@@ -143,6 +143,7 @@
   function readColors() {
     ['--c2', '--c7', '--surface', '--surface-2', '--text', '--muted', '--border', '--c1', '--c5', '--accent'].forEach(function (k) { COL[k] = EDU.css(k) || '#888'; });
     COL.orange = parseColor(COL['--c2']); COL.blue = parseColor(COL['--c7']); COL.bg = parseColor(COL['--surface']);
+    COL.k = EDU.theme() === 'dark' ? 0.85 : 0.72;          /* dark surfaces need stronger tints */
   }
   function rgb(c) { return 'rgb(' + c.join(',') + ')'; }
 
@@ -153,7 +154,7 @@
       var v = (vals[k] * mul + add) / norm;
       if (!(v === v)) v = 0;
       if (v > 1) v = 1; else if (v < -1) v = -1;
-      var c = v < 0 ? o : b, a = sharp ? (v === 0 ? 0 : 0.5) : Math.abs(v) * 0.72;
+      var c = v < 0 ? o : b, a = sharp ? (v === 0 ? 0 : 0.6) : Math.abs(v) * COL.k;
       var q = k * 4;
       d[q] = s[0] + (c[0] - s[0]) * a; d[q + 1] = s[1] + (c[1] - s[1]) * a; d[q + 2] = s[2] + (c[2] - s[2]) * a; d[q + 3] = 255;
     }
@@ -603,7 +604,7 @@
       cfg.draw.push([Math.round(p.x * 100) / 100, Math.round(p.y * 100) / 100, cfg.tool === 'blue' ? 1 : -1]);
       lastPt = p; changed = true;
     }
-    if (changed) { buildData(); evaluate(); syncLabels(); if (!playing) drawAll(); }
+    if (changed) { buildData(); evaluate(); syncLabels(); drawAll(); }
   }
   outCv.addEventListener('pointerdown', function (e) {
     if (cfg.ds !== 'draw') return;
@@ -637,7 +638,9 @@
     var u;
     try { u = new URL(location.href); u.searchParams.set('lang', EDU.lang); u.searchParams.set('setup', EDU.pack(c)); u = u.toString(); }
     catch (e) { u = location.href; }
-    EDU.share(u, t('app_title'));
+    /* phones: native share sheet (WhatsApp etc.); laptops/smartboards: copy the link */
+    var touch = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+    if (touch && navigator.share) EDU.share(u, t('app_title')); else EDU.copy(u);
   });
   $('#print').addEventListener('click', function () { window.print(); });
 

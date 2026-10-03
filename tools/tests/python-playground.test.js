@@ -83,5 +83,6 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(imgs.length === 1 && imgs[0] > 200, 'bar chart example draws one chart image, got ' + JSON.stringify(imgs));
   const info = (await page.textContent('#runInfo')).trim();
   expect(info.startsWith('✓'), 'run finished without error, got ' + info);
+  await page.evaluate(() => window.scrollTo(0, 0));   // clean full-page screenshot (sticky header)
   log('all steps done in ' + Math.round((Date.now() - t0) / 1000) + ' s');
 };

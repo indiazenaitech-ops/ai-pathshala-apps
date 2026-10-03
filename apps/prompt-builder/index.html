@@ -26,12 +26,24 @@
     .tpl-t { font-weight: 700; font-size: .95rem; line-height: 1.3; }
     .tpl-d { font-size: .8rem; color: var(--muted); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
+    @media (max-width: 560px) {
+      .tpl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .tpl { padding: 9px 10px; }
+    }
+
     .pb-layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); margin-top: 16px; }
     @media (min-width: 980px) {
       .pb-layout { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: start; }
-      .pb-side { position: sticky; top: 66px; max-height: calc(100vh - 78px); overflow-y: auto; padding-bottom: 4px; }
     }
     .pb-side > * + * { margin-top: 16px; }
+    .head-badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .jump-btn {
+      position: fixed; inset-inline-end: 14px; bottom: 14px; z-index: 40;
+      display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 8px 16px;
+      border: 0; border-radius: 999px; background: var(--primary); color: var(--primary-ink);
+      font: inherit; font-weight: 700; box-shadow: var(--shadow-lg); cursor: pointer;
+    }
+    @media (min-width: 980px) { .jump-btn { display: none !important; } }
 
     .settings { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .settings .wide { grid-column: 1 / -1; }
@@ -39,6 +51,7 @@
     .settings select, .field input[type="text"] { width: 100%; }
     .field textarea { min-height: 76px; }
     #f-task { min-height: 64px; }
+    #f-role { min-height: 44px; resize: none; overflow: hidden; }
     .chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
     .chips .chip { min-height: 36px; font-size: .84rem; padding: 5px 11px; }
     .chips .chip[aria-pressed="true"]::before { content: "✓"; }
@@ -49,8 +62,9 @@
     .prompt-box {
       white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word;
       background: var(--surface-2); border: 1px dashed var(--border); border-radius: 12px;
-      padding: 14px 16px; font-size: 1rem; line-height: 1.65; max-height: 52vh; overflow-y: auto; text-align: start;
+      padding: 14px 16px; font-size: 1rem; line-height: 1.65; text-align: start;
     }
+    @media (min-width: 980px) { .prompt-box { max-height: 62vh; overflow-y: auto; } }
     .prompt-box mark { background: var(--warning-soft); color: var(--text); border-radius: 4px; padding: 0 2px; outline: 1px solid color-mix(in srgb, var(--warning) 45%, transparent); }
     .prompt-box:focus-visible { outline: 3px solid var(--accent); }
     .copy-btn { flex: 1 1 220px; }
@@ -100,8 +114,8 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
     <h1 class="print-only print-head" data-i18n="app_title"></h1>
+    <p class="edu-intro" data-i18n="intro"></p>
 
     <details class="card howto no-print" id="howto">
       <summary><strong data-i18n="howto_title"></strong></summary>
@@ -131,7 +145,7 @@
 
         <div class="field">
           <label for="f-role" data-i18n="f_role"></label>
-          <input id="f-role" type="text" dir="auto" autocomplete="off" maxlength="400" data-i18n-placeholder="ph_role">
+          <textarea id="f-role" dir="auto" rows="1" maxlength="400" data-i18n-placeholder="ph_role"></textarea>
           <span class="hint" data-i18n="f_role_hint"></span>
         </div>
         <div class="field">
@@ -221,7 +235,7 @@
         <section class="card stack" id="preview-card" aria-labelledby="preview-h">
           <div class="row spread">
             <h2 id="preview-h" class="mb0" data-i18n="preview_h"></h2>
-            <span class="badge primary" id="lang-badge"></span>
+            <div class="head-badges"><span class="badge primary" id="lang-badge"></span><span class="badge no-print" id="score-pill"></span></div>
           </div>
           <p class="muted small mb0 no-print" id="preview-note"></p>
           <div id="preview-empty" class="panel muted" data-i18n="empty_preview" hidden></div>
@@ -277,6 +291,7 @@
       <p class="muted" id="favs-empty" data-i18n="favs_empty"></p>
       <div class="fav-list" id="favs"></div>
     </section>
+    <button type="button" class="jump-btn no-print" id="jump" hidden><span aria-hidden="true">⬇</span> <span data-i18n="preview_h"></span> <span id="jump-score"></span></button>
   </main>
   <script src="../../shared/edu.js"></script>
   <script src="strings.js"></script>

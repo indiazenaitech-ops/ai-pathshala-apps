@@ -46,7 +46,7 @@
 
   function blank(alang, manual) {
     return { role: '', task: '', context: '', cons: '', ex: '', aud: '', fmt: '', tone: '', len: '',
-      ask: false, unsure: false, alang: alang || EDU.lang, manual: !!manual, tpl: null };
+      ask: false, unsure: true, alang: alang || EDU.lang, manual: !!manual, tpl: null };
   }
   function normalize(o) {
     var s = blank();
@@ -89,7 +89,7 @@
   }
   function assemble(s) {
     var A = C(s.alang).asm, paras = [], p;
-    var role = s.role.trim(), task = s.task.trim(), ctx = s.context.trim(), cons = lines(s.cons), ex = s.ex.trim();
+    var role = s.role.replace(/\s*[\r\n]+\s*/g, ' ').trim(), task = s.task.trim(), ctx = s.context.trim(), cons = lines(s.cons), ex = s.ex.trim();
     if (!role && !task && !ctx && !cons.length && !ex) return '';
     if (role) paras.push(fill(A.role, stripEnd(role)));
     if (task) paras.push(fill(A.task, task));
@@ -127,7 +127,7 @@
     var taskShort = !st.task && len(s.task) > 0;
     if (taskShort) score += 10;
     var br = brackets(s);
-    if (br.length) score = Math.max(0, score - 10);
+    if (br.length) score = Math.max(0, score - 15);
     var level = score >= 90 ? 3 : score >= 70 ? 2 : score >= 40 ? 1 : 0;
     return { st: st, score: score, taskShort: taskShort, br: br, level: level };
   }
@@ -150,8 +150,14 @@
   function save() { store.set('draft', S); }
 
   /* ---------------- rendering ---------------- */
+  /* Grow textareas with their content (up to a limit) so long texts stay readable on phones. */
+  function autosize(ta) {
+    if (!ta || ta.tagName !== 'TEXTAREA') return;
+    ta.style.height = 'auto';
+    if (ta.scrollHeight) ta.style.height = Math.min(ta.scrollHeight + 2, 380) + 'px';
+  }
   function fillForm() {
-    TEXT.forEach(function (k) { if (F[k].value !== S[k]) F[k].value = S[k]; });
+    TEXT.forEach(function (k) { if (F[k].value !== S[k]) F[k].value = S[k]; autosize(F[k]); });
     F.aud.value = S.aud; F.fmt.value = S.fmt; F.tone.value = S.tone; F.len.value = S.len;
     F.ask.checked = S.ask; F.unsure.checked = S.unsure;
     F.lang.value = S.alang;
@@ -219,6 +225,10 @@
   function renderQuality() {
     var q = quality(S);
     var num = $('#q-score'), bar = $('#q-bar');
+    var pill = $('#score-pill');
+    pill.textContent = q.score + '/100';
+    pill.className = 'badge ' + ['danger', 'accent', 'primary', 'success'][q.level];
+    $('#jump-score').textContent = '· ' + q.score + '/100';
     num.textContent = String(q.score);
     num.className = 'score-num lvl-' + q.level;
     bar.style.width = q.score + '%';
@@ -265,7 +275,7 @@
           el('span', { class: 'fav-name no-i18n', dir: 'auto', text: f.name || t('untitled') }),
           el('span', { class: 'badge primary', text: langName(f.s.alang) })),
         el('span', { class: 'tiny muted', text: dateStr(f.at) }),
-        el('p', { class: 'small fav-snip no-i18n', dir: 'auto', text: text }),
+        el('p', { class: 'small fav-snip no-i18n', dir: EDU.langInfo(f.s.alang).dir, lang: f.s.alang, text: text }),
         el('div', { class: 'row' },
           el('button', { type: 'button', class: 'btn btn-sm btn-primary fav-load', text: t('fav_load'), onclick: function () { loadFav(f.id); } }),
           el('button', { type: 'button', class: 'btn btn-sm fav-copy', text: t('copy'), onclick: function () { EDU.copy(text); } }),
@@ -325,6 +335,7 @@
       S.cons = S.cons.replace(/\s+$/, '') + (S.cons.trim() ? '\n' : '') + texts[0];
     }
     F.cons.value = S.cons;
+    autosize(F.cons);
     update();
   }
   function resetForm() {
@@ -375,7 +386,8 @@
   }
 
   /* ---------------- events ---------------- */
-  TEXT.forEach(function (k) { F[k].addEventListener('input', function () { readForm(); update(); }); });
+  TEXT.forEach(function (k) { F[k].addEventListener('input', function () { autosize(F[k]); readForm(); update(); }); });
+  F.role.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); F.task.focus(); } });
   ['aud', 'fmt', 'tone', 'len', 'ask', 'unsure'].forEach(function (k) { F[k].addEventListener('change', function () { readForm(); update(); }); });
   F.lang.addEventListener('change', function () { readForm(); changeAnswerLang(F.lang.value, true); });
   $('#btn-reset').addEventListener('click', resetForm);
@@ -394,6 +406,21 @@
   });
   $('#btn-print').addEventListener('click', function () { window.print(); });
   $('#btn-fs').addEventListener('click', function () { EDU.fullscreen($('#preview-card')); });
+
+  /* Phones: a floating button jumps to the prompt while the form is on screen. */
+  (function jumpButton() {
+    var btn = $('#jump'), seen = { builder: false, preview: false };
+    if (!('IntersectionObserver' in window)) return;
+    btn.addEventListener('click', function () {
+      try { $('#preview-card').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { }
+    });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { seen[en.target.id === 'builder' ? 'builder' : 'preview'] = en.isIntersecting; });
+      btn.hidden = !(seen.builder && !seen.preview);
+    }, { threshold: 0 });
+    io.observe($('#builder'));
+    io.observe($('#preview-card'));
+  })();
 
   EDU.onLang(function (code) {
     if (!S.manual && S.alang !== code) {

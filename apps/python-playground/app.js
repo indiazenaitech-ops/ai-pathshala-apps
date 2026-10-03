@@ -85,13 +85,17 @@
   /* ------------------------------------------------------------ output */
   var segs = [], outLen = 0, truncated = false, tail = '', figN = 0, outHasContent = false;
   function clearOut() {
-    outEl.textContent = ''; segs = []; outLen = 0; truncated = false; tail = ''; outHasContent = false;
+    outEl.textContent = ''; segs = []; outLen = 0; errLen = 0; truncated = false; tail = ''; outHasContent = false;
     $('#outEmpty').hidden = false;
   }
+  var errLen = 0;
   function addOut(kind, s) {
     if (!s) return;
     tail = (tail + s).slice(-800);
-    if (truncated) return;
+    if (truncated) {
+      if (kind !== 'err' || errLen > 20000) return;      // keep showing the error message after a flood of print()
+      errLen += s.length; segs.push({ kind: 'err', text: s }); return;
+    }
     if (outLen + s.length > MAX_OUT) { s = s.slice(0, Math.max(0, MAX_OUT - outLen)); truncated = true; }
     outLen += s.length;
     var last = segs[segs.length - 1];
@@ -331,6 +335,7 @@
     var html = '';
     for (var k = 1; k <= n; k++) html += k === mark ? '<div class="pp-eline">' + k + '</div>' : '<div>' + k + '</div>';
     gutter.innerHTML = html;
+    gutter.parentNode.style.setProperty('--pp-gw', String(Math.max(2, String(n).length)));
     lastLines = n; lastMark = mark;
     syncGutter();
   }
@@ -481,7 +486,7 @@
     if (!ex) { note.hidden = true; return; }
     note.hidden = false;
     note.appendChild(EDU.el('span', { text: t('exn_' + ex.id) }));
-    if (ex.pkg) note.appendChild(EDU.el('span', { class: 'badge accent', text: t('ex_note_pkg') }));
+    if (ex.pkg) note.appendChild(EDU.el('span', { class: 'badge accent no-print', text: t('ex_note_pkg') }));
   }
   function loadExample(id, keepOut) {
     var ex = exById(id);

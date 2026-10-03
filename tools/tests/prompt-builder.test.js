@@ -10,8 +10,11 @@ module.exports = async function ({ page, lang, expect }) {
   let pv = await preview();
   expect(pv.includes(C.asm.lang), 'preview contains the answer-language line');
   expect(pv.includes(C.asm.audv.c6_8), 'preview contains the audience phrase');
-  expect((await score()) === 90, 'template has all six parts but unfilled [blanks] → 90, got ' + (await score()));
+  expect((await score()) === 85, 'template has all six parts but unfilled [blanks] → 85, got ' + (await score()));
   expect((await page.$$('#q-tips .tip-br')).length === 1, 'tip about [square brackets] is shown');
+  await page.fill('#f-task', C.templates.explain.task.replace(/\[[^\]]*\]/g, 'friction'));
+  expect((await score()) === 100, 'filling the [blank] gives 100, got ' + (await score()));
+  expect((await page.$$('#q-tips .tip-br')).length === 0, 'bracket tip disappears');
 
   // 2) Clear the form (confirm is auto-accepted).
   await page.click('#btn-reset');
@@ -79,4 +82,16 @@ module.exports = async function ({ page, lang, expect }) {
   expect(pv.includes(C.asm.rules) && pv.includes(C.chips[0].text), 'rules section assembled');
   await page.click('#btn-copy');
   await page.waitForSelector('.edu-toast', { timeout: 3000 });
+
+  // 10) A shared link (#p=...) opens the same prompt on another device.
+  const shared = { role: 'a Class 8 maths teacher', task: 'Make 5 word problems on percentages using Indian prices in Rs', context: 'Class 8, NCERT chapter Comparing Quantities', aud: 'c6_8', fmt: 'list', tone: 'friendly', len: 'short', cons: 'Give an answer key at the end.', ex: '', alang: lang };
+  const packed = await page.evaluate((o) => EDU.pack(o), shared);
+  const base = page.url().split('#')[0];
+  await page.goto(base + '#p=' + packed);
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForTimeout(600);
+  expect((await page.inputValue('#f-task')) === shared.task, 'shared link fills the task');
+  expect((await page.inputValue('#f-fmt')) === 'list', 'shared link sets the format');
+  expect(!page.url().includes('#p='), 'share hash is removed after loading');
+  expect((await score()) === 100, 'shared prompt scores 100, got ' + (await score()));
 };

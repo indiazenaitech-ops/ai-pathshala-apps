@@ -153,7 +153,8 @@ function staticChecks() {
     }
   }
   if (/http:\/\/(?!localhost|127\.0\.0\.1|www\.w3\.org)/.test(html)) warn('index.html contains http:// URLs');
-  const eduIdx = html.indexOf('shared/edu.js'), strIdx = html.indexOf('strings.js'), appIdx = html.indexOf('app.js');
+  const order = srcs.map(x => x.split('/').pop());
+  const eduIdx = srcs.findIndex(x => /shared\/edu\.js$/.test(x)), strIdx = order.indexOf('strings.js'), appIdx = order.indexOf('app.js');
   if (!isHome && !(eduIdx < strIdx && strIdx < appIdx)) err('script order must be shared/edu.js → strings.js → app.js');
 
   if (isHome) {
@@ -172,7 +173,7 @@ function staticChecks() {
     const jsFiles = fs.readdirSync(appDir).filter(f => f.endsWith('.js') && f !== 'strings.js');
     for (const f of jsFiles) {
       const js = fs.readFileSync(path.join(appDir, f), 'utf8');
-      if (/^\s*(import|export)\s[^(]/m.test(js)) err(`${f}: ES module import/export — use classic scripts`);
+      if (/^\s*import\s+(?:[\w$*{][^;\n]*\sfrom\s+)?['"][^'"]+['"]\s*;?\s*$/m.test(js) || /^\s*export\s+(default|const|let|var|function|class|async|\{)/m.test(js)) err(`${f}: ES module import/export — use classic scripts`);
       if (/fetch\(\s*['"`](?!https?:)/.test(js)) err(`${f}: fetch() of a relative path fails on file:// — inline the data in a .js file`);
       if (/\blocalStorage\b/.test(js)) warn(`${f}: uses localStorage directly — prefer EDU.store() (safe in private mode)`);
       if (/https?:\/\/(?!cdn\.jsdelivr\.net|unpkg\.com|cdnjs\.cloudflare\.com|www\.w3\.org|fonts\.googleapis|fonts\.gstatic|storage\.googleapis\.com|tfhub\.dev|www\.youtube\.com|wa\.me|api\.whatsapp\.com)/.test(js)) warn(`${f}: references an external URL — make sure nothing paid / tracking / needing keys`);
@@ -247,10 +248,11 @@ function analyze() {
     h1: (document.getElementById('edu-title') || {}).textContent || '', overflow: document.documentElement.scrollWidth - window.innerWidth,
     rawKeys: [], englishLeft: [], hardcoded: [], textCount: 0 };
   const visible = el => { const r = el.getBoundingClientRect(); const cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; };
+  const latinShare = (txt) => { const letters = txt.match(/\p{L}/gu) || []; if (!letters.length) return 0; return letters.filter(c => /[A-Za-z]/.test(c)).length / letters.length; };
   const consider = (txt, where) => {
     if (keys.has(txt) && !curVals.has(txt)) out.rawKeys.push(where + txt);
     else if (L !== 'en' && enVals.has(txt) && cur[enVals.get(txt)] !== undefined && cur[enVals.get(txt)].trim() !== txt && /[A-Za-z]{3,}/.test(txt)) out.englishLeft.push(where + txt.slice(0, 70));
-    else if (L !== 'en' && /\b[A-Za-z]{3,}\b[^A-Za-z]+\b[A-Za-z]{3,}\b/.test(txt) && !curVals.has(txt) && !BR.test(txt)) out.hardcoded.push(where + txt.slice(0, 70));
+    else if (L !== 'en' && /\b[A-Za-z]{3,}\b[^A-Za-z]+\b[A-Za-z]{3,}\b/.test(txt) && !curVals.has(txt) && !BR.test(txt) && latinShare(txt) > 0.6) out.hardcoded.push(where + txt.slice(0, 70));
   };
   const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
   let n;

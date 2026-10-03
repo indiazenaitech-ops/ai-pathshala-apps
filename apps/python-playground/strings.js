@@ -1361,7 +1361,7 @@ window.APP_STRINGS = {
     keys_label: 'کوڈنگ کے بٹن',
     key_indent: 'انڈینٹ: 4 اسپیس جوڑیں',
     key_dedent: '4 اسپیس ہٹائیں',
-    shortcuts: '<kbd>Ctrl</kbd> + <kbd>Enter</kbd> سے کوڈ چلتا ہے · <kbd>Tab</kbd> سے 4 اسپیس · <kbd>Esc</kbd> پھر <kbd>Tab</kbd> سے ایڈیٹر سے باہر',
+    shortcuts: '<span dir="ltr"><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span> سے کوڈ چلتا ہے · <kbd>Tab</kbd> سے 4 اسپیس · <kbd>Esc</kbd> پھر <kbd>Tab</kbd> سے ایڈیٹر سے باہر',
     pos: 'سطر {l}، کالم {c}',
     st_loading: 'Python لوڈ ہو رہا ہے… پہلی بار تقریباً 10 MB، اس کے بعد جلدی کھلے گا۔',
     st_slow: 'ابھی بھی لوڈ ہو رہا ہے۔ انٹرنیٹ سست ہے؟ تھوڑا اور انتظار کریں۔',
@@ -1430,3 +1430,22 @@ window.APP_STRINGS = {
     inside4: 'زیادہ تر عام ماڈیول چلتے ہیں (math، random، statistics، csv، datetime…)۔ turtle اور tkinter کو ڈیسک ٹاپ ونڈو چاہیے، اس لیے وہ یہاں نہیں چلتے۔ آپ کی بنائی فائلیں صرف براؤزر کی میموری میں رہتی ہیں۔'
   }
 };
+
+/* Urdu is right-to-left. Code words such as print(), .py or int("abc") are left-to-right, and the
+   brackets/dots at their edges get pulled to the wrong side. Wrap every run of Latin code text in
+   Unicode LTR isolates (U+2066 ... U+2069) so it keeps its shape inside Urdu sentences.
+   Strings that contain HTML are left alone (they use <span dir="ltr"> instead). */
+(function (ur) {
+  if (!ur) return;
+  var RE = /\{\w+\}|\([A-Za-z0-9_ "'.]+\)|[A-Za-z_.][A-Za-z0-9_.()"'\[\]{}\-–+:\/= ]*[A-Za-z0-9_)"\]}]|[A-Za-z]/g;
+  function wrap(m) {
+    if (m.charAt(0) === '{') return m;                 // {n} placeholders stay as they are
+    var tail = '';                                      // a ")" whose "(" is in Urdu text stays outside
+    while (m.length > 1 && m.slice(-1) === ')' && m.split('(').length < m.split(')').length) { tail = ')' + tail; m = m.slice(0, -1); }
+    return '⁦' + m + '⁩' + tail;
+  }
+  Object.keys(ur).forEach(function (k) {
+    var v = ur[k];
+    if (typeof v === 'string' && v.indexOf('<') < 0) ur[k] = v.replace(RE, wrap);
+  });
+})(window.APP_STRINGS.ur);
