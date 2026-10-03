@@ -29,6 +29,7 @@
   function times(x) { return EDU.fmt(x, { maximumFractionDigits: x < 10 ? 1 : 0 }); }
   function hash(str) { var h = 5381; for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0; return h; }
   function lc(l) { return 'var(--c' + l.color + ')'; }
+  function nSent(n) { return n === 1 ? t('one_sentence') : t('n_sentences', { n: EDU.fmt(n) }); }
 
   /* ---------------- state ---------------- */
   var S, model = null, evalRes = null, trainedRows = [], trainedSig = null;
@@ -161,7 +162,7 @@
       });
       var card = el('div', { class: 'lab-card', dataset: { id: l.id, idx: String(i), count: String(rows.length) }, style: { '--lc': lc(l) } },
         el('div', { class: 'lab-head' }, sel, name, del),
-        el('div', { class: 'lab-meta' }, el('span', { class: 'lab-count', text: t('n_sentences', { n: EDU.fmt(rows.length) }) }),
+        el('div', { class: 'lab-meta' }, el('span', { class: 'lab-count', text: nSent(rows.length) }),
           rows.length && rows.length < 5 ? el('span', { class: 'small', text: t('few_sentences') }) : null),
         form, list);
       card.style.setProperty('--lc', lc(l));
@@ -361,7 +362,7 @@
       clues.appendChild(cl);
       ls.appendChild(el('div', { class: 'lab-stat', style: { '--lc': lc(l) } },
         el('div', { class: 'ls-head' }, el('span', { class: 'ls-name' }, l.emoji + ' ', el('span', { class: 'no-i18n', text: labelName(l) })),
-          el('span', { class: 'ls-nums', text: t('label_nums', { n: EDU.fmt(model.docs[id]), p: pct(model.docs[id] / model.N), w: EDU.fmt(model.total[id]) }) })),
+          el('span', { class: 'ls-nums', text: t('label_nums', { s: nSent(model.docs[id]), p: pct(model.docs[id] / model.N), w: EDU.fmt(model.total[id]) }) })),
         clues));
       ls.lastChild.style.setProperty('--lc', lc(l));
     });
@@ -634,7 +635,7 @@
   }
   function renderExp1() {
     var tok = expWordTok(), hits = exp1Hits(tok), btn = $('#exp1-btn');
-    btn.textContent = t('exp1_btn', { n: EDU.fmt(hits.length) });
+    btn.textContent = hits.length === 1 ? t('exp1_btn_1') : t('exp1_btn', { n: EDU.fmt(hits.length) });
     btn.disabled = !hits.length;
     $('#exp1-info').textContent = !tok ? t('exp1_type') : hits.length ? t('exp1_count', { n: EDU.fmt(hits.length), word: tok.raw }) : t('exp1_none');
   }
