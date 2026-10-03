@@ -10,7 +10,7 @@ node tools/build_catalog.js --only-passing --zip "$ZIP"
 git add .gitignore .nojekyll README.md LICENSE AGENTS.md APPS.md index.html catalog.js manifest.webmanifest sw.js shared \
         tools/verify.js tools/build_catalog.js tools/publish.sh tools/package.json tools/package-lock.json \
         apps/_template tools/tests/_template.test.js
-for slug in $(node -e "global.window={};require('./catalog.js');console.log(window.EDU_CATALOG.map(a=>a.slug).join(' '))"); do
+for slug in $(cat tools/.publish_stage); do
   git add "apps/$slug"
   [ -f "tools/tests/$slug.test.js" ] && git add "tools/tests/$slug.test.js"
 done

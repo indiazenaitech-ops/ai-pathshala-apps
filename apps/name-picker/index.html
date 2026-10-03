@@ -64,6 +64,8 @@
     .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .lbl { font-weight: 600; font-size: .92rem; }
     .h-sm { font-size: 1.05rem; margin-bottom: 10px; }
+    /* local workaround: the shared header title clips tall Nastaliq glyphs (overflow hidden + line-height 1.25) */
+    :root[lang="ur"] .edu-title { line-height: 1.9; }
 
     /* card flip mode */
     .cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-content: center; min-height: 300px; padding: 8px; perspective: 1200px; cursor: pointer; }
@@ -112,6 +114,7 @@
     .print-head { margin-bottom: 8px; }
 
     /* list */
+    #panel-list .grid-2 { align-items: start; }
     .roll { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px; }
     .help ul { margin: 10px 0 0; padding-inline-start: 1.3em; }
     .help li + li { margin-top: 6px; }
