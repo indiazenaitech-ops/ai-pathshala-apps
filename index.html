@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free AI &amp; Learning Apps for Schools · AI Pathshala</title>
+  <meta name="description" content="Free classroom apps for schools and colleges: learn AI, maths, science, coding, languages. No sign-up, no ads, works offline, 12 Indian languages.">
+  <meta property="og:title" content="Free AI &amp; Learning Apps for Schools">
+  <meta property="og:description" content="No sign-up, no ads, 12 Indian languages. Works on smartboards, laptops and phones.">
+  <meta property="og:image" content="shared/img/icon-512.png">
+  <link rel="icon" href="shared/img/icon-32.png">
+  <link rel="apple-touch-icon" href="shared/img/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0b4f5c">
+  <link rel="stylesheet" href="shared/edu.css">
+  <style>
+    .hero { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; margin: 6px 0 18px; }
+    .hero img { width: 92px; height: 92px; border-radius: 22px; box-shadow: var(--shadow); }
+    .hero h2 { font-size: clamp(1.5rem, 3.6vw, 2.3rem); margin: 0 0 6px; }
+    .hero p { color: var(--muted); margin: 0; max-width: 70ch; }
+    @media (max-width: 560px) { .hero { grid-template-columns: 1fr; } .hero img { width: 64px; height: 64px; border-radius: 16px; } }
+    .search { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+    .search input { flex: 1 1 260px; font-size: 1.05rem; min-height: 46px; }
+    .cats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .apps { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+    .app-card { display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: var(--text); transition: transform .12s, box-shadow .12s, border-color .12s; }
+    .app-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+    .app-card .ic { font-size: 2.1rem; line-height: 1; width: 56px; height: 56px; display: grid; place-items: center; background: var(--surface-2); border-radius: 14px; }
+    .app-card h3 { margin: 0; font-size: 1.08rem; }
+    .app-card p { margin: 0; color: var(--muted); font-size: .92rem; flex: 1; }
+    .app-card .meta { display: flex; flex-wrap: wrap; gap: 6px; }
+    .section-title { margin: 30px 0 10px; }
+    .how { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 8px; }
+    .how ol { margin: 0; padding-inline-start: 1.2em; }
+    .how li { margin-bottom: 8px; }
+    .cat-head { display: flex; align-items: center; gap: 10px; margin: 24px 0 10px; }
+    .cat-head h2 { margin: 0; }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <section class="hero">
+      <img src="shared/img/icon-192.png" alt="">
+      <div>
+        <h2 id="home-title" data-i18n="home_title"></h2>
+        <p id="home-sub"></p>
+      </div>
+    </section>
+
+    <div class="search">
+      <input type="search" id="q" data-i18n-placeholder="search_ph" data-i18n-aria-label="search_ph" autocomplete="off">
+      <button class="btn" id="share-lib" type="button">🔗 <span data-i18n="share_library"></span></button>
+      <a class="btn" id="zip" hidden>⬇ <span data-i18n="download_zip"></span></a>
+    </div>
+    <div class="cats" id="cats" role="toolbar"></div>
+    <div id="list"></div>
+    <p class="muted center" id="empty" hidden data-i18n="no_results"></p>
+
+    <h2 class="section-title" data-i18n="how_title"></h2>
+    <div class="how">
+      <div class="card">
+        <ol>
+          <li data-i18n="how_1"></li>
+          <li data-i18n="how_2"></li>
+          <li data-i18n="how_3"></li>
+          <li data-i18n="how_4"></li>
+          <li data-i18n="how_5"></li>
+        </ol>
+      </div>
+      <div class="card stack">
+        <h3 data-i18n="privacy_title"></h3>
+        <p class="muted" data-i18n="privacy_text"></p>
+        <h3 data-i18n="request_title"></h3>
+        <p class="muted" data-i18n="request_text"></p>
+        <p><a class="btn btn-accent" id="yt" target="_blank" rel="noopener">▶ <span data-i18n="youtube_cta"></span></a></p>
+      </div>
+    </div>
+  </main>
+  <script src="shared/edu.js"></script>
+  <script src="shared/home-strings.js"></script>
+  <script src="catalog.js"></script>
+  <script src="shared/home.js"></script>
+</body>
+</html>
