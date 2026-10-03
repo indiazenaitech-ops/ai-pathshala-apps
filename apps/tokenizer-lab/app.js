@@ -66,10 +66,22 @@
   /* ---------- token display helpers ---------- */
   function tokenView(m, id) {
     if (m.disp[id]) return m.disp[id];
-    var bytes = m.vocab[id], s = T.decode(bytes);
-    var v = s === null ? { s: bytes.map(T.hex).join(' '), raw: true } : { s: s, raw: false };
+    var parts = T.pieces(m.vocab[id]);
+    var v = {
+      parts: parts,
+      raw: parts.every(function (p) { return p.raw; }),
+      s: parts.filter(function (p) { return !p.raw; }).map(function (p) { return p.s; }).join('')
+    };
     m.disp[id] = v;
     return v;
+  }
+  /* A token made of text parts and raw-byte parts (‹E0 A4› = piece of a character). */
+  function fillParts(node, parts) {
+    parts.forEach(function (p) {
+      if (p.raw) node.appendChild(el('span', { class: 'rb', dir: 'ltr', text: '‹' + p.s + '›' }));
+      else fillText(node, p.s, false);
+    });
+    return node;
   }
   /* Show spaces / newlines visibly and put a dotted circle before a lone vowel sign. */
   function fillText(node, s, raw) {
@@ -98,7 +110,7 @@
       T.words(text, 'en').forEach(function (w) { var id = vocab.get(w.text.toLowerCase()) || 0; out.push({ s: w.text, id: id, unk: !id }); });
     } else {
       var m = model();
-      T.encode(m, N(), text).forEach(function (id) { var v = tokenView(m, id); out.push({ s: v.s, raw: v.raw, id: id }); });
+      T.encode(m, N(), text).forEach(function (id) { var v = tokenView(m, id); out.push({ parts: v.parts, raw: v.raw, id: id }); });
     }
     return out;
   }
@@ -140,15 +152,15 @@
     var frag = document.createDocumentFragment();
     for (var i = eff - 1; i >= 0; i--) {
       var mm = m.merges[i], a = tokenView(m, mm.a), b = tokenView(m, mm.b), c = tokenView(m, mm.id);
-      var rtl = RTL.test(c.raw ? '' : c.s);
+      var rtl = RTL.test(c.s);
       frag.appendChild(el('li', { class: i === eff - 1 ? 'newest' : null },
         el('span', { class: 'mn', text: '#' + (i + 1) }),
         el('span', { class: 'mg', dir: rtl ? 'rtl' : 'ltr' },
-          fillText(el('span', { class: 'mt' + (a.raw ? ' raw' : '') }), a.s, a.raw),
+          fillParts(el('span', { class: 'mt' + (a.raw ? ' raw' : '') }), a.parts),
           el('span', { class: 'op', text: '+' }),
-          fillText(el('span', { class: 'mt' + (b.raw ? ' raw' : '') }), b.s, b.raw),
+          fillParts(el('span', { class: 'mt' + (b.raw ? ' raw' : '') }), b.parts),
           el('span', { class: 'op', text: rtl ? String.fromCharCode(8592) : String.fromCharCode(8594) }),
-          fillText(el('span', { class: 'mt' + (c.raw ? ' raw' : '') }), c.s, c.raw)),
+          fillParts(el('span', { class: 'mt' + (c.raw ? ' raw' : '') }), c.parts)),
         el('span', { class: 'mc', text: '×' + fmt(mm.count) })));
     }
     list.appendChild(frag);
@@ -168,7 +180,7 @@
       if (i >= CHIP_CAP) return;
       var chip = el('span', { class: 'tk ' + (tk.unk ? 'unk' : 'k' + (i % 6)) + (tk.raw ? ' raw' : ''), 'data-id': String(tk.id),
         title: tk.unk ? t('unk_title') : tk.title ? tk.title + ' · ' + t('tok_title', { i: fmt(i + 1), id: tk.id }) : t('tok_title', { i: fmt(i + 1), id: tk.id }) });
-      chip.appendChild(fillText(el('span', { class: 'tx' }), tk.s, tk.raw));
+      chip.appendChild(tk.parts ? fillParts(el('span', { class: 'tx' }), tk.parts) : fillText(el('span', { class: 'tx' }), tk.s, false));
       chip.appendChild(el('span', { class: 'id', text: tk.unk ? '[UNK] 0' : String(tk.id) }));
       frag.appendChild(chip);
     });
@@ -189,8 +201,10 @@
     $('#ids-box').textContent = '[' + shown + (lastIds.length > IDS_CAP ? ', …' : '') + ']';
   }
 
+  /* The chart always uses the slider value (300 by default), so it looks the same in every language. */
+  function cmpN() { return state.merges === null ? DEFAULT_N : state.merges; }
   function renderCompare() {
-    var n = N(), en = getModel('en'), mu = getModel('all');
+    var n = cmpN(), en = getModel('en'), mu = getModel('all');
     var rows = LCODES.map(function (L) {
       var s = content(L).sentence;
       return { L: L, s: s, chars: Array.from(s).length, a: T.encode(en, n, s).length, b: T.encode(mu, n, s).length };
@@ -207,7 +221,7 @@
       function line(cls, v, ref) {
         return el('div', { class: 'bar-line' },
           el('span', { class: 'bar ' + cls, style: { inlineSize: (100 * v / max * 0.8).toFixed(1) + '%' } }),
-          el('span', { class: 'bar-num' }, fmt(v), ' ', el('span', { class: 'x', text: '×' + dec(v / ref, 1) })));
+          el('span', { class: 'bar-num', dir: 'ltr' }, fmt(v), ' ', el('span', { class: 'x', text: '×' + dec(v / ref, 1) })));
       }
       wrap.appendChild(el('div', { class: 'cmp-row' + (r.L === EDU.lang ? ' me' : ''), 'data-lang': r.L, 'data-en': String(r.a), 'data-multi': String(r.b) },
         el('div', { class: 'cmp-lang' },
@@ -223,6 +237,9 @@
     }
     var f = rows.filter(function (r) { return r.L === focus; })[0];
     $('#cmp-summary').textContent = t('cmp_summary', { lang: EDU.lang === 'en' ? EDU.langInfo(focus).name : native(focus), x: dec(f.a / base.a, 1), y: dec(f.b / base.b, 1) });
+    var budget = $('#cmp-budget');
+    budget.hidden = !(n > 0 && base.b > base.a);
+    if (!budget.hidden) budget.textContent = t('cmp_budget', { a: fmt(base.a), b: fmt(base.b), n: fmt(n) });
   }
 
   function renderCtx() {
@@ -257,7 +274,7 @@
       body.appendChild(el('tr', {},
         el('td', {}, fillText(el('span', { class: 'ch' }), ch, false)),
         el('td', { class: 'mono', text: hexCode(ch.codePointAt(0)) }),
-        el('td', {}, b.map(function (x) { return el('span', { class: 'bt', text: T.hex(x) }); }))));
+        el('td', { class: 'bytes-td' }, el('span', { dir: 'ltr' }, b.map(function (x) { return el('span', { class: 'bt', text: T.hex(x) }); })))));
     });
     $('#byte-total').textContent = t('byte_total', { c: fmt(chars.length), b: fmt(total) });
   }

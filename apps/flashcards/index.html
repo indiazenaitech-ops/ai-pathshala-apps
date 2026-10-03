@@ -113,7 +113,11 @@
     #studySession:fullscreen .fc-text.xl { font-size: clamp(2.4rem, 7vw, 5.5rem); }
     #studySession:fullscreen .fc-text.l { font-size: clamp(1.8rem, 5vw, 3.6rem); }
     #studySession:fullscreen .fc-text.m { font-size: clamp(1.4rem, 3.4vw, 2.4rem); }
-    @media (prefers-reduced-motion: reduce) { .fc-inner { transition: none; } }
+    @media (prefers-reduced-motion: reduce) {
+      .fc-inner { transition: none; }
+      .fc-tile { transition: none !important; animation: none !important; }
+      .fc-tile[aria-pressed="true"] { transform: none !important; }
+    }
 
     /* ---------- summary ---------- */
     .fc-sum { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }

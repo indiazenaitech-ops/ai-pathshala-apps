@@ -28,6 +28,26 @@
     try { return DEC.decode(new Uint8Array(bytes)); } catch (e) { return null; }
   }
 
+  /* Split a token's bytes into readable parts: complete UTF-8 characters become text,
+     leftover bytes (pieces of a character) stay as hex. [{s, raw}] */
+  function pieces(bytes) {
+    var parts = [], raw = [], i = 0;
+    function flushRaw() { if (raw.length) { parts.push({ s: raw.map(hex).join(' '), raw: true }); raw = []; } }
+    while (i < bytes.length) {
+      var b = bytes[i], n = b < 0x80 ? 1 : (b >> 5) === 6 ? 2 : (b >> 4) === 14 ? 3 : (b >> 3) === 30 ? 4 : 0;
+      var ok = n > 0 && i + n <= bytes.length, k;
+      for (k = 1; ok && k < n; k++) if ((bytes[i + k] & 0xC0) !== 0x80) ok = false;
+      var s = ok ? decode(bytes.slice(i, i + n)) : null;
+      if (s === null) { raw.push(b); i++; continue; }
+      flushRaw();
+      var last = parts[parts.length - 1];
+      if (last && !last.raw) last.s += s; else parts.push({ s: s, raw: false });
+      i += n;
+    }
+    flushRaw();
+    return parts;
+  }
+
   /* Train byte-level BPE: start from 256 byte tokens, repeatedly join the most frequent
      neighbouring pair. Pair counts are updated only for words that contain the merged pair. */
   function train(text, maxMerges) {
@@ -148,7 +168,7 @@
 
   root.TOKLAB = {
     MAX_MERGES: 600, K: K, CORPUS_CAP: CORPUS_CAP,
-    pretok: pretok, utf8: utf8, hex: hex, decode: decode, train: train,
+    pretok: pretok, utf8: utf8, hex: hex, decode: decode, pieces: pieces, train: train,
     encode: encode, encodeChunk: encodeChunk, words: words, wordVocab: wordVocab, isMark: isMark
   };
 })(typeof window !== 'undefined' ? window : this);

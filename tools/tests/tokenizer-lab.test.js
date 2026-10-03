@@ -21,6 +21,11 @@ module.exports = async function ({ page, expect, t }) {
   expect(c.by.ta.mu < c.by.ta.en && c.by.hi.mu < c.by.hi.en, 'multilingual tokenizer should need fewer tokens for Hindi and Tamil');
   const summary = (await page.textContent('#cmp-summary')).trim();
   expect(summary.length > 20 && !/\{\w+\}/.test(summary), 'fairness summary is filled in: ' + summary);
+  // Shared vocabulary budget: the 12-language tokenizer needs more tokens for English.
+  expect(c.by.en.mu > c.by.en.en && await page.isVisible('#cmp-budget'), 'budget note shown when English gets more tokens from the 12-language tokenizer');
+  // Byte pieces: a token that is part of a character shows its raw bytes next to readable text.
+  const pieces = await page.evaluate(() => JSON.stringify(window.TOKLAB.pieces([0xE0, 0xA4, 0xA8, 0xE0, 0xA4])));
+  expect(pieces === JSON.stringify([{ s: 'न', raw: false }, { s: 'E0 A4', raw: true }]), 'pieces() splits full letters from leftover bytes: ' + pieces);
 
   // 2) 0 merges = raw UTF-8 bytes: tokens == bytes, both tokenizers identical.
   await setRange('#merges', 0);

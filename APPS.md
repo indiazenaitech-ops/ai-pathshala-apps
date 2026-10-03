@@ -1,11 +1,14 @@
-# App list (24)
+# App list (27)
 
 Live: https://indiazenaitech-ops.github.io/ai-pathshala-apps/
 
 | | App | Category | Classes | What it does |
 |---|---|---|---|---|
+| 🤖 | [AI or Not? Sorting Game](apps/ai-around-us/index.html) | learn-ai | 3-10 | Sort everyday things like face unlock, a fan or Google Maps into Uses AI or No AI, and learn why. |
 | 🔄 | [AI Project Cycle Canvas](apps/ai-project-cycle/index.html) | learn-ai | 8-12 | Plan an AI project the CBSE way: 4Ws problem canvas, data, modelling, evaluation and ethics. 3 samples, autosave, print. |
 | 🤖 | [Build a Chatbot](apps/chatbot-builder/index.html) | learn-ai | 5-12 | Build a rule-based chatbot with intents and example phrases, chat with it, and see how it matches words to pick a reply. |
+| 🔵 | [Clustering Lab (k-means)](apps/kmeans-clustering/index.html) | learn-ai | 8-12 | Tap to add points and watch k-means find groups with no labels: assign, update, inertia and the elbow chart. |
+| 🌳 | [Decision Tree Lab](apps/decision-tree-builder/index.html) | learn-ai | 6-12 | Build a decision tree by hand, test it on new animals or weather days, and compare it with the computer's Gini tree. |
 | 🖼️ | [How Computers See](apps/image-pixels-filters/index.html) | learn-ai | 6-12 | A picture is a grid of numbers: read pixels, see the maths of blur and edge filters, and find out what a CNN's first layer detects. |
 | 🎯 | [Is My AI Good? (Evaluation)](apps/confusion-matrix-lab/index.html) | learn-ai | 9-12 | Move a threshold, fill the confusion matrix and see Accuracy, Precision, Recall and F1 change live, for CBSE Class 10 AI. |
 | 🧠 | [Neural Network Playground](apps/neural-network-playground/index.html) | learn-ai | 9-12 | Watch a tiny neural network learn to separate dots. Change layers, neurons and activation, and see why XOR needs a hidden layer. |
