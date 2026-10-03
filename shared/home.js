@@ -6,8 +6,12 @@
   var APPS = (window.EDU_CATALOG || []).slice();
   var cat = 'all', query = '';
 
-  EDU.init({ slug: 'home', title: null, home: true, strings: window.HOME_STRINGS });
+  EDU.init({ slug: 'home', title: null, home: true, strings: window.HOME_STRINGS, waKey: 'wa_home' });
   var $ = EDU.$, el = EDU.el, t = EDU.t;
+  var CONF = EDU.SITE || {};
+  /* The home page has no app title, so the shell's header <h1> stays empty; the hero heading is the page's h1. */
+  var shellH1 = document.getElementById('edu-title');
+  if (shellH1 && !shellH1.textContent.trim()) shellH1.remove();
 
   try { var c0 = new URLSearchParams(location.search).get('cat'); if (CATS.indexOf(c0) >= 0) cat = c0; } catch (e) { }
 
@@ -62,17 +66,24 @@
     $('#empty').hidden = shown.length > 0;
   }
 
+  function setMeta(name, value) { var m = document.querySelector('meta[name="' + name + '"]'); if (m) m.setAttribute('content', value); }
+
   function renderStatic() {
     $('#home-sub').textContent = t('home_sub', { n: EDU.fmt(APPS.length) });
-    $('#yt').href = EDU.YOUTUBE;
-    var zip = $('#zip');
-    if (SITE.zip) { zip.hidden = false; zip.href = SITE.zip; }
-    document.title = t('home_title') + ' · ' + t('brand');
+    $('#wa-home').href = EDU.waLink(t('wa_home', { url: EDU.shareUrl() }));
+    $('#subscribe').href = CONF.subscribe || EDU.YOUTUBE;
+    $('#subscribe-2').href = CONF.subscribe || EDU.YOUTUBE;
+    $('#watch').href = CONF.youtube || EDU.YOUTUBE;
+    $('#schools-link').href = 'schools.html?lang=' + EDU.lang;
+    var zip = $('#zip'), zipUrl = SITE.zip || CONF.zip;
+    if (zipUrl) { zip.hidden = false; zip.href = zipUrl; }
+    document.title = t('doc_title');
+    setMeta('description', t('doc_desc'));
   }
 
   APPS.sort(function (a, b) { return CATS.indexOf(a.category) - CATS.indexOf(b.category) || (a.order || 999) - (b.order || 999) || a.title.en.localeCompare(b.title.en); });
   $('#q').addEventListener('input', function (e) { query = e.target.value.trim(); renderList(); });
-  $('#share-lib').addEventListener('click', function () { EDU.share(location.href.split('?')[0], t('home_title')); });
+  $('#share-lib').addEventListener('click', function () { EDU.share(EDU.shareUrl(), t('home_title')); });
 
   function renderAll() { renderStatic(); renderCats(); renderList(); }
   EDU.onLang(renderAll);

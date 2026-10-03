@@ -11,6 +11,12 @@ node tools/build_catalog.js --only-passing --zip "$ZIP"
 git add .gitignore .nojekyll README.md LICENSE AGENTS.md APPS.md index.html catalog.js manifest.webmanifest sw.js shared \
         tools/verify.js tools/build_catalog.js tools/publish.sh tools/package.json tools/package-lock.json \
         apps/_template tools/tests/_template.test.js
+# site pages + SEO files + site tools (each only if present, so a missing file never stops a publish)
+for f in schools.html robots.txt sitemap.xml tools/verify_pages.js tools/inject_og.js tools/make_og.js; do
+  if [ -f "$f" ]; then git add "$f"; fi
+done
+# press kit / printable flyer (linked from schools.html via EDU_SITE.press in catalog.js)
+if [ -d press ]; then git add press; fi
 for slug in $(cat tools/.publish_stage); do
   git add "apps/$slug"
   [ -f "tools/tests/$slug.test.js" ] && git add "tools/tests/$slug.test.js"

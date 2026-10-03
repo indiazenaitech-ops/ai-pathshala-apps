@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Talk &amp; Listen (Speech AI) · AI Pathshala</title>
+  <meta name="description" content="Speak and see your words, hear any text read aloud and practise pronunciation in 12 Indian languages with speech AI.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    #app > * + * { margin-top: 16px; }
+    #app > .edu-intro + * { margin-top: 0; }
+    .lbl { font-weight: 600; font-size: .92rem; color: var(--text); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+    /* ---------- speech language bar ---------- */
+    .sl-bar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+    .sl-langf { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; flex: 1 1 320px; min-width: 0; }
+    #sp-lang { font-size: 1.05rem; font-weight: 600; min-width: 0; max-width: 100%; flex: 0 1 auto; }
+    .sl-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+    .sl-badges .badge { font-size: .8rem; padding: 4px 10px; white-space: normal; }
+    .badge.warn { background: var(--warning-soft); color: var(--warning); border-color: transparent; }
+    .sl-bar .hint { flex-basis: 100%; margin: 0; }
+
+    /* ---------- tabs ---------- */
+    .tabs { margin-bottom: 0; }
+    .tabs button { font-size: 1rem; min-height: 44px; }
+    @media (max-width: 560px) {
+      .tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 4px; }
+      .tabs button { white-space: normal; text-align: start; padding: 8px 8px; font-size: .95rem; line-height: 1.3; }
+    }
+    [role="tabpanel"] > * + * { margin-top: 16px; }
+
+    /* ---------- dictation ---------- */
+    .dict-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr) 300px; align-items: start; }
+    @media (max-width: 900px) { .dict-grid { grid-template-columns: minmax(0, 1fr); } }
+    .card-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+    .card-head h2 { margin: 0; font-size: 1.2rem; }
+    .mic-row { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; }
+    .mic-btn { min-height: 56px; padding: 12px 22px; font-size: 1.1rem; border-radius: 999px; }
+    .mic-btn .ic { font-size: 1.4rem; line-height: 1; }
+    .mic-btn.listening { background: var(--danger); border-color: var(--danger); color: var(--bg); animation: sl-pulse 1.4s ease-out infinite; }
+    .mic-btn.listening:hover { background: var(--danger); }
+    @keyframes sl-pulse {
+      0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--danger) 55%, transparent); }
+      70% { box-shadow: 0 0 0 16px transparent; }
+      100% { box-shadow: 0 0 0 0 transparent; }
+    }
+    .sl-status { min-height: 1.6em; font-weight: 600; color: var(--muted); flex: 1 1 220px; min-width: 0; }
+    .sl-status[data-state="listening"] { color: var(--danger); }
+    .sl-status[data-state="error"] { color: var(--danger); font-weight: 600; }
+    .interim { min-height: 1.7em; color: var(--muted); font-style: italic; padding: 4px 10px; border-radius: 8px; background: var(--surface-2); }
+    .interim .tiny { font-style: normal; font-weight: 700; margin-inline-end: 6px; }
+    .interim.idle { opacity: .55; }
+    .sl-status:empty { min-height: 0; }
+    .transcript { min-height: 190px; font-size: 1.2rem; line-height: 1.7; }
+    :root[lang="ur"] .transcript, .transcript[lang="ur"] { line-height: 2.1; }
+    .punct-row .btn { min-width: 44px; font-size: 1.05rem; }
+    .tools-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+    .tools-row .row { gap: 8px; }
+    .guesses { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .guesses li { background: var(--surface-2); border-radius: var(--radius-sm); padding: 8px 10px; border: 2px solid transparent; }
+    .guesses li:first-child { border-color: var(--primary); background: var(--primary-soft); }
+    .g-txt { display: block; font-weight: 600; overflow-wrap: anywhere; }
+    .g-meta { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+    .g-bar { flex: 1; height: 8px; background: var(--surface-3); border-radius: 999px; overflow: hidden; }
+    .g-bar > span { display: block; height: 100%; background: var(--primary); border-radius: inherit; }
+    .g-conf { font-size: .8rem; color: var(--muted); white-space: nowrap; }
+
+    /* ---------- text to speech ---------- */
+    #tts-text { min-height: 140px; font-size: 1.15rem; }
+    .range-row { display: flex; align-items: center; gap: 10px; }
+    .range-row output { min-width: 3.4em; font-variant-numeric: tabular-nums; font-weight: 700; text-align: end; direction: ltr; unicode-bidi: isolate; font-family: "Noto Sans", system-ui, sans-serif; }
+    #tts-voice { width: 100%; }
+    .tts-actions .btn-lg { min-width: 130px; }
+
+    /* ---------- practice ---------- */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chips .chip { min-height: 44px; min-width: 52px; justify-content: center; gap: 6px; }
+    .chip .pc { font-size: .72rem; font-weight: 800; padding: 1px 6px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
+    .chip[aria-pressed="true"] .pc { background: color-mix(in srgb, var(--primary-ink) 25%, transparent); color: var(--primary-ink); }
+    .chip .pc.hi { background: var(--success-soft); color: var(--success); }
+    .chip .pc.mid { background: var(--warning-soft); color: var(--warning); }
+    .chip .pc.lo { background: var(--danger-soft); color: var(--danger); }
+    .chip .own-star { font-size: .8rem; }
+    .prac-target { font-size: clamp(1.35rem, 3.4vw, 2.2rem); font-weight: 700; line-height: 1.55; padding: 18px 16px; margin: 0;
+                   background: var(--surface-2); border-radius: var(--radius-sm); text-align: center; overflow-wrap: anywhere; }
+    .prac-target[lang="ur"] { line-height: 2.1; }
+    .prac-target.is-hidden { color: var(--muted); font-size: 1.15rem; font-weight: 600; border: 2px dashed var(--border); background: transparent; }
+    .prac-ctrls { justify-content: center; }
+    .prac-ctrls .btn-lg { min-width: 120px; }
+    .typebox { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .typebox input { flex: 1 1 240px; font-size: 1.1rem; min-height: 48px; }
+    .prac-result { border-top: 1px solid var(--border); padding-top: 14px; }
+    .prac-result > * + * { margin-top: 12px; }
+    .score-row { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+    .score-row .big-number { min-width: 3.2ch; }
+    .sc-hi { color: var(--success); } .sc-mid { color: var(--warning); } .sc-lo { color: var(--danger); }
+    .pr-fb { font-weight: 700; font-size: 1.05rem; }
+    .heard-line { overflow-wrap: anywhere; }
+    .heard-line b { margin-inline-end: 6px; }
+    .align { display: flex; flex-wrap: wrap; gap: 8px; font-size: 1.3rem; line-height: 1.35; }
+    .w { display: inline-flex; flex-direction: column; align-items: center; padding: 4px 10px; border-radius: 10px; border: 2px solid transparent; }
+    .w-ok { background: var(--success-soft); border-color: color-mix(in srgb, var(--success) 45%, transparent); }
+    .w-close { background: var(--warning-soft); border-color: color-mix(in srgb, var(--warning) 50%, transparent); text-decoration: underline dotted; }
+    .w-miss { background: var(--danger-soft); border-color: color-mix(in srgb, var(--danger) 55%, transparent); text-decoration: underline wavy var(--danger); text-underline-offset: 4px; }
+    .w-extra { background: transparent; border: 2px dashed var(--border); color: var(--muted); font-size: .8em; }
+    .w-h { font-size: .6em; color: var(--muted); text-decoration: none; display: block; }
+    .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend i { width: 16px; height: 16px; border-radius: 5px; display: inline-block; border: 2px solid transparent; }
+    .legend .l-ok { background: var(--success-soft); border-color: var(--success); }
+    .legend .l-close { background: var(--warning-soft); border-color: var(--warning); }
+    .legend .l-miss { background: var(--danger-soft); border-color: var(--danger); }
+    .legend .l-extra { border: 2px dashed var(--muted); }
+    .prac-foot { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+    .prac-foot .row { gap: 8px; }
+    details.panel summary { cursor: pointer; font-weight: 600; }
+    details.panel p { margin: 8px 0 0; }
+    .own-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    .own-list li { display: flex; gap: 10px; align-items: center; background: var(--surface-2); border-radius: var(--radius-sm); padding: 6px 6px 6px 12px; padding-inline: 12px 6px; }
+    .own-list li span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+    .add-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .add-row input { flex: 1 1 240px; }
+
+    /* ---------- how it works ---------- */
+    .pipe { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 900px) { .pipe { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 480px) { .pipe { grid-template-columns: minmax(0, 1fr); } }
+    .pipe li { background: var(--surface-2); border-radius: var(--radius-sm); padding: 12px; border-top: 4px solid var(--c1); }
+    .pipe li:nth-child(2) { border-top-color: var(--c3); }
+    .pipe li:nth-child(3) { border-top-color: var(--c2); }
+    .pipe li:nth-child(4) { border-top-color: var(--c4); }
+    .pipe .pic { font-size: 1.8rem; line-height: 1; display: block; margin-bottom: 6px; }
+    .pipe strong { display: block; margin-bottom: 4px; }
+    .viz-lbl { font-weight: 700; margin: 0 0 4px; }
+    .viz canvas { display: block; width: 100%; border-radius: var(--radius-sm); }
+    #wave { height: 70px; background: var(--surface-2); }
+    .spec-wrap { position: relative; border-radius: var(--radius-sm); overflow: hidden; }
+    .spec-axis { position: absolute; inset: 0; pointer-events: none; }
+    .ax-line { position: absolute; inset-inline: 0; border-top: 1px dashed rgba(255,255,255,.16); }
+    .ax-line b { position: absolute; inset-inline-start: 6px; bottom: 1px; font: 600 11px/1.2 system-ui, sans-serif; color: #dbe4ee;
+                 background: rgba(11,16,32,.7); padding: 1px 5px; border-radius: 4px; }
+    #spec { height: 220px; background: #0b1020; }
+    .viz-empty { position: absolute; inset: 0; display: grid; place-items: center; padding: 16px; text-align: center; color: #c8d3e0; font-weight: 600; pointer-events: none; }
+    .see-status { min-height: 1.5em; font-weight: 600; color: var(--muted); margin: 0; }
+    .see-status[data-state="error"] { color: var(--danger); }
+    .plain-list { margin: 0; padding-inline-start: 1.2em; }
+    .plain-list li + li { margin-top: 6px; }
+    .help ul { margin: 8px 0 0; padding-inline-start: 1.2em; }
+    .help li + li { margin-top: 6px; }
+    .help summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; }
+
+    /* ---------- smartboard / full screen ---------- */
+    .fs-target:fullscreen { overflow: auto; padding: 28px; background: var(--surface); }
+    .fs-target:fullscreen .transcript { font-size: 2.1rem; min-height: 55vh; }
+    .fs-target:fullscreen .prac-target { font-size: 3rem; }
+    .fs-target:fullscreen .align { font-size: 2rem; }
+    .fs-target:fullscreen .interim { font-size: 1.5rem; }
+
+    /* ---------- print ---------- */
+    #print-area h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    #print-area .pa-text { white-space: pre-wrap; font-size: 1.15rem; line-height: 1.8; }
+    #print-area .pa-list { padding-inline-start: 1.4em; font-size: 1.2rem; line-height: 1.7; }
+    #print-area .pa-list li { margin-bottom: 18px; break-inside: avoid; }
+    #print-area .pa-score { display: block; color: #444; font-size: .9rem; }
+    @media print {
+      body.sl-printing #app > :not(#print-area) { display: none !important; }
+      body:not(.sl-printing) #print-area { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+
+    <section class="card sl-bar no-print" aria-labelledby="sp-lang-lbl">
+      <div class="sl-langf">
+        <label id="sp-lang-lbl" for="sp-lang" class="lbl" data-i18n="speech_lang"></label>
+        <select id="sp-lang"></select>
+      </div>
+      <div class="sl-badges">
+        <span class="badge" id="badge-sr"></span>
+        <span class="badge" id="badge-tts"></span>
+      </div>
+      <p class="tiny muted hint" data-i18n="speech_lang_hint"></p>
+    </section>
+
+    <div id="sr-warn" class="callout warning no-print" hidden>
+      <strong data-i18n="unsupported_title"></strong>
+      <p class="small mb0" data-i18n="unsupported_body"></p>
+    </div>
+    <p id="file-note" class="callout small no-print" data-i18n="file_note" hidden></p>
+
+    <div class="tabs no-print" role="tablist" data-i18n-aria-label="tabs_label">
+      <button type="button" role="tab" id="tab-dict" data-tab="dict" aria-controls="panel-dict" data-i18n="tab_dict"></button>
+      <button type="button" role="tab" id="tab-tts" data-tab="tts" aria-controls="panel-tts" data-i18n="tab_tts"></button>
+      <button type="button" role="tab" id="tab-prac" data-tab="prac" aria-controls="panel-prac" data-i18n="tab_prac"></button>
+      <button type="button" role="tab" id="tab-how" data-tab="how" aria-controls="panel-how" data-i18n="tab_how"></button>
+    </div>
+
+    <!-- ============ 1. speak to text ============ -->
+    <section id="panel-dict" role="tabpanel" aria-labelledby="tab-dict">
+      <div class="dict-grid">
+        <section class="card stack fs-target" id="dict-card">
+          <div class="card-head">
+            <h2 data-i18n="dict_title"></h2>
+            <button type="button" class="btn btn-sm btn-ghost" id="dict-fs">⛶ <span data-i18n="fullscreen"></span></button>
+          </div>
+          <div class="mic-row">
+            <button type="button" class="btn btn-primary mic-btn" id="dict-mic" aria-pressed="false"><span class="ic" aria-hidden="true">🎤</span><span id="dict-mic-lbl"></span></button>
+            <div id="dict-status" class="sl-status" role="status" aria-live="polite" data-state="idle"></div>
+          </div>
+          <div class="interim" id="dict-interim-wrap"><span class="tiny" data-i18n="dict_hearing"></span><span id="dict-interim" class="no-i18n"></span></div>
+          <label for="dict-text" class="sr-only" data-i18n="dict_label"></label>
+          <textarea id="dict-text" class="transcript no-i18n" data-i18n-placeholder="dict_placeholder"></textarea>
+          <div class="row punct-row" id="dict-punct">
+            <button type="button" class="btn btn-sm" data-p="stop" data-i18n-title="add_stop" data-i18n-aria-label="add_stop"></button>
+            <button type="button" class="btn btn-sm" data-p="comma" data-i18n-title="add_comma" data-i18n-aria-label="add_comma"></button>
+            <button type="button" class="btn btn-sm" data-p="q" data-i18n-title="add_q" data-i18n-aria-label="add_q"></button>
+            <button type="button" class="btn btn-sm" data-p="nl" data-i18n-title="add_nl" data-i18n-aria-label="add_nl">↵</button>
+          </div>
+          <div class="tools-row">
+            <span id="dict-count" class="muted small" aria-live="polite"></span>
+            <div class="row">
+              <button type="button" class="btn btn-sm" id="dict-say">🔊 <span data-i18n="read_aloud"></span></button>
+              <button type="button" class="btn btn-sm" id="dict-copy">📋 <span data-i18n="copy"></span></button>
+              <button type="button" class="btn btn-sm" id="dict-dl">⬇ <span data-i18n="download"></span></button>
+              <button type="button" class="btn btn-sm" id="dict-print">🖨 <span data-i18n="print"></span></button>
+              <button type="button" class="btn btn-sm btn-danger" id="dict-clear" data-i18n="clear"></button>
+            </div>
+          </div>
+        </section>
+        <aside class="card stack" id="guess-card">
+          <h3 data-i18n="guesses_title"></h3>
+          <ol id="dict-guesses" class="guesses no-i18n" aria-live="polite"></ol>
+          <p class="small muted" id="guesses-empty" data-i18n="guesses_empty"></p>
+          <p class="small callout mb0" data-i18n="guesses_note"></p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ 2. text to speech ============ -->
+    <section id="panel-tts" role="tabpanel" aria-labelledby="tab-tts" hidden>
+      <section class="card stack">
+        <h2 data-i18n="tts_title"></h2>
+        <label for="tts-text" class="lbl" data-i18n="tts_text_label"></label>
+        <textarea id="tts-text" class="no-i18n"></textarea>
+        <div class="row">
+          <button type="button" class="btn btn-sm" id="tts-sample">📄 <span data-i18n="tts_sample_btn"></span></button>
+          <button type="button" class="btn btn-sm" id="tts-from-dict">🎙️ <span data-i18n="tts_use_dict"></span></button>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="tts-voice" class="lbl" data-i18n="voice"></label>
+            <select id="tts-voice" class="no-i18n"></select>
+            <label class="check small"><input type="checkbox" id="tts-all"> <span data-i18n="show_all_voices"></span></label>
+          </div>
+          <div class="stack">
+            <div class="field">
+              <label for="tts-rate" class="lbl" data-i18n="rate"></label>
+              <div class="range-row"><input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1"><output id="tts-rate-out" for="tts-rate"></output></div>
+            </div>
+            <div class="field">
+              <label for="tts-pitch" class="lbl" data-i18n="pitch"></label>
+              <div class="range-row"><input type="range" id="tts-pitch" min="0" max="2" step="0.1" value="1"><output id="tts-pitch-out" for="tts-pitch"></output></div>
+            </div>
+          </div>
+        </div>
+        <div id="tts-novoice" class="callout warning" hidden>
+          <strong id="tts-nv-title"></strong>
+          <p class="small" data-i18n="tts_none_body"></p>
+          <button type="button" class="btn btn-sm" id="tts-try" data-i18n="try_anyway"></button>
+        </div>
+        <div class="row tts-actions">
+          <button type="button" class="btn btn-primary btn-lg" id="tts-play">🔊 <span data-i18n="tts_play"></span></button>
+          <button type="button" class="btn btn-lg" id="tts-stop">⏹ <span data-i18n="stop"></span></button>
+          <span id="tts-status" class="muted" role="status" aria-live="polite"></span>
+        </div>
+        <p class="small muted mb0" data-i18n="tts_tip"></p>
+      </section>
+    </section>
+
+    <!-- ============ 3. pronunciation practice ============ -->
+    <section id="panel-prac" role="tabpanel" aria-labelledby="tab-prac" hidden>
+      <section class="card stack fs-target" id="prac-card">
+        <div class="card-head">
+          <h2 data-i18n="prac_title"></h2>
+          <div class="seg" id="pr-mode" role="group" data-i18n-aria-label="mode_label">
+            <button type="button" data-mode="speak" data-i18n="mode_speak"></button>
+            <button type="button" data-mode="type" data-i18n="mode_type"></button>
+          </div>
+        </div>
+        <p class="small muted mb0" id="pr-mode-hint"></p>
+        <div class="chips" id="pr-chips" role="group" data-i18n-aria-label="sentences_label"></div>
+        <div class="card-head">
+          <span class="badge primary" id="pr-pos"></span>
+          <button type="button" class="btn btn-sm btn-ghost" id="pr-fs">⛶ <span data-i18n="fullscreen"></span></button>
+        </div>
+        <p id="pr-target" class="prac-target" aria-live="polite"></p>
+        <div class="row prac-ctrls">
+          <button type="button" class="btn" id="pr-prev" data-i18n="previous"></button>
+          <button type="button" class="btn btn-lg" id="pr-listen">🔊 <span data-i18n="listen"></span></button>
+          <button type="button" class="btn btn-primary btn-lg mic-btn" id="pr-mic" aria-pressed="false"><span class="ic" aria-hidden="true">🎤</span><span id="pr-mic-lbl"></span></button>
+          <button type="button" class="btn" id="pr-next" data-i18n="next"></button>
+        </div>
+        <div class="typebox" id="pr-typebox" hidden>
+          <label for="pr-typed" class="sr-only" data-i18n="typed_label"></label>
+          <input type="text" id="pr-typed" class="no-i18n" data-i18n-placeholder="typed_label" autocomplete="off" spellcheck="false">
+          <button type="button" class="btn btn-primary" id="pr-check" data-i18n="check"></button>
+        </div>
+        <div id="pr-status" class="sl-status center" role="status" aria-live="polite" data-state="idle"></div>
+        <div id="pr-result" class="prac-result" hidden>
+          <div class="score-row">
+            <div class="big-number" id="pr-score" data-score=""></div>
+            <div class="grow">
+              <div id="pr-line" class="muted"></div>
+              <div id="pr-fb" class="pr-fb"></div>
+            </div>
+          </div>
+          <div class="heard-line"><b id="pr-heard-lbl"></b><span id="pr-heard" class="no-i18n"></span></div>
+          <div id="pr-align" class="align no-i18n"></div>
+          <div class="legend tiny muted">
+            <span><i class="l-ok"></i><span data-i18n="legend_ok"></span></span>
+            <span><i class="l-close"></i><span data-i18n="legend_close"></span></span>
+            <span><i class="l-miss"></i><span data-i18n="legend_miss"></span></span>
+            <span><i class="l-extra"></i><span data-i18n="legend_extra"></span></span>
+          </div>
+          <div class="row">
+            <button type="button" class="btn" id="pr-again">↻ <span data-i18n="try_again"></span></button>
+            <button type="button" class="btn btn-accent" id="pr-next2" data-i18n="next"></button>
+          </div>
+        </div>
+        <div class="prac-foot">
+          <span id="pr-progress" class="small muted"></span>
+          <div class="row">
+            <button type="button" class="btn btn-sm" id="pr-print">🖨 <span data-i18n="print"></span></button>
+            <button type="button" class="btn btn-sm btn-danger" id="pr-reset" data-i18n="reset"></button>
+          </div>
+        </div>
+        <details class="panel">
+          <summary data-i18n="how_scored_t"></summary>
+          <p class="small" data-i18n="how_scored"></p>
+        </details>
+      </section>
+      <section class="card stack" id="own-card">
+        <h3 data-i18n="my_sentences"></h3>
+        <p class="small muted" data-i18n="my_sentences_hint"></p>
+        <div class="add-row">
+          <label for="pr-new" class="sr-only" data-i18n="add_sentence"></label>
+          <input type="text" id="pr-new" class="no-i18n" data-i18n-placeholder="add_sentence_ph" maxlength="200" autocomplete="off">
+          <button type="button" class="btn" id="pr-add">＋ <span data-i18n="add_sentence"></span></button>
+        </div>
+        <ul id="pr-own" class="own-list"></ul>
+        <p class="small muted mb0" id="pr-own-empty" data-i18n="own_empty"></p>
+      </section>
+    </section>
+
+    <!-- ============ 4. how it works ============ -->
+    <section id="panel-how" role="tabpanel" aria-labelledby="tab-how" hidden>
+      <section class="card stack">
+        <h2 data-i18n="how_title"></h2>
+        <ol class="pipe">
+          <li><span class="pic" aria-hidden="true">🎤〰️</span><strong data-i18n="step1_t"></strong><span class="small muted" data-i18n="step1_d"></span></li>
+          <li><span class="pic" aria-hidden="true">🌈</span><strong data-i18n="step2_t"></strong><span class="small muted" data-i18n="step2_d"></span></li>
+          <li><span class="pic" aria-hidden="true">🧠</span><strong data-i18n="step3_t"></strong><span class="small muted" data-i18n="step3_d"></span></li>
+          <li><span class="pic" aria-hidden="true">📝</span><strong data-i18n="step4_t"></strong><span class="small muted" data-i18n="step4_d"></span></li>
+        </ol>
+      </section>
+      <section class="card stack" id="see-card">
+        <div class="card-head">
+          <h2 data-i18n="see_title"></h2>
+          <div class="row">
+            <button type="button" class="btn btn-primary" id="see-mic" aria-pressed="false">🎤 <span id="see-mic-lbl"></span></button>
+            <button type="button" class="btn" id="see-demo">🎵 <span data-i18n="see_demo"></span></button>
+          </div>
+        </div>
+        <p class="small muted mb0" data-i18n="see_hint"></p>
+        <div class="viz">
+          <p class="viz-lbl small" data-i18n="wave_label"></p>
+          <canvas id="wave" aria-hidden="true"></canvas>
+          <p class="viz-lbl small" style="margin-top:10px" data-i18n="spec_label"></p>
+          <div class="spec-wrap">
+            <canvas id="spec" data-frames="0" aria-hidden="true"></canvas>
+            <div class="spec-axis" id="spec-axis" dir="ltr" aria-hidden="true"></div>
+            <div class="viz-empty" id="see-empty" data-i18n="see_empty"></div>
+          </div>
+        </div>
+        <p id="see-status" class="see-status" role="status" aria-live="polite" data-state="idle"></p>
+        <p class="callout small mb0" data-i18n="see_try"></p>
+      </section>
+      <div class="grid-2">
+        <section class="card stack">
+          <h3 data-i18n="why_title"></h3>
+          <ul class="plain-list small">
+            <li data-i18n="why_1"></li><li data-i18n="why_2"></li><li data-i18n="why_3"></li><li data-i18n="why_4"></li>
+          </ul>
+        </section>
+        <section class="card stack">
+          <h3 data-i18n="privacy_title"></h3>
+          <ul class="plain-list small">
+            <li data-i18n="privacy_1"></li>
+            <li><strong data-i18n="privacy_2"></strong></li>
+            <li data-i18n="privacy_3"></li>
+          </ul>
+          <p class="callout danger small mb0" data-i18n="privacy_4"></p>
+        </section>
+      </div>
+      <section class="card">
+        <h3 data-i18n="uses_title"></h3>
+        <p class="small mb0" data-i18n="uses_body"></p>
+      </section>
+    </section>
+
+    <details class="card help no-print" id="help">
+      <summary data-i18n="help_title"></summary>
+      <ul class="small">
+        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li><li data-i18n="tip5"></li><li data-i18n="tip6"></li>
+      </ul>
+    </details>
+
+    <div id="print-area" class="print-only"></div>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

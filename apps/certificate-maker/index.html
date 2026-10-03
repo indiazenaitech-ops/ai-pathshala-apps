@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Certificate Maker · AI Pathshala</title>
+  <meta name="description" content="Free certificate maker for schools: merit, participation, appreciation, excellence and completion certificates in bulk, in 12 Indian languages. Print or save as PNG.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .help summary { cursor: pointer; font-weight: 700; font-size: 1.02rem; }
+    .help ul { margin: 12px 0 4px; padding-inline-start: 1.3em; }
+    .help li + li { margin-top: 6px; }
+
+    .cm-layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+    @media (min-width: 980px) {
+      .cm-layout { grid-template-columns: minmax(0, 430px) minmax(0, 1fr); }
+      .cm-preview { position: sticky; top: 64px; }
+    }
+    @media (max-width: 979px) { .cm-preview { order: -1; } }
+    .cm-form > .card + .card { margin-top: 14px; }
+    .card h2 { font-size: 1.12rem; margin-bottom: 10px; }
+    .head-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .head-row h2 { margin: 0; }
+    .field input, .field select, .field textarea { width: 100%; }
+    .field + .field, .field + fieldset, fieldset + fieldset, fieldset + .field, .field + .check, .row + .field { margin-top: 12px; }
+    .hint { color: var(--muted); font-size: .84rem; font-weight: 400; margin: 0; }
+
+    /* design picker */
+    .designs { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 10px; }
+    @media (max-width: 480px) { .designs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; } }
+    .dbtn { display: flex; flex-direction: column; gap: 6px; padding: 6px; border: 2px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); cursor: pointer; font: inherit; font-weight: 600; font-size: .84rem; line-height: 1.25; text-align: center; min-height: 44px; }
+    .dbtn:hover { border-color: color-mix(in srgb, var(--primary) 50%, var(--border)); }
+    .dbtn[aria-pressed="true"] { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+    .dbtn svg { display: block; width: 100%; height: auto; aspect-ratio: 1122 / 793; border-radius: 4px; box-shadow: 0 1px 3px rgba(0, 0, 0, .18); }
+
+    #names { min-height: 180px; font-size: 1rem; line-height: 1.6; }
+    #message { min-height: 96px; }
+    .two { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .two > .field { margin-top: 0; justify-content: end; }
+    .two + .field { margin-top: 12px; }
+    @media (max-width: 400px) { .two { grid-template-columns: minmax(0, 1fr); } }
+    fieldset { border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px 12px; margin: 0; min-width: 0; }
+    legend { font-weight: 700; padding-inline: 4px; font-size: .92rem; }
+    .logo-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .logo-thumb { width: 56px; height: 56px; object-fit: contain; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+    .msg-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+
+    /* preview */
+    .cert-stage { background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px; }
+    .cert-view { display: flex; justify-content: center; min-height: 120px; }
+    .cert-scale { position: relative; overflow: hidden; direction: ltr; flex: none; box-shadow: 0 3px 16px rgba(0, 0, 0, .22); background: #fff; }
+    /* the wrapper is forced LTR and only anchors the scale transform, so a physical left is intended here
+       (the certificate inside keeps its own dir, e.g. rtl for Urdu) */
+    .cert-scale > .cert { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+    .stage-nav { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+    .stage-nav .btn { min-width: 46px; font-size: 1.15rem; }
+    [dir="rtl"] .flip { display: inline-block; transform: scaleX(-1); }
+    #pos-label { min-width: 6.5em; text-align: center; font-weight: 700; }
+    .cert-stage:fullscreen { background: #1d2126; display: flex; flex-direction: column; justify-content: center; padding: 14px; border-radius: 0; }
+    .cert-stage:fullscreen #pos-label { color: #fff; }
+    .cert-stage:-webkit-full-screen { background: #1d2126; display: flex; flex-direction: column; justify-content: center; padding: 14px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .actions .btn { flex: 1 1 auto; }
+    .count-badge { font-size: .85rem; }
+    .warn-line { margin-top: 8px; }
+
+    /* off-screen areas used for printing and for making the PNG (no layout effect on the page) */
+    #print-root, #measure { position: fixed; top: 0; inset-inline-start: 0; width: 0; height: 0; overflow: hidden; pointer-events: none; }
+
+    @page { size: A4 landscape; margin: 0; }
+    @media print {
+      #app, #measure { display: none !important; }
+      html, body { background: #fff !important; margin: 0; padding: 0; }
+      body { display: block; min-height: 0; }
+      #print-root { position: static; width: auto; height: auto; overflow: visible; }
+      #print-root .cert { margin: 0; break-after: page; page-break-after: always; break-inside: avoid; }
+      #print-root .cert:last-child { break-after: auto; page-break-after: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+
+    <details class="card help no-print" id="help">
+      <summary data-i18n="help_title"></summary>
+      <ul>
+        <li data-i18n="help_1"></li>
+        <li data-i18n="help_2"></li>
+        <li data-i18n="help_3"></li>
+        <li data-i18n="help_4"></li>
+        <li data-i18n="help_5"></li>
+        <li data-i18n="help_6"></li>
+      </ul>
+    </details>
+
+    <div class="cm-layout" style="margin-top:16px">
+      <section class="cm-form">
+        <div class="card">
+          <h2 id="design-h" data-i18n="sec_design"></h2>
+          <div class="designs" id="designs" role="group" data-i18n-aria-label="designs_aria"></div>
+        </div>
+
+        <div class="card">
+          <div class="head-row">
+            <h2><label for="names" data-i18n="sec_names"></label></h2>
+            <span class="badge primary count-badge" id="count" aria-live="polite"></span>
+          </div>
+          <textarea id="names" class="no-i18n" rows="7" spellcheck="false" data-i18n-aria-label="f_names"></textarea>
+          <p class="hint" data-i18n="f_names_hint"></p>
+          <p class="callout warning small warn-line" id="names-warn" hidden></p>
+        </div>
+
+        <div class="card">
+          <h2 data-i18n="sec_text"></h2>
+          <div class="two">
+            <div class="field">
+              <label for="type" data-i18n="f_type"></label>
+              <select id="type">
+                <option value="merit" data-i18n="type_merit"></option>
+                <option value="participation" data-i18n="type_participation"></option>
+                <option value="appreciation" data-i18n="type_appreciation"></option>
+                <option value="excellence" data-i18n="type_excellence"></option>
+                <option value="completion" data-i18n="type_completion"></option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="certlang" data-i18n="f_certlang"></label>
+              <select id="certlang">
+                <option value="ui" data-i18n="certlang_ui"></option>
+                <option value="en" data-i18n="certlang_en"></option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="title" data-i18n="f_title"></label>
+            <input type="text" id="title" class="no-i18n" maxlength="90" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="event" data-i18n="f_event"></label>
+            <input type="text" id="event" class="no-i18n" maxlength="120" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="message" data-i18n="f_message"></label>
+            <textarea id="message" class="no-i18n" rows="3" maxlength="400"></textarea>
+            <div class="msg-tools">
+              <p class="hint" data-i18n="f_message_hint"></p>
+              <button type="button" class="btn btn-sm" id="msg-default" data-i18n="msg_default"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 data-i18n="sec_school"></h2>
+          <div class="field">
+            <label for="school" data-i18n="f_school"></label>
+            <input type="text" id="school" class="no-i18n" maxlength="120" autocomplete="organization">
+          </div>
+          <div class="field">
+            <span class="hint" id="logo-label" data-i18n="f_logo"></span>
+            <div class="logo-row">
+              <img id="logo-thumb" class="logo-thumb" alt="" hidden>
+              <button type="button" class="btn" id="logo-add"><span aria-hidden="true">🖼</span> <span data-i18n="logo_add"></span></button>
+              <button type="button" class="btn btn-danger" id="logo-remove" data-i18n="logo_remove" hidden></button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="date" data-i18n="f_date"></label>
+            <input type="date" id="date">
+            <span class="hint" data-i18n="f_date_hint"></span>
+          </div>
+          <fieldset>
+            <legend data-i18n="f_sig1"></legend>
+            <div class="two">
+              <div class="field"><label for="sig1n" data-i18n="f_sig_name"></label><input type="text" id="sig1n" class="no-i18n" maxlength="60"></div>
+              <div class="field"><label for="sig1r" data-i18n="f_sig_role"></label><input type="text" id="sig1r" class="no-i18n" maxlength="60"></div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend data-i18n="f_sig2"></legend>
+            <div class="two">
+              <div class="field"><label for="sig2n" data-i18n="f_sig_name"></label><input type="text" id="sig2n" class="no-i18n" maxlength="60"></div>
+              <div class="field"><label for="sig2r" data-i18n="f_sig_role"></label><input type="text" id="sig2r" class="no-i18n" maxlength="60"></div>
+            </div>
+          </fieldset>
+          <label class="check" style="margin-top:12px"><input type="checkbox" id="seal"> <span data-i18n="f_seal"></span></label>
+        </div>
+
+        <div class="card row spread">
+          <span class="small muted" data-i18n="saved_local"></span>
+          <button type="button" class="btn btn-danger" id="reset" data-i18n="reset"></button>
+        </div>
+      </section>
+
+      <section class="card cm-preview" aria-labelledby="prev-h">
+        <h2 id="prev-h" data-i18n="sec_preview"></h2>
+        <div class="cert-stage" id="stage">
+          <div class="cert-view" id="view"><div class="cert-scale" id="scale"></div></div>
+          <div class="stage-nav">
+            <button type="button" class="btn" id="prev" data-i18n-aria-label="previous" data-i18n-title="previous"><span class="flip" aria-hidden="true">◀</span></button>
+            <span id="pos-label" aria-live="polite"></span>
+            <button type="button" class="btn" id="next" data-i18n-aria-label="next" data-i18n-title="next"><span class="flip" aria-hidden="true">▶</span></button>
+            <button type="button" class="btn" id="fs" data-i18n-aria-label="fullscreen" data-i18n-title="fullscreen"><span aria-hidden="true">⛶</span></button>
+          </div>
+        </div>
+        <p class="callout accent small" id="empty-note" hidden data-i18n="no_names" style="margin-top:10px"></p>
+        <div class="actions">
+          <button type="button" class="btn btn-primary btn-lg" id="print-all"><span aria-hidden="true">🖨</span> <span data-i18n="btn_print_all"></span> <span id="print-n"></span></button>
+          <button type="button" class="btn" id="print-one"><span aria-hidden="true">🖨</span> <span data-i18n="btn_print_one"></span></button>
+          <button type="button" class="btn btn-accent" id="png"><span aria-hidden="true">⬇</span> <span data-i18n="btn_png"></span></button>
+        </div>
+        <p class="tiny muted" style="margin:10px 0 0" data-i18n="print_tip"></p>
+        <p class="tiny muted" style="margin:4px 0 0" data-i18n="keys_tip"></p>
+      </section>
+    </div>
+  </main>
+  <div id="print-root" aria-hidden="true"></div>
+  <div id="measure" aria-hidden="true"></div>
+
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="designs.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

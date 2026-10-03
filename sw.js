@@ -2,18 +2,36 @@
    Same-origin files: network first (so updates arrive), cache as fallback.
    Libraries/fonts from CDNs: cache first. */
 var CACHE = 'edu-apps-v1';
-var CORE = ['./', './index.html', './catalog.js', './shared/edu.css', './shared/edu.js', './shared/home.js', './shared/img/icon-96.png', './shared/img/icon-192.png'];
+/* Cache name stays the same on purpose: bumping it would wipe every app a school already opened offline.
+   Network-first means updates arrive anyway; sw.js changing is enough to re-run install for new CORE files. */
+var CORE = ['./', './index.html', './catalog.js', './shared/edu.css', './shared/edu.js', './shared/home.js', './shared/home-strings.js',
+  './schools.html', './shared/schools.js', './shared/schools-strings.js', './shared/img/icon-96.png', './shared/img/icon-192.png'];
 var CDN = /(^|\.)(cdn\.jsdelivr\.net|unpkg\.com|cdnjs\.cloudflare\.com|fonts\.googleapis\.com|fonts\.gstatic\.com)$/;
 
 self.addEventListener('install', function (e) {
   self.skipWaiting();
-  e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(CORE).catch(function () { }); }));
+  e.waitUntil(caches.open(CACHE).then(function (c) { return Promise.all(CORE.map(function (u) { return c.add(u).catch(function () { }); })); }));
 });
 
 self.addEventListener('activate', function (e) {
   e.waitUntil(caches.keys().then(function (keys) {
     return Promise.all(keys.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); }));
   }).then(function () { return self.clients.claim(); }));
+});
+
+/* A page opened before this worker existed (first visit) sends the list of its own same-origin files
+   (see registerSW in shared/edu.js); cache the ones not cached yet so the page also works offline. */
+self.addEventListener('message', function (e) {
+  var d = e.data || {};
+  if (d.type !== 'edu-cache' || !Array.isArray(d.urls)) return;
+  var urls = d.urls.filter(function (u) {
+    try { return new URL(u).origin === location.origin; } catch (x) { return false; }
+  }).slice(0, 150);
+  e.waitUntil(caches.open(CACHE).then(function (c) {
+    return Promise.all(urls.map(function (u) {
+      return c.match(u).then(function (hit) { return hit || c.add(u).catch(function () { }); });
+    }));
+  }));
 });
 
 self.addEventListener('fetch', function (e) {

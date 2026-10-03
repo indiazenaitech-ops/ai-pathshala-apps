@@ -425,7 +425,7 @@ async function run() {
 }
 
 function finish() {
-  const report = { slug, ok: errors.length === 0, errors, warnings, info, at: new Date().toISOString() };
+  const report = { slug, ok: errors.length === 0, quick: QUICK, errors, warnings, info, at: new Date().toISOString() };
   fs.mkdirSync(path.join(__dirname, 'reports'), { recursive: true });
   fs.writeFileSync(path.join(__dirname, 'reports', `${slug}.json`), JSON.stringify(report, null, 2));
   const uniq = a => [...new Set(a)];
