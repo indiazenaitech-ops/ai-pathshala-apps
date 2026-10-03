@@ -11,7 +11,6 @@
     /* ---------- layout ---------- */
     .ws-layout { grid-template-columns: minmax(0, 330px) minmax(0, 1fr); }
     @media (max-width: 860px) { .ws-layout { grid-template-columns: minmax(0, 1fr); } .from-link .ws-controls { order: 2; } }
-    @media (min-width: 861px) { .ws-controls { position: sticky; top: 64px; max-height: calc(100vh - 78px); overflow: auto; } }
     .help summary { cursor: pointer; padding: 4px 0; min-height: 32px; }
     .tips { margin: 10px 0 0; padding-inline-start: 1.2em; }
     .tips li + li { margin-top: 6px; }
@@ -24,11 +23,13 @@
     .tchips { display: flex; flex-wrap: wrap; gap: 6px; }
     .tchips .chip { min-height: 40px; padding: 6px 11px; font-size: .86rem; text-align: start; }
     .chip .cls { font-size: .7rem; opacity: .75; font-weight: 600; white-space: nowrap; }
-    .opts { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .opts { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; }
+    .jump { display: none; }
+    @media (max-width: 860px) { .jump { display: inline-flex; } }
     .opts > .full { grid-column: 1 / -1; }
     .tables-row { display: flex; align-items: center; gap: 8px; }
     .tables-row select { flex: 1 1 0; min-width: 0; }
-    .actions .btn { flex: 0 0 auto; }
+    .actions .btn { flex: 0 1 auto; max-width: 100%; white-space: normal; text-align: center; }
     #score { display: block; }
     #score[hidden] { display: none; }
     #score-num { font-size: 1.9rem; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
@@ -159,7 +160,7 @@
 
     <div class="split ws-layout" style="margin-top:16px">
       <aside class="card stack no-print ws-controls" aria-labelledby="set-h">
-        <h2 id="set-h" data-i18n="settings_h"></h2>
+        <div class="row spread"><h2 id="set-h" data-i18n="settings_h"></h2><button type="button" class="btn btn-sm jump" id="btn-jump"><span aria-hidden="true">↓</span> <span data-i18n="jump_sheet"></span></button></div>
         <div>
           <div class="flabel" data-i18n="topics_h"></div>
           <p class="hint" data-i18n="topics_hint"></p>

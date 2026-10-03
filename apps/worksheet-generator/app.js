@@ -425,6 +425,7 @@
     var url = location.href.split('#')[0] + '#w=' + EDU.pack(data);
     EDU.share(url, t('app_title'));
   });
+  $('#btn-jump').addEventListener('click', function () { $('#sheet-area').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
   $('#btn-full').addEventListener('click', function () { EDU.fullscreen($('#sheet-area')); });
 
   function onAnswer(e) {
@@ -451,6 +452,8 @@
   EDU.onLang(render);
   render();
   if (fromLink) {
+    saveCfg();                                              /* keep the shared sheet, then drop the #w=… so a reload keeps later changes */
+    try { history.replaceState(history.state, '', location.href.split('#')[0]); } catch (e) { }
     EDU.toast(t('shared_loaded'));
     setTimeout(function () { $('#sheet-area').scrollIntoView({ block: 'start' }); }, 50);
   }

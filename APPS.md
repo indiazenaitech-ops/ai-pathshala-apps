@@ -1,4 +1,4 @@
-# App list (15)
+# App list (16)
 
 Live: https://indiazenaitech-ops.github.io/ai-pathshala-apps/
 
@@ -18,4 +18,5 @@ Live: https://indiazenaitech-ops.github.io/ai-pathshala-apps/
 | 📝 | [Maths Worksheet Generator](apps/worksheet-generator/index.html) | math | 1-8 | Printable maths worksheets with answer keys for Classes 1–8: 19 topics, Indian word problems, and on-screen practice with instant marks. |
 | 🐍 | [Python Playground](apps/python-playground/index.html) | coding | 8-12 | Write and run real Python in the browser: CBSE Class 11–12 examples, input(), pandas and charts. No install. |
 | 🗃️ | [SQL Playground](apps/sql-playground/index.html) | coding | 11-12 | Run real SQL on a ready school database: examples, friendly error hints and practice questions for CBSE Classes 11–12. |
+| 🔊 | [Read Aloud](apps/read-aloud/index.html) | languages | 1-12 | Hear any text read aloud in 12 Indian languages with word highlighting, echo reading and adjustable speed. |
 | 🚩 | [Spot the Scam](apps/phishing-spotter/index.html) | digital-safety | 6-12 | A cyber-safety game: decide if Indian SMS, WhatsApp and call messages are safe or scams, and learn the red flags. |
