@@ -242,8 +242,9 @@
   }
   function renderEthScore() {
     var n = cur.checks.length, all = n === CHECKS.length;
-    $('#eth-score').textContent = t('eth_score', { n: EDU.fmt(n), total: EDU.fmt(CHECKS.length) });
-    $('#eth-msg').textContent = t(all ? 'eth_ok' : 'eth_todo');
+    var sc = t('eth_score', { n: EDU.fmt(n), total: EDU.fmt(CHECKS.length) }), msg = t(all ? 'eth_ok' : 'eth_todo');
+    if ($('#eth-score').textContent !== sc) $('#eth-score').textContent = sc;
+    if ($('#eth-msg').textContent !== msg) $('#eth-msg').textContent = msg;
     $('#eth-status').className = 'callout eth-status ' + (all ? 'success' : 'warning');
   }
   function renderModel() {
@@ -271,8 +272,8 @@
     }
   }
   function renderProgress() {
-    var pc = percent(cur);
-    $('#overall').textContent = t('overall', { p: EDU.fmt(pc) });
+    var pc = percent(cur), txt = t('overall', { p: EDU.fmt(pc) });
+    if ($('#overall').textContent !== txt) $('#overall').textContent = txt;
     $('#overall-bar').style.width = pc + '%';
     renderStepper();
     renderEthScore();
@@ -454,9 +455,11 @@
   function goStep(n) {
     n = EDU.clamp(n, 1, STEPS);
     if (n === cur.step) return;
+    var fromStepper = !!(document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('step-btn'));
     cur.step = n;
     scheduleSave();
     renderStep();
+    if (fromStepper) { try { $('#step-' + n).focus({ preventScroll: true }); } catch (e) { } }
     var card = $('#stepper-card'), r = card.getBoundingClientRect();
     if (r.top < 0) window.scrollTo({ top: Math.max(0, window.pageYOffset + r.top - 70), behavior: 'auto' });
   }
