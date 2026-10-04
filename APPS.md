@@ -1,4 +1,4 @@
-# App list (80)
+# App list (81)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -73,6 +73,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 💰 | [Salary & Income Tax Calculator](https://apnipathshala.ai/apps/salary-tax-calculator/) | business | all | CTC to monthly in-hand pay, old vs new regime, salary hike and in-hand to CTC for Tax Year 2026-27. Private: nothing leaves your device. |
 | 🎬 | [Screen Recorder](https://apnipathshala.ai/apps/screen-recorder/) | business | all | Record your screen, a window or a tab with voice and a camera bubble. No upload, no time limit, no watermark. Videos stay on your device. |
 | 💳 | [UPI QR & Payment Standee](https://apnipathshala.ai/apps/upi-qr-standee/) | business | all | Make a printable Scan & Pay UPI QR standee, table tent or stickers for your shop, plus a counter mode with the bill amount. |
+| 📇 | [Visiting Card Maker](https://apnipathshala.ai/apps/visiting-card-maker/) | business | all | Design a visiting card with QR, logo and 10 designs, print 10 per A4 sheet with crop marks, or share a PNG on WhatsApp. |
 | 🪔 | [Festival Greeting & Offer Poster](https://apnipathshala.ai/apps/festival-poster-maker/) | marketing | all | Festival wishes and shop offer posters with your logo, photo and UPI QR, for WhatsApp, Instagram and print. Photos stay on your device. |
 | 🖼️ | [Image Compressor & Resizer](https://apnipathshala.ai/apps/image-compressor/) | marketing | all | Resize, compress and watermark 100 photos at once for Instagram, WhatsApp, YouTube, Amazon and websites. Photos never leave your device. |
 | 📐 | [Social Post Resizer](https://apnipathshala.ai/apps/social-post-resizer/) | marketing | all | One photo or poster into every size: Instagram post, story, YouTube thumbnail, WhatsApp DP, Facebook cover and more. Drag, zoom, download. |
