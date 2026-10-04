@@ -1,4 +1,4 @@
-# App list (84)
+# App list (85)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -88,3 +88,4 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 💍 | [Marriage Biodata Maker](https://apnipathshala.ai/apps/biodata-maker/) | everyday | all | Make a neat marriage biodata in any of 12 Indian languages: 8 designs, photo, horoscope. Print, PDF or WhatsApp image. Stays private. |
 | 🗜️ | [PDF Compress & JPG to PDF](https://apnipathshala.ai/apps/pdf-compress-convert/) | everyday | all | Compress a PDF under 100 KB or 200 KB, turn photos into a PDF, save pages as JPG, unlock your own PDF. Files stay on your device. |
 | 📄 | [Resume & CV Builder](https://apnipathshala.ai/apps/resume-builder/) | everyday | all | Make a job-ready resume with a live A4 preview, ATS-safe and Govt/PSU templates, and a free PDF. Your details stay on your device. |
+| 🧾 | [Split Bill & Trip Expenses](https://apnipathshala.ai/apps/split-bill/) | everyday | all | Split trip, dinner and room expenses between friends: who paid, who owes, the fewest UPI payments to settle up, and a WhatsApp summary. |
