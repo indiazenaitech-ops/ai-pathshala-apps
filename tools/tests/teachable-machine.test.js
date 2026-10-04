@@ -109,6 +109,62 @@ module.exports = async function ({ page, lang, expect, t, log }) {
     await page.click(cls(1, '.clr-btn'));
     expect(await examples(1) === 0, 'Clear should empty class 1');
     expect(await page.$$eval(cls(1, '.thumbs img'), els => els.length) === 0, 'Clear removes thumbnails');
+
+    // smartboard (1280 x 800): camera + result columns stay in view while scrolling down to class 5
+    await page.evaluate(() => document.querySelector('#classes .cls:nth-child(5)').scrollIntoView({ block: 'end' }));
+    await page.waitForTimeout(300);
+    const pin = await page.evaluate(() => ({ y: window.scrollY, cam: document.getElementById('camCard').getBoundingClientRect().top, test: document.getElementById('testCard').getBoundingClientRect().top, hdr: document.querySelector('.edu-top').offsetHeight }));
+    expect(pin.y > 100 && pin.cam >= 0 && pin.cam <= pin.hdr + 20 && pin.test <= pin.hdr + 20, 'camera and result cards should stay pinned below the header when scrolling to class 5: ' + JSON.stringify(pin));
+
+    // phone: the pinned camera card is compact (header + camera leave at least half the screen)
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(400);
+    await page.evaluate(() => window.scrollTo(0, 1000));
+    await page.waitForTimeout(300);
+    const ph = await page.evaluate(() => { const c = document.getElementById('camCard'), r = c.getBoundingClientRect(); return { pos: getComputedStyle(c).position, top: Math.round(r.top), h: Math.round(r.height), hdr: document.querySelector('.edu-top').offsetHeight, over: document.documentElement.scrollWidth - window.innerWidth }; });
+    expect(ph.pos === 'sticky' && Math.abs(ph.top - ph.hdr) <= 3, 'phone: camera card should be pinned under the header: ' + JSON.stringify(ph));
+    expect(ph.h + ph.hdr <= 844 * 0.5, 'phone: header + pinned camera should use at most half the screen: ' + JSON.stringify(ph));
+    expect(ph.over <= 2, 'phone: page must not scroll sideways with the camera on');
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.waitForTimeout(300);
+
+    // photo-only flow (no camera needed): a few photos per class must give a clear answer, not a K-vote tie
+    await page.click('#resetAll');
+    await page.click('#camStop');
+    expect(await page.isVisible('#camStart'), 'Stop camera shows the Start button again');
+    const pic = (bg, shape) => page.evaluate(([bg, shape]) => {
+      const c = document.createElement('canvas'); c.width = 160; c.height = 120; const x = c.getContext('2d');
+      x.fillStyle = bg; x.fillRect(0, 0, 160, 120); x.fillStyle = '#fff';
+      if (shape === 'circle') { x.beginPath(); x.arc(80, 60, 34, 0, 7); x.fill(); } else x.fillRect(44, 24, 72, 72);
+      return c.toDataURL('image/png').split(',')[1];
+    }, [bg, shape]).then(b => Buffer.from(b, 'base64'));
+    const red = await pic('#d22', 'circle'), blue = await pic('#22d', 'square'), green = await pic('#2a2', 'circle');
+    const up = async (sel, files) => { const [ch] = await Promise.all([page.waitForEvent('filechooser', { timeout: 10000 }), page.click(sel)]); await ch.setFiles(files); };
+    const three = (buf, n) => [1, 2, 3].map(i => ({ name: `${n}${i}.png`, mimeType: 'image/png', buffer: buf }));
+    await up(cls(1, '.upl-btn'), [{ name: 'one.png', mimeType: 'image/png', buffer: red }]);
+    await page.waitForFunction(() => document.querySelector('#classes .cls:nth-child(1) .cls-count').getAttribute('data-n') === '1', null, { timeout: 10000 });
+    const oneLabel = (await page.textContent(cls(1, '.cls-count'))).trim();
+    expect(oneLabel === t('n_example_one', { n: 1 }), `1 example should use the singular label "${t('n_example_one', { n: 1 })}", got "${oneLabel}"`);
+    const wantToast = t('added_one', { name: t('n_thumbs_up') });
+    await page.waitForFunction(w => [...document.querySelectorAll('.edu-toast')].some(e => e.textContent === w), wantToast, { timeout: 5000 });
+    await up(cls(1, '.upl-btn'), three(red, 'r').slice(0, 2));
+    await up(cls(2, '.upl-btn'), three(blue, 'b'));
+    await page.waitForFunction(() => document.querySelector('#classes .cls:nth-child(2) .cls-count').getAttribute('data-n') === '3', null, { timeout: 10000 });
+    await up('#testPhoto', [{ name: 'test.png', mimeType: 'image/png', buffer: blue }]);
+    const id2 = await page.getAttribute(cls(2), 'data-id');
+    await page.waitForFunction(id => document.getElementById('winner').getAttribute('data-id') === id, id2, { timeout: 10000 });
+    const p2 = parseInt((await page.textContent('#bars .bar-row:nth-child(2) .bar-pct')).replace(/\D/g, ''), 10);
+    expect(p2 >= 60, 'with 3 photos per class and K = 10 the photo must not end in a tie, class 2 got ' + p2 + '%');
+    const kNote = (await page.textContent('#kNote')).trim();
+    expect(kNote === t('k_capped', { k: 3 }), `K note should say only 3 vote, got "${kNote}"`);
+    expect((await page.textContent('#votesNote')).includes('3'), 'votes note should use the K that is really used (3)');
+    // examples change while the test photo is shown: the photo is checked again (no stale or empty answer)
+    await page.click(cls(1, '.clr-btn'));
+    expect((await page.textContent('#winner')).trim() === t('need_two'), 'after clearing class 1 the AI needs 2 classes again');
+    await up(cls(1, '.upl-btn'), three(green, 'g'));
+    await page.waitForFunction(id => document.getElementById('winner').getAttribute('data-id') === id && /\d/.test(document.getElementById('winnerSub').textContent), id2, { timeout: 10000 });
+    await page.click('#backLive');
+    expect(await page.isHidden('#testPrev'), 'Back to live camera hides the test photo');
   }
 
   // 7) reset everything
@@ -116,4 +172,8 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(await count() === 2, 'Reset should go back to 2 classes');
   const again = await page.inputValue(cls(1, '.cls-name'));
   expect(again === t('n_thumbs_up'), 'Reset restores the default names');
+  const k = await page.inputValue('#kRange');
+  expect(k === '10', 'Reset puts K back to 10, got ' + k);
+  await page.evaluate(() => window.scrollTo(0, 0));   // tidy after-test screenshot (sticky cards)
+  await page.waitForTimeout(300);
 };

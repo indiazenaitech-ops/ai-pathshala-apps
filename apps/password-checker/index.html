@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Password Strength Lab · AI Pathshala</title>
+  <meta name="description" content="A free classroom app: see how fast a password can be guessed, learn the patterns attackers try first, and make strong passphrases. Everything stays on your device.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    /* ---------- general ---------- */
+    .privacy { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; }
+    .privacy .pi { font-size: 1.6rem; line-height: 1.2; flex: none; }
+    .privacy p { margin: 0; }
+    .privacy strong { display: block; color: var(--success); font-size: 1.02rem; }
+    @media (max-width: 560px) { #tabs button { padding: 8px 10px; } }
+    .h-sec { font-size: 1.02rem; margin: 0 0 4px; }
+    .lbl { font-weight: 700; font-size: .92rem; }
+    .mono-pw { font-family: var(--mono); unicode-bidi: isolate; direction: ltr; overflow-wrap: anywhere; }
+
+    /* ---------- checker ---------- */
+    .check-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: start; }
+    @media (max-width: 900px) { .check-grid { grid-template-columns: minmax(0, 1fr); } }
+    @media (min-width: 901px) and (min-height: 620px) { #input-card { position: sticky; top: 72px; } }
+    .pw-row { display: flex; gap: 8px; align-items: stretch; }
+    .pw-row input { flex: 1 1 auto; min-width: 0; font-family: var(--mono); font-size: 1.25rem; min-height: 52px; letter-spacing: .02em; }
+    .pw-row .btn { min-height: 52px; flex: none; }
+    #toggle { min-width: 92px; }
+    .examples { display: flex; flex-wrap: wrap; gap: 8px; }
+    .examples .chip { font-family: var(--mono); font-weight: 600; min-height: 40px; direction: ltr; }
+    .result-empty { color: var(--muted); padding: 24px 8px; text-align: center; font-size: 1.05rem; }
+    .meter { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+    .meter span { height: 14px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); transition: background .2s; }
+    .lv0 { --lv: var(--danger); } .lv1 { --lv: var(--accent); } .lv2 { --lv: var(--warning); } .lv3 { --lv: var(--c4); } .lv4 { --lv: var(--success); }
+    .meter span.on { background: var(--lv); border-color: var(--lv); }
+    .level-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
+    .level-label { font-size: clamp(1.5rem, 3.4vw, 2.1rem); font-weight: 800; color: var(--lv); line-height: 1.2; }
+    .crack { background: var(--surface-2); border-radius: var(--radius-sm); padding: 12px 14px; }
+    .crack p { margin: 0 0 4px; }
+    .crack-time { font-size: clamp(1.35rem, 3vw, 1.9rem); font-weight: 800; line-height: 1.25; }
+    .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .stat { background: var(--surface-2); border-radius: var(--radius-sm); padding: 8px 6px; text-align: center; min-width: 0; }
+    .stat b { display: block; font-size: 1.3rem; font-variant-numeric: tabular-nums; line-height: 1.25; direction: ltr; unicode-bidi: isolate; }
+    .stat span { display: block; font-size: .8rem; color: var(--muted); line-height: 1.3; }
+    .types { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ctype { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: .82rem; font-weight: 600;
+      border: 1px dashed var(--border); color: var(--muted); }
+    .ctype.on { border-style: solid; border-color: var(--primary); background: var(--primary-soft); color: var(--text); }
+    .ctype b { font-variant-numeric: tabular-nums; }
+    .pieces { display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: stretch; }
+    .piece { --pc: var(--c8); display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 52px; max-width: 100%;
+      padding: 6px 9px; border-radius: 10px; border: 2px solid var(--pc); background: color-mix(in srgb, var(--pc) 12%, var(--surface)); }
+    .piece .tok { font-family: var(--mono); font-weight: 700; font-size: 1.08rem; white-space: pre-wrap; overflow-wrap: anywhere; text-align: center; line-height: 1.3; }
+    .piece .knd { font-size: .74rem; font-weight: 700; color: var(--text); text-align: center; line-height: 1.3; }
+    .piece .gx { font-size: .74rem; color: var(--muted); font-variant-numeric: tabular-nums; direction: ltr; }
+    .piece[data-kind="common"] { --pc: var(--danger); }
+    .piece[data-kind="name"], .piece[data-kind="place"] { --pc: var(--c5); }
+    .piece[data-kind="word"], .piece[data-kind="hindi"] { --pc: var(--c7); }
+    .piece[data-kind="date"], .piece[data-kind="year"], .piece[data-kind="phone"], .piece[data-kind="number"] { --pc: var(--c2); }
+    .piece[data-kind="seq"], .piece[data-kind="keyboard"], .piece[data-kind="repeat"] { --pc: var(--c3); }
+    .piece[data-kind="sep"] { --pc: var(--border); min-width: 34px; }
+    .piece[data-kind="random"] { --pc: var(--c4); }
+    .fb { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+    .fb li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; padding: 7px 10px; border-radius: var(--radius-sm); align-items: start; }
+    .fb li .ic { line-height: 1.45; }
+    .fb.fbx-bad li { background: var(--danger-soft); }
+    .fb.fbx-good li { background: var(--success-soft); }
+    .fb.fbx-tip li { background: var(--info-soft); }
+    .fb li .tk { font-family: var(--mono); unicode-bidi: isolate; direction: ltr; }
+    .bars { display: grid; gap: 8px; }
+    .bar-lbl { display: flex; justify-content: space-between; gap: 10px; font-size: .86rem; flex-wrap: wrap; }
+    .bar-lbl b { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .bar { height: 16px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+    .bar > span { display: block; height: 100%; border-radius: inherit; transition: width .3s; }
+    .bar.simple > span { background: var(--c8); }
+    .bar.real > span { background: var(--lv, var(--primary)); }
+    .scale { width: 100%; }
+    .scale td:first-child { font-weight: 700; color: var(--lv); white-space: nowrap; }
+    .scale .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--lv); margin-inline-end: 6px; vertical-align: middle; }
+    #panel-check:fullscreen { background: var(--bg); overflow: auto; padding: 24px; }
+    #panel-check:fullscreen .check-grid { font-size: 1.15rem; }
+    #panel-check:fullscreen .pw-row input { font-size: 1.7rem; }
+    #panel-check:fullscreen .piece .tok { font-size: 1.4rem; }
+    #panel-check:fullscreen #inside { display: none; }
+
+    /* ---------- generator ---------- */
+    .gen-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; }
+    @media (max-width: 900px) { .gen-grid { grid-template-columns: minmax(0, 1fr); } }
+    .phrase { font-family: var(--mono); font-size: clamp(1.25rem, 3.4vw, 2.1rem); font-weight: 700; line-height: 1.45; padding: 16px;
+      background: var(--surface-2); border-radius: var(--radius-sm); border: 2px dashed var(--border); overflow-wrap: anywhere; text-align: center;
+      min-height: 3.4em; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; direction: ltr; }
+    .phrase .w { white-space: nowrap; }
+    .phrase .w:nth-of-type(6n+1) { color: var(--c1); } .phrase .w:nth-of-type(6n+2) { color: var(--c2); } .phrase .w:nth-of-type(6n+3) { color: var(--c3); }
+    .phrase .w:nth-of-type(6n+4) { color: var(--c4); } .phrase .w:nth-of-type(6n+5) { color: var(--c5); } .phrase .w:nth-of-type(6n) { color: var(--c7); }
+    .phrase .num { color: var(--text); }
+    .phrase .s { color: var(--muted); white-space: pre; }
+    .opt-block { display: flex; flex-direction: column; gap: 6px; }
+    .seg button { min-height: 40px; min-width: 44px; }
+    .math { font-size: .95rem; }
+    .math p { margin: 0 0 6px; }
+    .math .f { font-family: var(--mono); direction: ltr; unicode-bidi: isolate; }
+
+    /* ---------- quiz ---------- */
+    .qtop { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; white-space: nowrap; }
+    .pill b { font-variant-numeric: tabular-nums; }
+    .pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+    @media (max-width: 640px) { .pair { grid-template-columns: minmax(0, 1fr); } }
+    .opt { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 140px; padding: 16px 12px;
+      border: 2px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; text-align: center; }
+    .opt:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-soft); }
+    .opt:disabled { cursor: default; }
+    .opt .ol { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--primary); color: var(--primary-ink); font-weight: 800; }
+    .opt .opw { font-family: var(--mono); font-size: clamp(1.15rem, 2.6vw, 1.6rem); font-weight: 700; overflow-wrap: anywhere; direction: ltr; unicode-bidi: isolate; }
+    .opt .ores { font-size: .92rem; font-weight: 600; }
+    .opt.win { border-color: var(--success); background: var(--success-soft); }
+    .opt.lose { border-color: var(--border); opacity: .9; }
+    .opt.picked.lose { border-color: var(--danger); background: var(--danger-soft); }
+    .verdict { font-size: 1.3rem; font-weight: 800; margin: 0; }
+    .verdict.ok { color: var(--success); } .verdict.bad { color: var(--danger); }
+    .final-score { font-size: clamp(2.4rem, 8vw, 4rem); font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+
+    /* ---------- tips poster ---------- */
+    .poster { padding: 22px; border: 3px solid var(--primary); }
+    .poster-head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .poster-head .shield { font-size: 2.6rem; line-height: 1; }
+    .poster-head h2 { font-size: clamp(1.3rem, 3vw, 1.9rem); margin: 0; }
+    .rules { list-style: none; padding: 0; margin: 0 0 16px; display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 700px) { .rules { grid-template-columns: minmax(0, 1fr); } }
+    .rule { display: flex; gap: 12px; background: var(--surface-2); border-radius: var(--radius-sm); padding: 12px; min-width: 0; }
+    .rule .ri { font-size: 1.8rem; line-height: 1.1; flex: none; }
+    .rule h3 { margin: 0 0 4px; font-size: 1.05rem; }
+    .rule p { margin: 0; font-size: .93rem; }
+    .helpline { border: 2px dashed var(--danger); border-radius: var(--radius); padding: 12px 16px; background: var(--danger-soft); display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+    .helpline .hl-big { font-size: 2.4rem; font-weight: 900; color: var(--danger); line-height: 1; font-variant-numeric: tabular-nums; }
+    .helpline h3 { color: var(--danger); margin: 0 0 2px; }
+    .helpline p { margin: 0; }
+    .poster-foot { margin-top: 12px; text-align: center; color: var(--muted); font-size: .85rem; }
+
+    /* ---------- worksheet (print only) ---------- */
+    #worksheet { display: none; }
+    .ws-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .ws-table th, .ws-table td { border: 1px solid #888; padding: 8px; text-align: start; vertical-align: top; }
+    .ws-table .pw { font-family: var(--mono); font-size: 12pt; direction: ltr; unicode-bidi: isolate; }
+    .ws-box { display: inline-block; width: 14px; height: 14px; border: 1.5px solid #000; margin-inline-end: 6px; vertical-align: middle; }
+    .ws-why { height: 28px; }
+
+    /* Urdu Nastaliq needs taller lines */
+    :root[lang="ur"] .stat span, :root[lang="ur"] .piece .knd, :root[lang="ur"] .rule p, :root[lang="ur"] .fb li { line-height: 2.1; }
+    :root[lang="ur"] .level-label, :root[lang="ur"] .crack-time { line-height: 1.9; }
+    :root[lang="ur"] .btn, :root[lang="ur"] .seg button, :root[lang="ur"] .tabs button { line-height: 1.8; }
+
+    @media print {
+      @page { size: A4; margin: 12mm; }
+      .tabs, #howto, .edu-intro, .privacy, #inside { display: none !important; }
+      body { font-size: 12pt; }
+      .check-grid, .gen-grid { display: block; }
+      #input-card { display: none; }
+      .card, .rule, .helpline, .piece, .fb li { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body.printing-ws #app > :not(#worksheet) { display: none !important; }
+      body.printing-ws #worksheet { display: block !important; }
+      body.printing-poster #app > :not(#panel-tips) { display: none !important; }
+      .poster { border: 3px solid #000; padding: 12px 14px; }
+      .rules { grid-template-columns: 1fr 1fr !important; gap: 8px; }
+      .rule { break-inside: avoid; padding: 9px 11px; }
+      .rule p { font-size: 10.5pt; }
+      .ws-key { break-before: page; }
+      .ws-table tr { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+
+    <div class="callout success privacy" id="privacy">
+      <span class="pi" aria-hidden="true">🔒</span>
+      <p><strong data-i18n="privacy"></strong><span class="small" data-i18n="privacy_more"></span></p>
+    </div>
+
+    <div class="tabs" role="tablist" id="tabs">
+      <button type="button" role="tab" id="tab-check" data-panel="panel-check" aria-controls="panel-check" aria-selected="true">🔍 <span data-i18n="tab_check"></span></button>
+      <button type="button" role="tab" id="tab-gen" data-panel="panel-gen" aria-controls="panel-gen" aria-selected="false">🎲 <span data-i18n="tab_gen"></span></button>
+      <button type="button" role="tab" id="tab-quiz" data-panel="panel-quiz" aria-controls="panel-quiz" aria-selected="false">🧠 <span data-i18n="tab_quiz"></span></button>
+      <button type="button" role="tab" id="tab-tips" data-panel="panel-tips" aria-controls="panel-tips" aria-selected="false">🛡️ <span data-i18n="tab_tips"></span></button>
+    </div>
+
+    <!-- ===================== CHECK ===================== -->
+    <section id="panel-check" role="tabpanel" aria-labelledby="tab-check">
+      <div class="check-grid">
+        <div class="card stack" id="input-card">
+          <label for="pw" class="lbl" data-i18n="pw_label"></label>
+          <div class="pw-row">
+            <input id="pw" type="password" dir="ltr" maxlength="256" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+              data-lpignore="true" data-1p-ignore data-i18n-placeholder="pw_ph">
+            <button type="button" class="btn" id="toggle" aria-pressed="false" aria-controls="pw" data-i18n-title="show_aria"><span aria-hidden="true">👁</span> <span id="toggle-txt"></span></button>
+            <button type="button" class="btn btn-ghost" id="clear" data-i18n-aria-label="clear_aria" data-i18n-title="clear_aria">✕</button>
+          </div>
+          <p class="muted small mb0" data-i18n="examples"></p>
+          <div class="examples no-i18n" id="examples"></div>
+          <div class="row">
+            <button type="button" class="btn btn-sm" id="fs">⛶ <span data-i18n="fullscreen"></span></button>
+          </div>
+        </div>
+
+        <div class="card stack" id="result" aria-live="polite"></div>
+      </div>
+
+      <details class="card" id="inside" style="margin-top:16px">
+        <summary><strong data-i18n="inside_title"></strong></summary>
+        <ol class="stack" style="padding-inline-start:20px;margin-top:12px">
+          <li data-i18n="inside_1"></li>
+          <li data-i18n="inside_2"></li>
+          <li data-i18n="inside_3"></li>
+          <li data-i18n="inside_4"></li>
+        </ol>
+        <p class="callout warning small" data-i18n="inside_5"></p>
+        <h3 data-i18n="scale_title"></h3>
+        <div class="scroll-x">
+          <table class="table scale" id="scale">
+            <thead><tr><th data-i18n="scale_level"></th><th data-i18n="scale_time"></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <!-- ===================== GENERATOR ===================== -->
+    <section id="panel-gen" role="tabpanel" aria-labelledby="tab-gen" hidden>
+      <div class="gen-grid">
+        <div class="card stack">
+          <h2 data-i18n="gen_title"></h2>
+          <p class="muted mb0" data-i18n="gen_intro"></p>
+          <div id="phrase" class="phrase no-i18n" aria-live="polite" data-i18n-aria-label="gen_aria" role="status"></div>
+          <div class="row">
+            <button type="button" class="btn btn-primary btn-lg" id="gen-new">🎲 <span data-i18n="gen_new"></span></button>
+            <button type="button" class="btn" id="gen-copy">📋 <span data-i18n="copy"></span></button>
+            <button type="button" class="btn" id="gen-test">🔍 <span data-i18n="gen_test"></span></button>
+          </div>
+          <div id="gen-strength" class="stack"></div>
+        </div>
+        <div class="card stack" id="gen-opts">
+          <div class="opt-block">
+            <span class="lbl" id="lbl-words" data-i18n="opt_words"></span>
+            <div class="seg" role="group" aria-labelledby="lbl-words" id="seg-words"></div>
+          </div>
+          <div class="opt-block">
+            <span class="lbl" id="lbl-list" data-i18n="opt_list"></span>
+            <div class="seg" role="group" aria-labelledby="lbl-list" id="seg-list">
+              <button type="button" data-v="en" id="list-en" data-i18n="list_en"></button>
+              <button type="button" data-v="hi" id="list-hi" data-i18n="list_hi"></button>
+              <button type="button" data-v="both" id="list-both" data-i18n="list_both"></button>
+            </div>
+          </div>
+          <div class="opt-block">
+            <span class="lbl" id="lbl-sep" data-i18n="opt_sep"></span>
+            <div class="seg" role="group" aria-labelledby="lbl-sep" id="seg-sep">
+              <button type="button" data-v="-" id="sep-dash" class="mono">-</button>
+              <button type="button" data-v="." id="sep-dot" class="mono">.</button>
+              <button type="button" data-v="_" id="sep-under" class="mono">_</button>
+              <button type="button" data-v=" " id="sep-space" data-i18n="sep_space"></button>
+              <button type="button" data-v="" id="sep-none" data-i18n="sep_none"></button>
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" id="opt-num"> <span data-i18n="opt_number"></span></label>
+          <label class="check"><input type="checkbox" id="opt-caps"> <span data-i18n="opt_caps"></span></label>
+          <p class="callout small mb0" data-i18n="gen_random_note"></p>
+          <p class="callout accent small mb0" data-i18n="gen_memory_tip"></p>
+          <p class="callout warning small mb0" data-i18n="gen_screen_warn"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== QUIZ ===================== -->
+    <section id="panel-quiz" role="tabpanel" aria-labelledby="tab-quiz" hidden>
+      <div class="card stack" id="quiz"></div>
+      <div class="row" style="margin-top:12px">
+        <button type="button" class="btn" id="quiz-print">🖨️ <span data-i18n="quiz_print"></span></button>
+      </div>
+    </section>
+
+    <!-- ===================== TIPS ===================== -->
+    <section id="panel-tips" role="tabpanel" aria-labelledby="tab-tips" hidden>
+      <div class="row spread no-print" style="margin-bottom:12px">
+        <p class="muted mb0" data-i18n="tips_sub"></p>
+        <button type="button" class="btn btn-primary" id="print-poster">🖨️ <span data-i18n="print_poster"></span></button>
+      </div>
+      <article class="card poster" id="poster">
+        <header class="poster-head">
+          <span class="shield" aria-hidden="true">🔐</span>
+          <h2 data-i18n="tips_title"></h2>
+        </header>
+        <ol class="rules" id="rules">
+          <li class="rule"><span class="ri" aria-hidden="true">🗝️</span><div><h3 data-i18n="tip1_t"></h3><p data-i18n="tip1_d"></p></div></li>
+          <li class="rule"><span class="ri" aria-hidden="true">📏</span><div><h3 data-i18n="tip2_t"></h3><p data-i18n="tip2_d"></p></div></li>
+          <li class="rule"><span class="ri" aria-hidden="true">🧰</span><div><h3 data-i18n="tip3_t"></h3><p data-i18n="tip3_d"></p></div></li>
+          <li class="rule"><span class="ri" aria-hidden="true">📲</span><div><h3 data-i18n="tip4_t"></h3><p data-i18n="tip4_d"></p></div></li>
+          <li class="rule"><span class="ri" aria-hidden="true">🤫</span><div><h3 data-i18n="tip5_t"></h3><p data-i18n="tip5_d"></p></div></li>
+          <li class="rule"><span class="ri" aria-hidden="true">🎂</span><div><h3 data-i18n="tip6_t"></h3><p data-i18n="tip6_d"></p></div></li>
+          <li class="rule"><span class="ri" aria-hidden="true">🖥️</span><div><h3 data-i18n="tip7_t"></h3><p data-i18n="tip7_d"></p></div></li>
+          <li class="rule"><span class="ri" aria-hidden="true">🔄</span><div><h3 data-i18n="tip8_t"></h3><p data-i18n="tip8_d"></p></div></li>
+        </ol>
+        <div class="helpline">
+          <span class="hl-big" dir="ltr">1930</span>
+          <div><h3 data-i18n="help_title"></h3><p data-i18n="help_text"></p></div>
+        </div>
+        <div class="poster-foot"><span data-i18n="brand"></span> · <span data-i18n="app_title"></span></div>
+      </article>
+    </section>
+
+    <section id="worksheet" aria-hidden="true"></section>
+
+    <details class="card" id="howto" style="margin-top:18px">
+      <summary><strong data-i18n="howto_title"></strong></summary>
+      <ul>
+        <li data-i18n="how1"></li>
+        <li data-i18n="how2"></li>
+        <li data-i18n="how3"></li>
+        <li data-i18n="how4"></li>
+        <li data-i18n="how5"></li>
+        <li data-i18n="how6"></li>
+      </ul>
+    </details>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="data.js"></script>
+  <script src="content.js"></script>
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

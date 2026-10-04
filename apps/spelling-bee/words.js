@@ -1,0 +1,161 @@
+/* Spelling Bee: the English word lists (the same in every UI language).
+   w = word to spell (Indian / British spelling, as taught in Indian schools)
+   s = a simple example sentence that contains the word exactly once
+   alt = other accepted spellings (American), shown with a note
+   Meanings in the 12 UI languages live in content.js (APP_CONTENT[lang].m[word]). */
+window.SB_WORDS = {
+  levels: [
+    {
+      id: 1, grades: '1–2', icon: '🐣',
+      words: [
+        { w: 'cat', s: 'The cat drinks milk from a bowl.' },
+        { w: 'dog', s: 'Our dog barks at the postman.' },
+        { w: 'sun', s: 'The sun rises in the east.' },
+        { w: 'bus', s: 'Riya goes to school by bus.' },
+        { w: 'cup', s: 'Dadi drinks tea from a cup.' },
+        { w: 'hen', s: 'The hen laid an egg.' },
+        { w: 'pen', s: 'Aman writes with a blue pen.' },
+        { w: 'red', s: 'A ripe tomato is red.' },
+        { w: 'fish', s: 'A fish lives in water.' },
+        { w: 'milk', s: 'I drink a glass of milk every day.' },
+        { w: 'book', s: 'Meena reads a story book.' },
+        { w: 'tree', s: 'A big tree gives us shade.' },
+        { w: 'ball', s: 'Kabir kicks the ball.' },
+        { w: 'frog', s: 'The frog jumps into the pond.' },
+        { w: 'duck', s: 'The duck swims in the lake.' },
+        { w: 'star', s: 'I can see a bright star in the sky.' },
+        { w: 'rain', s: 'Peacocks dance in the rain.' },
+        { w: 'cake', s: 'We cut a cake at the party.' },
+        { w: 'kite', s: 'Arjun flies a kite on Makar Sankranti.' },
+        { w: 'boat', s: 'The boat sails on the river.' },
+        { w: 'hand', s: 'Raise your hand to answer.' },
+        { w: 'nest', s: 'The bird made a nest in the tree.' },
+        { w: 'ship', s: 'A big ship came to the port in Mumbai.' },
+        { w: 'bell', s: 'The school bell rings at nine.' },
+        { w: 'jump', s: 'Children love to jump and play.' }
+      ]
+    },
+    {
+      id: 2, grades: '3', icon: '🌼',
+      words: [
+        { w: 'apple', s: 'Priya ate a juicy red apple.' },
+        { w: 'water', s: 'Please drink clean water.' },
+        { w: 'school', s: 'Our school starts at eight o’clock.' },
+        { w: 'happy', s: 'Grandpa was happy to see us.' },
+        { w: 'mango', s: 'The mango is the king of fruits.' },
+        { w: 'green', s: 'Parrots are green.' },
+        { w: 'house', s: 'My house has a small garden.' },
+        { w: 'chair', s: 'Please sit on the chair.' },
+        { w: 'mother', s: 'My mother cooks tasty food.' },
+        { w: 'flower', s: 'The lotus is our national flower.' },
+        { w: 'garden', s: 'Dadaji waters the plants in the garden.' },
+        { w: 'orange', s: 'I peeled an orange for lunch.' },
+        { w: 'monkey', s: 'A monkey took my banana!' },
+        { w: 'pencil', s: 'Sharpen your pencil before the test.' },
+        { w: 'window', s: 'Open the window to let in fresh air.' },
+        { w: 'yellow', s: 'Ripe bananas are yellow.' },
+        { w: 'rabbit', s: 'The rabbit has long ears.' },
+        { w: 'little', s: 'The little puppy is sleeping.' },
+        { w: 'friend', s: 'Sana is my best friend.' },
+        { w: 'bread', s: 'We had bread and butter in the morning.' },
+        { w: 'clock', s: 'The clock on the wall is slow.' },
+        { w: 'sweet', s: 'Jalebi is very sweet.' },
+        { w: 'river', s: 'The Ganga is a long river.' },
+        { w: 'colour', s: 'What colour is your school bag?', alt: ['color'] },
+        { w: 'plant', s: 'Water the plant every morning.' }
+      ]
+    },
+    {
+      id: 3, grades: '4–5', icon: '🐝',
+      words: [
+        { w: 'beautiful', s: 'The Taj Mahal is a beautiful building.' },
+        { w: 'because', s: 'We stayed at home because it was raining.' },
+        { w: 'elephant', s: 'An elephant can carry heavy logs.' },
+        { w: 'holiday', s: 'Sunday is a holiday.' },
+        { w: 'tomorrow', s: 'We have a maths test tomorrow.' },
+        { w: 'village', s: 'My grandparents live in a village.' },
+        { w: 'picture', s: 'Zoya drew a picture of a tiger.' },
+        { w: 'kitchen', s: 'Papa is cooking in the kitchen.' },
+        { w: 'festival', s: 'Diwali is the festival of lights.' },
+        { w: 'umbrella', s: 'Take an umbrella, it may rain.' },
+        { w: 'birthday', s: 'Rohan got a cycle on his birthday.' },
+        { w: 'morning', s: 'I brush my teeth every morning.' },
+        { w: 'family', s: 'There are five people in my family.' },
+        { w: 'weather', s: 'The weather is very hot in May.' },
+        { w: 'doctor', s: 'The doctor checked my fever.' },
+        { w: 'people', s: 'Many people visit the Red Fort.' },
+        { w: 'answer', s: 'Write the answer in your notebook.' },
+        { w: 'question', s: 'Raise your hand if you have a question.' },
+        { w: 'hospital', s: 'The injured man was taken to the hospital.' },
+        { w: 'island', s: 'Majuli in Assam is a river island.' },
+        { w: 'breakfast', s: 'Idli and sambar make a good breakfast.' },
+        { w: 'library', s: 'We borrow books from the school library.' },
+        { w: 'country', s: 'India is a large country.' },
+        { w: 'children', s: 'The children are playing kabaddi.' },
+        { w: 'butterfly', s: 'A butterfly sat on the rose.' }
+      ]
+    },
+    {
+      id: 4, grades: '6', icon: '🦋',
+      words: [
+        { w: 'knowledge', s: 'Reading books gives us knowledge.' },
+        { w: 'science', s: 'We do experiments in the science lab.' },
+        { w: 'neighbour', s: 'Our neighbour gave us sweets on Eid.', alt: ['neighbor'] },
+        { w: 'believe', s: 'I believe you can win the race.' },
+        { w: 'receive', s: 'Did you receive my letter?' },
+        { w: 'journey', s: 'The train journey from Delhi to Chennai is long.' },
+        { w: 'language', s: 'Tamil is a very old language.' },
+        { w: 'vegetable', s: 'Spinach is a green leafy vegetable.' },
+        { w: 'calendar', s: 'Mark the exam date on the calendar.' },
+        { w: 'dangerous', s: 'It is dangerous to cross the road at a red light.' },
+        { w: 'delicious', s: 'Mummy’s biryani is delicious.' },
+        { w: 'exercise', s: 'Do some exercise every day to stay fit.' },
+        { w: 'honest', s: 'The honest boy returned the lost wallet.' },
+        { w: 'invitation', s: 'We got an invitation to the wedding.' },
+        { w: 'temperature', s: 'A thermometer measures temperature.' },
+        { w: 'surprise', s: 'We planned a surprise party for Papa.' },
+        { w: 'thought', s: 'I thought the shop was closed.' },
+        { w: 'through', s: 'The train went through a long tunnel.' },
+        { w: 'tongue', s: 'We taste food with our tongue.' },
+        { w: 'scissors', s: 'Cut the paper with scissors.' },
+        { w: 'guard', s: 'A guard stands at the bank gate.' },
+        { w: 'address', s: 'Write your address on the envelope.' },
+        { w: 'sentence', s: 'Begin every sentence with a capital letter.' },
+        { w: 'government', s: 'The government built a new school in our town.' },
+        { w: 'adventure', s: 'Climbing the hill was a great adventure.' }
+      ]
+    },
+    {
+      id: 5, grades: '7–8', icon: '🏆',
+      words: [
+        { w: 'accommodate', s: 'This hall can accommodate two hundred students.' },
+        { w: 'necessary', s: 'It is necessary to wash our hands before eating.' },
+        { w: 'occasion', s: 'Holi is a happy occasion for everyone.' },
+        { w: 'embarrass', s: 'Please do not embarrass me in front of my friends.' },
+        { w: 'conscience', s: 'My conscience told me to return the extra change.' },
+        { w: 'conscious', s: 'The patient is conscious and can talk now.' },
+        { w: 'definitely', s: 'I will definitely finish my project today.' },
+        { w: 'environment', s: 'We must keep our environment clean.' },
+        { w: 'independence', s: 'India won independence in 1947.' },
+        { w: 'maintenance', s: 'The lift is closed for maintenance.' },
+        { w: 'mischievous', s: 'The mischievous monkey stole the bananas.' },
+        { w: 'pronunciation', s: 'Listen carefully to the pronunciation of each word.' },
+        { w: 'recommend', s: 'Can you recommend a good book?' },
+        { w: 'rhythm', s: 'Clap to the rhythm of the dhol.' },
+        { w: 'privilege', s: 'It is a privilege to meet the President.' },
+        { w: 'restaurant', s: 'We ate masala dosa at a restaurant.' },
+        { w: 'guarantee', s: 'This watch has a one-year guarantee.' },
+        { w: 'committee', s: 'The school formed a cleanliness committee.' },
+        { w: 'parliament', s: 'Laws for the country are made in Parliament.' },
+        { w: 'achievement', s: 'Winning the quiz was a big achievement.' },
+        { w: 'separate', s: 'Keep wet and dry waste separate.' },
+        { w: 'beginning', s: 'Read the chapter from the beginning.' },
+        { w: 'exaggerate', s: 'Do not exaggerate, the fish was not that big!' },
+        { w: 'hygiene', s: 'Good hygiene keeps diseases away.' },
+        { w: 'occurrence', s: 'An earthquake is a rare occurrence here.' }
+      ]
+    }
+  ],
+  /* the "Example list" button in Word lists fills the teacher box with this (science words) */
+  example: 'planet | The Earth is a planet.\noxygen | We breathe in oxygen.\nmagnet | A magnet pulls iron pins.\nshadow | My shadow is long in the evening.\nenergy | The Sun gives us energy.\nseed | A seed grows into a plant.\nfossil | We saw a dinosaur fossil in the museum.\nvolcano | Hot lava flows out of a volcano.'
+};

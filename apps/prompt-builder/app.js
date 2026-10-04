@@ -81,6 +81,20 @@
 
   /* ---------------- prompt assembly ---------------- */
   function stripEnd(x) { return x.replace(/[\s.!?,;:।॥۔。]+$/, ''); }
+  /* The role frame already says "You are … ." (in the answer language). Students often type
+     "You are a teacher" or "Act as …" anyway, which would give "You are You are a teacher."
+     Remove such a lead-in (and the frame's own ending, e.g. Hindi "हैं") from the typed role. */
+  var ROLE_LEAD = /^(?:you\s+are|you['’]re|act\s+(?:as|like)|pretend\s+to\s+be|imagine\s+(?:that\s+)?you\s+are)\s+/i;
+  function cleanRole(role, alang) {
+    var r = stripEnd(role.replace(/\s*[\r\n]+\s*/g, ' ').trim());
+    var parts = (C(alang).asm.role || '').split('{x}');
+    var pre = (parts[0] || '').trim(), suf = stripEnd((parts[1] || '').trim());
+    var r0 = r.replace(ROLE_LEAD, '');
+    if (pre && r0 === r && r.length > pre.length + 1 && r.slice(0, pre.length).toLowerCase() === pre.toLowerCase() &&
+        /^\s/.test(r.slice(pre.length)) && !/^\s+(?:का|के|की|को|से|کا|کے|کی|کو|سے)(?:\s|$)/.test(r.slice(pre.length))) r0 = r.slice(pre.length).trim();
+    if (suf && r0.length > suf.length + 1 && r0.slice(-suf.length) === suf && /\s$/.test(r0.slice(0, -suf.length))) r0 = stripEnd(r0.slice(0, -suf.length));
+    return r0 || r;
+  }
   function fill(frame, x) { return frame.replace('{x}', function () { return x; }); }
   function lines(text) {
     return String(text || '').split(/\r?\n/).map(function (l) {
@@ -89,9 +103,9 @@
   }
   function assemble(s) {
     var A = C(s.alang).asm, paras = [], p;
-    var role = s.role.replace(/\s*[\r\n]+\s*/g, ' ').trim(), task = s.task.trim(), ctx = s.context.trim(), cons = lines(s.cons), ex = s.ex.trim();
+    var role = cleanRole(s.role, s.alang), task = s.task.trim(), ctx = s.context.trim(), cons = lines(s.cons), ex = s.ex.trim();
     if (!role && !task && !ctx && !cons.length && !ex) return '';
-    if (role) paras.push(fill(A.role, stripEnd(role)));
+    if (role) paras.push(fill(A.role, role));
     if (task) paras.push(fill(A.task, task));
     if (ctx) paras.push(fill(A.context, ctx));
     p = [];
@@ -156,6 +170,7 @@
     ta.style.height = 'auto';
     if (ta.scrollHeight) ta.style.height = Math.min(ta.scrollHeight + 2, 380) + 'px';
   }
+  function autosizeAll() { TEXT.forEach(function (k) { autosize(F[k]); }); }
   function fillForm() {
     TEXT.forEach(function (k) { if (F[k].value !== S[k]) F[k].value = S[k]; autosize(F[k]); });
     F.aud.value = S.aud; F.fmt.value = S.fmt; F.tone.value = S.tone; F.len.value = S.len;
@@ -227,7 +242,8 @@
     var num = $('#q-score'), bar = $('#q-bar');
     var pill = $('#score-pill');
     pill.textContent = q.score + '/100';
-    pill.className = 'badge ' + ['danger', 'accent', 'primary', 'success'][q.level];
+    /* keep "no-print": the score is not part of the printed prompt */
+    pill.className = 'badge no-print ' + ['danger', 'accent', 'primary', 'success'][q.level];
     $('#jump-score').textContent = '· ' + q.score + '/100';
     num.textContent = String(q.score);
     num.className = 'score-num lvl-' + q.level;
@@ -355,9 +371,11 @@
     readForm();
     if (!currentText()) { EDU.toast(t('nothing_to_copy')); return; }
     var name = $('#fav-name').value.trim() || autoName();
+    var before = favs.slice();
     favs.unshift({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name: name.slice(0, 80), at: Date.now(), s: copyState(S) });
     if (favs.length > MAX_FAVS) favs.length = MAX_FAVS;
-    store.set('favs', favs);
+    /* store.set() returns false when the browser storage is full or blocked: don't pretend it worked */
+    if (store.set('favs', favs) === false) { favs = before; EDU.toast(t('fav_failed'), 5000); return; }
     $('#fav-name').value = '';
     renderFavs();
     EDU.toast(t('fav_saved'));
@@ -365,7 +383,7 @@
   function loadFav(id) {
     var f = favs.filter(function (x) { return x.id === id; })[0];
     if (!f) return;
-    if (hasText() && !isPristine() && !confirm(t('confirm_replace'))) return;
+    if (hasText() && !isPristine() && !confirm(t('confirm_load'))) return;
     S = normalize(copyState(f.s));
     S.manual = true;
     fillForm();
@@ -379,15 +397,36 @@
     store.set('favs', favs);
     renderFavs();
   }
+  /* Public address of this app (also from a downloaded ZIP opened as file://, whose own path would
+     only work on this computer), plus the packed prompt in the #hash. */
+  function shareBase() {
+    try { if (typeof EDU.shareUrl === 'function') { var u = EDU.shareUrl(EDU.lang); if (/^https?:\/\//.test(u)) return u; } } catch (e) { }
+    return location.href.split('#')[0];
+  }
   function shareLink() {
+    readForm();
+    if (!currentText()) { EDU.toast(t('nothing_to_copy')); return; }
     var s = copyState(S); delete s.manual;
-    var base = location.href.split('#')[0];
-    EDU.share(base + '#p=' + EDU.pack(s), t('app_title'));
+    EDU.share(shareBase() + '#p=' + EDU.pack(s), t('app_title'));
+  }
+  /* A prompt packed into the address (#p=…) by "Share link". */
+  function sharedFromHash() {
+    try {
+      var m = /[#&]p=([A-Za-z0-9_-]+)/.exec(location.hash || '');
+      var o = m ? EDU.unpack(m[1]) : null;
+      return o && typeof o === 'object' && !Array.isArray(o) ? o : null;
+    } catch (e) { return null; }
+  }
+  function dropHash() { try { history.replaceState(history.state, '', location.href.split('#')[0]); } catch (e) { } }
+  function localDate() {
+    var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
   }
 
   /* ---------------- events ---------------- */
   TEXT.forEach(function (k) { F[k].addEventListener('input', function () { autosize(F[k]); readForm(); update(); }); });
-  F.role.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); F.task.focus(); } });
+  /* Enter in the one-line role box jumps to the task (but not while an Indic keyboard/IME is composing). */
+  F.role.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); F.task.focus(); } });
   ['aud', 'fmt', 'tone', 'len', 'ask', 'unsure'].forEach(function (k) { F[k].addEventListener('change', function () { readForm(); update(); }); });
   F.lang.addEventListener('change', function () { readForm(); changeAnswerLang(F.lang.value, true); });
   $('#btn-reset').addEventListener('click', resetForm);
@@ -397,12 +436,12 @@
     EDU.copy(text);
   });
   $('#btn-save').addEventListener('click', saveFav);
-  $('#fav-name').addEventListener('keydown', function (e) { if (e.key === 'Enter') saveFav(); });
+  $('#fav-name').addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) saveFav(); });
   $('#btn-share').addEventListener('click', shareLink);
   $('#btn-dl').addEventListener('click', function () {
     var text = currentText();
     if (!text) { EDU.toast(t('nothing_to_copy')); return; }
-    EDU.download('prompt-' + new Date().toISOString().slice(0, 10) + '.txt', text);
+    EDU.download('prompt-' + localDate() + '.txt', text);   /* local date, not UTC (IST is +5:30) */
   });
   $('#btn-print').addEventListener('click', function () { window.print(); });
   $('#btn-fs').addEventListener('click', function () { EDU.fullscreen($('#preview-card')); });
@@ -431,17 +470,36 @@
     renderAll();
   });
 
+  /* Textareas grow with their text. Their width changes when a phone turns or a window is resized,
+     and the line height changes when the Indic web font arrives, so measure again then
+     (the one-line role box has no scrollbar, so it would otherwise cut text off). */
+  (function () {
+    var timer = null;
+    window.addEventListener('resize', function () { clearTimeout(timer); timer = setTimeout(autosizeAll, 120); });
+    try { if (document.fonts && document.fonts.ready) document.fonts.ready.then(autosizeAll); } catch (e) { }
+    try { if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', autosizeAll); } catch (e) { }
+  })();
+
+  /* A shared link pasted into a tab where the app is already open only changes the #hash. */
+  window.addEventListener('hashchange', function () {
+    var o = sharedFromHash();
+    if (!o) return;
+    dropHash();
+    readForm();
+    if (hasText() && !isPristine() && !confirm(t('confirm_load'))) return;
+    S = normalize(o);
+    S.manual = true;
+    renderAll();
+    EDU.toast(t('shared_loaded'));
+  });
+
   /* ---------------- start ---------------- */
   (function start() {
-    var fromLink = null;
-    try {
-      var m = /[#&]p=([A-Za-z0-9_-]+)/.exec(location.hash || '');
-      if (m) fromLink = EDU.unpack(m[1]);
-    } catch (e) { fromLink = null; }
-    if (fromLink && typeof fromLink === 'object') {
+    var fromLink = sharedFromHash();
+    if (fromLink) {
       S = normalize(fromLink);
       S.manual = true;
-      try { history.replaceState(history.state, '', location.href.split('#')[0]); } catch (e) { }
+      dropHash();
       setTimeout(function () { EDU.toast(t('shared_loaded')); }, 300);
     } else {
       var d = store.get('draft', null);

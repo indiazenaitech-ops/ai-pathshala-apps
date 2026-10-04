@@ -78,6 +78,17 @@
   }
   function totalExamples() { return classes.reduce(function (s, c) { return s + (counts[c.id] || 0); }, 0); }
   function trainedCount() { return classes.filter(function (c) { return (counts[c.id] || 0) > 0; }).length; }
+  /* K actually used: never more than the smallest trained class. Otherwise, with e.g. 3 photos per class
+     and K = 10, every example votes and the answer is always a tie, whatever the picture shows. */
+  function effK() {
+    var m = Infinity;
+    classes.forEach(function (c) { var n = counts[c.id] || 0; if (n > 0 && n < m) m = n; });
+    return m === Infinity ? K : Math.max(1, Math.min(K, m));
+  }
+  function exLabel(n) { return t(n === 1 ? 'n_example_one' : 'n_examples', { n: EDU.fmt(n) }); }
+  /* write text only when it changed (no DOM churn 10×/s, no repeated screen-reader announcements) */
+  function setText(el, s) { if (el && el.textContent !== s) el.textContent = s; }
+  function errKey() { return modelErr === 'offline' ? 'ms_offline' : 'ms_error'; }
 
   /* ---------------- model loading ---------------- */
   function loadScript(src) {
@@ -124,7 +135,7 @@
     box.className = 'callout' + (modelState === 'ready' ? ' success' : modelState === 'error' ? ' danger' : '');
     $('#msSpin').hidden = modelState !== 'loading';
     $('#msRetry').hidden = modelState !== 'error';
-    $('#msText').textContent = t(modelState === 'ready' ? 'ms_ready' : modelState === 'error' ? (modelErr === 'offline' ? 'ms_offline' : 'ms_error') : 'ms_loading');
+    $('#msText').textContent = t(modelState === 'ready' ? 'ms_ready' : modelState === 'error' ? errKey() : 'ms_loading');
   }
 
   /* ---------------- capture helpers ---------------- */
@@ -177,10 +188,13 @@
   }
 
   function predictCap() {
-    if (!net || !knn || trainedCount() < 2 || !knn.getNumExamples()) { lastPred = null; renderPrediction(); return Promise.resolve(null); }
+    if (!net || !knn || trainedCount() < 2 || !knn.getNumExamples()) {
+      if (lastPred) { lastPred = null; updatePrediction(); }
+      return Promise.resolve(null);
+    }
     var emb = net.infer(cap, true);
     var wantFp = $('#insideBox').open;
-    return Promise.all([knn.predictClass(emb, K), wantFp ? emb.data() : Promise.resolve(null)]).then(function (r) {
+    return Promise.all([knn.predictClass(emb, effK()), wantFp ? emb.data() : Promise.resolve(null)]).then(function (r) {
       emb.dispose();
       lastPred = r[0];
       if (r[1]) drawFp(r[1]);
@@ -189,7 +203,24 @@
     }, function (e) { emb.dispose(); throw e; });
   }
 
-  function notReady() { EDU.toast(t(modelState === 'error' ? (modelErr === 'offline' ? 'ms_offline' : 'ms_error') : 'model_wait')); }
+  function notReady() { EDU.toast(t(modelState === 'error' ? errKey() : 'model_wait')); }
+
+  /* examples changed (upload, clear, remove, open, …): rebuild the bars, and if a test photo is
+     shown, ask the AI again about that photo instead of leaving the old (or an empty) answer */
+  function examplesChanged() {
+    lastPred = null; smooth = {};
+    renderPrediction();
+    refreshFrozen();
+  }
+  function refreshFrozen() {
+    if (!frozen || !net || !knn) return;
+    var img = $('#testImg');
+    if (!img.complete || !img.naturalWidth) return;
+    try { drawImageFile({ img: img }); } catch (e) { return; }
+    smooth = {};
+    busy = true;
+    predictCap().then(function () { busy = false; }, function () { busy = false; });
+  }
 
   /* ---------------- recording ---------------- */
   function startRec(id) {
@@ -231,6 +262,7 @@
       var inp = EDU.el('input', { type: 'file', accept: 'image/*', style: { display: 'none' } });
       inp.multiple = !!multiple;
       inp.addEventListener('change', function () { resolve(Array.prototype.slice.call(inp.files || [])); inp.remove(); });
+      inp.addEventListener('cancel', function () { resolve([]); inp.remove(); });
       document.body.appendChild(inp);
       inp.click();
     });
@@ -258,9 +290,9 @@
       var added = 0, failed = 0, i = 0;
       (function next() {
         if (i >= files.length || indexOf(id) < 0) {
-          if (added) EDU.toast(t('added_n', { n: EDU.fmt(added), name: nameOf(byId(id)) }));
+          if (added) EDU.toast(added === 1 ? t('added_one', { name: nameOf(byId(id)) }) : t('added_n', { n: EDU.fmt(added), name: nameOf(byId(id)) }));
           if (failed) EDU.toast(t('img_failed', { n: EDU.fmt(failed) }));
-          lastPred = null; renderPrediction();
+          examplesChanged();
           return;
         }
         var f = files[i++];
@@ -278,7 +310,7 @@
       if (!files[0]) return;
       loadImage(files[0]).then(function (o) {
         try { drawImageFile(o); } catch (e) { URL.revokeObjectURL(o.url); EDU.toast(t('img_failed', { n: EDU.fmt(1) })); return; }
-        frozen = true; smooth = {};
+        frozen = true; smooth = {}; spoken = ''; stableId = '';
         var img = $('#testImg');
         if (img.src && img.src.indexOf('blob:') === 0) URL.revokeObjectURL(img.src);
         img.src = o.url;
@@ -387,7 +419,7 @@
       var card = EDU.el('div', { class: 'cls', 'data-id': c.id },
         EDU.el('div', { class: 'cls-head' },
           EDU.el('span', { class: 'cls-dot', 'aria-hidden': 'true' }), input,
-          EDU.el('span', { class: 'badge cls-count' + (n ? ' has' : ''), 'data-n': String(n), 'aria-live': 'polite', text: t('n_examples', { n: EDU.fmt(n) }) })),
+          EDU.el('span', { class: 'badge cls-count' + (n ? ' has' : ''), 'data-n': String(n), 'aria-live': 'polite', text: exLabel(n) })),
         thumbStrip(c.id),
         EDU.el('div', { class: 'cls-actions' }, hold,
           EDU.el('button', { type: 'button', class: 'btn upl-btn', onclick: function () { uploadTo(c.id); } },
@@ -414,7 +446,7 @@
     if (!card) return;
     var n = counts[id] || 0;
     var badge = $('.cls-count', card);
-    badge.textContent = t('n_examples', { n: EDU.fmt(n) });
+    badge.textContent = exLabel(n);
     badge.setAttribute('data-n', String(n));
     badge.classList.toggle('has', n > 0);
     var strip = $('.thumbs', card);
@@ -463,16 +495,14 @@
     if (recId === id) stopRec();
     forgetExamples(id);
     classes.splice(indexOf(id), 1);
-    lastPred = null;
-    saveClasses(); renderClasses(); renderPrediction();
+    saveClasses(); renderClasses(); examplesChanged();
   }
   function clearClass(id) {
     var c = byId(id); if (!c || !(counts[id] || 0)) return;
     if (!confirm(t('confirm_clear_class', { name: nameOf(c) }))) return;
     if (recId === id) stopRec();
     forgetExamples(id);
-    lastPred = null;
-    updateClassCard(id); renderPrediction();
+    updateClassCard(id); examplesChanged();
   }
   function clearAllExamples() {
     stopRec();
@@ -497,7 +527,7 @@
 
   /* ---------------- rendering: prediction ---------------- */
   function idleKey() {
-    if (modelState !== 'ready') return modelState === 'error' ? 'ms_error' : 'need_model';
+    if (modelState !== 'ready') return modelState === 'error' ? errKey() : 'need_model';
     if (trainedCount() < 2) return 'need_two';
     if (!frozen && camState !== 'on') return 'show_cam';
     return '';
@@ -513,65 +543,76 @@
       row.style.setProperty('--cc', colorOf(c));
       bars.appendChild(row);
     });
-    $('#votesNote').textContent = t('votes_note', { k: EDU.fmt(K) });
     updatePrediction();
+  }
+  /* "how many neighbours vote" notes: K from the slider, capped by the smallest class (see effK) */
+  function renderVotes() {
+    var k = effK();
+    setText($('#votesNote'), t('votes_note', { k: EDU.fmt(k) }));
+    var note = $('#kNote'), capped = k < K && totalExamples() > 0;
+    if (note.hidden === capped) note.hidden = !capped;
+    setText(note, capped ? t('k_capped', { k: EDU.fmt(k) }) : '');
   }
   function updatePrediction() {
     var key = idleKey();
     var winBox = $('#winnerBox'), win = $('#winner'), sub = $('#winnerSub'), camLabel = $('#camLabel');
+    renderVotes();
     if (key || !lastPred) {
-      win.className = 'winner idle';
-      win.textContent = t(key || 'need_model');
-      if (!key) win.textContent = '…';
+      win.className = 'winner idle msg';
+      setText(win, key ? t(key) : '…');
       win.removeAttribute('data-id');
-      sub.textContent = '';
+      setText(sub, '');
       $('#winnerCap').hidden = true;
       winBox.style.removeProperty('--cc');
       camLabel.hidden = true;
-      EDU.$$('.bar-row').forEach(function (row) { $('.bar-fill', row).style.width = '0%'; $('.bar-pct', row).textContent = EDU.fmt(0) + '%'; });
+      EDU.$$('.bar-row').forEach(function (row) { $('.bar-fill', row).style.width = '0%'; setText($('.bar-pct', row), EDU.fmt(0) + '%'); });
+      maybeSpeak(null);
       return;
     }
     var conf = lastPred.confidences || {};
-    var best = null, bestP = -1;
+    var best = null, bestP = -1, second = -1;
     classes.forEach(function (c) {
       var raw = conf[c.id] || 0;
       var prev = smooth[c.id] === undefined ? raw : smooth[c.id];
       var s = frozen ? raw : prev * 0.5 + raw * 0.5;
       smooth[c.id] = s;
-      if (s > bestP) { bestP = s; best = c; }
+      if (s > bestP) { second = bestP; bestP = s; best = c; } else if (s > second) second = s;
     });
     EDU.$$('.bar-row').forEach(function (row) {
       var p = smooth[row.getAttribute('data-id')] || 0;
       $('.bar-fill', row).style.width = (p * 100).toFixed(1) + '%';
-      $('.bar-pct', row).textContent = EDU.fmt(Math.round(p * 100)) + '%';
+      setText($('.bar-pct', row), EDU.fmt(Math.round(p * 100)) + '%');
     });
     var pct = EDU.fmt(Math.round(bestP * 100));
+    /* below 50 %, or a tie between the top two classes: the AI has no clear answer */
+    var unsure = bestP < 0.5 || bestP - second < 0.005;
     $('#winnerCap').hidden = false;
-    if (bestP < 0.5) {
+    if (unsure) {
       win.className = 'winner idle';
-      win.textContent = t('not_sure');
+      setText(win, t('not_sure'));
       win.removeAttribute('data-id');
       winBox.style.removeProperty('--cc');
     } else {
       win.className = 'winner no-i18n';
-      win.textContent = nameOf(best);
+      setText(win, nameOf(best));
       win.setAttribute('data-id', best.id);
       winBox.style.setProperty('--cc', colorOf(best));
     }
-    sub.textContent = t('sure_pct', { p: pct });
+    setText(sub, t('sure_pct', { p: pct }));
     if (camState === 'on' && !frozen && best) {
       camLabel.hidden = false;
-      camLabel.style.setProperty('--cc', colorOf(best));
-      $('#camLabelTxt').textContent = (bestP < 0.5 ? t('not_sure') : nameOf(best)) + ' · ' + pct + '%';
+      camLabel.style.setProperty('--cc', unsure ? 'var(--border)' : colorOf(best));
+      setText($('#camLabelTxt'), (unsure ? t('not_sure') : nameOf(best)) + ' · ' + pct + '%');
     } else camLabel.hidden = true;
-    maybeSpeak(bestP >= 0.7 ? best : null);
+    maybeSpeak(!unsure && bestP >= 0.7 ? best : null);
   }
+  /* live camera: speak once the same answer has stayed for ~1 s; test photo: speak right away */
   function maybeSpeak(c) {
     if (!speakOn) return;
     var id = c ? c.id : '';
     var now = Date.now();
-    if (id !== stableId) { stableId = id; stableSince = now; return; }
-    if (!id || id === spoken || now - stableSince < 900) return;
+    if (id !== stableId) { stableId = id; stableSince = now; if (!frozen) return; }
+    if (!id || id === spoken || (!frozen && now - stableSince < 900)) return;
     spoken = id;
     EDU.speak(nameOf(c)).then(function (ok) {
       if (!ok) { EDU.toast(t('no_voice')); speakOn = false; store.set('speak', false); $('#speakChk').checked = false; }
@@ -632,24 +673,28 @@
       return EDU.readText(file).then(function (txt) {
         var m = JSON.parse(txt);
         if (!m || m.app !== SLUG || m.model !== MODEL_ID || m.dim !== embDim) throw new Error('wrong file');
-        var list = sanitize(m.classes);
+        /* drop broken entries first, so list[i] and raw[i] always describe the same class */
+        var raw = Array.isArray(m.classes) ? m.classes.filter(function (c) { return c && typeof c === 'object'; }) : null;
+        var list = sanitize(raw);
         if (!list) throw new Error('bad classes');
-        var tensors = {}, newCounts = {}, newThumbs = {};
+        var arrays = {}, newCounts = {}, newThumbs = {};
         list.forEach(function (c, i) {
-          var src = m.classes[i] || {}, n = parseInt(src.n, 10) || 0;
+          var src = raw[i], n = parseInt(src.n, 10) || 0;
           if (n > 0) {
             var arr = b64ToF32(String(src.data || ''));
             if (arr.length !== n * embDim) throw new Error('bad data');
-            tensors[c.id] = window.tf.tensor2d(arr, [n, embDim]);
+            arrays[c.id] = arr;
             newCounts[c.id] = n;
           }
           newThumbs[c.id] = (Array.isArray(src.thumbs) ? src.thumbs : []).filter(function (u) { return typeof u === 'string' && /^data:image\/(jpeg|png|webp);base64,/.test(u); }).slice(0, MAX_THUMBS);
         });
         clearAllExamples();
+        var tensors = {};   /* made only after the whole file was checked, so a bad file leaks nothing */
+        Object.keys(arrays).forEach(function (id) { tensors[id] = window.tf.tensor2d(arrays[id], [newCounts[id], embDim]); });
         if (Object.keys(tensors).length) knn.setClassifierDataset(tensors);
         classes = list; counts = newCounts; thumbs = newThumbs;
         if (m.k) { K = EDU.clamp(parseInt(m.k, 10) || 10, 1, 20); store.set('k', K); }
-        saveClasses(); renderAll();
+        saveClasses(); renderAll(); refreshFrozen();
         EDU.toast(t('model_opened', { n: EDU.fmt(totalExamples()) }));
       });
     }).catch(function (e) { console.warn(e); EDU.toast(t('bad_file')); });
@@ -659,7 +704,7 @@
   function renderK() {
     $('#kRange').value = String(K);
     $('#kLabel').textContent = t('k_label', { k: EDU.fmt(K) });
-    $('#votesNote').textContent = t('votes_note', { k: EDU.fmt(K) });
+    renderVotes();
   }
   function renderWorksheet() {
     var body = $('#wsRows');
@@ -667,8 +712,12 @@
     for (var i = 1; i <= 5; i++) body.appendChild(EDU.el('tr', {}, EDU.el('td', { text: EDU.fmt(i) }), EDU.el('td'), EDU.el('td'), EDU.el('td'), EDU.el('td')));
   }
   function setHeaderVar() {
-    var top = $('.edu-top');
-    if (top) document.documentElement.style.setProperty('--hdr', top.offsetHeight + 'px');
+    var top = $('.edu-top'), root = document.documentElement, h = top ? top.offsetHeight : 0;
+    root.style.setProperty('--hdr', h + 'px');
+    /* phone with the camera pinned: keyboard focus / scrollIntoView must not hide buttons under the camera card */
+    var card = $('#camCard');
+    var pinned = card.classList.contains('sticky') && window.matchMedia && matchMedia('(max-width: 759px)').matches;
+    root.style.scrollPaddingTop = pinned ? (h + card.offsetHeight + 12) + 'px' : '';
   }
   function renderAll() {
     renderModelState(); renderCam(); renderPresets(); renderClasses(); renderPrediction(); renderK(); renderWorksheet(); drawFp(null);
@@ -686,7 +735,7 @@
   $('#testPhoto').addEventListener('click', testWithPhoto);
   $('#backLive').addEventListener('click', backToLive);
   $('#speakChk').addEventListener('change', function (e) { speakOn = e.target.checked; spoken = ''; store.set('speak', speakOn); if (!speakOn) EDU.stopSpeaking(); });
-  $('#kRange').addEventListener('input', function (e) { K = EDU.clamp(parseInt(e.target.value, 10) || 10, 1, 20); store.set('k', K); renderK(); });
+  $('#kRange').addEventListener('input', function (e) { K = EDU.clamp(parseInt(e.target.value, 10) || 10, 1, 20); store.set('k', K); renderK(); refreshFrozen(); });
   $('#saveModel').addEventListener('click', saveModel);
   $('#openModel').addEventListener('click', openModel);
   $('#resetAll').addEventListener('click', resetAll);
@@ -725,7 +774,7 @@
   window.addEventListener('resize', setHeaderVar);
   window.addEventListener('pagehide', function () { stopStream(); });
   EDU.onTheme(function () { drawFp(null); });
-  EDU.onLang(function () { renderAll(); setHeaderVar(); });
+  EDU.onLang(function () { renderAll(); refreshFrozen(); setHeaderVar(); });
 
   renderAll();
   initModel();

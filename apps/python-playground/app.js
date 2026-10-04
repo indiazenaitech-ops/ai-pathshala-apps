@@ -36,21 +36,25 @@
   else { state.exId = 'hello'; ed.value = exById('hello').code; }
   if (state.exId && !exById(state.exId)) state.exId = '';
 
-  // A shared link (#py=...) brings code with it.
+  // A shared link (#py=...) brings code with it. The student's own earlier work is kept, and a
+  // button under the editor brings it back (opening a link must never silently wipe homework).
+  var prevCode = '';
   (function () {
     var m = /^#py=([A-Za-z0-9_-]+)$/.exec(location.hash || '');
     if (!m) return;
     var obj = EDU.unpack(m[1]);
     try { history.replaceState(history.state, '', location.pathname + location.search); } catch (e) { }
     if (obj && typeof obj.c === 'string') {
+      var old = ed.value;
+      if (old.trim() && !isPristine(old) && old !== obj.c) prevCode = old;
       ed.value = obj.c; state.exId = obj.e && exById(obj.e) ? obj.e : '';
       saveCode(); store.set('ex', state.exId);
-      setTimeout(function () { EDU.toast(t('loaded_link')); }, 400);
+      if (!prevCode) setTimeout(function () { EDU.toast(t('loaded_link')); }, 400);
     }
   })();
 
-  function isPristine() {
-    var v = ed.value;
+  function isPristine(v) {
+    if (typeof v !== 'string') v = ed.value;
     if (!v.trim()) return true;
     for (var i = 0; i < EXAMPLES.length; i++) if (EXAMPLES[i].code === v) return true;
     return false;
@@ -71,11 +75,13 @@
     else if (p === 'failed') { txt = t('st_failed'); cls += ' danger'; btn = 'try_again'; }
     else if (p === 'savedata') { txt = t('st_savedata'); cls += ' warning'; btn = 'load_now'; }
     else if (p === 'crashed') { txt = t('st_crashed'); cls += ' danger'; btn = 'restart'; }
-    statusBox.className = cls;
-    statusText.textContent = txt;
+    // Only touch what changed: the box is an aria-live region and the timer ticks every second.
+    if (statusBox.className !== cls) statusBox.className = cls;
+    if (statusText.textContent !== txt) statusText.textContent = txt;
     spin.hidden = !busy;
     if (btn) { statusBtn.hidden = false; statusBtn.textContent = t(btn); statusBtn.dataset.act = btn; } else statusBtn.hidden = true;
-    elapsedEl.textContent = (p === 'loading' && loadT0 && !state.busyKey) ? t('sec', { n: EDU.fmt(Math.round((Date.now() - loadT0) / 1000)) }) : '';
+    var el = (p === 'loading' && loadT0 && !state.busyKey) ? t('sec', { n: EDU.fmt(Math.round((Date.now() - loadT0) / 1000)) }) : '';
+    if (elapsedEl.textContent !== el) elapsedEl.textContent = el;
   }
   statusBtn.addEventListener('click', function () {
     var act = statusBtn.dataset.act;
@@ -100,14 +106,15 @@
     outLen += s.length;
     var last = segs[segs.length - 1];
     if (last && last.kind === kind) last.text += s; else segs.push({ kind: kind, text: s });
-    if (truncated) segs.push({ kind: 'sys', text: '\n' + t('out_trunc') + '\n' });
+    if (truncated) sysNote('out_trunc', '\n', '\n');
   }
   function flushOut() {
     if (!segs.length) return;
     var frag = document.createDocumentFragment();
     segs.forEach(function (sg) {
       if (sg.kind === 'img') { frag.appendChild(figureEl(sg.b64)); return; }
-      var cls = sg.kind === 'err' ? 'e' : sg.kind === 'in' ? 'i' : sg.kind === 'sys' ? 's' : '';
+      if (sg.kind === 'sys') { frag.appendChild(EDU.el('span', { class: 's', text: sg.text, dataset: { k: sg.key, pre: sg.pre, post: sg.post } })); return; }
+      var cls = sg.kind === 'err' ? 'e' : sg.kind === 'in' ? 'i' : '';
       frag.appendChild(cls ? EDU.el('span', { class: cls, text: sg.text }) : document.createTextNode(sg.text));
     });
     segs = [];
@@ -115,6 +122,11 @@
     outHasContent = true;
     $('#outEmpty').hidden = true;
     outEl.scrollTop = outEl.scrollHeight;
+  }
+  /* App notes inside the output (not printed by the program); they follow the language picker. */
+  function sysNote(key, pre, post) { segs.push({ kind: 'sys', key: key, pre: pre || '', post: post || '', text: (pre || '') + t(key) + (post || '') }); }
+  function renderSysNotes() {
+    EDU.$$('.s[data-k]', outEl).forEach(function (n) { n.textContent = n.dataset.pre + t(n.dataset.k) + n.dataset.post; });
   }
   function figureEl(b64) {
     figN++;
@@ -138,6 +150,7 @@
   }
 
   /* bridge used by the Python side (module "_pp") */
+  var dialogMs = 0;
   var bridge = {
     write: function (kind, s) { addOut(String(kind), String(s)); },
     image: function (b64) { segs.push({ kind: 'img', b64: String(b64) }); tail = ''; },
@@ -146,10 +159,15 @@
       var before = tail.replace(/\n$/, '').split('\n').slice(-6).join('\n').trim();
       tail = '';
       var msg = t('ask_title') + (before ? '\n\n' + before : '') + (p ? '\n\n' + p : '');
-      var r = window.prompt(msg, '');
+      var w0 = performance.now(), r = window.prompt(msg, '');
+      dialogMs += performance.now() - w0;          // typing time is not program time
       return r === null || r === undefined ? null : String(r);
     },
-    stop_ask: function (n) { return !!window.confirm(t('guard_q', { n: EDU.fmt(n) })); }
+    stop_ask: function (n) {
+      var w0 = performance.now(), ok = !!window.confirm(t('guard_q', { n: EDU.fmt(n) }));
+      dialogMs += performance.now() - w0;
+      return ok;
+    }
   };
 
   /* ------------------------------------------------------------ Pyodide */
@@ -210,11 +228,17 @@
   /* ------------------------------------------------------------ running */
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   var IMPORT_RE = /^[ \t]*(?:import|from)[ \t]+[A-Za-z_]/m;
+  var PANDAS_PLOT_RE = /^[ \t]*(?:import[ \t]+pandas|from[ \t]+pandas[ \t.])/m;
 
   function ensurePackages(code) {
     if (!IMPORT_RE.test(code)) return Promise.resolve(true);
     var failed = false, names = '';
-    return py.loadPackagesFromImports(code, {
+    // a background download (example just picked) holds Pyodide's package lock: show it
+    if (preload && preload.inst === py && preload.names) { names = preload.names; setBusy('st_pkg', { pkgs: names }); }
+    // df.plot() / s.hist() need matplotlib even when the program never imports it (Class 12 IP)
+    var scan = code;
+    if (PANDAS_PLOT_RE.test(code) && /\.(plot|hist|boxplot)\b/.test(code)) scan += '\nimport matplotlib\n';
+    return py.loadPackagesFromImports(scan, {
       messageCallback: function (m) {
         var mm = /^Loading (.+)$/.exec(String(m));
         if (mm) { names = mm[1]; setBusy('st_pkg', { pkgs: names }); }
@@ -239,6 +263,8 @@
       return;
     }
     var code = ed.value;
+    // Save first: a program that freezes the tab must not cost the student their last edits.
+    clearTimeout(saveTimer); saveTimer = null; saveCode();
     state.running = true; updateRunBtn();
     clearOut(); hideHint(); setInfo(null);
     state.lastErr = null; state.errMarked = false; renderGutter(true);
@@ -248,8 +274,9 @@
       setBusy('st_running');
       return wait(40).then(function () {
         var t0 = performance.now();
+        dialogMs = 0;
         var raw = runner(code, state.guard ? GUARD_SECS : 0);
-        ms = performance.now() - t0;
+        ms = Math.max(0, performance.now() - t0 - dialogMs);
         return JSON.parse(String(raw));
       });
     }).then(function (res) {
@@ -273,7 +300,7 @@
 
   function finish(res, ms) {
     if (res.ok) {
-      if (!outHasContent) { addOut('sys', t('no_output') + '\n'); flushOut(); }
+      if (!outHasContent) { sysNote('no_output', '', '\n'); flushOut(); }
       var sec = Math.max(ms, 1) / 1000;
       setInfo({ key: 'done_ok', vars: { s: EDU.fmt(sec, { maximumFractionDigits: sec < 0.1 ? 3 : 2 }) }, cls: 'ok' });
       return;
@@ -324,7 +351,11 @@
   /* ------------------------------------------------------------ editor */
   var saveTimer = null;
   function saveCode() { store.set('code', ed.value); }
-  function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(saveCode, 300); }
+  function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(function () { saveTimer = null; saveCode(); }, 300); }
+  function flushSave() { if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; saveCode(); } }
+  // reload / tab close / app switch within 300 ms of typing must not lose the last keys
+  window.addEventListener('pagehide', flushSave);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushSave(); });
 
   var lastLines = -1, lastMark = -1;
   function renderGutter(force) {
@@ -469,6 +500,20 @@
     });
   });
 
+  function renderLinkNote() {
+    var box = $('#linkNote');
+    box.hidden = !prevCode;
+    if (prevCode) { $('#linkNoteText').textContent = t('loaded_link'); $('#restoreBtn').textContent = t('restore_mine'); }
+  }
+  $('#restoreBtn').addEventListener('click', function () {
+    if (!prevCode) return;
+    ed.value = prevCode; prevCode = '';
+    state.exId = ''; store.set('ex', ''); sel.value = ''; prevSel = ''; state.fileName = '';
+    state.lastErr = null; state.errMarked = false;
+    saveCode(); renderGutter(true); renderPos(); renderNote(); renderLinkNote();
+    clearOut(); hideHint(); setInfo(null);
+  });
+
   /* ------------------------------------------------------------ examples menu */
   function renderExamples() {
     sel.textContent = '';
@@ -493,14 +538,32 @@
     state.exId = ex ? id : '';
     store.set('ex', state.exId);
     if (ex) { ed.value = ex.code; state.fileName = ''; }
+    if (prevCode) { prevCode = ''; renderLinkNote(); }
     ed.scrollTop = 0; ed.scrollLeft = 0;
     state.lastErr = null; state.errMarked = false;
     saveCode(); renderGutter(true); renderPos(); renderNote();
     if (!keepOut) { clearOut(); hideHint(); setInfo(null); }
     // fetch pandas / matplotlib in the background so Run is quicker
-    if (ex && ex.pkg && state.ready && py && !state.running) {
-      py.loadPackagesFromImports(ex.code, { messageCallback: function () { }, errorCallback: function () { } }).catch(function () { });
-    }
+    if (ex && ex.pkg && state.ready && py && !state.running) preloadPackages(ex.code);
+  }
+  /* Background download for pandas / matplotlib examples. The status bar says what is being
+     downloaded, so a slow school network does not look like a frozen Run button. */
+  var preload = null;
+  function preloadPackages(code) {
+    var job = { inst: py, names: '' };
+    preload = job;
+    job.inst.loadPackagesFromImports(code, {
+      messageCallback: function (m) {
+        var mm = /^Loading (.+)$/.exec(String(m));
+        if (!mm || py !== job.inst) return;
+        job.names = mm[1];
+        if (!state.running || state.busyKey === 'st_pkg') setBusy('st_pkg', { pkgs: job.names });
+      },
+      errorCallback: function () { }
+    }).catch(function () { }).then(function () {
+      if (preload === job) preload = null;
+      if (!state.running && state.busyKey === 'st_pkg') setBusy('');
+    });
   }
   var prevSel = state.exId || '';
   sel.addEventListener('change', function () {
@@ -531,7 +594,7 @@
     EDU.pickFile('.py,.txt,.pyw,text/x-python,text/plain').then(function (f) {
       if (!f) return;
       if (f.size > MAX_FILE_KB * 1024) { EDU.toast(t('file_too_big', { n: MAX_FILE_KB })); return; }
-      if (!isPristine() && !window.confirm(t('confirm_replace'))) return;
+      if (!isPristine() && !window.confirm(t('confirm_open'))) return;
       return EDU.readText(f).then(function (txt) {
         ed.value = String(txt).replace(/\r\n?/g, '\n').replace(/^﻿/, '');
         state.exId = ''; store.set('ex', ''); sel.value = ''; prevSel = '';
@@ -582,7 +645,7 @@
 
   /* ------------------------------------------------------------ language */
   function render() {
-    renderExamples(); renderNote(); renderStatus(); renderInfo(); renderPos();
+    renderExamples(); renderNote(); renderStatus(); renderInfo(); renderPos(); renderSysNotes(); renderLinkNote();
     if (state.lastErr) renderHint();
     $('#guardLbl').textContent = t('guard_label', { n: GUARD_SECS });
     EDU.$$('.pp-fig img').forEach(function (img) { img.alt = t('chart_alt'); });

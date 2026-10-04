@@ -29,6 +29,8 @@
     .pp-tools { display: flex; flex-wrap: wrap; gap: 6px; }
     .pp-note { margin: 0 0 10px; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; }
     .pp-note .badge { white-space: normal; }
+    .pp-link { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0 0 10px; }
+    .pp-link[hidden] { display: none; }
 
     .pp-editor { display: flex; direction: ltr; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--surface); font-family: var(--mono); font-size: var(--pp-fs); line-height: 1.5; }
     .pp-editor:focus-within { border-color: var(--primary); box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 30%, transparent); }
@@ -44,6 +46,8 @@
       white-space: pre; overflow-wrap: normal; overflow: auto; resize: vertical; tab-size: 4; -moz-tab-size: 4;
     }
     .pp-editor textarea:focus { outline: none; }
+    /* edu.css gives Urdu textareas line-height 2 (for Nastaliq); code keeps the gutter's 1.5 or the line numbers drift */
+    .pp-editor textarea#code { line-height: inherit; }
     .pp-under { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 12px; margin-top: 8px; }
     .pp-pos { font-variant-numeric: tabular-nums; white-space: nowrap; }
     .pp-keys { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; direction: ltr; }
@@ -89,6 +93,8 @@
       .pp-toolbar .pp-actions .btn { flex: 1 1 auto; }
       .pp-editor textarea { height: 46vh; }
       .pp-out { min-height: 180px; }
+      /* on a phone the error message must be readable without swiping the output sideways */
+      .pp-out .e { white-space: pre-wrap; overflow-wrap: break-word; }
     }
 
     #ppPrint { display: none; }
@@ -109,7 +115,7 @@
 
     <div id="ppStatus" class="callout pp-status no-print" role="status" aria-live="polite">
       <span id="ppSpin" class="pp-spin" aria-hidden="true"></span>
-      <span class="pp-msg"><span id="ppStatusText"></span> <span id="ppElapsed" class="pp-elapsed muted small"></span></span>
+      <span class="pp-msg"><span id="ppStatusText"></span> <span id="ppElapsed" class="pp-elapsed muted small" aria-hidden="true"></span></span>
       <button type="button" id="ppStatusBtn" class="btn btn-sm btn-primary" hidden></button>
     </div>
 
@@ -140,6 +146,10 @@
           </div>
         </div>
         <p id="exNote" class="pp-note small muted"></p>
+        <div id="linkNote" class="callout accent small pp-link no-print" role="status" hidden>
+          <span id="linkNoteText"></span>
+          <button type="button" class="btn btn-sm" id="restoreBtn"></button>
+        </div>
         <div class="pp-editor no-i18n" id="ppEditor">
           <div class="pp-gutter" aria-hidden="true"><div class="pp-gutter-in" id="gutter"></div></div>
           <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" dir="ltr" data-i18n-aria-label="code_label"></textarea>
@@ -247,26 +257,80 @@ _PP = {"t0": 0.0, "next": 0.0, "limit": 0.0, "n": 0, "why": "", "on": False}
 _PP_TOOL = 3
 _PP_MON = sys.monitoring
 
-def _pp_input(prompt=""):
-    prompt = str(prompt)
+def _pp_ask(prompt):
+    # A program that was already stopped (Cancel / loop guard) must not ask again,
+    # even when a bare "except:" swallowed the first KeyboardInterrupt.
+    if _PP["why"]:
+        raise KeyboardInterrupt
     t = time.monotonic()
     ans = _pp.ask(prompt)
     waited = time.monotonic() - t
     _PP["t0"] += waited
     _PP["next"] += waited
+    return ans
+
+def _pp_stop(why):
+    # Remember the stop and watch loop jumps, so "while True: try: ... except: ..." also ends.
+    _PP["why"] = why
+    if not _PP["on"]:
+        _pp_guard_on(3600)
+    raise KeyboardInterrupt
+
+def _pp_input(prompt=""):
+    prompt = str(prompt)
+    ans = _pp_ask(prompt)
     if prompt:
         _PP_OUT.write(prompt)
     if ans is None:
         _pp.write("in", "\n")
-        _PP["why"] = "cancel"
-        raise KeyboardInterrupt
+        _pp_stop("cancel")
     ans = str(ans)
     _pp.write("in", ans + "\n")
     return ans
 
+class _PPStdin:
+    # sys.stdin for help(), sys.stdin.readline() and "for line in sys.stdin": each line is
+    # asked with the same input box; Cancel means end of input.
+    encoding = "utf-8"
+    errors = "strict"
+    closed = False
+    def readable(self):
+        return True
+    def writable(self):
+        return False
+    def isatty(self):
+        return False
+    def flush(self):
+        pass
+    def close(self):
+        pass
+    def readline(self, size=-1):
+        ans = _pp_ask("")
+        if ans is None:
+            return ""
+        ans = str(ans)
+        _pp.write("in", ans + "\n")
+        return ans + "\n"
+    def read(self, size=-1):
+        return self.readline()
+    def readlines(self, hint=-1):
+        return list(self)
+    def __iter__(self):
+        return self
+    def __next__(self):
+        line = self.readline()
+        if not line:
+            raise StopIteration
+        return line
+
+_PP_IN = _PPStdin()
+sys.stdin = _PP_IN
+
 def _pp_jump(code, offset, dest):
     if code.co_filename != "main.py":
         return _PP_MON.DISABLE
+    if _PP["why"]:
+        raise KeyboardInterrupt
     _PP["n"] += 1
     if _PP["n"] & 1023:
         return None
@@ -346,6 +410,7 @@ def _pp_setup_mpl():
 def _pp_run(src, guard_secs):
     sys.stdout = _PP_OUT
     sys.stderr = _PP_ERR
+    sys.stdin = _PP_IN
     builtins.input = _pp_input
     _PP["why"] = ""
     res = {"ok": True, "type": "", "line": 0, "msg": "", "why": ""}
@@ -371,6 +436,7 @@ def _pp_run(src, guard_secs):
         _pp_guard_off()
         sys.stdout = _PP_OUT
         sys.stderr = _PP_ERR
+        sys.stdin = _PP_IN
     try:
         _pp_show()
     except Exception as e:

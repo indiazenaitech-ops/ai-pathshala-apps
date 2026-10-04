@@ -42,11 +42,23 @@
     .rec-dot::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #fff; animation: tm-blink 1s steps(2) infinite; }
     @keyframes tm-blink { 50% { opacity: .2; } }
     .cam-tools { justify-content: center; margin-top: 12px; }
+    /* phone: while the camera is on, the camera card stays pinned under the header in a compact
+       side-by-side layout (picture | buttons) so the class cards below still have room */
     @media (max-width: 759px) {
-      .cam-card.sticky { position: sticky; top: var(--hdr, 0px); z-index: 20; box-shadow: var(--shadow-lg); padding: 10px; }
+      .cam-card.sticky { position: sticky; top: var(--hdr, 0px); z-index: 20; box-shadow: var(--shadow-lg); padding: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
       .cam-card.sticky .step, .cam-card.sticky .cam-hint { display: none; }
-      .cam-card.sticky .cam-box { max-width: 30vh; }
-      .cam-card.sticky .cam-tools { margin-top: 8px; }
+      .cam-card.sticky .cam-box { flex: 0 0 auto; width: min(26vh, 58%); max-width: none; margin: 0; }
+      .cam-card.sticky .cam-tools { flex: 1 1 0; min-width: 0; flex-direction: column; align-items: stretch; margin-top: 0; gap: 8px; }
+      .cam-card.sticky .cam-tools .btn { white-space: normal; padding-inline: 8px; }
+      .cam-card.sticky #camMsg { flex-basis: 100%; }
+      .cam-card.sticky .cam-label { inset-inline: 4px; bottom: 6px; }
+      .cam-card.sticky .cam-label span { font-size: .8rem; padding: 2px 8px; border-width: 2px; }
+      .cam-card.sticky .rec-dot { top: 6px; inset-inline-start: 6px; font-size: .75rem; padding: 2px 8px; }
+    }
+    /* laptop / smartboard: camera and result columns stay in view while you scroll down to class 4 or 5 */
+    @media (min-width: 1100px) and (min-height: 700px) {
+      .cam-card, .test-card { position: sticky; top: calc(var(--hdr, 60px) + 12px); }
+      #lab:fullscreen .cam-card, #lab:fullscreen .test-card { top: 0; }
     }
 
     /* ---------- classes ---------- */
@@ -115,9 +127,10 @@
     #lab:fullscreen { background: var(--bg); padding: 18px; overflow: auto; }
     #lab:fullscreen .cam-box { max-width: min(70vh, 640px); }
     #lab:fullscreen .winner { font-size: clamp(2.2rem, 6vw, 4rem); }
+    #lab:fullscreen .winner.msg { font-size: 1.3rem; }
 
     @media print {
-      #lab, #modelState, .tm-bottom, .edu-intro, #helpBox, #insideBox .fp-wrap, #insideBox input { display: none !important; }
+      #lab, #modelState, .tm-bottom, .edu-intro, #helpBox, #insideBox .fp-wrap, #insideBox .field, #kNote { display: none !important; }
       details.card > summary { list-style: none; }
       #wsBox > summary { display: none; }
       #wsBox { border: 0; padding: 0; }
@@ -219,6 +232,7 @@
           <label class="field" style="margin-top:10px"><span id="kLabel"></span>
             <input type="range" id="kRange" min="1" max="20" step="1" value="10">
           </label>
+          <p class="tiny muted mb0" id="kNote" hidden></p>
         </div>
         <div><h3 data-i18n="in4_h"></h3><p data-i18n="in4"></p></div>
         <div class="callout warning"><h3 data-i18n="in5_h"></h3><p data-i18n="in5"></p></div>

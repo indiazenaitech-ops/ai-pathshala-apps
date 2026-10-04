@@ -22,7 +22,14 @@
     if (!text) return null;
     var out = { id: q.id && typeof q.id === 'string' ? q.id : uid(), type: q.type === 'tf' ? 'tf' : 'mcq', text: text, options: [], answer: 0, explain: str(q.explain, 600) };
     var ans = parseInt(q.answer, 10);
-    if (out.type === 'tf') { out.answer = ans === 1 ? 1 : 0; return out; }
+    if (out.type === 'tf') {
+      /* 0 = True, 1 = False; hand-written JSON may also say answer: true/false or "True"/"False" */
+      if (typeof q.answer === 'boolean') ans = q.answer ? 0 : 1;
+      else if (/^\s*(true|t)\s*$/i.test(String(q.answer))) ans = 0;
+      else if (/^\s*(false|f)\s*$/i.test(String(q.answer))) ans = 1;
+      out.answer = ans === 1 ? 1 : 0; return out;
+    }
+    if (isNaN(ans) && typeof q.answer === 'string' && /^\s*[A-Fa-f]\s*$/.test(q.answer)) ans = LETTERS.indexOf(q.answer.trim().toUpperCase());
     var raw = Array.isArray(q.options) ? q.options : [];
     var newAns = -1;
     raw.forEach(function (o, i) {
@@ -38,27 +45,37 @@
   function normQuiz(raw) {
     raw = raw || {};
     var qs = (Array.isArray(raw.questions) ? raw.questions : []).map(normQuestion).filter(Boolean).slice(0, MAX_Q);
-    var qz = { id: typeof raw.id === 'string' ? raw.id : uid(), title: str(raw.title, 120), questions: qs, updated: Date.now() };
+    /* question ids must be unique inside a quiz (edit / delete find questions by id) */
+    var seen = {};
+    qs.forEach(function (q) { while (seen[q.id]) q.id = uid(); seen[q.id] = 1; });
+    var qz = { id: typeof raw.id === 'string' && raw.id ? raw.id : uid(), title: str(raw.title, 120), questions: qs, updated: Date.now() };
     if (raw.sample) qz.sample = raw.sample;
     return qz;
   }
   function sampleQuiz(lang, id) {
     var C = window.APP_CONTENT || {};
     var c = C[lang] || C.en || { title: '', questions: [] };
-    var q = normQuiz({ title: c.title, questions: c.questions, sample: lang });
-    if (id) q.id = id;
-    return q;
+    id = id || uid();
+    /* stable question ids, so a running class quiz / practice keeps its place when the language changes */
+    var qs = (c.questions || []).map(function (q, i) { var o = {}; for (var k in q) o[k] = q[k]; o.id = id + '-s' + i; return o; });
+    return normQuiz({ id: id, title: c.title, questions: qs, sample: lang });
   }
 
   /* ---------------------------------------------------------------- state */
   var quizzes = store.get('quizzes', null);
-  if (!Array.isArray(quizzes)) quizzes = null; else quizzes = quizzes.map(normQuiz);
+  if (!Array.isArray(quizzes)) quizzes = null; else quizzes = quizzes.filter(function (q) { return q && typeof q === 'object'; }).map(normQuiz);
   if (!quizzes || !quizzes.length) quizzes = [sampleQuiz(EDU.lang)];
+  /* An untouched sample quiz follows the UI language, also when the language was changed elsewhere
+     (library home page, ?lang= link) since the last visit. */
+  quizzes = quizzes.map(function (q) { return q.sample && q.sample !== EDU.lang ? sampleQuiz(EDU.lang, q.id) : q; });
   var currentId = store.get('current', quizzes[0].id);
   var settings = Object.assign({ timer: 0, teams: 4, shuffleQ: false, shuffleO: false, names: ['', '', '', ''], key: true, lines: true, expl: false }, store.get('settings', {}));
   if (!Array.isArray(settings.names)) settings.names = ['', '', '', ''];
+  if ([0, 2, 3, 4].indexOf(settings.teams) < 0) settings.teams = 4;
+  if (TIMERS.indexOf(settings.timer) < 0) settings.timer = 0;
   var scores = store.get('scores', [0, 0, 0, 0]);
   if (!Array.isArray(scores) || scores.length !== 4) scores = [0, 0, 0, 0];
+  scores = scores.map(function (v) { return typeof v === 'number' && isFinite(v) ? v : 0; });
   var tab = store.get('tab', 'edit');
   var shared = null;            // quiz opened from a share link (#quiz=...)
 
@@ -70,7 +87,7 @@
   }
   function saveQuizzes() { store.set('quizzes', quizzes); store.set('current', currentId); }
   function saveSettings() { store.set('settings', settings); }
-  function touch(qz) { delete qz.sample; qz.updated = Date.now(); saveQuizzes(); }
+  function touch(qz) { delete qz.sample; qz.updated = Date.now(); saveQuizzes(); syncDecks(); }
   function titleOf(qz) { return qz.title || t('untitled'); }
 
   /* ---------------------------------------------------------------- helpers */
@@ -90,9 +107,49 @@
   function ansNode(card, origIdx) {
     var q = card.q, opts = optsOf(q);
     if (q.type === 'tf') return el('span', { text: opts[origIdx] });
-    return el('span', { class: 'no-i18n' }, ltMini(card.perm.indexOf(origIdx)), opts[origIdx]);
+    return el('span', { class: 'no-i18n' }, ltMini(card.perm.indexOf(origIdx)), el('bdi', { text: opts[origIdx] }));
   }
   function setBar(span, frac) { span.style.width = Math.round(EDU.clamp(frac, 0, 1) * 100) + '%'; }
+  function idxList(n) { var a = []; for (var i = 0; i < n; i++) a.push(i); return a; }
+
+  /* The quiz was edited (or the sample quiz changed language) while a class quiz or a practice run was
+     going on: put the new versions of the questions into the running decks, drop deleted questions and
+     keep the place. map: optional { oldQuestionId: newQuestion }. */
+  function syncDecks(map) {
+    if (!cq && !pr) return;
+    var byId = {};
+    cur().questions.forEach(function (q) { byId[q.id] = q; });
+    if (map) Object.keys(map).forEach(function (k) { byId[k] = map[k]; });
+    /* -> 'empty' (nothing left), 'kept' (same current question, same option order) or 'moved' */
+    function sync(st, withAnswers) {
+      var deck = [], answers = [], before = 0, curKept = false;
+      st.deck.forEach(function (card, k) {
+        var q = byId[card.q.id];
+        if (!q) return;
+        if (k < st.i) before++;
+        var n = optsOf(q).length, perm = card.perm;
+        if (perm.length !== n) perm = (settings.shuffleO && q.type === 'mcq') ? EDU.shuffle(idxList(n)) : idxList(n);
+        if (k === st.i && perm === card.perm) curKept = true;
+        if (withAnswers) {
+          var a = st.answers[k];
+          if (a && q !== card.q) a = a.chosen < n ? { chosen: a.chosen, ok: a.chosen === q.answer } : undefined;
+          answers[deck.length] = a;
+        }
+        deck.push({ q: q, perm: perm });
+      });
+      if (!deck.length) return 'empty';
+      st.deck = deck;
+      if (withAnswers) st.answers = answers;
+      st.i = Math.min(before, deck.length - 1);
+      return curKept ? 'kept' : 'moved';
+    }
+    if (cq) {
+      var r = sync(cq, false);
+      if (r === 'empty') stopClass(true);
+      else if (r === 'moved' && !cq.finished) { cq.picked = -1; cq.revealed = false; }
+    }
+    if (pr && sync(pr, true) === 'empty') pr = null;
+  }
 
   var audioCtx = null;
   function beep() {
@@ -100,6 +157,7 @@
       var AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
       audioCtx = audioCtx || new AC();
+      if (audioCtx.state === 'suspended' && audioCtx.resume) audioCtx.resume().catch(function () { });
       [0, 0.22].forEach(function (d) {
         var o = audioCtx.createOscillator(), g = audioCtx.createGain();
         o.type = 'sine'; o.frequency.value = 880;
@@ -159,7 +217,8 @@
     if (TABS.indexOf(name) < 0) name = 'edit';
     if (shared) name = 'practice';
     tab = name; if (!shared) store.set('tab', tab);
-    if (name !== 'class') pauseTimer();
+    if (name !== 'class') suspendTimer(); else resumeTimer();
+    $('#badLink').hidden = true;
     render();
   }
   EDU.$$('#tabs button').forEach(function (b) {
@@ -196,7 +255,7 @@
       var radio = el('input', { type: 'radio', name: 'mcqAns', id: 'ans' + i, 'aria-label': t('mark_correct', { n: LETTERS[i] }), title: t('mark_correct', { n: LETTERS[i] }) });
       radio.checked = ed.answer === i;
       radio.addEventListener('change', function () { if (radio.checked) { ed.answer = i; $('#edMsg').textContent = ''; } });
-      var input = el('input', { type: 'text', id: 'opt' + i, maxlength: 300, placeholder: t('option_n', { n: LETTERS[i] }), 'aria-label': t('option_n', { n: LETTERS[i] }) });
+      var input = el('input', { type: 'text', id: 'opt' + i, dir: 'auto', maxlength: 300, placeholder: t('option_n', { n: LETTERS[i] }), 'aria-label': t('option_n', { n: LETTERS[i] }) });
       input.value = val;
       input.addEventListener('input', function () { ed.options[i] = input.value; });
       input.addEventListener('keydown', function (e) {
@@ -301,7 +360,7 @@
       var ul = el('ul', { class: 'qopts' + (q.type === 'mcq' ? ' no-i18n' : '') });
       opts.forEach(function (o, k) {
         var right = k === q.answer;
-        ul.appendChild(el('li', { class: right ? 'is-correct' : '' }, q.type === 'mcq' ? ltMini(k) : null, o, right ? '  ✓' : null));
+        ul.appendChild(el('li', { class: right ? 'is-correct' : '' }, q.type === 'mcq' ? ltMini(k) : null, q.type === 'mcq' ? el('bdi', { text: o }) : o, right ? '  ✓' : null));
       });
       var n = EDU.fmt(i + 1);
       var acts = el('div', { class: 'qactions' },
@@ -313,9 +372,9 @@
         el('div', { class: 'qnum', text: n }),
         el('div', { class: 'qbody' },
           el('span', { class: 'badge', text: q.type === 'tf' ? t('type_tf') : t('type_mcq') }),
-          el('div', { class: 'qtext no-i18n', text: q.text }),
+          el('div', { class: 'qtext no-i18n', dir: 'auto', text: q.text }),
           ul,
-          q.explain ? el('div', { class: 'qexpl no-i18n', text: '💡 ' + q.explain }) : null),
+          q.explain ? el('div', { class: 'qexpl no-i18n', dir: 'auto', text: '💡 ' + q.explain }) : null),
         acts));
     });
   }
@@ -329,7 +388,7 @@
 
   /* ---------------------------------------------------------------- import / export */
   var CSV_HEAD = ['question', 'option1', 'option2', 'option3', 'option4', 'option5', 'option6', 'correct', 'explanation'];
-  function safeName(s) { return (String(s || '').replace(/[\\/:*?"<>|#%\n\r\t]+/g, ' ').trim().slice(0, 60) || 'quiz'); }
+  function safeName(s) { return (String(s || '').replace(/[\\/:*?"<>|#%\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60).trim() || 'quiz'); }
   function quizToCsvRows(qz) {
     var rows = [CSV_HEAD];
     qz.questions.forEach(function (q) {
@@ -381,7 +440,8 @@
       if (cCol < 0 && i > 0 && /^(correct|answer|ans\b|key\b|सही|उत्तर)/.test(h)) cCol = i;
       if (eCol < 0 && /^(expl|reason|व्याख्या)/.test(h)) eCol = i;
     });
-    var hasHead = cCol > 0 || /^(question|q\b|प्रश्न|सवाल)/.test(head[0] || '');
+    /* a header cell is a short label ("question", "Q", "प्रश्न"), not a question like "Q. Which …?" */
+    var hasHead = cCol > 0 || /^(questions?|q|प्रश्न|सवाल)(\s*(text|no\.?|#))?\s*:?$/.test(head[0] || '');
     if (hasHead) rows = rows.slice(1);
     rows.forEach(function (r) {
       r = r.map(function (c) { return String(c == null ? '' : c); });
@@ -389,15 +449,26 @@
       if (c < 0) {
         var cells = r.slice(); while (cells.length && !cells[cells.length - 1].trim()) cells.pop();
         var n = cells.length;
-        if (n >= 4 && ansIndex(cells[n - 1]) >= 0) { c = n - 1; e = -1; }
-        else if (n >= 5 && ansIndex(cells[n - 2]) >= 0) { c = n - 2; e = n - 1; }
+        var low = function (v) { return String(v == null ? '' : v).trim().toLowerCase(); };
+        var tfRow = T[low(cells[1])] && F[low(cells[2])];
+        var isAns = function (v) { return ansIndex(v) >= 0 || (tfRow && (T[low(v)] || F[low(v)])); };
+        if (n >= 4 && isAns(cells[n - 1])) { c = n - 1; e = -1; }
+        else if (n >= 5 && isAns(cells[n - 2])) { c = n - 2; e = n - 1; }
       } else if (e < 0) e = c + 1;
       if (c < 3 || !str(r[0])) { if (r.some(function (x) { return x.trim(); })) skipped++; return; }
-      var opts = r.slice(1, c), ans = ansIndex(r[c]);
+      var opts = r.slice(1, c), ans = ansIndex(r[c]), said = String(r[c] || '').trim().toLowerCase();
       var filled = opts.map(function (o) { return o.trim().toLowerCase(); }).filter(Boolean);
       var raw;
-      if (filled.length === 2 && T[filled[0]] && F[filled[1]]) raw = { type: 'tf', text: r[0], answer: ans === 1 ? 1 : 0 };
-      else raw = { type: 'mcq', text: r[0], options: opts, answer: ans };
+      if (filled.length === 2 && T[filled[0]] && F[filled[1]]) {
+        /* True/False row: the answer may be 1/2, A/B or the word itself ("False", "गलत") */
+        if (T[said]) ans = 0; else if (F[said]) ans = 1;   /* before letters: "F" means False here, not option F */
+        if (ans !== 0 && ans !== 1) { skipped++; return; }
+        raw = { type: 'tf', text: r[0], answer: ans };
+      } else {
+        /* the correct column may also hold the text of the right option */
+        if (ans < 0 && said) opts.forEach(function (o, i) { if (ans < 0 && o.trim().toLowerCase() === said) ans = i; });
+        raw = { type: 'mcq', text: r[0], options: opts, answer: ans };
+      }
       raw.explain = e >= 0 && e < r.length ? r[e] : '';
       var q = normQuestion(raw);
       if (q) qs.push(q); else skipped++;
@@ -461,7 +532,7 @@
   function renderClassSetup() {
     var qz = cur();
     $('#classQuizName').textContent = '';
-    $('#classQuizName').appendChild(el('strong', { class: 'no-i18n', text: titleOf(qz) }));
+    $('#classQuizName').appendChild(el('bdi', {}, el('strong', { class: 'no-i18n', text: titleOf(qz) })));
     $('#classQuizName').appendChild(document.createTextNode(' · ' + t('q_count', { n: EDU.fmt(qz.questions.length) })));
     var ts = $('#timerSeg'); ts.innerHTML = ''; ts.setAttribute('aria-label', t('timer'));
     TIMERS.forEach(function (s) {
@@ -474,8 +545,9 @@
         onclick: function () { settings.teams = n; saveSettings(); renderClassSetup(); renderScoreboard(); } }));
     });
     var ti = $('#teamInputs'); ti.innerHTML = '';
-    for (var i = 0; i < Math.max(2, settings.teams); i++) (function (i) {
-      var inp = el('input', { type: 'text', maxlength: 30, id: 'teamName' + i, placeholder: t('team_n', { n: TEAM_LETTERS[i] }), 'aria-label': t('team_n', { n: TEAM_LETTERS[i] }) });
+    ti.parentNode.hidden = !settings.teams;   /* no team names to type when playing without teams */
+    for (var i = 0; i < settings.teams; i++) (function (i) {
+      var inp = el('input', { type: 'text', dir: 'auto', maxlength: 30, id: 'teamName' + i, placeholder: t('team_n', { n: TEAM_LETTERS[i] }), 'aria-label': t('team_n', { n: TEAM_LETTERS[i] }) });
       inp.value = settings.names[i] || '';
       inp.addEventListener('input', function () { settings.names[i] = inp.value; saveSettings(); renderScoreboard(); });
       ti.appendChild(inp);
@@ -488,7 +560,9 @@
     var qz = cur();
     if (!qz.questions.length) { EDU.toast(t('empty_quiz')); return; }
     stopClass(true);
-    cq = { deck: makeDeck(qz.questions, settings.shuffleQ, settings.shuffleO), i: 0, revealed: false, picked: -1, finished: false, timerId: null, timeUp: false };
+    /* unlock audio while we have the teacher's click, so the "time's up" beep can play later */
+    if (settings.timer) { try { var AC = window.AudioContext || window.webkitAudioContext; if (AC) { audioCtx = audioCtx || new AC(); if (audioCtx.resume) audioCtx.resume().catch(function () { }); } } catch (e) { } }
+    cq = { deck: makeDeck(qz.questions, settings.shuffleQ, settings.shuffleO), i: 0, revealed: false, picked: -1, finished: false, timerId: null, timeUp: false, left: 0 };
     renderCQ(); startTimer();
     $('#classStage').scrollIntoView({ block: 'start' });
     $('#cqReveal').focus({ preventScroll: true });
@@ -498,6 +572,13 @@
     if (!keepFull && (document.fullscreenElement || document.webkitFullscreenElement)) EDU.fullscreen();
   }
   $('#startClass').addEventListener('click', startClass);
+  /* After a mouse / touch click on a stage button (Next, full screen…), give focus back to the page, so
+     the presenter keys still work: Space = show answer, not "press the last clicked button again".
+     Keyboard users (Tab + Enter, detail 0) keep their focus. */
+  $('#classStage').addEventListener('click', function (e) {
+    var b = e.target && e.target.closest ? e.target.closest('button') : null;
+    if (e.detail > 0 && b && document.activeElement === b) b.blur();
+  });
   $('#cqExit').addEventListener('click', function () { stopClass(); render(); });
   $('#cqFull').addEventListener('click', function () { EDU.fullscreen($('#classStage')); });
   $('#cqRestartTimer').addEventListener('click', startTimer);
@@ -529,7 +610,7 @@
   function startTimer() {
     pauseTimer();
     if (!cq) return;
-    cq.timeUp = false;
+    cq.timeUp = false; cq.left = 0;
     if (!cq.finished && settings.timer && !cq.revealed) {
       cq.deadline = Date.now() + settings.timer * 1000;
       cq.timerId = setInterval(tick, 200);
@@ -537,6 +618,13 @@
     renderTimer();
   }
   function pauseTimer() { if (cq && cq.timerId) { clearInterval(cq.timerId); cq.timerId = null; } }
+  /* Leaving the Class quiz tab stops the countdown; coming back continues it from where it was. */
+  function suspendTimer() { if (cq && cq.timerId) { cq.left = Math.max(1, cq.deadline - Date.now()); pauseTimer(); } }
+  function resumeTimer() {
+    if (!cq || cq.timerId || !cq.left || cq.revealed || cq.finished || cq.timeUp) return;
+    cq.deadline = Date.now() + cq.left; cq.left = 0;
+    cq.timerId = setInterval(tick, 200);
+  }
   function tick() {
     if (!cq) return;
     if (cq.deadline - Date.now() <= 0) { pauseTimer(); cq.timeUp = true; beep(); }
@@ -570,7 +658,7 @@
     for (var i = 0; i < n; i++) (function (i) {
       var name = teamName(i);
       sb.appendChild(el('div', { class: 'team t' + i + (top > 0 && scores[i] === top ? ' lead' : '') },
-        el('div', { class: 'team-name' + ((settings.names[i] || '').trim() ? ' no-i18n' : ''), text: name }),
+        el('div', { class: 'team-name' + ((settings.names[i] || '').trim() ? ' no-i18n' : ''), dir: (settings.names[i] || '').trim() ? 'auto' : null, text: name }),
         el('div', { class: 'team-score', id: 'teamScore' + i, 'aria-live': 'polite', text: EDU.fmt(scores[i]) }),
         el('div', { class: 'row' },
           el('button', { type: 'button', class: 'btn', dir: 'ltr', id: 'teamMinus' + i, 'aria-label': t('minus_point', { team: name }), title: t('minus_point', { team: name }), text: '−1', onclick: function () { addPoint(i, -1); } }),
@@ -605,14 +693,14 @@
       else if (cq.revealed && cq.picked === pos) { cls += ' is-wrong'; mark = '✗'; }
       box.appendChild(el('button', { type: 'button', class: cls, 'aria-pressed': cq.picked === pos ? 'true' : 'false', onclick: function () { cq.picked = cq.picked === pos ? -1 : pos; renderCQ(); } },
         q.type === 'mcq' ? el('span', { class: letterCls(pos), 'aria-hidden': 'true', text: LETTERS[pos] }) : null,
-        el('span', { class: q.type === 'mcq' ? 'no-i18n' : '', text: opts[orig] }),
+        el('span', { class: q.type === 'mcq' ? 'no-i18n' : '', dir: q.type === 'mcq' ? 'auto' : null, text: opts[orig] }),
         mark ? el('span', { class: 'mark', 'aria-hidden': 'true', text: mark }) : null));
     });
     var ans = $('#cqAnswer');
     ans.hidden = !cq.revealed; ans.innerHTML = '';
     if (cq.revealed) {
       ans.appendChild(el('div', { style: { fontWeight: '700' } }, t('correct_answer') + ': ', ansNode(card, q.answer)));
-      if (q.explain) ans.appendChild(el('div', { class: 'no-i18n', style: { marginTop: '6px' }, text: '💡 ' + q.explain }));
+      if (q.explain) ans.appendChild(el('div', { class: 'no-i18n', dir: 'auto', style: { marginTop: '6px' }, text: '💡 ' + q.explain }));
     }
     $('#cqReveal').textContent = cq.revealed ? t('hide_answer') : t('reveal');
     $('#cqPrev').disabled = cq.i === 0;
@@ -630,7 +718,7 @@
       var top = scores[order[0]], tied = order.filter(function (i) { return scores[i] === top; }).length > 1;
       f.appendChild(el('p', { class: 'present', style: { fontWeight: '800' }, text: top <= 0 ? t('no_points') : tied ? t('tie') : t('winner', { team: teamName(order[0]) }) }));
       f.appendChild(el('ol', { class: 'rank' }, order.map(function (i) {
-        return el('li', {}, el('span', { class: (settings.names[i] || '').trim() ? 'no-i18n' : '', text: teamName(i) }), el('span', { text: EDU.fmt(scores[i]) }));
+        return el('li', {}, el('bdi', { class: (settings.names[i] || '').trim() ? 'no-i18n' : '', text: teamName(i) }), el('span', { text: EDU.fmt(scores[i]) }));
       })));
     }
     f.appendChild(el('div', { class: 'row', style: { justifyContent: 'center' } },
@@ -717,7 +805,7 @@
       else if (a && orig === a.chosen) { cls += ' is-wrong'; mark = '✗'; }
       box.appendChild(el('button', { type: 'button', class: cls, disabled: !!a, onclick: function () { answerPractice(pos); } },
         q.type === 'mcq' ? el('span', { class: letterCls(pos), 'aria-hidden': 'true', text: LETTERS[pos] }) : null,
-        el('span', { class: q.type === 'mcq' ? 'no-i18n' : '', text: opts[orig] }),
+        el('span', { class: q.type === 'mcq' ? 'no-i18n' : '', dir: q.type === 'mcq' ? 'auto' : null, text: opts[orig] }),
         mark ? el('span', { class: 'mark', 'aria-hidden': 'true', text: mark }) : null));
     });
     var fb = $('#prFeedback'); fb.innerHTML = '';
@@ -725,7 +813,7 @@
       var c = el('div', { class: 'callout ' + (a.ok ? 'success' : 'danger') + ' stack' },
         el('div', { style: { fontWeight: '800', fontSize: '1.1rem' }, text: a.ok ? '✓ ' + t('correct') : '✗ ' + t('wrong') }),
         a.ok ? null : el('div', {}, t('correct_answer') + ': ', el('strong', {}, ansNode(card, q.answer))),
-        q.explain ? el('div', { class: 'no-i18n', text: '💡 ' + q.explain }) : null);
+        q.explain ? el('div', { class: 'no-i18n', dir: 'auto', text: '💡 ' + q.explain }) : null);
       fb.appendChild(c);
     }
     var nx = $('#prNext');
@@ -745,10 +833,10 @@
       if (!a || a.ok) return;
       wrong++;
       rv.appendChild(el('div', { class: 'review-item' },
-        el('div', { class: 'qtext no-i18n', text: card.q.text }),
+        el('div', { class: 'qtext no-i18n', dir: 'auto', text: card.q.text }),
         el('div', { class: 'bad' }, '✗ ' + t('your_answer') + ': ', ansNode(card, a.chosen)),
         el('div', { class: 'ok' }, '✓ ' + t('correct_answer') + ': ', ansNode(card, card.q.answer)),
-        card.q.explain ? el('div', { class: 'qexpl no-i18n', text: '💡 ' + card.q.explain }) : null));
+        card.q.explain ? el('div', { class: 'qexpl no-i18n', dir: 'auto', text: '💡 ' + card.q.explain }) : null));
     });
     if (wrong) rv.insertBefore(el('h3', { class: 'mb0', text: t('review_wrong') }), rv.firstChild);
     else rv.appendChild(el('div', { class: 'callout success', text: '🎉 ' + t('all_correct') }));
@@ -817,7 +905,8 @@
       ln.hidden = url.length <= 6000; ln.textContent = t('link_long');
     });
     ['copyLink', 'nativeShare'].forEach(function (id) { $('#' + id).disabled = !has; });
-    ['waLink', 'openLink'].forEach(function (id) { var a = $('#' + id); a.setAttribute('aria-disabled', has ? 'false' : 'true'); a.style.pointerEvents = has ? '' : 'none'; });
+    /* an empty quiz must not keep the previous quiz's link (keyboard Enter still follows an href) */
+    ['waLink', 'openLink'].forEach(function (id) { var a = $('#' + id); a.setAttribute('aria-disabled', has ? 'false' : 'true'); a.style.pointerEvents = has ? '' : 'none'; if (!has) a.removeAttribute('href'); });
     $('#nativeShare').hidden = !navigator.share;
     var sn = $('#shareNote');
     sn.hidden = location.protocol !== 'file:'; sn.textContent = t('share_file_note');
@@ -826,6 +915,7 @@
     $('#printBtn').disabled = !has;
   }
   $('#copyLink').addEventListener('click', function () { EDU.copy($('#shareUrl').value); });
+  $('#shareUrl').addEventListener('focus', function (e) { try { e.target.select(); } catch (x) { } });
   $('#nativeShare').addEventListener('click', function () { EDU.share($('#shareUrl').value, titleOf(cur())); });
   $('#pKey').addEventListener('change', function (e) { settings.key = e.target.checked; saveSettings(); renderShare(); });
   $('#pLines').addEventListener('change', function (e) { settings.lines = e.target.checked; saveSettings(); });
@@ -835,7 +925,7 @@
   function buildPrint() {
     var qz = cur(), pa = $('#printArea');
     pa.innerHTML = '';
-    pa.appendChild(el('h1', { class: 'no-i18n', text: titleOf(qz) }));
+    pa.appendChild(el('h1', { class: 'no-i18n', dir: 'auto', text: titleOf(qz) }));
     if (settings.lines) pa.appendChild(el('div', { class: 'pw-lines' }, ['name_line', 'class_line', 'roll_line', 'date_line'].map(function (k) {
       return el('span', { text: t(k) + ': ' + (k === 'name_line' ? '______________________' : '__________') });
     })));
@@ -843,17 +933,17 @@
     qz.questions.forEach(function (q, i) {
       var opts = optsOf(q);
       pa.appendChild(el('div', { class: 'pw-q' },
-        el('div', { class: 'qt' }, EDU.fmt(i + 1) + '. ', el('span', { class: 'no-i18n', text: q.text })),
-        el('ul', { class: 'pw-opts' }, opts.map(function (o, k) { return el('li', { class: q.type === 'mcq' ? 'no-i18n' : '' }, q.type === 'mcq' ? [el('bdi', { text: '(' + LETTERS[k] + ')' }), ' '] : null, o); }))));
+        el('div', { class: 'qt' }, EDU.fmt(i + 1) + '. ', el('bdi', { class: 'no-i18n', text: q.text })),
+        el('ul', { class: 'pw-opts' }, opts.map(function (o, k) { return el('li', { class: q.type === 'mcq' ? 'no-i18n' : '' }, q.type === 'mcq' ? [el('bdi', { text: '(' + LETTERS[k] + ')' }), ' ', el('bdi', { text: o })] : o); }))));
     });
     if (settings.key && qz.questions.length) {
       var key = el('div', { class: 'pw-key' },
-        el('h2', {}, t('answer_key') + ' · ', el('span', { class: 'no-i18n', text: titleOf(qz) })));
+        el('h2', {}, t('answer_key') + ' · ', el('bdi', { class: 'no-i18n', text: titleOf(qz) })));
       var ol = el('ol');
       qz.questions.forEach(function (q) {
-        var a = q.type === 'mcq' ? [el('bdi', { text: '(' + LETTERS[q.answer] + ')' }), ' ' + q.options[q.answer]] : optsOf(q)[q.answer];
+        var a = q.type === 'mcq' ? [el('bdi', { text: '(' + LETTERS[q.answer] + ')' }), ' ', el('bdi', { text: q.options[q.answer] })] : optsOf(q)[q.answer];
         ol.appendChild(el('li', {}, el('strong', { class: q.type === 'mcq' ? 'no-i18n' : '' }, a),
-          settings.expl && q.explain ? el('div', { class: 'no-i18n', text: q.explain }) : null));
+          settings.expl && q.explain ? el('div', { class: 'no-i18n', dir: 'auto', text: q.explain }) : null));
       });
       key.appendChild(ol);
       pa.appendChild(key);
@@ -871,23 +961,31 @@
       if (qz === false) return false;
       if (!qz || !qz.questions.length) { $('#badLink').hidden = false; return false; }
       $('#badLink').hidden = true;
-      shared = qz; pr = null; stopClass(); tab = 'practice';
+      shared = qz; sharedSaved = false; pr = null; stopClass(); tab = 'practice';
       return true;
     });
   }
-  window.addEventListener('hashchange', function () { readHash().then(function (ok) { if (ok) render(); }); });
+  var sharedSaved = false;
+  window.addEventListener('hashchange', function () {
+    readHash().then(function (ok) {
+      if (ok) render();
+      else if (shared && !/^#(quiz|qz)=/.test(location.hash || '')) leaveShared(true);   /* browser Back out of a quiz link */
+    });
+  });
   $('#saveShared').addEventListener('click', function () {
-    if (!shared) return;
+    if (!shared || sharedSaved) return;
     var copy = normQuiz(JSON.parse(JSON.stringify(shared)));
     copy.id = uid(); copy.questions.forEach(function (q) { q.id = uid(); });
     quizzes.push(copy); currentId = copy.id; saveQuizzes();
+    sharedSaved = true; $('#saveShared').disabled = true;   /* one tap = one copy */
     EDU.toast(t('saved_shared'));
   });
-  $('#leaveShared').addEventListener('click', function () {
+  function leaveShared(keepUrl) {
     shared = null; pr = null; tab = store.get('tab', 'edit');
-    try { history.replaceState(history.state, '', location.href.split('#')[0]); } catch (e) { location.hash = ''; }
+    if (!keepUrl) { try { history.replaceState(history.state, '', location.href.split('#')[0]); } catch (e) { location.hash = ''; } }
     render();
-  });
+  }
+  $('#leaveShared').addEventListener('click', function () { leaveShared(false); });
 
   /* ---------------------------------------------------------------- reset + render */
   $('#resetAll').addEventListener('click', function () {
@@ -903,6 +1001,8 @@
     var isShared = !!shared;
     $('#quizBar').hidden = isShared; $('#tabs').hidden = isShared; $('#helpBox').hidden = isShared;
     $('#sharedBanner').hidden = !isShared;
+    $('#saveShared').disabled = isShared && sharedSaved;
+    var intro = $('#app > .edu-intro'); if (intro) intro.hidden = isShared;   /* students see the banner instead of the teacher intro */
     if (isShared) tab = 'practice';
     renderTabs();
     if (!isShared) renderQuizBar();
@@ -913,12 +1013,21 @@
 
   /* An untouched sample quiz follows the language; quizzes people typed are never translated. */
   EDU.onLang(function (lang) {
-    var changed = false;
+    var changed = false, map = null, curId = shared ? null : cur().id;
     quizzes = quizzes.map(function (q) {
-      if (q.sample && q.sample !== lang) { changed = true; return sampleQuiz(lang, q.id); }
-      return q;
+      if (!q.sample || q.sample === lang) return q;
+      var nq = sampleQuiz(lang, q.id);
+      changed = true;
+      if (q.id === curId) {
+        /* the quiz on screen: same questions in the new language, so running decks keep their place */
+        map = {};
+        q.questions.forEach(function (old, i) { if (nq.questions[i]) map[old.id] = nq.questions[i]; });
+        if (ed.id && map[ed.id]) resetEditor();
+      }
+      return nq;
     });
-    if (changed) { saveQuizzes(); if (!shared) { pr = null; stopClass(true); } }
+    if (changed) saveQuizzes();
+    if (map) syncDecks(map);
     render();
   });
 

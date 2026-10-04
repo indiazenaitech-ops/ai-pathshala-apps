@@ -1,4 +1,4 @@
-# App list (49)
+# App list (57)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -40,6 +40,9 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🧮 | [Mental Maths Challenge](https://apnipathshala.ai/apps/math-practice/) | math | 1-8 | Timed mental-maths games: tables, + − × ÷, squares, cubes and percentages, with mistake review and a two-player race. |
 | 🎲 | [Probability Lab](https://apnipathshala.ai/apps/probability-lab/) | math | 6-12 | Toss coins, roll dice, spin, draw balls and cards up to 10,000 times, and watch experimental probability approach theory. |
 | 📊 | [Statistics Calculator](https://apnipathshala.ai/apps/statistics-calculator/) | math | 8-12 | Mean, median, mode, quartiles, variance and SD with NCERT-style step-by-step working, plus histograms and ogives. |
+| ⚗️ | [Chemical Equation Balancer](https://apnipathshala.ai/apps/equation-balancer/) | science | 9-12 | Balance any chemical equation with steps and an atom table, then practise 15 NCERT Class 10 reactions. |
+| 🔍 | [Lens & Mirror Ray Lab](https://apnipathshala.ai/apps/ray-optics-lab/) | science | 10-12 | Ray diagrams for concave and convex mirrors and lenses: drag the object, see the image, signs, formulas and NCERT tables. |
+| 💡 | [Ohm's Law & Circuits](https://apnipathshala.ai/apps/circuit-ohms-law/) | science | 8-12 | Circuit simulator with live meters, glowing bulbs, series and parallel maths, a V–I graph experiment and practice for Class 10. |
 | ⚛️ | [Periodic Table Explorer](https://apnipathshala.ai/apps/periodic-table/) | science | 8-12 | All 118 elements with shells, valency and Bohr models, colour filters, quizzes and a Class 9–10 corner. |
 | 🏏 | [Projectile Motion Lab](https://apnipathshala.ai/apps/projectile-motion/) | science | 9-12 | Launch a cricket ball on Earth, Moon, Mars or Jupiter; compare paths and check range and height with Class 11 formulas. |
 | 💡 | [Logic Gates Lab](https://apnipathshala.ai/apps/logic-gates/) | coding | 8-12 | Play with AND, OR, NOT, NAND, NOR, XOR gates, turn Boolean expressions into truth tables and circuits, and build adders. CBSE Class 11. |
@@ -51,5 +54,10 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🐢 | [Turtle Coding](https://apnipathshala.ai/apps/turtle-coding/) | coding | 3-8 | Snap blocks together or type simple code to make a turtle draw shapes. Learn loops and angles with fun challenges. |
 | 🌐 | [Web Page Maker](https://apnipathshala.ai/apps/html-playground/) | coding | 6-12 | Learn HTML, CSS and JavaScript with a live preview, console, ready templates and a tag cheat sheet. Works offline. |
 | 🔊 | [Read Aloud](https://apnipathshala.ai/apps/read-aloud/) | languages | 1-12 | Hear any text read aloud in 12 Indian languages with word highlighting, echo reading and adjustable speed. |
+| 🐝 | [Spelling Bee](https://apnipathshala.ai/apps/spelling-bee/) | languages | 1-8 | Hear English words and spell them: 125 words for Class 1–8, meanings in your language, hints, a class spelling bee and printable tests. |
+| 📝 | [Essay & Word Counter](https://apnipathshala.ai/apps/word-counter/) | study-skills | 6-12 | Live word, character and sentence counts in any Indian language, with exam word-limit bars, long-sentence checks and format guides. |
+| 📆 | [Exam Study Planner](https://apnipathshala.ai/apps/study-planner/) | study-skills | 6-12 | Turn your date sheet into a day-by-day revision plan: weighted chapters, Pomodoro breaks, 2 revision rounds, light days, progress. |
 | 📇 | [Flashcards](https://apnipathshala.ai/apps/flashcards/) | study-skills | all | Make flashcard decks and remember them with spaced repetition, a typing quiz and a match game. Share on WhatsApp, print. |
+| ⌨️ | [Typing Tutor](https://apnipathshala.ai/apps/typing-tutor/) | study-skills | 3-12 | Learn touch typing with colour-coded fingers, live speed and accuracy, stars for every lesson and practice in 12 Indian languages. |
+| 🔐 | [Password Strength Lab](https://apnipathshala.ai/apps/password-checker/) | digital-safety | 6-12 | See how fast a password can be guessed, spot the patterns attackers try first, and make strong passphrases. All on your device. |
 | 🚩 | [Spot the Scam](https://apnipathshala.ai/apps/phishing-spotter/) | digital-safety | 6-12 | A cyber-safety game: decide if Indian SMS, WhatsApp and call messages are safe or scams, and learn the red flags. |

@@ -126,6 +126,7 @@
     .pw-q .qt { font-weight: 700; white-space: pre-wrap; }
     .pw-opts { list-style: none; margin: 4pt 0 0; padding-inline-start: 18pt; display: grid; grid-template-columns: 1fr 1fr; gap: 3pt 18pt; }
     .pw-opts li::before { content: "\25EF"; margin-inline-end: 6pt; }
+    :root[lang="ur"] .pw { line-height: 2; }   /* Nastaliq needs more room between lines */
     .pw-key { break-before: page; page-break-before: always; }
     .pw-key ol { padding-inline-start: 22pt; }
     .pw-key li { margin-bottom: 6pt; }
@@ -173,7 +174,7 @@
       <div class="card stack">
         <label class="field">
           <span data-i18n="quiz_title"></span>
-          <input type="text" id="quizTitle" maxlength="120" data-i18n-placeholder="untitled">
+          <input type="text" id="quizTitle" dir="auto" maxlength="120" data-i18n-placeholder="untitled">
         </label>
         <div class="row spread">
           <div class="row"><h2 class="mb0" data-i18n="questions"></h2><span class="badge primary" id="qCount"></span></div>
@@ -190,7 +191,7 @@
         </div>
         <label class="field">
           <span data-i18n="question_text"></span>
-          <textarea id="qText" rows="2" maxlength="1000" data-i18n-placeholder="question_ph"></textarea>
+          <textarea id="qText" dir="auto" rows="2" maxlength="1000" data-i18n-placeholder="question_ph"></textarea>
         </label>
         <div id="mcqBox" class="stack">
           <div class="field">
@@ -208,7 +209,7 @@
         </div>
         <label class="field">
           <span data-i18n="explanation"></span>
-          <textarea id="qExplain" rows="2" maxlength="600" data-i18n-placeholder="explanation_ph"></textarea>
+          <textarea id="qExplain" dir="auto" rows="2" maxlength="600" data-i18n-placeholder="explanation_ph"></textarea>
         </label>
         <p id="edMsg" class="small bad mb0" role="alert" aria-live="polite"></p>
         <div class="row">
@@ -264,7 +265,7 @@
         </div>
         <div class="progress" style="margin-top:10px"><span id="cqBar"></span></div>
         <div id="cqQuestion">
-          <div class="cq-text no-i18n" id="cqText"></div>
+          <div class="cq-text no-i18n" id="cqText" dir="auto"></div>
           <div class="cq-opts" id="cqOpts"></div>
           <div class="callout success" id="cqAnswer" aria-live="polite" style="margin-top:14px" hidden></div>
           <div class="cq-nav">
@@ -284,7 +285,7 @@
     <!-- ============ PRACTICE ============ -->
     <section id="p-practice" role="tabpanel" aria-labelledby="tab-practice" class="stack" hidden>
       <div class="card stack" id="prStart">
-        <h2 class="mb0 no-i18n" id="prTitle"></h2>
+        <h2 class="mb0 no-i18n" id="prTitle" dir="auto"></h2>
         <p class="mb0"><span class="badge primary" id="prCount"></span></p>
         <p class="muted mb0" data-i18n="practice_intro"></p>
         <div class="row">
@@ -300,7 +301,7 @@
           <span class="badge success" id="prRunning"></span>
         </div>
         <div class="progress"><span id="prBar"></span></div>
-        <div class="cq-text no-i18n" id="prText" style="font-size:clamp(1.15rem,3vw,1.7rem)"></div>
+        <div class="cq-text no-i18n" id="prText" dir="auto" style="font-size:clamp(1.15rem,3vw,1.7rem)"></div>
         <div class="pr-opts" id="prOpts"></div>
         <div id="prFeedback" aria-live="polite"></div>
         <div class="row"><button class="btn btn-primary btn-lg" id="prNext" type="button" hidden></button></div>
