@@ -95,15 +95,17 @@ async function main() {
     /* ------------------------------------------------ 1. mode detection */
     console.log('1. mode detection');
     const host = await open('host');
-    eq(await host.evaluate(() => [EDUCloud.mode, EDUCloud.isDemo, typeof EDUCloudMock, EDU_FIREBASE, typeof EDU_CONTACT_EMAIL]), ['mock', true, 'object', null, 'string'], 'null config → mock');
+    eq(await host.evaluate(() => [EDUCloud.mode, EDUCloud.isDemo, typeof EDUCloudMock, typeof EDU_CONTACT_EMAIL]), ['mock', true, 'object', 'string'], 'local test server → mock (real config never used locally)');
     const missing = await host.evaluate(() => {
       const names = ['ready', 'onTeacher', 'signInTeacher', 'signOut', 'deleteTeacherAccount', 'listQuizzes', 'getQuiz', 'saveQuiz', 'deleteQuiz', 'createSession', 'hostWatch', 'startQuestion', 'revealQuestion', 'writeScores', 'lockSession', 'kickPlayer', 'endSession', 'listSessions', 'sessionResults', 'deleteSession', 'joinSession', 'playerWatch', 'submitAnswer', 'leaveSession', 'purgeExpired'];
       return names.filter(n => typeof EDUCloud[n] !== 'function' || typeof EDUCloudMock[n] !== 'function');
     });
     eq(missing, [], 'every LIVE_SPEC function exists on EDUCloud and EDUCloudMock');
     const cfgPage = await open('cfg', base + '__e2e/cfg.html');
-    eq(await cfgPage.evaluate(() => [EDUCloud.mode, EDUCloud.isDemo, typeof window.firebase]), ['firebase', false, 'undefined'], 'config on http → firebase mode, SDK not loaded before ready()');
-    await cfgPage.goto(base + '__e2e/cfg.html?mock=1');
+    eq(await cfgPage.evaluate(() => [EDUCloud.mode, EDUCloud.isDemo]), ['mock', true], 'config on a local server → mock unless ?live=1');
+    await cfgPage.goto(base + '__e2e/cfg.html?live=1');
+    eq(await cfgPage.evaluate(() => [EDUCloud.mode, EDUCloud.isDemo, typeof window.firebase]), ['firebase', false, 'undefined'], 'config + ?live=1 on http → firebase mode, SDK not loaded before ready()');
+    await cfgPage.goto(base + '__e2e/cfg.html?live=1&mock=1');
     eq(await cfgPage.evaluate(() => EDUCloud.mode), 'mock', 'config + ?mock=1 → mock');
     await cfgPage.close();
     await host.evaluate(() => EDUCloudMock._reset());

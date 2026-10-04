@@ -17,7 +17,7 @@ const { chromium } = require('playwright-core');
 
 const ROOT = path.resolve(__dirname, '..');
 const LANGS = ['en', 'hi', 'bn', 'mr', 'gu', 'pa', 'or', 'ta', 'te', 'kn', 'ml', 'ur'];
-const CATS = ['learn-ai', 'teacher-tools', 'math', 'science', 'coding', 'languages', 'study-skills', 'digital-safety'];
+const CATS = ['learn-ai', 'teacher-tools', 'math', 'science', 'coding', 'languages', 'study-skills', 'digital-safety', 'business', 'marketing', 'everyday'];
 const NEEDS = ['camera', 'microphone', 'internet', 'speech'];
 const CHROME = [
   'C:/Program Files/Google/Chrome/Application/chrome.exe',

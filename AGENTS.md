@@ -1,7 +1,8 @@
 # AI Pathshala Apps: build contract
 
-A free library of classroom web apps for Indian schools and colleges, from the YouTube channel
-**AI की पाठशाला** (https://www.youtube.com/@Apni_Pathshala_AI). The site is static HTML/CSS/JS. It is
+A free library of web apps for everyone in India: classroom apps for schools and colleges, plus tools for
+work and business, marketing and creators, and everyday use ("free AI & productivity tools: learn, teach, work"),
+from the YouTube channel **AI की पाठशाला** (https://www.youtube.com/@Apni_Pathshala_AI). The site is static HTML/CSS/JS. It is
 published on GitHub Pages, and teachers can also download it as a ZIP and open it from disk with
 no internet (`file://`). Students use it on smartboards, laptops, cheap Android phones and in every
 browser. **No backend, no accounts, no fees, no API keys, no ads, no tracking.**
@@ -109,12 +110,32 @@ Tokens: `--bg --surface --surface-2 --text --muted --border --primary --primary-
 
 ## meta.json
 ```json
-{ "slug": "<slug>", "icon": "<one emoji>", "category": "learn-ai|teacher-tools|math|science|coding|languages|study-skills|digital-safety",
+{ "slug": "<slug>", "icon": "<one emoji>",
+  "category": "learn-ai|teacher-tools|math|science|coding|languages|study-skills|digital-safety|business|marketing|everyday",
   "grades": "6-12" | "UG" | "all", "audience": ["student","teacher"], "needs": [] /* subset of camera, microphone, internet, speech */,
   "tags": ["english", "search", "keywords"],
   "title": { "en": "...", "hi": "...", ... all 12 },   /* ≤ 32 chars in en; same as app_title */
   "desc":  { "en": "...", ... all 12 } }               /* one sentence, ≤ 140 chars */
 ```
+Categories. School library: `learn-ai` (Learn AI), `teacher-tools`, `math`, `science`, `coding`, `languages`
+(Languages & reading), `study-skills`, `digital-safety`. For everyone else:
+- `business`: Work & business (teams, meetings, HR, finance, invoices)
+- `marketing`: Marketing & creators (campaigns, social media, SEO, content, branding)
+- `everyday`: Everyday tools (PDFs, images, text, calculators, privacy-safe utilities)
+
+The home page groups categories by audience (`?for=` link parameter): Schools & colleges = the 8 school categories;
+Work & business = `business`, `learn-ai`, `digital-safety`; Marketing & creators = `marketing`, `everyday`;
+Everyone = all. A new category id must be added in `tools/verify.js`, `tools/build_catalog.js`, `shared/home.js`
+and `cat_<id>` in `shared/home-strings.js`.
+
+Apps in `business`, `marketing` and `everyday`:
+- `"grades": "all"` (the home card then shows "For everyone" instead of a class) and `"audience": ["teacher"]` for
+  work tools used by adults, or `["teacher", "student"]` for tools anyone can use (verify.js allows only these two values).
+- Pass `EDU.init({ ..., waKey: 'shell_wa_tool' })` so the header WhatsApp message says "a free tool" rather than
+  "a learning app for school students".
+- Same quality bar and the same privacy promise: files and data never leave the device (read files with
+  `EDU.pickFile` / `FileReader`, never upload them). Use Indian context: ₹, GST, UPI, Indian names and businesses.
+  The `intro` says what the tool does; the "How to use" tips give ideas for work instead of a classroom activity.
 
 ## Interaction test: tools/tests/<slug>.test.js
 ```js

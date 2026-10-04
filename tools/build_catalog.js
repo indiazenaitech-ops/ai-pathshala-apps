@@ -8,7 +8,7 @@
    (e.g. being edited) stay in the catalog using their committed meta.json and are not re-staged.
    Site outputs:
    - catalog.js also sets window.EDU_SITE = { zip, press? } (press = printable flyer/kit if press/ exists).
-   - sitemap.xml lists home, schools.html, press/index.html (if present) and every catalogued app.
+   - sitemap.xml lists home, schools.html, business.html, press/index.html (if present) and every catalogued app.
    - index.html: the block between <!-- build:apps-jsonld ... --> and <!-- /build:apps-jsonld --> is replaced with an
      ItemList of the apps (schema.org SoftwareApplication, free, 12 languages). Nothing else in index.html is touched. */
 'use strict';
@@ -21,7 +21,9 @@ const argv = process.argv.slice(2);
 const zipIdx = argv.indexOf('--zip');
 const zip = (zipIdx >= 0 ? argv[zipIdx + 1] : '') || DEFAULT_ZIP;
 const onlyPassing = argv.includes('--only-passing');
-const CATS = ['learn-ai', 'teacher-tools', 'math', 'science', 'coding', 'languages', 'study-skills', 'digital-safety'];
+const CATS = ['learn-ai', 'teacher-tools', 'math', 'science', 'coding', 'languages', 'study-skills', 'digital-safety', 'business', 'marketing', 'everyday'];
+/* categories for work and everyday use (not school subjects): no class level in the JSON-LD */
+const WORK_CATS = { business: 'BusinessApplication', marketing: 'BusinessApplication', everyday: 'UtilitiesApplication' };
 
 function newestMtime(p) {
   let m = 0;
@@ -108,6 +110,7 @@ writeIfChanged(path.join(ROOT, 'APPS.md'), `# App list (${apps.length})\n\nLive:
 const newestApp = Object.values(lastmod).sort().pop() || day();
 const urls = [{ loc: SITE_URL, lastmod: [day(newestMtime(path.join(ROOT, 'index.html'))), newestApp].sort().pop(), pri: '1.0' }];
 if (fs.existsSync(path.join(ROOT, 'schools.html'))) urls.push({ loc: SITE_URL + 'schools.html', lastmod: day(Math.max(newestMtime(path.join(ROOT, 'schools.html')), newestMtime(path.join(ROOT, 'shared', 'schools-strings.js')))), pri: '0.9' });
+if (fs.existsSync(path.join(ROOT, 'business.html'))) urls.push({ loc: SITE_URL + 'business.html', lastmod: day(Math.max(newestMtime(path.join(ROOT, 'business.html')), newestMtime(path.join(ROOT, 'shared', 'business-strings.js')))), pri: '0.9' });
 if (press && press.kit) urls.push({ loc: SITE_URL + press.kit, lastmod: day(newestMtime(pressDir)), pri: '0.5' });
 for (const a of apps) urls.push({ loc: `${SITE_URL}apps/${a.slug}/`, lastmod: lastmod[a.slug], pri: '0.8' });
 const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
@@ -124,14 +127,16 @@ try {
   else {
     const level = g => (!g || g === 'all') ? 'Classes 1-12' : (g === 'UG' || g === 'PG') ? 'College' : 'Class ' + g;
     const ld = {
-      '@context': 'https://schema.org', '@type': 'ItemList', name: 'Free classroom apps for Indian schools', numberOfItems: apps.length,
+      '@context': 'https://schema.org', '@type': 'ItemList', name: 'Free AI, learning and work apps in 12 Indian languages', numberOfItems: apps.length,
       itemListElement: apps.map((a, i) => ({
         '@type': 'ListItem', position: i + 1,
         item: {
           '@type': 'SoftwareApplication', name: a.title.en, alternateName: a.title.hi, description: a.desc.en,
-          url: `${SITE_URL}apps/${a.slug}/`, applicationCategory: 'EducationalApplication', operatingSystem: 'Any (web browser)',
-          isAccessibleForFree: true, inLanguage: LANGS, educationalLevel: level(a.grades),
-          audience: { '@type': 'EducationalAudience', educationalRole: (a.audience || ['student']).join(', ') },
+          url: `${SITE_URL}apps/${a.slug}/`, applicationCategory: WORK_CATS[a.category] || 'EducationalApplication', operatingSystem: 'Any (web browser)',
+          isAccessibleForFree: true, inLanguage: LANGS,
+          ...(WORK_CATS[a.category]
+            ? { audience: { '@type': 'Audience', audienceType: a.category === 'everyday' ? 'Everyone' : 'Businesses, teams and creators' } }
+            : { educationalLevel: level(a.grades), audience: { '@type': 'EducationalAudience', educationalRole: (a.audience || ['student']).join(', ') } }),
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
           publisher: { '@id': SITE_URL + '#org' }
         }

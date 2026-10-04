@@ -22,7 +22,14 @@
  * Leave out measurementId (Google Analytics stays OFF; cloud.js ignores it anyway).
  * For local tests with the Firebase emulators (http://localhost only) add  emulator: true.
  */
-window.EDU_FIREBASE = null;
+window.EDU_FIREBASE = {
+  apiKey: 'AIzaSyBjRbEPR5I38Radbldtqrd_ILwCzkQcVeI',
+  authDomain: 'studio-7387948978-ac74c.firebaseapp.com',
+  projectId: 'studio-7387948978-ac74c',
+  storageBucket: 'studio-7387948978-ac74c.firebasestorage.app',
+  messagingSenderId: '1072050739382',
+  appId: '1:1072050739382:web:76bbfa38873ec6f1a8ae17'
+};
 
 /* Grievance / privacy contact shown in legal/privacy.html and the apps (DPDP Act 2023). */
 window.EDU_CONTACT_EMAIL = 'indiazenaitech@gmail.com';

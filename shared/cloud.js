@@ -36,7 +36,12 @@
       var cfg = window.EDU_FIREBASE;
       if (!cfg || typeof cfg !== 'object') return 'mock';
       if (!/^https?:$/.test(location.protocol)) return 'mock';
-      if (new URLSearchParams(location.search).get('mock') === '1') return 'mock';
+      var q = new URLSearchParams(location.search);
+      if (q.get('mock') === '1') return 'mock';
+      /* Local test servers (verify.js, e2e tests) stay in Demo mode so they never touch the real project,
+         unless they explicitly ask for the emulator (?emulator=1 / cfg.emulator) or the real backend (?live=1). */
+      var h = location.hostname;
+      if ((h === 'localhost' || h === '127.0.0.1' || h === '[::1]') && !cfg.emulator && q.get('emulator') !== '1' && q.get('live') !== '1') return 'mock';
       return 'firebase';
     } catch (e) { return 'mock'; }
   }
