@@ -30,12 +30,13 @@
   var FieldValue = {
     serverTimestamp: function () { return new Sentinel('serverTimestamp'); },
     arrayUnion: function () { return new Sentinel('arrayUnion', Array.prototype.slice.call(arguments)); },
+    increment: function (n) { var x = new Sentinel('increment'); x.n = n; return x; },
     delete: function () { return new Sentinel('delete'); }
   };
   function encode(v) {
     if (v === undefined) return undefined;
     if (v instanceof Timestamp) return { __ts: v._ms };
-    if (v instanceof Sentinel) return v.__op === 'arrayUnion' ? { __op: v.__op, values: v.values.map(encode) } : { __op: v.__op };
+    if (v instanceof Sentinel) return v.__op === 'arrayUnion' ? { __op: v.__op, values: v.values.map(encode) } : v.__op === 'increment' ? { __op: v.__op, n: v.n } : { __op: v.__op };
     if (Array.isArray(v)) return v.map(encode);
     if (v && typeof v === 'object') { var o = {}; for (var k in v) { var x = encode(v[k]); if (x !== undefined) o[k] = x; } return o; }
     return v;
@@ -160,7 +161,7 @@
     return B.get(w.client, w.auth, this.path).then(function (r) { return new DocSnap(self, r.exists, r.data); });
   };
   DocRef.prototype._commit = function (writes) { var w = this._db._who(); return B.commit(w.client, w.auth, writes).then(function () { }); };
-  DocRef.prototype.set = function (data) { return this._commit([{ type: 'set', path: this.path, data: encode(data) }]); };
+  DocRef.prototype.set = function (data, opts) { return this._commit([{ type: 'set', path: this.path, data: encode(data), merge: !!(opts && opts.merge) }]); };
   DocRef.prototype.update = function (data) { return this._commit([{ type: 'update', path: this.path, data: encode(data) }]); };
   DocRef.prototype.delete = function () { return this._commit([{ type: 'delete', path: this.path }]); };
   DocRef.prototype.onSnapshot = function (next, error) {
@@ -170,7 +171,7 @@
   };
 
   function Batch(db) { this._db = db; this._writes = []; }
-  Batch.prototype.set = function (ref, data) { this._writes.push({ type: 'set', path: ref.path, data: encode(data) }); return this; };
+  Batch.prototype.set = function (ref, data, opts) { this._writes.push({ type: 'set', path: ref.path, data: encode(data), merge: !!(opts && opts.merge) }); return this; };
   Batch.prototype.update = function (ref, data) { this._writes.push({ type: 'update', path: ref.path, data: encode(data) }); return this; };
   Batch.prototype.delete = function (ref) { this._writes.push({ type: 'delete', path: ref.path }); return this; };
   Batch.prototype.commit = function () { var w = this._db._who(); return B.commit(w.client, w.auth, this._writes).then(function () { }); };

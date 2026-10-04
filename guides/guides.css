@@ -1,0 +1,81 @@
+/* Guide pages (guides/...). Uses the tokens and classes of shared/edu.css; logical properties only (Urdu is RTL). */
+.g-crumbs { font-size: .88rem; color: var(--muted); margin: 0 0 12px; display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
+.g-crumbs a { color: var(--muted); }
+.g-crumbs a:hover { color: var(--primary); }
+.g-crumbs .sep { opacity: .6; }
+.g-hero { padding: 2px 0 6px; }
+.g-kicker { display: inline-block; font-weight: 700; font-size: .85rem; color: var(--accent); background: var(--accent-soft); padding: 3px 10px; border-radius: 999px; margin-bottom: 10px; }
+.g-hero h1 { font-size: clamp(1.55rem, 4vw, 2.45rem); line-height: 1.2; margin: 0 0 10px; max-width: 30ch; }
+.g-lead { color: var(--muted); max-width: 70ch; margin: 0 0 8px; font-size: 1.07rem; }
+.g-meta { margin: 0; }
+.g-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.g-cta .btn-accent { background: #c4461a; border-color: #c4461a; color: #fff; }
+.g-sec { margin-top: 28px; }
+.g-sec > h2, .g-sec .g-h2 { margin: 0 0 12px; }
+.g-quick { margin-top: 22px; border-inline-start: 5px solid var(--primary); }
+.g-quick h2 { margin: 0 0 6px; font-size: 1.1rem; color: var(--primary); }
+.g-quick p { margin: 0; font-size: 1.04rem; }
+
+.g-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: gstep; }
+.g-step { counter-increment: gstep; display: grid; gap: 14px; align-items: start; scroll-margin-top: 80px; }
+.g-step.has-shot { grid-template-columns: minmax(0, 1fr) minmax(0, 330px); }
+.g-step h3 { display: flex; gap: 10px; align-items: flex-start; font-size: 1.1rem; margin: 0 0 6px; }
+.g-step h3::before { content: counter(gstep); flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--primary); color: var(--primary-ink); display: grid; place-items: center; font-size: .95rem; font-family: "Noto Sans", system-ui, sans-serif; margin-top: -1px; }
+.g-step p { margin: 0; }
+.g-shot { margin: 0; }
+.g-shot img { display: block; width: 100%; max-width: 330px; height: auto; border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); background: var(--surface-2); }
+.g-shot figcaption { font-size: .85rem; color: var(--muted); margin-top: 6px; max-width: 330px; }
+.g-step.has-shot.is-wide { grid-template-columns: minmax(0, 1fr); }
+.g-step.is-wide .g-shot img, .g-step.is-wide .g-shot figcaption { max-width: 760px; }
+@media (max-width: 760px) {
+  .g-step.has-shot { grid-template-columns: minmax(0, 1fr); }
+  .g-shot img, .g-shot figcaption { max-width: 300px; margin-inline: auto; }
+  .g-step.is-wide .g-shot img, .g-step.is-wide .g-shot figcaption { max-width: 100%; }
+  .g-shot figcaption { text-align: center; }
+}
+
+.g-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.g-list li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: start; }
+.g-list li::before { content: "✓"; font-weight: 800; color: var(--success); }
+.g-note { margin-top: 14px; }
+
+.g-end { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.g-su { border-inline-start: 5px solid var(--accent); }
+.g-su h2, .g-why h2 { font-size: 1.2rem; margin: 0 0 8px; }
+.g-su p, .g-why p { margin: 0 0 10px; }
+.g-why .g-list { margin-bottom: 12px; }
+.g-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.faq-item { padding: 12px 16px; margin-bottom: 10px; }
+.faq-item summary { font-weight: 700; cursor: pointer; }
+.faq-item p { margin: 10px 0 0; color: var(--muted); }
+
+.g-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.g-chips .chip { text-decoration: none; }
+.g-chips .chip:hover { border-color: var(--primary); }
+.g-cards { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
+.g-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; align-content: start; text-decoration: none; color: var(--text); transition: border-color .15s, transform .15s; }
+.g-card:hover { border-color: var(--primary); transform: translateY(-1px); }
+.g-card .g-ic { grid-row: span 3; font-size: 1.8rem; line-height: 1.2; }
+.g-card h3 { margin: 0; font-size: 1.05rem; color: var(--primary); }
+.g-card p { margin: 0; color: var(--muted); font-size: .92rem; }
+.g-card .g-go { font-weight: 700; font-size: .9rem; color: var(--accent); }
+.g-all { margin: 12px 0 0; font-weight: 600; }
+.g-share { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; }
+.g-share h2 { font-size: 1.1rem; margin: 0 0 4px; }
+.g-share p { margin: 0; color: var(--muted); }
+.g-group + .g-group { margin-top: 26px; }
+
+:root[lang="ur"] .g-hero h1, :root[lang="ur"] .g-sec > h2, :root[lang="ur"] .g-step h3, :root[lang="ur"] .g-kicker,
+:root[lang="ur"] .g-card h3, :root[lang="ur"] .g-su h2, :root[lang="ur"] .g-why h2, :root[lang="ur"] .g-quick h2, :root[lang="ur"] .g-share h2 { line-height: 2.1; }
+:root[lang="ur"] .faq-item summary, :root[lang="ur"] .g-list li, :root[lang="ur"] .g-step p { line-height: 2; }
+@media (max-width: 560px) { .g-cta .btn { flex: 1 1 100%; } .g-btns .btn { flex: 1 1 100%; } }
+@media print { .g-cta, .g-end, .g-share, .g-related { display: none !important; } .g-step { break-inside: avoid; } }
+.g-arr::before { content: "\00a0→"; }
+:root[dir="rtl"] .g-arr::before { content: "\00a0←"; }
+.g-su .btn-accent { background: #c4461a; border-color: #c4461a; color: #fff; }
+.g-su .btn-accent:hover { background: #a93b15; border-color: #a93b15; }
+.g-langs { margin-top: 22px; font-size: .9rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
+.g-langs .no-i18n { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.g-langs a { color: var(--primary); }
+.g-langs [aria-current] { font-weight: 700; color: var(--text); }

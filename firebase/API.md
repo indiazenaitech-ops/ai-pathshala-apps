@@ -215,23 +215,40 @@ await EDUCloud.registerInterest({
   topics: ['apps', 'videos'],           // 1–3 of EDUCloud.INTEREST.topics: apps videos training
   consent: true,                        // must be exactly true (18+, agrees to occasional emails)
   lang: EDU.lang, page: 'home'          // UI language; page = home | schools | business
-});   // → {id} (Firebase) or {id, demo:true} (Demo mode). Errors: invalid-input, offline, quota-exceeded,
-      //   permission-denied (rules not published yet), not-configured, unknown.
+});   // → {id, counted} (Firebase; counted = the public counter went up by 1) or {id, demo:true} (Demo mode).
+      //   Errors: invalid-input, offline, quota-exceeded, permission-denied (rules not published yet), not-configured, unknown.
+
+const n = await EDUCloud.signupCount();   // → whole number ≥ 0, or null when not known. Never rejects.
 ```
 
 - **Firebase mode:** a third app instance (`'edu-interest'`, never the teacher or quiz-player identity) signs in as a
-  **new** anonymous account for every sign-up, then makes ONE write: `set()` on `interest/{that uid}` = exactly the
-  fields above + `createdAt` (server time) + `uid`. Afterwards (saved or not) that account is signed out, so nothing
+  **new** anonymous account for every sign-up, then commits ONE batch: `set()` on `interest/{that uid}` = exactly the
+  fields above + `createdAt` (server time) + `uid`, and `set({count: increment(1)}, {merge: true})` on the public counter
+  `stats/signups` (the first sign-up creates it with 1). The rules allow that +1 only in the same batch as a NEW sign-up
+  of the same account (`existsAfter` + `!exists` of `interest/{uid}`), so the number can never be pushed up on its own,
+  jump, or go down. If the batch is refused (rules from before the counter, or a counter edited by hand in the console),
+  the sign-up is saved alone (`counted: false`): a sign-up never fails because of the counter. Afterwards (saved or not) that account is signed out, so nothing
   stays on the device and the next sign-up on the same browser (a shared school computer) gets a new id. Calls run one
   after another. No reads. `firestore.rules` allows **create only**, with this exact shape, at your own uid, once per
   account: writing it again is an update, which is denied. Nobody can read, list, change or delete sign-ups from a
   browser. The owner works with them in the Firebase console (`firebase/SETUP.md` §4c).
 - **Demo mode:** saved in this browser under `edu.cloudmock.interest/anon-…` (a new id per sign-up, the same as the
-  record's `uid`) with `demo: true`; nothing is sent.
+  record's `uid`) with `demo: true`; nothing is sent. `signupCount()` = the number of those records in this browser.
+- **signupCount() (Firebase mode):** ONE plain `GET` of `stats/signups` from the Firestore REST API
+  (`firestore.googleapis.com/v1/projects/<id>/databases/(default)/documents/stats/signups?key=<apiKey>`): no SDK download,
+  no sign-in, `credentials: 'omit'` (no cookies). The rules let anyone read that one document (it is only a number) and
+  nothing else in `stats/`. Cached once per page, and for 10 minutes in the tab's `sessionStorage` (`edu.cloud.signups`),
+  dropped after a sign-up. 404 (nobody signed up yet) → 0; refused, offline or odd → null. `signup.js` asks only when the
+  form comes within 600 px of the screen and shows "Join {n}+ teachers & learners…" from 25 on (rounded down to tens).
 - The honeypot field, consent box, validation and translated messages live in `signup.js`, not here.
-- Cost: 1 write per sign-up (+1 free anonymous Auth account per sign-up). No reads.
-- Until the owner publishes the rules with `match /interest/{id}` (SETUP.md §4b), Firebase mode rejects with
-  `permission-denied` and the form shows "please email us instead".
+- Cost: 2 writes per sign-up (the sign-up + the counter) and up to 2 rule look-ups (+1 free anonymous Auth account per
+  sign-up). Showing the number: 1 read per visitor who scrolls to the form (at most one per tab per 10 minutes).
+- Until the owner publishes the rules with `match /interest/{id}` and `match /stats/{docId}` (SETUP.md §4b), Firebase
+  mode rejects with `permission-denied` and the form shows "please email us instead"; `signupCount()` gives null and the
+  form shows a neutral line instead of the number.
+- Tests: `firebase/tests/rules.test.js` (suites `interest` and `stats/signups`, emulator), `firebase/tests/signup.emulator.e2e.js`
+  (real SDK + real rules in the emulator: batch, count, form, fallback), `firebase/tests/firebase_mode.sim.js` (part G),
+  `node tools/tests/_signup.check.js` (Demo mode, 12 languages, social proof, Starter Pack links).
 
 ## 11. Testing
 

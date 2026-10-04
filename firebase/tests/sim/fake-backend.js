@@ -2,7 +2,7 @@
  *
  * It runs in the top page of the simulation; every client frame talks to it through fake-sdk.js (the fake
  * Firebase compat SDK). It gives what shared/cloud.js needs to run in Firebase mode without a real project:
- *   - documents, batches, transactions (with retry on conflict), queries with == filters, listeners;
+ *   - documents, batches, transactions (with retry on conflict), set with merge, increment, queries with == filters, listeners;
  *   - a JavaScript port of firebase/firestore.rules (every read and write is checked; the nickname character
  *     lists are taken from the real rules file by the driver, so they cannot drift);
  *   - billing counters the way Firestore bills: 1 read per document read (a query with no results = 1),
@@ -140,6 +140,14 @@
           && tp.every(function (t, k) { return ['apps', 'videos', 'training'].indexOf(t) >= 0 && tp.indexOf(t) === k; })
           && LG.indexOf(inc.prefLang) >= 0 && LG.indexOf(inc.lang) >= 0 && ['home', 'schools', 'business', 'other'].indexOf(inc.page) >= 0;
       }
+      if (s.length === 2 && s[0] === 'stats') {        /* the public sign-up counter (match /stats/{docId}) */
+        if (s[1] !== 'signups') return false;
+        if (op === 'get') return true;
+        var fresh = signedIn(R) && R.existsAfter('interest/' + uid) && !R.exists('interest/' + uid);
+        if (op === 'create') return keysOnly(inc, ['count']) && isInt(inc.count) && inc.count === 1 && fresh;
+        if (op === 'update') return keysOnly(inc, ['count']) && typeof inc.count === 'number' && inc.count === res.count + 1 && fresh;
+        return false;
+      }
       if (s[0] !== 'sessions') return false;
       var code = s[1];
       if (s.length === 2) {
@@ -223,9 +231,10 @@
     if (val && val.__op === 'delete') delete o[parts[parts.length - 1]];
     else o[parts[parts.length - 1]] = val;
   }
-  /* resolve server timestamps / arrayUnion against the stored value */
+  /* resolve server timestamps / arrayUnion / increment against the stored value */
   function resolve(v, old, time) {
     if (v && typeof v === 'object' && v.__op === 'serverTimestamp') return { __ts: time };
+    if (v && typeof v === 'object' && v.__op === 'increment') return (typeof old === 'number' ? old : 0) + v.n;
     if (v && typeof v === 'object' && v.__op === 'arrayUnion') {
       var arr = Array.isArray(old) ? old.slice() : [];
       v.values.forEach(function (x) { if (!arr.some(function (y) { return same(x, y); })) arr.push(x); });
@@ -295,7 +304,11 @@
         var old = now(w.path);
         var inc;
         if (w.type === 'delete') inc = null;
-        else if (w.type === 'set') inc = resolve(w.data, old, time);
+        else if (w.type === 'set' && w.merge && old) {       /* set with merge: the given fields over the stored ones */
+          inc = clone(old);
+          for (var mk in w.data) inc[mk] = resolve(w.data[mk], old[mk], time);
+        }
+        else if (w.type === 'set') inc = resolve(w.data, w.merge ? undefined : old, time);
         else {
           if (!old) throw err('not-found', 'No document to update: ' + w.path);
           inc = clone(old);

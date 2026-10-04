@@ -58,27 +58,44 @@ other players. Nobody can change scores except the teacher who owns the session.
 A quiz session can be opened by its code only while it is running (less than 1 day old and not ended); after that only
 the teacher and the students who played it can see it. Details: `firebase/SECURITY_REVIEW.md`.
 
-### 4b. Re-paste the rules for the "Stay updated" form (4 Oct 2026, owner action)
+### 4b. Re-paste the rules for the "Stay updated" form and its counter (4 Oct 2026, owner action)
 
-`firestore.rules` now ends with a `match /interest/{id}` block for the email updates list. The rules running in the
-console are the old ones, so until you publish the new file **every sign-up on apnipathshala.ai fails**. The form then
-shows a friendly "sorry, please email us instead" message with a ready-made email link. Nothing else is affected: the
-Live Class Quiz rules in the file are unchanged.
+`firestore.rules` now ends with two new blocks: `match /interest/{id}` (the email updates list) and
+`match /stats/{docId}` (a public sign-up counter: one document `stats/signups` = `{count: <number>}`, used for the line
+"Join 120+ teachers & learners getting free AI apps" above the form). **One paste covers both.** The rules running in
+the console are the old ones, so until you publish the new file **every sign-up on apnipathshala.ai fails**: the form
+then shows a friendly "sorry, please email us instead" message with a ready-made email link, and a neutral line
+instead of the number. Nothing else is affected: the Live Class Quiz rules in the file are unchanged.
 
 1. Open `https://github.com/indiazenaitech-ops/ai-pathshala-apps/blob/main/firebase/firestore.rules` → **Raw**.
-   Check that it contains `match /interest/{id}` and the line `&& id == request.auth.uid`. If it does not, the
-   auto-publisher has not pushed the new version yet: wait 15 minutes and reload.
+   Check that it contains `match /interest/{id}` **and** `match /stats/{docId}`. If it does not, the auto-publisher has
+   not pushed the new version yet: wait 15 minutes and reload.
 2. Select all, copy. In the Firebase console: Firestore Database → **Rules** → select all the old text → paste →
    **Publish**. (As in step 4: always copy the whole file from Raw, never retype it; the "hidden characters" warning
    is expected.)
 3. Test it: open **https://apnipathshala.ai/#updates**, fill in the form with your own email, tick the consent box and
-   press the button. You should see the thank-you message. In Firestore Database → **Data** you will now see a
-   collection `interest` with one document. Delete that test document afterwards if you like (see below).
+   press the button. You should see the thank-you message with two "Starter Pack" PDF links. In Firestore Database →
+   **Data** you will now see a collection `interest` with one document, and a collection `stats` with one document
+   `signups` whose `count` is **1**. Delete the test sign-up afterwards if you like (see below); the counter then stays
+   one ahead, which does not matter (you can also correct it, see the note below).
 
-The rules allow the website to **add** a sign-up and nothing else. Nobody can read, search, change or delete the list
-from a browser, not even the person who signed up. Each sign-up uses its own new anonymous account, and each anonymous
-account can add only one sign-up. Details: `firebase/SECURITY_REVIEW.md` §7b. Tests: `cd firebase && npm run test:emulator`
-(122/122 passed on 4 Oct 2026).
+What the rules allow: the website can **add** a sign-up and nothing else. Nobody can read, search, change or delete the
+list from a browser, not even the person who signed up. Each sign-up uses its own new anonymous account, and each
+anonymous account can add only one sign-up. The counter can only go **up by exactly 1**, and only in the same write as a
+**new** sign-up of that same account; anyone may read the number (it is only a number, no names or emails). Details:
+`firebase/SECURITY_REVIEW.md` §7b and §7c. Tests: `cd firebase && npm run test:emulator` (134/134 passed on 4 Oct 2026),
+plus `npx firebase emulators:exec --project demo-apni-pathshala --only firestore,auth "node tests/signup.emulator.e2e.js"`
+(the real form against the real rules in the emulator; needs internet for the Firebase library).
+
+**The counter, if you ever need to touch it** (Firestore Database → Data → `stats` → `signups`):
+- It shows on the site only from 25 sign-ups on, rounded **down** to tens (137 → "130+"). Below 25 the form shows
+  "Free · no spam · unsubscribe any time" instead.
+- Deleting sign-ups (unsubscribes, test entries, junk) does **not** lower it. If you want it exact, edit `count` by hand:
+  click the value, type the number of documents in `interest`, keep the type **number**, **Update**. Never add other
+  fields to this document and never create other documents in `stats` (the website's +1 is refused if the document
+  looks different, and sign-ups are then saved without counting).
+- A page that a visitor's browser cached from before this change still saves sign-ups, just without the +1. So the
+  counter can lag behind the list for a day or two; it never runs ahead of it.
 
 ### 4c. Working with the updates list (only you, in the console)
 
@@ -206,9 +223,10 @@ npm install                 # rules-unit-testing, firebase, firebase-tools (loca
 npm run test:emulator       # = firebase emulators:exec --project demo-apni-pathshala --only firestore "npm test"
 ```
 
-All tests must pass (122 on 4 Oct 2026). They cover every allow and deny case, including attacks such as a student
+All tests must pass (134 on 4 Oct 2026). They cover every allow and deny case, including attacks such as a student
 writing their own score, reading the answer key, answering twice or joining a locked session, and for the updates list:
-reading or listing emails, a second sign-up from the same account, extra fields and too-long text.
+reading or listing emails, a second sign-up from the same account, extra fields and too-long text, and for the sign-up
+counter: a +1 without a new sign-up, jumps, going down, a second +1 by the same account, extra fields.
 
 On the project's Windows PC a portable Java is in `tools/jre/` (not published). In PowerShell:
 
@@ -241,7 +259,8 @@ The stored data stays in Firebase (until TTL deletes it, if step 5 worked). To r
 | Sign-in popup closes and the app says "not set up" | Step 2.3: add the domain to **Authorized domains** |
 | "not set up" when a student joins | Step 2.2: **Anonymous** provider not enabled |
 | Everything says "No permission" | Step 4: rules not published, or published from an old copy |
-| "Stay updated" form says "sorry, please email us instead" | Step 4b: the new rules (with `match /interest/{id}`) are not published yet |
+| "Stay updated" form says "sorry, please email us instead" | Step 4b: the new rules (with `match /interest/{id}` and `match /stats/{docId}`) are not published yet |
+| No "Join 120+ teachers…" line above the form | Normal below 25 sign-ups. Otherwise step 4b (rules), or the `stats/signups` document was edited into something odd (see "The counter" in 4b) |
 | "Today's free limit is used up" | Spark daily limit reached. Wait for the reset (about 1 pm IST), or see Sign-up quota above |
 | Works on Wi-Fi but not at school | The school network may block Google services. Try mobile data; Demo mode always works |
 | Phone shows "open in browser" or sign-in fails inside WhatsApp | Open the link in Chrome (in-app browsers block Google sign-in) |

@@ -7,7 +7,13 @@
  *
  * Privacy: nothing leaves the page until the visitor presses the button with the consent box ticked. Then ONE call:
  * EDUCloud.registerInterest(data) (Firebase mode: one create-only write to interest/{id}; Demo mode: this browser only).
- * No tracking, no cookies, no reads. A hidden "website" field catches simple bots (they get a fake "thank you").
+ * No tracking, no cookies. A hidden "website" field catches simple bots (they get a fake "thank you").
+ * Social proof: when the form comes near the screen, EDUCloud.signupCount() reads ONE public number (stats/signups,
+ * one plain GET without cookies, once per page; Demo mode: the sign-ups in this browser). From 25 sign-ups on, the form
+ * says "Join 120+ teachers & learners…" (rounded DOWN to tens); below that, or when the number is unknown, a neutral line.
+ * A sign-up also tells the shell's "get updates" reminder (shared/edu.js) to stop: EDU.store('cta') 'joined'.
+ * Free "AI Classroom Starter Pack" (downloads/*.pdf, built by tools/make_starter_pack.js): never behind the form. The
+ * schools page shows it to everyone above the form; after a sign-up, every page shows the two download links.
  * Opened from a downloaded ZIP (file://): a short note and an email link instead of the form.
  * Strings: shared/signup-strings.js (window.SIGNUP_STRINGS, 12 languages). Test: node tools/tests/_signup.check.js */
 (function () {
@@ -20,6 +26,7 @@
   var DEFAULT_TOPICS = ['apps', 'videos'];
   var PAGES = ['home', 'schools', 'business'];
   var MAX = { name: 60, org: 80, place: 60, email: 254 };
+  var PACK = { hi: 'downloads/ai-classroom-starter-pack-hi.pdf', en: 'downloads/ai-classroom-starter-pack-en.pdf' };
 
   function st(key, vars) {
     var L = EDU.lang, v = (STR[L] && STR[L][key]);
@@ -46,6 +53,7 @@
     '.su-head .su-ic { font-size: 2rem; line-height: 1.1; flex: none; }',
     '.su-head h2 { margin: 0 0 6px; }',
     '.su-head p { margin: 0; color: var(--muted); max-width: 70ch; }',
+    '.su-head p.su-proof { display: inline-flex; align-items: center; gap: 6px; margin: 10px 0 0; padding: 4px 12px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); font-weight: 700; font-size: .9rem; max-width: 100%; }',
     '.su-form { margin-top: 14px; display: grid; gap: 14px; }',
     '.su-grid { display: grid; gap: 12px 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); }',
     '.su-grid input, .su-grid select { width: 100%; min-height: 44px; }',
@@ -64,6 +72,13 @@
     '.su-status .row { margin-top: 8px; }',
     '.su-done, .su-file { margin-top: 14px; }',
     '.su-done h3 { margin: 0 0 6px; }',
+    '.su-pack { display: flex; gap: 14px; align-items: flex-start; margin-top: 14px; padding: 12px 14px; border-radius: var(--radius-sm, 10px); background: var(--primary-soft); border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--border)); }',
+    '.su-pack-ic { font-size: 2rem; line-height: 1.1; flex: none; }',
+    '.su-pack h3 { margin: 0 0 4px; font-size: 1.05rem; }',
+    '.su-pack p { margin: 0 0 10px; color: var(--muted); max-width: 75ch; }',
+    '.su-pack-links, .su-done-pack { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; }',
+    '.su-done-pack { margin: 4px 0 10px; }',
+    '.su-done-pack .su-dp-lbl { flex: 1 1 100%; font-weight: 600; }',
     '.su-done p { margin: 0 0 8px; }',
     '.su-mail { margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }',
     '.su-mail a.su-addr { font-weight: 700; word-break: break-all; }',
@@ -72,7 +87,7 @@
     '.su-wrap { position: relative; }',
     ':root[lang="ur"] .su h2, :root[lang="ur"] .su h3 { line-height: 2.1; }',
     ':root[lang="ur"] .su label, :root[lang="ur"] .su legend, :root[lang="ur"] .su p { line-height: 1.9; }',
-    '@media (max-width: 560px) { .su-actions .btn { flex: 1 1 100%; } .su-head .su-ic { display: none; } }'
+    '@media (max-width: 560px) { .su-actions .btn { flex: 1 1 100%; } .su-head .su-ic, .su-pack-ic { display: none; } .su-pack-links .btn { flex: 1 1 auto; } }'
   ].join('\n');
 
   function addStyle() {
@@ -96,10 +111,44 @@
     function req() { return el('span', { class: 'su-req', 'aria-hidden': 'true', text: ' *' }); }
 
     /* ---- head */
+    var proof = el('p', { class: 'su-proof', id: 'su-proof' });
+    var proofN = null;      /* the sign-up count, once known */
     var head = el('div', { class: 'su-head' },
       el('div', { class: 'su-ic', 'aria-hidden': 'true', text: '✉️' }),
-      el('div', null, tx(el('h2', { id: 'su-h' }), 'su_title'), tx(el('p', { id: 'su-intro' }), 'su_intro_' + page)));
+      el('div', null, tx(el('h2', { id: 'su-h' }), 'su_title'), tx(el('p', { id: 'su-intro' }), 'su_intro_' + page), proof));
     box.setAttribute('aria-labelledby', 'su-h');
+    /* "Join 120+ teachers & learners…" from 25 sign-ups on (rounded down to tens), otherwise a neutral line.
+       The number (with its "+") is kept left-to-right inside Urdu text with Unicode isolates. */
+    function renderProof() {
+      if (typeof proofN === 'number' && isFinite(proofN) && proofN >= 25) {
+        var r = Math.floor(proofN / 10) * 10, num = EDU.fmt(r), mark = '\u0001';
+        var txt = st('su_proof', { n: mark });
+        txt = txt.replace(mark + '+', '\u2066' + num + '+\u2069').replace(mark, '\u2066' + num + '\u2069');
+        proof.textContent = '👥 ' + txt;
+        proof.setAttribute('data-n', String(r));
+      } else {
+        proof.textContent = '✓ ' + st('su_proof_none');
+        proof.removeAttribute('data-n');
+      }
+    }
+    function loadCount() {
+      var c = cloud();
+      if (isFile || !c || typeof c.signupCount !== 'function') return;
+      Promise.resolve().then(function () { return c.signupCount(); }).then(function (n) {
+        proofN = typeof n === 'number' ? n : null;
+        renderProof();
+      }, function () { });
+    }
+    /* ask only when the form comes near the screen (no request for visitors who never scroll this far) */
+    (function () {
+      if (!('IntersectionObserver' in window)) { setTimeout(loadCount, 1500); return; }
+      var io = new IntersectionObserver(function (entries) {
+        if (!entries.some(function (e) { return e.isIntersecting; })) return;
+        io.disconnect();
+        loadCount();
+      }, { rootMargin: '600px 0px' });
+      io.observe(box);
+    })();
 
     /* ---- fields */
     function errEl(id) { return el('p', { class: 'su-err', id: id, hidden: true, role: 'alert' }); }
@@ -168,8 +217,39 @@
     var doneDemo = tx(el('p', { class: 'small', id: 'su-done-demo', hidden: true }), 'su_ok_demo');
     var again = el('button', { type: 'button', class: 'btn btn-sm', id: 'su-again' });
     tx(again, 'su_again');
+    /* ---- the free Starter Pack: two PDF links (the edition for this language first) */
+    function packLink(ed, id, cls) {
+      var a = el('a', { class: cls, id: id, target: '_blank', rel: 'noopener', type: 'application/pdf', 'data-ed': ed });
+      a.appendChild(el('span', { 'aria-hidden': 'true', text: '⬇ ' }));
+      a.appendChild(tx(el('span'), 'su_pack_' + ed));
+      return a;
+    }
+    var packBoxes = [];
+    function packRow(row, idp, primary, other) {
+      var links = { hi: packLink('hi', idp + '-hi', ''), en: packLink('en', idp + '-en', '') };
+      packBoxes.push({ row: row, links: links, primary: primary, other: other });
+      return row;
+    }
+    function renderPack() {
+      var first = (EDU.lang === 'hi' || EDU.lang === 'mr') ? 'hi' : 'en';
+      packBoxes.forEach(function (b) {
+        ['hi', 'en'].forEach(function (ed) {
+          var a = b.links[ed];
+          a.href = (EDU.ROOT || '') + PACK[ed];
+          a.className = ed === first ? b.primary : b.other;
+          b.row.appendChild(a);
+        });
+        b.row.appendChild(b.links[first === 'hi' ? 'en' : 'hi']);
+      });
+    }
+    var donePack = packRow(el('p', { class: 'su-done-pack', id: 'su-done-pack' }, tx(el('span', { class: 'su-dp-lbl' }), 'su_ok_pack')), 'su-done-pack', 'btn btn-sm btn-primary', 'btn btn-sm');
     var done = el('div', { class: 'callout success su-done', id: 'su-done', hidden: true, 'aria-live': 'polite' },
-      doneTitle, tx(el('p'), 'su_ok_text'), doneDemo, again);
+      doneTitle, tx(el('p'), 'su_ok_text'), donePack, doneDemo, again);
+    /* public on the schools page: no sign-up needed */
+    var packCard = page !== 'schools' ? null : el('div', { class: 'su-pack', id: 'su-pack' },
+      el('div', { class: 'su-pack-ic', 'aria-hidden': 'true', text: '📘' }),
+      el('div', null, tx(el('h3', { id: 'su-pack-h' }), 'su_pack_title'), tx(el('p', { id: 'su-pack-text' }), 'su_pack_text'),
+        packRow(el('div', { class: 'su-pack-links' }), 'su-pack', 'btn btn-accent', 'btn')));
 
     /* ---- file:// note */
     var fileMail = el('a', { class: 'btn btn-primary', id: 'su-file-mail' });
@@ -183,7 +263,7 @@
     var mailLine = el('p', { class: 'small muted su-mail', id: 'su-mail' }, tx(el('span'), 'su_mail_line'), addr);
 
     box.innerHTML = '';
-    box.appendChild(el('div', { class: 'su-wrap' }, head, form, done, fileNote, mailLine));
+    box.appendChild(el('div', { class: 'su-wrap' }, head, packCard, form, done, fileNote, mailLine));
 
     /* ---- behaviour */
     function values() {
@@ -274,6 +354,7 @@
       setBusy(true);
       Promise.resolve().then(function () { return c.registerInterest(v); }).then(function (res) {
         setBusy(false);
+        try { EDU.store('cta').set('joined', Date.now()); } catch (x) { }    /* the shell's "get updates" reminder stops */
         showDone(!!((res && res.demo) || c.isDemo));
       }, function (err) {
         setBusy(false);
@@ -292,6 +373,8 @@
 
     function render() {
       T.forEach(function (p) { if (p[0] !== submitTxt) p[0].textContent = st(p[1]); });
+      renderProof();
+      renderPack();
       submitTxt.textContent = st(busy ? 'su_sending' : 'su_submit');
       [emailErr, roleErr, topicsErr, consentErr].forEach(function (p) { var k = p.getAttribute('data-key'); if (k) p.textContent = st(k); });
       Array.prototype.forEach.call(status.querySelectorAll('[data-key]'), function (n) { n.textContent = st(n.getAttribute('data-key')); });

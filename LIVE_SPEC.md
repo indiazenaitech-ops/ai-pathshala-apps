@@ -189,6 +189,9 @@ topics, consent:true, lang, page, createdAt, uid}`, create-only in the rules, on
 uid; no reads by anyone but the owner in the console). Anonymous auth in a separate app instance `'edu-interest'`, a new
 account per sign-up, signed out right after. Adults only (consent text says 18+). Kept until
 unsubscribe; deleted within 30 days of a request (manual, by the owner). Details: firebase/API.md §10, legal/privacy.html#updates.
+Public counter (2026-10-04): `stats/signups {count}` goes up by exactly 1 in the same batch as each new sign-up (rules:
++1 only with a new `interest/{my uid}`; anyone may read the number). `EDUCloud.signupCount()` reads it with one plain REST
+GET (once per page, 10-minute tab cache); the form shows "Join {n}+ teachers & learners…" from 25 on. API.md §10.
 
 ## Security review (2026-10-04): deviations
 Full report: **firebase/SECURITY_REVIEW.md**. The EDUCloud API did not change; these are rule and behaviour changes,

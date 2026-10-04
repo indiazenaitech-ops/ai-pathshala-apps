@@ -93,15 +93,30 @@ async function main() {
   const problems = [];
   const ctx = await browser.newContext();
   const fakeSdk = fs.readFileSync(path.join(__dirname, 'sim', 'fake-sdk.js'), 'utf8');
-  await ctx.route('**/*', route => {
+  const REST = 'https://firestore.googleapis.com/v1/projects/sim/databases/(default)/documents/';
+  const restCalls = [];
+  let page = null;
+  await ctx.route('**/*', async route => {
     const u = route.request().url();
     if (u.startsWith(base)) return route.continue();
+    /* EDUCloud.signupCount(): one plain REST GET of stats/signups, answered from the fake backend (rules checked, signed out) */
+    if (u.startsWith(REST)) {
+      const req = route.request();
+      restCalls.push({ url: u, method: req.method(), cookie: (await req.allHeaders()).cookie || '' });
+      const docPath = decodeURIComponent(u.slice(REST.length).split('?')[0]);
+      const r = await page.evaluate(p => window.__FakeFirestore.get('rest', null, p).then(x => x, e => ({ denied: e.code })), docPath);
+      if (r.denied) return route.fulfill({ status: 403, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: '{"error":{"code":403,"status":"PERMISSION_DENIED"}}' });
+      if (!r.exists) return route.fulfill({ status: 404, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: '{"error":{"code":404,"status":"NOT_FOUND"}}' });
+      const fields = {};
+      for (const [k, v] of Object.entries(r.data)) fields[k] = Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v };
+      return route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ name: 'projects/sim/databases/(default)/documents/' + docPath, fields }) });
+    }
     if (u === SDK + 'firebase-app-compat.js') return route.fulfill({ status: 200, contentType: 'text/javascript', body: fakeSdk });
     if (u === SDK + 'firebase-auth-compat.js' || u === SDK + 'firebase-firestore-compat.js') return route.fulfill({ status: 200, contentType: 'text/javascript', body: '/* fake: everything is in firebase-app-compat.js */' });
     problems.push('unexpected network request: ' + u);
     return route.abort();
   });
-  const page = await ctx.newPage();
+  page = await ctx.newPage();
   page.on('pageerror', e => problems.push('page error: ' + (e && e.message)));
   page.on('console', m => { if (m.type() === 'error') problems.push('console error: ' + m.text()); });
   page.on('dialog', d => d.accept().catch(() => { }));
@@ -331,7 +346,31 @@ async function main() {
       return out.map(x => x.ok ? 'ok' : x.code);
     });
     eq(atk, ['ok', 'permission-denied', 'permission-denied'], 'one account = one sign-up: writing again, or under another id, is refused');
-    await phase('extra: "Stay updated": 5 writes (4 sign-ups), 3 refused attacks', { extra: true, expectDenied: 3 });
+    /* the public counter stats/signups: +1 in the same batch as each of the 4 sign-ups made through registerInterest;
+       the attack script's lone sign-up above did not add 1 (allowed: the counter may lag, never run ahead) */
+    eq(await page.evaluate(() => window.__FakeFirestore.data('stats/signups')), { count: 4 }, 'stats/signups counts the 4 sign-ups, +1 each');
+    const atk2 = await su.evaluate(async () => {
+      const app = firebase.apps.find(a => a.name === 'edu-interest'), db = app.firestore(), FV = firebase.firestore.FieldValue;
+      const out = [];
+      const u = (await app.auth().signInAnonymously()).user;              /* a new account, +1 without a sign-up */
+      out.push(await __try(() => db.collection('stats').doc('signups').set({ count: FV.increment(1) }, { merge: true })));
+      const r = { name: '', email: 'jump@example.com', role: 'other', org: '', place: '', prefLang: 'en', topics: ['apps'], consent: true, lang: 'en', page: 'home', createdAt: FV.serverTimestamp(), uid: u.uid };
+      const b = db.batch();                                               /* a real sign-up, but +5 */
+      b.set(db.collection('interest').doc(u.uid), r);
+      b.set(db.collection('stats').doc('signups'), { count: FV.increment(5) }, { merge: true });
+      out.push(await __try(() => b.commit()));
+      await app.auth().signOut();
+      return out.map(x => x.ok ? 'ok' : x.code);
+    });
+    eq(atk2, ['permission-denied', 'permission-denied'], 'counter: +1 without a sign-up, or +5 with one, is refused');
+    eq(await page.evaluate(() => window.__FakeFirestore.data('stats/signups')), { count: 4 }, 'stats/signups unchanged by the attacks');
+    const n1 = await su.evaluate(() => EDUCloud.signupCount());
+    const n2 = await su.evaluate(() => EDUCloud.signupCount());
+    const n3 = await S[1].evaluate(() => EDUCloud.signupCount());
+    eq([n1, n2, n3], [4, 4, 4], 'signupCount() reads the public number');
+    eq([restCalls.length, restCalls[0] && restCalls[0].method, restCalls[0] && restCalls[0].cookie], [1, 'GET', ''], 'signupCount(): ONE plain GET without cookies, then the cached number (same page and same tab)');
+    check(restCalls.length && /\/stats\/signups\?key=/.test(restCalls[0].url), 'signupCount() asks only for stats/signups ' + (restCalls[0] && restCalls[0].url));
+    await phase('extra: "Stay updated": 4 sign-ups +1 each, 5 refused, 1 count read', { extra: true, expectDenied: 5 });
 
     eq(await host.evaluate(() => window.__hostErr), null, 'no hostWatch errors');
     const pErrs = await Promise.all(S.slice(Math.floor(N / 2)).map(f => f.evaluate(() => window.__pErr)));

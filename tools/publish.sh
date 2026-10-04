@@ -17,6 +17,15 @@ for f in schools.html business.html robots.txt sitemap.xml tools/verify_pages.js
 done
 # press kit / printable flyer (linked from schools.html via EDU_SITE.press in catalog.js)
 if [ -d press ]; then git add press; fi
+# free downloads: the "AI Classroom Starter Pack" PDFs (shared/signup.js links them; built by tools/make_starter_pack.js)
+if [ -d downloads ]; then git add downloads; fi
+for f in tools/make_starter_pack.js tools/tests/_cta.check.js firebase/tests/signup.emulator.e2e.js; do if [ -f "$f" ]; then git add "$f"; fi; done
+# free how-to guides (guides/: static pages in 12 languages + screenshots + strings, built by guides/_build/build.js)
+# and the IndexNow key file (<32 hex>.txt at the root, its content = its name; used by tools/indexnow.js)
+if [ -d guides ]; then git add guides; fi
+for f in [0-9a-f]*.txt tools/indexnow.js; do
+  if [ -f "$f" ] && { [ "$f" = tools/indexnow.js ] || [[ "$f" =~ ^[0-9a-f]{32}\.txt$ && "$(cat "$f")" == "${f%.txt}" ]]; }; then git add "$f"; fi
+done
 # Live Quiz: legal pages, short links, Firebase rules/tests (node_modules is gitignored), spec + e2e tests
 for d in legal join teacher firebase; do if [ -d "$d" ]; then git add "$d"; fi; done
 for f in LIVE_SPEC.md tools/tests/_live_e2e.js tools/tests/_cloud_mock.e2e.js tools/tests/_legal.check.js tools/tests/_signup.check.js; do if [ -f "$f" ]; then git add "$f"; fi; done

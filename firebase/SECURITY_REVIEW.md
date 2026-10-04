@@ -36,7 +36,7 @@ residual risks and what would reduce them.
   places where the apps show student-written text.
 - **`firebase/tests/rules.test.js`** (Firestore emulator) has a test for every fix (`ATTACK (fixed)`), next to the
   existing attack tests. **It had not been run at the time of this review** (no Java). It has been run since, with the
-  updates-list tests: 122/122 pass (§7b). Run `cd firebase && npm run test:emulator` after every rules change.
+  updates-list tests: 122/122 pass (§7b); with the sign-up counter tests 134/134 (§7c). Run `cd firebase && npm run test:emulator` after every rules change.
 - **`firebase/tests/firebase_mode.sim.js`** (new) runs the real `cloud.js` in Firebase mode against a fake Firebase SDK and
   an in-memory Firestore. That Firestore enforces a JavaScript port of the rules and counts what Firestore bills. The port
   takes the nickname character lists from `firestore.rules`, so the two cannot drift apart. It plays one teacher and 40
@@ -211,7 +211,7 @@ the quiz is live; the sentence is still correct as written.
 | R5 | Lobby flooding by scripted anonymous accounts. | Lock + kick. A removed uid can't rejoin. | App Check; a cap on players per session (needs a counter). |
 | R6 | A teacher who never opens the app again keeps old sessions forever on Spark. | Stated honestly in the privacy policy ("deleted on request"). | Blaze + TTL (`expireAt` is already on every doc), or a scheduled Cloud Function. |
 | R7 | Anonymous Auth records (uid plus creation time, no personal data) pile up in Firebase Authentication. | None needed for privacy. | Identity Platform's automatic clean-up of anonymous users, if the project is upgraded. |
-| R8 | **The rules were not run against the real emulator in this review** (no Java). The simulation uses a JavaScript model of them. | `rules.test.js` has tests for every rule and every fix. **Update 4 Oct 2026:** a local Java runtime (`tools/jre`) now runs the emulator; all 122 tests pass (§7b). | Install Java 11+ and run `cd firebase && npm run test:emulator` before publishing the config. The console's rules editor also compiles the file on Publish. |
+| R8 | **The rules were not run against the real emulator in this review** (no Java). The simulation uses a JavaScript model of them. | `rules.test.js` has tests for every rule and every fix. **Update 4 Oct 2026:** a local Java runtime (`tools/jre`) now runs the emulator; all 122 tests pass (§7b), 134 with the counter (§7c). | Install Java 11+ and run `cd firebase && npm run test:emulator` before publishing the config. The console's rules editor also compiles the file on Publish. |
 | R9 | A student can rejoin under a new nickname mid-quiz while the session is unlocked (leave, then join). Their answers stay, and their score starts again from 0. | The teacher locks the session once everyone has joined. | — |
 | R10 | Large quizzes cost more downloads: the session doc, with every question, is re-sent to every phone on each change. With today's limits (200 questions of 1,000 characters) a single doc can reach ~0.5 MB. | Reads run out first for normal quizzes (§5). | Option c in §5, or lower `LIMITS.questions`. |
 
@@ -283,6 +283,48 @@ client also signs in one new anonymous account per sign-up (Firebase Auth, free)
 - A scripted second write with the same account, or a write under another id, is refused.
 - A mutation check (weakening the rules in a copy: no id check, duplicate topics allowed, a read rule added) made the
   matching emulator tests fail every time.
+
+## 7c. Addendum (4 Oct 2026): `stats/signups`, the public sign-up counter
+
+The form shows "Join 120+ teachers & learners getting free AI apps" (from 25 sign-ups on, rounded down to tens). The
+number comes from ONE public document `stats/signups = {count}`. Rules: `match /stats/{docId}` at the end of
+`firestore.rules`. Tests: the `stats/signups (public sign-up counter)` suite in `firebase/tests/rules.test.js` (12 tests);
+the emulator run passed **134/134** (122 earlier + 12). `firebase/tests/signup.emulator.e2e.js` runs the real
+`cloud.js` with the real Firebase SDK against the emulator (batch, count read, the form, the fallback): 21/21.
+`firebase/tests/firebase_mode.sim.js` (G) models the same rules and checks the billing.
+
+**What the rules allow.**
+- `get` of `stats/signups` for **anyone**, signed in or not. It holds one number and nothing personal. `list` and every
+  other document in `stats/` are denied, so nothing else can ever be published there by mistake.
+- `create` (count must be exactly 1) or `update` (count must be exactly the stored count + 1), with `keys().hasOnly(['count'])`,
+  and **only** when the same request also creates a NEW sign-up of the writer's own account:
+  `existsAfter(interest/{request.auth.uid}) && !exists(interest/{request.auth.uid})`. `cloud.js` sends both in one batch
+  (`increment(1)`, merged). The sign-up rule itself is unchanged, so every sign-up still passes all the §7b checks.
+- No `delete`.
+
+| # | Threat | Result | Why / mitigation |
+|---|---|---|---|
+| C1 | **Inflate the number** without signing up (script `count + 1`, `+2`, `+1000`) | Not possible | Every change needs a new `interest/{my uid}` in the same batch, and only +1 is accepted. Tests: counter alone (signed in, teacher, signed out), `increment(2/10/1.5)`, big numbers, a new counter that does not start at 1. |
+| C2 | **Inflate the number with junk sign-ups** | Same limit as I3 | One +1 needs one new anonymous account AND one valid sign-up document. That is exactly the cost of the junk sign-up itself (Auth sign-up quota per IP). The number can never run ahead of the documents in `interest/`. |
+| C3 | **Count twice** for one account (second sign-up, or a later +1 by an account that already signed up) | Not possible | The second sign-up is an update (denied, §7b), and `!exists(interest/{uid})` fails for any later +1. Tested. |
+| C4 | **Lower, reset or delete** the number (vandalism, "social proof" sabotage) | Not possible | Only `+1`; no delete rule. Tested: `-1`, same value, `0`, reset to 1, delete as anonymous, teacher and signed out. |
+| C5 | **Abuse the open read** (privacy, scraping) | Harmless | The document is one integer. The read is a plain `GET` without cookies (`credentials: 'omit'`); it is made only when the form comes near the screen, at most once per tab per 10 minutes. No identifier is sent; Google sees the IP like for any Firebase or Google Fonts request (privacy policy, "Like any online service…"). |
+| C6 | **Quota**: reads of the counter by many visitors | Small | 1 read per visitor who scrolls to the form (cached per tab), against 50,000 free reads a day. A script looping the `GET` is the same class of risk as R1 (App Check would cover it). |
+| C7 | **The counter blocks sign-ups** (old rules, an owner edit, contention) | Cannot happen | If the batch is refused, `cloud.js` saves the sign-up alone and stops trying the counter on that page. One document takes about one sustained write per second, far above the sign-up rate. |
+| C8 | **The number lags** (pages cached from before, owner deletes sign-ups) | Accepted | It may lag behind the list, never run ahead. The owner can set it by hand in the console (SETUP.md §4b). |
+
+**Cost per sign-up:** 2 writes (sign-up + counter) and up to 2 rule look-ups (`exists` and `existsAfter` of the same
+sign-up document). **Showing the number:** 1 read per visitor who scrolls to the form.
+
+**Client changes:** `registerInterest` = one batch (sign-up + `increment(1)` with merge), falling back to the sign-up alone
+on `permission-denied` (returns `{id, counted}`); new `signupCount()` (REST `GET`, never rejects, number or null; Demo mode:
+the sign-ups saved in this browser); `signup.js` shows the line from 25 on, rounded down to tens, with the number kept
+left-to-right inside Urdu text.
+
+**Mutation check (4 Oct 2026).** Eight weakened copies of the rules (never the real file) were run against the emulator
+suite; every one made at least one counter test fail: no `!exists` (a second +1 by the same account), no `existsAfter`
+(+1 without a sign-up), "any bigger number", "any change", "any start value", extra fields allowed, every `stats/`
+document readable and listable, and delete allowed.
 
 ## 8. Changes made in this review
 

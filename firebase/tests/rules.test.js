@@ -13,7 +13,8 @@
  * look-alike / invisible-character nicknames, nickname squatting, reading other students' nickname
  * reservations, and reading ended or forgotten sessions by guessing codes.
  * The "Stay updated" list (interest/{uid}) is tested last: create only, one sign-up per account, exact shape, and no
- * reads, lists, changes or deletes for anyone. */
+ * reads, lists, changes or deletes for anyone. Then the public sign-up counter stats/signups: anyone may read the
+ * number; it goes up by exactly 1, and only in the same batch as a NEW sign-up of the writer's own account. */
 'use strict';
 const { describe, test, before, after, beforeEach } = require('node:test');
 const assert = require('node:assert');
@@ -23,7 +24,7 @@ const path = require('path');
 const { initializeTestEnvironment, assertSucceeds, assertFails } = require('@firebase/rules-unit-testing');
 const {
   doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, query, where, writeBatch,
-  serverTimestamp, Timestamp, arrayUnion, runTransaction
+  serverTimestamp, Timestamp, arrayUnion, runTransaction, increment
 } = require('firebase/firestore');
 
 const PROJECT = 'demo-apni-pathshala';
@@ -710,5 +711,144 @@ describe('interest (updates list)', () => {
     await assertFails(deleteDoc(doc(teacher('tA'), 'interest/v0')));
     await assertFails(deleteDoc(doc(nobody(), 'interest/v0')));
     await assertFails(deleteDoc(doc(student('v9'), 'interest/v9')));
+  });
+});
+
+/* ================================================================== stats/signups: the public sign-up counter
+   What cloud.js does: ONE batch per sign-up = create interest/{my new uid} + set stats/signups {count: increment(1)}
+   (merge, so the very first sign-up creates the counter with 1). Rules: +1 only together with a NEW sign-up of the
+   writer's own account; anyone may read the number; nothing else. */
+describe('stats/signups (public sign-up counter)', () => {
+  const rec = (uid, over) => Object.assign({
+    name: '', email: uid.toLowerCase() + '@example.com', role: 'teacher', org: '', place: '',
+    prefLang: 'hi', topics: ['apps'], consent: true, lang: 'hi', page: 'home', createdAt: serverTimestamp(), uid
+  }, over || {});
+  const COUNTER = 'stats/signups';
+  /* the batch cloud.js sends: the sign-up + the counter change (default: increment(1), merged).
+     counter null = no counter write; opts: db, path, merge:false, noInterest, rec (overrides for the sign-up) */
+  function signup(uid, counter, opts) {
+    opts = opts || {};
+    const db = opts.db || student(uid), b = writeBatch(db);
+    if (!opts.noInterest) b.set(doc(db, 'interest/' + uid), rec(uid, opts.rec));
+    if (counter !== null) {
+      const data = counter === undefined ? { count: increment(1) } : counter;
+      if (opts.merge === false) b.set(doc(db, opts.path || COUNTER), data);
+      else b.set(doc(db, opts.path || COUNTER), data, { merge: true });
+    }
+    return b.commit();
+  }
+  const seedCount = (n, extra) => env.withSecurityRulesDisabled(async (ctx) => {
+    await setDoc(doc(ctx.firestore(), COUNTER), Object.assign({ count: n }, extra || {}));
+  });
+  const stored = async () => {
+    let v = null;
+    await env.withSecurityRulesDisabled(async (ctx) => { const s = await getDoc(doc(ctx.firestore(), COUNTER)); v = s.exists() ? s.data() : null; });
+    return v;
+  };
+  /* v0 signed up earlier (before the counter existed) */
+  beforeEach(async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'interest/v0'), rec('v0', { createdAt: Timestamp.now() }));
+    });
+  });
+
+  test('valid: the first sign-up creates the counter with 1 (increment on a missing document)', async () => {
+    await assertSucceeds(signup('v1'));
+    assert.deepStrictEqual(await stored(), { count: 1 });
+  });
+  test('valid: every new sign-up adds exactly 1 (increment(1), or the next number written out)', async () => {
+    await seedCount(41);
+    await assertSucceeds(signup('v1'));
+    assert.deepStrictEqual(await stored(), { count: 42 });
+    await assertSucceeds(signup('v2', { count: 43 }));
+    await assertSucceeds(signup('v3', { count: 44 }, { merge: false }));
+    await assertSucceeds(signup('tA', undefined, { db: teacher('tA') }));      /* a Google teacher signing up for themselves */
+    assert.deepStrictEqual(await stored(), { count: 45 });
+  });
+  test('valid: anyone may read the number, even signed out; a missing counter reads as "not there yet"', async () => {
+    const none = await assertSucceeds(getDoc(doc(nobody(), COUNTER)));
+    assert.strictEqual(none.exists(), false);
+    await seedCount(7);
+    for (const db of [nobody(), student('v1'), student('v0'), teacher('tB')]) {
+      const s = await assertSucceeds(getDoc(doc(db, COUNTER)));
+      assert.strictEqual(s.data().count, 7);
+    }
+  });
+  test('valid: a sign-up without the +1 (an old cached page) is still accepted; the counter only lags', async () => {
+    await seedCount(5);
+    await assertSucceeds(signup('v1', null));
+    assert.deepStrictEqual(await stored(), { count: 5 });
+  });
+  test('ATTACK: no +1 without a sign-up (counter alone, signed in or signed out)', async () => {
+    await assertFails(setDoc(doc(student('v1'), COUNTER), { count: increment(1) }, { merge: true }));
+    await assertFails(setDoc(doc(student('v1'), COUNTER), { count: 1 }));
+    await assertFails(setDoc(doc(nobody(), COUNTER), { count: 1 }));
+    await seedCount(10);
+    await assertFails(updateDoc(doc(student('v1'), COUNTER), { count: increment(1) }));
+    await assertFails(updateDoc(doc(student('v1'), COUNTER), { count: 11 }));
+    await assertFails(updateDoc(doc(teacher('tA'), COUNTER), { count: 11 }));
+    await assertFails(updateDoc(doc(nobody(), COUNTER), { count: 11 }));
+    assert.deepStrictEqual(await stored(), { count: 10 });
+  });
+  test('ATTACK: no jumps: +2, +10, a big number, or a new counter that does not start at 1', async () => {
+    await assertFails(signup('v1', { count: increment(2) }));
+    await assertFails(signup('v1', { count: 5 }));
+    await assertFails(signup('v1', { count: 0 }));
+    await seedCount(10);
+    for (const counter of [{ count: increment(2) }, { count: increment(10) }, { count: 12 }, { count: 1000000 }, { count: increment(1.5) }]) {
+      await assertFails(signup('v1', counter));
+    }
+    assert.deepStrictEqual(await stored(), { count: 10 });
+  });
+  test('ATTACK: the counter never goes down, stays put or resets', async () => {
+    await seedCount(10);
+    for (const counter of [{ count: increment(-1) }, { count: 9 }, { count: 0 }, { count: 10 }, { count: increment(0) }, { count: 1 }]) {
+      await assertFails(signup('v1', counter));
+    }
+    assert.deepStrictEqual(await stored(), { count: 10 });
+  });
+  test('ATTACK: one +1 per account: a second sign-up, or a later +1 by an account that already signed up, is refused', async () => {
+    await seedCount(10);
+    await assertSucceeds(signup('v1'));
+    await assertFails(signup('v1'));                                            /* the same account again */
+    await assertFails(signup('v1', undefined, { noInterest: true }));           /* +1 alone, sign-up already there */
+    await assertFails(signup('v0', undefined, { noInterest: true }));           /* signed up earlier without the counter */
+    await assertFails(signup('v0', undefined, { rec: { email: 'again@example.com' } }));
+    assert.deepStrictEqual(await stored(), { count: 11 });
+  });
+  test("ATTACK: a +1 counts only for the writer's OWN new sign-up (not someone else's, not a refused one)", async () => {
+    await seedCount(10);
+    const db = student('v2'), b = writeBatch(db);
+    b.set(doc(db, 'interest/v3'), rec('v3'));                                   /* someone else's id: refused anyway */
+    b.set(doc(db, COUNTER), { count: increment(1) }, { merge: true });
+    await assertFails(b.commit());
+    await assertFails(signup('v1', undefined, { rec: { consent: false } }));    /* an invalid sign-up takes the +1 down with it */
+    await assertFails(signup('v1', undefined, { rec: { email: 'NOT-AN-EMAIL' } }));
+    assert.deepStrictEqual(await stored(), { count: 10 });
+  });
+  test('ATTACK: only {count}: extra fields, other documents in stats/ and wrong types are refused', async () => {
+    await assertFails(signup('v1', { count: 1, admin: true }));
+    await seedCount(10);
+    await assertFails(signup('v1', { count: increment(1), note: 'hi' }));
+    await assertFails(signup('v1', { count: '11' }, { merge: false }));
+    await assertFails(signup('v1', { count: 11, total: 99 }, { merge: false }));
+    await assertFails(signup('v1', { count: increment(1) }, { path: 'stats/other' }));
+    await assertFails(signup('v1', { count: 1 }, { path: 'stats/visits' }));
+    assert.deepStrictEqual(await stored(), { count: 10 });
+  });
+  test('ATTACK: nobody can delete the counter, list stats/ or read other stats documents', async () => {
+    await seedCount(10);
+    await env.withSecurityRulesDisabled(async (ctx) => { await setDoc(doc(ctx.firestore(), 'stats/secret'), { x: 1 }); });
+    for (const db of [nobody(), student('v1'), teacher('tA')]) {
+      await assertFails(deleteDoc(doc(db, COUNTER)));
+      await assertFails(getDocs(collection(db, 'stats')));
+      await assertFails(getDoc(doc(db, 'stats/secret')));
+    }
+    assert.deepStrictEqual(await stored(), { count: 10 });
+  });
+  test('a run of sign-ups from new accounts counts each one exactly once', async () => {
+    for (let i = 1; i <= 6; i++) await assertSucceeds(signup('n' + i));
+    await assertFails(signup('n3'));
+    assert.deepStrictEqual(await stored(), { count: 6 });
   });
 });

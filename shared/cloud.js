@@ -17,7 +17,10 @@
  *     student on the same browser never mix; it is remembered on the device, so a reload = same player,
  *   - the "Stay updated" form (shared/signup.js) calls registerInterest(): one write to interest/{uid} as a NEW
  *     anonymous user of a THIRD app instance ('edu-interest'), signed out right after, so a sign-up is never linked
- *     to a teacher account or a quiz player; the record is never read back (firestore.rules: create only, once per uid),
+ *     to a teacher account or a quiz player; the record is never read back (firestore.rules: create only, once per uid).
+ *     The same batch adds 1 to the public counter stats/signups {count} (firestore.rules: +1 only with a new sign-up),
+ *   - signupCount() reads that one number with ONE plain REST GET (no SDK, no sign-in, no cookies), once per page
+ *     (cached for 10 minutes in this tab's sessionStorage), for the "Join 120+ teachers" line of the form,
  *   - no Analytics, no tracking, nothing else is loaded.
  * All async functions reject with an Error whose .code is one of EDUCloud.ERRORS.
  * Classic script, never throws at load time. */
@@ -30,10 +33,12 @@
   var INTEREST_APP = 'edu-interest';
   var PENDING_DELETE = 'edu.cloud.pendingDelete';
   var CLOCK_KEY = 'edu.cloud.clock';
+  var COUNT_KEY = 'edu.cloud.signups';     /* sessionStorage: {n, at} = the last sign-up count read in this tab */
+  var COUNT_TTL = 10 * 60000;
   var API = ['ready', 'onTeacher', 'signInTeacher', 'signOut', 'deleteTeacherAccount', 'listQuizzes', 'getQuiz',
     'saveQuiz', 'deleteQuiz', 'createSession', 'hostWatch', 'startQuestion', 'revealQuestion', 'writeScores',
     'lockSession', 'kickPlayer', 'endSession', 'listSessions', 'sessionResults', 'deleteSession', 'joinSession',
-    'playerWatch', 'submitAnswer', 'leaveSession', 'purgeExpired', 'registerInterest'];
+    'playerWatch', 'submitAnswer', 'leaveSession', 'purgeExpired', 'registerInterest', 'signupCount'];
 
   function detectMode() {
     try {
@@ -220,7 +225,7 @@
     var S = {
       readyP: null, fb: null, app: null, auth: null, db: null, authKnown: false,
       stuP: null, sAuth: null, sDb: null,
-      intA: null, intQ: null, iAuth: null, iDb: null,
+      intA: null, intQ: null, iAuth: null, iDb: null, noCounter: false, countP: null,
       teacher: null, teacherLs: [], teacherDocs: {}, redirectError: null, purged: {},
       host: {},   /* code → {session, players, key}: what the host page knows (from hostWatch / own writes) */
       stu: {}     /* code → {session, my:{i:choice}, changed()}: what the student page knows */
@@ -1167,7 +1172,11 @@
        The rules allow ONE document per anonymous account (document id = uid; writing it again is an update, which
        is denied). So every sign-up signs in as a NEW anonymous account and signs it out afterwards: a second person
        on a shared school computer can sign up too, a retry after a lost reply never hits "already exists", and no
-       sign-up identity stays on the device. Sign-ups run one after another (S.intQ). */
+       sign-up identity stays on the device. Sign-ups run one after another (S.intQ).
+       The public counter: the same batch sets stats/signups {count: increment(1)} (merge, so the first sign-up creates
+       it). firestore.rules allow that +1 only together with a NEW sign-up of the same account. If the batch is refused
+       (rules without the counter not re-published yet, or a counter document edited by hand), the sign-up is saved
+       alone, so a sign-up never fails because of the counter; the counter then lags, it never runs ahead. */
     function interestAuth() {
       if (S.intA) return S.intA;
       var p = ready().then(function () {
@@ -1203,12 +1212,69 @@
         var uid = cred.user.uid;
         rec.createdAt = ST();
         rec.uid = uid;
-        var ref = S.iDb.collection('interest').doc(uid);     /* id = my new uid: no read, one write */
-        return timeout(ref.set(rec)).then(function () { return { id: ref.id }; });
+        var ref = S.iDb.collection('interest').doc(uid);     /* id = my new uid: no read */
+        function alone() { return timeout(ref.set(rec)).then(function () { return { id: ref.id, counted: false }; }); }
+        if (S.noCounter) return alone();
+        var b = S.iDb.batch();
+        b.set(ref, rec);
+        b.set(S.iDb.collection('stats').doc('signups'), { count: S.fb.firestore.FieldValue.increment(1) }, { merge: true });
+        return timeout(b.commit()).then(function () {
+          forgetCount();
+          return { id: ref.id, counted: true };
+        }, function (e) {
+          if (mapError(e).code !== 'permission-denied') throw e;
+          S.noCounter = true;
+          return alone();
+        });
       });
       /* saved or not, the throw-away account is signed out before the next sign-up starts */
       S.intQ = p.then(interestSignOut, interestSignOut);
       return p.catch(rethrow);
+    }
+
+    /* ------------------------------------------------------------ public sign-up count
+       stats/signups {count} is public (firestore.rules: anyone may get it; it is only a number). It is read with ONE
+       plain GET to the Firestore REST API: no SDK download, no sign-in, no cookies (credentials: 'omit'), and only
+       when a page asks (signup.js asks when the form comes near the screen). Once per page; the number is also kept
+       for 10 minutes in this tab's sessionStorage, so moving between home, schools and business costs no more reads.
+       → a whole number ≥ 0 (0 = no counter yet), or null when it is not known (offline, refused, blocked). Never rejects. */
+    function readCountCache() {
+      try {
+        var c = JSON.parse(window.sessionStorage.getItem(COUNT_KEY) || 'null');
+        if (c && typeof c.n === 'number' && c.n >= 0 && Math.abs(Date.now() - c.at) < COUNT_TTL) return c.n;
+      } catch (e) { }
+      return null;
+    }
+    function forgetCount() {
+      S.countP = null;
+      try { window.sessionStorage.removeItem(COUNT_KEY); } catch (e) { }
+    }
+    function countUrl() {
+      var cfg = window.EDU_FIREBASE || {};
+      var host = wantEmulator() ? 'http://127.0.0.1:8080' : 'https://firestore.googleapis.com';
+      var u = host + '/v1/projects/' + encodeURIComponent(String(cfg.projectId || '')) + '/databases/(default)/documents/stats/signups';
+      return wantEmulator() || !cfg.apiKey ? u : u + '?key=' + encodeURIComponent(String(cfg.apiKey));
+    }
+    function signupCount() {
+      if (S.countP) return S.countP;
+      var cached = readCountCache();
+      if (cached !== null) { S.countP = Promise.resolve(cached); return S.countP; }
+      if (typeof fetch !== 'function' || !(window.EDU_FIREBASE && window.EDU_FIREBASE.projectId)) return Promise.resolve(null);
+      var p = timeout(fetch(countUrl(), { method: 'GET', credentials: 'omit', cache: 'no-store' }).then(function (r) {
+        if (r.status === 404) return 0;                                  /* allowed, but nobody has signed up yet */
+        if (!r.ok) return null;                                          /* 403 = rules without the counter */
+        return r.json().then(function (j) {
+          var f = j && j.fields && j.fields.count, v = f ? (f.integerValue !== undefined ? f.integerValue : f.doubleValue) : undefined;
+          var n = Number(v);
+          return v !== undefined && isFinite(n) && n >= 0 ? Math.floor(n) : null;
+        });
+      }), 10000).then(function (n) {
+        if (n !== null) { try { window.sessionStorage.setItem(COUNT_KEY, JSON.stringify({ n: n, at: Date.now() })); } catch (e) { } }
+        else S.countP = null;                                            /* not known: a later call may try again */
+        return n;
+      }, function () { S.countP = null; return null; });
+      S.countP = p;
+      return p;
     }
 
     var FB = {
@@ -1218,7 +1284,7 @@
       revealQuestion: revealQuestion, writeScores: writeScores, lockSession: lockSession, kickPlayer: kickPlayer,
       endSession: endSession, listSessions: listSessions, sessionResults: sessionResults, deleteSession: deleteSession,
       joinSession: joinSession, playerWatch: playerWatch, submitAnswer: submitAnswer, leaveSession: leaveSession,
-      purgeExpired: purgeExpired, registerInterest: registerInterest
+      purgeExpired: purgeExpired, registerInterest: registerInterest, signupCount: signupCount
     };
 
     /* ------------------------------------------------------------ public object */
@@ -1245,7 +1311,11 @@
     };
     API.forEach(function (name) {
       api[name] = MODE === 'mock'
-        ? function () { return Mock[name].apply(Mock, arguments); }
+        ? function () {
+          /* an older cached cloud-mock.js may not have a newer function: answer like "not known" instead of crashing */
+          if (typeof Mock[name] !== 'function') return name === 'signupCount' ? Promise.resolve(null) : Promise.reject(cloudError('not-configured', 'Reload the page.'));
+          return Mock[name].apply(Mock, arguments);
+        }
         : FB[name];
     });
     if (MODE === 'firebase') api._mapError = mapError;      /* for tests */

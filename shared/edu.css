@@ -136,6 +136,31 @@ code, kbd, pre, .mono { font-family: var(--mono); }
 .edu-foot a { color: var(--primary); text-decoration: none; font-weight: 600; }
 .edu-foot-links { display: inline-flex; flex-wrap: wrap; gap: 6px 18px; }
 
+/* ---------- "get updates" reminder (EDU shell, app pages only; see ctaInit in edu.js) ----------
+   Never on first paint, never in full screen / projector mode, never over content: on wide screens a small pill in
+   the header (it takes room from the title only), on phones and tablets a bar in the page flow above the footer. */
+.edu-cta { display: flex; align-items: center; gap: 2px; min-width: 0; animation: edu-pop .25s ease-out; }
+.edu-cta-link { display: flex; align-items: center; gap: 6px; min-width: 0; color: var(--text); text-decoration: none; font-weight: 700; }
+.edu-cta-link:hover .edu-cta-txt { text-decoration: underline; }
+.edu-cta-ic { flex: none; }
+.edu-cta-txt { min-width: 0; }
+.edu-cta-x { flex: none; border: 0; background: transparent; color: var(--muted); cursor: pointer; border-radius: 999px; font: inherit; font-size: .95rem; line-height: 1; display: inline-grid; place-items: center; padding: 0; }
+.edu-cta-x:hover { background: var(--surface); color: var(--text); }
+.edu-top .edu-cta { flex: 0 1 auto; max-width: 21rem; border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--border)); background: var(--accent-soft); border-radius: 999px; padding: 2px 3px 2px 12px; }
+.edu-top .edu-cta-link { font-size: .86rem; padding: 6px 0; }
+.edu-top .edu-cta-txt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.edu-top .edu-cta-x { width: 32px; height: 32px; }
+.edu-cta-on .edu-title { flex-basis: 0; }   /* the title gives up room (ellipsis) so the header stays one line */
+.edu-cta-row { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 16px 16px; }
+.edu-wide-page .edu-cta-row { max-width: 1500px; }
+.edu-cta-row .edu-cta { border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--border)); border-inline-start-width: 5px; background: var(--accent-soft); border-radius: 12px; padding: 4px 4px 4px 14px; }
+.edu-cta-row .edu-cta-link { flex: 1 1 auto; min-height: 44px; padding: 6px 0; }
+.edu-cta-row .edu-cta-x { width: 44px; height: 44px; }
+:root[lang="ur"] .edu-cta-link { line-height: 2; }
+.edu-fullscreen-on .edu-cta, .edu-fullscreen-on .edu-cta-row { display: none !important; }
+body:has(.present, .presenting) .edu-cta, body:has(.present, .presenting) .edu-cta-row { display: none !important; }
+@media print { .edu-cta, .edu-cta-row { display: none !important; } }
+
 /* ---------- layout helpers ---------- */
 .stack > * + * { margin-top: 12px; }
 .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }

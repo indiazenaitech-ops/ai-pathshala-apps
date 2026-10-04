@@ -8,7 +8,8 @@
    (e.g. being edited) stay in the catalog using their committed meta.json and are not re-staged.
    Site outputs:
    - catalog.js also sets window.EDU_SITE = { zip, press? } (press = printable flyer/kit if press/ exists).
-   - sitemap.xml lists home, schools.html, business.html, press/index.html (if present) and every catalogued app.
+   - sitemap.xml lists home, schools.html, business.html, press/index.html (if present), every catalogued app and,
+     if guides/index.html exists, every guide page (all 12 languages; folders starting with _ are skipped).
    - index.html: the block between <!-- build:apps-jsonld ... --> and <!-- /build:apps-jsonld --> is replaced with an
      ItemList of the apps (schema.org SoftwareApplication, free, 12 languages). Nothing else in index.html is touched. */
 'use strict';
@@ -33,7 +34,11 @@ function newestMtime(p) {
   for (const f of fs.readdirSync(p)) m = Math.max(m, newestMtime(path.join(p, f)));
   return m;
 }
+/* tools/.publish_hold: one slug per line (# comments ok). Apps another session is still building/QA-ing are
+   never treated as publish-ready, even with a PASS report; already-published versions stay as they are. */
+const HOLD = (() => { try { return new Set(fs.readFileSync(path.join(__dirname, '.publish_hold'), 'utf8').split(/\r?\n/).map(l => l.replace(/#.*/, '').trim()).filter(Boolean)); } catch (e) { return new Set(); } })();
 function fresh(slug) {
+  if (HOLD.has(slug)) return false;
   const rp = path.join(__dirname, 'reports', slug + '.json');
   if (!fs.existsSync(rp)) return false;
   const r = JSON.parse(fs.readFileSync(rp, 'utf8'));
@@ -113,6 +118,21 @@ if (fs.existsSync(path.join(ROOT, 'schools.html'))) urls.push({ loc: SITE_URL + 
 if (fs.existsSync(path.join(ROOT, 'business.html'))) urls.push({ loc: SITE_URL + 'business.html', lastmod: day(Math.max(newestMtime(path.join(ROOT, 'business.html')), newestMtime(path.join(ROOT, 'shared', 'business-strings.js')))), pri: '0.9' });
 if (press && press.kit) urls.push({ loc: SITE_URL + press.kit, lastmod: day(newestMtime(pressDir)), pri: '0.5' });
 for (const a of apps) urls.push({ loc: `${SITE_URL}apps/${a.slug}/`, lastmod: lastmod[a.slug], pri: '0.8' });
+/* free how-to guides, one static page per language (guides/index.html, guides/<slug>/, guides/<lang>/, guides/<lang>/<slug>/;
+   built by guides/_build/build.js). Folders starting with _ and the img/ i18n/ assets are skipped. */
+const guidesDir = path.join(ROOT, 'guides');
+if (fs.existsSync(path.join(guidesDir, 'index.html'))) {
+  const pages = [];
+  (function walk(dir, rel, depth) {
+    if (fs.existsSync(path.join(dir, 'index.html'))) pages.push(rel);
+    if (depth >= 2) return;
+    for (const f of fs.readdirSync(dir).sort()) {
+      if (f.startsWith('_') || f.startsWith('.') || f === 'img' || f === 'i18n') continue;
+      if (fs.statSync(path.join(dir, f)).isDirectory()) walk(path.join(dir, f), rel + f + '/', depth + 1);
+    }
+  })(guidesDir, 'guides/', 0);
+  for (const rel of pages) urls.push({ loc: SITE_URL + rel, lastmod: day(fs.statSync(path.join(ROOT, rel, 'index.html')).mtimeMs), pri: '0.7' });
+}
 const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   urls.map(u => `  <url><loc>${xmlEsc(u.loc)}</loc><lastmod>${u.lastmod}</lastmod><priority>${u.pri}</priority></url>`).join('\n') + '\n</urlset>\n';
 writeIfChanged(path.join(ROOT, 'sitemap.xml'), sitemap);

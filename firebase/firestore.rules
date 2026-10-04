@@ -363,7 +363,8 @@ service cloud.firestore {
     // counts as an update, which is denied. A flood therefore needs a new Firebase account per document, and new
     // accounts are rate-limited per IP address (Authentication → Settings → sign-up quota). cloud.js uses a fresh
     // anonymous account for every sign-up, so a second person on a shared computer can still sign up.
-    // No get()/exists() here, so a sign-up costs one write and no reads.
+    // No get()/exists() here, so this write costs no reads. (cloud.js adds the +1 on stats/signups in the same batch:
+    // 1 more write and 2 look-ups, see below. A sign-up without it is still valid.)
     function validEmail(e) {
       return e is string && e.size() >= 6 && e.size() <= 254
         && e == e.lower() && e == e.trim()
@@ -406,6 +407,37 @@ service cloud.firestore {
         && incoming().page in ['home', 'schools', 'business', 'other'];
       // No get / list / update / delete rule = denied for everyone, even for the person who signed up (the owner
       // reads and deletes sign-ups in the Firebase console, which ignores these rules).
+    }
+
+    // ------------------------------------------------------------------ stats/signups
+    // The public sign-up counter: ONE document stats/signups = {count: <number of sign-ups>}. The "Stay updated" form
+    // shows "Join 120+ teachers & learners" from it (EDUCloud.signupCount; nothing else is in it, so anyone may read it).
+    // It can only go UP BY EXACTLY 1, and only in the SAME batch that creates a NEW sign-up interest/{my uid}
+    // (EDUCloud.registerInterest writes both together):
+    //   - existsAfter(interest/{my uid}): my sign-up exists once this batch is applied, and
+    //   - !exists(interest/{my uid}):    it did not exist before, so this batch is the one that creates it.
+    // One anonymous account = one sign-up = at most one +1. No +1 without a sign-up, no second +1 for the same
+    // account, no jumps, no going down, no other fields, no delete, no other documents in stats/.
+    // A sign-up without the +1 (an old cached page) is still allowed above: the counter may lag, it never runs ahead.
+    // Cost: 2 extra document look-ups per sign-up (exists + existsAfter of the same sign-up document).
+    function newSignup() {
+      return signedIn()
+        && existsAfter(/databases/$(database)/documents/interest/$(request.auth.uid))
+        && !exists(/databases/$(database)/documents/interest/$(request.auth.uid));
+    }
+    match /stats/{docId} {
+      allow get: if docId == 'signups';
+      allow create: if docId == 'signups'
+        && incoming().keys().hasOnly(['count'])
+        && incoming().count is int
+        && incoming().count == 1
+        && newSignup();
+      allow update: if docId == 'signups'
+        && incoming().keys().hasOnly(['count'])
+        && incoming().count is number
+        && incoming().count == existing().count + 1
+        && newSignup();
+      // No list / delete rule = denied. The owner can correct the number in the Firebase console if ever needed.
     }
 
     // Everything else (other collections, other paths) has no rule and is therefore denied.

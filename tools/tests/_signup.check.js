@@ -12,6 +12,8 @@
  * 5. Success: exactly the agreed fields are saved (Demo mode, marked demo:true) with page + language; "Add another".
  * 6. Errors from the backend (offline, quota, refused) → translated messages + an email link to CONTACT_EMAIL.
  * 7. No request leaves the site while the form is used; file:// shows a note and an email link instead of the form.
+ * 8. The free "AI Classroom Starter Pack": on the schools page for everyone (no sign-up), elsewhere only after a sign-up;
+ *    two links (Hindi first for hi/mr) to downloads/*.pdf, which exist and are real PDFs.
  * Screenshots: tools/shots/signup/ (home-hi-mobile, home-ur-mobile, home-en-dark-mobile, schools-en-desktop, …). */
 'use strict';
 const fs = require('fs'), path = require('path'), http = require('http'), vm = require('vm');
@@ -78,6 +80,8 @@ function formState() {
     addr: txt('#su-addr'), addrHref: ($('#su-addr') || { getAttribute: () => '' }).getAttribute('href'),
     fileMail: ($('#su-file-mail') || { getAttribute: () => '' }).getAttribute('href'),
     prefLang: ($('#su-lang') || {}).value, email: ($('#su-email') || {}).value,
+    pack: (() => { const c = $('#su-pack'); return c ? { visible: vis(c), title: txt('#su-pack-h'), text: txt('#su-pack-text'), links: [...c.querySelectorAll('a')].map(a => [a.getAttribute('data-ed'), a.textContent.trim(), a.getAttribute('href'), a.className]) } : null; })(),
+    donePack: (() => { const c = $('#su-done-pack'); return c ? { visible: vis(c), links: [...c.querySelectorAll('a')].map(a => [a.getAttribute('data-ed'), a.textContent.trim(), a.getAttribute('href')]) } : null; })(),
     errs, saved: Object.keys(localStorage).filter(k => k.indexOf('edu.cloudmock.interest/') === 0).map(k => JSON.parse(localStorage.getItem(k))),
     hpVisible: (() => { const w = document.querySelector('.su-hp'); if (!w) return true; const r = w.getBoundingClientRect(); return r.width > 2 || r.height > 2 || w.getAttribute('aria-hidden') !== 'true' || document.getElementById('su-website').tabIndex !== -1; })()
   };
@@ -95,6 +99,11 @@ function formState() {
     ok(!/workshop|20-minute|20 मिनट|a plan and a quote/i.test(html.replace(/<!--[\s\S]*?-->/g, '')), `${file}: still mentions a workshop`);
   }
 
+  for (const ed of ['hi', 'en']) {
+    const f = path.join(ROOT, 'downloads', `ai-classroom-starter-pack-${ed}.pdf`);
+    const ex = fs.existsSync(f);
+    ok(ex && fs.readFileSync(f).slice(0, 5).toString() === '%PDF-' && fs.statSync(f).size > 100000 && fs.statSync(f).size < 3000000, `downloads/ai-classroom-starter-pack-${ed}.pdf missing or not a PDF of a sensible size`);
+  }
   const srv = http.createServer((req, res) => {
     let p = decodeURIComponent(req.url.split('?')[0]); if (p.endsWith('/')) p += 'index.html';
     const fp = path.join(ROOT, p);
@@ -156,6 +165,13 @@ function formState() {
       ok(st.addr === contact && st.addrHref.indexOf('mailto:' + contact + '?subject=') === 0, `${where}: contact email line`);
       ok(st.overflow <= 1, `${where}: horizontal overflow ${st.overflow}px`);
       ok(!st.hpVisible, `${where}: honeypot field is visible`);
+      const first = ['hi', 'mr'].includes(L) ? 'hi' : 'en';
+      if (pg === 'schools') {
+        ok(st.pack && st.pack.visible && st.pack.title === S.su_pack_title && st.pack.text === S.su_pack_text, `${where}: Starter Pack shown to everyone on the schools page`);
+        ok(st.pack && st.pack.links.length === 2 && st.pack.links[0][0] === first && st.pack.links.every(l => l[1] === '⬇ ' + S['su_pack_' + l[0]] && l[2] === base + 'downloads/ai-classroom-starter-pack-' + l[0] + '.pdf'), `${where}: pack links ${JSON.stringify(st.pack && st.pack.links)}`);
+        ok(st.pack && /btn-accent/.test(st.pack.links[0][3]), `${where}: this language's edition is the main button`);
+      } else ok(!st.pack, `${where}: no Starter Pack card before a sign-up on the ${pg} page`);
+      ok(st.donePack && !st.donePack.visible, `${where}: pack links in the thank-you box stay hidden until a sign-up`);
       for (const l of log) ok(false, `${where}: console: ${l}`);
       ok(!external.length, `${where}: request to another site: ${external.join(' | ')}`);
       if (pg === 'home' && ['hi', 'ur'].includes(L)) await shot(page, `home-${L}-mobile`);
@@ -166,6 +182,54 @@ function formState() {
       if (fs.existsSync(path.join(SHOTS, `${pg}-${L}-mobile.png`))) continue;
       const { ctx, page } = await open(pg, L, { width: 390, height: 844 });
       await shot(page, `${pg}-${L}-mobile`);
+      await ctx.close();
+    }
+
+    /* ---------- 2b. social proof: "Join {n}+ teachers & learners…" from 25 sign-ups on (Demo mode counts the sign-ups
+       saved in this browser), rounded down to tens; a neutral line below 25; asked only when the form is near the screen */
+    for (const [pg, L, seed, want] of [['home', 'en', 0, null], ['home', 'en', 24, null], ['schools', 'hi', 25, 20], ['business', 'ur', 137, 130], ['home', 'ta', 1009, 1000]]) {
+      const where = `proof ${pg}/${L}/${seed}`;
+      const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'en-IN', serviceWorkers: 'block' });
+      await ctx.addInitScript(n => {
+        if (sessionStorage.getItem('seeded')) return;
+        sessionStorage.setItem('seeded', '1');
+        for (let i = 0; i < n; i++) localStorage.setItem('edu.cloudmock.interest/anon-seed' + i, JSON.stringify({ email: 'x' + i + '@example.com', demo: true }));
+      }, seed);
+      await ctx.addInitScript(() => {
+        window.__countCalls = 0;
+        let C;
+        Object.defineProperty(window, 'EDUCloud', { configurable: true, get() { return C; }, set(v) {
+          C = v;
+          if (v && typeof v.signupCount === 'function') { const f = v.signupCount; v.signupCount = function () { window.__countCalls++; return f.apply(this, arguments); }; }
+        } });
+      });
+      const page = await ctx.newPage();
+      const log = [];
+      page.on('console', m => { if (m.type() === 'error' || m.text().startsWith('[i18n-missing]')) log.push(m.text().slice(0, 200)); });
+      page.on('pageerror', e => log.push('pageerror: ' + String(e).slice(0, 200)));
+      await page.goto(base + PAGES[pg] + '?lang=' + L, { waitUntil: 'load' });
+      await page.waitForTimeout(400);
+      const early = await page.evaluate(() => ({ calls: window.__countCalls, text: (document.getElementById('su-proof') || {}).textContent || '' }));
+      if (pg === 'home') ok(early.calls === 0, `${where}: the count is not asked for while the form is far below the screen`);
+      ok(early.text === '✓ ' + T[L].su_proof_none, `${where}: neutral line before the count is known: "${early.text}"`);
+      await page.evaluate(() => document.getElementById('updates').scrollIntoView());
+      await page.waitForTimeout(500);
+      const st = await page.evaluate(() => ({ calls: window.__countCalls, text: document.getElementById('su-proof').textContent, n: document.getElementById('su-proof').getAttribute('data-n'), overflow: document.documentElement.scrollWidth - innerWidth }));
+      ok(st.calls === 1, `${where}: the count is asked for exactly once (${st.calls})`);
+      if (want === null) ok(st.text === '✓ ' + T[L].su_proof_none && st.n === null, `${where}: under 25 → neutral line, got "${st.text}"`);
+      else {
+        const num = '⁦' + want.toLocaleString('en-IN') + '+⁩';
+        ok(st.n === String(want) && st.text === '👥 ' + T[L].su_proof.replace('{n}+', num), `${where}: "${st.text}" (want ${want}+)`);
+      }
+      ok(st.overflow <= 1, `${where}: horizontal overflow ${st.overflow}px`);
+      if (want === 130) await shot(page, 'proof-business-ur-mobile');
+      if (want === 20) {
+        await page.selectOption('#edu-lang', 'gu');
+        await page.waitForTimeout(200);
+        const t2 = await page.evaluate(() => document.getElementById('su-proof').textContent);
+        ok(t2 === '👥 ' + T.gu.su_proof.replace('{n}+', '⁦' + '20+⁩'), `${where}: language switch re-translates the line: "${t2}"`);
+      }
+      for (const l of log) ok(false, `${where}: console: ${l}`);
       await ctx.close();
     }
 
@@ -217,6 +281,9 @@ function formState() {
       ok(JSON.stringify(rec.topics) === '["apps","training"]' && rec.consent === true && rec.lang === 'hi' && rec.prefLang === 'hi' && rec.page === 'home' && rec.demo === true && typeof rec.createdAt === 'number' && /^anon-/.test(rec.uid),
         'record meta: ' + JSON.stringify(rec));
       ok(await page.evaluate(() => document.activeElement && document.activeElement.id) === 'su-done-title', 'focus moves to the thank-you message');
+      ok(st.donePack && st.donePack.visible && st.donePack.links.length === 2 && st.donePack.links[0][0] === 'hi' && st.donePack.links.every(l => l[1] === '⬇ ' + T.hi['su_pack_' + l[0]] && l[2] === base + 'downloads/ai-classroom-starter-pack-' + l[0] + '.pdf'),
+        'after the sign-up: the Starter Pack links (Hindi first) ' + JSON.stringify(st.donePack));
+      ok(await page.evaluate(() => localStorage.getItem('edu.cta.joined') !== null), 'a sign-up stops the shell reminder (edu.cta.joined)');
       await shot(page, 'home-hi-success-desktop');
       for (const l of log) ok(false, `home/en/desktop: console: ${l}`);
       ok(!external.length, `home/en/desktop: request to another site: ${external.join(' | ')}`);

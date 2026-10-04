@@ -947,6 +947,12 @@
       });
     },
 
+    /* How many sign-ups there are (the "Join 120+ teachers" line of the form). Demo mode: the sign-ups saved in
+       this browser. Never rejects: a number, or null when it is not known. */
+    signupCount: function () {
+      return run(function () { return sKeys(P + 'interest/').length; }).catch(function () { return null; });
+    },
+
     /* helpers (same on EDUCloud) */
     ERRORS: ERROR_CODES.slice(),
     LIMITS: LIMITS,
