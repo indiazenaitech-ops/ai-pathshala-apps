@@ -1,4 +1,4 @@
-# App list (86)
+# App list (87)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -56,6 +56,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🐢 | [Turtle Coding](https://apnipathshala.ai/apps/turtle-coding/) | coding | 3-8 | Snap blocks together or type simple code to make a turtle draw shapes. Learn loops and angles with fun challenges. |
 | 🌐 | [Web Page Maker](https://apnipathshala.ai/apps/html-playground/) | coding | 6-12 | Learn HTML, CSS and JavaScript with a live preview, console, ready templates and a tag cheat sheet. Works offline. |
 | 🔤 | [Alphabet Explorer](https://apnipathshala.ai/apps/alphabet-explorer/) | languages | 1-5 | See, hear and trace the letters of 10 Indian scripts and English, with matra charts and a listen-and-tap game. |
+| 🗣️ | [Learn Indian Languages](https://apnipathshala.ai/apps/indian-languages-phrasebook/) | languages | all | Phrasebook and trainer between any two of 12 Indian languages: 456 everyday phrases with audio, Roman pronunciation, games and a daily 10. |
 | 🔊 | [Read Aloud](https://apnipathshala.ai/apps/read-aloud/) | languages | 1-12 | Hear any text read aloud in 12 Indian languages with word highlighting, echo reading and adjustable speed. |
 | 🐝 | [Spelling Bee](https://apnipathshala.ai/apps/spelling-bee/) | languages | 1-8 | Hear English words and spell them: 125 words for Class 1–8, meanings in your language, hints, a class spelling bee and printable tests. |
 | 📝 | [Essay & Word Counter](https://apnipathshala.ai/apps/word-counter/) | study-skills | 6-12 | Live word, character and sentence counts in any Indian language, with exam word-limit bars, long-sentence checks and format guides. |
