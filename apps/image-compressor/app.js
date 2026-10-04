@@ -284,6 +284,8 @@
   function loadHeicLib() {
     if (window.heic2any) return Promise.resolve();
     if (heicPromise) return heicPromise;
+    /* after a failed load, wait for the "Try again" button instead of asking the CDN again for every HEIC photo */
+    if (heicState === 'failed') return Promise.reject(new Error('offline'));
     setHeicBox('loading');
     heicPromise = new Promise(function (resolve, reject) {
       var s = document.createElement('script');
@@ -452,14 +454,17 @@
         var c = canvas(T.W, T.H), ctx = c.getContext('2d');
         var fmt = opts.format || outFormat(), opaque = fmt === 'jpg';
         var bg = T.kind === 'box' && S.mode === 'fit' ? S.bg : 'none';
-        if (bg === 'color' || bg === 'blur' || opaque) { ctx.fillStyle = S.color; ctx.fillRect(0, 0, T.W, T.H); }
+        /* the chosen colour only where its picker is shown (Fit + Colour / Transparent); otherwise white, so a colour
+           picked long ago for another preset never turns the transparent parts of a logo black */
+        var fill = bg === 'color' || bg === 'transparent' ? S.color : '#ffffff';
+        if (bg === 'color' || bg === 'blur' || opaque) { ctx.fillStyle = fill; ctx.fillRect(0, 0, T.W, T.H); }
         if (bg === 'blur' && g.pad) blurCover(ctx, d, T.W, T.H);
         drawHQ(ctx, d.src, g.sx * fx, g.sy * fy, g.sw * fx, g.sh * fy, g.dx, g.dy, g.dw, g.dh);
         d.close();
         if (!opts.noWatermark) drawWatermark(ctx, T.W, T.H);
         var flags = {
           alphaFilled: !!item.info.alpha && opaque && !(bg === 'color' || bg === 'blur'),
-          upscaled: T.kind === 'box' && g.k > 1.25 ? g.k : 0,
+          upscaled: g.k > 1.25 ? g.k : 0,                 /* also for width / long-side presets with enlarging allowed */
           clamped: T.clamped
         };
         return { canvas: c, T: T, g: g, flags: flags };
@@ -495,7 +500,9 @@
   function encode(c, fmt, flexible, isStale) {
     var type = MIME[fmt], P = preset();
     var limitKB = S.cmode === 'size' ? Math.max(5, +S.targetKB || 0) : (P.maxKB || 0);
-    var limit = limitKB * 1024, notes = {};
+    /* 1 KB = 1000 bytes here: then the file is also under the limit where KB means 1024 bytes (Windows, most
+       portals), and Android / Mac file managers (which count 1000) do not show "203 kB" for a 200 KB target. */
+    var limit = limitKB * 1000, notes = {};
     if (fmt === 'png') {
       return toBlob(c, type).then(function (b) {
         if (b && limit && b.size > limit) notes.over = limitKB;
@@ -653,14 +660,12 @@
     if (!added.length) return;
     if (!selId) selId = added[0].id;
     renderList();
-    Promise.all(added.map(function (it) {
-      return readHead(it.file).then(function (b) { it.info = sniff(b); }, function () { }).then(function () {
+    /* read the first 1 MB of each file one after another, not all 100 at once (phone memory) */
+    added.reduce(function (p, it) {
+      return p.then(function () { return readHead(it.file); }).then(function (b) { it.info = sniff(b); }, function () { }).then(function () {
         if (it.info.type === 'unknown' && (/\.(heic|heif)$/i.test(it.file.name) || /hei[cf]/i.test(it.file.type))) it.info.type = 'heic';
       });
-    })).then(function () {
-      if (added.some(function (it) { return it.info.type === 'heic'; }) && !window.heic2any) {
-        /* show the loading note early; the converter itself loads only if this browser cannot open HEIC */
-      }
+    }, Promise.resolve()).then(function () {
       added.forEach(function (it) { if (items.indexOf(it) >= 0) { it.dirty = true; updateItem(it); } });
       kick(0);
     });
@@ -820,6 +825,8 @@
     var p = (1 - after / before) * 100;
     return p >= 0 ? Math.min(99, Math.floor(p)) : -Math.ceil(-p);
   }
+  /* sizes like "3.21 MB" inside a translated sentence: keep them left-to-right in Urdu, as in the rest of the page */
+  function iso(s) { return '\u2066' + s + '\u2069'; }
   function dims(w, h) { return w + ' × ' + h; }
   function dimsPlain(w, h) { return w + ' × ' + h; }
 
@@ -965,6 +972,10 @@
   function bindSettings() {
     $('#customW').addEventListener('input', function () { S.customW = Math.max(0, Math.min(20000, Math.round(+this.value || 0))); renderPresets(); changed(500); });
     $('#customH').addEventListener('input', function () { S.customH = Math.max(0, Math.min(20000, Math.round(+this.value || 0))); renderPresets(); changed(500); });
+    /* leaving a box: show the number really used (over 20000 becomes 20000, 0 or less becomes empty) */
+    ['customW', 'customH'].forEach(function (k) {
+      $('#' + k).addEventListener('change', function () { this.value = S[k] || ''; });
+    });
     EDU.$$('[data-mode]').forEach(function (b) { b.addEventListener('click', function () { S.mode = b.getAttribute('data-mode'); changed(0); }); });
     EDU.$$('[data-bg]').forEach(function (b) { b.addEventListener('click', function () { S.bg = b.getAttribute('data-bg'); changed(0); }); });
     $('#bgColor').addEventListener('input', function () { S.color = this.value; changed(300); });
@@ -975,6 +986,12 @@
     EDU.$$('[data-cm]').forEach(function (b) { b.addEventListener('click', function () { S.cmode = b.getAttribute('data-cm'); changed(0); }); });
     $('#quality').addEventListener('input', function () { S.quality = +this.value; $('#qualityOut').textContent = EDU.fmt(S.quality); save(); invalidateAll(300); });
     $('#targetKB').addEventListener('input', function () { var v = Math.round(+this.value || 0); if (v >= 5) { S.targetKB = Math.min(50000, v); changed(600); } });
+    /* leaving the box: show the limit that is really used (empty, 0 or 1 KB is not accepted) */
+    $('#targetKB').addEventListener('change', function () {
+      var v = Math.round(+this.value || 0);
+      if (v > 0 && v < 5) { S.targetKB = 5; changed(0); }
+      this.value = S.targetKB;
+    });
     EDU.$$('#kbChips [data-kb]').forEach(function (b) { b.addEventListener('click', function () { S.targetKB = +b.getAttribute('data-kb'); $('#targetKB').value = S.targetKB; changed(0); }); });
 
     EDU.$$('[data-wm]').forEach(function (b) {
@@ -1163,11 +1180,11 @@
     var done = doneItems(), before = 0, after = 0;
     done.forEach(function (it) { before += it.file.size; after += it.out.size; });
     $('#stCount').textContent = EDU.fmt(items.length);
-    $('#stBefore').textContent = done.length ? fmtBytes(before) : '–';
-    $('#stAfter').textContent = done.length ? fmtBytes(after) : '–';
+    $('#stBefore').textContent = done.length ? iso(fmtBytes(before)) : '–';
+    $('#stAfter').textContent = done.length ? iso(fmtBytes(after)) : '–';
     var pct = before ? savedPct(after, before) : 0;
     var sv = $('#stSaved');
-    sv.textContent = done.length ? (pct >= 0 ? EDU.fmt(pct) + '%' : '+' + EDU.fmt(-pct) + '%') : '–';
+    sv.textContent = done.length ? iso(pct >= 0 ? EDU.fmt(pct) + '%' : '+' + EDU.fmt(-pct) + '%') : '–';
     sv.className = 'ic-stat ' + (done.length ? (pct >= 0 ? 'ok' : 'bad') : '');
     var pending = items.filter(function (it) { return it.dirty || it.status === 'working' || it.status === 'queued'; }).length;
     var total = items.length, prog = $('#prog');
@@ -1178,14 +1195,14 @@
     var st = '';
     if (!total) st = t('status_empty');
     else if (working) st = t('status_working', { done: EDU.fmt(total - pending), total: EDU.fmt(total) });
-    else if (done.length) st = (pct >= 0 ? t('status_done', { n: EDU.fmt(done.length), saved: fmtBytes(before - after) }) : t('status_bigger', { n: EDU.fmt(done.length) })) + (errors ? ' ' + t('status_errors', { n: EDU.fmt(errors) }) : '');
+    else if (done.length) st = (pct >= 0 ? t('status_done', { n: EDU.fmt(done.length), saved: iso(fmtBytes(before - after)) }) : t('status_bigger', { n: EDU.fmt(done.length) })) + (errors ? ' ' + t('status_errors', { n: EDU.fmt(errors) }) : '');
     else if (errors) st = t('status_errors', { n: EDU.fmt(errors) });
     $('#status').textContent = st;
     var ready = done.length > 0 && !working;
-    $('#zipBtn').disabled = !ready; $('#eachBtn').disabled = !ready; $('#shareBtn').disabled = !ready;
+    $('#zipBtn').disabled = !ready || zipping; $('#eachBtn').disabled = !ready; $('#shareBtn').disabled = !ready;
     $('#clearBtn').disabled = !total;
     $('#mbar').hidden = !total;
-    $('#mbarZip').disabled = !ready;
+    $('#mbarZip').disabled = !ready || zipping;
     $('#mbarTxt').textContent = !total ? '' : working ? t('status_working', { done: EDU.fmt(total - pending), total: EDU.fmt(total) })
       : done.length ? t('mbar_saved', { n: EDU.fmt(done.length), pct: EDU.fmt(Math.max(0, pct)) }) : '';
   }
@@ -1221,8 +1238,11 @@
     var my = ++viewerToken, o = it.out;
     if (!o || it.status !== 'done') {
       $('#cmpInfo').textContent = it.status === 'error' ? t(it.error || 'err_open') : t('st_working');
+      /* keep this photo's last result on screen while it is redone, but never another photo's */
+      if (cmpShownId !== it.id) showCmp(false);
       return;
     }
+    showCmp(true); cmpShownId = it.id;
     var cmp = $('#cmp'), img = $('#cmpAfter');
     var zoom = $('#zoom1').checked;
     cmp.style.aspectRatio = o.w + ' / ' + o.h;
@@ -1230,18 +1250,28 @@
     if (img.getAttribute('src') !== o.url) img.src = o.url;
     img.alt = t('after');
     applyCmpPos();
-    var info = t('cmp_info', { before: fmtBytes(it.file.size), after: fmtBytes(o.size) });
+    var info = t('cmp_info', { before: iso(fmtBytes(it.file.size)), after: iso(fmtBytes(o.size)) });
     if (o.q != null) info += ' · ' + t('quality_label') + ' ' + EDU.fmt(Math.round(o.q * 100));
     $('#cmpInfo').textContent = info;
-    /* "before" = the same framing, drawn without compression or watermark */
+    /* "before" = the same framing, drawn without compression or watermark. Drawn once per result (not on every
+       refresh), and kept at most 2400 px unless "Actual size" is on, so a big photo does not hold a second
+       full-size canvas in phone memory. */
+    var bc = $('#cmpBefore'), key = it.id + '|' + o.url + '|' + (zoom ? 1 : 0);
+    if (bc.getAttribute('data-key') === key) return;
+    if ((bc.getAttribute('data-key') || '').split('|')[0] !== String(it.id)) { bc.width = 1; bc.height = 1; bc.removeAttribute('data-key'); }
     renderCanvas(it, { noWatermark: true, format: o.fmt === 'jpg' ? 'jpg' : 'png' }).then(function (r) {
       if (my !== viewerToken) { free(r.canvas); return; }
-      var bc = $('#cmpBefore');
-      bc.width = r.canvas.width; bc.height = r.canvas.height;
-      bc.getContext('2d').drawImage(r.canvas, 0, 0);
-      free(r.canvas);
+      var c = r.canvas, k = zoom ? 1 : Math.min(1, 2400 / Math.max(c.width, c.height));
+      bc.width = Math.max(1, Math.round(c.width * k)); bc.height = Math.max(1, Math.round(c.height * k));
+      var bx = bc.getContext('2d');
+      bx.clearRect(0, 0, bc.width, bc.height);
+      drawHQ(bx, c, 0, 0, c.width, c.height, 0, 0, bc.width, bc.height);
+      bc.setAttribute('data-key', key);
+      free(c);
     }, function () { });
   }
+  var cmpShownId = null;
+  function showCmp(on) { $('#cmpBox').hidden = !on; $('#cmpRange').hidden = !on; $('#zoom1').parentNode.hidden = !on; if (!on) cmpShownId = null; }
   function applyCmpPos() {
     $('#cmpAfter').style.clipPath = 'inset(0 0 0 ' + cmpPos + '%)';
     $('#cmpLine').style.insetInlineStart = cmpPos + '%';
@@ -1256,10 +1286,12 @@
       var img = $('#cropImg');
       if (img.getAttribute('src') !== it.srcThumbUrl) img.src = it.srcThumbUrl;
       img.alt = it.file.name;
+      $('#crop').hidden = false;
       positionFrame(it);
     };
     if (it.srcThumbUrl) return draw();
-    if (!it.ow) return;
+    $('#crop').hidden = true;                          /* not the previous photo while this one loads */
+    if (!it.ow || it.status === 'error') return;
     var k = Math.min(1, 720 / Math.max(it.ow, it.oh));
     decode(it, k).then(function (d) {
       var c = canvas(it.ow * k, it.oh * k);
@@ -1379,20 +1411,23 @@
     var nm = fileNames();
     return doneItems().map(function (it) { return { name: nm[it.id], blob: it.out.blob, type: it.out.blob.type }; });
   }
+  var zipping = false;
   function downloadZip() {
     var files = outFiles();
-    if (!files.length) return;
-    $('#zipBtn').disabled = true;
+    if (!files.length || zipping) return;            /* a double tap (or both ZIP buttons) makes one ZIP */
+    zipping = true;
+    $('#zipBtn').disabled = true; $('#mbarZip').disabled = true;
     makeZip(files).then(function (zip) {
       EDU.download('photos_' + preset().id + '_' + today() + '.zip', zip);
       EDU.toast(t('zip_ready', { n: EDU.fmt(files.length) }));
-    }, function () { EDU.toast(t('zip_failed')); }).then(function () { renderSummary(); });
+    }, function () { EDU.toast(t('zip_failed')); }).then(function () { zipping = false; renderSummary(); });
   }
+  var eachRun = 0;
   function downloadEach() {
-    var files = outFiles(), i = 0;
+    var files = outFiles(), i = 0, run = ++eachRun;      /* a second tap restarts instead of doubling the files */
     if (files.length > 1) EDU.toast(t('each_hint'));
     (function next() {
-      if (i >= files.length) return;
+      if (i >= files.length || run !== eachRun) return;
       var f = files[i++];
       EDU.download(f.name, f.blob);
       setTimeout(next, 450);
@@ -1443,6 +1478,7 @@
       }));
     });
     $('#heicRetry').addEventListener('click', function () {
+      if (heicState === 'failed') heicState = 'idle';
       items.forEach(function (it) { if (it.status === 'error' && it.info.type === 'heic') { it.retry = true; it.dirty = true; it.status = 'queued'; updateItem(it); } });
       kick(0);
     });

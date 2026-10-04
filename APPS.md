@@ -1,4 +1,4 @@
-# App list (63)
+# App list (77)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -65,5 +65,19 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | ⌨️ | [Typing Tutor](https://apnipathshala.ai/apps/typing-tutor/) | study-skills | 3-12 | Learn touch typing with colour-coded fingers, live speed and accuracy, stars for every lesson and practice in 12 Indian languages. |
 | 🔐 | [Password Strength Lab](https://apnipathshala.ai/apps/password-checker/) | digital-safety | 6-12 | See how fast a password can be guessed, spot the patterns attackers try first, and make strong passphrases. All on your device. |
 | 🚩 | [Spot the Scam](https://apnipathshala.ai/apps/phishing-spotter/) | digital-safety | 6-12 | A cyber-safety game: decide if Indian SMS, WhatsApp and call messages are safe or scams, and learn the red flags. |
+| 🧾 | [GST Calculator & GSTIN Checker](https://apnipathshala.ai/apps/gst-calculator/) | business | all | Add or remove GST with the CGST/SGST/IGST split, make a quick bill, plan prices against MRP and check a GSTIN. Offline. |
+| 🧾 | [GST Invoice & Quotation Maker](https://apnipathshala.ai/apps/gst-invoice-maker/) | business | all | Make GST tax invoices, quotations, challans and receipts with CGST/SGST/IGST, HSN summary, UPI QR and PDF. Data stays on your device. |
+| 📝 | [Image to Text (OCR)](https://apnipathshala.ai/apps/image-to-text/) | business | all | Turn photos, screenshots and scanned PDFs into editable text in 12 Indian languages. Runs on your device: nothing is uploaded. |
+| 🔤 | [Kruti Dev - Unicode Converter](https://apnipathshala.ai/apps/krutidev-unicode/) | business | all | Convert Kruti Dev 010 typing to Unicode Hindi and back, for Hindi, Marathi and Sanskrit. Your text never leaves your device. |
+| 📑 | [PDF Merge, Split & Organise](https://apnipathshala.ai/apps/pdf-merge-split/) | business | all | Merge PDFs and photos, split by page ranges, reorder, rotate, add page numbers or KYC watermarks. Files never leave your device. |
+| 💰 | [Salary & Income Tax Calculator](https://apnipathshala.ai/apps/salary-tax-calculator/) | business | all | CTC to monthly in-hand pay, old vs new regime, salary hike and in-hand to CTC for Tax Year 2026-27. Private: nothing leaves your device. |
+| 🎬 | [Screen Recorder](https://apnipathshala.ai/apps/screen-recorder/) | business | all | Record your screen, a window or a tab with voice and a camera bubble. No upload, no time limit, no watermark. Videos stay on your device. |
 | 💳 | [UPI QR & Payment Standee](https://apnipathshala.ai/apps/upi-qr-standee/) | business | all | Make a printable Scan & Pay UPI QR standee, table tent or stickers for your shop, plus a counter mode with the bill amount. |
+| 🪔 | [Festival Greeting & Offer Poster](https://apnipathshala.ai/apps/festival-poster-maker/) | marketing | all | Festival wishes and shop offer posters with your logo, photo and UPI QR, for WhatsApp, Instagram and print. Photos stay on your device. |
 | 🖼️ | [Image Compressor & Resizer](https://apnipathshala.ai/apps/image-compressor/) | marketing | all | Resize, compress and watermark 100 photos at once for Instagram, WhatsApp, YouTube, Amazon and websites. Photos never leave your device. |
+| 💬 | [WhatsApp Business Link Kit](https://apnipathshala.ai/apps/whatsapp-business-kit/) | marketing | all | Click-to-chat links, ready messages in 12 languages, payment reminders for a customer list and a website chat button. |
+| 🧮 | [EMI, SIP & FD Calculator](https://apnipathshala.ai/apps/emi-savings-calculator/) | everyday | all | Loan EMI with schedule, prepayment, rate change, APR and flat-rate checks, plus SIP, FD, RD and PPF calculators. Private, works offline. |
+| 🪪 | [Form Photo & Signature Resizer](https://apnipathshala.ai/apps/form-photo-resizer/) | everyday | all | Resize photo, signature or thumb to the exact px, cm and KB for SSC, UPSC, IBPS, NEET or PAN forms. Nothing is uploaded. |
+| 💍 | [Marriage Biodata Maker](https://apnipathshala.ai/apps/biodata-maker/) | everyday | all | Make a neat marriage biodata in any of 12 Indian languages: 8 designs, photo, horoscope. Print, PDF or WhatsApp image. Stays private. |
+| 🗜️ | [PDF Compress & JPG to PDF](https://apnipathshala.ai/apps/pdf-compress-convert/) | everyday | all | Compress a PDF under 100 KB or 200 KB, turn photos into a PDF, save pages as JPG, unlock your own PDF. Files stay on your device. |
+| 📄 | [Resume & CV Builder](https://apnipathshala.ai/apps/resume-builder/) | everyday | all | Make a job-ready resume with a live A4 preview, ATS-safe and Govt/PSU templates, and a free PDF. Your details stay on your device. |

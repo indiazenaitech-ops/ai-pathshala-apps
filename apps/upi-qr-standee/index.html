@@ -88,6 +88,9 @@
     .sheet.is-off .qrbox svg { opacity: .1; }
     .sheet.is-off .qrbox { border-style: dashed; }
     .clamp2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+    /* Chrome's line clamp drops parts of Nastaliq letters (the stroke of a first ک, dots below), so Urdu lines are never
+       clamped; the fit step shrinks the QR or the text instead */
+    .sheet.is-ur .clamp2 { display: block; -webkit-line-clamp: none; line-clamp: none; overflow: visible; }
 
     /* counter standee */
     .d-standee { display: flex; flex-direction: column; align-items: center; text-align: center; }
@@ -100,7 +103,7 @@
     .st-en { font-size: 3.4cqw; color: #444; margin-top: .6cqw; }
     .st-qr { width: calc(var(--qrw) * 1cqw); }
     .st-amt { font-size: 7cqw; font-weight: 800; }
-    .st-amt small { font-size: 3.4cqw; font-weight: 700; color: #444; display: block; }
+    .st-amt small { font-size: 3.4cqw; font-weight: 700; color: #444; display: block; font-family: var(--sfont, var(--font)); }
     .st-payee { font-size: 4.2cqw; font-weight: 700; overflow-wrap: anywhere; }
     .st-vpa { font-size: 3.6cqw; color: #222; overflow-wrap: anywhere; }
     .st-foot { width: 100%; background: var(--band); color: #fff; font-size: 2.9cqw; padding: 2.4cqw 5cqw; font-weight: 600; }
@@ -115,7 +118,7 @@
     .tt-scanrow { padding: 2.6cqw 6cqw 0; text-align: center; }
     .tt-body { flex: 1 0 auto; display: flex; align-items: center; justify-content: center; gap: 5cqw; padding: 2cqw 6cqw 3cqw; min-height: 0; }
     .tt-qr { width: calc(var(--qrw) * 1cqw); flex: none; }
-    .tt-text { flex: 0 1 auto; min-width: 0; max-width: 52cqw; display: flex; flex-direction: column; gap: 1.6cqw; text-align: start; }
+    .tt-text { flex: 0 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1.6cqw; text-align: start; }
     .tt-scan { font-size: 4.4cqw; font-weight: 800; }
     .tt-en { font-size: 3cqw; color: #444; }
     .tt-amt { font-size: 6cqw; font-weight: 800; }
@@ -125,8 +128,9 @@
     .tt-fold { position: absolute; inset-inline: 0; top: 50%; border-top: .3cqw dashed #888; height: 0; }
     .tt-fold span { position: absolute; inset-inline-start: 2cqw; top: -1.5cqw; background: #fff; color: #777; font-size: 1.9cqw; padding-inline: 1cqw; line-height: 1.4; }
 
-    /* sticker sheet */
-    .d-stickers { display: grid; padding: 3cqw; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); grid-template-rows: repeat(var(--rows), minmax(0, 1fr)); }
+    /* sticker sheet: the 3cqw margin sits on an inner grid, because cqw on the container itself would be measured
+       against the window instead of the sheet (preview and print would differ) */
+    .sk-grid { position: absolute; inset: 3cqw; display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); grid-template-rows: repeat(var(--rows), minmax(0, 1fr)); }
     .sk { container-type: inline-size; border: 1px dashed #9a9a9a; display: flex; text-align: center; padding: 0; min-height: 0; min-width: 0; overflow: hidden; }
     /* auto margins centre the block but collapse to 0 when it is too tall, so the overflow check sees it */
     .sk-in { margin: auto; width: 100%; padding: 5cqw 6cqw; display: flex; flex-direction: column; align-items: center; gap: 2.4cqw; }
@@ -146,6 +150,14 @@
     .tight .tt-band { padding: 2cqw 5cqw; }
     .tight .tt-shop { font-size: 4.4cqw; }
     .tight .tt-scan { font-size: 3.6cqw; }
+    .tight .tt-en { font-size: 2.6cqw; }
+    .tight .tt-scanrow { padding-top: 1.8cqw; }
+    .tight .tt-body { padding-top: 1.4cqw; padding-bottom: 2cqw; }
+    .tight .tt-text { gap: 1cqw; }
+    .tight .tt-amt { font-size: 5cqw; }
+    .tight .tt-payee { font-size: 3.3cqw; }
+    .tight .tt-vpa { font-size: 2.9cqw; }
+    .tight .tt-check { font-size: 2.4cqw; }
     .tight .sk-shop { font-size: 6cqw; }
     .tight .sk-scan { font-size: 4.6cqw; }
 
@@ -178,11 +190,13 @@
       .upi-layout > :not(#designCard) { display: none !important; }
       #designCard { position: static; max-height: none; overflow: visible; border: 0; padding: 0; box-shadow: none; }
       #designCard > :not(.pv-wrap) { display: none !important; }
-      .pv-wrap { padding: 0; background: none; display: block; }
-      .sheet { box-shadow: none; border-radius: 0; max-width: none; margin: 0 auto; }
+      /* no gap above the sheet (.stack adds 12px), or the sheet spills onto a second page */
+      html, body { margin: 0 !important; padding: 0 !important; min-height: 0 !important; height: auto !important; background: #fff; }
+      #designCard > .pv-wrap { margin: 0 !important; padding: 0; background: none; display: block; }
+      .sheet { box-shadow: none; border-radius: 0; max-width: none; margin: 0 auto; break-inside: avoid; }
       .sheet.p-A5 { width: 148mm; height: 209mm; aspect-ratio: auto; }
       .sheet.p-A4 { width: 210mm; height: 296mm; aspect-ratio: auto; }
-      .pv-wrap canvas { width: auto; max-width: 100%; max-height: 280mm; margin: 0 auto; box-shadow: none; border-radius: 0; }
+      .pv-wrap canvas { width: auto; max-width: 100%; max-height: 265mm; margin: 0 auto; box-shadow: none; border-radius: 0; }
     }
   </style>
   <style id="pageSize">@page { size: A5 portrait; margin: 0; }</style>

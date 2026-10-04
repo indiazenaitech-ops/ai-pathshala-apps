@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EMI, SIP &amp; FD Calculator · AI Pathshala</title>
+  <meta name="description" content="Free loan EMI calculator with repayment schedule, prepayment, floating-rate change, APR, flat-rate and no-cost EMI checks, plus SIP, FD, RD and PPF calculators. 12 languages, works offline.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .fc-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: -6px 0 14px; }
+    .fc-top .badge { font-size: .82rem; padding: 4px 10px; white-space: normal; }
+
+    /* main tabs */
+    .fc-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 16px; }
+    .fc-tabs button {
+      font: inherit; font-weight: 700; font-size: .98rem; color: var(--text); background: var(--surface);
+      border: 1px solid var(--border); border-radius: 12px; padding: 8px 6px; min-height: 52px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px; text-align: center; line-height: 1.2;
+    }
+    .fc-tabs button:hover { background: var(--surface-2); }
+    .fc-tabs button[aria-selected="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+    .fc-tabs .ic { font-size: 1.2rem; }
+    @media (max-width: 560px) {
+      .fc-tabs { gap: 6px; }
+      .fc-tabs button { flex-direction: column; gap: 2px; font-size: .86rem; padding: 6px 4px; }
+    }
+
+    .fc-panel > * + * { margin-top: 16px; }
+    .fc-split { display: grid; gap: 16px; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); align-items: start; }
+    @media (max-width: 900px) { .fc-split { grid-template-columns: minmax(0, 1fr); } }
+    .fc-col > * + * { margin-top: 16px; }
+    .card h2 { font-size: 1.2rem; }
+    .card h3 { font-size: 1.02rem; margin-bottom: .4em; }
+
+    /* number fields */
+    .nf { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); min-height: 44px; overflow: hidden; }
+    .nf:focus-within { outline: 2px solid var(--primary); border-color: var(--primary); }
+    .nf input { flex: 1 1 auto; min-width: 0; width: 100%; border: 0 !important; outline: 0 !important; background: transparent; font-size: 1.05rem; font-weight: 600; font-variant-numeric: tabular-nums; padding-inline: 10px; }
+    .nf-pfx, .nf-sfx { color: var(--muted); font-weight: 700; padding-inline: 10px; white-space: nowrap; font-size: .95rem; }
+    .nf-pfx { padding-inline-end: 0; }
+    .nf-sfx { padding-inline-start: 0; }
+    .nf-in[aria-invalid="true"] { color: var(--danger); }
+    .nf:has(input[aria-invalid="true"]) { border-color: var(--danger); }
+    .nf-hint { font-size: .82rem; color: var(--muted); min-height: 1.1em; }
+    .nf-hint:empty { min-height: 0; margin-top: -4px; }
+    .nf-hint.err { color: var(--danger); font-weight: 600; }
+    .nf-range { margin: 2px 0 0; height: 22px; }
+    .fc-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+    .fc-lbl, .field > .fc-lbl { font-weight: 600; font-size: .92rem; color: var(--text); }
+    .fc-form .field { gap: 4px; }
+    .fc-form > * + * { margin-top: 12px; }
+    input[type="month"] { font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 11px; min-height: 44px; max-width: 100%; }
+    .fc-presets { display: flex; flex-wrap: wrap; gap: 6px; }
+    .fc-presets .chip { min-height: 38px; }
+    .seg { max-width: 100%; }
+    .seg button { min-height: 40px; }
+    .fc-seg-full { display: flex; width: 100%; }
+    .fc-seg-full button { flex: 1 1 0; }
+
+    /* results */
+    .fc-big { display: flex; flex-direction: column; gap: 2px; }
+    .fc-big .big-number { font-size: clamp(2.2rem, 6vw, 3.4rem); color: var(--primary); overflow-wrap: anywhere; }
+    .fc-big .big-number.long { font-size: clamp(1.5rem, 4.6vw, 2.3rem); }
+    .fc-stat b.long { font-size: .98rem; }
+    .fc-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .fc-stats.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .fc-stat { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+    .fc-stat span { display: block; color: var(--muted); font-size: .82rem; line-height: 1.3; }
+    .fc-stat b { display: block; font-size: 1.15rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; margin-top: 2px; }
+    .fc-stat.hl { background: var(--primary-soft); }
+    .fc-stat.hl b { color: var(--primary); }
+    .fc-stat.good b { color: var(--success); }
+    .fc-stat.bad b { color: var(--danger); }
+    @media (max-width: 560px) { .fc-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .fc-stats > .fc-stat:last-child:nth-child(odd) { grid-column: 1 / -1; } }
+    .fc-pibar { display: flex; height: 14px; border-radius: 999px; overflow: hidden; background: var(--surface-2); margin-top: 14px; }
+    .fc-pibar span { display: block; height: 100%; }
+    .sw-c1, .fc-pibar .p { background: var(--c1); }
+    .sw-c2, .fc-pibar .i { background: var(--c2); }
+    .sw-c3 { background: var(--c3); } .sw-c4 { background: var(--c4); } .sw-c8 { background: var(--c8); }
+    .fc-res-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .fc-err { color: var(--danger); font-weight: 600; }
+    .fc-out { margin-top: 8px; }
+    .fc-out p { margin: 6px 0 0; }
+
+    /* charts */
+    .fc-chart-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .fc-chart-head h3 { margin: 0; }
+    .fc-chart { position: relative; direction: ltr; min-height: 210px; touch-action: pan-y; border-radius: 8px; }
+    .fc-chart:focus-visible { outline: 3px solid var(--accent); }
+    .fc-chart svg { display: block; overflow: visible; }
+    .fc-chart text { fill: var(--muted); font-size: 11px; font-family: "Noto Sans", system-ui, sans-serif; }
+    .fc-chart .grid { stroke: var(--border); stroke-width: 1; }
+    .fc-chart .axis { stroke: var(--muted); stroke-width: 1; }
+    .fc-chart .b-c1 { fill: var(--c1); } .fc-chart .b-c2 { fill: var(--c2); } .fc-chart .b-c4 { fill: var(--c4); } .fc-chart .b-c3 { fill: var(--c3); }
+    .fc-chart .l-c1 { stroke: var(--c1); } .fc-chart .l-c3 { stroke: var(--c3); } .fc-chart .l-c8 { stroke: var(--c8); } .fc-chart .l-c2 { stroke: var(--c2); }
+    .fc-chart .a-c1 { fill: var(--c1); opacity: .14; }
+    .fc-chart .ln { fill: none; stroke-width: 2.5; stroke-linejoin: round; }
+    .fc-chart .ln.dash { stroke-dasharray: 6 5; stroke-width: 2; }
+    .fc-chart .guide { stroke: var(--text); stroke-width: 1; opacity: .45; }
+    .fc-chart .hot { fill: var(--text); opacity: .06; }
+    .fc-tip {
+      position: absolute; z-index: 5; pointer-events: none; background: var(--surface); color: var(--text);
+      border: 1px solid var(--border); box-shadow: var(--shadow-lg); border-radius: 10px; padding: 8px 10px; font-size: .84rem;
+      min-width: 150px; max-width: 260px; line-height: 1.4;
+    }
+    .fc-tip b { display: block; margin-bottom: 2px; }
+    .fc-tip .tr { display: flex; gap: 10px; justify-content: space-between; align-items: center; }
+    .fc-tip .tr span:last-child { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-inline-end: 5px; vertical-align: middle; }
+    .sw.line { height: 3px; border-radius: 2px; width: 14px; }
+    .sw.dash { background: repeating-linear-gradient(90deg, var(--sw) 0 5px, transparent 5px 8px) !important; }
+    .fc-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: .85rem; color: var(--muted); margin-top: 8px; }
+    .fc-axis-note { font-size: .78rem; color: var(--muted); text-align: center; margin-top: 2px; }
+
+    /* tables */
+    .fc-table-wrap { max-height: 480px; overflow: auto; border: 1px solid var(--border); border-radius: 10px; }
+    .fc-table { font-size: .9rem; }
+    .fc-table th { z-index: 1; white-space: nowrap; }
+    .fc-table td { white-space: nowrap; }
+    /* phones: let column titles wrap and tighten the cells, so short tables (FD, PPF) fit without sideways scrolling */
+    @media (max-width: 560px) {
+      .fc-table { font-size: .85rem; }
+      .fc-table thead th, .fc-table thead th.n { white-space: normal; vertical-align: bottom; line-height: 1.25; font-size: .8rem; }
+      .fc-table th, .fc-table td { padding: 6px 5px; }
+    }
+    .fc-table td.n, .fc-table th.n { text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .fc-table tr.done td { color: var(--success); font-weight: 700; }
+    .fc-table tr.ev td { background: color-mix(in srgb, var(--accent-soft) 60%, transparent); }
+    .fc-table tfoot td { font-weight: 700; background: var(--surface-2); position: sticky; bottom: 0; }
+    .fc-sch-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+    .fc-sch-head h2 { margin: 0; }
+    .fc-sch-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    @media (max-width: 560px) {
+      .fc-sch-tools { width: 100%; }
+      .fc-sch-tools .seg { display: flex; flex-wrap: nowrap; width: 100%; }
+      .fc-sch-tools .seg button { flex: 1 1 0; padding-inline: 6px; line-height: 1.2; }
+    }
+
+    /* prepayment / rate rows: label / input / hint rows line up across columns (subgrid) */
+    .fc-rows > * + * { margin-top: 8px; }
+    .fc-row { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .8fr) minmax(0, 1fr) auto; column-gap: 8px; row-gap: 4px; align-items: start; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px; }
+    .fc-row.rc { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+    @supports (grid-template-rows: subgrid) {
+      .fc-row > .field { display: grid; grid-row: span 3; grid-template-rows: subgrid; gap: 4px; }
+      .fc-row > .field > label { align-self: end; }
+      .fc-row .rm { grid-row: span 3; }
+    }
+    .fc-row .field > label { font-size: .8rem; color: var(--muted); font-weight: 600; line-height: 1.3; }
+    .fc-row select { width: 100%; min-height: 44px; padding-inline: 6px; font-size: .92rem; }
+    .fc-row .nf { min-height: 44px; }
+    .fc-row .nf input { font-size: .98rem; }
+    .fc-row .rm { align-self: center; }
+    @media (max-width: 560px) {
+      .fc-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+      .fc-row > .field:first-child { grid-column: 1 / -1; }
+      .fc-row.rc { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+      .fc-row.rc > .field:first-child { grid-column: auto; }
+    }
+    .fc-empty { color: var(--muted); font-size: .9rem; margin: 0; }
+    .fc-cmp { margin-top: 4px; }
+    .fc-cmp td.n, .fc-cmp th.n { text-align: end; font-variant-numeric: tabular-nums; }
+    .fc-cmp td.good { color: var(--success); font-weight: 700; }
+    .fc-cmp td.bad { color: var(--danger); font-weight: 700; }
+    /* phones: each row = its name on top, then "original" and "with changes" side by side, so both columns stay visible */
+    @media (max-width: 560px) {
+      .fc-cmp, .fc-cmp thead, .fc-cmp tbody { display: block; width: 100%; }
+      .fc-cmp tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-bottom: 1px solid var(--border); }
+      .fc-cmp th, .fc-cmp td { border-bottom: 0; position: static; }
+      .fc-cmp thead th:first-child { display: none; }
+      .fc-cmp thead th { padding: 8px 6px; }
+      .fc-cmp tbody th { grid-column: 1 / -1; background: none; color: var(--muted); font-size: .84rem; padding: 8px 6px 0; }
+      .fc-cmp tbody td { padding: 2px 6px 8px; }
+      .fc-cmp td.n, .fc-cmp th.n { text-align: start; }
+    }
+
+    /* tool cards */
+    .fc-tools { align-items: start; }
+    .fc-tool > * + * { margin-top: 10px; }
+    .fc-tool h3 { margin: 0; font-size: 1.08rem; }
+    .fc-tool .grid-2 { gap: 10px; }
+    @media (min-width: 621px) { .fc-tool .grid-2 > .field > label, .fc-tool .grid-2 > .field > .fc-lbl { min-height: 2.6em; display: flex; align-items: flex-end; } }
+    .fc-kv { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 0; margin: 0; font-size: .93rem; }
+    .fc-kv dt { padding-inline-end: 12px; }
+    .fc-kv dt { color: var(--muted); }
+    .fc-kv dd { margin: 0; font-weight: 700; text-align: end; font-variant-numeric: tabular-nums; }
+    .fc-kv .tot { border-top: 1px solid var(--border); padding-top: 4px; }
+    .fc-meter { height: 12px; border-radius: 999px; background: var(--surface-2); overflow: hidden; position: relative; }
+    .fc-meter > span { display: block; height: 100%; border-radius: inherit; background: var(--success); transition: width .2s; }
+    .fc-meter.tight > span { background: var(--warning); }
+    .fc-meter.over > span { background: var(--danger); }
+    .fc-meter > i { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--text); opacity: .6; }
+    .fc-sec { margin: 24px 0 0; font-size: 1.25rem; }
+    .fc-sec + p { margin-top: 4px; }
+
+    /* Urdu (Nastaliq) needs taller lines, or labels touch the boxes and hints around them */
+    :root[lang="ur"] .fc-row .field > label, :root[lang="ur"] .fc-stat span, :root[lang="ur"] .fc-tip,
+    :root[lang="ur"] .fc-tabs button, :root[lang="ur"] .fc-sch-tools .seg button, :root[lang="ur"] .fc-table th { line-height: 1.85; }
+    :root[lang="ur"] .fc-row { row-gap: 6px; }
+    :root[lang="ur"] .fc-form .field, :root[lang="ur"] .fc-row .field { gap: 6px; }
+
+    details.card summary { cursor: pointer; font-weight: 700; }
+    details.card ul { padding-inline-start: 22px; }
+    .fc-how p { margin: 8px 0 0; }
+    .fc-how code { font-size: .88em; background: var(--surface-2); padding: 1px 5px; border-radius: 5px; }
+    .fc-disc { margin-top: 18px; }
+
+    @media print {
+      /* print is always on white paper: use the light colours even when the screen is in dark mode */
+      :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+        --primary: #0b4f5c; --primary-ink: #fff; --accent: #d9501c;
+        --success: #15803d; --success-soft: #dcfce7; --danger: #b42318; --danger-soft: #fee4e2;
+        --warning: #a15c07; --warning-soft: #fef0c7; --info: #0b69a3; --info-soft: #e0f2fe;
+        --c1: #0b7285; --c2: #e8590c; --c3: #5f3dc4; --c4: #2b8a3e; --c5: #c2255c; --c6: #b08900; --c7: #1971c2; --c8: #868e96;
+      }
+      .fc-table-wrap { max-height: none; overflow: visible; border: 0; }
+      .fc-table th { position: static; }
+      .fc-table tfoot td { position: static; }
+      .nf-range, .fc-presets, .fc-chart-head .seg { display: none !important; }
+      .fc-split { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+      .fc-panel > * + * { margin-top: 10px; }
+      #printHead { margin-bottom: 10px; }
+      #printHead h1 { font-size: 1.4rem; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <div id="printHead" class="print-only"><h1 data-i18n="app_title"></h1><p class="small" id="printDate"></p></div>
+    <p class="edu-intro" data-i18n="intro"></p>
+    <div class="fc-top no-print">
+      <span class="badge success"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></span>
+      <span class="badge"><span aria-hidden="true">⌨</span> <span data-i18n="kbd_hint"></span></span>
+    </div>
+
+    <div class="fc-tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
+      <button type="button" role="tab" id="tab-emi" data-tab="emi" aria-controls="p-emi"><span class="ic" aria-hidden="true">🏠</span><span data-i18n="tab_emi"></span></button>
+      <button type="button" role="tab" id="tab-sip" data-tab="sip" aria-controls="p-sip"><span class="ic" aria-hidden="true">📈</span><span data-i18n="tab_sip"></span></button>
+      <button type="button" role="tab" id="tab-fd" data-tab="fd" aria-controls="p-fd"><span class="ic" aria-hidden="true">🏦</span><span data-i18n="tab_fd"></span></button>
+      <button type="button" role="tab" id="tab-ppf" data-tab="ppf" aria-controls="p-ppf"><span class="ic" aria-hidden="true">🛡️</span><span data-i18n="tab_ppf"></span></button>
+    </div>
+
+    <!-- ============================================================ EMI -->
+    <section id="p-emi" class="fc-panel" role="tabpanel" aria-labelledby="tab-emi">
+      <div class="fc-split">
+        <div class="card fc-form" id="emiForm">
+          <h2 data-i18n="loan_details"></h2>
+          <div class="fc-presets" id="presets" role="group" data-i18n-aria-label="loan_type">
+            <button type="button" class="chip" data-preset="home"><span aria-hidden="true">🏠</span> <span data-i18n="preset_home"></span></button>
+            <button type="button" class="chip" data-preset="car"><span aria-hidden="true">🚗</span> <span data-i18n="preset_car"></span></button>
+            <button type="button" class="chip" data-preset="bike"><span aria-hidden="true">🛵</span> <span data-i18n="preset_bike"></span></button>
+            <button type="button" class="chip" data-preset="personal"><span aria-hidden="true">👤</span> <span data-i18n="preset_personal"></span></button>
+            <button type="button" class="chip" data-preset="edu"><span aria-hidden="true">🎓</span> <span data-i18n="preset_edu"></span></button>
+          </div>
+          <div data-f="emiAmt"></div>
+          <div data-f="emiRate"></div>
+          <div class="field">
+            <span class="fc-lbl" data-i18n="f_tenure"></span>
+            <div class="fc-pair"><div data-f="emiYrs"></div><div data-f="emiMos"></div></div>
+            <input type="range" class="nf-range" id="emiYrsR" min="0" max="30" step="1" tabindex="-1" aria-hidden="true">
+            <span class="nf-hint" id="tenureHint"></span>
+          </div>
+          <div class="field">
+            <label for="emiStart" data-i18n="f_start"></label>
+            <input type="month" id="emiStart">
+          </div>
+          <p class="tiny muted mb0" data-i18n="rate_check"></p>
+        </div>
+
+        <div class="fc-col">
+          <div class="card" id="emiRes" aria-live="polite"></div>
+          <div class="card">
+            <div class="fc-chart-head">
+              <h3 id="emiChartTitle"></h3>
+              <div class="seg" id="emiChartSeg" role="group" data-i18n-aria-label="chart_view">
+                <button type="button" data-v="balance" data-i18n="ch_balance"></button>
+                <button type="button" data-v="split" data-i18n="ch_split"></button>
+              </div>
+            </div>
+            <div class="fc-chart" id="emiChart" tabindex="0"></div>
+            <div class="fc-legend" id="emiLegend"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card stack" id="chgCard">
+        <div>
+          <h2 data-i18n="chg_title"></h2>
+          <p class="muted small mb0" data-i18n="chg_help"></p>
+        </div>
+        <div class="grid-2">
+          <div class="panel stack">
+            <h3 data-i18n="pp_title"></h3>
+            <div class="fc-rows" id="ppList"></div>
+            <button type="button" class="btn btn-sm no-print" id="ppAdd"><span aria-hidden="true">＋</span> <span data-i18n="pp_add"></span></button>
+            <div class="field">
+              <span class="fc-lbl" id="ppModeLbl" data-i18n="pp_mode"></span>
+              <div class="seg fc-seg-full" id="ppMode" role="group" aria-labelledby="ppModeLbl">
+                <button type="button" data-v="tenure" data-i18n="mode_tenure"></button>
+                <button type="button" data-v="emi" data-i18n="mode_emi"></button>
+              </div>
+            </div>
+            <div data-f="ppCharge"></div>
+          </div>
+          <div class="panel stack">
+            <h3 data-i18n="rc_title"></h3>
+            <div class="fc-rows" id="rcList"></div>
+            <button type="button" class="btn btn-sm no-print" id="rcAdd"><span aria-hidden="true">＋</span> <span data-i18n="rc_add"></span></button>
+            <div class="field">
+              <span class="fc-lbl" id="rcModeLbl" data-i18n="rc_mode"></span>
+              <div class="seg fc-seg-full" id="rcMode" role="group" aria-labelledby="rcModeLbl">
+                <button type="button" data-v="tenure" data-i18n="rc_keep_emi"></button>
+                <button type="button" data-v="emi" data-i18n="rc_keep_tenure"></button>
+              </div>
+            </div>
+            <p class="tiny muted mb0" data-i18n="rc_help"></p>
+          </div>
+        </div>
+        <div id="chgOut" aria-live="polite"></div>
+      </div>
+
+      <div class="card stack" id="schCard">
+        <div class="fc-sch-head">
+          <h2 data-i18n="sch_title"></h2>
+          <div class="fc-sch-tools no-print">
+            <div class="seg" id="schView" role="group" data-i18n-aria-label="sch_title">
+              <button type="button" data-v="monthly" data-i18n="view_monthly"></button>
+              <button type="button" data-v="yearly" data-i18n="view_yearly"></button>
+              <button type="button" data-v="fy" data-i18n="view_fy"></button>
+            </div>
+            <button type="button" class="btn btn-sm" id="emiCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="emiPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
+          </div>
+        </div>
+        <p class="tiny muted mb0" id="schNote"></p>
+        <div class="fc-table-wrap"><table class="table fc-table" id="schTable"></table></div>
+      </div>
+
+      <h2 class="fc-sec no-print" data-i18n="tools_title"></h2>
+      <p class="muted small no-print" data-i18n="tools_help"></p>
+      <div class="grid-2 fc-tools no-print">
+        <div class="card fc-tool" id="aprCard">
+          <h3><span aria-hidden="true">🧾</span> <span data-i18n="apr_title"></span></h3>
+          <p class="small muted" data-i18n="apr_help"></p>
+          <div class="grid-2"><div data-f="aprFee"></div><div data-f="aprOther"></div></div>
+          <label class="check"><input type="checkbox" id="aprGst"> <span data-i18n="apr_gst"></span></label>
+          <div id="aprOut" class="fc-out" aria-live="polite"></div>
+        </div>
+
+        <div class="card fc-tool" id="flatCard">
+          <h3><span aria-hidden="true">🏷️</span> <span data-i18n="flat_title"></span></h3>
+          <p class="small muted" data-i18n="flat_help"></p>
+          <div data-f="flAmt"></div>
+          <div class="grid-2">
+            <div data-f="flRate"></div>
+            <div class="field">
+              <span class="fc-lbl" id="flPerLbl" data-i18n="flat_per"></span>
+              <div class="seg fc-seg-full" id="flPer" role="group" aria-labelledby="flPerLbl">
+                <button type="button" data-v="month" data-i18n="per_month"></button>
+                <button type="button" data-v="year" data-i18n="per_year"></button>
+              </div>
+            </div>
+          </div>
+          <div data-f="flN"></div>
+          <div id="flatOut" class="fc-out" aria-live="polite"></div>
+        </div>
+
+        <div class="card fc-tool" id="ncCard">
+          <h3><span aria-hidden="true">🛍️</span> <span data-i18n="nc_title"></span></h3>
+          <p class="small muted" data-i18n="nc_help"></p>
+          <div class="grid-2"><div data-f="ncPrice"></div><div data-f="ncN"></div></div>
+          <div class="grid-2"><div data-f="ncRate"></div><div data-f="ncFee"></div></div>
+          <div data-f="ncCash"></div>
+          <div id="ncOut" class="fc-out" aria-live="polite"></div>
+        </div>
+
+        <div class="card fc-tool" id="afCard">
+          <h3><span aria-hidden="true">⚖️</span> <span data-i18n="af_title"></span></h3>
+          <p class="small muted" data-i18n="af_help"></p>
+          <div class="grid-2"><div data-f="afInc"></div><div data-f="afOth"></div></div>
+          <div data-f="afFoir"></div>
+          <div id="afOut" class="fc-out" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ SIP -->
+    <section id="p-sip" class="fc-panel" role="tabpanel" aria-labelledby="tab-sip" hidden>
+      <div class="fc-split">
+        <div class="card fc-form" id="sipForm">
+          <h2 data-i18n="sip_title"></h2>
+          <div class="seg fc-seg-full" id="sipMode" role="group" data-i18n-aria-label="sip_title">
+            <button type="button" data-v="grow" data-i18n="sip_grow"></button>
+            <button type="button" data-v="goal" data-i18n="sip_goal"></button>
+          </div>
+          <div id="sipGoalBox" class="fc-form">
+            <div data-f="sipGoal"></div>
+            <label class="check"><input type="checkbox" id="sipToday"> <span data-i18n="sip_today"></span></label>
+          </div>
+          <div data-f="sipAmt" id="sipAmtBox"></div>
+          <div data-f="sipStep"></div>
+          <div data-f="sipRet"></div>
+          <div data-f="sipYrs"></div>
+          <div data-f="sipLump"></div>
+          <div data-f="sipInf"></div>
+        </div>
+        <div class="fc-col">
+          <div class="card" id="sipRes" aria-live="polite"></div>
+          <div class="card">
+            <div class="fc-chart-head"><h3 data-i18n="ch_growth"></h3></div>
+            <div class="fc-chart" id="sipChart" tabindex="0"></div>
+            <div class="fc-axis-note" data-i18n="ax_years"></div>
+            <div class="fc-legend" id="sipLegend"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card stack">
+        <div class="fc-sch-head">
+          <h2 data-i18n="yearwise"></h2>
+          <div class="fc-sch-tools no-print">
+            <button type="button" class="btn btn-sm" id="sipCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="sipPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
+          </div>
+        </div>
+        <div class="fc-table-wrap"><table class="table fc-table" id="sipTable"></table></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ FD / RD -->
+    <section id="p-fd" class="fc-panel" role="tabpanel" aria-labelledby="tab-fd" hidden>
+      <div class="fc-split">
+        <div class="card fc-form" id="fdForm">
+          <div class="seg fc-seg-full" id="fdKind" role="group" data-i18n-aria-label="tab_fd">
+            <button type="button" data-v="fd" data-i18n="fd_kind_fd"></button>
+            <button type="button" data-v="rd" data-i18n="fd_kind_rd"></button>
+          </div>
+          <div id="fdBox" class="fc-form">
+            <div data-f="fdAmt"></div>
+            <div data-f="fdRate"></div>
+            <div class="field">
+              <span class="fc-lbl" data-i18n="f_tenure"></span>
+              <div class="fc-pair"><div data-f="fdYrs"></div><div data-f="fdMos"></div></div>
+              <span class="nf-hint" id="fdTenureHint"></span>
+            </div>
+            <div class="field">
+              <label for="fdPayout" data-i18n="fd_payout"></label>
+              <select id="fdPayout">
+                <option value="cum" data-i18n="payout_cum"></option>
+                <option value="month" data-i18n="payout_month"></option>
+                <option value="quarter" data-i18n="payout_quarter"></option>
+              </select>
+            </div>
+          </div>
+          <div id="rdBox" class="fc-form">
+            <div data-f="rdAmt"></div>
+            <div data-f="rdRate"></div>
+            <div data-f="rdN"></div>
+          </div>
+          <label class="check"><input type="checkbox" id="fdSenior"> <span data-i18n="fd_senior"></span></label>
+          <p class="tiny muted mb0" data-i18n="rate_check"></p>
+        </div>
+        <div class="fc-col">
+          <div class="card" id="fdRes" aria-live="polite"></div>
+          <div class="card">
+            <div class="fc-chart-head"><h3 data-i18n="ch_growth"></h3></div>
+            <div class="fc-chart" id="fdChart" tabindex="0"></div>
+            <div class="fc-axis-note" data-i18n="ax_years"></div>
+            <div class="fc-legend" id="fdLegend"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card stack">
+        <div class="fc-sch-head">
+          <h2 data-i18n="yearwise"></h2>
+          <div class="fc-sch-tools no-print">
+            <button type="button" class="btn btn-sm" id="fdCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="fdPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
+          </div>
+        </div>
+        <div class="fc-table-wrap"><table class="table fc-table" id="fdTable"></table></div>
+        <p class="tiny muted mb0" data-i18n="fd_note"></p>
+      </div>
+    </section>
+
+    <!-- ============================================================ PPF -->
+    <section id="p-ppf" class="fc-panel" role="tabpanel" aria-labelledby="tab-ppf" hidden>
+      <div class="fc-split">
+        <div class="card fc-form" id="ppfForm">
+          <h2 data-i18n="ppf_title"></h2>
+          <div data-f="ppfAmt"></div>
+          <div data-f="ppfRate"></div>
+          <div class="field">
+            <span class="fc-lbl" id="ppfModeLbl" data-i18n="ppf_how"></span>
+            <div class="seg fc-seg-full" id="ppfMode" role="group" aria-labelledby="ppfModeLbl">
+              <button type="button" data-v="yearly" data-i18n="ppf_yearly"></button>
+              <button type="button" data-v="monthly" data-i18n="ppf_monthly"></button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="ppfExt" data-i18n="ppf_ext"></label>
+            <select id="ppfExt"></select>
+          </div>
+          <label class="check" id="ppfExtDepBox"><input type="checkbox" id="ppfExtDep"> <span data-i18n="ppf_ext_dep"></span></label>
+          <p class="tiny muted mb0" data-i18n="ppf_rate_hint"></p>
+        </div>
+        <div class="fc-col">
+          <div class="card" id="ppfRes" aria-live="polite"></div>
+          <div class="card">
+            <div class="fc-chart-head"><h3 data-i18n="ch_growth"></h3></div>
+            <div class="fc-chart" id="ppfChart" tabindex="0"></div>
+            <div class="fc-axis-note" data-i18n="ax_years"></div>
+            <div class="fc-legend" id="ppfLegend"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card stack">
+        <div class="fc-sch-head">
+          <h2 data-i18n="yearwise"></h2>
+          <div class="fc-sch-tools no-print">
+            <button type="button" class="btn btn-sm" id="ppfCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="ppfPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
+          </div>
+        </div>
+        <div class="fc-table-wrap"><table class="table fc-table" id="ppfTable"></table></div>
+        <p class="tiny muted mb0" data-i18n="ppf_note"></p>
+      </div>
+    </section>
+
+    <p class="callout warning small fc-disc" role="note"><strong data-i18n="disc_title"></strong> <span data-i18n="disclaimer"></span></p>
+
+    <details class="card no-print" id="helpBox" style="margin-top:16px">
+      <summary data-i18n="help_title"></summary>
+      <ul class="stack" style="margin-top:10px">
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+        <li data-i18n="tip5"></li>
+        <li data-i18n="tip6"></li>
+      </ul>
+      <h3 style="margin-top:14px" data-i18n="how_title"></h3>
+      <div class="fc-how small">
+        <p data-i18n="how_emi"></p>
+        <p data-i18n="how_apr"></p>
+        <p data-i18n="how_flat"></p>
+        <p data-i18n="how_sip"></p>
+        <p data-i18n="how_fd"></p>
+        <p data-i18n="how_ppf"></p>
+      </div>
+      <div class="row spread" style="margin-top:12px">
+        <span class="small muted" data-i18n="saved_local"></span>
+        <button class="btn btn-sm btn-danger" id="resetAll" type="button" data-i18n="reset"></button>
+      </div>
+    </details>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

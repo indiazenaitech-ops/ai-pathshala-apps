@@ -52,8 +52,9 @@
     .ic-shape b { font-size: 1rem; color: var(--primary); }
     .ic-ptxt { min-width: 0; display: flex; flex-direction: column; line-height: 1.25; }
     .ic-plab { font-weight: 600; font-size: .86rem; overflow-wrap: anywhere; }
-    .ic-pdim { font-size: .74rem; color: var(--muted); font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+    .ic-pdim { font-size: .74rem; color: var(--muted); font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; align-self: flex-start; }
     .ic-note { font-size: .86rem; }
+    #sizeHint.bad { color: var(--warning); font-weight: 600; }
     /* Nastaliq (Urdu) needs taller lines or the words overlap */
     :root[lang="ur"] .ic-ptxt, :root[lang="ur"] .ic-badges .badge, :root[lang="ur"] .ic-sizes, :root[lang="ur"] .ic-tag { line-height: 2; }
     :root[lang="ur"] .ic-plab { font-size: .82rem; }
@@ -78,7 +79,7 @@
     /* results */
     .ic-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
     @media (max-width: 480px) { .ic-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    .ic-stat { font-size: 1.35rem; font-weight: 800; font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+    .ic-stat { font-size: 1.35rem; font-weight: 800; font-variant-numeric: tabular-nums; }
     .ic-stat.ok { color: var(--success); }
     .ic-stat.bad { color: var(--warning); }
     .ic-actions { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -144,6 +145,7 @@
     .ic-help summary { cursor: pointer; font-weight: 700; min-height: 32px; }
     .ic-help + .ic-help { margin-top: 12px; }
     .ic-kbd { margin-top: 8px; }
+    .ic-kbd kbd { font-size: .72rem; }
   </style>
 </head>
 <body>
@@ -242,7 +244,7 @@
           </div>
           <div id="sizeBox" class="stack" hidden>
             <label class="field"><span data-i18n="target_label"></span>
-              <input type="number" id="targetKB" min="10" max="50000" step="10" inputmode="numeric">
+              <input type="number" id="targetKB" min="5" max="50000" step="1" inputmode="numeric">
             </label>
             <div class="ic-chips no-i18n" id="kbChips">
               <button type="button" class="chip" data-kb="100">100 KB</button>

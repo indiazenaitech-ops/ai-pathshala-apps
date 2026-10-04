@@ -97,7 +97,7 @@
   /* ---------------- UPI payload ---------------- */
   function cleanVpa(raw) { return String(raw || '').trim().toLowerCase(); }
   function parseAmount(raw) {
-    var s = asciiDigits(raw).replace(/[\s,₹]/g, '').replace(/^rs\.?/i, '');
+    var s = asciiDigits(raw).replace(/[\s,₹]/g, '').replace(/^(rs\.?|inr)/i, '').replace(/\/[-=]$/, '');   // "Rs. 1,250/-" -> 1250
     if (!s) return { empty: true };
     if (/^-/.test(s)) return { err: 'err_amt_neg' };
     if (!/^(\d+\.?\d*|\.\d+)$/.test(s)) return { err: 'err_amt_bad' };
@@ -131,7 +131,9 @@
     var nt = cleanNote(state.note);
     r.tn = nt.v; r.noteCut = nt.cut;
     r.L = stLang();
-    r.shop = state.shop === null ? ts('sample_shop', r.L) : state.shop.trim();
+    /* an untouched "Name on the standee" shows the sample shop only next to the sample UPI ID; with a real UPI ID it
+       uses the payee name, so a sample name never ends up on someone's printed standee */
+    r.shop = state.shop === null ? (vpa === SAMPLE_VPA ? ts('sample_shop', r.L) : r.pn) : state.shop.trim();
     if (!r.vpaErr && !r.amtErr) {
       r.payload = upiLink(vpa, r.pn, r.am, r.tn);
       var q = QRGen.encode(r.payload, 'M');
@@ -180,7 +182,13 @@
   function qrBox(cls, r) { return el('div', { class: 'qrbox ' + cls, html: qrSvg(r.q) }); }
   function logoEl(cls) { return state.logo ? el('img', { class: cls, src: state.logo, alt: '' }) : null; }
   function enLine(r, cls) { return state.addEn && r.L !== 'en' ? div(cls + ' lat', ts('st_scan', 'en'), { lang: 'en', dir: 'ltr' }) : null; }
-  function vpaLine(r, cls) { return div(cls + ' ltr', 'UPI ID: ' + (r.vpa || '—'), { dir: 'ltr' }); }
+  /* a long UPI ID wraps after the @ (name@ / bank), not in the middle of the bank handle */
+  function vpaLine(r, cls) {
+    var d = div(cls + ' ltr', 'UPI ID: ', { dir: 'ltr' }), v = r.vpa || '—', at = v.indexOf('@');
+    if (at < 0) d.appendChild(document.createTextNode(v));
+    else { d.appendChild(document.createTextNode(v.slice(0, at + 1))); d.appendChild(document.createElement('wbr')); d.appendChild(document.createTextNode(v.slice(at + 1))); }
+    return d;
+  }
 
   function buildStandee(r) {
     return [
@@ -188,7 +196,7 @@
       el('div', { class: 'st-mid' },
         el('div', null, div('st-scan', ts('st_scan', r.L)), enLine(r, 'st-en')),
         qrBox('st-qr', r),
-        r.am ? el('div', { class: 'st-amt ltr' }, el('small', { class: 'lat', text: ts('st_amount', r.L) }), money(r.am)) : null,
+        r.am ? el('div', { class: 'st-amt ltr' }, el('small', { text: ts('st_amount', r.L) }), money(r.am)) : null,
         el('div', null, r.pn ? div('st-payee' + latCls(r.pn), r.pn, { dir: 'auto' }) : null, vpaLine(r, 'st-vpa'))),
       div('st-foot', ts('st_check', r.L))
     ];
@@ -209,15 +217,15 @@
     return [tentPanel(r, true), tentPanel(r, false), el('div', { class: 'tt-fold', 'aria-hidden': 'true' }, el('span', { text: t('fold_here') }))];
   }
   function buildStickers(r) {
-    var out = [];
+    var grid = el('div', { class: 'sk-grid' });
     for (var i = 0; i < state.stickers; i++) {
-      out.push(el('div', { class: 'sk' }, el('div', { class: 'sk-in' },
+      grid.appendChild(el('div', { class: 'sk' }, el('div', { class: 'sk-in' },
         r.shop ? div('sk-shop clamp2' + latCls(r.shop), r.shop, { dir: 'auto' }) : null,
         qrBox('sk-qr', r),
-        div('sk-scan clamp2', ts('st_scan', r.L)),
+        div('sk-scan', ts('st_scan', r.L)),               // never cut: the fit step makes room for it
         r.am ? div('sk-vpa ltr', money(r.am), { dir: 'ltr' }) : div('sk-vpa ltr', r.vpa, { dir: 'ltr' }))));
     }
-    return out;
+    return [grid];
   }
 
   /* shrink the QR step by step until nothing overflows its panel (long names, logo, Urdu line height) */
@@ -228,20 +236,38 @@
     return first ? [first] : [];
   }
   function fits(list) { return list.every(function (n) { return n.scrollHeight <= n.clientHeight + 1 && n.scrollWidth <= n.clientWidth + 1; }); }
+  var PRINT_PX = { A5: 148 * 96 / 25.4, A4: 210 * 96 / 25.4 };
   var QRW_MIN = { standee: 46, tent: 32, stickers: 52 };
   function fitSheet() {
-    var sheet = $('#sheet');
+    var sheet = $('#sheet'), st = sheet.style;
     if (state.design === 'image' || !sheet.clientHeight) return;
-    var list = fitTargets(sheet), d = state.design, w;
-    function tryDown(min) {
-      w = QRW_DEFAULT[d];
-      sheet.style.setProperty('--qrw', w);
-      while (w > min && !fits(list)) { w -= 2; sheet.style.setProperty('--qrw', w); }
-      return fits(list);
+    var list = fitTargets(sheet), d = state.design, w = QRW_DEFAULT[d];
+    function setW(x) { w = x; st.setProperty('--qrw', x); }
+    /* biggest even QR width in [min, default] that fits (binary search: a smaller QR never fits worse) */
+    function search(min) {
+      var lo = min, hi = QRW_DEFAULT[d];
+      setW(hi); if (fits(list)) return true;
+      setW(lo); if (!fits(list)) return false;
+      while (hi - lo > 2) {
+        var mid = lo + Math.max(1, Math.floor((hi - lo) / 4)) * 2;
+        setW(mid); if (fits(list)) lo = mid; else hi = mid;
+      }
+      setW(lo);
+      return true;
     }
+    /* measure at the real paper width: text wraps a little differently at each size, and print is what counts */
+    st.width = PRINT_PX[d === 'standee' ? state.paper : 'A4'] + 'px'; st.maxWidth = 'none'; st.flex = 'none';
     sheet.classList.remove('tight');
-    /* first shrink only the QR a little; if a long name, logo or tall script still does not fit, use smaller text */
-    if (!tryDown(QRW_MIN[d])) { sheet.classList.add('tight'); tryDown(24); }
+    /* first shrink only the QR a little. If a long name, logo or tall script still does not fit, or smaller text
+       would give a clearly bigger QR (long Tamil or Malayalam lines on stickers), use the smaller text */
+    var okN = search(QRW_MIN[d]), wN = w;
+    if (!okN || wN < QRW_DEFAULT[d]) {
+      sheet.classList.add('tight');
+      search(24);
+      if (okN && w < wN + 6) { sheet.classList.remove('tight'); setW(wN); }
+    }
+    st.width = ''; st.maxWidth = ''; st.flex = '';
+    while (w > 24 && !fits(list)) setW(w - 2);         // the small preview must not overflow either
     sheet.dataset.qrw = w;
     sizeInfo();
   }
@@ -367,11 +393,11 @@
       o.shopB = block(r.shop, W * (sq ? 0.06 : 0.078) * f, 800, famFor(r.shop), 2, '#fff');
       o.logoS = logoImg ? W * (sq ? 0.11 : 0.16) * f : 0;
       o.bandH = pad * 0.8 * f + (o.logoS ? o.logoS + W * 0.025 * f : 0) + (o.shopB ? o.shopB.h : 0) + pad * 0.7 * f;
-      o.footB = block(ts('st_check', L), W * 0.03 * z, 600, fam, 2, '#fff');
+      o.footB = block(ts('st_check', L), W * 0.03 * z, 600, fam, 3, '#fff');
       o.footH = o.footB.h + W * 0.05 * f;
       o.tight = W * 0.012 * f;
       var g = [];                                       // groups are spaced evenly; lines inside a group stay close
-      g.push([block(ts('st_scan', L), W * (sq ? 0.045 : 0.056) * f, 800, fam, 2, '#111'),
+      g.push([block(ts('st_scan', L), W * (sq ? 0.045 : 0.056) * f, 800, fam, 4, '#111'),     // fixed text is never cut short
         state.addEn && L !== 'en' ? block(ts('st_scan', 'en'), W * 0.033 * z, 600, lat, 1, '#444') : null]);
       g.push('qr');
       if (r.am) g.push([block(money(r.am), W * 0.075 * z, 800, lat, 1, '#111')]);
@@ -469,7 +495,8 @@
   function syncInputs() {
     $('#vpa').value = state.vpa;
     $('#pn').value = state.pn;
-    $('#shop').value = state.shop === null ? ts('sample_shop', stLang()) : state.shop;
+    $('#shop').value = state.shop === null ? '' : state.shop;
+    $('#shop').placeholder = ts('sample_shop', stLang());
     $('#amt').value = state.amt;
     $('#note').value = state.note;
     $('#addEn').checked = state.addEn;
@@ -515,12 +542,15 @@
   function readUpiLink(v) {
     if (!/^\s*upi:\/\//i.test(v)) return false;
     try {
-      var p = new URL(v.trim()).searchParams, pa = cleanVpa(p.get('pa'));
+      var q = {};                                       // parameter names in any case (UPI://PAY?PA=...)
+      new URL(v.trim()).searchParams.forEach(function (val, k) { k = k.toLowerCase(); if (!(k in q)) q[k] = val; });
+      var pa = cleanVpa(q.pa);
       if (!pa) return false;
+      /* the link describes the whole payment: fields it leaves out are cleared, not kept from before */
       state.vpa = pa;
-      if (p.get('pn')) state.pn = p.get('pn').slice(0, 99);
-      if (p.get('am')) state.amt = p.get('am').slice(0, 14);
-      if (p.get('tn')) state.note = p.get('tn').slice(0, 120);
+      state.pn = String(q.pn || '').slice(0, 99);
+      state.amt = String(q.am || '').slice(0, 14);
+      state.note = String(q.tn || '').slice(0, 120);
       syncInputs();
       EDU.toast(t('link_read'));
       return true;
@@ -530,6 +560,8 @@
     $(id).addEventListener('input', function () {
       if (key === 'vpa' && readUpiLink(this.value)) { saveSoon(); render(); return; }
       state[key] = this.value;
+      /* typing your own UPI ID clears the untouched sample payee name, so it cannot slip into a real QR */
+      if (key === 'vpa' && state.pn === SAMPLE_PN && cleanVpa(this.value) !== SAMPLE_VPA) { state.pn = ''; $('#pn').value = ''; }
       saveSoon(); renderSoon();
     });
   }
@@ -541,7 +573,7 @@
   $('#addEn').addEventListener('change', function () { state.addEn = this.checked; saveSoon(); render(); });
   $('#slang').addEventListener('change', function () {
     state.slang = this.value; ensureFont(stLang());
-    if (state.shop === null) $('#shop').value = ts('sample_shop', stLang());
+    $('#shop').placeholder = ts('sample_shop', stLang());
     saveSoon(); render();
   });
   EDU.$$('#segPaper button').forEach(function (b) { b.addEventListener('click', function () { state.paper = b.dataset.v; saveSoon(); render(); }); });
@@ -668,10 +700,15 @@
     if (!cmOpen) return;
     cmOpen = false;
     $('#counter').hidden = true;
-    if (document.fullscreenElement || document.webkitFullscreenElement) EDU.fullscreen();
     try { if (wakeLock) wakeLock.release(); } catch (e) { }
     wakeLock = null;
-    $('#btnCounter').focus();
+    function back() { if (!cmOpen) $('#btnCounter').focus(); }
+    /* focus cannot move to the page while it is still full screen, so return it once full screen has ended */
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      document.addEventListener('fullscreenchange', function once() { document.removeEventListener('fullscreenchange', once); back(); });
+      setTimeout(back, 500);
+      EDU.fullscreen();
+    } else back();
   }
   $('#btnCounter').addEventListener('click', openCounter);
   $('#cmClose').addEventListener('click', closeCounter);
@@ -696,7 +733,7 @@
   /* ---------------- language, fonts, resize ---------------- */
   EDU.onLang(function () {
     buildLangSelect(); buildSwatches(); ensureFont(stLang());
-    if (state.shop === null) $('#shop').value = ts('sample_shop', stLang());
+    $('#shop').placeholder = ts('sample_shop', stLang());
     render();
   });
   var fontTimer = 0;

@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Image to Text (OCR) · AI Pathshala</title>
+  <meta name="description" content="Free OCR in 12 Indian languages: turn photos, screenshots and scanned PDFs into editable text on your own device. Nothing is uploaded. Hindi, English, Tamil, Bengali and more.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .it-privacy { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 16px; }
+    .it-privacy .ic { font-size: 1.35rem; line-height: 1.3; flex: none; }
+    .it-privacy p { margin: 0; }
+    .it-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); align-items: start; }
+    @media (max-width: 920px) { .it-grid { grid-template-columns: minmax(0, 1fr); } }
+    .it-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+    .it-step { font-size: 1.15rem; margin: 0; }
+    .it-hidden-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; inset-inline-start: -9999px; }
+
+    /* drop zone */
+    .it-drop {
+      border: 2px dashed color-mix(in srgb, var(--primary) 35%, var(--border)); border-radius: var(--radius); padding: 22px 16px;
+      text-align: center; background: var(--surface-2); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px;
+      transition: background .12s, border-color .12s;
+    }
+    .it-drop:hover, .it-drop.over { border-color: var(--primary); background: var(--primary-soft); }
+    .it-drop-ic { font-size: 2.1rem; line-height: 1.1; }
+    .it-drop strong { font-size: 1.05rem; }
+    .it-add { display: flex; flex-wrap: wrap; gap: 8px; }
+    .it-add .btn { flex: 1 1 auto; }
+    #camBtn { display: none; }
+    @media (hover: none) and (pointer: coarse) { #camBtn { display: inline-flex; } }
+
+    /* page strip */
+    .it-pages { display: flex; gap: 10px; overflow-x: auto; padding: 8px 4px 6px; margin: 0; list-style: none; }
+    .it-thumb { position: relative; flex: none; }
+    .it-thumb-btn {
+      width: 74px; height: 94px; padding: 0; border: 2px solid var(--border); border-radius: 10px; background: #fff;
+      overflow: hidden; cursor: pointer; display: block; position: relative;
+    }
+    .it-thumb-btn img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .it-thumb.sel .it-thumb-btn { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+    .it-pno {
+      position: absolute; inset-inline-start: 4px; bottom: 4px; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 11px;
+      background: var(--primary); color: var(--primary-ink); font-size: .75rem; font-weight: 800; display: grid; place-items: center;
+      font-family: system-ui, "Segoe UI", Roboto, sans-serif; line-height: 1;
+    }
+    .it-done-mark { position: absolute; inset-inline-end: 4px; bottom: 4px; width: 22px; height: 22px; border-radius: 50%; background: var(--success); color: #fff; font-size: .8rem; display: grid; place-items: center; line-height: 1; }
+    .it-thumb-x {
+      position: absolute; top: -8px; inset-inline-end: -8px; width: 30px; height: 30px; border-radius: 50%; padding: 0;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-size: .95rem; line-height: 1;
+      display: grid; place-items: center; box-shadow: var(--shadow);
+    }
+    .it-thumb-x:hover { background: var(--danger-soft); color: var(--danger); }
+
+    /* empty state of step 2 */
+    .it-empty-box { margin-top: 10px; display: flex; gap: 12px; align-items: center; padding: 14px; border: 2px dashed var(--border); border-radius: var(--radius-sm); }
+    .it-empty-ic { font-size: 1.6rem; line-height: 1; opacity: .7; flex: none; }
+    @media (min-width: 921px) { .it-empty-box { min-height: 180px; justify-content: center; flex-direction: column; text-align: center; } .it-empty-ic { font-size: 2.4rem; } }
+
+    /* preview */
+    .it-tools { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .it-tools .btn { min-height: 40px; }
+    .it-tools .sep { flex: 1 1 auto; }
+    .it-move { display: inline-flex; gap: 6px; }
+    .it-stage { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; display: flex; justify-content: center; position: relative; }
+    #preview { display: block; max-width: 100%; max-height: 62vh; width: auto; height: auto; border-radius: 4px; box-shadow: var(--shadow); background: #fff; }
+    #preview.crop { cursor: crosshair; touch-action: none; }
+    .it-adjust summary { cursor: pointer; font-weight: 700; }
+    .it-adjust .grid-2 { margin-top: 10px; gap: 10px 16px; }
+    .it-range { display: flex; flex-direction: column; gap: 2px; }
+    .it-range span { font-size: .84rem; color: var(--muted); font-weight: 600; }
+
+    /* languages */
+    .it-langs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .it-lang {
+      display: inline-flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 0; min-height: 48px; min-width: 92px;
+      padding: 5px 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      font: inherit; cursor: pointer; text-align: start; line-height: 1.25;
+    }
+    .it-lang:hover { background: var(--surface-2); }
+    .it-lang .nm { font-weight: 700; font-size: .95rem; }
+    .it-lang .sub { font-size: .74rem; color: var(--muted); display: flex; gap: 6px; flex-wrap: wrap; }
+    .it-lang .ok { color: var(--success); font-weight: 700; }
+    .it-lang[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+    .it-lang[aria-pressed="true"] .sub, .it-lang[aria-pressed="true"] .ok { color: var(--primary-ink); opacity: .9; }
+    :root[lang="ur"] .it-lang { line-height: 1.7; }
+    .it-run { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .it-run .btn-lg { flex: 1 1 220px; }
+    .it-count { font-size: .8rem; font-weight: 800; padding: 1px 8px; border-radius: 999px; background: color-mix(in srgb, var(--primary-ink) 22%, transparent); }
+    .it-status { display: flex; flex-direction: column; gap: 6px; }
+    .it-status .progress { height: 12px; }
+    #stText { font-weight: 600; }
+    .progress > span.it-indet {
+      background: linear-gradient(90deg, var(--primary-soft) 0%, var(--primary) 50%, var(--primary-soft) 100%);
+      background-size: 200% 100%; animation: it-slide 1.3s linear infinite;
+    }
+    @keyframes it-slide { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+    [dir="rtl"] .it-arr { display: inline-block; transform: scaleX(-1); }
+    .it-honest { margin: 0; padding-inline-start: 0; list-style: none; display: grid; gap: 4px; }
+    .it-honest li { display: flex; gap: 8px; align-items: flex-start; }
+    .it-honest li span:first-child { flex: none; }
+
+    /* result */
+    .it-resbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+    .it-stats { display: flex; flex-wrap: wrap; gap: 6px; }
+    .it-result {
+      min-height: 220px; max-height: 70vh; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; word-break: normal;
+      padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text);
+      font-size: 1.05rem; line-height: 1.65; tab-size: 6; -moz-tab-size: 6; unicode-bidi: plaintext; text-align: start;
+    }
+    .it-result:focus { outline: 2px solid var(--primary); outline-offset: 0; }
+    .it-result.tabular { font-family: var(--mono); font-size: .95rem; white-space: pre; overflow-x: auto; }
+    :root[lang="ur"] .it-result { line-height: 1.9; }
+    .it-result .lc {
+      text-decoration: underline wavy var(--warning); text-decoration-thickness: 1.5px; text-underline-offset: 4px;
+      background: color-mix(in srgb, var(--warning-soft) 70%, transparent); border-radius: 3px; cursor: pointer;
+    }
+    .it-result .lc.cur { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .it-result.no-lc .lc { text-decoration: none; background: none; outline: 0; }
+    .it-result:empty::before { content: attr(data-empty); color: var(--muted); }
+    .it-wordcheck { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); }
+    .it-wordcheck canvas { max-height: 80px; max-width: 100%; background: #fff; border: 1px solid var(--border); border-radius: 6px; display: block; }
+    .it-wordcheck .grow { min-width: 160px; }
+    #wcWord { font-weight: 700; unicode-bidi: isolate; }
+    .it-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    @media (max-width: 560px) { .it-actions .btn { flex: 1 1 calc(50% - 8px); } }
+
+    /* modals */
+    .it-form { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .it-form .full { grid-column: 1 / -1; }
+    .it-form input, .it-form textarea { width: 100%; }
+    .it-form textarea { min-height: 64px; }
+    @media (max-width: 560px) { .it-form { grid-template-columns: minmax(0, 1fr); } }
+    .it-csv { max-height: 46vh; overflow: auto; border: 1px solid var(--border); border-radius: 8px; }
+    .it-csv td, .it-csv th { white-space: nowrap; }
+
+    .it-help ul { margin: 10px 0 0; padding-inline-start: 22px; display: grid; gap: 8px; }
+    .it-storage { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-top: 12px; }
+
+    #printArea { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12pt; line-height: 1.5; color: #000; unicode-bidi: plaintext; }
+    #printArea h1 { font-size: 15pt; margin: 0 0 10pt; }
+    @media print {
+      #app > *:not(#printArea) { display: none !important; }
+      #printArea { display: block !important; }
+      body { background: #fff; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+
+    <div class="callout success it-privacy">
+      <span class="ic" aria-hidden="true">🔒</span>
+      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+    </div>
+
+    <div class="it-grid">
+      <div class="it-col">
+        <!-- 1. add files -->
+        <section class="card stack" id="addCard" aria-labelledby="hAdd">
+          <h2 class="it-step" id="hAdd" data-i18n="step_add"></h2>
+          <div class="it-drop" id="drop" tabindex="0" role="button" aria-describedby="dropHint">
+            <span class="it-drop-ic" aria-hidden="true">🖼️</span>
+            <strong data-i18n="drop_title"></strong>
+            <span class="small muted" id="dropHint" data-i18n="drop_hint"></span>
+          </div>
+          <div class="it-add">
+            <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_files"></span></button>
+            <button class="btn" id="camBtn" type="button"><span aria-hidden="true">📷</span> <span data-i18n="take_photo"></span></button>
+            <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">🪪</span> <span data-i18n="try_sample"></span></button>
+          </div>
+          <input type="file" id="fileInput" class="it-hidden-input" accept="image/*,application/pdf,.pdf,.heic,.heif" multiple tabindex="-1" aria-hidden="true">
+          <input type="file" id="camInput" class="it-hidden-input" accept="image/*" capture="environment" tabindex="-1" aria-hidden="true">
+          <div id="pagesWrap" hidden>
+            <div class="row spread">
+              <strong class="small" id="pagesHead"></strong>
+              <button class="btn btn-sm btn-ghost" id="clearPages" type="button" data-i18n="clear_pages"></button>
+            </div>
+            <ul class="it-pages" id="pages"></ul>
+          </div>
+          <div class="callout stack" id="pdfTextNote" hidden>
+            <p class="mb0" id="pdfTextMsg"></p>
+            <div><button class="btn btn-sm btn-primary" id="usePdfText" type="button" data-i18n="use_pdf_text"></button></div>
+          </div>
+        </section>
+
+        <!-- 2. check the page -->
+        <section class="card it-empty" id="editEmpty" aria-labelledby="hEditEmpty">
+          <h2 class="it-step" id="hEditEmpty" data-i18n="step_check"></h2>
+          <div class="it-empty-box"><span class="it-empty-ic" aria-hidden="true">📄</span><span class="small muted" data-i18n="check_empty"></span></div>
+        </section>
+        <section class="card stack" id="editCard" aria-labelledby="hEdit" hidden>
+          <div class="row spread">
+            <h2 class="it-step" id="hEdit" data-i18n="step_check"></h2>
+            <span class="badge primary" id="pageBadge"></span>
+          </div>
+          <div class="it-tools" role="toolbar" data-i18n-aria-label="step_check">
+            <button class="btn btn-sm" id="rotL" type="button" data-i18n-aria-label="rotate_left" data-i18n-title="rotate_left"><span aria-hidden="true">↺</span></button>
+            <button class="btn btn-sm" id="rotR" type="button" data-i18n-aria-label="rotate_right" data-i18n-title="rotate_right"><span aria-hidden="true">↻</span></button>
+            <button class="btn btn-sm" id="cropBtn" type="button" aria-pressed="false"><span aria-hidden="true">✂️</span> <span data-i18n="select_area"></span></button>
+            <button class="btn btn-sm" id="cropClear" type="button" data-i18n="whole_page"></button>
+            <span class="sep"></span>
+            <span class="it-move">
+            <button class="btn btn-sm" id="moveL" type="button" data-i18n-aria-label="move_earlier" data-i18n-title="move_earlier"><span aria-hidden="true" class="it-arr">◀</span></button>
+            <button class="btn btn-sm" id="moveR" type="button" data-i18n-aria-label="move_later" data-i18n-title="move_later"><span aria-hidden="true" class="it-arr">▶</span></button>
+            </span>
+          </div>
+          <p class="small muted mb0" id="cropHint" data-i18n="crop_hint" hidden></p>
+          <div class="it-stage"><canvas id="preview" width="10" height="10" role="img"></canvas></div>
+          <p class="small muted mb0 no-i18n" id="imgInfo"></p>
+          <div id="imgHints" class="stack"></div>
+          <details class="it-adjust" id="adjustBox">
+            <summary data-i18n="improve"></summary>
+            <p class="small muted" style="margin:6px 0 0" data-i18n="improve_note"></p>
+            <div class="grid-2">
+              <label class="check"><input type="checkbox" id="optLevels"> <span data-i18n="opt_levels"></span></label>
+              <label class="check"><input type="checkbox" id="optGray"> <span data-i18n="opt_gray"></span></label>
+              <label class="check"><input type="checkbox" id="optBw"> <span data-i18n="opt_bw"></span></label>
+              <label class="check"><input type="checkbox" id="optUp"> <span data-i18n="opt_up"></span></label>
+              <label class="check"><input type="checkbox" id="optDeskew"> <span data-i18n="opt_deskew"></span></label>
+              <span></span>
+              <label class="it-range"><span data-i18n="opt_contrast"></span><input type="range" id="optContrast" min="-50" max="100" step="5"></label>
+              <label class="it-range" id="bwLevelWrap"><span data-i18n="opt_bw_level"></span><input type="range" id="optBwLevel" min="-60" max="60" step="4"></label>
+            </div>
+            <div class="row" style="margin-top:10px"><button class="btn btn-sm btn-ghost" id="resetAdjust" type="button" data-i18n="reset"></button></div>
+          </details>
+        </section>
+      </div>
+
+      <div class="it-col">
+        <!-- 3. languages + read -->
+        <section class="card stack" id="setCard" aria-labelledby="hLang">
+          <h2 class="it-step" id="hLang" data-i18n="step_lang"></h2>
+          <div class="it-langs" id="langs" role="group" aria-labelledby="hLang"></div>
+          <p class="small muted mb0" data-i18n="lang_hint"></p>
+          <p class="callout warning small mb0" id="urduNote" data-i18n="urdu_note" hidden></p>
+          <label class="field">
+            <span data-i18n="doc_type"></span>
+            <select id="docType"></select>
+          </label>
+          <div class="stack">
+            <label class="check"><input type="checkbox" id="optJoin"> <span data-i18n="opt_join"></span></label>
+            <label class="check"><input type="checkbox" id="optMarks"> <span data-i18n="opt_marks"></span></label>
+          </div>
+          <div class="it-run">
+            <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled>
+              <span aria-hidden="true">🔍</span> <span data-i18n="read_btn"></span> <span class="it-count" id="runCount" hidden></span>
+            </button>
+            <button class="btn btn-danger" id="stopBtn" type="button" data-i18n="stop" hidden></button>
+          </div>
+          <p class="tiny muted mb0" data-i18n="kbd_hint"></p>
+          <div class="it-status" id="statusBox" hidden>
+            <span id="stText" aria-live="polite"></span>
+            <div class="progress" id="stBarWrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-labelledby="stText"><span id="stBar" style="width:0%"></span></div>
+          </div>
+          <div class="callout danger stack" id="errBox" role="alert" hidden>
+            <p class="mb0" id="errText"></p>
+            <div><button class="btn btn-sm" id="retryBtn" type="button" data-i18n="try_again"></button></div>
+          </div>
+          <p class="small muted mb0" id="firstTime" data-i18n="first_time"></p>
+          <div class="callout warning small">
+            <strong data-i18n="honest_title"></strong>
+            <ul class="it-honest">
+              <li><span aria-hidden="true">✅</span><span data-i18n="honest_good"></span></li>
+              <li><span aria-hidden="true">⚠️</span><span data-i18n="honest_bad"></span></li>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- 4. result -->
+    <section class="card stack" id="resultCard" aria-labelledby="hRes" style="margin-top:16px" hidden>
+      <div class="it-resbar">
+        <h2 class="it-step" id="hRes" data-i18n="step_result"></h2>
+        <div class="it-stats" id="stats"></div>
+      </div>
+      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden></p>
+      <div class="callout warning stack" id="suggestBox" hidden>
+        <p class="mb0" id="suggestText"></p>
+        <div class="row" id="suggestBtns"></div>
+      </div>
+      <div class="row spread" id="unsureRow">
+        <label class="check"><input type="checkbox" id="optUnsure"> <span id="unsureLabel"></span></label>
+        <button class="btn btn-sm" id="nextUnsure" type="button"><span data-i18n="next_unsure"></span> <span aria-hidden="true" class="it-arr">→</span></button>
+      </div>
+      <div class="it-wordcheck" id="wordCheck" hidden>
+        <span class="small muted" data-i18n="wc_title"></span>
+        <canvas id="wcCanvas" width="10" height="10"></canvas>
+        <span class="grow small" id="wcInfo"></span>
+        <div class="row">
+          <button class="btn btn-sm btn-primary" id="wcOk" type="button" data-i18n="wc_ok"></button>
+          <button class="btn btn-sm btn-ghost" id="wcClose" type="button" data-i18n="close"></button>
+        </div>
+      </div>
+      <div id="result" class="it-result no-i18n" dir="auto" spellcheck="false" role="textbox" aria-multiline="true" data-i18n-aria-label="result_label" tabindex="0"></div>
+      <div class="it-actions">
+        <button class="btn btn-primary" id="copyBtn" type="button"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
+        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt"></span></button>
+        <a class="btn btn-wa" id="waBtn" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="wa_share"></span></a>
+        <button class="btn" id="printBtn" type="button"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
+        <button class="btn" id="csvBtn" type="button"><span aria-hidden="true">📊</span> <span data-i18n="to_csv"></span></button>
+        <button class="btn" id="vcfBtn" type="button"><span aria-hidden="true">📇</span> <span data-i18n="to_contact"></span></button>
+        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text"></button>
+      </div>
+      <label class="check small"><input type="checkbox" id="optKeep"> <span data-i18n="keep_text"></span></label>
+    </section>
+
+    <details class="card it-help no-print" style="margin-top:16px">
+      <summary><strong data-i18n="help_title"></strong></summary>
+      <ul>
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+        <li data-i18n="tip5"></li>
+        <li data-i18n="tip6"></li>
+      </ul>
+      <h3 style="margin-top:14px" data-i18n="ideas_title"></h3>
+      <p class="mb0" data-i18n="ideas_body"></p>
+      <h3 style="margin-top:14px" data-i18n="inside_title"></h3>
+      <p class="mb0" data-i18n="inside_body"></p>
+      <div class="it-storage">
+        <span class="small muted" id="storageText"></span>
+        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden></button>
+      </div>
+      <div class="row spread" style="margin-top:12px">
+        <span class="small muted" data-i18n="saved_local"></span>
+        <button class="btn btn-sm btn-danger" id="resetAll" type="button" data-i18n="reset"></button>
+      </div>
+    </details>
+
+    <div id="printArea" class="print-only no-i18n"></div>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
