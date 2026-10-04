@@ -85,7 +85,64 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.waitForFunction(() => document.querySelector('#count').getAttribute('data-n') === '6', null, { timeout: 5000 });
   expect(await page.$('#scale .c-logo') === null, 'reset removes the logo');
 
-  /* 10) RTL: an Urdu certificate must be visible inside the preview box (not pushed out by dir=rtl) */
+  /* 10) more name formats: a dash without spaces before a rank splits, "Mary-Ann" does not, runner-up is 2nd (silver) */
+  await page.fill('#names', 'Asha Rani-1st\nMary-Ann Thomas\nKaran Singh - First runner up\nNeha - 2nd runner-up');
+  expect(await attr('#count', 'data-n') === '4', '4 names, got ' + await attr('#count', 'data-n'));
+  expect(await txt('#scale .c-name') === 'Asha Rani' && await txt('#scale .c-pos') === t('pos_1'), '"Asha Rani-1st" → Asha Rani, First Place');
+  await page.click('#next');
+  expect(await txt('#scale .c-name') === 'Mary-Ann Thomas' && await page.$('#scale .c-pos') === null, 'a hyphenated name is kept whole');
+  await page.click('#next');
+  expect(await txt('#scale .c-pos') === 'First runner up' && await attr('#scale .cert', 'data-rank') === '2', '"First runner up" is 2nd place (silver), not gold');
+  await page.click('#next');
+  expect(await attr('#scale .cert', 'data-rank') === '3', '"2nd runner-up" is 3rd place (bronze)');
+
+  /* 11) a long school name goes on 2 readable lines; logo and text stay clear of the Modern design's corner art */
+  await page.click('#designs .dbtn[data-d="4"]');
+  const [fc2] = await Promise.all([page.waitForEvent('filechooser', { timeout: 5000 }), page.click('#logo-add')]);
+  await fc2.setFiles({ name: 'logo.png', mimeType: 'image/png', buffer: Buffer.from(PNG_1PX, 'base64') });
+  await page.waitForSelector('#scale .c-logo', { timeout: 5000 });
+  await page.fill('#school', 'PM SHRI Kendriya Vidyalaya No. 2, Air Force Station Hindan, Ghaziabad (U.P.)');
+  await page.fill('#sig2r', 'Principal & Chairperson, Examination Committee');
+  const geo = await page.evaluate(() => {
+    const c = document.querySelector('#scale .cert'), k = c.getBoundingClientRect().width / 1122, cb = c.getBoundingClientRect();
+    const sc = c.querySelector('.c-school'), lg = c.querySelector('.c-logo').getBoundingClientRect();
+    const lines = [...c.querySelectorAll('.c-sig-line')].map((e) => (e.getBoundingClientRect().top - cb.top) / k);
+    return { wrap: sc.classList.contains('c-wrap'), fs: parseFloat(getComputedStyle(sc).fontSize), fits: sc.scrollHeight <= sc.clientHeight + 2 && sc.scrollWidth <= sc.clientWidth + 1,
+      logoX: (lg.left - cb.left) / k, logoR: (lg.right - cb.left) / k, lines };
+  });
+  expect(geo.wrap && geo.fs >= 18 && geo.fits, 'long school name wraps to 2 lines at a readable size: ' + JSON.stringify(geo));
+  expect(geo.logoX >= 185 && geo.logoR <= 1122 - 185, 'logo stays clear of the corner triangles: ' + JSON.stringify(geo));
+  expect(Math.abs(geo.lines[0] - geo.lines[1]) < 1.5, 'both signature lines stay level when one designation wraps: ' + JSON.stringify(geo.lines));
+
+  /* 12) Rangoli: the designation sits above the inner border lines (they start at y≈731) */
+  await page.click('#designs .dbtn[data-d="3"]');
+  const roleBottom = await page.evaluate(() => {
+    const c = document.querySelector('#scale .cert'), k = c.getBoundingClientRect().width / 1122, top = c.getBoundingClientRect().top;
+    return Math.max(...[...c.querySelectorAll('.c-sig-role')].map((e) => (e.getBoundingClientRect().bottom - top) / k));
+  });
+  expect(roleBottom <= 728, 'Rangoli designations do not touch the border lines, bottom at ' + roleBottom.toFixed(1));
+
+  /* 13) "Print this one" prints only the current certificate, even if the browser fires beforeprint late (iOS / Android) */
+  await page.evaluate(() => { window.__printed = 0; window.print = () => { window.__printed++; }; });
+  await page.click('#print-one');
+  await page.waitForFunction(() => window.__printed === 1, null, { timeout: 5000 });
+  await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+  const one = await page.$$eval('#print-root .cert .c-name', (els) => els.map((e) => e.textContent));
+  expect(one.length === 1 && one[0] === 'Neha', 'print this one → only the current certificate: ' + one.join('|'));
+  await page.evaluate(() => { window.dispatchEvent(new Event('afterprint')); window.dispatchEvent(new Event('beforeprint')); });
+  expect(await page.$$eval('#print-root .cert', (els) => els.length) === 4, 'a later Ctrl+P prints all certificates');
+
+  /* 14) an emptied date stays hidden after a reload */
+  await page.fill('#date', '');
+  await page.dispatchEvent('#date', 'change');
+  expect(await page.$('#scale .c-date') === null, 'empty date hides the date line');
+  await page.waitForTimeout(500);
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForSelector('#scale .cert .c-name', { timeout: 10000 });
+  expect(await page.$('#scale .c-date') === null && await page.inputValue('#date') === '', 'empty date is remembered');
+  expect(await page.$eval('#scale .cert', (e) => e.classList.contains('d-rangoli')) && await attr('#count', 'data-n') === '4', 'design and names remembered');
+
+  /* 15) RTL: an Urdu certificate must be visible inside the preview box (not pushed out by dir=rtl) */
   const inside = await page.evaluate((back) => {
     EDU.setLang('ur');
     const box = document.querySelector('#scale').getBoundingClientRect();

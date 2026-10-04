@@ -59,13 +59,14 @@
 
   /* ---------------- state (validated, so a broken store never crashes the app) ---------------- */
   function isHex(c) { return typeof c === 'string' && /^#[0-9a-f]{6}$/i.test(c); }
+  function marginOr4(v) { var m = Math.round(+v); return isNaN(m) ? 4 : EDU.clamp(m, 0, 10); }   // 0 is a valid margin
   function loadState() {
     var o = Object.assign({}, DEFAULT_OPT, store.get('opt', {}) || {});
     o.size = EDU.clamp(Math.round(+o.size || DEFAULT_OPT.size), 200, 1200);
     if (ECLS.indexOf(o.ecl) < 0) o.ecl = 'M';
     if (!isHex(o.fg)) o.fg = DEFAULT_OPT.fg;
     if (!isHex(o.bg)) o.bg = DEFAULT_OPT.bg;
-    o.margin = EDU.clamp(Math.round(+o.margin), 0, 10); if (isNaN(o.margin)) o.margin = 4;
+    o.margin = marginOr4(o.margin);
     o.parts = !!o.parts;
     var s = Object.assign({}, DEFAULT_SHEET, store.get('sheet', {}) || {});
     if ([2, 3, 4].indexOf(+s.cols) < 0) s.cols = 3; else s.cols = +s.cols;
@@ -76,7 +77,7 @@
     }).slice(0, MAX_SHEET).map(function (it, i) {
       return { id: String(it.id || ('i' + i + Date.now())), type: it.type, title: String(it.title || ''), payload: it.payload,
         summary: String(it.summary || ''), ecl: ECLS.indexOf(it.ecl) >= 0 ? it.ecl : 'M',
-        fg: isHex(it.fg) ? it.fg : '#000000', bg: isHex(it.bg) ? it.bg : '#ffffff', margin: EDU.clamp(Math.round(+it.margin || 4), 0, 10) };
+        fg: isHex(it.fg) ? it.fg : '#000000', bg: isHex(it.bg) ? it.bg : '#ffffff', margin: marginOr4(it.margin), secret: !!it.secret };
     });
     var fields = store.get('fields', {});
     if (!fields || typeof fields !== 'object' || Array.isArray(fields)) fields = {};
@@ -120,11 +121,29 @@
   EDU.init({ slug: SLUG, title: 'app_title' });
 
   /* ---------------- payload builders ---------------- */
-  function cleanPhone(s) { return String(s || '').replace(/[\s\-().\/]/g, ''); }
+  /* digits typed on an Indian-language or Urdu keyboard (Devanagari, Bengali, Tamil, Urdu ... digits) become 0-9 */
+  var DIGIT_ZEROS = [0x0660, 0x06F0, 0x0966, 0x09E6, 0x0A66, 0x0AE6, 0x0B66, 0x0BE6, 0x0C66, 0x0CE6, 0x0D66];
+  function asciiDigits(s) {
+    s = String(s == null ? '' : s);
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var k = s.charCodeAt(i), d = -1;
+      for (var j = 0; j < DIGIT_ZEROS.length; j++) if (k >= DIGIT_ZEROS[j] && k <= DIGIT_ZEROS[j] + 9) { d = k - DIGIT_ZEROS[j]; break; }
+      out += d >= 0 ? String(d) : s.charAt(i);
+    }
+    return out;
+  }
+  function cleanPhone(s) { return asciiDigits(s).replace(/[\s\-().\/]/g, ''); }
   function wifiEsc(s) { return String(s).replace(/([\\;,:"])/g, '\\$1'); }
   function vEsc(s) { return String(s).replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/;/g, '\\;').replace(/,/g, '\\,'); }
   var DEFAULT_SCHEME = 'https:' + '//';                // added when a teacher types "ncert.nic.in"
-  function withScheme(u) { return /^[a-z][a-z0-9+.\-]*:/i.test(u) ? u : DEFAULT_SCHEME + u; }
+  var LOCAL_SCHEME = 'http:' + '//';                   // school servers such as "192.168.4.1:8080" (Kolibri) rarely have https
+  function withScheme(u) {
+    var hostPort = /^[a-z0-9-]+(\.[a-z0-9-]+)*:\d+([\/?#]|$)/i.test(u);          // "localhost:8080/quiz" is a host, not a scheme
+    if (!hostPort && /^[a-z][a-z0-9+.\-]*:/i.test(u)) return u;
+    var local = (hostPort && !/:443([\/?#]|$)/.test(u)) || /^(localhost|\d{1,3}(\.\d{1,3}){3})([:\/?#]|$)/i.test(u);
+    return (local ? LOCAL_SCHEME : DEFAULT_SCHEME) + u;
+  }
   function urlLooksBad(u) {
     if (/\s/.test(u)) return true;
     try {
@@ -170,8 +189,9 @@
         break;
       }
       case 'wa': {
-        var raw = String(v('num')).trim(), d = raw.replace(/\D/g, ''), msg = String(v('msg')).trim();
-        if (!d) { r.missing = 'f_wa_num'; break; }
+        var raw = asciiDigits(v('num')).trim(), d = raw.replace(/\D/g, ''), msg = String(v('msg')).trim();
+        if (!d) { r.missing = 'f_wa_num'; if (raw) r.warns.push('warn_phone'); break; }
+        if (d.slice(0, 2) === '00') d = d.slice(2);        // 0091 98765 43210: 00 is the international prefix
         if (d.length === 11 && d.charAt(0) === '0') d = d.slice(1);
         if (d.length === 10 && raw.charAt(0) !== '+') d = '91' + d;
         if (!/^\d{10,15}$/.test(d)) r.warns.push('warn_phone');
@@ -242,12 +262,13 @@
     return out;
   }
   var RTL_RE = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
+  function capLineHeight(cap) { return RTL_RE.test(cap) ? 1.9 : 1.45; }   // Urdu Nastaliq letters reach far above and below the line
 
   /* draw a code (plus optional caption) into a canvas; o = {scale, margin, fg, bg, caption, parts} */
   function drawQR(canvas, q, o) {
     var n = q.size, m = o.margin, s = o.scale, W = (n + 2 * m) * s;
     var ctx = canvas.getContext('2d');
-    var cap = (o.caption || '').trim(), lines = [], fs = Math.max(14, Math.round(W * 0.06)), lh = Math.round(fs * 1.45);
+    var cap = (o.caption || '').trim(), lines = [], fs = Math.max(14, Math.round(W * 0.06)), lh = Math.round(fs * capLineHeight(cap));
     /* the caption may use the outer half of the quiet zone, but always leaves 2 empty squares under the code */
     var capTop = o.parts ? W + s : W - Math.max(0, m - 2) * s, H = W;
     if (cap) {
@@ -305,7 +326,7 @@
   function svgFile(q, o) {
     var n = q.size, m = o.margin, U = 10, W = (n + 2 * m) * U, H = W, cap = (o.caption || '').trim(), extra = '';
     if (cap) {
-      var c = document.createElement('canvas').getContext('2d'), fs = Math.round(W * 0.06), lh = Math.round(fs * 1.45);
+      var c = document.createElement('canvas').getContext('2d'), fs = Math.round(W * 0.06), lh = Math.round(fs * capLineHeight(cap));
       c.font = '700 ' + fs + 'px ' + fontStack();
       var lines = wrapText(c, cap, W - 2 * Math.max(fs * 0.6, U * 2), 3), top = m < 2 ? W + U * 2 : W - Math.max(0, m - 2) * U;
       H = Math.round(top + lines.length * lh + fs * 0.55);
@@ -416,7 +437,7 @@
     if (r.missing) msgs.push(['danger', t('err_required', { field: t(r.missing) })]);
     else {
       q = QRGen.encode(r.payload, o.ecl);
-      if (!q.ok) { msgs.push(['danger', t('err_too_long', { b: EDU.fmt(q.bytes), e: o.ecl, max: EDU.fmt(q.maxBytes) })]); q = null; }
+      if (!q.ok) { msgs.push(['danger', t(o.ecl === 'L' ? 'err_too_long_l' : 'err_too_long', { b: EDU.fmt(q.bytes), e: o.ecl, max: EDU.fmt(q.maxBytes) })]); q = null; }
     }
     r.warns.forEach(function (k) { msgs.push(['warning', t(k)]); });
     info.innerHTML = '';
@@ -438,6 +459,7 @@
     } else {
       wrap.classList.add('is-off');
       canvas.dataset.ok = '0';
+      $('#o-size-out').textContent = '—';
       canvas.setAttribute('aria-label', t('h_preview'));
     }
     status.innerHTML = '';
@@ -471,12 +493,18 @@
     document.body.classList.remove('pm-single', 'pm-sheet');
     document.body.classList.add(mode);
   }
+  /* The chosen layout stays on the page until the next print. Android Chrome returns from print() before it
+     renders the pages, so switching back on a timer (or on an early 'afterprint') could print the wrong layout.
+     Ctrl+P on its own always prints the single code. */
+  var printReq = null, printAt = 0;
   function doPrint(mode) {
+    printReq = mode; printAt = Date.now();
     printMode(mode);
     try { window.print(); } catch (e) { }
-    setTimeout(function () { printMode('pm-single'); }, 800);
   }
-  window.addEventListener('afterprint', function () { printMode('pm-single'); });
+  window.addEventListener('beforeprint', function () {
+    printMode(printReq && Date.now() - printAt < 60000 ? printReq : 'pm-single');
+  });
 
   /* big-screen view for the projector / smartboard */
   var bigOpen = false;
@@ -492,15 +520,24 @@
     EDU.fullscreen(bv);
     $('#bigClose').focus();
   }
+  var refocusBig = false;
   function closeBig() {
     if (!bigOpen) return;
     bigOpen = false;
     $('#bigView').hidden = true;
-    if (document.fullscreenElement || document.webkitFullscreenElement) EDU.fullscreen();
+    if (document.fullscreenElement || document.webkitFullscreenElement) { refocusBig = true; EDU.fullscreen(); }
     $('#btnBig').focus();
   }
-  document.addEventListener('keydown', function (e) { if (bigOpen && e.key === 'Escape') closeBig(); });
-  document.addEventListener('fullscreenchange', function () { if (bigOpen && !document.fullscreenElement) closeBig(); });
+  document.addEventListener('keydown', function (e) {
+    if (!bigOpen) return;
+    if (e.key === 'Escape') closeBig();
+    else if (e.key === 'Tab') { e.preventDefault(); $('#bigClose').focus(); }   // the close button is the only control in the view
+  });
+  document.addEventListener('fullscreenchange', function () {
+    if (document.fullscreenElement) return;
+    if (bigOpen) { refocusBig = true; closeBig(); }
+    if (refocusBig) { refocusBig = false; $('#btnBig').focus(); }   // leaving fullscreen drops the focus
+  });
 
   /* ---------------- poster sheet ---------------- */
   function newId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
@@ -519,7 +556,8 @@
     if (S.items.length + 4 > MAX_SHEET) { EDU.toast(t('sheet_full', { n: EDU.fmt(MAX_SHEET) })); return; }
     for (var i = 1; i <= 4; i++) {
       var clue = t('hunt_' + i);
-      S.items.push({ id: newId(), type: 'text', title: t('station_n', { n: EDU.fmt(i) }), payload: clue, summary: clue, ecl: 'M', fg: '#000000', bg: '#ffffff', margin: 4 });
+      /* secret: the clue is shown here for the teacher but never printed, or nobody would need to scan */
+      S.items.push({ id: newId(), type: 'text', title: t('station_n', { n: EDU.fmt(i) }), payload: clue, summary: clue, ecl: 'M', fg: '#000000', bg: '#ffffff', margin: 4, secret: true });
     }
     if (!S.heading.trim()) { S.heading = t('hunt_heading'); $('#sheetHeading').value = S.heading; }
     saveSoon(); renderSheet();
@@ -540,30 +578,38 @@
     grid.style.setProperty('--cols', S.cols);
     grid.classList.toggle('no-nums', !S.numbers);
     $('#sheetEmpty').hidden = S.items.length > 0;
-    $('#sheetCount').textContent = t('sheet_count', { n: EDU.fmt(S.items.length) });
+    $('#sheetCount').textContent = t(S.items.length === 1 ? 'sheet_count_one' : 'sheet_count', { n: EDU.fmt(S.items.length) });
     var h = $('#sheetH'); h.textContent = S.heading.trim(); h.classList.toggle('is-empty', !S.heading.trim());
     $('#btnSheetPrint').disabled = !S.items.length; $('#btnSheetClear').disabled = !S.items.length;
     EDU.$$('#colsSeg button').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.cols === S.cols)); });
     $('#sheetShowText').checked = S.showText; $('#sheetNumbers').checked = S.numbers;
+    $('#sheetSecret').hidden = !(S.showText && S.items.some(function (it) { return it.secret; }));
     S.items.forEach(function (it, i) {
+      var typeName = t('type_' + it.type);
       var title = el('input', { type: 'text', class: 'si-title-input no-print', dir: 'auto', 'aria-label': t('item_title') + ' ' + EDU.fmt(i + 1), maxlength: '60' });
       title.value = it.title;
       var printTitle = el('div', { class: 'si-title print-only', dir: 'auto', text: it.title });
-      title.addEventListener('input', function () { it.title = title.value; printTitle.textContent = title.value; saveSoon(); });
-      var qr = el('div', { class: 'si-qr', role: 'img', 'aria-label': it.title || t('type_' + it.type) });
+      var qr = el('div', { class: 'si-qr', role: 'img', 'aria-label': it.title || typeName });
+      title.addEventListener('input', function () {
+        it.title = title.value; printTitle.textContent = title.value; qr.setAttribute('aria-label', title.value || typeName); saveSoon();
+      });
       qr.innerHTML = itemSvg(it);
       var card = el('div', { class: 'sheet-item no-i18n', dataset: { id: it.id } },
         S.numbers ? el('span', { class: 'si-num', 'aria-hidden': 'true', text: EDU.fmt(i + 1) }) : null,
+        el('span', { class: 'si-type no-print', role: 'img', 'aria-label': typeName, title: typeName, text: TYPES[it.type].icon }),
         printTitle, title, qr,
-        S.showText ? el('div', { class: 'si-text', dir: 'auto', text: it.summary }) : null,
+        S.showText ? el('div', { class: 'si-text' + (it.secret ? ' si-secret no-print' : ''), dir: 'auto', text: (it.secret ? '🔒 ' : '') + it.summary }) : null,
         el('div', { class: 'si-actions no-print' },
-          el('span', { class: 'badge', i18n: 'type_' + it.type }),
           el('button', { type: 'button', class: 'btn btn-sm btn-ghost si-up', 'aria-label': t('move_up'), title: t('move_up'), disabled: i === 0, text: '↑',
             onclick: function () { move(i, -1); } }),
           el('button', { type: 'button', class: 'btn btn-sm btn-ghost si-down', 'aria-label': t('move_down'), title: t('move_down'), disabled: i === S.items.length - 1, text: '↓',
             onclick: function () { move(i, 1); } }),
           el('button', { type: 'button', class: 'btn btn-sm btn-ghost btn-danger si-del', 'aria-label': t('delete'), title: t('delete'), text: '✕',
-            onclick: function () { S.items.splice(i, 1); saveSoon(); renderSheet(); } })));
+            onclick: function () {
+              S.items.splice(i, 1); saveSoon(); renderSheet();
+              var dels = EDU.$$('#sheetGrid .si-del'), next = dels[Math.min(i, dels.length - 1)];
+              (next || $('#btnSheetSample')).focus();           // keep keyboard users in the sheet
+            } })));
       grid.appendChild(card);
     });
   }

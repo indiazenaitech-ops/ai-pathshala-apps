@@ -23,11 +23,32 @@ module.exports = async function ({ page, expect, log }) {
   const nonzero = s.Q.filter(q => q !== 0).length;
   expect(nonzero === 1, 'exactly one Q-value changed after one step, got ' + nonzero);
 
+  // 2b) animated episode: Stop keeps the unfinished episode, 1 step continues it, Fast speed finishes it
+  await page.click('#speed button[data-speed="slow"]');
+  await page.click('#btn-episode');
+  await page.waitForTimeout(700);
+  expect((await dbg()).busy === 'episode', 'the 1 episode button starts an animated episode');
+  await page.click('#btn-episode');                       // same button = Stop
+  s = await dbg();
+  expect(s.busy === null && s.run.active && s.run.steps >= 2, 'Stop pauses the episode without ending it, steps = ' + s.run.steps);
+  const stepsBefore = s.run.steps;
+  await page.click('#btn-step');
+  s = await dbg();
+  expect(s.run.active ? s.run.steps === stepsBefore + 1 : s.episodes === 1, '1 step continues the same episode');
+  await page.click('#speed button[data-speed="fast"]');
+  if ((await dbg()).episodes === 0) {
+    await page.click('#btn-episode');
+    await page.waitForFunction(() => window.QL_DEBUG().busy === null, null, { timeout: 30000 });
+  }
+  s = await dbg();
+  expect(s.episodes === 1 && s.hist.length === 1 && !s.run.active, 'the animated episode is counted once it ends, got ' + s.episodes);
+  expect(['good', 'bad'].includes(await page.getAttribute('#msg', 'data-code')), 'end-of-episode message shown');
+
   // 3) train 1000 episodes fast: counter, history and learning improve
   await page.click('#btn-fast1000');
   s = await dbg();
-  expect(s.episodes === 1000 && s.hist.length === 1000, '1000 episodes recorded, got ' + s.episodes);
-  expect((await page.textContent('#st-ep')).replace(/[^0-9]/g, '') === '1000', 'episode counter shows 1000');
+  expect(s.episodes === 1001 && s.hist.length === 1001, '1000 more episodes recorded, got ' + s.episodes);
+  expect((await page.textContent('#st-ep')).replace(/[^0-9]/g, '') === '1001', 'episode counter shows 1001');
   const mean = a => a.reduce((x, y) => x + y, 0) / a.length;
   const first = mean(s.hist.slice(0, 100)), last = mean(s.hist.slice(-100));
   expect(last > first, 'average reward improves: first 100 = ' + first.toFixed(2) + ', last 100 = ' + last.toFixed(2));
@@ -54,7 +75,7 @@ module.exports = async function ({ page, expect, log }) {
   await page.mouse.click(p.x, p.y);
   s = await dbg();
   expect(s.grid[5 * 7 + 3] === '#' && s.preset === 'custom', 'one tap turns the cell into a wall');
-  expect(s.episodes === 1000, 'editing the world keeps what was learned');
+  expect(s.episodes === 1001, 'editing the world keeps what was learned');
   await page.mouse.click(p.x, p.y);
   s = await dbg();
   expect(s.grid[5 * 7 + 3] === 'P', 'second tap turns it into a pit');
@@ -67,6 +88,16 @@ module.exports = async function ({ page, expect, log }) {
   expect(s.look === 43, 'look tool selects the tapped cell, got ' + s.look);
   const boxes = await page.$$eval('#compass .qbox:not(.empty)', b => b.length);
   expect(boxes === 4, 'brain panel shows 4 Q-values, got ' + boxes);
+  // the 4 Q-values are also written right under the board (the brain panel is far below on phones)
+  const fmtQ = (cellIdx) => page.evaluate(i => { const Q = window.QL_DEBUG().Q; return [0, 1, 2, 3].map(a => EDU.fmt((Math.round(Q[i * 4 + a] * 100) / 100) || 0, { minimumFractionDigits: 2, maximumFractionDigits: 2 })); }, cellIdx);
+  let msg = await page.textContent('#msg');
+  expect(await page.getAttribute('#msg', 'data-code') === 'look', 'look tool writes a look message');
+  expect((await fmtQ(43)).every(v => msg.includes(v)) && ['↑', '→', '↓', '←'].every(a => msg.includes(a)), 'look message lists the 4 Q-values of the cell: ' + msg);
+  await page.focus('#board');
+  await page.keyboard.press('ArrowRight');
+  s = await dbg();
+  msg = await page.textContent('#msg');
+  expect(s.look === 44 && (await fmtQ(44)).every(v => msg.includes(v)), 'arrow keys move the look cursor and update the values, look = ' + s.look);
 
   // 7) preset Cliff edge resets learning; reset button clears Q
   await page.click('#preset-cliff');
@@ -75,6 +106,11 @@ module.exports = async function ({ page, expect, log }) {
   await page.click('#btn-fast100');
   s = await dbg();
   expect(s.episodes === 100 && s.Q.some(q => q !== 0), '100 episodes trained on the cliff');
+  expect(s.epsNow < 0.2, 'ε decays during training (×0.99 per episode), got ' + s.epsNow);
+  await page.uncheck('#chk-decay');
+  s = await dbg();
+  expect(near(s.epsNow, s.eps) && (await page.textContent('#st-eps')).includes('0.30'), 'turning decay off puts exploring back to the slider value, got ' + s.epsNow);
+  await page.check('#chk-decay');
   await page.click('#btn-reset');
   s = await dbg();
   expect(s.episodes === 0 && s.Q.every(q => q === 0), 'reset learning clears the Q-table');
@@ -92,8 +128,27 @@ module.exports = async function ({ page, expect, log }) {
   await page.fill('#calc-input', String(ans + 5));
   await page.click('#calc-check');
   expect(await page.$('#calc-fb .bad') !== null, 'wrong hand calculation is flagged');
+  // a negative answer typed with the Unicode minus sign (phone keyboards) is accepted
+  for (let k = 0; k < 400 && (await dbg()).calc.ans > -0.05; k++) await page.click('#calc-new');
+  const neg = (await dbg()).calc.ans;
+  expect(neg < 0, 'found a hand calculation with a negative answer, got ' + neg);
+  await page.fill('#calc-input', '−' + Math.abs(neg).toFixed(2));
+  await page.click('#calc-check');
+  expect(await page.$('#calc-fb .ok') !== null, 'negative answer with − is accepted');
+  expect(await page.getAttribute('#calc-input', 'inputmode') !== 'decimal', 'answer box keeps a keyboard that has a minus key');
 
   // 10) quiz: answer first question correctly
   await page.click('#quiz-list button[data-q="0"][data-a="0"]');
   expect(await page.$('#quiz-list .opt.right') !== null, 'quiz marks the right answer');
+  expect(/^1\D+6$/.test((await page.textContent('#quiz-score')).trim()), 'quiz score shows 1 / 6');
+
+  // 11) everything survives a reload, even straight after training (the save is debounced)
+  await page.click('#preset-simple');
+  await page.click('#btn-fast100');
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForFunction(() => typeof window.QL_DEBUG === 'function');
+  s = await dbg();
+  expect(s.episodes === 100 && s.hist.length === 100 && s.Q.some(q => q !== 0), 'training is kept after an immediate reload, episodes = ' + s.episodes);
+  expect(near(s.alpha, 0.2) && s.tool === 'look' && s.preset === 'simple', 'settings, tool and world are kept after reload');
+  expect((await page.textContent('#st-ep')).replace(/[^0-9]/g, '') === '100', 'counter shows 100 after reload');
 };

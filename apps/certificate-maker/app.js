@@ -75,9 +75,11 @@
   function looseRank(p) {
     var r = exactRank(p); if (r) return r;
     var x = norm(p); if (!x) return 0;
-    var m = x.match(/^([123])(st|nd|rd)?(?=\s|$)/); if (m) return +m[1];
-    var R = rankWords(), best = 0;
-    Object.keys(R).forEach(function (w) { if (!best && w.length > 2 && x.indexOf(w + ' ') === 0) best = R[w]; });
+    var m = x.match(/^([123])(st|nd|rd)?(?=\s|$)/);
+    var R = rankWords(), best = m ? +m[1] : 0;
+    if (!best) Object.keys(R).forEach(function (w) { if (!best && w.length > 2 && x.indexOf(w + ' ') === 0) best = R[w]; });
+    /* "First runner-up" is 2nd place and "2nd runner up" is 3rd; a plain "runner-up" / "उपविजेता" is 2nd */
+    if (/runners?[\s-]*up|उपविजेता/.test(x)) return best ? (best < 3 ? best + 1 : 0) : 2;
     return best;
   }
   function parseNames(text) {
@@ -92,7 +94,11 @@
       } else {
         line = line.replace(/^\d{1,3}[.)]\s+/, '');   /* "1. Aarav" numbered lists */
         var m = line.match(/^(.*\S)\s*(?:\s[-–—]|\|)\s*(.*)$/);
-        if (m) { name = m[1]; pos = m[2]; } else name = line;
+        /* "Ravi-1st" / "Ravi- प्रथम": a dash without spaces also splits when the part after it is a rank (but not "Mary-Ann") */
+        var m2 = m ? null : line.match(/^(.*\S)\s*[-–—]\s*(\S.*)$/);
+        if (m) { name = m[1]; pos = m[2]; }
+        else if (m2 && looseRank(m2[2]) && !/^[ivx]+$/i.test(m2[2])) { name = m2[1]; pos = m2[2]; }
+        else name = line;
       }
       name = name.replace(/\s+/g, ' ').trim().slice(0, 120);
       pos = pos.replace(/\s+/g, ' ').trim().slice(0, 60);
@@ -166,22 +172,54 @@
   }
 
   /* shrink long school names, titles, names and messages so they always fit (certs must be in the layout) */
+  /* School names and signatures may use 2 lines: a long "Kendriya Vidyalaya No. 2, Air Force Station …" then stays readable
+     instead of shrinking to a tiny single line. Results are cached per text + design + language, because in "Print all"
+     the school, title and signatures are the same on every certificate. */
+  var FIT = '.c-school, .c-title, .c-name, .c-sig-name, .c-sig-role', WRAP2 = '.c-school, .c-sig-name, .c-sig-role';
+  function fitKey(e, c) { return e.className + '\u0001' + c.className + '\u0001' + c.lang + '\u0001' + e.textContent; }
+  function lineH(e, fs) { var lh = parseFloat(getComputedStyle(e).lineHeight); return lh > 0 ? lh : fs * 1.4; }
   function fitCerts(certs) {
-    var items = [];
+    var items = [], cache = {};
     certs.forEach(function (c) {
-      $$('.c-school, .c-title, .c-name, .c-msg, .c-sig-name, .c-sig-role', c).forEach(function (e) { e.style.fontSize = ''; });
-      $$('.c-school, .c-title, .c-name, .c-sig-name, .c-sig-role', c).forEach(function (e) { items.push(e); });
+      $$('.c-school, .c-title, .c-name, .c-msg, .c-sig-name, .c-sig-role', c).forEach(function (e) { e.style.fontSize = ''; e.classList.remove('c-wrap'); });
+      $$(FIT, c).forEach(function (e) { items.push({ e: e, key: fitKey(e, c) }); });
     });
-    var meas = items.map(function (e) { return { e: e, sw: e.scrollWidth, cw: e.clientWidth, fs: parseFloat(getComputedStyle(e).fontSize) || 20 }; });
-    meas.forEach(function (m) { if (m.cw > 0 && m.sw > m.cw + 1) { m.fs = Math.max(11, Math.floor(m.fs * m.cw / m.sw * 0.97)); m.e.style.fontSize = m.fs + 'px'; } });
+    /* one batched measuring pass, then one writing pass */
+    var meas = items.map(function (it) {
+      var e = it.e;
+      return { e: e, key: it.key, sw: e.scrollWidth, cw: e.clientWidth, fs: parseFloat(getComputedStyle(e).fontSize) || 20, wrap: e.matches(WRAP2), two: false };
+    });
     meas.forEach(function (m) {
-      var guard = 0;
-      while (m.e.scrollWidth > m.e.clientWidth + 1 && m.fs > 12 && guard++ < 10) { m.fs -= 1; m.e.style.fontSize = m.fs + 'px'; }
+      if (!(m.cw > 0 && m.sw > m.cw + 1)) return;
+      var k = m.cw / m.sw;
+      if (m.wrap && k < 0.8) { m.two = true; m.e.classList.add('c-wrap'); }
+      else { m.fs = Math.max(11, Math.floor(m.fs * k * 0.97)); m.e.style.fontSize = m.fs + 'px'; }
+    });
+    meas.forEach(function (m) {
+      var hit = cache[m.key];
+      if (hit) { m.e.style.fontSize = hit.fs; m.e.classList.toggle('c-wrap', hit.two); return; }
+      var e = m.e, guard = 0;
+      var over = function () { return e.scrollWidth > e.clientWidth + 1 || (m.two && e.scrollHeight > 2 * lineH(e, m.fs) + 2); };
+      while (over() && m.fs > 11 && guard++ < 50) { m.fs -= 1; e.style.fontSize = m.fs + 'px'; }
+      cache[m.key] = { fs: e.style.fontSize, two: m.two };
     });
     certs.forEach(function (c) {
       var m = c.querySelector('.c-msg'); if (!m) return;
+      var key = fitKey(m, c), hit = cache[key];
+      if (hit) { m.style.fontSize = hit.fs; return; }
       var fs = parseFloat(getComputedStyle(m).fontSize) || 21, guard = 0;
       while (m.scrollHeight > m.clientHeight + 1 && fs > 12 && guard++ < 24) { fs -= 1; m.style.fontSize = fs + 'px'; }
+      cache[key] = { fs: m.style.fontSize };
+    });
+    /* when one signature uses 2 lines, keep both signature lines at the same height (read all, then write all) */
+    var sigs = certs.map(function (c) {
+      var sg = $$('.c-sig', c);
+      sg.forEach(function (e) { e.style.marginBottom = ''; });
+      return sg.length === 2 && !sg[0].classList.contains('empty') && !sg[1].classList.contains('empty') ? sg : null;
+    });
+    sigs.map(function (sg) { return sg ? [sg[0].offsetHeight, sg[1].offsetHeight] : null; }).forEach(function (h, i) {
+      if (!h || Math.abs(h[0] - h[1]) < 2) return;
+      sigs[i][h[0] < h[1] ? 0 : 1].style.marginBottom = Math.abs(h[0] - h[1]) + 'px';
     });
   }
 
@@ -366,7 +404,9 @@
   });
 
   /* ---------------- printing: one certificate per A4 landscape page ---------------- */
-  var printReady = false;
+  /* time when a Print button built the pages. Some browsers (iOS Safari, Android) return from print() at once and fire
+     beforeprint later, so the pages are not rebuilt as "all" during that window (that turned "Print this one" into all). */
+  var printBy = 0;
   function preparePrint(which) {
     var root = $('#print-root');
     root.innerHTML = '';
@@ -376,21 +416,21 @@
     var certs = arr.map(function (p) { var x = buildCert(c, p); frag.appendChild(x); return x; });
     root.appendChild(frag);
     fitCerts(certs);
-    printReady = true;
   }
   function doPrint(which) {
     if (!people().length) { EDU.toast(t('no_names')); return; }
     preparePrint(which);
+    printBy = Date.now();
     var imgs = $$('#print-root img');
     Promise.all(imgs.map(function (im) { return im.decode ? im.decode().catch(function () { }) : null; })).then(function () {
+      printBy = Date.now();
       try { window.print(); } catch (e) { }
-      printReady = false;
     });
   }
   $('#print-all').addEventListener('click', function () { doPrint('all'); });
   $('#print-one').addEventListener('click', function () { doPrint('one'); });
-  window.addEventListener('beforeprint', function () { if (!printReady) preparePrint('all'); });
-  window.addEventListener('afterprint', function () { printReady = false; });
+  window.addEventListener('beforeprint', function () { if (Date.now() - printBy > 15000) preparePrint('all'); });
+  window.addEventListener('afterprint', function () { printBy = 0; });
 
   /* ---------------- PNG: the certificate HTML is drawn through an SVG <foreignObject> onto a canvas ---------------- */
   var pngBusy = false;
@@ -407,6 +447,9 @@
     var person = list[idx], box = $('#measure'), S = 2;
     box.innerHTML = '';
     var cert = buildCert(ctx(), person);
+    /* the SVG image cannot use the page's web fonts (e.g. Noto Sans Devanagari) and falls back to system fonts, which can be
+       wider: measure with exactly that fallback so long names are not cut off at the edge of the PNG */
+    cert.style.setProperty('--font-script', '"Nirmala UI"');
     box.appendChild(cert);
     fitCerts([cert]);
     function fail() { box.innerHTML = ''; pngBusy = false; EDU.toast(t('png_fail'), 6000); }

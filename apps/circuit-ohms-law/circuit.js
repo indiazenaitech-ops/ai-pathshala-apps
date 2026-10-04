@@ -102,7 +102,13 @@
     }
     return w.pts[0];
   }
-  function speedFor(I) { if (I === Infinity) return 330; return Math.min(300, 120 * Math.abs(I || 0)); }
+  /* dot speed ∝ current (120 px/s per ampere). Above 2.5 A the whole circuit is scaled down together,
+     so the dots in different branches still compare correctly instead of all hitting the same cap. */
+  function speedFor(I, Imax) {
+    if (I === Infinity) return 330;
+    var k = Imax > 2.5 ? 300 / Imax : 120;
+    return Math.min(300, k * Math.abs(I || 0));
+  }
 
   /* ---------------- svg helpers ---------------- */
   function S(tag, attrs, parent) {
@@ -154,22 +160,25 @@
     if (res.shorted || st.short) wires.push({ pts: [[LX, SY], [RX, SY]], cur: 'S', short: true });
     wires.forEach(function (w) {
       prep(w);
-      S('polyline', { points: w.pts.map(function (p) { return p.join(','); }).join(' '), class: 'wire' + (w.short ? ' short' : '') }, gW);
+      w.el = S('polyline', { points: w.pts.map(function (p) { return p.join(','); }).join(' '), class: 'wire' + (w.short ? ' short' : '') }, gW);
     });
     L.joints.forEach(function (j) { S('circle', { cx: j[0], cy: j[1], r: 6, class: 'joint' }, gC); });
     if (st.short) {
       S('circle', { cx: LX, cy: SY, r: 6, class: 'joint' }, gC); S('circle', { cx: RX, cy: SY, r: 6, class: 'joint' }, gC);
-      T(gC, (LX + RX) / 2, SY - 10, '⚡ ' + lab.shortTag, 'lbl warn');
+      T(gC, (LX + RX) / 2, SY - 10, '⚡ ' + lab.shortTag, 'lbl warn').setAttribute('direction', document.documentElement.dir === 'rtl' ? 'rtl' : 'ltr');
     }
 
     /* current through each wire */
     wires.forEach(function (w) {
-      var I;
-      if (w.cur === 'T') I = res.Itop;
-      else if (w.cur === 'S') I = res.shorted ? Infinity : 0;
-      else if (w.cur === 'L') I = res.I;
-      else I = res.Ik[w.cur] || 0;
-      w.speed = reduceMotion ? 0 : speedFor(I);
+      if (w.cur === 'T') w.I = res.Itop;
+      else if (w.cur === 'S') w.I = res.shorted ? Infinity : 0;
+      else if (w.cur === 'L') w.I = res.I;
+      else w.I = res.Ik[w.cur] || 0;
+    });
+    var Imax = Math.max.apply(null, wires.map(function (w) { return isFinite(w.I) ? Math.abs(w.I) : 0; }));
+    wires.forEach(function (w) {
+      w.speed = reduceMotion ? 0 : speedFor(w.I, Imax);
+      w.el.setAttribute('data-cur', String(w.cur)); w.el.setAttribute('data-speed', w.speed.toFixed(2));
     });
     var key = res.preset + (st.short ? 's' : '');
     if (key !== this.key) { this.off = wires.map(function () { return 0; }); this.key = key; }

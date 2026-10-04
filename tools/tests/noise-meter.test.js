@@ -2,7 +2,7 @@
    verify.js starts Chrome with a fake microphone: silence with a short loud beep about every 0.5 s,
    so the smoothed level settles roughly between 25 and 75 on the 0–100 scale.
    ctx = { page, lang, expect(cond, msg), t(key, vars) -> string in ctx.lang, log } */
-module.exports = async function ({ page, expect, t, log }) {
+module.exports = async function ({ page, lang, expect, t, log }) {
   const txt = async (sel) => ((await page.textContent(sel)) || '').trim();
   const numOf = async (sel) => parseFloat((await txt(sel)).replace(/[^\d.]/g, '')) || 0;
   const attr = (sel, a) => page.getAttribute(sel, a);
@@ -38,6 +38,16 @@ module.exports = async function ({ page, expect, t, log }) {
   const needle = await attr('#nm-needle', 'transform');
   expect(needle && !/rotate\(-90/.test(needle), 'needle moved away from 0: ' + needle);
 
+  /* ---------- "Set quiet level": either a new sensitivity, or "too noisy" and the old one is kept ---------- */
+  await setRange('#nm-sens', 7);
+  await page.click('#nm-calib');
+  await page.waitForFunction((run) => !document.querySelector('#nm-calib-msg').textContent.startsWith(run), t('calib_run', { n: 'X' }).split('X')[0], { timeout: 8000 });
+  const calibTxt = await txt('#nm-calib-msg'), sensAfter = await page.inputValue('#nm-sens');
+  if (calibTxt === t('calib_noisy')) expect(sensAfter === '7', 'a noisy calibration keeps the sensitivity, got ' + sensAfter);
+  else expect(calibTxt === t('calib_done', { n: sensAfter }), 'calibration reports the new sensitivity: ' + calibTxt + ' / ' + sensAfter);
+  log('calibration', calibTxt, sensAfter);
+  await setRange('#nm-sens', 10);
+
   /* ---------- too loud for longer than the delay → one alert ---------- */
   await setRange('#nm-delay', 1);
   expect(await txt('#nm-delay-val') === t('sec_n', { n: 1 }), 'delay label shows 1 second');
@@ -61,6 +71,7 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(!(await page.isHidden('#nm-chstrip')), 'challenge strip appears on the stage');
   expect(await txt('#nm-ch-btn') === t('ch_stop'), 'button now offers Stop challenge');
   expect(await txt('#nm-stars-txt') === t('ch_stars', { n: 0, goal: 2 }), 'shows 0 of 2 stars');
+  expect(await page.textContent('#nm-ch-print') === t('ch_stars', { n: 0, goal: 2 }), 'printed report carries the challenge progress');
   expect(await page.$$eval('#nm-stars span', (s) => s.length) === 2, 'two star slots for a 2-minute goal');
   await page.waitForTimeout(2600);
   const sec1 = parseFloat(await attr('#nm-chstrip', 'data-sec'));
@@ -85,6 +96,17 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(Math.abs(sum - 100) < 0.6 && z[2] > 0, 'quiet/getting loud/too loud shares add up to 100%: ' + z.join(' / '));
   expect(await numOf('#nm-s-peak') >= await numOf('#nm-s-avg'), 'loudest ≥ average');
 
+  /* ---------- printing in dark mode: the chart line must be dark on white paper ---------- */
+  const darkPx = () => page.$eval('#nm-chart', (c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 200 && d[i] + d[i + 1] + d[i + 2] < 150) n++; return n; });
+  await page.evaluate(() => EDU.setTheme('dark'));
+  await page.waitForTimeout(700);
+  const onScreen = await darkPx();
+  await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+  const onPaper = await darkPx();
+  await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+  await page.evaluate(() => EDU.setTheme('light'));
+  expect(onPaper > 50 && onPaper > onScreen * 3, 'print redraws the dark-theme chart with a dark line: ' + onScreen + ' → ' + onPaper);
+
   /* ---------- stop: challenge pauses ---------- */
   await page.click('#nm-mic');
   expect(await attr('#nm-stage', 'data-state') === 'idle', 'mic stopped');
@@ -98,6 +120,21 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(await txt('#nm-count') === '2', 'times-too-loud count kept after reload');
   expect(await page.inputValue('#nm-goal') === '2', 'goal kept after reload');
 
+  /* ---------- Urdu (Nastaliq): the big emoji must not swallow clicks on the view buttons ---------- */
+  await page.evaluate(() => EDU.setLang('ur'));
+  await page.waitForTimeout(600);
+  const urOk = await page.evaluate(() => { const U = window.APP_STRINGS.ur; const q = (s) => document.querySelector(s).textContent.trim();
+    return [q('#nm-ch-status') === U.ch_paused, q('#nm-mic-txt') === U.mic_start, q('#nm-act-val') === U.act_custom, q('#nm-delay-val') === U.sec_n.replace('{n}', '1'), document.documentElement.dir === 'rtl'].join(); });
+  expect(urOk === 'true,true,true,true,true', 'dynamic texts re-render in Urdu (RTL): ' + urOk);
+  const hit = await page.$eval('#nm-view button[data-view="balls"]', (b) => { b.scrollIntoView({ block: 'center' }); const r = b.getBoundingClientRect(); const h = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2); return b.contains(h) ? 'ok' : (h && (h.id || h.className)); });
+  expect(hit === 'ok', 'Bouncing balls button is clickable in Urdu, covered by: ' + hit);
+  await page.click('#nm-view button[data-view="balls"]');
+  expect(await attr('#nm-view button[data-view="balls"]', 'aria-pressed') === 'true', 'Bouncing balls view opens in Urdu');
+  await page.click('#nm-view button[data-view="meter"]');
+  await page.evaluate((L) => EDU.setLang(L), lang);
+  await page.waitForTimeout(300);
+  expect(await txt('#nm-ch-status') === t('ch_paused'), 'language switch re-renders the challenge status');
+
   /* ---------- balls view ---------- */
   await page.click('#nm-view button[data-view="balls"]');
   expect(!(await page.isHidden('#nm-balls-view')) && await page.isHidden('#nm-meter-view'), 'bouncing balls view replaces the gauge');
@@ -110,6 +147,23 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(await txt('#nm-count') === '0', 'new session resets the count');
   expect(await txt('#nm-s-alerts') === '0', 'new session resets session stats');
   expect(await page.isHidden('#nm-chstrip'), 'new session clears the challenge');
+
+  /* ---------- a damaged save is repaired, not shown ---------- */
+  await page.evaluate(() => {
+    localStorage.setItem('edu.noise-meter.session', JSON.stringify({ t: 100, g: 1e9, y: 0, r: 0, sum: 1e12, peak: 50, alerts: 3, start: 9e15, ch: { running: true, goal: 2, stars: 99, sec: 5 } }));
+    localStorage.setItem('edu.noise-meter.jar', JSON.stringify(1e15));
+  });
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForTimeout(600);
+  expect(!/Invalid/.test(await txt('#nm-s-when')), 'session date is valid: ' + await txt('#nm-s-when'));
+  const zb = await page.$eval('#nm-zonebar', (e) => +e.dataset.g + +e.dataset.y + +e.dataset.r);
+  expect(Math.abs(zb - 100) < 0.6, 'zone shares still add up to 100%: ' + zb);
+  expect(await numOf('#nm-s-avg') <= 100, 'average stays on the 0–100 scale');
+  expect(await txt('#nm-ch-btn') === t('ch_start') && await txt('#nm-ch-status') === t('ch_done', { n: 2 }), 'a challenge saved with all its stars counts as complete');
+  expect(await numOf('#nm-jar') <= 99999, 'star jar is capped');
+  await page.click('#nm-jar-empty');                 // confirm() is auto-accepted
+  expect(await txt('#nm-jar') === '0', 'Empty the jar resets the class star jar');
+  await page.click('#nm-new');
 
   /* leave it listening with group-work settings for the screenshot */
   await page.click('#nm-presets button[data-th="65"]');

@@ -47,7 +47,14 @@
     .tc-speed input { flex: 1 1 auto; min-height: 40px; }
     .tc-speed .tiny { font-weight: 400; color: var(--muted); }
     .tc-wrap { width: min(100%, calc(100vh - 250px)); min-width: min(100%, 260px); margin-inline: auto; }
-    .tc-wrap canvas { cursor: default; }
+    .tc-wrap canvas { cursor: default; direction: ltr; }
+    /* laptop / smartboard: the sticky drawing panel (buttons, canvas, status, tools) must fit the screen height */
+    @media (min-width: 1000px) {
+      .tc-wrap { width: min(100%, calc(100vh - 300px)); }
+    }
+    @media (min-width: 1000px) and (max-width: 1239px) {
+      .tc-wrap { width: min(100%, calc(100vh - 350px)); }   /* the run bar wraps onto two lines here */
+    }
     .tc-under { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; justify-content: space-between; margin-top: 8px; }
     .tc-readout { margin: 0; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--muted); }
     .tc-status { margin: 8px 0 0; padding: 8px 12px; border-radius: var(--radius-sm); background: var(--surface-2); font-weight: 600; min-height: 2.6em; }
@@ -57,7 +64,7 @@
     .tc-tools .check { min-height: 40px; margin-inline-end: 6px; }
     .tc-stage:fullscreen { background: var(--bg); padding: 14px 18px; overflow: auto; border-radius: 0; }
     .tc-stage:-webkit-full-screen { background: var(--bg); padding: 14px 18px; overflow: auto; }
-    .tc-stage:fullscreen .tc-wrap { width: min(100%, calc(100vh - 190px)); }
+    .tc-stage:fullscreen .tc-wrap { width: min(100%, calc(100vh - 250px)); }
     .tc-stage:fullscreen .tc-status, .tc-stage:fullscreen .tc-readout { font-size: 1.2rem; }
 
     /* ---------- program editor ---------- */
@@ -106,7 +113,7 @@
     .tc-iter { font-variant-numeric: tabular-nums; }
     .tc-in { min-height: 36px; }
     .tc-in[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
-    .tc-rep > .tc-body { margin-inline-start: 16px; padding: 6px 0 6px 8px; padding-inline: 8px 0; border-inline-start: 4px solid var(--c2); margin-block: 4px; border-radius: 0 0 0 6px; }
+    .tc-rep > .tc-body { margin-inline-start: 16px; padding: 6px 0 6px 8px; padding-inline: 8px 0; border-inline-start: 4px solid var(--c2); margin-block: 4px; border-radius: 0; border-end-start-radius: 6px; }
     .tc-rep.tc-target > .tc-body { background: var(--accent-soft); border-inline-start-color: var(--accent); }
     .tc-end { min-height: 30px; padding-block: 2px; font-size: .85rem; color: var(--muted); }
     .tc-end .tc-handle { visibility: hidden; }
@@ -138,6 +145,7 @@
     .tc-cmds { margin-top: 12px; }
     .tc-cmds summary { cursor: pointer; font-weight: 700; }
     .tc-cmds code { direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+    .tc-cmds code.tc-wrapcode { white-space: normal; overflow-wrap: anywhere; }
 
     /* ---------- saved / angles / help ---------- */
     .tc-saveform { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; }

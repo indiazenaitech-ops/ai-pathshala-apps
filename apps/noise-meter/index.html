@@ -41,6 +41,10 @@
 
     .nm-face-row { display: flex; flex-direction: column; align-items: center; gap: 2px; }
     .nm-face { font-size: clamp(3.6rem, 13vw, 6rem); line-height: 1.1; transition: transform .2s; }
+    /* The big emoji is decoration: it must never catch clicks. In Urdu the Nastaliq font's very tall line box
+       made the emoji cover the "Bouncing balls" button, so emoji use an emoji font there. */
+    .nm-face, .nm-stars { pointer-events: none; }
+    :root[lang="ur"] .nm-face, :root[lang="ur"] .nm-stars { font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Noto Sans", sans-serif; }
     .nm-stage.nm-alert .nm-face { animation: nm-wobble .5s ease-in-out infinite alternate; }
     @keyframes nm-wobble { from { transform: rotate(-8deg) scale(1.05); } to { transform: rotate(8deg) scale(1.1); } }
     .nm-face-label { font-size: clamp(1.15rem, 3.2vw, 1.55rem); font-weight: 800; min-height: 1.6em; line-height: 1.3; }
@@ -79,6 +83,7 @@
     .nm-banner { font-weight: 700; text-align: start; }
     .nm-actions { display: flex; justify-content: center; }
     .nm-mic { min-width: min(100%, 300px); font-size: 1.2rem; min-height: 56px; }
+    #nm-fs, #nm-jar-empty { min-height: 40px; }          /* touch targets: at least 40 px */
     .nm-msg { text-align: start; }
     .nm-hint { margin: 0; }
     .nm-privacy { margin: 0; padding: 8px 12px; border-radius: var(--radius-sm); background: var(--surface-2); color: var(--muted); text-align: start; }
@@ -90,7 +95,7 @@
     .nm-stage.nm-big { border-radius: 0; border-width: 0; padding: 2vh clamp(16px, 4vw, 56px); overflow: auto; justify-content: safe center; gap: 1.2vh; }
     .nm-stage.nm-pseudo { position: fixed; inset: 0; z-index: 300; }
     body.nm-noscroll { overflow: hidden; }
-    .nm-big .nm-face { font-size: clamp(4rem, 13vh, 10rem); }
+    .nm-big .nm-face { font-size: clamp(3.4rem, 11vh, 10rem); }
     .nm-big .nm-face-label { font-size: clamp(1.4rem, 4.2vh, 3rem); }
     .nm-big .nm-meter-view svg { max-width: none; width: 100%; height: auto; max-height: 38vh; }
     .nm-big .nm-num { font-size: clamp(2.8rem, 10vh, 7.5rem); }
@@ -115,6 +120,18 @@
       .nm-big .nm-meter-view svg { max-height: 54vh; }
       .nm-big .nm-num { font-size: clamp(3rem, 13vh, 9rem); }
       .nm-big .nm-balls-view canvas { height: 62vh; }
+    }
+    /* short landscape screens (phone on its side): keep the Stop button on screen */
+    @media (orientation: landscape) and (max-height: 520px) {
+      .nm-stage.nm-big { padding-block: 1.5vh; row-gap: 1vh; }
+      .nm-big .nm-face { font-size: clamp(2.6rem, 15vh, 14rem); line-height: 1; }
+      .nm-big .nm-face-label { font-size: clamp(1.05rem, 4.6vh, 3.6rem); min-height: 0; }
+      .nm-big .nm-pill { font-size: .95rem; padding-block: 4px; }
+      .nm-big .nm-stars { font-size: 1.2rem; }
+      .nm-big .nm-mic { min-height: 40px; padding-block: 6px; }
+      .nm-big .nm-meter-view svg { max-height: 46vh; }
+      .nm-big .nm-num { font-size: clamp(2.2rem, 11vh, 9rem); }
+      .nm-big .nm-balls-view canvas { height: 56vh; }
     }
 
     /* ---------- settings ---------- */
@@ -163,7 +180,10 @@
     /* ---------- print: a one-page session report ---------- */
     .nm-print-head { margin-bottom: 12px; }
     @media print {
-      .nm-stage, .nm-settings, .nm-help, .edu-intro, .nm-chrow, #nm-jar-empty { display: none !important; }
+      .nm-stage, .nm-settings, .nm-help, .edu-intro, .nm-chrow, #nm-jar-empty, #nm-ch-status { display: none !important; }
+      /* browsers drop background colours when printing unless told otherwise: keep the zone bar and its legend */
+      .nm-zonebar, .nm-zonebar span, .nm-key::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #nm-ch-print { font-weight: 700; }
       .nm-layout { display: block; margin: 0; }
       .nm-lower { display: block; }
       .nm-lower > .card { margin-bottom: 12px; }
@@ -288,6 +308,7 @@
           <button type="button" class="btn btn-accent" id="nm-ch-btn"></button>
         </div>
         <p class="small mb0" id="nm-ch-status" aria-live="polite"></p>
+        <p class="print-only mb0" id="nm-ch-print"></p>
         <div class="panel nm-jar">
           <div>
             <div class="small muted" data-i18n="jar"></div>

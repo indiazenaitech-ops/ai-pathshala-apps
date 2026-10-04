@@ -121,4 +121,80 @@ module.exports = async function ({ page, expect, log }) {
   await page.click('#tab-expr');
   await wait(200);
   expect((await page.inputValue('#expr-in')) === "A·B + C'", 'expression should persist after reload');
+
+  /* 7) parser extras: textbook "Y = …" prefix is accepted; deep brackets are not reported as "too long" */
+  const yCol = async () => (await page.$$eval('#x-tt tbody tr', (rows) => rows.map((r) => { const c = r.querySelectorAll('td.o'); return c[c.length - 1].textContent.trim(); }))).join('');
+  await page.fill('#expr-in', 'Y = A·B + C');
+  await wait(400);
+  expect(!(await page.isVisible('#x-msg')), '"Y = A·B + C" should be accepted (output name before =)');
+  expect((await yCol()) === '01010111', 'Y = A·B + C should give 01010111, got ' + (await yCol()));
+  await page.fill('#expr-in', '('.repeat(70) + 'A' + ')'.repeat(70));
+  await wait(400);
+  expect(!(await page.isVisible('#x-msg')), '70 nested brackets (141 characters) must not give an error');
+  expect((await yCol()) === '01', 'deeply bracketed A should give 01');
+
+  /* 8) circuit pills keep keyboard focus after Enter (the diagram is redrawn) */
+  await page.fill('#expr-in', "A·B + A'");
+  await wait(400);
+  const before = await page.getAttribute('#x-toggles button[data-v="A"]', 'aria-pressed');
+  await page.focus('#x-circ [data-fk="xp-2"]');
+  await page.keyboard.press('Enter');
+  await wait(120);
+  expect((await page.evaluate(() => document.activeElement && document.activeElement.getAttribute('data-fk'))) === 'xp-2', 'focus should stay on the same circuit input after Enter');
+  expect((await page.getAttribute('#x-toggles button[data-v="A"]', 'aria-pressed')) !== before, 'Enter on the A pill should flip A');
+
+  /* 9) symbol keypad inserts at the end without focusing the text box (no phone keyboard pop-up) */
+  await page.fill('#expr-in', 'A');
+  await wait(300);
+  await page.evaluate(() => document.activeElement && document.activeElement.blur());
+  await page.click('#x-keys [data-ins=" + "]');
+  await page.click('#x-keys [data-ins="B"]');
+  await page.click('#x-keys [data-ins="\'"]');
+  expect((await page.inputValue('#expr-in')) === "A + B'", 'keypad should build "A + B\'", got ' + (await page.inputValue('#expr-in')));
+  expect((await page.evaluate(() => document.activeElement.id)) !== 'expr-in', 'keypad must not move focus into the text box');
+  expect((await yCol()) === '1011', "A + B' should give 1011");
+
+  /* 10) letters that are not inputs of the visible tab are not swallowed (D on a 2-input gate) */
+  await page.click('#tab-gates');
+  await page.evaluate(() => { window.__lgdp = null; document.addEventListener('keydown', (e) => { window.__lgdp = e.defaultPrevented; }); });
+  const r0 = await page.textContent('#gx-read');
+  await page.keyboard.press('d');
+  expect((await page.evaluate(() => window.__lgdp)) === false, 'D on the gate explorer should not be swallowed');
+  expect((await page.textContent('#gx-read')) === r0, 'D should not change the gate inputs');
+  await page.keyboard.press('a');
+  expect((await page.evaluate(() => window.__lgdp)) === true, 'A should flip input A on the gate explorer');
+  expect((await page.textContent('#gx-read')) !== r0, 'A should change the gate reading');
+
+  /* 11) shared link: opens the expression lab, then the #x= part is removed so a reload keeps later edits */
+  const packed = await page.evaluate(() => EDU.pack({ e: 'A ⊕ B + C' }));
+  const base = page.url().split('#')[0];
+  await page.goto(base + '#x=' + packed);   /* same page, only the hash changes → hashchange */
+  await wait(300);
+  expect((await page.getAttribute('#tab-expr', 'aria-selected')) === 'true', 'a shared link should open the expression lab');
+  expect((await page.inputValue('#expr-in')) === 'A ⊕ B + C', 'a shared link should load its expression');
+  expect(!page.url().includes('#x='), 'the shared #x= part should be removed from the address');
+  await page.fill('#expr-in', 'A·C');
+  await wait(400);
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForSelector('#expr-in');
+  expect((await page.inputValue('#expr-in')) === 'A·C', 'after a reload the student’s own edit must stay, got ' + (await page.inputValue('#expr-in')));
+
+  /* 12) printable worksheet: 8 questions + an answer key that matches the questions */
+  await page.click('#tab-practice');
+  await page.click('#level-seg button[data-l="easy"]');
+  await page.evaluate(() => { window.print = () => { window.__lgPrinted = (window.__lgPrinted || 0) + 1; }; });
+  await page.click('#ws-print');
+  await wait(200);
+  expect((await page.evaluate(() => window.__lgPrinted)) === 1, 'Print worksheet should call print once');
+  const ws = await page.evaluate(() => ({
+    q: document.querySelectorAll('#worksheet .ws-q').length,
+    keys: [...document.querySelectorAll('#worksheet .ws-keylist > div')].map((d) => d.textContent.replace(/\s+/g, ' ').trim()),
+    first: (() => { const q = document.querySelector('#worksheet .ws-q'); return { title: q.querySelector('.ws-qt').textContent, rows: [...q.querySelectorAll('tbody tr')].map((r) => [...r.querySelectorAll('td:not(.blank)')].map((c) => +c.textContent)) }; })()
+  }));
+  expect(ws.q === 8 && ws.keys.length === 8, 'worksheet should have 8 questions and 8 answers, got ' + ws.q + '/' + ws.keys.length);
+  const g1 = (ws.first.title.match(/\b(XNOR|NAND|NOR|XOR|AND|OR|NOT)\b/) || [])[1];
+  expect(RULE[g1], 'first easy worksheet question should be a gate, got ' + ws.first.title);
+  const want1 = ws.first.rows.map((r) => RULE[g1](r)).join(' ');
+  expect(ws.keys[0].endsWith('Y = ' + want1), 'answer key 1 should be Y = ' + want1 + ', got ' + ws.keys[0]);
+  await page.evaluate(() => document.body.classList.remove('print-ws'));
 };

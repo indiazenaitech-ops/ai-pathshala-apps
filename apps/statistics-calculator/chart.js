@@ -161,7 +161,6 @@
         P.forEach(function (p) { ctx.beginPath(); ctx.arc(X(p[0]), Y(p[1]), 4.5, 0, Math.PI * 2); ctx.fill(); });
       }
     }
-    if (kind === 'poly') line(poly, C.c2, true);
     if (kind === 'ogive') {
       line(less, C.c1, true);
       line(more, C.c2, true);
@@ -195,13 +194,16 @@
     /* ---------- axes ---------- */
     ctx.strokeStyle = C.text; ctx.lineWidth = 1.6;
     ctx.beginPath(); ctx.moveTo(left, top - 4); ctx.lineTo(left, Y(0)); ctx.lineTo(left + pw, Y(0)); ctx.stroke();
-    if (isCls && xmin > 0 && kind !== 'ogive') {
-      /* NCERT-style kink: the x-axis does not start at 0 */
+    /* NCERT-style kink: the x-axis does not start at 0 (only when there is room before the first bar) */
+    if (isCls && xmin > 0 && kind !== 'ogive' && X(kind === 'poly' ? poly[0][0] : D.classes[0].l) - left >= 26) {
       var zx = left + 6, zy = Y(0);
       ctx.fillStyle = C.surface; ctx.fillRect(zx, zy - 3, 16, 6);
       ctx.strokeStyle = C.text; ctx.lineWidth = 1.6;
       ctx.beginPath(); ctx.moveTo(zx, zy); ctx.lineTo(zx + 4, zy - 5); ctx.lineTo(zx + 8, zy + 5); ctx.lineTo(zx + 12, zy - 5); ctx.lineTo(zx + 16, zy); ctx.stroke();
     }
+
+    /* the polygon goes on top of the axis (its end points sit on the x-axis, next to the kink) */
+    if (kind === 'poly') line(poly, C.c2, true);
 
     /* x ticks with overlap skipping */
     ctx.font = font(400); ctx.fillStyle = C.muted; ctx.textAlign = 'center';

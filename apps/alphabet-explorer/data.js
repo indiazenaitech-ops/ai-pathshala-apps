@@ -12,6 +12,8 @@
                      r = rarely used, no everyday example word
               say:   text to speak instead of the letter (letter names, e.g. Urdu)
      signs  { tab, head, marks ('-' = inherent vowel), roman, bases (optional) }
+     same   'a b|c d e' groups of letters that sound the same in that language (e.g. Bengali জ য):
+            the listening game never offers two of them in one round, so there is one right answer
    Example words are everyday words a primary child knows; roman = a simple sound guide. */
 window.AE_DATA = { order: ['deva', 'beng', 'guru', 'gujr', 'orya', 'taml', 'telu', 'knda', 'mlym', 'arab', 'latn'], scripts: {} };
 
@@ -41,6 +43,7 @@ window.AE_DATA.scripts.deva = {
     'ज्ञ': 'gya|ज्ञान|📚|gyān', 'श्र': 'shra|श्रमिक|👷|shramik', 'ड़': 'ṛa|पेड़|🌳|peṛ|m', 'ढ़': 'ṛha|पढ़ना|📖|paṛhnā|m',
     'ऑ': 'ŏ|ऑटो|🛺|ŏṭo', 'ळ': 'ḷa|बाळ|👶|bāḷ|m'
   },
+  same: 'श ष',
   signs: { tab: 'tab_signs', head: 'अ आ इ ई उ ऊ ऋ ए ऐ ओ औ अं अः', marks: '- ा ि ी ु ू ृ े ै ो ौ ं ः',
     roman: 'a ā i ī u ū ṛi e ai o au aṃ aḥ' }
 };
@@ -70,6 +73,7 @@ window.AE_DATA.scripts.beng = {
     'ৎ': 't|বিদ্যুৎ|⚡|bidyut|m|খণ্ড ত', 'ং': 'ṅ|রং|🎨|rôṅ|m|অনুস্বার', 'ঃ': 'ḥ|দুঃখ|😢|duḥkhô|m|বিসর্গ', 'ঁ': '~|চাঁদ|🌙|chãd|m|চন্দ্রবিন্দু',
     'ক্ষ': 'kṣô|ক্ষেত|🌾|kṣet'
   },
+  same: 'ই ঈ|উ ঊ|জ য|ন ণ|শ ষ স|ড় ঢ়',
   signs: { tab: 'tab_signs', head: 'অ আ ই ঈ উ ঊ ঋ এ ঐ ও ঔ', marks: '- া ি ী ু ূ ৃ ে ৈ ো ৌ',
     roman: 'ô ā i ī u ū ri e oi o ou' }
 };
@@ -127,6 +131,7 @@ window.AE_DATA.scripts.gujr = {
     'હ': 'ha|હરણ|🦌|haraṇ', 'ળ': 'ḷa|નળ|🚰|naḷ|m',
     'અં': 'aṃ|અંક|🔢|aṅk', 'અઃ': 'aḥ|દુઃખ|😢|duḥkh|m', 'ક્ષ': 'kṣa|ક્ષિતિજ|🌅|kṣitij', 'જ્ઞ': 'gña|જ્ઞાન|📚|gnān'
   },
+  same: 'શ ષ',
   signs: { tab: 'tab_signs', head: 'અ આ ઇ ઈ ઉ ઊ ઋ એ ઐ ઓ ઔ અં અઃ', marks: '- ા િ ી ુ ૂ ૃ ે ૈ ો ૌ ં ઃ',
     roman: 'a ā i ī u ū ṛu e ai o au aṃ aḥ' }
 };
@@ -156,6 +161,7 @@ window.AE_DATA.scripts.orya = {
     'ଅଂ': 'ôṃ|ସିଂହ|🦁|siṃhô|m', 'ଅଃ': 'ôḥ|ଦୁଃଖ|😢|duḥkhô|m', 'ଅଁ': 'õ|ହଁ|👍|hõ|m',
     'କ୍ଷ': 'kṣô|କ୍ଷୀର|🥛|kṣīrô', 'ଡ଼': 'ṛô|ଘଡ଼ି|⏰|ghôṛi|m', 'ଢ଼': 'ṛhô|ଚଢ଼େଇ|🐦|chôṛhei|m'
   },
+  same: 'ଇ ଈ|ଉ ଊ|ଜ ଯ|ଶ ଷ ସ',
   signs: { tab: 'tab_signs', head: 'ଅ ଆ ଇ ଈ ଉ ଊ ଋ ଏ ଐ ଓ ଔ ଅଂ ଅଃ', marks: '- ା ି ୀ ୁ ୂ ୃ େ ୈ ୋ ୌ ଂ ଃ',
     roman: 'ô ā i ī u ū ru e oi o ou ôṃ ôḥ' }
 };
@@ -197,7 +203,7 @@ window.AE_DATA.scripts.telu = {
   ],
   L: {
     'అ': 'a|అమ్మ|👩|amma', 'ఆ': 'ā|ఆవు|🐄|āvu', 'ఇ': 'i|ఇల్లు|🏠|illu', 'ఈ': 'ī|ఈగ|🪰|īga',
-    'ఉ': 'u|ఉడుత|🐿️|uḍuta', 'ఊ': 'ū|ఊరు|🏘️|ūru', 'ఋ': 'ṛu|ఋషి|🧘|ṛuṣi', 'ౠ': 'ṝū||||r',
+    'ఉ': 'u|ఉడుత|🐿️|uḍuta', 'ఊ': 'ū|ఊరు|🏘️|ūru', 'ఋ': 'ṛu|ఋషి|🧘|ṛuṣi', 'ౠ': 'ṛū||||r',
     'ఎ': 'e|ఎలుక|🐭|eluka', 'ఏ': 'ē|ఏనుగు|🐘|ēnugu', 'ఐ': 'ai|ఐదు|5️⃣|aidu', 'ఒ': 'o|ఒంటె|🐫|onṭe',
     'ఓ': 'ō|ఓడ|🚢|ōḍa', 'ఔ': 'au|ఔషధం|💊|auṣadham',
     'క': 'ka|కప్ప|🐸|kappa', 'ఖ': 'kha|ఖడ్గం|⚔️|khaḍgam', 'గ': 'ga|గడియారం|⏰|gaḍiyāram', 'ఘ': 'gha|ఘంట|🔔|ghanṭa',
@@ -211,8 +217,9 @@ window.AE_DATA.scripts.telu = {
     'హ': 'ha|హంస|🦢|hamsa', 'ళ': 'ḷa|తాళం|🔒|tāḷam|m', 'క్ష': 'kṣa|పక్షి|🐦|pakṣi|m', 'ఱ': 'ṟa||||r',
     'అం': 'aṃ|అంగడి|🏪|angaḍi', 'అః': 'aḥ|దుఃఖం|😢|duḥkham|m'
   },
+  same: 'ర ఱ',
   signs: { tab: 'tab_signs', head: 'అ ఆ ఇ ఈ ఉ ఊ ఋ ౠ ఎ ఏ ఐ ఒ ఓ ఔ అం అః', marks: '- ా ి ీ ు ూ ృ ౄ ె ే ై ొ ో ౌ ం ః',
-    roman: 'a ā i ī u ū ṛu ṝū e ē ai o ō au aṃ aḥ' }
+    roman: 'a ā i ī u ū ṛu ṛū e ē ai o ō au aṃ aḥ' }
 };
 
 window.AE_DATA.scripts.knda = {

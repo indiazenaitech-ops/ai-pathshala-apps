@@ -16,22 +16,40 @@
       var code = c.charCodeAt(0);
       for (var i = 0; i < ZEROS.length; i++) if (code >= ZEROS[i] && code <= ZEROS[i] + 9) return String(code - ZEROS[i]);
       return c;
-    }).replace(/[−﹣－]/g, '-').replace(/٫/g, '.').replace(/٬/g, ',');
+    }).replace(/[−﹣－]/g, '-').replace(/٫/g, '.').replace(/٬/g, ',').replace(/[₹%]/g, '');
   }
 
   var NUM_RE = /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i;
-  /* one table cell: '' → null, bad → NaN. Commas and spaces inside a cell are thousands separators. */
+  /* a number written with thousands separators: 1,000 · 12,500 · 1,20,000 (Indian) · 1,234,567 */
+  var GROUPED_RE = /^[-+]?(\d{1,3}(,\d{3})+|\d{1,2}(,\d{2})*,\d{3})(\.\d+)?$/;
+  /* one table cell: '' → null, bad → NaN. Commas are allowed only as real thousands separators
+     (1,200 or 1,20,000); "12 15" or "12,15" in one cell is an error, not 1215. */
   function parseCell(s) {
-    s = normDigits(s).replace(/[\s,_']/g, '');
+    s = normDigits(s).trim();
     if (s === '') return null;
+    if (s.indexOf(',') >= 0) {
+      if (!GROUPED_RE.test(s)) return NaN;
+      s = s.replace(/,/g, '');
+    }
     if (!NUM_RE.test(s)) return NaN;
     var v = Number(s);
     return isFinite(v) ? v : NaN;
   }
 
-  /* a pasted list: commas, spaces, tabs, new lines, semicolons and | all separate numbers */
+  /* a pasted list: commas, spaces, tabs, new lines, semicolons and | all separate numbers.
+     Exception: when the numbers are separated by spaces / new lines and every comma sits inside a
+     number like 1,200 or 1,20,000 (a column copied from Excel), the commas are thousands separators. */
   function parseRaw(text, max) {
-    var toks = normDigits(text).split(/[\s,;|]+/), vals = [], bad = [], badCount = 0;
+    var src = normDigits(text), thousands = false;
+    var words = src.split(/[\s;|]+/).filter(Boolean).map(function (w) { return w.replace(/,+$/, ''); });
+    if (words.length > 1) {
+      var withComma = words.filter(function (w) { return w.indexOf(',') >= 0; });
+      if (withComma.length && withComma.every(function (w) { return GROUPED_RE.test(w); })) {
+        thousands = true;
+        src = words.map(function (w) { return w.replace(/,/g, ''); }).join(' ');
+      }
+    }
+    var toks = src.split(/[\s,;|]+/), vals = [], bad = [], badCount = 0;
     for (var i = 0; i < toks.length; i++) {
       var tk = toks[i];
       if (!tk) continue;
@@ -41,7 +59,7 @@
     }
     var total = vals.length;
     if (max && vals.length > max) vals = vals.slice(0, max);
-    return { vals: vals, bad: bad, badCount: badCount, total: total, cut: total > vals.length };
+    return { vals: vals, bad: bad, badCount: badCount, total: total, cut: total > vals.length, thousands: thousands };
   }
 
   function clean(v) { return isFinite(v) ? parseFloat(v.toPrecision(12)) : v; }
@@ -64,6 +82,8 @@
       var xs = String(r.x == null ? '' : r.x), fs = String(r.f == null ? '' : r.f);
       if (!xs.trim() && !fs.trim()) return;
       var x = parseCell(xs), f = parseCell(fs);
+      /* a value whose frequency is still blank counts 0 times (no error while the row is being typed) */
+      if (f === null && x !== null && !isNaN(x)) f = 0;
       if (x === null || isNaN(x)) { bad.push([i, 'x']); }
       if (f === null || isNaN(f)) { bad.push([i, 'f']); }
       if (x === null || isNaN(x) || f === null || isNaN(f)) { errors.push({ key: 'err_row', vars: { r: i + 1 } }); return; }
@@ -89,6 +109,8 @@
       var ls = String(r.l == null ? '' : r.l), us = String(r.u == null ? '' : r.u), fs = String(r.f == null ? '' : r.f);
       if (!ls.trim() && !us.trim() && !fs.trim()) return;
       var l = parseCell(ls), u = parseCell(us), f = parseCell(fs), ok = true;
+      /* a class whose frequency is still blank (new row, quick classes) is an empty class, f = 0 */
+      if (f === null && l !== null && !isNaN(l) && u !== null && !isNaN(u)) f = 0;
       [[l, 'l'], [u, 'u'], [f, 'f']].forEach(function (p) { if (p[0] === null || isNaN(p[0])) { bad.push([i, p[1]]); ok = false; } });
       if (!ok) { errors.push({ key: 'err_row', vars: { r: i + 1 } }); return; }
       if (f < 0) { bad.push([i, 'f']); errors.push({ key: 'err_negf', vars: { r: i + 1 } }); return; }
@@ -157,7 +179,7 @@
       sVariance: n > 1 ? ss / (n - 1) : NaN,
       cf: cf, median: med, modes: modes, maxf: maxf, noMode: noMode,
       min: nz[0].x, max: nz[nz.length - 1].x, range: nz[nz.length - 1].x - nz[0].x,
-      q1: posValue((n + 1) / 4), q3: posValue(3 * (n + 1) / 4), valueAt: valueAt
+      q1: posValue((n + 1) / 4), q3: posValue(3 * (n + 1) / 4), valueAt: valueAt, idxAt: idxAt
     };
   }
 

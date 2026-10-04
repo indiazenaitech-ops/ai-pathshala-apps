@@ -67,6 +67,7 @@
   function save() { clearTimeout(saveT); saveT = setTimeout(saveNow, 250); }
   function r4(v) { return Math.round(v * 10000) / 10000; }
   function saveNow() {
+    clearTimeout(saveT); saveT = 0;
     store.set('state', {
       grid: QL.encode(S.grid), start: S.start, preset: S.preset, Q: Array.prototype.map.call(S.Q, r4),
       alpha: S.alpha, gamma: S.gamma, eps: S.eps, epsNow: r4(S.epsNow), cost: S.cost, decay: S.decay,
@@ -257,8 +258,20 @@
 
   /* ------------------------------------------------------------ editing the world */
   var paint = null;
+  /* the 4 Q-values of a cell as one line, shown right under the board (the brain panel is far below on phones) */
+  function lookMsg(i) {
+    var tp = S.grid[i], head = t('brain_cell', { cell: cellName(i) }) + ': ';
+    if (tp === WALL || tp === PIT || tp === GOAL) return head + t(tp === WALL ? 'brain_wall' : 'brain_end');
+    var parts = [], best = QL.bestActions(S.Q, i);
+    for (var a = 0; a < A; a++) parts.push(ARROWS[a] + ' ' + f2(S.Q[i * A + a]));
+    return head + parts.join(' · ') + ' — ' + (best.length === A ? t('brain_none') : t('brain_best', { act: best.map(actName).join(' / ') }));
+  }
+  function lookAt(i) {
+    S.look = i; renderBrain();
+    setMsg(function () { return lookMsg(i); }, 'look');
+  }
   function applyTool(i, first) {
-    if (S.tool === 'look') { S.look = i; renderBrain(); draw(); save(); return; }
+    if (S.tool === 'look') { lookAt(i); draw(); save(); return; }
     if (S.tool === 'start') {
       if (!first || i === S.start) return;
       if (busy) stopBusy(true);
@@ -520,7 +533,9 @@
       ctx.strokeRect((kcur % N) * cs + 2, Math.floor(kcur / N) * cs + 2, cs - 4, cs - 4);
     }
     var rp = robotPos(now);
-    drawRobot(ctx, rp[0] * cs, rp[1] * cs, cs);
+    /* with numbers on, draw a smaller robot so the start cell's values stay readable */
+    if (S.view.nums) drawRobot(ctx, rp[0] * cs, (rp[1] - (S.view.q ? 0 : 0.1)) * cs, cs * 0.6);
+    else drawRobot(ctx, rp[0] * cs, rp[1] * cs, cs);
   }
 
   function niceStep(range, ticks) {
@@ -544,16 +559,21 @@
       ctx.fillText(t('chart_empty'), Wd / 2, H / 2, Wd - 20);
       return;
     }
-    var lo = 0, hi = 10;
+    var lo = 0, hi = 10, v;
     for (i = 0; i < n; i++) { if (S.hist[i] < lo) lo = S.hist[i]; if (S.hist[i] > hi) hi = S.hist[i]; }
     if (best !== null && best > hi) hi = best;
     var stp = niceStep(hi - lo, 5);
     lo = Math.floor(lo / stp) * stp; hi = Math.ceil(hi / stp) * stp; if (hi <= lo) hi = lo + stp;
+    // make room for the widest y label ("-250") so it never runs into the rotated axis title
+    ctx.font = font(11);
+    var labW = 0;
+    for (v = lo; v <= hi + 1e-9; v += stp) labW = Math.max(labW, ctx.measureText(EDU.fmt(v)).width);
+    padL = Math.max(44, Math.ceil(labW) + 30); pw = Wd - padL - padR;
     var X = function (j) { return padL + (n === 1 ? pw / 2 : j / (n - 1) * pw); };
     var Y = function (v) { return padT + (hi - v) / (hi - lo) * ph; };
     // grid + y labels
-    ctx.font = font(11); ctx.textAlign = 'end'; ctx.textBaseline = 'middle';
-    for (var v = lo; v <= hi + 1e-9; v += stp) {
+    ctx.textAlign = 'end'; ctx.textBaseline = 'middle';
+    for (v = lo; v <= hi + 1e-9; v += stp) {
       ctx.strokeStyle = css(P.border, v === 0 ? 1 : 0.55); ctx.lineWidth = v === 0 ? 1.5 : 1;
       ctx.beginPath(); ctx.moveTo(padL, Math.round(Y(v)) + 0.5); ctx.lineTo(Wd - padR, Math.round(Y(v)) + 0.5); ctx.stroke();
       ctx.fillStyle = css(P.muted); ctx.fillText(EDU.fmt(v), padL - 6, Y(v));
@@ -562,7 +582,10 @@
     var off = S.episodes - n;
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     var xs = niceStep(Math.max(1, n), 5);
-    for (var e = Math.ceil((off + 1) / xs) * xs; e <= S.episodes; e += xs) ctx.fillText(EDU.fmt(e), X(e - off - 1), padT + ph + 4);
+    for (var e = Math.ceil((off + 1) / xs) * xs; e <= S.episodes; e += xs) {
+      var xl = EDU.fmt(e);   /* keep the last label ("1,000") inside the canvas */
+      ctx.fillText(xl, Math.min(X(e - off - 1), Wd - 2 - ctx.measureText(xl).width / 2), padT + ph + 4);
+    }
     ctx.font = font(12, 600); ctx.direction = dirDoc; ctx.fillText(t('chart_x'), padL + pw / 2, padT + ph + 21);
     ctx.save(); ctx.translate(12, padT + ph / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle'; ctx.fillText(t('chart_y'), 0, 0, ph); ctx.restore();
     ctx.direction = 'ltr';
@@ -819,7 +842,7 @@
     if (k === 'ArrowUp') r--; else if (k === 'ArrowDown') r++; else if (k === 'ArrowLeft') c--; else if (k === 'ArrowRight') c++;
     else { applyTool(kcur, true); paint = null; return; }
     kcur = EDU.clamp(r, 0, N - 1) * N + EDU.clamp(c, 0, N - 1);
-    if (S.tool === 'look') { S.look = kcur; renderBrain(); }
+    if (S.tool === 'look') { lookAt(kcur); save(); }
     draw();
   });
   board.addEventListener('blur', function () { if (kcur >= 0) { kcur = -1; draw(); } });
@@ -851,7 +874,11 @@
       save();
     });
   });
-  $('#chk-decay').addEventListener('change', function (e) { S.decay = e.target.checked; save(); });
+  $('#chk-decay').addEventListener('change', function (e) {
+    S.decay = e.target.checked;
+    if (!S.decay) S.epsNow = S.eps;          /* no decay: exploring stays at the slider value, not at the decayed one */
+    renderStats(); save();
+  });
   $('#btn-defaults').addEventListener('click', function () {
     S.alpha = DEF.alpha; S.gamma = DEF.gamma; S.eps = DEF.eps; S.epsNow = DEF.eps; S.cost = DEF.cost; S.decay = DEF.decay;
     renderSettings(); renderStats(); drawChart(); save();
@@ -861,6 +888,9 @@
   });
   $('#fs-btn').addEventListener('click', function () { EDU.fullscreen($('#ql')); });
   $('#print-btn').addEventListener('click', function () { window.print(); });
+  /* the save is debounced: write at once when the page is closed, reloaded or hidden, so nothing is lost */
+  window.addEventListener('pagehide', saveNow);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') saveNow(); });
   window.addEventListener('beforeprint', function () { readPalette(true); drawBoard(performance.now()); drawChart(); });
   window.addEventListener('afterprint', function () { readPalette(); redrawAll(); });
 

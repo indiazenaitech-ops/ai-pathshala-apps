@@ -40,6 +40,26 @@
   var S = cleanSettings(store.get('settings', null));
   function saveSettings() { store.set('settings', S); }
 
+  /* personal bests { key: number } and the last games, read defensively (old or damaged data never crashes) */
+  function getBests() {
+    var b = store.get('best', {});
+    return (b && typeof b === 'object' && !Array.isArray(b)) ? b : {};
+  }
+  function cleanHist(h) {
+    var num = function (x) { x = +x; return isFinite(x) && x >= 0 ? x : 0; };
+    if (!h || typeof h !== 'object' || MODES.indexOf(h.mode) < 0 || !(num(h.total) > 0) || !num(h.at)) return null;
+    return {
+      at: num(h.at), mode: h.mode, level: LEVELS.indexOf(h.level) >= 0 ? h.level : 'd1',
+      ops: Array.isArray(h.ops) ? OPS.filter(function (o) { return h.ops.indexOf(o) >= 0; }) : [],
+      table: (+h.table >= 2 && +h.table <= 20) ? Math.round(+h.table) : 2, dur: DURS.indexOf(+h.dur) >= 0 ? +h.dur : 60,
+      points: num(h.points), correct: num(h.correct), total: num(h.total), acc: Math.min(100, num(h.acc))
+    };
+  }
+  function getHist() {
+    var h = store.get('hist', []);
+    return Array.isArray(h) ? h.map(cleanHist).filter(Boolean) : [];
+  }
+
   /* Operations that actually apply to a level (in fixed order). */
   function effOps(level, ops) {
     if (level === 'tables') {
@@ -77,9 +97,9 @@
       mul: function () { var a = R(101, 999), b = R(2, 9); return [a, b, a * b]; },
       div: function () { var b = R(2, 9), q = R(Math.ceil(100 / b), Math.floor(999 / b)); return [q * b, b, q]; }
     },
-    tables: {
-      mul: function () { var a = R(2, 20), b = R(1, 10); return Math.random() < 0.75 ? [a, b, a * b] : [b, a, a * b]; },
-      div: function () { var a = R(2, 20), b = R(1, 10); return [a * b, a, b]; }
+    tables: {   /* ×2 … ×10 (the ×1 and "n ÷ n" facts are too easy for a drill; the Table trainer still starts at ×1) */
+      mul: function () { var a = R(2, 20), b = R(2, 10); return Math.random() < 0.75 ? [a, b, a * b] : [b, a, a * b]; },
+      div: function () { var a = R(2, 20), b = R(2, 10); return [a * b, a, b]; }
     }
   };
   var PCTS = [1, 5, 10, 10, 20, 25, 25, 50, 50, 75, 15, 30, 40, 60, 80, 90];
@@ -125,12 +145,13 @@
     if (this.recent.length > 8) this.recent.shift();
     return q;
   };
-  function uniqueList(level, ops, n) {
+  /* n different questions; with strict, never repeat one (a small pool such as cubes gives a shorter list) */
+  function uniqueList(level, ops, n, strict) {
     var out = [], seen = {}, tries = 0;
     while (out.length < n && tries < n * 60) {
       tries++;
       var q = makeQ(level, ops), k = qKey(q);
-      if (seen[k] && tries < n * 50) continue;
+      if (seen[k] && (strict || tries < n * 50)) continue;
       seen[k] = 1; out.push(q);
     }
     return out;
@@ -160,6 +181,8 @@
     if (c.mode === 'sprint') k += '|' + c.dur;
     return k;
   }
+  /* "5 / 6": shown in elements with dir="ltr" so Urdu (RTL) does not flip it to "6 / 5" */
+  function frac(a, b) { return EDU.fmt(a) + ' / ' + EDU.fmt(b); }
   function clock(s) { s = Math.max(0, Math.floor(s)); var m = Math.floor(s / 60), r = s % 60; return m + ':' + (r < 10 ? '0' : '') + r; }
   function secs(x) { return t('secs', { n: EDU.fmt(x, { maximumFractionDigits: 1, minimumFractionDigits: x < 10 ? 1 : 0 }) }); }
   function fmtDate(ms) {
@@ -258,6 +281,10 @@
     pad.addEventListener('click', function (e) {
       var b = e.target.closest('button[data-k]');
       if (!b) return;
+      /* A mouse / touch / pen click (detail ≥ 1) was already handled on pointerdown, however long the
+         finger stayed down (a slow press on a smartboard used to type the digit twice). Only keyboard
+         activation (Space on a focused key, detail 0) or browsers without pointer events get here. */
+      if (window.PointerEvent && e.detail > 0) return;
       if (Date.now() - (+b.dataset.pd || 0) < 900) return;    // already handled on pointerdown
       flash(b);
       onKey(b.dataset.k);
@@ -354,11 +381,12 @@
     $('#play-mode').textContent = modeName(c.mode);
     $('#play-desc').textContent = descr(c);
     var qn = Math.max(1, G.idx);
-    $('#play-prog').textContent = G.list ? EDU.fmt(qn) + ' / ' + EDU.fmt(G.list.length) : EDU.fmt(qn);
+    $('#play-prog').textContent = G.list ? frac(qn, G.list.length) : EDU.fmt(qn);
     $('#prog-pill').title = G.list ? t('q_of', { n: qn, total: G.list.length }) : t('q_n', { n: qn });
     $('#play-points').textContent = EDU.fmt(G.points);
     $('#play-streak').textContent = EDU.fmt(G.streak);
     $('#play-progress').hidden = !(G.list || c.mode === 'sprint');
+    $('#time-pill').hidden = c.mode === 'practice';      // "no timer, no pressure": no ticking clock in Practice
     if (G.list) $('#play-bar').style.width = (G.log.length / G.list.length * 100).toFixed(1) + '%';
     else if (c.mode === 'sprint' && !G.startAt) $('#play-bar').style.width = '100%';
     if (!G.startAt) $('#play-time').textContent = c.mode === 'sprint' ? clock(c.dur) : '0:00';
@@ -386,10 +414,12 @@
 
     var facts = $('#facts');
     facts.innerHTML = '';
+    facts.classList.toggle('on', c.mode === 'table');
     if (c.mode === 'table' && (!G.cur || G.cur.phase === 1)) {
       G.facts.forEach(function (f) {
         facts.appendChild(el('span', { class: 'mp-num' + (f.ok ? '' : ' bad'), dir: 'ltr', text: qText(f.q) + ' = ' + f.q.ans }));
       });
+      facts.scrollLeft = facts.scrollWidth;            // phones: show the newest facts
     }
   }
 
@@ -407,12 +437,11 @@
       mistakes: G.log.filter(function (x) { return !x.ok; }), isBest: false, prevBest: null
     };
     if (c.mode !== 'mistakes') {
-      var key = bestKey(c), bests = store.get('best', {}) || {};
+      var key = bestKey(c), bests = getBests();
       var metric = c.mode === 'practice' ? G.bestStreak : G.points;
       res.prevBest = typeof bests[key] === 'number' ? bests[key] : null;
       if (metric > 0 && (res.prevBest === null || metric > res.prevBest)) { bests[key] = metric; store.set('best', bests); res.isBest = true; }
-      var hist = store.get('hist', []);
-      if (!Array.isArray(hist)) hist = [];
+      var hist = getHist();
       hist.unshift({ at: Date.now(), mode: c.mode, level: c.level, ops: c.ops, table: c.table, dur: c.dur, points: G.points, correct: G.correct, total: n, acc: res.acc });
       store.set('hist', hist.slice(0, 12));
     }
@@ -435,11 +464,11 @@
     else if (r.prevBest !== null) best.appendChild(el('p', { class: 'mp-prevbest mb0', text: t(c.mode === 'practice' ? 'best_streak_here' : 'best_here', { n: EDU.fmt(r.prevBest) }) }));
 
     var stats = $('#sum-stats'); stats.innerHTML = '';
-    function stat(id, label, val, main) {
-      stats.appendChild(el('div', { class: 'mp-stat' + (main ? ' main' : '') }, el('span', { text: label }), el('b', { class: 'mp-num', id: id, text: val })));
+    function stat(id, label, val, main, dir) {
+      stats.appendChild(el('div', { class: 'mp-stat' + (main ? ' main' : '') }, el('span', { text: label }), el('b', { class: 'mp-num', id: id, dir: dir, text: val })));
     }
     stat('sum-points', t('points'), EDU.fmt(r.points), true);
-    stat('sum-correct', t('stat_correct'), EDU.fmt(r.correct) + ' / ' + EDU.fmt(r.total));
+    stat('sum-correct', t('stat_correct'), frac(r.correct, r.total), false, 'ltr');
     stat('sum-acc', t('stat_acc'), EDU.fmt(r.acc) + '%');
     stat('sum-avg', t('stat_avg'), secs(r.avg));
     stat('sum-streak', t('stat_streak'), EDU.fmt(r.streak));
@@ -491,6 +520,7 @@
     D = { level: S.level, ops: effOps(S.level, S.ops), target: S.target, seq: [], gen: new Gen(S.level, S.ops), over: false, started: false, winner: -1, startAt: 0,
       p: [0, 1].map(function (i) { return { i: i, idx: 0, cur: null, input: '', correct: 0, wrong: 0, ms: 0, fb: null, locked: true }; }) };
     show('duel');
+    $('#duel').classList.remove('done');
     $('#duel-result').hidden = true;
     $('#duel-grid').hidden = false;
     $('#end-duel').hidden = false;
@@ -511,7 +541,7 @@
       var pad = el('div', { class: 'mp-pad mp-pad6', role: 'group' });
       buildPad(pad, ['1', '2', '3', '4', '5', 'back', '6', '7', '8', '9', '0', 'ok'], function (k) { duelKey(P, k); });
       var box = el('section', { class: 'mp-player', id: 'p' + P.i, 'data-p': String(P.i), 'data-state': 'count', 'data-qid': '0' },
-        el('div', { class: 'mp-phead' }, el('span', { class: 'mp-pname' }), el('span', { class: 'mp-pscore mp-num' })),
+        el('div', { class: 'mp-phead' }, el('span', { class: 'mp-pname' }), el('span', { class: 'mp-pscore mp-num', dir: 'ltr' })),
         el('div', { class: 'mp-track' }, el('span')),
         el('div', { class: 'mp-qline', dir: 'ltr', 'aria-live': 'polite' },
           el('span', { class: 'mp-q' }), el('span', { class: 'mp-eq', 'aria-hidden': 'true', text: '=' }), el('output', { class: 'mp-ans empty', text: '?' })),
@@ -531,7 +561,7 @@
     var name = $('.mp-pname', box);
     name.textContent = pName(P.i);
     name.classList.toggle('no-i18n', !!(S.names[P.i] || '').trim());
-    $('.mp-pscore', box).textContent = EDU.fmt(P.correct) + ' / ' + EDU.fmt(D.target);
+    $('.mp-pscore', box).textContent = frac(P.correct, D.target);
     $('.mp-track span', box).style.width = Math.min(100, P.correct / D.target * 100) + '%';
     var q = $('.mp-q', box);
     q.textContent = P.cur ? qText(P.cur) : '…';
@@ -593,6 +623,7 @@
   function renderDuelResult() {
     var res = $('#duel-result');
     res.hidden = false;
+    $('#duel').classList.add('done');
     $('#duel-grid').hidden = true;
     $('#end-duel').hidden = true;
     var w = D.winner;
@@ -632,10 +663,14 @@
   document.addEventListener('keydown', function (e) {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     var tag = (e.target && e.target.tagName) || '';
-    if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) return;
+    if (/^(INPUT|TEXTAREA)$/.test(tag) || (e.target && e.target.isContentEditable)) return;
+    /* After changing the language mid-game the focus stays on the language picker: digits, Enter and
+       Backspace must still reach the game (they mean nothing to a closed <select>). */
+    if (tag === 'SELECT' && screen !== 'play' && screen !== 'duel') return;
     if (screen === 'play' && G && !G.over) {
-      var k = e.key;
+      var k = e.key, nm = /^Numpad([0-9])$/.exec(e.code || '');
       if (/^[0-9]$/.test(k)) playKey(k);
+      else if (nm) playKey(nm[1]);                         // number pad with Num Lock off
       else if (k === 'Backspace' || k === 'Delete') playKey('back');
       else if (k === 'Enter' || k === '=') playKey('ok');
       else return;
@@ -700,13 +735,12 @@
   function renderBest() {
     var line = $('#best-line');
     if (S.mode === 'duel') { line.textContent = '🤝 ' + t('first_to', { n: S.target }); return; }
-    var b = (store.get('best', {}) || {})[bestKey(currentCfg())];
+    var b = getBests()[bestKey(currentCfg())];
     if (typeof b !== 'number') line.textContent = t('best_none');
     else line.textContent = '🏆 ' + t(S.mode === 'practice' ? 'best_streak_here' : 'best_here', { n: EDU.fmt(b) });
   }
   function renderRecent() {
-    var hist = store.get('hist', []);
-    if (!Array.isArray(hist)) hist = [];
+    var hist = getHist();
     $('#recent-none').hidden = hist.length > 0;
     $('#recent-wrap').hidden = !hist.length;
     var tb = $('#recent'); tb.innerHTML = '';
@@ -714,11 +748,10 @@
     tb.appendChild(el('thead', null, el('tr', null, el('th', { text: t('col_game') }), el('th', { text: t('points') }), el('th', { text: t('col_acc') }))));
     var body = el('tbody');
     hist.forEach(function (h) {
-      if (!h || MODES.concat(['mistakes']).indexOf(h.mode) < 0) return;
       body.appendChild(el('tr', null,
         el('td', null, el('b', { text: modeName(h.mode) }), el('small', { text: descr(h) }), el('small', { class: 'when mp-num', text: fmtDate(h.at) })),
-        el('td', { class: 'mp-num' }, el('b', { text: EDU.fmt(h.points || 0) })),
-        el('td', { class: 'mp-num' }, el('b', { text: EDU.fmt(h.acc || 0) + '%' }), el('small', { text: EDU.fmt(h.correct || 0) + ' / ' + EDU.fmt(h.total || 0) }))));
+        el('td', { class: 'mp-num' }, el('b', { text: EDU.fmt(h.points) })),
+        el('td', { class: 'mp-num' }, el('b', { text: EDU.fmt(h.acc) + '%' }), el('small', null, el('bdi', { dir: 'ltr', text: frac(h.correct, h.total) })))));
     });
     tb.appendChild(body);
   }
@@ -773,7 +806,7 @@
   /* ------------------------------------------------------------ worksheet */
   function printWorksheet() {
     var cfg = currentCfg();
-    var qs = S.mode === 'table' ? tableList(S.table) : uniqueList(S.level, S.ops, 40);
+    var qs = S.mode === 'table' ? tableList(S.table) : uniqueList(S.level, S.ops, 40, true);
     var sub = S.mode === 'table' ? t('table_of', { n: S.table }) : descr({ mode: 'practice', level: cfg.level, ops: cfg.ops });
     var ws = $('#ws'); ws.innerHTML = '';
     ws.appendChild(el('h1', { text: t('ws_title') }));
@@ -783,8 +816,10 @@
       el('span', { text: t('ws_class') + ': ________' }),
       el('span', { text: t('ws_date') + ': ____________' }),
       el('span', { text: t('ws_time') + ': ________' }),
-      el('span', { text: t('score') + ': ______ / ' + qs.length })));
-    var grid = el('ol', { class: 'mp-ws-grid' });
+      el('span', null, t('score') + ': ', el('bdi', { dir: 'ltr', text: '______ / ' + qs.length }))));
+    /* long questions (percentages in words) get 3 roomy columns instead of 4 */
+    var wide = qs.some(function (q) { return q.k === 'pct' || qText(q).length > 11; });
+    var grid = el('ol', { class: 'mp-ws-grid' + (wide ? ' wide' : '') });
     qs.forEach(function (q, i) {
       grid.appendChild(el('li', { class: 'mp-ws-q' }, el('span', { class: 'n', text: (i + 1) + '.' }), el('bdi', { dir: qDir(q), text: qText(q) + ' =' }), el('span', { class: 'line' })));
     });

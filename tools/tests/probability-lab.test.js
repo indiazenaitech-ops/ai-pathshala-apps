@@ -1,5 +1,5 @@
 /* Interaction test for Probability Lab (run by tools/verify.js in en and hi). */
-module.exports = async function ({ page, expect, t, log }) {
+module.exports = async function ({ page, lang, expect, t, log }) {
   const num = async (sel, attr) => Number(await page.getAttribute(sel, attr));
   const theory = async () => ({
     fav: await num('#pe-theory', 'data-fav'), total: await num('#pe-theory', 'data-total'),
@@ -66,6 +66,14 @@ module.exports = async function ({ page, expect, t, log }) {
   expect((await page.textContent('#ev-s1')).includes('Ravi'), 'renamed part shows in the event chips');
   await page.click('#run-100');
   await waitTrials(100);
+  // fast runs are not animated, but the wheel's pointer must still point at the part named in "Trial n: …"
+  for (let i = 0; i < 4; i++) {
+    const ptr = await page.getAttribute('#stage', 'data-pointer'), raw = await page.getAttribute('#stage', 'data-raw');
+    expect(ptr !== '' && ptr === raw, 'spinner pointer shows the last result after ×100 (pointer ' + ptr + ', last part ' + raw + ')');
+    if (i < 3) { await page.click('#run-100'); await waitTrials(200 + i * 100); }
+  }
+  const spinRows = await page.$$eval('#results-body tr[data-key]', (trs) => trs.map((r) => Number(r.dataset.count)));
+  expect(spinRows.length === 4 && spinRows.reduce((a, b) => a + b, 0) === 400, 'spinner table: 4 parts, frequencies add up to 400');
 
   // 5) bag 5 red, 3 blue, 2 green: P(red) = 1/2; two balls without replacement, same colour = 28/90 = 14/45
   await page.click('#tab-bag');
@@ -97,6 +105,21 @@ module.exports = async function ({ page, expect, t, log }) {
   await waitTrials(1, 8000);
   expect((await page.textContent('#last')).trim().length > 3, 'last result is described');
 
+  // CSV: one row per rank + headers, total and event rows; plain text (no "E: E:", no invisible bidi characters)
+  await page.click('#run-1000');
+  await waitTrials(1001);
+  const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#csv')]);
+  const csv = require('fs').readFileSync(await dl.path(), 'utf8').replace(/^\uFEFF/, '');
+  const lines = csv.split(/\r?\n/);
+  expect(lines.length === 2 + 13 + 2, 'CSV has 2 header rows, 13 rank rows, total and event rows, got ' + lines.length);
+  expect(!/[\u2066-\u2069]/.test(csv) && !/E: E:/.test(csv), 'CSV is plain text without bidi control characters or a doubled "E:"');
+  const evLine = lines[lines.length - 1];
+  expect(evLine.includes('3/26') && evLine.includes(String(await num('#pe-exp', 'data-count'))), 'CSV event row has P(red face card) = 3/26 and the event count: ' + evLine);
+  await page.click('#reset');
+  await waitTrials(0);
+  await page.click('#run-1');
+  await waitTrials(1, 8000);
+
   // 7) results survive a reload; reset clears them
   await page.waitForTimeout(500);
   await page.reload();
@@ -108,4 +131,33 @@ module.exports = async function ({ page, expect, t, log }) {
   await page.click('#reset');
   await waitTrials(0);
   expect((await page.textContent('#trials')).trim() === t('trials_n', { n: '0' }), 'trials badge in this language after reset');
+
+  // 8) reload in the middle of an animated ×10 run keeps the trials that already finished
+  await page.click('#run-10');
+  await page.waitForFunction(() => Number(document.getElementById('trials').dataset.n) >= 2, null, { timeout: 8000 });
+  const midRun = await trials();
+  await page.reload();
+  await page.waitForSelector('#pe-theory');
+  const afterReload = await trials();
+  expect(afterReload >= midRun && afterReload <= 10, 'finished animated trials survive a reload mid-run (' + midRun + ' before, ' + afterReload + ' after)');
+  await page.click('#reset');
+  await waitTrials(0);
+
+  // 9) Urdu (RTL): "Trial n: 3 + 4 = 7" stays left-to-right maths, and coin 1 is drawn on the right like the text
+  await page.evaluate(() => EDU.setLang('ur'));
+  await page.click('#tab-dice');
+  const diceBefore = await trials();
+  await page.click('#run-100');
+  await waitTrials(diceBefore + 100);
+  const order = await page.evaluate(() => {
+    const el = document.getElementById('last'), tn = el.firstChild, s = tn.data;
+    const x = (i) => { const r = document.createRange(); r.setStart(tn, i); r.setEnd(tn, i + 1); return r.getBoundingClientRect().left; };
+    return { plus: x(s.indexOf('+')), eq: x(s.indexOf('=')) };
+  });
+  expect(order.plus < order.eq, 'Urdu: dice sum reads "a + b = s" left to right (+ at ' + order.plus + ', = at ' + order.eq + ')');
+  await page.click('#tab-spinner');
+  await page.click('#run-100');
+  expect(await page.getAttribute('#stage', 'data-pointer') === await page.getAttribute('#stage', 'data-raw'), 'Urdu: spinner pointer matches the last result');
+  await page.evaluate((l) => EDU.setLang(l), lang);
+  await page.click('#tab-coin');
 };

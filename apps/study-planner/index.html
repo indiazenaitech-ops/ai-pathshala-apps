@@ -37,6 +37,8 @@
     .cd-row { display: flex; align-items: center; gap: 14px; }
     .cd-num { font-size: clamp(2.4rem, 6vw, 3.6rem); font-weight: 800; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; min-width: 1.4ch; text-align: center; }
     .cd-txt { min-width: 0; }
+    /* typed subject / chapter names can be one long word: never let them push the page sideways */
+    .cd-txt, .cd-later, .exam-line, .day-note, .today-card .callout, .timer-what, .print-area, .edu-modal h2 { overflow-wrap: anywhere; }
     .cd-txt b { display: block; font-size: 1.05rem; }
     .cd-later { margin: 8px 0 0; }
     .pct-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
@@ -83,6 +85,10 @@
     .sess-subj { font-weight: 700; }
     .sess-meta { display: block; color: var(--muted); font-size: .8rem; font-weight: 500; }
     .sess-meta > span { unicode-bidi: isolate; }
+    /* Urdu Nastaliq has tall letters: tight line heights make wrapped lines collide */
+    html[lang="ur"] .sess-txt { line-height: 1.9; }
+    html[lang="ur"] .sess-meta { line-height: 1.8; }
+    html[lang="ur"] .tabs button, html[lang="ur"] .ch-head { line-height: 1.7; }
     .sess.done .sess-subj, .sess.done .sess-ch { text-decoration: line-through; color: var(--muted); }
     .sess.done { background: color-mix(in srgb, var(--success) 8%, var(--surface)); }
     .sess.missed { background: var(--danger-soft); }

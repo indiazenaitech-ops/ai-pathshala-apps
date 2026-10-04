@@ -74,19 +74,42 @@
   /* Text with inline maths ("1 km = 1000 m"). In Urdu (RTL) every Latin/number run is isolated
      as its own left-to-right island, otherwise the bidi algorithm scrambles the formula. */
   var LTR_RUN = /[0-9A-Za-z°µ(][0-9A-Za-z°µ²³\/.,%()×÷=+\-−– ]*[0-9A-Za-z°µ²³)%]|[0-9A-Za-z]/g;
+  function bracketBal(s) { return (s.match(/\(/g) || []).length - (s.match(/\)/g) || []).length; }
+  /* Split text into [start, end) ranges of left-to-right runs. Brackets are kept in one island:
+     "0 °C (32 °F، 273.15 K)" stays whole, and an unmatched "(" or ")" at an island's edge
+     ("(°C میں)") is left to the right-to-left text, where the browser mirrors it as a pair. */
+  function ltrRuns(text) {
+    var runs = [], m, i;
+    LTR_RUN.lastIndex = 0;
+    while ((m = LTR_RUN.exec(text))) runs.push([m.index, m.index + m[0].length]);
+    for (i = 0; i < runs.length - 1; i++) {
+      if (bracketBal(text.slice(runs[i][0], runs[i][1])) > 0 && /^[\s\u060C,;\u061B]*$/.test(text.slice(runs[i][1], runs[i + 1][0]))) {
+        runs[i][1] = runs[i + 1][1]; runs.splice(i + 1, 1); i--;
+      }
+    }
+    return runs.map(function (r) {
+      var a = r[0], b = r[1];
+      while (b - a > 1 && text.charAt(a) === '(' && bracketBal(text.slice(a, b)) > 0) a++;
+      while (b - a > 1 && text.charAt(b - 1) === ')' && bracketBal(text.slice(a, b)) < 0) b--;
+      while (b - a > 1 && text.charAt(a) === ' ') a++;
+      return [a, b];
+    });
+  }
   function setRich(node, text) {
     node.textContent = '';
     if (document.documentElement.dir !== 'rtl') { node.textContent = text; return node; }
-    var last = 0, m;
-    LTR_RUN.lastIndex = 0;
-    while ((m = LTR_RUN.exec(text))) {
-      if (m.index > last) node.appendChild(document.createTextNode(text.slice(last, m.index)));
-      node.appendChild(el('span', { class: 'uc-ltr no-i18n', dir: 'ltr', text: m[0] }));
-      last = m.index + m[0].length;
-    }
+    var last = 0;
+    ltrRuns(text).forEach(function (r) {
+      if (r[0] > last) node.appendChild(document.createTextNode(text.slice(last, r[0])));
+      node.appendChild(el('span', { class: 'uc-ltr no-i18n', dir: 'ltr', text: text.slice(r[0], r[1]) }));
+      last = r[1];
+    });
     if (last < text.length) node.appendChild(document.createTextNode(text.slice(last)));
     return node;
   }
+  /* A unit symbol inside right-to-left text (a <select> option cannot hold an isolating <span>):
+     a leading left-to-right mark keeps "°C" from turning into "C°" in Urdu. */
+  function symText(sym) { return document.documentElement.dir === 'rtl' ? '\u200E' + sym + '\u200E' : sym; }
   function rich(tag, props, text) { return setRich(el(tag, props), text); }
 
   /* ------------------------------------------------------------------ numbers */
@@ -201,7 +224,7 @@
   function fillSelect(sel, cat, value) {
     sel.textContent = '';
     cat.units.forEach(function (u) {
-      sel.appendChild(el('option', { value: u.id, text: unitName(u) + ' (' + u.sym + ')' }));
+      sel.appendChild(el('option', { value: u.id, text: unitName(u) + ' (' + symText(u.sym) + ')' }));
     });
     sel.value = value;
   }
@@ -348,9 +371,13 @@
     state.vals[cat.id] = { v: (val.side === 'a' ? inA : inB).value, side: val.side };
     save(); renderConverter();
   });
+  /* Phone number pads often have no minus key, so temperatures get a ± button. */
+  function flipSign(inp) {
+    var s = inp.value.trim().replace(/^[\u2212\u2013]/, '-');
+    inp.value = s.charAt(0) === '-' ? s.slice(1) : s.charAt(0) === '+' ? '-' + s.slice(1) : '-' + (s || '0');
+  }
   function toggleSign(side) {
-    var inp = side === 'a' ? inA : inB, s = inp.value.trim();
-    inp.value = s.charAt(0) === '-' ? s.slice(1) : '-' + (s || '0');
+    flipSign(side === 'a' ? inA : inB);
     onType(side);
   }
   $('#pm-a').addEventListener('click', function () { toggleSign('a'); });
@@ -431,7 +458,12 @@
     var tb = $('#cmp tbody');
     tb.textContent = '';
     CMP.forEach(function (row) {
-      var pick = function () { setNum(row.n); numIn.focus(); };
+      /* show the number's cards (not the input box, which would pop up the phone keyboard) */
+      var pick = function () {
+        setNum(row.n);
+        var out = $('#num-out');
+        if (out.scrollIntoView) out.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      };
       tb.appendChild(el('tr', { onclick: pick, dataset: { n: row.n } },
         el('td', {}, el('button', { type: 'button', class: 'rowbtn', onclick: function (e) { e.stopPropagation(); pick(); } }, el('strong', { text: phrase(row.ind) })),
           el('div', { class: 'math muted no-i18n', text: W.groupIndian(row.n) })),
@@ -466,13 +498,34 @@
     tbl.appendChild(thead); tbl.appendChild(body);
   }
 
+  /* All 9 columns of both charts share one width (so the digits line up), wide enough for the longest
+     single word in a place name: "பத்தாயிரங்கள்" or "Ten thousands" must never be cut or split mid-word.
+     Measured with a canvas, so it also works while the tab is hidden. */
+  var pvCtx = null;
+  function fitPv() {
+    try { pvCtx = pvCtx || document.createElement('canvas').getContext('2d'); } catch (e) { pvCtx = null; }
+    if (!pvCtx) return;
+    var widest = 0, tables = [$('#pv-in'), $('#pv-intl')];
+    tables.forEach(function (tbl) {
+      EDU.$$('thead tr:nth-child(2) th', tbl).forEach(function (th) {
+        var cs = getComputedStyle(th);
+        pvCtx.font = (cs.fontWeight || '700') + ' ' + (cs.fontSize || '13px') + ' ' + (cs.fontFamily || 'sans-serif');
+        th.textContent.split(/\s+/).forEach(function (w) { if (w) widest = Math.max(widest, pvCtx.measureText(w).width); });
+      });
+    });
+    var col = Math.ceil(widest + 11);   /* + cell padding (8), border and a little slack */
+    tables.forEach(function (tbl) { tbl.style.minWidth = Math.max(660, col * 9) + 'px'; });
+  }
+  if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', fitPv);
+
   function renderNumbers() {
     var s = W.clean(state.num);
     var err = $('#num-err'), out = $('#num-out');
     if (numIn.value !== state.num && document.activeElement !== numIn) numIn.value = state.num;
     if (s === null) {
-      err.textContent = t('num_invalid');
-      numIn.setAttribute('aria-invalid', 'true');
+      var blank = !String(state.num || '').trim();   /* an empty box is not a mistake: just wait for a number */
+      err.textContent = blank ? '' : t('num_invalid');
+      if (blank) numIn.removeAttribute('aria-invalid'); else numIn.setAttribute('aria-invalid', 'true');
       out.hidden = true;
       return;
     }
@@ -492,7 +545,7 @@
     $('#pv-big').hidden = !big;
     EDU.$$('#pv-in, #pv-intl').forEach(function (tb) { tb.parentNode.hidden = big; });
     EDU.$$('.uc-pv-cap').forEach(function (c) { c.hidden = big; });
-    if (!big) { pvTable($('#pv-in'), PV_IN, s); pvTable($('#pv-intl'), PV_INTL, s); }
+    if (!big) { pvTable($('#pv-in'), PV_IN, s); pvTable($('#pv-intl'), PV_INTL, s); fitPv(); }
     /* expanded form */
     var terms = [], pows = [];
     for (var i = 0; i < s.length; i++) {
@@ -567,6 +620,9 @@
     } else {
       var pair = EDU.pick(cat.pr), big = unitById(cat, pair[0]), small = unitById(cat, pair[1]);
       var F = round(big.f / small.f, 10), n = nice(level);
+      /* Data: a bit cannot be split, and 1.45 KiB = 1484.8 bytes is not a real file size. Harder data
+         questions use whole bytes (for bits) or quarters (× 1000 or × 1024 is then always whole). */
+      if (cat.id === 'data' && hard) n = small.id === 'bit' ? EDU.randInt(11, 128) : EDU.randInt(1, 30) + EDU.pick([0.25, 0.5, 0.75]);
       if (Math.random() < 0.5) { a = big.id; b = small.id; v = n; r = round(n * F, 12); }
       else { a = small.id; b = big.id; v = round(n * F, 12); r = n; }
     }
@@ -628,6 +684,9 @@
     if (P.done) inp.value = P.given;
     inp.disabled = P.done;
     $('#pr-check').disabled = P.done;
+    var pm = $('#pr-pm');                     /* temperature answers can be negative */
+    pm.hidden = q.cat !== 'temp';
+    pm.disabled = P.done;
     var fb = $('#pr-fb'), ol = $('#pr-steps');
     fb.textContent = ''; ol.textContent = ''; ol.hidden = true;
     if (note) fb.appendChild(el('p', { class: 'callout warning', text: note }));
@@ -681,6 +740,11 @@
     if (res === 'wrong') P.streak = 0; else { P.c++; P.streak++; }
     savePr(); renderQuestion();
     $('#pr-next').focus();
+  });
+  $('#pr-pm').addEventListener('click', function () {
+    var inp = $('#pr-ans');
+    if (state.pr.done) return;
+    flipSign(inp); inp.focus();
   });
   $('#pr-next').addEventListener('click', function () {
     newQuestion(true); savePr(); renderQuestion();

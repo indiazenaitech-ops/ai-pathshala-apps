@@ -29,6 +29,19 @@ module.exports = async function ({ page, lang, expect }) {
   expect(await val('words') === 13, 'joined words counted once (13), got ' + await val('words'));
   expect(await val('sents') === 3, 'numbered lines are not split at "1." (3 sentences), got ' + await val('sents'));
 
+  // 1c) sentence ends that are easy to get wrong
+  const sents = async (text) => { await fill(text); return val('sents'); };
+  expect(await sents('Did you go? No. I stayed at home.') === 3, '"No." at the end of a sentence splits (3)');
+  expect(await sents('My roll No. 5 is here. Yes.') === 2, '"No. 5" (number) does not split (2)');
+  expect(await sents('We need pens, pencils, erasers etc. The shop opens at 9.') === 2, '"etc." before a capital ends the sentence (2)');
+  expect(await sents('I got grade A. My friend got B.') === 2, '"grade A." ends the sentence (2)');
+  expect(await sents('Dr. A. P. J. Abdul Kalam was born in 1931. Shri R. Kumar met M. K. Gandhi.') === 2, 'initials do not split (2)');
+  expect(await sents('Q. What is AI? Ans. It is a field. We woke at 7 a.m. Then we ate.') === 4, 'Q./Ans. and a.m. handled (4)');
+  expect(await sents('Our President A.P.J. Abdul Kalam was kind. I live in the U.S.A. Then I moved.') === 3, 'A.P.J. joins, "the U.S.A." ends (3)');
+  expect(await sents('मी पु. ल. देशपांडे वाचले. மு. வரதராசன் எழுத்தாளர். அவர் நல்லவர்.') === 3, 'Indian-script initials पु. ल. / மு. do not split (3)');
+  await fill('I went home--it was late.');
+  expect(await val('words') === 6, 'a double hyphen is a dash, not a joined word (6), got ' + await val('words'));
+
   // 2) Hindi danda + double danda, Urdu full stop + question mark
   await fill('मेरा नाम राम है। मैं दसवीं कक्षा में पढ़ता हूँ॥ क्या तुम आओगे?\nیہ کتاب ہے۔ کیا آپ آئیں گے؟');
   expect(await val('words') === 20, 'Hindi + Urdu words = 20, got ' + await val('words'));
@@ -50,6 +63,10 @@ module.exports = async function ({ page, lang, expect }) {
   expect((await page.getAttribute('#meter', 'data-state')) === 'over', '53 words is a little over');
   await fill(words(70));
   expect((await page.getAttribute('#meter', 'data-state')) === 'way', '70 words is far over');
+  expect((await page.textContent('#zone-lo')) === '40' && (await page.textContent('#zone-hi')) === '50', 'target zone shows 40 and 50');
+  // far over: the zone gets thin, so one "40–50" label replaces two labels drawn on top of each other
+  await fill(words(1500));
+  expect((await page.textContent('#zone-lo')) === '' && (await page.textContent('#zone-hi')) === '40–50', 'thin zone has one 40–50 label, got "' + await page.textContent('#zone-hi') + '"');
   // custom character limit
   await page.selectOption('#preset', 'custom');
   await page.fill('#cmin', '10');
@@ -58,6 +75,14 @@ module.exports = async function ({ page, lang, expect }) {
   await fill('Hello world');
   expect((await page.getAttribute('#meter', 'data-value')) === '11', 'character meter counts 11');
   expect((await page.getAttribute('#meter', 'data-state')) === 'ok', '11 characters fits 10–20');
+  // "1e3" means 1000 (not 1) and a negative minimum becomes 0 when the box is left
+  await page.fill('#cmax', '1e3');
+  await page.fill('#cmin', '-5');
+  await page.locator('#cmin').blur();
+  await settle();
+  expect((await page.getAttribute('#bar', 'aria-valuemax')) === '1000', 'custom max 1e3 = 1000, got ' + await page.getAttribute('#bar', 'aria-valuemax'));
+  expect((await page.inputValue('#cmin')) === '0', 'negative minimum corrected to 0, got ' + await page.inputValue('#cmin'));
+  await page.click('#unit-w');
   await page.selectOption('#preset', 'para');
 
   // 4) longest sentences + check view
@@ -87,7 +112,18 @@ module.exports = async function ({ page, lang, expect }) {
   await page.check('#skip-small');
   await page.click('#rep-list .chip[data-word="school"]');
   expect((await page.$$('#check mark')).length === 3, 'repeated word highlighted 3 times in check view');
+  expect(await page.evaluate(() => document.activeElement && document.activeElement.dataset.word === 'school' && document.activeElement.getAttribute('aria-pressed') === 'true'),
+    'the pressed chip keeps keyboard focus after the list is redrawn');
   await page.click('#view-write');
+
+  // 5b) a long repeated word (a pasted web address) wraps inside its card instead of widening the page
+  const url = 'https://www.example.com/' + 'verylongpath/'.repeat(12) + 'page.html';
+  await fill(url + ' and ' + url);
+  const fits = await page.evaluate(() => {
+    const c = document.querySelector('#rep-list .chip'), card = document.querySelector('#rep-card');
+    return !!c && c.getBoundingClientRect().right <= card.getBoundingClientRect().right + 1 && c.getBoundingClientRect().left >= card.getBoundingClientRect().left - 1;
+  });
+  expect(fits, 'long repeated-word chip stays inside its card');
 
   // 6) readability for English
   await fill('The sun is bright today. We went to the park with our friends. We played games and ate food. Then we sat under a big tree and read books. It was a fun day for all of us. We will go again next week.');
@@ -104,6 +140,16 @@ module.exports = async function ({ page, lang, expect }) {
   await page.click('#undo');
   await settle();
   expect((await page.inputValue('#text')) === before, 'undo restores the text');
+  // Example (confirm) then Clear: Undo must still bring back the student's own text, not the example
+  await page.click('#example');
+  await settle();
+  expect((await page.inputValue('#text')) === sample, 'example replaces the text');
+  await page.click('#clear');
+  await settle();
+  expect(await page.isVisible('#undo'), 'undo still offered after Example then Clear');
+  await page.click('#undo');
+  await settle();
+  expect((await page.inputValue('#text')) === before, 'undo after Example + Clear restores the own text');
 
   // 8) autosave survives a reload
   await fill('Saved draft text for the test.');
@@ -129,4 +175,18 @@ module.exports = async function ({ page, lang, expect }) {
   expect(/^writing-\d{4}-\d{2}-\d{2}\.txt$/.test(dl.suggestedFilename()), 'txt file name, got ' + dl.suggestedFilename());
   const body = fs.readFileSync(await dl.path(), 'utf8').replace(/^﻿/, '').replace(/\r\n/g, '\n');
   expect(body === g.outline, 'downloaded text matches the editor');
+
+  // 11) the example follows the language, even after a language switch and a reload
+  await page.click('#example');
+  await settle();
+  const other = lang === 'bn' ? 'ta' : 'bn';
+  await page.evaluate((l) => EDU.setLang(l), other);
+  await settle();
+  const otherSample = await page.evaluate((l) => window.APP_CONTENT[l].sample, other);
+  expect((await page.inputValue('#text')) === otherSample, 'example switches to the ' + other + ' example');
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForTimeout(500);
+  await page.evaluate((l) => EDU.setLang(l), lang);
+  await settle();
+  expect((await page.inputValue('#text')) === sample, 'after a reload the example is still treated as an example and follows the language');
 };

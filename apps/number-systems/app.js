@@ -18,6 +18,19 @@
   var Z = BigInt(0), ONE = BigInt(1);
 
   function pad(s, n) { s = String(s); while (s.length < n) s = '0' + s; return s; }
+  /* keep digit lists like "0–9, A–F" left-to-right inside Urdu sentences */
+  function iso(s) { return '⁦' + s + '⁩'; }
+  /* phone keyboards in Indian languages often type native digits (२५, ২৫, ௨௫, ۲۵…): read them as 0–9 */
+  var NATIVE_ZERO = [0x0660, 0x06F0, 0x0966, 0x09E6, 0x0A66, 0x0AE6, 0x0B66, 0x0BE6, 0x0C66, 0x0CE6, 0x0D66, 0xFF10];
+  function latinDigits(s) {
+    return String(s == null ? '' : s).replace(/[٠-٩۰-۹०-९০-৯੦-੯૦-૯୦-୯௦-௯౦-౯೦-೯൦-൯０-９]/g, function (c) {
+      var cp = c.charCodeAt(0);
+      for (var i = 0; i < NATIVE_ZERO.length; i++) if (cp >= NATIVE_ZERO[i] && cp <= NATIVE_ZERO[i] + 9) return String(cp - NATIVE_ZERO[i]);
+      return c;
+    }).replace(/٫/g, '.');
+  }
+  /* sentence end mark per language (used when two strings are joined) */
+  var STOP = { hi: '।', bn: '।', pa: '।', or: '।', ur: '۔' };
   function pow(b, e) { var r = ONE, x = BigInt(b); for (var i = 0; i < e; i++) r *= x; return r; }
   function bigFrom(str, base) {
     var n = Z, b = BigInt(base);
@@ -37,13 +50,14 @@
 
   /* Clean and validate a number typed in a base. Returns {ok, base, int, frac} or {err, ch}. */
   function parseNum(raw, base) {
-    var s = String(raw == null ? '' : raw).replace(/[\s_,  ]/g, '').toUpperCase();
+    var s = latinDigits(raw).replace(/[\s_,  ]/g, '').toUpperCase();
     if (base === 16 && /^0X/.test(s)) s = s.slice(2);
     if (base === 2 && /^0B/.test(s)) s = s.slice(2);
     if (base === 8 && /^0O/.test(s)) s = s.slice(2);
     if (!s || s === '.') return { err: 'empty' };
     if (s[0] === '-' || s[0] === '−') return { err: 'minus' };
     if (s[0] === '+') s = s.slice(1);
+    if (!s || s === '.') return { err: 'empty' };          /* a lone "+" is not a number */
     if (s.split('.').length > 2) return { err: 'points' };
     for (var i = 0; i < s.length; i++) {
       var c = s[i];
@@ -62,7 +76,7 @@
     if (p.err === 'minus') return t('err_minus');
     if (p.err === 'points') return t('err_points');
     if (p.err === 'long') return t('err_long', { n: MAXLEN });
-    return t('err_digit', { c: p.ch, base: baseName(base), d: ALLOWED[base] });
+    return t('err_digit', { c: p.ch, base: baseName(base), d: iso(ALLOWED[base]) });
   }
 
   /* exact value of a fraction part as N / 10^K */
@@ -288,13 +302,16 @@
   placesIn.value = conv.places;
 
   function pickButtons(box, items, cur, onPick) {
+    /* the buttons are rebuilt on every render: keep keyboard focus on the same choice */
+    var ae = document.activeElement, foc = ae && box.contains(ae) ? ae.dataset.v : null;
     box.innerHTML = '';
     items.forEach(function (it) {
       box.appendChild(el('button', { type: 'button', class: 'btn', 'aria-pressed': String(it.v === cur), dataset: { v: String(it.v) },
         onclick: function () { onPick(it.v); } },
         it.short ? [el('span', { class: 'lg', text: it.label }), el('span', { class: 'sh', text: it.short })] : el('span', { text: it.label }),
-        it.sub ? el('small', { text: it.sub }) : null));
+        it.sub ? el('small', { text: it.sub, dir: it.subLtr ? 'ltr' : null }) : null));
     });
+    if (foc != null) { var fb = box.querySelector('[data-v="' + foc + '"]'); if (fb) fb.focus(); }
   }
   function saveConv() { store.set('conv', conv); }
   function renderConvert() {
@@ -310,15 +327,17 @@
     var p = parseNum(numIn.value, conv.base);
     var msg = $('#conv-msg'), res = $('#results'), steps = $('#steps');
     numIn.classList.toggle('bad', !!(p.err && p.err !== 'empty'));
+    numIn.setAttribute('aria-invalid', String(!!(p.err && p.err !== 'empty')));
+    numIn.inputMode = conv.base === 16 ? 'text' : 'decimal';
     $('#places-wrap').hidden = !(p.ok && p.base === 10 && p.frac);
     res.innerHTML = ''; steps.innerHTML = '';
     if (!p.ok) {
       msg.className = 'ns-msg small' + (p.err === 'empty' ? '' : ' bad');
       msg.textContent = parseErrText(p, conv.base);
-      res.appendChild(el('p', { class: 'muted mb0', text: t('err_empty') }));
+      res.appendChild(el('p', { class: 'mb0 ' + (p.err === 'empty' ? 'muted' : 'ns-msg bad'), text: parseErrText(p, conv.base) }));
     } else {
       msg.className = 'ns-msg small muted';
-      msg.textContent = t('allowed_digits', { base: baseName(conv.base), d: ALLOWED[conv.base] });
+      msg.textContent = t('allowed_digits', { base: baseName(conv.base), d: iso(ALLOWED[conv.base]) });
       var all = convertAll(p, conv.places);
       BASES.forEach(function (b) {
         var r = all[b], s = numStr(r);
@@ -395,11 +414,14 @@
     box.appendChild(el('div', { class: 'ns-nib', id: 'nib-hi' }));
     box.appendChild(el('div', { class: 'ns-nib', id: 'nib-lo' }));
   }
+  /* the note under the toy is kept as [key, vars] so it is re-translated on a language change */
+  var bitMsg = null;
+  function showBitMsg() { $('#bit-msg').textContent = bitMsg ? t(bitMsg[0], bitMsg[1]) : ''; }
   function setByte(v, wrapped) {
     byte = ((v % 256) + 256) % 256;
     store.set('byte', byte);
+    bitMsg = wrapped ? ['wrap_note'] : null;
     renderBits();
-    $('#bit-msg').textContent = wrapped ? t('wrap_note') : '';
   }
   function renderBits() {
     $$('#bits button').forEach(function (b) {
@@ -424,6 +446,7 @@
     $('#bit-note').textContent = ci.note;
     var din = $('#bit-dec-in');
     if (document.activeElement !== din) din.value = byte;
+    showBitMsg();
   }
   $('#bit-clear').addEventListener('click', function () { setByte(0); });
   $('#bit-inc').addEventListener('click', function () { setByte(byte + 1, byte === 255); });
@@ -432,16 +455,22 @@
   $('#bit-shr').addEventListener('click', function () { setByte(byte >> 1); });
   $('#bit-not').addEventListener('click', function () { setByte(~byte & 255); });
   $('#bit-dec-in').addEventListener('input', function () {
-    var v = parseInt(this.value, 10);
-    if (isNaN(v)) return;
-    if (v < 0 || v > 255) { $('#bit-msg').textContent = t('dec_range'); return; }
+    if (this.value === '') return;
+    var v = Number(this.value);
+    if (!isFinite(v)) return;
+    if (v !== Math.floor(v) || v < 0 || v > 255) { bitMsg = ['dec_range']; showBitMsg(); return; }
     setByte(v);
   });
-  $('#bit-char-in').addEventListener('input', function () {
-    var ch = Array.from(this.value)[0];
-    if (!ch) return;
+  $('#bit-dec-in').addEventListener('change', function () { this.value = byte; });
+  $('#bit-char-in').addEventListener('input', function (e) {
+    if (e.isComposing) return;
+    /* the newest character typed wins, so typing a, b, c… steps through the letters */
+    var chars = Array.from(this.value);
+    if (!chars.length) return;
+    var ch = chars[chars.length - 1];
+    if (chars.length > 1) this.value = ch;
     var cp = ch.codePointAt(0);
-    if (cp > 255) { $('#bit-msg').textContent = t('char_too_big', { ch: ch, u: uPlus(cp) }); return; }
+    if (cp > 255) { bitMsg = ['char_too_big', { ch: ch, u: uPlus(cp) }]; showBitMsg(); return; }
     setByte(cp);
   });
 
@@ -449,7 +478,7 @@
   var addSt = Object.assign({ a: '1011', b: '111' }, store.get('add', {}));
   var addA = $('#add-a'), addB = $('#add-b');
   addA.value = addSt.a; addB.value = addSt.b;
-  function cleanBin(s) { return String(s || '').replace(/[\s_]/g, ''); }
+  function cleanBin(s) { return latinDigits(s).replace(/[\s_]/g, ''); }
   function addBinary(a, b) {
     var n = Math.max(a.length, b.length), A = pad(a, n), Bv = pad(b, n), carry = 0, digits = [], carries = [], cols = [];
     for (var i = n - 1; i >= 0; i--) {
@@ -466,11 +495,12 @@
     var a = cleanBin(addA.value), b = cleanBin(addB.value), msg = $('#add-msg');
     var out = $('#add-out'), cols = $('#add-cols'), check = $('#add-check');
     out.innerHTML = ''; cols.innerHTML = ''; check.textContent = '';
+    out.dataset.value = ''; out.dataset.extra = ''; delete check.dataset.sum;
     var bad = [[a, addA], [b, addB]].filter(function (x) { x[1].classList.toggle('bad', !/^[01]*$/.test(x[0])); return !/^[01]+$/.test(x[0]); });
     if (bad.length) {
       var wrong = (a + b).replace(/[01]/g, '');
       msg.className = 'ns-msg small' + (wrong ? ' bad' : '');
-      msg.textContent = wrong ? t('err_digit', { c: Array.from(wrong)[0], base: baseName(2), d: ALLOWED[2] }) : t('err_empty');
+      msg.textContent = wrong ? t('err_digit', { c: Array.from(wrong)[0], base: baseName(2), d: iso(ALLOWED[2]) }) : t('add_empty');
       check.hidden = true; $('#add-cols-wrap').hidden = true;
       return;
     }
@@ -494,19 +524,31 @@
     out.dataset.value = r.sum;
     out.dataset.extra = String(r.extra);
     r.cols.forEach(function (c) {
-      cols.appendChild(el('li', { class: 'ns-ltr-nums', dataset: { col: String(c.n) } }, t('col_step', { n: c.n, x: c.x, y: c.y, c: c.c, s: c.s.toString(2), w: c.w, o: c.o })));
+      cols.appendChild(el('li', { class: 'ns-ltr-nums', tabindex: '0', dataset: { col: String(c.n) } }, t('col_step', { n: c.n, x: c.x, y: c.y, c: c.c, s: c.s.toString(2), w: c.w, o: c.o })));
     });
     if (r.extra) cols.appendChild(el('li', { text: t('add_extra_bit') }));
     check.textContent = t('add_check', { eq: '⁦' + va + ' + ' + vb + ' = ' + vs + ' ✓⁩' });
     check.dataset.sum = vs.toString();
-    /* highlight a column when its explanation is hovered / tapped */
+    /* highlight a column when its explanation is pointed at (mouse), focused (keyboard) or tapped
+       (touch: smartboards and phones have no hover, so a tap pins the highlight until tapped again) */
+    var pin = 0, hov = 0;
+    function paint() {
+      $$('#add-table td.hl', out).forEach(function (td) { td.classList.remove('hl'); });
+      [pin, hov].forEach(function (col) {
+        if (!col) return;
+        var idx = w - col + 1;                  /* +1 for the label cell */
+        $$('#add-table tr', out).forEach(function (tr) { var td = tr.children[idx]; if (td) td.classList.add('hl'); });
+      });
+      $$('li[data-col]', cols).forEach(function (li) { li.classList.toggle('on', +li.dataset.col === pin); });
+    }
     $$('li[data-col]', cols).forEach(function (li) {
-      function hl(on) {
-        var idx = w - +li.dataset.col + 1;      /* +1 for the label cell */
-        $$('#add-table tr', out).forEach(function (tr) { var td = tr.children[idx]; if (td) td.classList.toggle('hl', on); });
-      }
-      li.addEventListener('pointerenter', function () { hl(true); });
-      li.addEventListener('pointerleave', function () { hl(false); });
+      var col = +li.dataset.col;
+      li.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') { hov = col; paint(); } });
+      li.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { hov = 0; paint(); } });
+      li.addEventListener('focus', function () { var kb = true; try { kb = li.matches(':focus-visible'); } catch (e) { } if (kb) { hov = col; paint(); } });
+      li.addEventListener('blur', function () { hov = 0; paint(); });
+      li.addEventListener('click', function () { pin = pin === col ? 0 : col; paint(); });
+      li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); li.click(); } });
     });
   }
   function saveAdd() { addSt = { a: addA.value, b: addB.value }; store.set('add', addSt); renderAdd(); }
@@ -577,7 +619,7 @@
     var bytes = utf8(cp), n = bytes.length, total = SPLIT[n].reduce(function (a, b) { return a + b; }, 0);
     var bits = pad(cp.toString(2), total), groups = [], pos = 0;
     SPLIT[n].forEach(function (len) { groups.push(bits.substr(pos, len)); pos += len; });
-    box.appendChild(el('h2', { class: 'ns-h' }, t('enc_how', { u: uPlus(cp), n: n }), ' ', el('span', { class: 'no-i18n', style: { color: 'var(--accent)' }, text: glyph(ch, cp) })));
+    box.appendChild(el('h2', { class: 'ns-h' }, t(n === 1 ? 'enc_how_one' : 'enc_how', { u: uPlus(cp), n: n }), ' ', el('span', { class: 'no-i18n', style: { color: 'var(--accent)' }, text: glyph(ch, cp) })));
     box.appendChild(el('p', { class: 'mb0', text: '1. ' + t('enc_how_1', { bits: total }) }));
     box.appendChild(el('div', { class: 'ns-bitrow' }, uPlus(cp) + ' = ', groups.map(function (g, i) { return [el('b', { class: 'p' + i, text: g }), ' ']; })));
     box.appendChild(el('p', { class: 'mb0', text: '2. ' + t('enc_how_2') }));
@@ -639,10 +681,10 @@
 
   /* ================================================================ practice quiz */
   var LEVELS = ['easy', 'med', 'hard', 'frac'];
-  var LVL_SUB = { easy: '0–31', med: '16–255', hard: '256–4095', frac: '5.625' };
+  var LVL_SUB = { easy: '2–31', med: '16–255', hard: '256–4095', frac: '5.625' };
   var quiz = Object.assign({ level: 'easy', c: 0, n: 0, streak: 0, best: 0 }, store.get('quiz', {}));
   if (LEVELS.indexOf(quiz.level) < 0) quiz.level = 'easy';
-  var q = null, answered = false, fbState = null, qAns = $('#q-ans');
+  var q = null, answered = false, answeredAt = 0, fbState = null, qAns = $('#q-ans');
 
   function makeQ(level) {
     var pairs;
@@ -657,7 +699,7 @@
       p10 = { ok: true, base: 10, int: String(EDU.randInt(lim[0], lim[1])), frac: '' };
     }
     var all = convertAll(p10, 12);
-    return { from: pr[0], to: pr[1], num: numStr(all[pr[0]]), ans: numStr(all[pr[1]]) };
+    return { from: pr[0], to: pr[1], num: numStr(all[pr[0]]), ans: numStr(all[pr[1]]), val: numStr(p10) };
   }
   function newQ() {
     var prev = q, tries = 0;
@@ -675,10 +717,11 @@
   }
   function checkQ() {
     if (!q) return;
-    if (answered) { newQ(); qAns.focus(); return; }
+    /* Check turns into Next in the same spot: ignore a double tap / held Enter so the feedback is not skipped */
+    if (answered) { if (Date.now() - answeredAt < 700) return; newQ(); qAns.focus(); return; }
     var p = parseNum(qAns.value, q.to);
     if (!p.ok) { fbState = { kind: 'err', p: p }; renderFb(); return; }
-    answered = true;
+    answered = true; answeredAt = Date.now();
     var ok = numStr(p) === q.ans;
     quiz.n++;
     if (ok) { quiz.c++; quiz.streak++; quiz.best = Math.max(quiz.best, quiz.streak); } else quiz.streak = 0;
@@ -695,10 +738,10 @@
     if (!fbState) return;
     if (fbState.kind === 'err') { fb.classList.add('bad'); fb.textContent = parseErrText(fbState.p, q.to); return; }
     if (fbState.kind === 'ok') { fb.classList.add('ok'); fb.append(t('correct') + ' ', numEl(q.num, q.from), ' = ', numEl(q.ans, q.to)); }
-    else { fb.classList.add('bad'); fb.append(t('wrong') + '. ' + t('right_answer') + ' ', numEl(q.ans, q.to)); }
+    else { fb.classList.add('bad'); fb.append(t('wrong') + (STOP[EDU.lang] || '.') + ' ' + t('right_answer') + ' ', numEl(q.ans, q.to)); }
   }
   function renderQuiz() {
-    pickButtons($('#levels'), LEVELS.map(function (l) { return { v: l, label: t('lvl_' + l), sub: LVL_SUB[l] }; }), quiz.level, function (l) {
+    pickButtons($('#levels'), LEVELS.map(function (l) { return { v: l, label: t('lvl_' + l), sub: LVL_SUB[l], subLtr: true }; }), quiz.level, function (l) {
       quiz.level = l; store.set('quiz', quiz); newQ();
     });
     var sc = $('#q-score'); sc.innerHTML = '';
@@ -711,7 +754,8 @@
     show.dataset.num = q.num; show.dataset.from = String(q.from); show.dataset.to = String(q.to);
     show.append(pretty(q.num, q.from), el('sub', { text: String(q.from) }), ' = ', el('span', { class: 'qm', text: answered ? '' : '?' }),
       answered ? pretty(q.ans, q.to) : '', el('sub', { text: String(q.to) }));
-    $('#q-ans-l').textContent = t('your_answer', { base: baseName(q.to), d: ALLOWED[q.to] });
+    $('#q-ans-l').textContent = t('your_answer', { base: baseName(q.to), d: iso(ALLOWED[q.to]) });
+    qAns.inputMode = q.to === 16 ? 'text' : 'decimal';
     $('#q-check').textContent = answered ? t('next') : t('check');
     $('#q-check').dataset.mode = answered ? 'next' : 'check';
     $('#q-next').hidden = answered;
@@ -728,7 +772,12 @@
   });
   $('#ws-print').addEventListener('click', function () {
     var qs = [], seen = {};
-    for (var i = 0; qs.length < 12 && i < 200; i++) { var w = makeQ(quiz.level), key = w.num + '|' + w.from + '|' + w.to; if (!seen[key]) { seen[key] = 1; qs.push(w); } }
+    /* 12 different questions; for the first 300 tries also avoid asking about the same number twice */
+    for (var i = 0; qs.length < 12 && i < 400; i++) {
+      var w = makeQ(quiz.level), key = w.num + '|' + w.from + '|' + w.to;
+      if (seen[key] || (i < 300 && seen['v' + w.val])) continue;
+      seen[key] = 1; seen['v' + w.val] = 1; qs.push(w);
+    }
     printOnly(el('div', { class: 'ns-ws' },
       el('h2', { text: t('ws_title') + ' · ' + t('lvl_' + quiz.level) }),
       el('p', { text: t('ws_name_line') }),

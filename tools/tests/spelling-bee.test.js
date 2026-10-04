@@ -35,12 +35,20 @@ module.exports = async function ({ page, lang, expect, t, log }) {
     return (await lastSpoken()).text;
   };
   const waitState = (P, s) => page.waitForFunction(([p, x]) => { const w = document.getElementById(p + '-wp'); return w && w.dataset.state === x; }, [P, s], { timeout: 6000 });
+  /* the teacher's ✓ ✗ and "Show answer" ignore taps in the first 350 ms of a new word (double-tap guard) */
+  const settle = () => page.waitForTimeout(400);
+  const reload = async () => {
+    await page.reload({ waitUntil: 'load' });
+    await page.waitForFunction(() => window.EDU_READY && document.querySelectorAll('#p-levels .lvl').length === 7);
+  };
+  /* confirm() answered by the test (verify.js would accept every dialog) */
+  const confirmWith = (answer) => page.evaluate((a) => { window.__confirms = []; window.confirm = (m) => { window.__confirms.push(String(m)); return a; }; }, answer);
+  const confirms = () => page.evaluate(() => window.__confirms || []);
   const content = await page.evaluate((l) => ({ words: window.SB_WORDS.levels.map((L) => L.words.map((x) => x.w)), sent: Object.fromEntries([].concat(...window.SB_WORDS.levels.map((L) => L.words.map((x) => [x.w, x.s])))), m: window.APP_CONTENT[l].m }), lang);
   const stat = (k) => txt(`#stats [data-stat="${k}"] b`);
 
   await page.addInitScript(installFakeSpeech);
-  await page.reload({ waitUntil: 'load' });
-  await page.waitForFunction(() => window.EDU_READY && document.querySelectorAll('#p-levels .lvl').length === 7);
+  await reload();
   await page.waitForSelector('#voice-status[data-voice="ok"]', { timeout: 5000 });
 
   /* 1) Setup: 5 levels + my list + mistakes; level 1 picked; voices listed */
@@ -73,11 +81,14 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   const slow = await lastSpoken();
   expect(slow.text === w1 && slow.rate < 0.7, 'slow repeat is the word at a slower rate: ' + JSON.stringify(slow));
 
-  /* 4) Wrong first try → letter-by-letter feedback (one missing letter), then right */
+  /* 4) Wrong first try → letter-by-letter feedback (one missing letter), then right.
+        A double click on Check must not use up the second try with the same answer. */
   const wrong1 = w1.slice(0, 1) + w1.slice(2);
   await page.fill('#p-input', wrong1);
-  await page.click('#p-check');
+  await page.dblclick('#p-check');
   await waitState('p', 'retry');
+  await page.waitForTimeout(150);
+  expect(await page.evaluate(() => document.getElementById('p-wp').dataset.state) === 'retry', 'double click on Check keeps the second try');
   expect(await attr('#p-fb', 'data-kind') === 'retry', 'second-try feedback shown');
   expect(await count('#p-fb .tile.miss') === 1, 'exactly one missing-letter box for "' + wrong1 + '"');
   expect(await count('#p-fb .tile.ok') === wrong1.length, 'all typed letters marked right');
@@ -128,8 +139,21 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(bottom.length === 2 && bottom[1] === w3, 'comparison rows show the right spelling "' + w3 + '": ' + bottom.join(' / '));
   expect(await attr('#p-play', 'data-streak') === '0' && await txt('#p-score') === '2', 'streak reset, score stays 2');
 
+  /* 6b) Reload in the middle of the round: the round goes on at word 4 with score 2 */
+  await reload();
+  expect(await page.isVisible('#p-play') && await page.isHidden('#p-setup'), 'the unfinished round is back after a reload');
+  expect(await txt('#p-count') === t('word_x_of_y', { i: '4', n: '10' }), 'round continues at word 4: ' + await txt('#p-count'));
+  expect(await txt('#p-score') === '2' && await attr('#p-play', 'data-streak') === '0', 'score 2 and streak 0 kept');
+  expect(await stat('st_words') === '3', 'progress counted 3 words');
+  n0 = await spokenN();
+  await page.click('#p-hear');                                   // no auto-speech after a reload: the child taps 🔊
+  const w4 = await heardAfter(n0);
+  expect(![w1, w2, w3].includes(w4) && content.words[1].includes(w4), 'word 4 is a new level 2 word: ' + w4);
+  await page.fill('#p-input', w4); await page.press('#p-input', 'Enter');
+  await waitState('p', 'done');
+
   /* 7) Finish the round correctly → summary 9/10 with one word to practise */
-  for (let i = 4; i <= 10; i++) {
+  for (let i = 5; i <= 10; i++) {
     n0 = await spokenN();
     await page.click('#p-next');
     await waitState('p', 'ask');
@@ -144,6 +168,7 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(await count('#sum-mist li') === 1 && (await txt('#sum-mist li .mw')) === w3, 'the missed word is listed: ' + w3);
   expect((await txt('#sum-streak')).includes(t('sum_streak', { n: '7' })), 'best streak 7: ' + await txt('#sum-streak'));
   expect(await stat('st_words') === '10' && await stat('st_review') === '1', 'progress: 10 words, 1 to review');
+  expect(await page.evaluate(() => localStorage.getItem('edu.spelling-bee.run')) === null, 'a finished round is no longer kept for a reload');
 
   /* 8) Practise the mistake → perfect mini-round, mistakes list empties */
   n0 = await spokenN();
@@ -158,37 +183,48 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(await txt('#sum-score') === t('sum_score', { c: '1', n: '1' }) && await page.isVisible('#sum-perfect'), 'perfect mistake round');
   expect(await stat('st_review') === '0', 'mistakes list is empty again');
 
-  /* 9) Teacher list: 2 good words, a bad line skipped, a duplicate ignored */
+  /* 9) Teacher list pasted from a worksheet: 3 good words ("2) peacock" and "• constructor." are cleaned up;
+        "constructor" is also a name on JS objects), a bad line skipped, a duplicate ignored */
   await page.click('#tab-lists');
-  await page.fill('#l-text', 'giraffe | The giraffe has a long neck. | a tall animal\npeacock\n12345\nGiraffe');
+  await page.fill('#l-text', 'giraffe | The giraffe has a long neck. | a tall animal\n2) peacock\n12345\nGiraffe\n• constructor.');
   await page.click('#l-save');
   const msg = await txt('#l-msg');
-  expect(msg.includes(t('list_saved', { n: '2' })) && msg.includes(t('list_skipped', { n: '1' })), 'saved 2 words, skipped 1 line: ' + msg);
-  expect(await count('#l-table tbody tr') === 2 && await attr('#l-levels [data-level="custom"]', 'aria-pressed') === 'true', 'my list shown in the table');
-  expect(await page.$$eval('#print-area .test-sheet .key-list li', (l) => l.map((x) => x.textContent).join(',')) === 'giraffe,peacock', 'printable test has an answer key');
+  expect(msg.includes(t('list_saved', { n: '3' })) && msg.includes(t('list_skipped', { n: '1' })), 'saved 3 words, skipped 1 line: ' + msg);
+  expect(await count('#l-table tbody tr') === 3 && await attr('#l-levels [data-level="custom"]', 'aria-pressed') === 'true', 'my list shown in the table');
+  expect(await txt('#l-table tbody tr:nth-child(3) td.m') === '', '"constructor" has no made-up meaning: "' + await txt('#l-table tbody tr:nth-child(3) td.m') + '"');
+  expect(await page.$$eval('#print-area .test-sheet .key-list li', (l) => l.map((x) => x.textContent).join(',')) === 'giraffe,peacock,constructor', 'printable test has an answer key');
+  expect(await page.$eval('#print-area .list-sheet tbody tr td:nth-child(4)', (td) => td.getAttribute('dir')) === 'ltr', 'printed English sentences are marked left-to-right (for Urdu pages)');
+
+  /* 9b) "Example" asks before it replaces the teacher's own list */
+  await confirmWith(false);
+  await page.click('#l-example');
+  expect((await confirms())[0] === t('confirm_replace_list', { n: '3' }), 'Example asks first: ' + (await confirms())[0]);
+  expect((await page.inputValue('#l-text')).startsWith('giraffe') && await count('#l-table tbody tr') === 3, 'saying "no" keeps the list');
+  await confirmWith(true);
 
   await page.click('#tab-practise');
   await page.click('#sum-levels');
   await page.click('#p-levels [data-level="custom"]');
-  expect(await txt('#p-round-info') === t('round_info', { n: '2' }), 'my list gives a 2-word round');
+  expect(await txt('#p-round-info') === t('round_info', { n: '3' }), 'my list gives a 3-word round');
   n0 = await spokenN();
   await page.click('#p-start');
   await waitState('p', 'ask');
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 3; i++) {
     const w = await heardAfter(n0);
-    expect(w === 'giraffe' || w === 'peacock', 'custom word spoken: ' + w);
+    expect(['giraffe', 'peacock', 'constructor'].includes(w), 'custom word spoken: ' + w);
     if (w === 'giraffe') expect(await txt('#p-meaning') === 'a tall animal', 'teacher meaning shown');
+    if (w === 'constructor') expect(await page.isHidden('#p-meaning'), 'no meaning row for a word without one');
     await page.fill('#p-input', w.toUpperCase()); await page.press('#p-input', 'Enter');
     await waitState('p', 'done');
     expect(await attr('#p-wp', 'data-result') === 'ok', 'capital letters still count as right');
     n0 = await spokenN();
     await page.click('#p-next');
-    if (i === 0) await waitState('p', 'ask');
+    if (i < 2) await waitState('p', 'ask');
   }
   await page.waitForSelector('#p-summary', { state: 'visible' });
-  expect(await txt('#sum-score') === t('sum_score', { c: '2', n: '2' }), 'custom round 2 of 2');
+  expect(await txt('#sum-score') === t('sum_score', { c: '3', n: '3' }), 'custom round 3 of 3');
 
-  /* 10) Class bee: two players, 2 words each, typing and teacher judging */
+  /* 10) Class bee: two players, 2 words each, typing and teacher judging; the scoreboard survives a reload */
   await page.click('#tab-bee');
   await page.fill('#b-name0', 'Riya');
   await page.fill('#b-name1', 'Aman');
@@ -203,15 +239,19 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.fill('#b-input', bw); await page.press('#b-input', 'Enter');
   await waitState('b', 'done');
   expect(await txt('#b-board .sc[data-player="0"] .sc-score') === '1', 'Riya scores 1');
-  await page.click('#b-next');
+  await reload();
+  expect(await page.isVisible('#b-stage') && await page.isHidden('#b-setup'), 'the class bee is still on screen after a reload');
+  expect(await txt('#b-board .sc[data-player="0"] .sc-score') === '1' && await txt('#b-board .sc[data-player="1"] .sc-score') === '0', 'scores kept: Riya 1, Aman 0');
   await waitState('b', 'ask');
-  expect(await txt('#b-turn') === t('turn_of', { name: 'Aman' }), 'then Aman');
+  expect(await txt('#b-turn') === t('turn_of', { name: 'Aman' }), 'then Aman (Riya\'s turn was already scored)');
+  await settle();
   await page.click('#b-bad');                                     // spelt aloud, teacher marks wrong
   await waitState('b', 'done');
   expect(await attr('#b-wp', 'data-result') === 'bad' && await page.isHidden('#b-judge'), 'teacher marked Aman wrong');
   await page.click('#b-next');
   await waitState('b', 'ask');
   expect(await txt('#b-turn') === t('turn_of', { name: 'Riya' }), 'turns alternate back to Riya');
+  await settle();
   await page.click('#b-ok');                                      // spelt aloud correctly
   await waitState('b', 'done');
   await page.click('#b-next');
@@ -223,6 +263,7 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.waitForSelector('#b-endcard', { state: 'visible' });
   expect(await attr('#b-winner', 'data-winner') === '0' && await txt('#b-winner-title') === t('winner_is', { name: 'Riya' }), 'Riya wins: ' + await txt('#b-winner-title'));
   expect(await page.$$eval('#b-final .final-score', (c) => c.map((x) => x.textContent).join(',')) === '2,0', 'final scores 2 and 0');
+  expect(await page.evaluate(() => localStorage.getItem('edu.spelling-bee.beeRun')) === null, 'a finished bee is not restored again');
 
   /* 10b) Knock-out: no word limit; Aman misses three times and is out, so Riya wins */
   await page.click('#b-settings');
@@ -240,6 +281,7 @@ module.exports = async function ({ page, lang, expect, t, log }) {
     await waitState('b', 'ask');
     expect(await txt('#b-turn') === t('turn_of', { name: 'Aman' }), 'then Aman');
     expect((await txt('#b-turn-sub')).startsWith(t('lives_n', { n: String(3 - r) })), 'Aman has ' + (3 - r) + ' lives: ' + await txt('#b-turn-sub'));
+    await settle();
     await page.click('#b-bad');
     await waitState('b', 'done');
   }
@@ -257,7 +299,7 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.waitForSelector('#voice-status[data-voice="none"]', { state: 'attached', timeout: 6000 });
   await page.click('#tab-practise');
   expect(await page.isVisible('#nv-card'), 'no-voice help card shown');
-  expect(await stat('st_words') === '13', 'progress survived the reload (13 words): ' + await stat('st_words'));
+  expect(await stat('st_words') === '14', 'progress survived the reload (14 words): ' + await stat('st_words'));
   expect((await page.inputValue('#l-text')).startsWith('giraffe | The giraffe has a long neck. | a tall animal'), 'teacher list survived the reload');
   await page.click('#p-levels [data-level="1"]');
   await page.click('#p-start');
@@ -272,9 +314,47 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.fill('#p-input', fw); await page.press('#p-input', 'Enter');
   await waitState('p', 'done');
   expect(await attr('#p-wp', 'data-result') === 'ok', 'word solved from meaning + jumble');
+  await settle();
+  await page.click('#p-quit');                                    // end the round after one word
+  await page.waitForSelector('#p-summary', { state: 'visible' });
+
+  /* 12) A list shared as a link: asks before replacing the saved list; two-word entries get a space tile */
+  const link = await page.evaluate(() => EDU.pack({ v: 1, w: [['ice cream', 'We ate ice cream at the fair.', 'a cold sweet food'], ['tiger', '', '']] }));
+  await confirmWith(true);
+  await page.evaluate((h) => { location.hash = 'list=' + h; }, link);
+  await page.waitForSelector('#l-shared', { state: 'visible' });
+  expect(await txt('#l-shared-msg') === t('shared_found', { n: '2' }), 'shared list found: ' + await txt('#l-shared-msg'));
+  await page.click('#l-shared-use');
+  expect((await confirms())[0] === t('confirm_replace_list', { n: '3' }), 'asks before replacing the 3-word list');
+  expect((await page.inputValue('#l-text')).startsWith('ice cream | We ate ice cream at the fair.') && await page.evaluate(() => location.hash) === '', 'shared list saved, link hash cleared');
+  await page.click('#tab-practise');
+  await page.click('#sum-levels');
+  await page.click('#p-levels [data-level="custom"]');
+  await page.click('#p-start');
+  for (let i = 0; i < 2; i++) {
+    await waitState('p', 'ask');
+    const tl = await page.$$eval('#p-jumble .jt', (b) => b.map((x) => x.textContent));
+    if (tl.includes('␣')) {
+      for (const ch of ['i', 'c', 'e', '␣']) {
+        const idx = await page.$$eval('#p-jumble .jt', (bs, c) => bs.findIndex((b) => !b.disabled && b.textContent === c), ch);
+        await page.click(`#p-jumble .jt[data-i="${idx}"]`);
+      }
+      expect(await page.inputValue('#p-input') === 'ice ', 'tiles typed "ice "');
+      expect(await page.$$eval('#p-jumble .jt', (bs) => bs.filter((b) => b.textContent === '␣')[0].disabled), 'the space tile stays used after tapping it');
+      await page.fill('#p-input', 'Ice  Cream');
+    } else await page.fill('#p-input', 'tiger');
+    await page.press('#p-input', 'Enter');
+    await waitState('p', 'done');
+    expect(await attr('#p-wp', 'data-result') === 'ok', 'shared word ' + (i + 1) + ' spelt right');
+    await page.click('#p-next');
+  }
+  await page.waitForSelector('#p-summary', { state: 'visible' });
+  expect(await txt('#sum-score') === t('sum_score', { c: '2', n: '2' }), 'shared list round 2 of 2');
 
   /* leave a hinted second try on screen for the screenshot */
-  await page.click('#p-next');
+  await page.click('#sum-levels');
+  await page.click('#p-levels [data-level="1"]');
+  await page.click('#p-start');
   await waitState('p', 'ask');
   const m2 = await txt('#p-meaning');
   const fw2 = content.words[0].find((w) => content.m[w] === m2);
@@ -283,5 +363,5 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.click('#p-check');
   await waitState('p', 'retry');
   await page.evaluate(() => window.scrollTo(0, 0));
-  log('words', w1, w2, w3, 'fallback', fw, fw2);
+  log('words', w1, w2, w3, w4, 'fallback', fw, fw2);
 };

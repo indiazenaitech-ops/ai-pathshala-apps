@@ -191,6 +191,9 @@
     '.cert .c-sig-name{font-weight:700;font-size:18px;margin-top:6px;white-space:nowrap;overflow:hidden}',
     '.cert .c-sig-role{font-size:16px;color:var(--k-muted);white-space:nowrap;overflow:hidden}',
     '.cert .c-sig.empty{visibility:hidden}',
+    /* a very long school name or signature goes on 2 lines (see fitCerts in app.js) instead of becoming tiny */
+    '.cert .c-wrap{white-space:normal;text-wrap:balance;overflow-wrap:break-word}',
+    '.cert .c-school.c-wrap{line-height:1.3}',
     '.cert .c-seal{margin-bottom:-8px}',
     '.cert .c-seal svg{display:block;width:124px;height:142px;margin:0 auto;max-width:none}',
     '.cert .c-seal.off{visibility:hidden}',
@@ -207,12 +210,20 @@
     '.cert[lang="ur"] .c-msg{font-size:21px;line-height:1.85;max-height:118px}',
     '.cert[lang="ur"] .c-date{font-size:16px;line-height:1.7}',
     '.cert[lang="ur"] .c-sig-name,.cert[lang="ur"] .c-sig-role{line-height:1.8}',
+    '.cert[lang="ur"] .c-school.c-wrap{line-height:1.65}',
     '.cert.d-classic{--k-ink:#2b2112;--k-title-c:#7d5711;--k-name:#1f2a44;--k-muted:#6b5a3a;--k-ribbon:#8a6114}',
     '.cert.d-royal{--k-ink:#13294b;--k-title-c:#13294b;--k-name:#0f1f3d;--k-muted:#4a5878;--k-ribbon:#13294b}',
     '.cert.d-royal .c-title{color:#13294b;text-shadow:0 1px 0 #c9a646}',
     '.cert.d-tiranga{--k-ink:#1d2433;--k-title-c:#000080;--k-name:#000080;--k-muted:#4b5563;--k-ribbon:#138808}',
     '.cert.d-rangoli{--k-ink:#3b1219;--k-title-c:#7a1f2b;--k-name:#7a1f2b;--k-muted:#6b3a1f;--k-ribbon:#7a1f2b}',
     '.cert.d-modern{--k-ink:#1f2933;--k-title-c:#0f766e;--k-name:#111827;--k-muted:#52606d;--k-ribbon:#0f766e;--k-title:var(--k-sans);--k-body:var(--k-sans);--k-namef:var(--k-sans)}',
+    /* keep the logo, school name and signatures clear of the corner art of each design */
+    '.cert.d-classic .c-head{padding-inline:30px}',
+    '.cert.d-rangoli .c-head{margin-top:6px}',
+    '.cert.d-rangoli .c-logo{max-height:72px}',
+    '.cert.d-rangoli .c-sig{padding-bottom:16px}',
+    '.cert.d-tiranga .c-head,.cert.d-modern .c-head{padding-inline:90px}',
+    '.cert.d-tiranga .c-foot,.cert.d-modern .c-foot{padding-inline:72px}',
     '.cert.d-modern:lang(en) .c-title{letter-spacing:.14em;font-weight:800}',
     '.cert.d-modern:lang(en) .c-name{font-style:normal}'
   ].join('\n');

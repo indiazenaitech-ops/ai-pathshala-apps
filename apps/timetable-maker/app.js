@@ -50,7 +50,8 @@
     min = Math.max(0, Math.round(min));
     var h = Math.floor(min / 60), m = min % 60;
     if (!h) return t('mins', { n: EDU.fmt(m) });
-    return m ? t('hm', { h: EDU.fmt(h), m: EDU.fmt(m) }) : t('hours', { h: EDU.fmt(h) });
+    var one = h === 1 ? '_1' : '';   // "1 घंटा" but "2 घंटे"
+    return m ? t('hm' + one, { h: EDU.fmt(h), m: EDU.fmt(m) }) : t('hours' + one, { h: EDU.fmt(h) });
   }
   function fmtTime(v) {
     var n = toMin(v);
@@ -71,7 +72,13 @@
       .replace(/^(mr|mrs|ms|miss|dr|shri|smt|sir|madam) /, '');
   }
   var live;
-  function announce(msg) { if (!live) live = $('#live'); if (live) { live.textContent = ''; setTimeout(function () { live.textContent = msg; }, 30); } }
+  function announce(msg) {
+    if (!live) live = $('#live');
+    if (!live) return;
+    var lang = EDU.lang;
+    live.textContent = '';
+    setTimeout(function () { if (EDU.lang === lang) live.textContent = msg; }, 30);
+  }
 
   /* ------------------------------------------------------------ sample data */
   function P(id, s, e) { return { id: id, t: 'p', s: s, e: e, label: '', lk: null }; }
@@ -113,13 +120,16 @@
   }
 
   /* ------------------------------------------------------------ load / validate */
+  /* ids end up in CSS selectors and object keys: only plain word characters, and never inherited keys like "constructor" */
+  var ID_RE = /^[\w-]{1,40}$/;
+  function own(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
+  function cleanId(v, taken) { var s = str(v, 40); return ID_RE.test(s) && !own(taken, s) ? s : uid(); }
   function sanitize(d) {
     if (!d || typeof d !== 'object' || !Array.isArray(d.tts)) return null;
     var out = { v: 1, school: str(d.school, 160), cur: '', tts: [] }, seen = {};
     d.tts.slice(0, MAX_TT).forEach(function (x) {
       if (!x || typeof x !== 'object') return;
-      var id = str(x.id, 40);
-      if (!id || seen[id]) id = uid();
+      var id = cleanId(x.id, seen);
       seen[id] = 1;
       var tt = {
         id: id, name: str(x.name), nk: ['c0', 'c1', 'study'].indexOf(x.nk) >= 0 ? x.nk : null,
@@ -130,8 +140,7 @@
       var sids = {};
       (Array.isArray(x.slots) ? x.slots : []).slice(0, MAX_SLOTS).forEach(function (s) {
         if (!s || typeof s !== 'object') return;
-        var sid = str(s.id, 40);
-        if (!sid || sids[sid] || sid.indexOf('|') >= 0) sid = uid();
+        var sid = cleanId(s.id, sids);
         sids[sid] = 1;
         var a = toMin(s.s), b = toMin(s.e);
         tt.slots.push({ id: sid, t: s.t === 'b' ? 'b' : 'p', s: a == null ? '08:00' : fromMin(a), e: b == null ? '08:40' : fromMin(b), label: str(s.label, 40), lk: BRK.indexOf(s.lk) >= 0 ? s.lk : null });
@@ -139,8 +148,7 @@
       var subs = {};
       (Array.isArray(x.subjects) ? x.subjects : []).slice(0, MAX_SUBJ).forEach(function (s, i) {
         if (!s || typeof s !== 'object') return;
-        var sid = str(s.id, 40);
-        if (!sid || subs[sid] || sid === ERASE) sid = uid();
+        var sid = s.id === ERASE ? uid() : cleanId(s.id, subs);
         subs[sid] = 1;
         var w = parseInt(s.want, 10);
         tt.subjects.push({
@@ -151,10 +159,11 @@
       });
       if (x.cells && typeof x.cells === 'object') {
         Object.keys(x.cells).forEach(function (k) {
-          var m = /^([0-6])\|(.+)$/.exec(k);
-          if (m && sids[m[2]] && subs[x.cells[k]]) tt.cells[k] = x.cells[k];
+          var m = /^([0-6])\|(.+)$/.exec(k), v = x.cells[k];
+          if (m && own(sids, m[2]) && typeof v === 'string' && own(subs, v)) tt.cells[k] = v;
         });
       }
+      if (!tt.slots.length) tt.slots = defaultSlots();   // a timetable needs at least one row
       if (!tt.days.some(Boolean)) tt.days[0] = true;
       out.tts.push(tt);
     });
@@ -165,7 +174,9 @@
 
   var data = sanitize(store.get('data', null)) || sampleData();
   var ui = Object.assign({ tab: 'grid', mode: 'paint', brush: null, layout: 'auto', h24: false, showT: true, teacher: '', note: true }, store.get('ui', {}) || {});
-  var undoStack = [], swapSel = null, todayDay = null, clashCache = null;
+  if (['paint', 'swap', 'pick'].indexOf(ui.mode) < 0) ui.mode = 'paint';
+  if (['auto', 'rows', 'cols'].indexOf(ui.layout) < 0) ui.layout = 'auto';
+  var undoStack = [], swapSel = null, todayDay = null, todayPickedOn = null, clashCache = null;
 
   function saveUi() { store.set('ui', ui); }
   function save() {
@@ -250,6 +261,9 @@
     for (var i = 0; i < tt.slots.length; i++) { var a = toMin(tt.slots[i].s), b = toMin(tt.slots[i].e); if (a != null && b != null && a <= min && min < b) return tt.slots[i]; }
     return null;
   }
+  /* what the grid's "now" highlight depends on: the grid only needs a redraw when this changes */
+  var lastNowKey = '';
+  function nowKey(tt) { var n = nowInfo(), sl = tt.days[n.day] ? slotAt(tt, n.min) : null; return n.day + '|' + (sl ? sl.id : ''); }
 
   /* ------------------------------------------------------------ teachers + clashes (all class timetables) */
   function clashInfo() {
@@ -337,7 +351,8 @@
     hr.appendChild(el('th', { class: 'corner', scope: 'col' }, el('span', { class: 'sr-only', text: o.orient === 'rows' ? t('col_day') : t('col_time') })));
     if (o.orient === 'rows') {
       o.slots.forEach(function (sl) {
-        if (sl.t === 'p') hr.appendChild(el('th', { scope: 'col', class: 'ph' }, el('span', { class: 'pnum', text: EDU.fmt(o.pn[sl.id] || 0) }), el('span', { class: 'tm', text: fmtRange(sl) })));
+        if (sl.t === 'p') hr.appendChild(el('th', { scope: 'col', class: 'ph' }, el('span', { class: 'pnum', text: EDU.fmt(o.pn[sl.id] || 0) }),
+          o.compact ? el('span', { class: 'tm' }, fmtTime(sl.s), el('br'), fmtTime(sl.e)) : el('span', { class: 'tm', text: fmtRange(sl) })));   // narrow columns: start and end on two lines
         else hr.appendChild(el('th', { scope: 'col', class: 'bh' }, el('span', { class: 'tm', text: fmtTime(sl.s) })));
       });
       o.days.forEach(function (d, di) {
@@ -368,6 +383,12 @@
     }
     thead.appendChild(hr);
     tbl.appendChild(thead); tbl.appendChild(tbody);
+    /* the table has equal fixed columns; below this width it scrolls sideways instead of squeezing periods to slivers */
+    if (o.cls !== 'ptab') {
+      var np = o.slots.filter(function (s) { return s.t === 'p'; }).length, nb = o.slots.length - np;
+      tbl.style.minWidth = (o.orient === 'rows' ? (o.compact ? 64 : 104) + nb * 38 + np * (o.compact ? 46 : 92) + (o.slots.length + 2) * 3
+        : (o.compact ? 40 : 64) + nd * (o.compact ? 38 : 88) + (nd + 2) * 3) + 'px';
+    }
     return tbl;
   }
 
@@ -429,7 +450,7 @@
     $('#undo-btn').disabled = !undoStack.length;
   }
   function renderPalette(tt) {
-    var box = $('#palette');
+    var box = $('#palette'), ae = document.activeElement, fsid = ae && box.contains(ae) ? ae.getAttribute('data-sid') : null;
     box.innerHTML = '';
     if (ui.brush !== ERASE && !subjById(tt, ui.brush)) ui.brush = tt.subjects[0] ? tt.subjects[0].id : ERASE;
     var cnt = counts(tt), paint = ui.mode === 'paint';
@@ -443,12 +464,25 @@
     box.appendChild(el('button', { type: 'button', class: 'pchip erase', 'data-sid': ERASE, id: 'eraser', 'aria-pressed': paint && ui.brush === ERASE ? 'true' : 'false' },
       el('span', { 'aria-hidden': 'true', text: '⌫' }), el('span', { class: 'pn', text: t('eraser') })));
     if (!tt.subjects.length) box.appendChild(el('span', { class: 'muted small', text: t('no_subjects') }));
+    if (fsid) { var again = $$('.pchip', box).filter(function (b) { return b.getAttribute('data-sid') === fsid; })[0]; if (again) again.focus(); }
   }
   function cellLabel(tt, d, sl, s, pn) {
     return dayName(d) + ', ' + t('period_n', { n: EDU.fmt(pn[sl.id]) }) + ' (' + fmtRange(sl) + '): ' + (s ? sName(s) + (tt.kind === 'class' && sTeacher(s) ? ', ' + sTeacher(s) : '') : t('free_period'));
   }
+  /* Re-rendering replaces every cell button: keep keyboard focus on the same period (paint / swap with Enter, minute updates). */
+  function focusedCell(root) {
+    var a = document.activeElement;
+    return a && a.classList && a.classList.contains('cell') && root.contains(a) ? [a.getAttribute('data-d'), a.getAttribute('data-s')] : null;
+  }
+  function refocusCell(root, f) {
+    if (!f) return;
+    var b = $$('.cell', root).filter(function (x) { return x.getAttribute('data-d') === f[0] && x.getAttribute('data-s') === f[1]; })[0];
+    if (b) { try { b.focus({ preventScroll: true }); } catch (e) { b.focus(); } }
+  }
   function renderGrid(tt) {
     var wrap = $('#grid'), orient = orientation(), compact = isCompact(tt, orient), ci = clashInfo(), now = nowInfo();
+    var hadFocus = focusedCell(wrap);
+    lastNowKey = nowKey(tt);
     var pn = periodNums(tt), nowSl = tt.days[now.day] ? slotAt(tt, now.min) : null;
     var showT = ui.showT && !compact && tt.kind === 'class';
     var subj = {};
@@ -479,6 +513,7 @@
     wrap.innerHTML = '';
     wrap.appendChild(tbl);
     fitLabels(tbl, compact);
+    refocusCell(wrap, hadFocus);
     var total = totalPeriods(tt), filled = 0;
     eachCell(tt, function () { filled++; });
     var mine = ci.list.filter(function (c) { return c.x.tt === tt || c.y.tt === tt; }).length;
@@ -602,6 +637,7 @@
       }
       var want = el('input', { type: 'number', class: 'c-want in-want', min: 0, max: 60, step: 1, inputmode: 'numeric', value: s.want ? String(s.want) : '', 'aria-label': t('subj_want'), placeholder: '0' });
       want.addEventListener('input', function () { var v = parseInt(want.value, 10); s.want = isFinite(v) ? EDU.clamp(v, 0, 60) : 0; save(); renderPalette(tt); updateSubjCounts(tt); });
+    want.addEventListener('change', function () { want.value = s.want ? String(s.want) : ''; });   // show the value really used (0-60)
       var have = el('span', { class: 'c-have have', 'aria-live': 'off' });
       var del = el('button', { type: 'button', class: 'btn btn-ghost btn-sm c-del del-subj', 'aria-label': t('delete_subject'), title: t('delete_subject'), text: '✕', onclick: function () { deleteSubject(tt, s); } });
       function cap(key, input) { return el('label', { class: 'sf ' + input.className.split(' ')[0] }, el('span', { class: 'cap', text: t(key) }), input); }
@@ -650,6 +686,7 @@
   /* --- auto-fill --- */
   function autoFill() {
     var tt = cur();
+    if (!tt.subjects.length) { EDU.toast(t('no_subjects')); return; }
     if (!tt.subjects.some(function (s) { return s.want > 0; })) { EDU.toast(t('autofill_none'), 4500); return; }
     var cnt = counts(tt), groups = [];
     tt.subjects.forEach(function (s) { var n = (s.want || 0) - (cnt[s.id] || 0); if (n > 0) groups.push({ s: s, n: n }); });
@@ -833,7 +870,7 @@
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function addTT(tt) {
     if (data.tts.length >= MAX_TT) { EDU.toast(t('too_many')); return; }
-    data.tts.push(tt); data.cur = tt.id; swapSel = null;
+    data.tts.push(tt); data.cur = tt.id; swapSel = null; todayDay = null;
     save(); ui.tab = 'grid'; renderAll();
     EDU.toast(t('created', { name: ttName(tt) }));
   }
@@ -871,7 +908,7 @@
     if (!confirm(t('confirm_del_tt', { name: ttName(tt) }))) return;
     data.tts = data.tts.filter(function (x) { return x !== tt; });
     undoStack = undoStack.filter(function (u) { return u.id !== tt.id; });
-    data.cur = data.tts[0].id;
+    data.cur = data.tts[0].id; swapSel = null; todayDay = null;
     save(); renderAll();
   }
 
@@ -893,16 +930,17 @@
     var tbl = $('#sum-table');
     tbl.innerHTML = '';
     tbl.appendChild(el('thead', null, el('tr', null, el('th', { text: t('col_subject') }), study ? null : el('th', { class: 'hide-sm', text: t('col_teacher') }),
-      el('th', { class: 'num', text: t('col_periods') }), el('th', { class: 'num', text: t('col_wanted') }), el('th', { class: 'num', text: t('col_time') }), el('th', { class: 'barcol', 'aria-hidden': 'true' }))));
+      el('th', { class: 'num', text: t('col_periods') }), el('th', { class: 'num', text: t('col_wanted') }), el('th', { class: 'num hide-sm', text: t('col_time') }), el('th', { class: 'barcol', 'aria-hidden': 'true' }))));
     var tb = el('tbody');
     tt.subjects.forEach(function (s) {
       var n = cnt[s.id] || 0, diff = s.want ? n - s.want : 0;
       tb.appendChild(el('tr', { 'data-sid': s.id, style: { '--sc': s.color } },
-        el('td', null, el('span', { class: 'dot', 'aria-hidden': 'true' }), ' ', el('span', { class: 'no-i18n', text: sName(s) })),
+        el('td', null, el('span', { class: 'sname' }, el('span', { class: 'dot', 'aria-hidden': 'true' }), el('span', { class: 'no-i18n', text: sName(s) })),
+          el('span', { class: 'sub-tm muted', text: hm(mins[s.id] || 0) })),   // phones: time under the name instead of its own column
         study ? null : el('td', { class: 'no-i18n hide-sm', text: sTeacher(s) || '—' }),
         el('td', { class: 'num n-have', text: EDU.fmt(n) }),
         el('td', { class: 'num' + (s.want ? (diff ? ' bad' : ' ok') : '') }, s.want ? EDU.fmt(s.want) + (diff ? ' (' + (diff > 0 ? '+' : '−') + EDU.fmt(Math.abs(diff)) + ')' : ' ✓') : '–'),
-        el('td', { class: 'num', text: hm(mins[s.id] || 0) }),
+        el('td', { class: 'num hide-sm n-time', text: hm(mins[s.id] || 0) }),
         el('td', { class: 'barcol', 'aria-hidden': 'true' }, el('span', { class: 'sbar' }, el('span', { style: { width: (n / max * 100).toFixed(1) + '%' } })))));
     });
     tbl.appendChild(tb);
@@ -916,7 +954,7 @@
     sp.appendChild(el('thead', null, hr));
     var sb = el('tbody');
     tt.subjects.forEach(function (s) {
-      var tr = el('tr', { style: { '--sc': s.color } }, el('td', null, el('span', { class: 'dot', 'aria-hidden': 'true' }), ' ', el('span', { class: 'no-i18n', text: sShort(s) })));
+      var tr = el('tr', { style: { '--sc': s.color } }, el('td', null, el('span', { class: 'sname' }, el('span', { class: 'dot', 'aria-hidden': 'true' }), el('span', { class: 'no-i18n', text: sShort(s) }))));
       days.forEach(function (d) { var n = perDay[s.id + '|' + d] || 0; tr.appendChild(el('td', { class: 'num' + (n > 1 ? ' many' : '') + (n ? '' : ' zero'), text: n ? EDU.fmt(n) : '·' })); });
       sb.appendChild(tr);
     });
@@ -1027,8 +1065,8 @@
     // load table
     var lt = $('#load-table');
     lt.innerHTML = '';
-    lt.appendChild(el('thead', null, el('tr', null, el('th', { text: t('col_teacher') }), el('th', { text: t('col_classes') }),
-      el('th', { class: 'num', text: t('col_week') }), el('th', { class: 'num', text: t('col_maxday') }), el('th', { class: 'num', text: t('col_clashes') }))));
+    lt.appendChild(el('thead', null, el('tr', null, el('th', { text: t('col_teacher') }), el('th', { class: 'hide-sm', text: t('col_classes') }),
+      el('th', { class: 'num', text: t('col_week') }), el('th', { class: 'num hide-sm', text: t('col_maxday') }), el('th', { class: 'num', text: t('col_clashes') }))));
     var lb = el('tbody');
     keys.forEach(function (k) {
       var es = ci.byT[k] || [], pd = {}, cls = {}, mx = 0, mxd = -1;
@@ -1039,9 +1077,9 @@
       var nc = ci.list.filter(function (c) { return c.k === k; }).length;
       lb.appendChild(el('tr', { class: k === ui.teacher ? 'sel' : null, 'data-k': k },
         el('td', null, el('button', { type: 'button', class: 'linkbtn no-i18n', text: ci.names[k], onclick: function () { ui.teacher = k; saveUi(); renderTeachers(); $('#teacher-sel').focus(); } })),
-        el('td', { class: 'small no-i18n cls', text: Object.keys(cls).join(', ') }),
+        el('td', { class: 'small no-i18n cls hide-sm' }, Object.keys(cls).map(function (c, i) { return el('span', { class: 'nw', text: c + (i < Object.keys(cls).length - 1 ? ',' : '') }); })),   // wraps between classes, never inside "7-A"; phones: the teacher timetable shows them
         el('td', { class: 'num', text: EDU.fmt(es.length) }),
-        el('td', { class: 'num', text: mxd >= 0 ? dayName(mxd, true) + ' (' + EDU.fmt(mx) + ')' : '–' }),
+        el('td', { class: 'num hide-sm', text: mxd >= 0 ? dayName(mxd, true) + ' (' + EDU.fmt(mx) + ')' : '–' }),   // phones: per-day counts are in the line above the teacher grid
         el('td', { class: 'num' }, nc ? el('span', { class: 'badge danger', text: EDU.fmt(nc) }) : el('span', { class: 'muted', text: '0' }))));
     });
     lt.appendChild(lb);
@@ -1088,14 +1126,18 @@
   function nextActiveDay(tt, d) { for (var i = 0; i < 7; i++) { var x = (d + i) % 7; if (tt.days[x]) return x; } return 0; }
   function renderToday() {
     var tt = cur(), now = nowInfo(), on = tt.days[now.day];
-    if (todayDay == null || !tt.days[todayDay]) todayDay = on ? now.day : nextActiveDay(tt, now.day);
+    // a day picked by hand is kept only for the same calendar day: a smartboard left on overnight follows the new day
+    if (todayPickedOn !== now.day) todayDay = null;
+    if (todayDay == null || !tt.days[todayDay]) { todayDay = on ? now.day : nextActiveDay(tt, now.day); todayPickedOn = null; }
     var d = todayDay, isToday = d === now.day;
     $('#today-name').textContent = ttName(tt);
     $('#today-day').textContent = dayName(d) + (isToday ? ' · ' + t('today') : '');
-    var seg = $('#today-days');
+    var seg = $('#today-days'), ae = document.activeElement, fd = ae && seg.contains(ae) ? ae.getAttribute('data-d') : null;
     seg.innerHTML = '';
     activeDays(tt).forEach(function (x) {
-      seg.appendChild(el('button', { type: 'button', 'data-d': x, 'aria-pressed': x === d ? 'true' : 'false', class: x === now.day ? 'is-today' : null, text: dayName(x, true) }));
+      var b = el('button', { type: 'button', 'data-d': x, 'aria-pressed': x === d ? 'true' : 'false', class: x === now.day ? 'is-today' : null, text: dayName(x, true) });
+      seg.appendChild(b);
+      if (fd === String(x)) b.focus();   // keep keyboard focus when the list redraws (day change, minute update)
     });
     var note = $('#today-note');
     note.hidden = on;
@@ -1185,12 +1227,27 @@
         return el('td', { class: 'pc', style: { '--sc': s.color } }, el('div', { class: 'sn', text: sName(s) }), !study && sTeacher(s) ? el('div', { class: 'st', text: sTeacher(s) }) : null);
       }
     }));
-    var lg = el('table', { class: 'plegend' });
-    lg.appendChild(el('thead', null, el('tr', null, el('th', { text: t('col_subject') }), study ? null : el('th', { text: t('col_teacher') }), el('th', { text: t('col_periods') }))));
+    /* Legend: more than 6 subjects go in two side-by-side halves, so the legend stays short and the page does not spill over */
+    var subs = tt.subjects, rowsN = subs.length > 6 ? Math.ceil(subs.length / 2) : subs.length, groups = rowsN < subs.length ? 2 : 1;
+    var lg = el('table', { class: 'plegend' + (groups > 1 ? ' two' : '') }), hr = el('tr');
+    for (var g = 0; g < groups; g++) {
+      hr.appendChild(el('th', { class: g ? 'gsep' : null, text: t('col_subject') }));
+      if (!study) hr.appendChild(el('th', { text: t('col_teacher') }));
+      hr.appendChild(el('th', { text: t('col_periods') }));
+    }
+    lg.appendChild(el('thead', null, hr));
     var lb = el('tbody');
-    tt.subjects.forEach(function (s) {
-      lb.appendChild(el('tr', null, el('td', null, el('span', { class: 'pdot', style: { '--sc': s.color } }), ' ' + sName(s)), study ? null : el('td', { text: sTeacher(s) || '—' }), el('td', { text: EDU.fmt(cnt[s.id] || 0) })));
-    });
+    for (var r = 0; r < rowsN; r++) {
+      var tr = el('tr');
+      for (g = 0; g < groups; g++) {
+        var s = subs[r + g * rowsN];
+        if (!s) { tr.appendChild(el('td', { class: g ? 'gsep' : null, colspan: study ? 2 : 3 })); continue; }
+        tr.appendChild(el('td', { class: g ? 'gsep' : null }, el('span', { class: 'pdot', style: { '--sc': s.color } }), ' ' + sName(s)));
+        if (!study) tr.appendChild(el('td', { text: sTeacher(s) || '—' }));
+        tr.appendChild(el('td', { text: EDU.fmt(cnt[s.id] || 0) }));
+      }
+      lb.appendChild(tr);
+    }
     lg.appendChild(lb);
     sec.appendChild(el('div', { class: 'pfoot' }, lg, study ? null : el('div', { class: 'psign' }, el('span', { text: t('class_teacher') }), el('span', { text: t('principal') }))));
     return sec;
@@ -1199,10 +1256,12 @@
     var area = $('#print-area');
     area.innerHTML = '';
     blocks.forEach(function (b) { area.appendChild(b); });
-    printing = true;
+    printing = true;   // "beforeprint" must not replace these blocks with the current timetable
     try { window.print(); } catch (e) { }
-    setTimeout(function () { printing = false; }, 500);
+    clearTimeout(doPrint.tm);
+    doPrint.tm = setTimeout(function () { printing = false; }, 8000);   // fallback if "afterprint" never comes (some mobile browsers print asynchronously)
   }
+  window.addEventListener('afterprint', function () { printing = false; });
   window.addEventListener('beforeprint', function () {
     if (printing) return;
     var area = $('#print-area');
@@ -1261,7 +1320,7 @@
         var o = JSON.parse(txt), d = sanitize(o && o.data ? o.data : o);
         if (!d) throw new Error('bad');
         if (!confirm(t('restore_confirm', { n: EDU.fmt(d.tts.length) }))) return;
-        data = d; undoStack = []; swapSel = null;
+        data = d; undoStack = []; swapSel = null; todayDay = null;
         save(); renderAll();
         EDU.toast(t('restore_ok', { n: EDU.fmt(d.tts.length) }));
       });
@@ -1405,7 +1464,8 @@
     len = EDU.clamp(isFinite(len) ? len : 40, 5, 240);
     retime(tt, st, len);
     save(); renderSetup();
-    EDU.toast(t('recalc_done'));
+    $('#auto-len').value = String(len);
+    EDU.toast(slotWarn(tt).any ? t('time_bad') : t('recalc_done'), 4000);   // e.g. the day would run past midnight
   });
   $('#dup-tt').addEventListener('click', function () { addTT(duplicate(cur())); });
   $('#del-tt').addEventListener('click', deleteTT);
@@ -1425,7 +1485,7 @@
   $('#today-days').addEventListener('click', function (e) {
     var b = e.target.closest('button[data-d]');
     if (!b) return;
-    todayDay = +b.getAttribute('data-d'); renderToday();
+    todayDay = +b.getAttribute('data-d'); todayPickedOn = nowInfo().day; renderToday();
   });
   $('#copy-day').addEventListener('click', function () { renderToday(); EDU.copy(dayText(cur(), todayDay)); });
   $('#today-fs').addEventListener('click', function () { EDU.fullscreen($('#today-card')); });
@@ -1437,7 +1497,7 @@
     if (m === lastMinute || drag || $('.edu-modal')) return;
     lastMinute = m;
     if (ui.tab === 'today') renderToday();
-    else if (ui.tab === 'grid') renderGrid(cur());
+    else if (ui.tab === 'grid' && nowKey(cur()) !== lastNowKey) renderGrid(cur());   // only when the current period changes
   }, 10000);
   var lastShape = '';
   function shape() { var tt = cur(), o = orientation(); return o + isCompact(tt, o); }
@@ -1446,7 +1506,11 @@
     clearTimeout(rz);
     rz = setTimeout(function () {
       var s = shape();
-      if (s === lastShape) return;
+      if (s === lastShape) {   // same layout, but cells changed width: fit the labels again
+        var g = ui.tab === 'grid' ? $('#grid table') : (ui.tab === 'teachers' ? $('#teacher-grid table') : null);
+        if (g) fitLabels(g, g.classList.contains('compact'));
+        return;
+      }
       lastShape = s;
       if (ui.tab === 'grid') renderGrid(cur());
       else if (ui.tab === 'teachers') renderTeachers();
@@ -1454,6 +1518,6 @@
   });
   lastShape = shape();
 
-  EDU.onLang(function () { clashCache = null; renderAll(); });
+  EDU.onLang(function () { clashCache = null; $('#live').textContent = ''; renderAll(); });   // no stale announcement in the old language
   renderAll();
 })();

@@ -41,6 +41,7 @@
     .pl-runrow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
     .pl-runrow .btn { min-width: 0; padding-inline: 4px; font-variant-numeric: tabular-nums; white-space: nowrap; direction: ltr; unicode-bidi: isolate; }
     .pl-runlbl { font-weight: 700; grid-column: 1 / -1; }
+    .pl-cap { margin: 10px 0 0; }
     .pl-opts { margin-top: 10px; gap: 8px 14px; }
     .pl-trials { font-size: .95rem; padding: 4px 12px; }
     .pl-run:fullscreen, .pl-run:-webkit-full-screen { overflow: auto; background: var(--bg); padding: 20px; border-radius: 0; }
@@ -83,6 +84,8 @@
     .pl-epreset { font-weight: 800; font-size: 1.12rem; margin-bottom: 6px; }
     .pl-eset { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-weight: 600; }
     .pl-eq { font-weight: 800; direction: ltr; unicode-bidi: isolate; font-family: "Noto Sans", system-ui, sans-serif; }
+    /* Urdu: "E =" must have its "=" facing the outcomes that follow on the left */
+    :root[dir="rtl"] .pl-eset > .pl-eq:first-child { direction: rtl; }
     .pl-ltr { direction: ltr; unicode-bidi: isolate; }
     :root[dir="rtl"] .pl-ltr { text-align: right; }
     .pl-pgrid { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -114,6 +117,7 @@
     .pl-table th:first-child { min-width: 0; }
     .pl-table td.num, .pl-table th.num { text-align: end; font-variant-numeric: tabular-nums; }
     .pl-table td.num { direction: ltr; text-align: right; }
+    :root[dir="rtl"] .pl-table th.num { text-align: right; }   /* line up with the right-aligned LTR numbers */
     .pl-table tr.in td:first-child { box-shadow: inset 4px 0 0 var(--accent); }
     :root[dir="rtl"] .pl-table tr.in td:first-child { box-shadow: inset -4px 0 0 var(--accent); }
     .pl-table tr.tot td { font-weight: 800; background: var(--surface-2); }
@@ -129,7 +133,10 @@
     :root[dir="rtl"] .pl-formula { justify-content: flex-end; }
     .pl-formula > span:first-child { font-family: "Noto Sans", system-ui, sans-serif; white-space: nowrap; }
     .pl-formula .frac { font-size: .95rem; text-align: center; line-height: 1.5; }
-    .pl-formula .frac > span { unicode-bidi: plaintext; }
+    .pl-formula .frac > span { unicode-bidi: isolate; }
+    /* Urdu: the formula row is LTR maths, but the words in the fraction read right-to-left
+       ("plaintext" picked LTR when a line started with the Latin letter E) */
+    :root[dir="rtl"] .pl-formula .frac > span { direction: rtl; }
     :root[lang="ur"] .pl-formula .frac { line-height: 2.1; }
     .pl-formula .frac > span { max-width: 32ch; }
     .pl-learn ul { margin: 6px 0 0; padding-inline-start: 1.3em; }
@@ -153,6 +160,8 @@
       .pl-chart canvas { max-width: 100%; }
       .pl-print-head { display: block !important; font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
       .pl-table th { position: static; }
+      /* legend swatches and colour dots are backgrounds: browsers drop them in print unless asked */
+      .sw, .dot, .pl-pbox, .pl-table tr.tot td, .pl-table tr.ev td, .pl-rc { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
   </style>
 </head>
@@ -186,6 +195,7 @@
           <div class="row pl-runrow" id="run-row">
             <span class="pl-runlbl" data-i18n="run_label"></span>
           </div>
+          <p class="callout warning small pl-cap" id="cap-note" role="status" hidden></p>
           <div class="row spread pl-opts">
             <label class="check"><input type="checkbox" id="anim"> <span data-i18n="animate"></span></label>
             <span class="badge primary pl-trials" id="trials" aria-live="polite"></span>

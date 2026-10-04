@@ -12,7 +12,7 @@
 
   /* ------------------------------------------------------------------ state */
   function num(v, lo, hi, d) { v = Number(v); if (!isFinite(v)) v = d; return Math.min(hi, Math.max(lo, v)); }
-  function freshGame(level) { return { level: level || 'easy', target: null, attempts: 0, solved: false, hits: 0, sumAttempts: 0, trails: [], nextN: 1, msg: '', msgKind: '' }; }
+  function freshGame(level) { return { level: level || 'easy', target: null, attempts: 0, solved: false, hits: 0, sumAttempts: 0, trails: [], nextN: 1, judgedN: 0, msg: '', msgKind: '' }; }
   function defaults() {
     return { u: 20, a: 45, h: 0, gKey: 'earth', gCustom: 9.8, drag: false, vec: false, slow: false, mode: 'explore',
       trails: [{ n: 1, u: 20, a: 45, h: 0, gKey: 'earth', g: 9.8, drag: false }], nextN: 2, game: freshGame() };
@@ -45,6 +45,7 @@
       G.hits = Math.round(num(g.hits, 0, 99999, 0)); G.sumAttempts = Math.round(num(g.sumAttempts, 0, 9999999, 0));
       G.trails = (Array.isArray(g.trails) ? g.trails : []).map(cleanTrail).filter(Boolean).slice(-MAXTR);
       G.nextN = Math.round(num(g.nextN, 1, 9999, 1));
+      G.judgedN = Math.round(num(g.judgedN, 0, 9999, 0));
       G.msg = typeof g.msg === 'string' ? g.msg : ''; G.msgKind = typeof g.msgKind === 'string' ? g.msgKind : '';
       G.msgVars = g.msgVars && typeof g.msgVars === 'object' ? g.msgVars : null;
     }
@@ -52,6 +53,11 @@
   }
   var S = load();
   [S.trails, S.game.trails].forEach(function (L) { L.forEach(attachSim); });
+  /* a game ball still in the air when the page was reloaded: its attempt was counted, so judge it now */
+  (function () {
+    var G = S.game, L = G.trails, n = G.judgedN;
+    if (G.target && L.length) { judge(L[L.length - 1], true); if (G.judgedN !== n) save(); }
+  })();
 
   function attachSim(tr) { tr.sim = P.simulate(tr); tr.prog = tr.sim.T; return tr; }
   function save() {
@@ -61,7 +67,7 @@
       u: S.u, a: S.a, h: S.h, gKey: S.gKey, gCustom: S.gCustom, drag: S.drag, vec: S.vec, slow: S.slow, mode: S.mode,
       trails: strip(S.trails), nextN: S.nextN,
       game: { level: G.level, target: G.target, attempts: G.attempts, solved: G.solved, hits: G.hits, sumAttempts: G.sumAttempts,
-        trails: strip(G.trails), nextN: G.nextN, msg: G.msg, msgKind: G.msgKind, msgVars: G.msgVars || null }
+        trails: strip(G.trails), nextN: G.nextN, judgedN: G.judgedN || 0, msg: G.msg, msgKind: G.msgKind, msgVars: G.msgVars || null }
     });
   }
 
@@ -75,7 +81,9 @@
   }
   function trails() { return S.mode === 'game' ? S.game.trails : S.trails; }
   function latest() { var L = trails(); return L.length ? L[L.length - 1] : null; }
-  function colorFor(n) { return EDU.css('--c' + (((n - 1) % 8) + 1)) || '#0b7285'; }
+  /* paper is white: print with the light-theme palette even from dark mode */
+  var PRINT_C = ['#0b7285', '#e8590c', '#5f3dc4', '#2b8a3e', '#c2255c', '#b08900', '#1971c2', '#868e96'];
+  function colorFor(n) { var i = ((n - 1) % 8 + 8) % 8; return printing ? PRINT_C[i] : (EDU.css('--c' + (i + 1)) || PRINT_C[i]); }
 
   /* ------------------------------------------------------------------ formatting */
   function f2(v) { return EDU.fmt(v, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
@@ -207,14 +215,14 @@
     var G = S.game, hard = G.level === 'hard';
     var gKey = hard ? EDU.pick(['earth', 'moon', 'mars', 'jupiter']) : 'earth';
     G.target = { x: hard ? EDU.randInt(20, 180) / 2 : EDU.randInt(30, 120) / 2, w: hard ? 2 : 3, h: hard ? EDU.randInt(0, 6) * 5 : 0, gKey: gKey, g: P.GRAV[gKey] };
-    G.attempts = 0; G.solved = false; G.trails = []; G.nextN = 1; G.msg = 'game_start'; G.msgKind = ''; G.msgVars = null;
-    scrubActive = false;
+    G.attempts = 0; G.solved = false; G.trails = []; G.nextN = 1; G.judgedN = 0; G.msg = 'game_start'; G.msgKind = ''; G.msgVars = null;
+    scrubActive = false; $('#best-box').hidden = true;
     save();
   }
   function judge(tr, quiet) {
     var G = S.game, T = G.target;
-    if (!T || G.solved || tr.judged) return;
-    tr.judged = true;
+    if (!T || G.solved || tr.judged || tr.n <= (G.judgedN || 0)) return;
+    tr.judged = true; G.judgedN = tr.n;
     var d = tr.sim.R - T.x;
     if (Math.abs(d) <= T.w / 2) {
       G.solved = true; G.hits++; G.sumAttempts += G.attempts;
@@ -357,10 +365,12 @@
   }
 
   /* ------------------------------------------------------------------ trails list */
-  function trailText(t) {
-    var parts = ['#' + t.n, g2(t.u) + ' m/s', g2(t.a) + '°', 'h = ' + g2(t.h) + ' m', EDU.t('g_' + t.gKey) + (t.gKey === 'custom' ? ' (' + g2(t.g) + ')' : '')];
-    if (t.drag) parts.push(EDU.t('with_air'));
-    return parts.join(' · ');
+  /* [text, isLatin] pieces; each one is bidi-isolated so "20 m/s" etc. never get scrambled in Urdu (RTL) */
+  function trailParts(t) {
+    var parts = [['#' + t.n, 1], [g2(t.u) + ' m/s', 1], [g2(t.a) + '°', 1], ['h = ' + g2(t.h) + ' m', 1], [EDU.t('g_' + t.gKey), 0]];
+    if (t.gKey === 'custom') parts.push(['g = ' + g2(t.g) + ' m/s²', 1]);
+    if (t.drag) parts.push([EDU.t('with_air'), 0]);
+    return parts;
   }
   function renderTrails() {
     var L = trails(), ol = $('#trails'), last = latest();
@@ -373,10 +383,14 @@
           var i = L.indexOf(t); if (i >= 0) L.splice(i, 1);
           finishFlights(); scrubActive = false; save(); renderResults(); renderTrails(); renderReadout(); draw();
         } });
-      ol.appendChild(EDU.el('li', { class: t === last ? 'latest' : '', 'data-n': t.n, 'data-r': t.sim.R },
-        EDU.el('span', { class: 'pm-dot', style: { '--col': colorFor(t.n) }, 'aria-hidden': 'true', text: String(t.n) }),
-        EDU.el('span', { class: 'pm-tl' }, EDU.el('span', { text: trailText(t) }), ' · ', EDU.el('span', { class: 'r num', text: 'R = ' + f2(t.sim.R) + ' m' })),
-        del));
+      var tl = EDU.el('span', { class: 'pm-tl' });
+      trailParts(t).forEach(function (p, i) {
+        if (i) tl.appendChild(document.createTextNode(' · '));
+        tl.appendChild(EDU.el('span', { class: 'pt' + (p[1] ? ' lat' : ''), text: p[0] }));
+      });
+      tl.appendChild(document.createTextNode(' · '));
+      tl.appendChild(EDU.el('span', { class: 'pt lat r num', text: 'R = ' + f2(t.sim.R) + ' m' }));
+      ol.appendChild(EDU.el('li', { class: t === last ? 'latest' : '', 'data-n': t.n, 'data-r': t.sim.R }, EDU.el('span', { class: 'pm-dot', style: { '--col': colorFor(t.n) }, 'aria-hidden': 'true', text: String(t.n) }), tl, del));
     });
   }
 
@@ -406,12 +420,12 @@
   $('#clear').addEventListener('click', function () {
     finishFlights();
     trails().length = 0;
-    if (S.mode === 'game') S.game.nextN = 1; else S.nextN = 1;
+    if (S.mode === 'game') { S.game.nextN = 1; S.game.judgedN = 0; } else S.nextN = 1;
     scrubActive = false; save(); renderAll(); EDU.toast(EDU.t('cleared'));
   });
   function setMode(m) {
     finishFlights();
-    S.mode = m; scrubActive = false;
+    S.mode = m; scrubActive = false; $('#best-box').hidden = true;  /* the best angle was for the other mode's settings */
     if (m === 'game' && !S.game.target) newTarget();
     save(); renderAll();
   }
@@ -430,7 +444,16 @@
     finishFlights();
     S.trails.length = 0; S.nextN = 1; S.h = 0; S.drag = false;
     if (!(gOf(S.gKey) > 0)) S.gKey = 'earth';
+    $('#best-box').hidden = true;
     syncControls();
+    showStage();
+  }
+  /* the demo and best-angle buttons sit below the picture: bring the picture into view so the class sees the flight */
+  function showStage() {
+    var r = cv.getBoundingClientRect(), vh = window.innerHeight || document.documentElement.clientHeight || 800;
+    if (r.top >= 0 && r.bottom <= vh) return;
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    try { cv.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' }); } catch (e) { cv.scrollIntoView(); }
   }
   $('#demo-45').addEventListener('click', function () {
     demoSetup();
@@ -455,7 +478,7 @@
   });
   $('#use-best').addEventListener('click', function () {
     if (!best) return;
-    S.a = best.a; syncControls(); launch([params()]);
+    S.a = best.a; syncControls(); showStage(); launch([params()]);
   });
   $('#reset').addEventListener('click', function () {
     if (!confirm(EDU.t('confirm_reset'))) return;
@@ -469,8 +492,8 @@
   ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) {
     document.addEventListener(ev, function () { setTimeout(function () { sizeCanvas(); draw(); }, 60); });
   });
-  window.addEventListener('beforeprint', function () { printing = true; finishFlights(); scrubActive = false; draw(); });
-  window.addEventListener('afterprint', function () { printing = false; sizeCanvas(); draw(); });
+  window.addEventListener('beforeprint', function () { printing = true; finishFlights(); scrubActive = false; renderTrails(); renderReadout(); draw(); });
+  window.addEventListener('afterprint', function () { printing = false; renderTrails(); sizeCanvas(); draw(); });
 
   /* keyboard: Enter/Space on the picture launches */
   cv.tabIndex = 0;

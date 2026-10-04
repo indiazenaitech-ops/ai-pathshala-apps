@@ -64,6 +64,25 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(await attr('#eb-status', 'data-status') === 'many', 'two independent reactions flagged as ambiguous');
   expect(await coefs() === '3,2,2,1', 'one smallest positive answer shown, got ' + await coefs());
 
+  /* NCERT-style ions with states (Ag+(aq)) and plain charges (Zn2+, SO42-) */
+  await balance('Ag+(aq) + Cl-(aq) -> AgCl(s)');
+  expect(await page.isHidden('#eq-msg') && await coefs() === '1,1,1', 'Ag+(aq) + Cl-(aq) is read as two ions, got ' + await attr('#eq-msg', 'data-err') + ' ' + await coefs());
+  await balance('Zn + H+ -> Zn2+ + H2');
+  expect(await coefs() === '1,2,1,1', 'Zn2+ is zinc with charge 2+ (Zn + 2H+ -> Zn2+ + H2), got ' + await coefs());
+  const qz = await page.$eval('#atoms tr[data-el="charge"]', (r) => r.dataset.l + '/' + r.dataset.r);
+  expect(qz === '2/2', 'charge row 2 = 2 for zinc in acid, got ' + qz);
+  await balance('Ba2+ + SO42- -> BaSO4');
+  expect(await coefs() === '1,1,1', 'SO42- is sulphate with charge 2-, got ' + await attr('#eq-msg', 'data-err') + ' ' + await coefs());
+  /* plaster of Paris (half hydrate, NCERT Class 10 Ch 2) and a full stop typed at the end */
+  await balance('CaSO4·½H2O + H2O -> CaSO4·2H2O');
+  expect(await coefs() === '1,3,2', 'half hydrate: (CaSO4)2·H2O + 3H2O -> 2CaSO4·2H2O, got ' + await attr('#eq-msg', 'data-err') + ' ' + await coefs());
+  await balance('Fe + H2O -> Fe3O4 + H2.');
+  expect(await coefs() === '3,4,1,4', 'a full stop at the end is ignored, got ' + await attr('#eq-msg', 'data-err'));
+  await balance('1/2O2 + H2 -> H2O');
+  expect(await attr('#eq-msg', 'data-err') === 'err_coef', 'fractional coefficient gets the whole-number message, got ' + await attr('#eq-msg', 'data-err'));
+  /* the atom table keeps "Left side" on the left even in Urdu */
+  expect(await attr('#atoms', 'dir') === 'ltr', 'atom table laid out left-to-right');
+
   /* example chip */
   await page.click('#examples .eb-ex[data-eq="Al + O2 -> Al2O3"]');
   await page.waitForTimeout(60);
@@ -83,6 +102,9 @@ module.exports = async function ({ page, expect, t, log }) {
   await fill([6, 8, 2, 8]);
   await page.click('#pr-check');
   expect(await attr('#pr-fb', 'data-result') === 'multiple', 'double answer = not smallest');
+  await page.click('#pr-hint');
+  expect(await txt('#pr-fb') === t('fb_multiple', { k: '2' }), 'hint on a doubled answer says divide by 2, got ' + await txt('#pr-fb'));
+  expect(await page.inputValue('#pr-in-2') === '2', 'that hint does not overwrite a box');
   await fill([3, 4, 1, 4]);
   await page.click('#pr-check');
   expect(await attr('#pr-fb', 'data-result') === 'ok', '3,4,1,4 is correct');
@@ -110,8 +132,20 @@ module.exports = async function ({ page, expect, t, log }) {
   const shown = await page.$$eval('#pr-eq .eb-coef-in', (ins) => ins.map((i) => i.value).join(','));
   expect(shown === '2,2,4,1', 'answer 2Pb(NO3)2 -> 2PbO + 4NO2 + O2, got ' + shown);
   expect(await attr('#pr-solved', 'data-n') === '1', 'showing the answer does not count as solved');
+  await page.click('#pr-check');
+  expect(await attr('#pr-fb', 'data-result') === 'seen', 'Show answer then Check is not a real solve, got ' + await attr('#pr-fb', 'data-result'));
+  expect(await attr('#pr-solved', 'data-n') === '1', 'Show answer then Check does not raise the solved count');
 
   const saved = await page.evaluate(() => EDU.store('equation-balancer').get('prog', {}));
   expect(saved['13'] && saved['13'].s === 1, 'solved reaction saved on this device');
+
+  /* half-typed answer survives a reload */
+  await page.selectOption('#pr-select', '2');                  // Al + O2
+  await page.fill('#pr-in-0', '4');
+  await page.reload();
+  await page.waitForSelector('#pr-in-0');
+  expect(await page.inputValue('#pr-select') === '2', 'current reaction kept after reload');
+  expect(await page.inputValue('#pr-in-0') === '4', 'typed number kept after reload, got ' + await page.inputValue('#pr-in-0'));
+  expect(await attr('#pr-solved', 'data-n') === '1', 'solved count kept after reload');
   log('balancer + practice ok');
 };

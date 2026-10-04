@@ -15,11 +15,16 @@
     .ds-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 14px; border: 2px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); font: inherit; font-weight: 700; font-size: .95rem; cursor: pointer; line-height: 1.25; text-align: start; }
     .ds-btn:hover { background: var(--surface-2); }
     .ds-btn[aria-pressed="true"] { border-color: var(--primary); background: var(--primary-soft); }
-    .ds-btn .ico { font-size: 1.35rem; line-height: 1; }
-    @media (max-width: 560px) { .ds-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .ds-btn { padding: 6px 10px; font-size: .9rem; } }
+    .ds-btn .ico { font-size: 1.35rem; line-height: 1; flex: none; }
+    /* long words (Tamil, Malayalam) must wrap inside the button instead of spilling out of it */
+    .ds-btn { min-width: 0; }
+    .ds-btn .nm { min-width: 0; overflow-wrap: anywhere; }
+    @media (max-width: 560px) { .ds-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .ds-btn { padding: 6px 8px; gap: 6px; font-size: .9rem; } .ds-btn .ico { font-size: 1.15rem; } }
+    html[lang="ur"] .ds-btn { line-height: 1.7; }
     .ds-about { margin: 0; color: var(--muted); font-size: .88rem; }
     .tb-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
     .tb-actions .btn { min-height: 40px; }
+    .tb-actions .badge { min-width: 5.2em; justify-content: center; }
 
     /* ---------- lab grid ---------- */
     .lr-lab { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); align-items: start; }
@@ -29,7 +34,14 @@
     .lr-graph { padding: 12px; }
     .plot-stage canvas { aspect-ratio: 10 / 9.5; cursor: crosshair; touch-action: none; }
     @media (min-width: 700px) { .plot-stage canvas { aspect-ratio: 16 / 11; } }
-    .lr-lab:fullscreen .plot-stage canvas { aspect-ratio: auto; height: calc(100vh - 230px); min-height: 320px; }
+    .lr-lab:fullscreen .plot-stage canvas { aspect-ratio: auto; height: calc(100vh - 230px); min-height: 320px; max-height: none; }
+    /* wide screens (smartboard, laptop): the graph stays in view while the side panel scrolls,
+       so the class can watch the line move and the loss curve fall at the same time */
+    @media (min-width: 980px) and (min-height: 700px) {
+      .lr-graph { position: sticky; top: 68px; z-index: 1; }
+      .plot-stage canvas { max-height: calc(100vh - 370px); min-height: 300px; }
+      .lr-lab:fullscreen .lr-graph { position: static; }
+    }
     .show-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
     .show-row .lbl { font-size: .85rem; font-weight: 700; color: var(--muted); }
     .show-row .chip { min-height: 38px; }
@@ -41,6 +53,10 @@
     .chip[aria-pressed="true"] .sw-best { border-top-color: var(--primary-ink); }
     .chip[aria-pressed="true"] .sw-res { background: var(--primary-ink); }
     .canvas-hint { color: var(--muted); font-size: .85rem; margin: 8px 0 0; }
+    /* inside the fullscreen lab the toolbar is out of reach, so this chip (touch-friendly) leaves fullscreen */
+    .fs-exit { display: none !important; margin-inline-start: auto; }
+    .lr-lab:fullscreen .fs-exit { display: inline-flex !important; }
+    .lr-lab:-webkit-full-screen .fs-exit { display: inline-flex !important; }
 
     /* ---------- stats ---------- */
     .stats { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin-top: 12px; }
@@ -54,7 +70,7 @@
     .eq .vc { color: var(--c3); }
     .eq-words { font-size: .88rem; color: var(--muted); margin-top: 2px; overflow-wrap: anywhere; }
     .stat .sub { font-size: .82rem; color: var(--muted); margin-top: 2px; }
-    .stat .progress { margin-top: 6px; }
+    .stat .progress { margin-top: 6px; background: var(--border); }
     .stat .progress > span { background: var(--success); }
     .slope-meaning { margin: 10px 0 0; font-weight: 600; }
 
@@ -96,6 +112,8 @@
     .section { margin-top: 16px; }
     #explain-card h2 { margin-bottom: 4px; }
     #explain-card h3.small { margin: 10px 0 8px; line-height: 1.7; }
+    html[lang="ur"] #explain-card h2 { line-height: 1.9; margin-bottom: 12px; }
+    html[lang="ur"] .concept h3 { line-height: 1.9; }
     .exp-row { display: flex; flex-wrap: wrap; gap: 8px; }
     .concepts { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); margin-top: 14px; }
     .concept { background: var(--surface-2); border-radius: var(--radius-sm); padding: 12px 14px; }
@@ -127,11 +145,12 @@
     .worksheet ol li { margin-bottom: 14px; }
     @media print {
       .lr-lab { display: block; }
-      .lr-graph { break-inside: avoid; }
-      .plot-stage canvas { aspect-ratio: 16 / 10; }
+      .lr-graph { break-inside: avoid; position: static; }
+      .plot-stage canvas { aspect-ratio: 16 / 10; height: auto; max-height: none; min-height: 0; }
       .tbl-wrap { max-height: none; overflow: visible; border: 0; }
       .data-table input[type="number"] { border: 0; padding: 0; min-height: 0; width: auto; background: none; }
       .data-table .del-col { display: none; }
+      .data-table th { position: static; }   /* shared .table th is sticky: on paper it covers row 1 */
       .worksheet { display: block !important; break-before: auto; }
       .section { margin-top: 10px; }
     }
@@ -166,6 +185,7 @@
           <button class="chip" id="show-res" type="button" aria-pressed="true"><span class="sw sw-res" aria-hidden="true"></span><span data-i18n="show_res"></span></button>
           <button class="chip" id="show-sq" type="button" aria-pressed="false"><span class="sw sw-sq" aria-hidden="true"></span><span data-i18n="show_sq"></span></button>
           <button class="chip" id="show-best" type="button" aria-pressed="false"><span class="sw sw-best" aria-hidden="true"></span><span data-i18n="show_best"></span></button>
+          <button class="chip fs-exit" id="fs-exit" type="button" aria-pressed="true"><span aria-hidden="true">✕</span><span data-i18n="fullscreen"></span></button>
         </div>
         <p class="canvas-hint no-print" id="canvas-hint"></p>
         <div class="stats">

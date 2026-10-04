@@ -17,12 +17,24 @@
   var state = {
     tab: store.get('tab', 'check'),
     show: true,                       /* examples are shown openly; typing your own (or Clear) hides it again */
-    gen: Object.assign({ count: 6, list: 'en', sep: '-', number: true, caps: false }, store.get('gen', {})),
+    gen: cleanGen(store.get('gen', null)),
     phrase: null,
     quiz: null,
-    best: store.get('best', null)
+    best: (function (b) { return typeof b === 'number' && b >= 0 && b <= 8 ? b : null; })(store.get('best', null))
   };
   if (['check', 'gen', 'quiz', 'tips'].indexOf(state.tab) < 0) state.tab = 'check';
+
+  /* settings from an old or damaged save fall back to the defaults, one by one */
+  function cleanGen(g) {
+    g = g && typeof g === 'object' ? g : {};
+    return {
+      count: [4, 5, 6, 7, 8].indexOf(+g.count) >= 0 ? +g.count : 6,
+      list: ['en', 'hi', 'both'].indexOf(g.list) >= 0 ? g.list : 'en',
+      sep: ['-', '.', '_', ' ', ''].indexOf(g.sep) >= 0 ? g.sep : '-',
+      number: g.number === undefined ? true : !!g.number,
+      caps: !!g.caps
+    };
+  }
 
   /* ---------------- helpers ---------------- */
   function sup(n) { return String(n).replace(/[0-9-]/g, function (d) { return '⁰¹²³⁴⁵⁶⁷⁸⁹'.charAt('0123456789'.indexOf(d)) || '⁻'; }); }
@@ -94,12 +106,15 @@
     var tok = function (s) { return state.show ? s.token : mask(s.token); };
     var add = function (list, key, vars) { list.push({ key: key, vars: vars || {} }); };
     var words = (by.word || []).concat(by.hindi || []);
-    var passphrase = words.length + (by.common || []).length + (by.name || []).length + (by.place || []).length >= 3 && words.length >= 2;
+    /* common passwords that are plain words ("tiger") count as words in a passphrase; "123456" never does */
+    var wordCommon = (by.common || []).filter(function (s) { return !s.leet && /^[a-z]+$/.test(s.word || ''); });
+    var nWords = words.length + wordCommon.length + (by.name || []).length + (by.place || []).length;
+    var passphrase = nWords >= 3 && words.length >= 2;
     var whole = segs.length === 1 && segs[0].kind === 'common';
     var personal = false;
 
     if (whole) add(probs, 'fb_common_whole');
-    else (by.common || []).slice(0, 2).forEach(function (s) { add(probs, passphrase ? 'fb_word' : 'fb_common_part', { x: tok(s) }); });
+    else (by.common || []).slice(0, 2).forEach(function (s) { add(probs, 'fb_common_part', { x: tok(s) }); });
     var nums = (by.year || []).concat(by.date || [], by.number || []);
     if (by.name && nums.length) { add(probs, 'fb_name_year'); personal = true; }
     (by.name || []).slice(0, 2).forEach(function (s) { add(probs, 'fb_name', { x: tok(s) }); personal = true; });
@@ -124,7 +139,7 @@
     probs = probs.slice(0, 7);
 
     var ntypes = Object.keys(res.classes).length;
-    if (passphrase && lvl >= 2) add(good, 'good_passphrase', { n: EDU.fmt(words.length + (by.common || []).length + (by.name || []).length + (by.place || []).length) });
+    if (passphrase && lvl >= 2) add(good, 'good_passphrase', { n: EDU.fmt(nWords) });
     if (res.length >= 16 && lvl >= 2) add(good, 'good_long', { n: EDU.fmt(res.length) });
     if (ntypes >= 3 && lvl >= 2) add(good, 'good_mix', { n: EDU.fmt(ntypes) });
     if (segs.every(function (s) { return s.kind === 'random'; }) && res.length >= 8) add(good, 'good_nopattern');
@@ -142,16 +157,24 @@
     }));
   }
 
+  /* Screen readers hear a short summary once typing pauses, not the whole result card on every key press */
+  var announce = (function () {
+    var h;
+    return function (msg) { clearTimeout(h); h = setTimeout(function () { $('#result-live').textContent = msg; }, 700); };
+  })();
+
   function renderResult() {
     var box = $('#result'), v = pw.value;
     box.innerHTML = '';
     if (!v) {
+      announce('');
       box.removeAttribute('data-level');
       box.appendChild(el('div', { class: 'meter', 'aria-hidden': 'true' }, [0, 1, 2, 3, 4].map(function () { return el('span'); })));
       box.appendChild(el('p', { class: 'result-empty', id: 'empty-hint', text: t('empty_hint') }));
       return;
     }
     var res = P.analyze(v), lvl = P.level(res.bits);
+    announce(t('level' + lvl) + '. ' + t('time_label') + ' ' + timeText(res.bits));
     box.setAttribute('data-level', String(lvl));
     box.className = 'card stack lv' + lvl;
 
@@ -284,20 +307,41 @@
     var C = window.APP_CONTENT || {}, L = C[EDU.lang] || C.en || {};
     return (L.lessons && L.lessons[id]) || (C.en && C.en.lessons && C.en.lessons[id]) || '';
   }
+  function makePair(p, swap) {
+    var a = swap ? p.b : p.a, b = swap ? p.a : p.b;
+    var ba = P.analyze(a).bits, bb = P.analyze(b).bits;
+    return { id: p.id, swap: !!swap, a: a, b: b, ba: ba, bb: bb, win: ba > bb ? 'a' : 'b' };
+  }
+  /* The quiz in progress survives a reload (it holds only the fixed quiz pairs, never anything typed). */
+  function saveQuiz() {
+    var q = state.quiz; if (!q) return;
+    store.set('quiz', { ids: q.pairs.map(function (p) { return p.id + (p.swap ? '~' : ''); }), i: q.i, score: q.score, picked: q.picked, done: q.done });
+  }
+  function loadQuiz() {
+    var sv = store.get('quiz', null), byId = {};
+    if (!sv || !Array.isArray(sv.ids) || !sv.ids.length || sv.ids.length > DATA.pairs.length) return null;
+    DATA.pairs.forEach(function (p) { byId[p.id] = p; });
+    var pairs = [];
+    for (var k = 0; k < sv.ids.length; k++) {
+      var id = String(sv.ids[k]), sw = id.slice(-1) === '~', p = byId[sw ? id.slice(0, -1) : id];
+      if (!p) return null;
+      pairs.push(makePair(p, sw));
+    }
+    var i = sv.i | 0;
+    if (i < 0 || i >= pairs.length) return null;
+    return { pairs: pairs, i: i, score: Math.max(0, Math.min(i + 1, sv.score | 0)), picked: sv.picked === 'a' || sv.picked === 'b' ? sv.picked : null, done: !!sv.done };
+  }
   function startQuiz() {
-    var pairs = EDU.shuffle(DATA.pairs).slice(0, QN).map(function (p) {
-      var swap = Math.random() < 0.5;
-      var a = swap ? p.b : p.a, b = swap ? p.a : p.b;
-      var ba = P.analyze(a).bits, bb = P.analyze(b).bits;
-      return { id: p.id, a: a, b: b, ba: ba, bb: bb, win: ba > bb ? 'a' : 'b' };
-    });
+    var pairs = EDU.shuffle(DATA.pairs).slice(0, QN).map(function (p) { return makePair(p, Math.random() < 0.5); });
     state.quiz = { pairs: pairs, i: 0, score: 0, picked: null, done: false };
+    saveQuiz();
     renderQuiz();
   }
   function answer(side) {
     var q = state.quiz; if (!q || q.done || q.picked) return;
     q.picked = side;
     if (side === q.pairs[q.i].win) q.score++;
+    saveQuiz();
     renderQuiz();
     var nx = $('#quiz-next'); if (nx) nx.focus();
   }
@@ -307,6 +351,7 @@
       q.done = true;
       if (state.best === null || q.score > state.best) { state.best = q.score; store.set('best', q.score); }
     } else { q.i++; q.picked = null; }
+    saveQuiz();
     renderQuiz();
     var f = $('#opt-a') || $('#quiz-again'); if (f) f.focus();
   }
@@ -320,7 +365,7 @@
       box.appendChild(el('p', { class: 'mb0', text: t('quiz_result', { score: EDU.fmt(q.score), total: EDU.fmt(q.pairs.length) }) }));
       box.appendChild(el('p', { class: 'callout ' + (pct === 1 ? 'success' : pct >= 0.6 ? '' : 'warning'), text: t(pct === 1 ? 'quiz_perfect' : pct >= 0.6 ? 'quiz_good' : 'quiz_keep') }));
       if (state.best !== null) box.appendChild(el('p', { class: 'muted', id: 'quiz-best', text: t('quiz_best', { n: EDU.fmt(state.best) + ' / ' + EDU.fmt(QN) }) }));
-      box.appendChild(el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn btn-primary btn-lg', id: 'quiz-again', onclick: startQuiz }, '🔁 ', t('quiz_again'))));
+      box.appendChild(el('div', { class: 'row' }, el('button', { type: 'button', class: 'btn btn-primary btn-lg', id: 'quiz-again', onclick: function () { startQuiz(); var f = $('#opt-a'); if (f) f.focus(); } }, '🔁 ', t('quiz_again'))));
       return;
     }
     var p = q.pairs[q.i];
@@ -377,7 +422,7 @@
     ws.appendChild(el('h2', { text: t('ws_title') }));
     ws.appendChild(el('p', { text: t('ws_name') }));
     ws.appendChild(el('p', { text: t('ws_instr') }));
-    var tbl = el('table', { class: 'ws-table' },
+    var tbl = el('table', { class: 'ws-table ws-q' },
       el('thead', {}, el('tr', {}, el('th', { text: '#' }), el('th', { text: 'A' }), el('th', { text: 'B' }), el('th', { text: t('ws_why') }))));
     var tb = el('tbody'), key = el('tbody');
     DATA.pairs.forEach(function (p, i) {
@@ -392,11 +437,22 @@
     tbl.appendChild(tb);
     ws.appendChild(tbl);
     var k = el('div', { class: 'ws-key' }, el('h2', { text: t('ws_key') }),
-      el('table', { class: 'ws-table' }, el('thead', {}, el('tr', {}, el('th', { text: '#' }), el('th', { text: '✓' }), el('th', { text: t('time_label') }), el('th', { text: t('ws_why') }))), key));
+      el('table', { class: 'ws-table ws-k' }, el('thead', {}, el('tr', {}, el('th', { text: '#' }), el('th', { text: '✓' }), el('th', { text: t('scale_time') }), el('th', { text: t('ws_why') }))), key));
     ws.appendChild(k);
   }
   $('#quiz-print').addEventListener('click', function () { buildWorksheet(); printAs('printing-ws'); });
   $('#print-poster').addEventListener('click', function () { printAs('printing-poster'); });
+
+  /* Reset: forget the best score, the quiz in progress and the passphrase settings (nothing else is ever saved) */
+  $('#reset').addEventListener('click', function () {
+    if (!window.confirm(t('confirm_reset'))) return;
+    ['best', 'quiz', 'gen'].forEach(function (k) { store.remove(k); });
+    state.best = null;
+    state.gen = cleanGen(null);
+    syncOpts();
+    if (state.phrase) newPhrase();
+    startQuiz();
+  });
 
   /* ---------------- render all ---------------- */
   function renderAll() {
@@ -410,6 +466,7 @@
   EDU.onLang(renderAll);
 
   renderExamples();
+  state.quiz = loadQuiz();
   pw.value = demo = 'Rahul@2008';
   setShow(true);
   showTab(state.tab);

@@ -36,7 +36,7 @@
    'how when where why because while after before again let one ' +
    'का के की को में से है हैं था थे थी थीं और या पर ने भी तो ही यह वह ये वे इस उस इन उन एक कि जो कर करना करते करती किया हो होता होती होते ' +
    'होना हुआ हुई हुए लिए साथ तक अपना अपने अपनी मैं हम आप तुम मेरा मेरी मेरे हमारा हमारी हमारे नहीं न जा जाता जाती जाते रहा रही रहे ' +
-   'सकता सकती सकते गया गई गए दिया अब जब तब कुछ सब बहुत क्या क्यों कैसे कौन किसी किस द्वारा लेकिन परंतु किंतु तथा एवं व वाले वाली वाला ' +
+   'सकता सकती सकते गया गई गए दिया अब जब तब कुछ सब हर बहुत क्या क्यों कैसे कौन किसी किस द्वारा लेकिन परंतु किंतु तथा एवं व वाले वाली वाला ' +
    'आणि आहे आहेत होते होता होती हे ही हा ते ती तो या की पण मध्ये चा ची चे च्या ला ना नाही मी आम्ही तुम्ही त्या साठी असे केले ' +
    'এবং ও এই সেই যে না করে হয় আর থেকে জন্য তার এর ছিল আছে কিন্তু একটি একটা আমি আমরা তুমি আপনি সে তারা কি কী হবে মধ্যে সব খুব বা যা এক আমাদের তোমাদের আপনার তাদের ' +
    'અને છે હતું હતી હતા તે આ એ માં પણ ના ની નો નું ને થી એક હું અમે તમે કે જે પર માટે સાથે નથી ' +
@@ -46,14 +46,17 @@
    'మరియు ఒక ఈ ఆ అని ఇది అది నేను మేము మనం మీరు అతను ఆమె వారు కూడా చాలా కానీ లేదా ఉంది నా మా ' +
    'ಮತ್ತು ಒಂದು ಈ ಆ ಎಂದು ಇದು ಅದು ನಾನು ನಾವು ನೀವು ಅವರು ಹಾಗೂ ತುಂಬಾ ಆದರೆ ಅಥವಾ ಇದೆ ನನ್ನ ನಮ್ಮ ಸಹ ಕೂಡ ' +
    'ഒരു ഈ ആ ഇത് അത് ഞാൻ ഞങ്ങൾ നമ്മൾ നിങ്ങൾ അവൻ അവൾ അവർ വളരെ പക്ഷേ ഉണ്ട് ആണ് എന്റെ നമ്മുടെ കൂടി ' +
-   'کا کے کی کو میں سے ہے ہیں تھا تھے تھی اور یا پر نے بھی تو ہی یہ وہ اس ان ایک کہ جو کر ہو لیے ساتھ تک اپنا اپنے اپنی ہم آپ تم نہیں گیا گئی گئے کیا بہت لیکن جب اب'
+   'کا کے کی کو میں سے ہے ہیں تھا تھے تھی اور یا پر نے بھی تو ہی یہ وہ اس ان ایک کہ جو کر ہو لیے ساتھ تک اپنا اپنے اپنی ہم آپ تم نہیں گیا گئی گئے کیا بہت لیکن جب اب ہر رہا رہی رہے'
   ).split(/\s+/).forEach(function (w) { if (w) STOP[w.normalize ? w.normalize('NFC') : w] = 1; });
 
-  /* Abbreviations whose full stop does not end a sentence. */
+  /* Abbreviations whose full stop does not end a sentence. "etc." is left out on purpose: before a small
+     letter it never splits anyway, and before a capital it usually ends the sentence ("pens etc. The shop").
+     "No." / "Nos." only count as abbreviations before a number ("Roll No. 5"), so "No. I stayed." splits. */
   var ABBR = Object.create(null);
-  ('mr mrs ms dr prof sr jr st mt no nos vs etc eg ie govt dept rd co ltd pvt jan feb mar apr jun jul aug sep sept oct nov dec ' +
-   'approx fig vol ch pp smt shri sh kum rs std hon col gen lt capt sgt ave est misc ref sec ' +
+  ('mr mrs ms dr prof sr jr st mt vs eg ie govt dept rd co ltd pvt jan feb mar apr jun jul aug sep sept oct nov dec ' +
+   'approx fig vol ch pp smt shri sh kum rs std hon col gen lt capt sgt ave est misc ref sec ans ' +
    'डॉ प्रो पं स्व कु सौ श्री ई पू क्र ता दि रु').split(' ').forEach(function (w) { ABBR[w] = 1; });
+  var ABBR_NUM = { no: 1, nos: 1 };
 
   /* ---------------- regex helpers (Unicode classes with fallbacks for old browsers) ---------------- */
   function rx(src, flags, fallback) { try { return new RegExp(src, flags); } catch (e) { return fallback; } }
@@ -61,7 +64,11 @@
   var RE_WORDCHAR = rx('[\\p{L}\\p{N}]', 'u', new RegExp('[A-Za-z0-9\\u00C0-\\u024F' + IND + ']'));
   var RE_LM = rx('[\\p{L}\\p{M}]', 'u', new RegExp('[A-Za-z\\u00C0-\\u024F' + IND + ']'));
   var RE_NONLETTER = rx('[^\\p{L}]', 'gu', new RegExp('[^A-Za-z\\u00C0-\\u024F' + IND + ']', 'g'));
-  var RE_WORDS_FB = rx("[\\p{L}\\p{M}\\p{N}\\u200C\\u200D]+(?:['’\\-‐‑./:@_]+[\\p{L}\\p{M}\\p{N}\\u200C\\u200D]+)*", 'gu', /\S+/g);
+  /* letters only (no vowel signs or virama), used to spot one-letter initials such as पु. or மு. */
+  var RE_LETTERS = rx('\\p{L}', 'gu', /[A-Za-z\u0904-\u0939\u0958-\u0961\u0985-\u09B9\u0A05-\u0A39\u0A85-\u0AB9\u0B05-\u0B39\u0B85-\u0BB9\u0C05-\u0C39\u0C85-\u0CB9\u0D05-\u0D3A]/g);
+  /* joiners: any run of ' ’ . / : @ _ with at most one hyphen (so "home--it" stays 2 words) */
+  var RE_WORDS_FB = rx("[\\p{L}\\p{M}\\p{N}\\u200C\\u200D]+(?:(?:['’./:@_]+[\\-‐‑]?['’./:@_]*|[\\-‐‑]['’./:@_]*)[\\p{L}\\p{M}\\p{N}\\u200C\\u200D]+)*", 'gu', /\S+/g);
+  var RE_DBLHYPH = /[\-‐‑][\-‐‑]/;
   var RE_NUM = rx('^[\\p{N}.,:/\\-]+$', 'u', /^[0-9.,:/\-]+$/);
   var RE_LISTNO = rx('^\\s*(?:\\p{Nd}{1,3}|[ivxIVX]{1,4})$', 'u', /^\s*(?:[0-9०-९]{1,3}|[ivxIVX]{1,4})$/);
   var TERM_LAT = '.!?…', TERM_IND = '।॥۔؟', CLOSE = '"\'”’)]}»›';
@@ -86,14 +93,17 @@
   function getWords(text) {
     var out = [], sg = segmenter('word');
     if (sg) {
-      var it = sg.segment(text)[Symbol.iterator](), r, last = null, joinAt = -1;
+      var it = sg.segment(text)[Symbol.iterator](), r, last = null, joinAt = -1, joinStr = '';
       while (!(r = it.next()).done) {
         var g = r.value, end = g.index + g.segment.length;
         if (g.isWordLike) {
           if (last && (g.index === last.e || g.index === joinAt)) last.e = end;
           else { last = { s: g.index, e: end }; out.push(last); }
           joinAt = -1;
-        } else if (last && (g.index === last.e || g.index === joinAt) && isJoin(g.segment)) joinAt = end;
+        } else if (last && (g.index === last.e || g.index === joinAt) && isJoin(g.segment)) {
+          joinStr = (g.index === last.e ? '' : joinStr) + g.segment;
+          joinAt = RE_DBLHYPH.test(joinStr) ? -1 : end;      // "home--it" is a dash, not a joined word
+        }
         else joinAt = -1;
       }
       return out;
@@ -123,7 +133,27 @@
   }
 
   function prevWord(line, i) { var j = i; while (j > 0 && RE_LM.test(line[j - 1])) j--; return line.slice(j, i); }
+  /* letters and dots right before i: "e.g", "U.S.A", "a.m" or a plain word */
+  function prevToken(line, i) { var j = i; while (j > 0 && (line[j - 1] === '.' || RE_LM.test(line[j - 1]))) j--; while (line[j] === '.') j++; return line.slice(j, i); }
   function isSpace(c) { return /\s/.test(c); }
+  /* One capital letter (A) or one Indian-script letter with its vowel sign (पु, மு, ಕು): the shape of an initial. */
+  function oneLetter(p) {
+    if (/^[A-Z]$/.test(p)) return true;
+    if (!/^[\u0900-\u0DFF]+$/.test(p)) return false;
+    var m = p.match(RE_LETTERS);
+    return !!m && m.length === 1;
+  }
+  /* Is the single letter at li (followed by ". ") an initial such as A. P. J. Abdul Kalam, Dr. A. Rao, Shri R. Kumar,
+     पु. ल. देशपांडे or a line that starts "R. Sharma"? Otherwise ("grade A. My friend") the full stop ends the sentence. */
+  function isInitial(line, li, k, start) {
+    var p = li - 1;
+    while (p >= start && isSpace(line[p])) p--;
+    if (p < start || '("\'“‘[«'.indexOf(line[p]) >= 0) return true;     // the sentence starts with it
+    if (line[p] === '.') return true;                                    // after "Dr." or another initial
+    if (ABBR[prevWord(line, p + 1).toLowerCase()]) return true;          // after Shri, Smt, Mr …
+    var nt = /^([^\s.]{1,6})\.(?:\s|$)/.exec(line.slice(k, k + 8));     // another initial follows: M. K. Gandhi, पु. ल.
+    return !!nt && oneLetter(nt[1]);
+  }
 
   /* Sentences: end at . ! ? … । ॥ ۔ ؟ (and | typed as a danda). Every line is split separately, so a
      heading without a full stop is one sentence. Abbreviations (Dr., Mr., Rs., डॉ.), initials (A. P. J.),
@@ -160,9 +190,19 @@
             if (k < n && /[a-z]/.test(line[k])) boundary = false;  // "etc. and", "Wait... what"
           }
           if (boundary && ch === '.' && j === i + 1 && !atEnd) {
-            var w = prevWord(line, i);
-            if (w && (ABBR[w.toLowerCase()] || /^[A-Za-z]$/.test(w))) boundary = false;
-            else if (RE_LISTNO.test(line.slice(0, i))) boundary = false;            // "1. Introduction", "ii. Body"
+            var nx = j; while (nx < n && isSpace(line[nx])) nx++;
+            var tok = prevToken(line, i), w = tok.toLowerCase();
+            if (tok.indexOf('.') >= 0) {
+              if (ABBR[w.replace(/\./g, '')]) boundary = false;                       // e.g. / i.e. (but not a.m.)
+              else if (tok.split('.').every(oneLetter)) {                              // A.P.J. Abdul Kalam, மு.க. ஸ்டாலின்
+                var q = i - tok.length - 1; while (q >= 0 && isSpace(line[q])) q--;
+                if (prevWord(line, q + 1).toLowerCase() !== 'the') boundary = false;     // but "the U.S.A. Then" ends
+              }
+            }
+            else if (w && ABBR[w]) boundary = false;
+            else if (w && ABBR_NUM[w] && /[0-9०-९]/.test(line[nx] || '')) boundary = false;  // "Roll No. 5"
+            else if ((/^[A-Za-z]$/.test(tok) || oneLetter(tok)) && isInitial(line, i - tok.length, nx, start)) boundary = false;
+            else if (i <= 16 && RE_LISTNO.test(line.slice(0, i))) boundary = false;      // "1. Introduction", "ii. Body"
           }
         }
         if (boundary) { push(base + start, base + j); start = j; }
@@ -226,14 +266,16 @@
   /* ---------------- state ---------------- */
   var C = function () { var A = window.APP_CONTENT || {}; return A[EDU.lang] || A.en; };
   var savedText = store.get('text', null);
+  var savedSample = typeof savedText !== 'string' || !!store.get('sample', false);
   var S = {
-    text: typeof savedText === 'string' ? savedText : C().sample,
-    isSample: typeof savedText === 'string' ? !!store.get('sample', false) : true,
+    /* the example text always follows the current language (a Hindi example is not shown on the English page) */
+    text: savedSample ? C().sample : savedText,
+    isSample: savedSample,
     view: 'write',
     font: EDU.clamp(Number(store.get('font', FONT_DEF)) || FONT_DEF, FONT_MIN, FONT_MAX),
     preset: store.get('preset', 'para'),
-    cmin: Number(store.get('cmin', 100)) || 0,
-    cmax: Number(store.get('cmax', 150)) || 1,
+    cmin: EDU.clamp(Math.round(Number(store.get('cmin', 100))) || 0, 0, 100000),
+    cmax: EDU.clamp(Math.round(Number(store.get('cmax', 150))) || 1, 1, 100000),
     unit: store.get('unit', 'w') === 'c' ? 'c' : 'w',
     skip: store.get('skip', true) !== false,
     guide: EDU.clamp(Number(store.get('guide', 0)) || 0, 0, 4),
@@ -293,12 +335,18 @@
     bar.hidden = false;
     var scale = Math.max(r.max * 1.25, v * 1.03, 1);
     $('#fill').style.width = Math.min(100, v / scale * 100).toFixed(2) + '%';
-    var zone = $('#zone');
-    zone.style.insetInlineStart = (r.min / scale * 100).toFixed(2) + '%';
-    zone.style.width = Math.max(0.6, (r.max - r.min) / scale * 100).toFixed(2) + '%';
-    $('#zone-lo').textContent = r.min === r.max ? '' : fmt(r.min);
-    $('#zone-hi').textContent = fmt(r.max);
-    bar.setAttribute('aria-valuemax', String(r.max));
+    var zone = $('#zone'), zlo = $('#zone-lo'), zhi = $('#zone-hi');
+    var zs = r.min / scale, zw = (r.max - r.min) / scale;
+    zone.style.insetInlineStart = (zs * 100).toFixed(2) + '%';
+    zone.style.width = Math.max(0.6, zw * 100).toFixed(2) + '%';
+    /* A narrow target zone (far over the limit, or a small range) gets one "40–50" label instead of
+       two labels printed on top of each other. It grows away from the nearer end of the bar. */
+    var narrow = zw * (bar.clientWidth || 300) < 14;
+    zhi.style.insetInlineStart = narrow ? (zs < 0.5 ? '0' : 'auto') : '';
+    zhi.style.insetInlineEnd = narrow && zs >= 0.5 ? '0' : '';
+    zlo.textContent = r.min === r.max || narrow ? '' : fmt(r.min);
+    zhi.textContent = narrow && r.min !== r.max ? fmt(r.min) + '–' + fmt(r.max) : fmt(r.max);
+    bar.setAttribute('aria-valuemax', String(Math.max(r.max, v)));   // valuenow must stay inside the range; valuetext gives the limit
     bar.setAttribute('aria-valuenow', String(v));
     bar.setAttribute('aria-valuetext', fmt(v) + ' / ' + fmt(r.min) + '–' + fmt(r.max));
     var n = st === 'short' || st === 'near' ? r.min - v : st === 'ok' ? 0 : v - r.max;
@@ -416,7 +464,17 @@
     if (!rows.length) { box.appendChild(EDU.el('p', { class: 'muted small mb0', text: t('rep_empty') })); return; }
     rows.forEach(function (r) {
       box.appendChild(EDU.el('button', { type: 'button', class: 'chip', 'data-word': r.w, 'data-count': String(r.c), 'aria-pressed': String(S.hl === r.w),
-        onclick: function () { S.hl = S.hl === r.w ? null : r.w; if (S.hl) setView('check'); renderRepeated(); renderCheck(); } },
+        onclick: function () {
+          S.hl = S.hl === r.w ? null : r.w;
+          if (S.hl) setView('check');
+          renderRepeated(); renderCheck();
+          /* keep keyboard focus on the same chip after the list is rebuilt */
+          var same = EDU.$$('#rep-list .chip').filter(function (c) { return c.dataset.word === r.w; })[0];
+          if (same) { try { same.focus({ preventScroll: true }); } catch (e) { } }
+          /* on a phone the text box is far above this card: bring the first highlighted use into view */
+          var mk = S.hl && $('#check mark');
+          if (mk) mk.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        } },
         EDU.el('span', { class: 'no-i18n', dir: 'auto', text: r.w }), EDU.el('span', { class: 'n', text: '×' + fmt(r.c) })));
     });
   }
@@ -485,7 +543,10 @@
 
   /* ---------------- status / autosave ---------------- */
   function timeNow(d) {
-    try { return new Intl.DateTimeFormat(EDU.langInfo(EDU.lang).tag, { hour: 'numeric', minute: '2-digit', numberingSystem: 'latn' }).format(d); }
+    /* English: "7:05 pm". Other languages already add "बजे / মিনিটে / மணிக்கு …", so a plain 24-hour "19:05" reads better than "7:05 pm बजे". */
+    var o = EDU.lang === 'en' ? { hour: 'numeric', minute: '2-digit' } : { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' };
+    o.numberingSystem = 'latn';
+    try { return new Intl.DateTimeFormat(EDU.langInfo(EDU.lang).tag, o).format(d); }
     catch (e) { return d.toTimeString().slice(0, 5); }
   }
   function renderStatus() {
@@ -514,7 +575,10 @@
   function announce() {
     clearTimeout(srTimer);
     srTimer = setTimeout(function () {
-      $('#sr-live').textContent = t('sr_summary', { w: fmt(A.words.length), s: fmt(A.sents.length), msg: $('#target-msg').textContent.replace(/^\S+\s/, '') });
+      /* drop the ✓ / ✂️ / ✏️ icon (the "no limit" message has none, so nothing is cut from it) */
+      var msg = $('#target-msg').textContent;
+      if ($('#meter').dataset.state !== 'none') msg = msg.replace(/^\S+\s/, '');
+      $('#sr-live').textContent = t('sr_summary', { w: fmt(A.words.length), s: fmt(A.sents.length), msg: msg });
     }, 1500);
   }
 
@@ -541,7 +605,9 @@
   /* Replace the text, keeping the old text for Undo. */
   function replaceText(text, isSample) {
     var old = S.text;
-    S.undo = (!S.isSample && old.trim()) ? old : null;
+    /* Replacing the example (or an empty box) keeps the older Undo, so "Example" then "Clear" (or "Clear" then
+       "Example") can still bring the student's own text back. */
+    S.undo = (!S.isSample && old.trim()) ? old : S.undo;
     setText(text, isSample, true);
   }
   function needsConfirm() { return !S.isSample && S.text.trim().length > 0; }
@@ -576,15 +642,22 @@
     if (S.preset === 'custom') { $('#cmin').value = S.cmin; $('#cmax').value = S.cmax; }
     renderMeter(); announce();
   });
+  /* Number() (not parseInt) so "1e5" is 100000, not 1; the limits stay between 0 and 100000. */
+  var CUSTOM_MAX = 100000;
   function readCustom() {
-    var lo = parseInt($('#cmin').value, 10), hi = parseInt($('#cmax').value, 10);
-    if (!isNaN(lo)) S.cmin = EDU.clamp(lo, 0, 1000000);
-    if (!isNaN(hi)) S.cmax = EDU.clamp(hi, 1, 1000000);
+    var lo = $('#cmin').value.trim() === '' ? NaN : Number($('#cmin').value),
+        hi = $('#cmax').value.trim() === '' ? NaN : Number($('#cmax').value);
+    if (isFinite(lo)) S.cmin = EDU.clamp(Math.round(lo), 0, CUSTOM_MAX);
+    if (isFinite(hi)) S.cmax = EDU.clamp(Math.round(hi), 1, CUSTOM_MAX);
     store.set('cmin', S.cmin); store.set('cmax', S.cmax);
     renderMeter();
   }
+  /* when the box is left, show the number that is really used (empty, negative or too big boxes are corrected) */
+  function tidyCustom() { readCustom(); this.value = this.id === 'cmin' ? S.cmin : S.cmax; }
   $('#cmin').addEventListener('input', readCustom);
   $('#cmax').addEventListener('input', readCustom);
+  $('#cmin').addEventListener('change', tidyCustom);
+  $('#cmax').addEventListener('change', tidyCustom);
   $('#unit-w').addEventListener('click', function () { S.unit = 'w'; store.set('unit', 'w'); renderMeter(); });
   $('#unit-c').addEventListener('click', function () { S.unit = 'c'; store.set('unit', 'c'); renderMeter(); });
 
@@ -714,12 +787,13 @@
 
   EDU.onLang(function () {
     segCache = {};
-    if (S.isSample) { S.text = C().sample; ta.value = S.text; store.set('text', S.text); }
+    if (S.isSample) { S.text = C().sample; ta.value = S.text; S.hl = null; store.set('text', S.text); store.set('sample', true); }
     A = analyze(S.text);
     renderTexts();
     buildPresetOptions();
     buildGuideTabs();
     renderAll();
+    announce();
   });
 
   /* ---------------- start ---------------- */

@@ -52,14 +52,23 @@
     var a = [Q[0] + u[0] * z, Q[1] + u[1] * z], b = [a[0] + v[0] * z, a[1] + v[1] * z], c = [Q[0] + v[0] * z, Q[1] + v[1] * z];
     return this.path('M' + r1(a[0]) + ' ' + r1(a[1]) + 'L' + r1(b[0]) + ' ' + r1(b[1]) + 'L' + r1(c[0]) + ' ' + r1(c[1]), 'mark');
   };
-  /* label for a vertical dashed segment at x from y0 to y1; 'room' = free width on the chosen side (dir -1 left, +1 right) */
-  Builder.prototype.vlab = function (x, y0, y1, s, room, dir, cls) {
+  /* label for a vertical dashed segment at x from y0 to y1; 'room' = free width on the chosen side (dir -1 left, +1 right).
+     alt = [x, y, anchor]: where to put the label when it fits neither beside the segment nor along it (e.g. a very flat shape) */
+  Builder.prototype.vlab = function (x, y0, y1, s, room, dir, cls, alt) {
     var w = this.tw(s), my = (y0 + y1) / 2, len = Math.abs(y1 - y0);
-    if (room >= w + 12) return this.text(x + dir * 8, my, s, { anchor: dir < 0 ? 'end' : 'start', cls: cls });
+    if (len < this.fs * 1.6 && alt) return this.free(alt[0], alt[1], s, alt[2] || 'middle', cls);
+    if (room >= w + 12 && len >= this.fs * 1.6) return this.text(x + dir * 8, my, s, { anchor: dir < 0 ? 'end' : 'start', cls: cls });
     if (len >= w + 8) return this.text(x + dir * this.fs * 0.75, my, s, { rot: -90, cls: cls });
+    if (alt) return this.free(alt[0], alt[1], s, alt[2] || 'middle', cls);
     var ox = x + dir * (room + 10);
     if (dir < 0 && ox - w < 2) { dir = 1; ox = x + 8; }
-    return this.text(ox, my, s, { anchor: dir < 0 ? 'end' : 'start', cls: cls });
+    return this.free(ox, my, s, dir < 0 ? 'end' : 'start', cls);
+  };
+  /* horizontal label kept inside the view box */
+  Builder.prototype.free = function (x, y, s, anchor, cls) {
+    var w = this.tw(s), x0 = anchor === 'end' ? x - w : anchor === 'start' ? x : x - w / 2;
+    if (x0 < 3) x += 3 - x0; else if (x0 + w > this.W - 3) x -= x0 + w - (this.W - 3);
+    return this.text(x, y, s, { anchor: anchor, cls: cls });
   };
   Builder.prototype.svg = function (cls, title) {
     return '<svg class="fig' + (cls ? ' ' + cls : '') + '" viewBox="0 0 ' + this.W + ' ' + this.H + '" xmlns="http://www.w3.org/2000/svg" role="img" direction="ltr" style="font-size:' + r1(this.fs) + 'px"' +
@@ -68,6 +77,38 @@
   function norm(v) { var l = Math.sqrt(v[0] * v[0] + v[1] * v[1]) || 1; return [v[0] / l, v[1] / l]; }
   function cen(pts) { var x = 0, y = 0; pts.forEach(function (p) { x += p[0]; y += p[1]; }); return [x / pts.length, y / pts.length]; }
   function arc(rx, ry, sweep, to) { return 'A' + r1(Math.max(rx, 0.1)) + ' ' + r1(Math.max(ry, 0.1)) + ' 0 0 ' + sweep + ' ' + r1(to[0]) + ' ' + r1(to[1]); }
+  function arcL(rx, ry, large, sweep, to) { return 'A' + r1(Math.max(rx, 0.1)) + ' ' + r1(Math.max(ry, 0.1)) + ' 0 ' + large + ' ' + sweep + ' ' + r1(to[0]) + ' ' + r1(to[1]); }
+  /* outline of a cone or frustum seen from above: the side lines touch both end ellipses (rx = r, ry = K·r)
+     at the points where they are tangent, not at the left/right ends. Top centre (cx, yt) radius rt, bottom (cx, yb) radius rb.
+     null when one end hides the other completely (a very flat solid). */
+  function sideTangents(cx, yt, rt, yb, rb) {
+    var D = (yb - yt) / K;
+    if (D <= Math.abs(rt - rb) + 0.5) return null;
+    var ny = (rt - rb) / D, nx = Math.sqrt(1 - ny * ny);
+    return { ny: ny, tR: [cx + rt * nx, yt + rt * ny * K], tL: [cx - rt * nx, yt + rt * ny * K],
+      bR: [cx + rb * nx, yb + rb * ny * K], bL: [cx - rb * nx, yb + rb * ny * K] };
+  }
+  /* draw the body of a cone (rt = 0) or frustum; returns the visible right side line [bottom, top] for the slant label */
+  function solidSides(b, cx, yt, rt, yb, rb) {
+    var T = sideTangents(cx, yt, rt, yb, rb), top = [cx, yt], bot = [cx, yb];
+    if (!T) {
+      if (rb >= rt) {                     /* the bottom end hides everything: full base outline, top face inside */
+        b.ell(bot, rb, rb * K, 'f1');
+        if (rt > 0) b.ell(top, rt, rt * K, 'f2');
+        else { b.line(top, [cx - rb, yb], 'edge'); b.line(top, [cx + rb, yb], 'edge'); }
+        return [[cx + rb, yb], [cx + rt, yt]];
+      }
+      b.ell(top, rt, rt * K, 'f2');      /* the top face hides the whole body; the base is behind it */
+      b.ell(bot, rb, rb * K, 'hid');
+      return [[cx + rb, yb], [cx + rt, yt]];
+    }
+    var back = T.ny > 0 ? 1 : 0;         /* tangent points below the centres → the hidden back arc is the long one */
+    b.path(M(T.tR) + Lp(T.bR) + arcL(rb, rb * K, 1 - back, 1, T.bL) + Lp(T.tL) +
+      (rt > 0 ? arcL(rt, rt * K, back, 1, T.tR) : '') + 'Z', 'f1');
+    b.path(M(T.bR) + arcL(rb, rb * K, back, 0, T.bL), 'hid');
+    if (rt > 0) b.ell(top, rt, rt * K, 'f2');
+    return [T.bR, T.tR];
+  }
   function M(p) { return 'M' + r1(p[0]) + ' ' + r1(p[1]); }
   function Lp(p) { return 'L' + r1(p[0]) + ' ' + r1(p[1]); }
 
@@ -94,7 +135,7 @@
         var foot = P(ax, 0);
         b.line(pts[2], foot, 'dim'); b.right(foot, pts[1], pts[2]);
         b.edge(pts[0], pts[1], lab('b'), C);
-        b.vlab(foot[0], foot[1], pts[2][1], lab('h'), 0.35 * v.b * b.s, 1, 'acc');
+        b.vlab(foot[0], foot[1], pts[2][1], lab('h'), 0.35 * v.b * b.s, 1, 'acc', [pts[2][0] + 6, pts[2][1] - b.fs * 0.8, 'start']);
         break;
       }
       case 'tri_heron': {
@@ -115,7 +156,8 @@
         if (off > v.b) b.line(pts[1], ft, 'aux');
         b.line(pts[3], ft, 'dim'); b.right(ft, off > v.b ? pts[1] : pts[0], pts[3]);
         b.edge(pts[0], pts[1], lab('b'), C); b.edge(pts[0], pts[3], lab('a'), C);
-        b.vlab(ft[0], ft[1], pts[3][1], lab('h'), Math.max(v.b - off, 0) * b.s + off * b.s / 2, 1, 'acc');
+        b.vlab(ft[0], ft[1], pts[3][1], lab('h'), Math.max(v.b - off, 0) * b.s + off * b.s / 2, 1, 'acc',
+          [(pts[3][0] + pts[2][0]) / 2, pts[3][1] - b.fs * 0.85 - 3, 'middle']);
         break;
       }
       case 'rhombus': {
@@ -124,9 +166,16 @@
         pts = [P(-p, 0), P(0, -q), P(p, 0), P(0, q)]; C = cen(pts);
         b.poly(pts, 'f1');
         b.line(pts[0], pts[2], 'dim'); b.line(pts[1], pts[3], 'dim2');
-        var O = P(0, 0); b.right(O, pts[2], pts[3]);
-        b.text((O[0] + pts[0][0]) / 2, O[1] + b.fs * 0.85, lab('d₁'), { cls: 'acc' });
-        b.vlab(O[0], O[1], pts[3][1], lab('d₂'), (O[0] - pts[0][0]) / 2, -1, 'acc2');
+        var O = P(0, 0); b.right(O, pts[0], pts[3]);
+        /* d₁ just under its diagonal if it fits inside the rhombus (left half first), else just past the right (or left) corner */
+        var l1 = lab('d₁'), w1 = b.tw(l1), pp = O[0] - pts[0][0], qq = O[1] - pts[3][1], dd = b.fs * 1.35;
+        var half = dd < qq ? pp * (1 - dd / qq) : 0, avail = half - 10;
+        if (avail >= w1) b.text(O[0] - 6 - avail / 2, O[1] + b.fs * 0.85, l1, { cls: 'acc' });
+        else if (2 * half - 12 >= w1) b.text(O[0] - half + 6 + w1 / 2, O[1] + b.fs * 0.85, l1, { cls: 'acc' });
+        else if (pts[2][0] + 8 + w1 <= b.W - 3) b.text(pts[2][0] + 8, O[1], l1, { anchor: 'start', cls: 'acc' });
+        else if (pts[0][0] - 8 - w1 >= 3) b.text(pts[0][0] - 8, O[1], l1, { anchor: 'end', cls: 'acc' });
+        else b.free(O[0], pts[1][1] + b.fs * 0.9, l1, 'middle', 'acc');
+        b.vlab(O[0], O[1], pts[3][1], lab('d₂'), pp / 2, 1, 'acc2', [O[0], pts[3][1] - b.fs * 0.85, 'middle']);
         break;
       }
       case 'trapezium': {
@@ -137,7 +186,9 @@
         var hx = v.a / 2, h0 = P(hx, 0), h1 = P(hx, v.h);
         b.line(h0, h1, 'dim'); b.right(h0, pts[1], h1);
         b.edge(pts[0], pts[1], lab('a'), C); b.edge(pts[3], pts[2], lab('b'), C);
-        b.vlab(h0[0], h0[1], h1[1], lab('h'), (v.a + v.b) / 4 * b.s, 1, 'acc');
+        var tTop = Math.min(pts[2][1], pts[3][1]), bw = b.tw(lab('b'));
+        b.vlab(h0[0], h0[1], h1[1], lab('h'), (v.a + v.b) / 4 * b.s, 1, 'acc',
+          [Math.max(pts[2][0] + 8, (pts[2][0] + pts[3][0]) / 2 + bw / 2 + b.fs * 0.8), tTop - b.fs * 0.85 - 3, 'start']);
         break;
       }
       case 'circle': case 'semicircle': {
@@ -164,8 +215,15 @@
           'M' + r1(cc[0] - RI) + ' ' + r1(cc[1]) + 'a' + r1(RI) + ' ' + r1(RI) + ' 0 1 0 ' + r1(2 * RI) + ' 0a' + r1(RI) + ' ' + r1(RI) + ' 0 1 0 ' + r1(-2 * RI) + ' 0Z', 'f1', ' fill-rule="evenodd"');
         var po = [cc[0] + RO, cc[1]], pi = [cc[0] - RI, cc[1]];
         b.line(cc, po, 'dim'); b.line(cc, pi, 'dim2'); b.dot(cc);
-        b.text(cc[0] + RO / 2, cc[1] - b.fs * 0.85, lab('R'), { cls: 'acc' });
-        b.text(cc[0] - RI / 2, cc[1] + b.fs * 0.85, lab('r'), { cls: 'acc2' });
+        /* keep each label inside one region (the band or the inner disc) where it fits, so it does not cross a circle */
+        var lR = lab('R'), lr = lab('r'), wR = b.tw(lR), wr = b.tw(lr), up = cc[1] - b.fs * 0.85, dn = cc[1] + b.fs * 0.85;
+        if (RO - RI >= wR + 10) b.text(cc[0] + (RO + RI) / 2, up, lR, { cls: 'acc' });
+        else if (RI - 10 >= wR) b.text(cc[0] + RI - 6, up, lR, { anchor: 'end', cls: 'acc' });
+        else if (RI - 8 >= wR / 2) b.text(cc[0], up, lR, { cls: 'acc' });
+        else b.text(cc[0] + RO / 2, up, lR, { cls: 'acc' });
+        if (RI - 10 >= wr) b.text(cc[0] - RI + 6, dn, lr, { anchor: 'start', cls: 'acc2' });
+        else if (RI - 8 >= wr / 2) b.text(cc[0], dn, lr, { cls: 'acc2' });
+        else b.text(cc[0] - RI / 2, dn, lr, { cls: 'acc2' });
         break;
       }
     }
@@ -208,16 +266,15 @@
       }
       case 'cone': {
         var cr = v.r, ch = v.h;
-        P = b.fit(-cr, -K * cr, cr, ch);
+        P = b.fit(-cr, -K * cr, cr, Math.max(ch, K * cr));
         var crx = cr * b.s, cry = crx * K, c0 = P(0, 0), apex = P(0, ch);
-        var cl = [c0[0] - crx, c0[1]], cR = [c0[0] + crx, c0[1]];
-        b.path(M(apex) + Lp(cR) + arc(crx, cry, 1, cl) + 'Z', 'f1');
-        b.path(M(cR) + arc(crx, cry, 0, cl), 'hid');
+        var cR = [c0[0] + crx, c0[1]];
+        var side = solidSides(b, c0[0], apex[1], 0, c0[1], crx);
         b.line(apex, c0, 'dim2'); b.line(c0, cR, 'dim'); b.dot(c0);
         b.right(c0, cR, apex);
         b.text((c0[0] + cR[0]) / 2, c0[1] + cry + b.fs * 0.85, lab('r'), { cls: 'acc' });
-        b.vlab(c0[0], c0[1], apex[1], lab('h'), crx / 2, -1, 'acc2');
-        b.edge(cR, apex, lab('l'), c0, 16);
+        b.vlab(c0[0], c0[1], apex[1], lab('h'), crx / 2, -1, 'acc2', [apex[0] - 6, Math.min(apex[1], c0[1] - cry) - b.fs * 0.8, 'end']);
+        b.edge(side[0], apex, lab('l'), c0, 16);
         break;
       }
       case 'sphere': {
@@ -246,17 +303,19 @@
       }
       case 'frustum': {
         var a1 = v.r1, a2 = v.r2, fh = v.h, mx = Math.max(a1, a2);
-        P = b.fit(-mx, -K * a2, mx, fh + K * a1);
+        P = b.fit(-mx, -K * a2, mx, Math.max(fh + K * a1, K * a2));
         var s = b.s, b0 = P(0, 0), t0 = P(0, fh), rx1 = a1 * s, rx2 = a2 * s;
-        var BL = [b0[0] - rx2, b0[1]], BR = [b0[0] + rx2, b0[1]], TL = [t0[0] - rx1, t0[1]], TR = [t0[0] + rx1, t0[1]];
-        b.path(M(TL) + Lp(BL) + arc(rx2, rx2 * K, 0, BR) + Lp(TR) + 'Z', 'f1');
-        b.path(M(BL) + arc(rx2, rx2 * K, 1, BR), 'hid');
-        b.ell(t0, rx1, rx1 * K, 'f2');
+        var BR = [b0[0] + rx2, b0[1]], TR = [t0[0] + rx1, t0[1]];
+        var fside = solidSides(b, b0[0], t0[1], rx1, b0[1], rx2);
         b.line(b0, t0, 'dim2'); b.line(t0, TR, 'dim'); b.line(b0, BR, 'dim'); b.dot(t0); b.dot(b0);
-        b.text((t0[0] + TR[0]) / 2, t0[1] - rx1 * K - b.fs * 0.85, lab('r₁'), { cls: 'acc' });
+        var lr1 = lab('r₁'), wr1 = b.tw(lr1), lh = lab('h'), wh = b.tw(lh);
+        b.text((t0[0] + TR[0]) / 2, t0[1] - rx1 * K - b.fs * 0.85, lr1, { cls: 'acc' });
         b.text((b0[0] + BR[0]) / 2, b0[1] + rx2 * K + b.fs * 0.85, lab('r₂'), { cls: 'acc' });
-        b.vlab(b0[0], b0[1], t0[1], lab('h'), (rx1 + rx2) / 2, -1, 'acc2');
-        b.edge(BR, TR, lab('l'), [b0[0], (b0[1] + t0[1]) / 2], 16);
+        /* a very flat frustum: put h on the left half of the top face, or above it, left of the r₁ label */
+        var hAlt = rx1 - 10 >= wh ? [t0[0] - 8, t0[1], 'end']
+          : [Math.min(t0[0] - 6, t0[0] + rx1 / 2 - wr1 / 2 - b.fs * 0.6), t0[1] - rx1 * K - b.fs * 0.85, 'end'];
+        b.vlab(b0[0], b0[1], t0[1], lh, (rx1 + rx2) / 2, -1, 'acc2', hAlt);
+        b.edge(fside[0], fside[1], lab('l'), [b0[0], (b0[1] + t0[1]) / 2], 16);
         break;
       }
     }

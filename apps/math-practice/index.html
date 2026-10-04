@@ -115,26 +115,64 @@
     .mp-facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 560px; }
     .mp-facts span { padding: 2px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-weight: 600; font-size: .95rem; white-space: nowrap; }
     .mp-facts span.bad { border-color: var(--danger); color: var(--danger); }
+    .mp-facts.on { min-height: 28px; }                /* table trainer: space kept so the pad does not jump */
     .mp-padcol { display: flex; flex-direction: column; justify-content: center; gap: 8px; }
     .mp-keys { margin: 4px 0 0; text-align: center; }
     @media (pointer: coarse) { .mp-keys { display: none; } }
     @media (max-width: 560px) {
       .mp-play { padding: 12px; }
       .mp-desc { display: none; }
-      .mp-bar-l { flex: 1 1 auto; }
-      .mp-hud { flex-wrap: nowrap; gap: 6px; margin: 10px 0 8px; }
-      .mp-pill { padding: 4px 9px; gap: 5px; font-size: .85rem; }
+      /* phones: game name + buttons on ONE line (a long name is cut with …) so the pad fits on screen */
+      .mp-bar { flex-wrap: nowrap; }
+      .mp-bar-l { flex: 1 1 0; min-width: 0; }
+      .mp-bar-l .badge { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+      .mp-bar-r { flex: none; gap: 4px; }
+      .mp-fb { font-size: 1rem; }
+      /* table trainer facts: one sideways-scrolling line showing the newest facts, so the pad never moves */
+      .mp-facts { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+      .mp-facts::-webkit-scrollbar { display: none; }
+      .mp-facts span { flex: none; font-size: .85rem; padding: 1px 8px; }
+      .mp-facts span:first-child { margin-inline-start: auto; }
+      .mp-facts span:last-child { margin-inline-end: auto; }
+      .mp-hud { gap: 5px; margin: 10px 0 8px; }        /* wraps only on very narrow phones */
+      .mp-pill { padding: 3px 8px; gap: 4px; font-size: .82rem; }
       .mp-pill .lbl { display: none; }
-      .mp-pill b { font-size: 1.08rem; }
+      .mp-pill b { font-size: 1.05rem; }
+      .mp-bar-r .btn-sm { padding-inline: 9px; }
       .mp-arena { margin-top: 10px; gap: 10px; }
       .mp-qa { min-height: 160px; padding: 12px 8px; gap: 8px; }
       .mp-pad { gap: 7px; }
       .mp-pad button { min-height: 56px; }
       .mp-keys { display: none; }
     }
-    .edu-fullscreen-on .mp-play { min-height: 100vh; border-radius: 0; }
-    .edu-fullscreen-on .mp-pad button { min-height: max(62px, 10vh); font-size: 2.2rem; }
+    .mp-end .x { display: none; font-size: 1.1rem; line-height: 1; }
+    @media (max-width: 430px) {                         /* phones: "End game" becomes ✕ so the game name fits */
+      .mp-end { min-width: 40px; justify-content: center; }
+      .mp-end .x { display: inline; }
+      .mp-end .txt { display: none; }
+    }
+    @media (max-width: 560px) and (max-height: 720px) {   /* short phones (browser bars take space) */
+      .mp-hud { margin: 8px 0 6px; }
+      .mp-arena { margin-top: 8px; gap: 8px; }
+      .mp-qa { min-height: 112px; padding: 8px; gap: 6px; }
+      .mp-qa .mp-q { line-height: 1.05; }
+      .mp-phase { font-size: .9rem; line-height: 1.3; }
+      .mp-pad { gap: 6px; }
+      .mp-pad button { min-height: 50px; font-size: 1.6rem; }
+    }
+    /* full screen on a smartboard: use the whole screen, bigger question and keys, no page scroll */
+    .edu-fullscreen-on #app.mp-playing { max-width: none; padding: 10px; }
+    .edu-fullscreen-on .mp-play { min-height: calc(100vh - 20px); display: flex; flex-direction: column; }
+    .edu-fullscreen-on .mp-play > .mp-stagewrap { flex: 1; display: flex; flex-direction: column; }
+    .edu-fullscreen-on .mp-play .mp-arena { flex: 1; }
+    .edu-fullscreen-on .mp-play .mp-pad { max-width: 560px; }
+    .edu-fullscreen-on .mp-play .mp-pad button { min-height: max(62px, 11vh); font-size: 2.3rem; }
     .edu-fullscreen-on .mp-qa { min-height: 50vh; }
+    .edu-fullscreen-on .mp-qa .mp-q { font-size: clamp(2.5rem, 8vw, 8rem); }
+    .edu-fullscreen-on .mp-qa .mp-q.long { font-size: clamp(1.9rem, 5vw, 5rem); }
+    .edu-fullscreen-on .mp-qa .mp-eq, .edu-fullscreen-on .mp-qa .mp-ans { font-size: clamp(2.2rem, 6.5vw, 6.5rem); }
+    .edu-fullscreen-on .mp-qa .mp-fb { font-size: 1.5rem; }
+    @media (min-width: 900px) { .edu-fullscreen-on .mp-arena { grid-template-columns: minmax(0, 1fr) minmax(320px, 560px); } }
 
     /* ---------- two-player race ---------- */
     .mp-duelwrap > .card { padding: 12px 14px; }
@@ -158,7 +196,15 @@
     .mp-player .mp-fb { font-size: 1rem; min-height: 1.5em; }
     .mp-pad6 { grid-template-columns: repeat(6, minmax(0, 1fr)); max-width: none; gap: 6px; }
     .mp-pad6 button { min-height: 50px; font-size: 1.45rem; border-radius: 11px; }
-    .edu-fullscreen-on .mp-pad6 button { min-height: max(50px, 9vh); }
+    .edu-fullscreen-on .mp-pad6 button { min-height: max(50px, 9vh); font-size: 1.8rem; }
+    /* full screen race: the two halves fill the screen */
+    .edu-fullscreen-on .mp-duelwrap { min-height: calc(100vh - 20px); display: flex; flex-direction: column; }
+    .edu-fullscreen-on .mp-duelwrap:not(.done) > .mp-stagewrap { flex: 1; display: flex; flex-direction: column; }
+    .edu-fullscreen-on .mp-duel { flex: 1; }
+    .edu-fullscreen-on .mp-player .mp-qline { flex: 1; }
+    .edu-fullscreen-on .mp-player .mp-q { font-size: clamp(1.9rem, 5vw, 5.5rem); }
+    .edu-fullscreen-on .mp-player .mp-q.long { font-size: clamp(1.5rem, 3.2vw, 3.4rem); }
+    .edu-fullscreen-on .mp-player .mp-eq, .edu-fullscreen-on .mp-player .mp-ans { font-size: clamp(1.7rem, 4.2vw, 4.4rem); }
     .mp-dres { margin-top: 12px; text-align: center; }
     .mp-dres .table { max-width: 720px; margin-inline: auto; }
     .mp-dres .table td:first-child { font-weight: 700; }
@@ -208,7 +254,9 @@
       .mp-ws-meta { display: flex; flex-wrap: wrap; gap: 6pt 22pt; font-size: 11pt; margin: 0 0 14pt; }
       .mp-ws-meta span { white-space: nowrap; }
       .mp-ws-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16pt 14pt; padding: 0; margin: 0; list-style: none; }
+      .mp-ws-grid.wide { grid-template-columns: repeat(3, 1fr); }
       .mp-ws-q { font-size: 14pt; display: flex; align-items: baseline; gap: 6pt; break-inside: avoid; }
+      .mp-ws-q bdi { white-space: nowrap; }
       .mp-ws-q .n { font-size: 9pt; color: #555; min-width: 16pt; }
       .mp-ws-q .line { flex: 1; border-bottom: 1px solid #000; min-width: 28pt; height: 1em; }
       .mp-ws-key { break-before: page; }
@@ -321,12 +369,12 @@
         <div class="mp-bar-r">
           <button type="button" class="edu-iconbtn mp-mute"></button>
           <button type="button" class="edu-iconbtn mp-fs" data-i18n-aria-label="fullscreen" data-i18n-title="fullscreen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
-          <button type="button" class="btn btn-sm" id="end-play" data-i18n="end_game"></button>
+          <button type="button" class="btn btn-sm mp-end" id="end-play" data-i18n-title="end_game" data-i18n-aria-label="end_game"><span class="x" aria-hidden="true">✕</span><span class="txt" data-i18n="end_game"></span></button>
         </div>
       </div>
       <div class="mp-hud">
-        <span class="mp-pill" data-i18n-title="stat_time"><span aria-hidden="true">⏱</span><b id="play-time" class="mp-num">0:00</b></span>
-        <span class="mp-pill" id="prog-pill"><span aria-hidden="true">📝</span><span class="lbl" data-i18n="col_q"></span><b id="play-prog" class="mp-num"></b></span>
+        <span class="mp-pill" id="time-pill" data-i18n-title="stat_time"><span aria-hidden="true">⏱</span><b id="play-time" class="mp-num">0:00</b></span>
+        <span class="mp-pill" id="prog-pill"><span aria-hidden="true">📝</span><span class="lbl" data-i18n="col_q"></span><b id="play-prog" class="mp-num" dir="ltr"></b></span>
         <span class="mp-pill" data-i18n-title="points"><span aria-hidden="true">⭐</span><span class="lbl" data-i18n="points"></span><b id="play-points" class="mp-num">0</b></span>
         <span class="mp-pill" data-i18n-title="streak"><span aria-hidden="true">🔥</span><span class="lbl" data-i18n="streak"></span><b id="play-streak" class="mp-num">0</b></span>
       </div>
@@ -340,7 +388,7 @@
               <span class="mp-q" id="q"></span><span class="mp-eq" aria-hidden="true">=</span><output class="mp-ans empty" id="ans" data-i18n-aria-label="your_answer">?</output>
             </div>
             <div class="mp-fb" id="fb" role="status" aria-live="polite"></div>
-            <div class="mp-facts" id="facts"></div>
+            <div class="mp-facts" id="facts" dir="ltr"></div>
           </div>
           <div class="mp-padcol">
             <div class="mp-pad" id="pad" role="group" data-i18n-aria-label="your_answer"></div>
@@ -361,7 +409,7 @@
         <div class="mp-bar-r">
           <button type="button" class="edu-iconbtn mp-mute"></button>
           <button type="button" class="edu-iconbtn mp-fs" data-i18n-aria-label="fullscreen" data-i18n-title="fullscreen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
-          <button type="button" class="btn btn-sm" id="end-duel" data-i18n="end_game"></button>
+          <button type="button" class="btn btn-sm mp-end" id="end-duel" data-i18n-title="end_game" data-i18n-aria-label="end_game"><span class="x" aria-hidden="true">✕</span><span class="txt" data-i18n="end_game"></span></button>
         </div>
       </div>
       <div class="mp-stagewrap">

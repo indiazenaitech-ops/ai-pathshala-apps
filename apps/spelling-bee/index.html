@@ -102,6 +102,11 @@
     .answer-row .answer { flex: 1 1 auto; min-width: 0; font-size: 1.8rem; font-weight: 700; letter-spacing: .06em; text-align: center; min-height: 60px;
                           font-family: "Noto Sans", system-ui, sans-serif; line-height: 1.3; }
     .answer-row .answer[readonly] { background: var(--surface-2); }
+    /* the hint text must fit the box in long scripts (Tamil, Malayalam) */
+    .answer-row .answer::placeholder { font-size: 1.05rem; font-weight: 600; letter-spacing: 0; }
+    /* "Next →" points the reading direction */
+    .fwd { display: inline-block; }
+    [dir="rtl"] .fwd { transform: scaleX(-1); }
     .answer-row .btn { min-height: 60px; }
     .answer-row .bksp { width: 54px; padding: 0; font-size: 1.3rem; flex: none; }
     @media (max-width: 560px) {
@@ -178,6 +183,12 @@
     .sc .hearts { font-size: .95rem; letter-spacing: 1px; color: var(--danger); }
     .sc.cur { border-color: var(--accent); background: var(--accent-soft); }
     .sc.out { opacity: .5; text-decoration: line-through; }
+    @media (max-width: 560px) {   /* two score pills per line on a phone, also with ♥♥♥ */
+      .board { gap: 6px; }
+      .sc { gap: 5px; padding: 4px 9px; font-size: .92rem; }
+      .sc .sc-name { max-width: 7.5em; }
+      .sc .hearts { font-size: .8rem; letter-spacing: 0; }
+    }
     .bee-tools { display: flex; gap: 8px; flex-wrap: wrap; }
     .turn { text-align: center; padding: 6px 0 0; }
     .turn-name { display: block; font-size: clamp(1.6rem, 5vw, 2.8rem); font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; }
@@ -191,6 +202,7 @@
     .winner .trophy { font-size: 4rem; line-height: 1; }
     .winner h2 { font-size: clamp(1.5rem, 5vw, 2.4rem); margin: 8px 0 4px; overflow-wrap: anywhere; }
     .final td.num, .final th.num { text-align: end; font-variant-numeric: tabular-nums; }
+    .final td:first-child, .final th:first-child { width: 3em; }
     .bee-end { max-width: 720px; margin-inline: auto; width: 100%; }
 
     /* projector / full screen */

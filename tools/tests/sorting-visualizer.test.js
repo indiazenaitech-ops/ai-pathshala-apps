@@ -1,5 +1,5 @@
 /* Interaction test for Sorting Algorithms Visualizer. Run by tools/verify.js in en and hi. */
-module.exports = async function ({ page, expect, t, log }) {
+module.exports = async function ({ page, lang, expect, t, log }) {
   const dbg = () => page.evaluate(() => window.SV_DEBUG());
   const setRange = (sel, v) => page.$eval(sel, (e, val) => { e.value = String(val); e.dispatchEvent(new Event('input', { bubbles: true })); }, v);
   const waitDone = () => page.waitForFunction(() => { const d = window.SV_DEBUG(); return d.total > 0 && d.pos === d.total && !d.playing; }, null, { timeout: 60000 });
@@ -38,6 +38,33 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(JSON.stringify(s.lanes[0].a) === '[1,3,5,8]', 'bars end up sorted: ' + JSON.stringify(s.lanes[0].a));
   expect((await page.getAttribute('#comps-a', 'data-value')) === '6' && (await page.getAttribute('#swaps-a', 'data-value')) === '4', 'final counters 6 comparisons, 4 swaps');
   expect(!(await page.isHidden('#done-a')), '"Done" badge shown');
+  // the variables panel shows the SORTED list on the last step (it used to show the unsorted input)
+  const varsEnd = (await page.textContent('#vars-a')).trim();
+  expect(varsEnd === 'a = [1, 3, 5, 8]', 'variables panel shows the sorted list at the end, got ' + varsEnd);
+  await page.click('#reset');
+  expect((await page.textContent('#vars-a')).trim() === 'a = [5, 3, 8, 1]', 'Reset shows the starting list again');
+
+  // 4b) custom-input edge cases: bad input never replaces the numbers; decimals stay distinct
+  await page.fill('#custom', '');
+  await page.click('#custom-use');
+  s = await dbg();
+  expect(JSON.stringify(s.arr) === '[5,3,8,1]' && /\bbad\b/.test(await page.getAttribute('#custom-msg', 'class')) && (await page.textContent('#custom-msg')).trim() === t('custom_err_empty'), 'empty input shows an error and keeps the numbers');
+  await page.fill('#custom', '4, abc, 7');
+  await page.click('#custom-use');
+  s = await dbg();
+  expect(JSON.stringify(s.arr) === '[5,3,8,1]' && (await page.textContent('#custom-msg')).includes('abc'), 'a word in the list is reported and the numbers stay');
+  await page.fill('#custom', '1000000000, 2, 1e3');
+  await page.click('#custom-use');
+  s = await dbg();
+  expect(JSON.stringify(s.arr) === '[1000000000,2,1000]', 'big numbers (and 1e3) are accepted, got ' + JSON.stringify(s.arr));
+  await page.fill('#custom', '0.003, 0.001, 0.002');
+  await page.click('#custom-use');
+  await page.click('#step');
+  await page.click('#step');
+  const decMsg = await page.textContent('#msg-a');
+  expect(decMsg.includes('0.003') && decMsg.includes('0.001'), 'small decimals are shown exactly in the step message (not rounded to 0): ' + decMsg);
+  await page.fill('#custom', '5, 3, 8, 1');
+  await page.click('#custom-use');
 
   // 5) quick sort on reversed data = worst case n(n-1)/2 comparisons
   await page.click('#algo-a [data-algo="quick"]');
@@ -51,6 +78,13 @@ module.exports = async function ({ page, expect, t, log }) {
   const rows = await page.$$eval('#count-table tbody tr', r => r.length);
   const tq = await page.getAttribute('#count-table tr[data-algo="quick"] .c-comps', 'data-value');
   expect(rows === 5 && tq === '45', 'count table has 5 rows and shows 45 for quick sort (got ' + rows + ', ' + tq + ')');
+
+  // 5b) reload keeps the algorithm and the very same numbers (a teacher's lesson survives a refresh)
+  const arrBefore = JSON.stringify(s.arr);
+  await page.reload();
+  await page.waitForFunction(() => typeof window.SV_DEBUG === 'function');
+  s = await dbg();
+  expect(s.algoA === 'quick' && JSON.stringify(s.arr) === arrBefore && s.pos === 0, 'after reload: quick sort with the same 10 numbers, at step 0');
 
   // 6) compare mode: race quick vs merge on the same numbers
   await page.check('#cmp-on');
@@ -66,4 +100,34 @@ module.exports = async function ({ page, expect, t, log }) {
   const race = await page.textContent('#race');
   expect(!(await page.isHidden('#race')) && race.includes(t('algo_merge')), 'race result names merge sort as winner: ' + race);
   log('race:', race.trim());
+
+  // 6b) quick sort reaches the end first (62 steps vs 96) but merge sort needs fewer comparisons (24 vs 26):
+  //     the result must name merge as winner AND explain why quick showed "Done!" first
+  await page.fill('#custom', '6, 2, 9, 4, 1, 8, 3, 7, 5, 10');
+  await page.click('#custom-use');
+  s = await dbg();
+  expect(s.counts.quick.C === 26 && s.counts.merge.C === 24 && s.counts.quick.steps === 62 && s.counts.merge.steps === 96, 'quick 26 comparisons / 62 steps, merge 24 / 96, got ' + JSON.stringify([s.counts.quick.C, s.counts.quick.steps, s.counts.merge.C, s.counts.merge.steps]));
+  await page.click('#play');
+  await waitDone();
+  const race2 = await page.textContent('#race');
+  const note = t('race_note', { name: t('algo_quick'), a: '62', b: '96' });
+  expect(race2.includes(t('race_win', { name: t('algo_merge'), x: '24', y: '26' })) && race2.includes(note), 'race names merge as winner and explains that quick finished first on screen: ' + race2);
+  log('race2:', race2.trim());
+
+  // 7) language switch mid-task re-renders the race text; Urdu (RTL) keeps "-5 vs 3" in the right order
+  await page.selectOption('#edu-lang', 'ur');
+  const raceUr = await page.textContent('#race');
+  expect(raceUr !== race2 && /[؀-ۿ]/.test(raceUr), 'race result is re-written in Urdu after switching language');
+  await page.uncheck('#cmp-on');
+  await page.click('#algo-a [data-algo="bubble"]');
+  await page.fill('#custom', '-5, 3');
+  await page.click('#custom-use');
+  await page.click('#step');
+  await page.click('#step');
+  const urMsg = await page.textContent('#msg-a');
+  // each number sits in its own left-to-right isolate (U+2066 … U+2069), -5 first
+  const iso = urMsg.match(/⁦([^⁩]*)⁩/g) || [];
+  expect(iso.length >= 2 && /-5/.test(iso[0]) && /3/.test(iso[1]), 'Urdu message isolates each number so "-5" and "3" do not swap places: ' + JSON.stringify(urMsg));
+  await page.selectOption('#edu-lang', lang);
+  expect(!/⁦/.test(await page.textContent('#msg-a')), 'no RTL isolates left in the message after switching back to ' + lang);
 };

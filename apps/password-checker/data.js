@@ -1,7 +1,7 @@
 /* Password Strength Lab: language-neutral data (word lists, common passwords, quiz pairs).
    Everything here is used on the device only. Lists are lower-case and space-separated to keep the file small. */
 window.PW_DATA = {
-  /* About 200 of the most common passwords, roughly in order of popularity, including ones that are very
+  /* About 370 of the most common passwords, roughly in order of popularity, including ones that are very
      common in Indian password leaks. Rank in this list = number of guesses an attacker needs. */
   common: (
     '123456 password 12345678 qwerty 123456789 12345 1234 111111 1234567 123123 password@123 india123 password123 ' +
@@ -23,7 +23,19 @@ window.PW_DATA = {
     'jaihanuman mother father family friends happy lucky sweety baby killer hunter soccer summer ginger ' +
     'flower tiger mustang pepper cheese orange banana purple silver golden diamond rockstar superstar ' +
     'champion legend king queen boss smile forever 12341234 123654 a1234567 qwerty123456 1q2w3e4r5t ' +
-    'qazwsxedc 999999 555555 222222 333333 444444 888888 987654 123654789 asdfasdf'
+    'qazwsxedc 999999 555555 222222 333333 444444 888888 987654 123654789 asdfasdf ' +
+    'jaishriram jaishreekrishna jaishrikrishna radhakrishna radheshyam jaimahakal mahakal jaibholenath ' +
+    'omnamahshivaya omnamahshivay shivshakti waheguru bismillah allah786 mashallah subhanallah jesus jesus123 ' +
+    'jesuschrist praisethelord godisgreat godislove doraemon nobita shinchan pokemon pikachu minecraft ' +
+    'freefire pubg bgmi fortnite roblox bts123 btsarmy blackpink naruto goku dragonball spiderman ironman ' +
+    'avengers batman123 superman123 thankyou iamthebest mummy papa mummypapa mumma imissyou bestfriend ' +
+    'bestfriends mypassword newpassword password1234 india@1234 india12345 india786 hindustan123 bharatmata ' +
+    'vandemataram cricketlover kingkhan shahrukhkhan salmankhan viratkohli msd007 thala7 hitman45 rohitsharma ' +
+    'sachin@10 nokia123 samsung123 redmi realme jio123 airtel qwer1234 1qazxsw2 zxcvbnm123 asdfg 1q2w3e4r5t6y ' +
+    '1234qwer letmein123 admin@1234 welcome1 hello@1234 hellohello mobile123 computer123 school123 student ' +
+    'student123 teacher123 love123 lovely123 sweety123 cutie123 angel123 princess123 baby123 babu123 sonu123 ' +
+    'monu123 golu123 chotu123 pinky123 raja123 king123 queen123 boss123 killer123 devil devil123 attitude ' +
+    'royalboy smartboy cuteboy cutegirl sweetgirl'
   ).split(' '),
 
   /* Simple English words for passphrases (and for spotting words inside passwords). */
@@ -73,6 +85,48 @@ window.PW_DATA = {
     'cloudy misty frosty breezy stormy dusty muddy sandy rocky grassy leafy snowy'
   ).split(' '),
 
+  /* More everyday English words, used only to SPOT words inside a typed password (never for passphrases).
+     People build passwords from words like these: mylife, bestfriend, goodmorning, happybirthday. */
+  enExtra: (
+    'able about above accept account across action active actor address adult advice after again against ' +
+    'agent agree ahead alarm alien alone along also always amazing among angry animal another answer anything ' +
+    'area army around asleep aunt away awesome back bank base basic battle beat beautiful beauty because ' +
+    'become before begin behind believe below best better between beyond birth birthday bitter blind blood ' +
+    'body bold bone border born brain brand break breath brother buddy burn business call captain card care ' +
+    'careful case cash center chance change charge cheap check child children choice choose church class ' +
+    'clean clear click club coach code cold color come comfort common company control copy corner country ' +
+    'couple courage course cousin cover crazy create crime cross crowd cute cyber daddy daily damage danger ' +
+    'dark darling data daughter dead deal dear death deep demon design detail different dinner direct dirty ' +
+    'dollar done double down dress drive drop during earth east edge effect eight either else empire empty ' +
+    'enemy energy enjoy enough enter entry equal error escape even evening event ever every evil exam example ' +
+    'exit expert face fact fair faith fall false fame famous fantasy fashion fear feel fight figure file ' +
+    'final find fine finger finish fire first five flash floor focus follow food fool force forget forgive ' +
+    'form four free friend from front fruit full future game gang gate general gift girl girlfriend give ' +
+    'glory gone good goodbye goodnight gorgeous great group guess guide guitar hair half hall hand handsome ' +
+    'hang happen happiness hard hate have head health hear heart heaven hell help hero high history hold hole ' +
+    'holiday home honest hope hotel hour human hundred hunt hurt husband idea image impossible inside iron ' +
+    'jack join joke journey judge just keep kill kiss knight know lady land large last late later lead least ' +
+    'leave left less letter level liar life light like limit line link list live living local lonely long ' +
+    'lord lose loss lost loud lover lunch machine main major make manager many mark marry matter maybe meet ' +
+    'member memory message middle might mind minute miss mission mister model moment money monster month more ' +
+    'morning most motion move movie much music must name nation natural nature near need never news next nice ' +
+    'night nine noble none north nothing number object office officer often once only order other outside ' +
+    'over owner page pain pair paradise parent part party pass past path peace people perfect person phone ' +
+    'photo pick picture piece place plan player please point police poor power present pretty price pride ' +
+    'prince private problem process promise protect public pure question ready real reason rebel record relax ' +
+    'remember rest result return revenge right rise risk rival role rule rules runner safe sale same save ' +
+    'scary score search season second security self sell send sense serious service seven shape share sharp ' +
+    'shoot shop show side sign silence silent since single sister size skill skin slave social soldier some ' +
+    'someone something song soon sorry soul sound south space speak special speed spirit sport stand start ' +
+    'state stay step stick still stop story strange strength strike study stupid style success such super ' +
+    'support sure surprise system take talent target taste tear tech teen tell than thank thanks that their ' +
+    'them then there these thing third this those three title today together tomorrow tonight total touch ' +
+    'tough tour toward track trade trouble true trust truth turn twin type uncle under unique unit until upon ' +
+    'usual value very victory view visit voice wait wake warrior wash water weak wealth wear weather week ' +
+    'well west what when where which while whole wife will winner wish with without woman women wonder wood ' +
+    'word work world worry wrong yesterday your yours youth zero'
+  ).split(' '),
+
   /* Simple Hindi words in Roman letters (as people type them on phones). */
   hi: (
     'ghar pani aam kitab chai dost sapna suraj chanda tara badal barish phool ped patta nadi pahad samundar hawa ' +
@@ -101,7 +155,7 @@ window.PW_DATA = {
     'hamara pyaar zindagi duniya'
   ).split(' '),
 
-  /* Common first names, surnames, nicknames and famous people: attackers' favourite guesses. */
+  /* About 600 common first names (from all over India), surnames, nicknames and famous people: attackers' favourite guesses. */
   names: (
     'aarav aditya akash amit anil anita anjali ankit anu arjun arun asha ashok ayesha bhavna deepak deepika dev ' +
     'dinesh divya ganesh gaurav geeta gopal hari harish isha jaya karan kavita kiran krishna kumar lakshmi lata ' +
@@ -116,7 +170,33 @@ window.PW_DATA = {
     'joshi iyer nair reddy rao das dutta bose ghosh khan ansari yadav mishra pandey tiwari chauhan dhoni kohli ' +
     'tendulkar bumrah amitabh hrithik ranbir alia katrina tommy moti sheru bholu kalu chintu pinky bunty babli ' +
     'golu chotu monu bittu pappu guddu tinku raju shivani aryan ishaan kabir vivaan reyansh saanvi aadhya diya ' +
-    'myra anika kiara aisha ishita kunal rishabh sahil sameer tushar abhishek akshay ajay sunny vicky'
+    'myra anika kiara aisha ishita kunal rishabh sahil sameer tushar abhishek akshay ajay sunny vicky ' +
+    'shubham saurabh sourabh rohan aman vivek sagar pankaj sandeep ankita pallavi payal sakshi shruti sonam ' +
+    'komal jyoti preeti puja ritu kajal khushi mansi megha nidhi rashmi shilpa mamta ankur aakash abhay ajit ' +
+    'alok anand anuj arvind ashish chetan gagan hemant himanshu jitendra kapil kishore lalit mukesh naveen ' +
+    'neeraj nitin pawan prashant rajat rajeev rajendra sanjeev satish shankar shyam sumit surya umesh vinay ' +
+    'vipin yogesh mohammed mohammad mohd muhammad ahmed ahmad aslam rizwan irfan faisal aditi ritika sonali ' +
+    'tanya vaishnavi vanshika khushboo aarti pinki rinki sushma savita poonam naina nikita prachi radhika ' +
+    'rakhi renu sonal tanu varsha yamini chirag deepu gautam harsh harshit hitesh jatin kartik keshav lakshay ' +
+    'manav mayank naman nakul nilesh parth piyush pranav prateek pratik ritesh shashank shaurya siddharth ' +
+    'utkarsh vaibhav vansh vedant yuvraj dhruv ayush aniket ankush devansh ishan krish mukul raghav rishi ' +
+    'rudra samar shiva arnav atharv advik ayaan aarush vihaan rudransh krishiv anvi pari navya avni ira ' +
+    'riddhi siddhi tanisha palak muskaan shraddha swara trisha mahi jiya ruhi gauri pihu kashish ishika mehak ' +
+    'bhumi diksha garima juhi kirti madhuri mitali monika neelam neetu pragya rachna rinku roshni ruchi ' +
+    'sangeeta shikha shivangi sunaina suhani tripti urmila vandana vidya babita bindu chanchal dolly ' +
+    'geetanjali hema jasmeet kamla kusum lalita manju meenakshi nirmala parul pushpa rama sarla sudha sushila ' +
+    'vimla abdul akbar anwar arshad asif azhar danish feroz hamid haris imtiaz iqbal junaid kamran kashif ' +
+    'mustafa nadeem naseem nawaz parvez rafiq rahim rashid sajid salim shahid shakeel sohail tariq waseem ' +
+    'yusuf zaid zubair afreen amina farah heena huma mehwish nargis nazia rubina saba sadia saira shabana ' +
+    'shazia sumaiya tabassum yasmin zainab zeenat bhanu dilip girish jagdish kailash lokesh mahendra narendra ' +
+    'nagesh rupesh shailesh sudhir sukhdev suraj tejas uday vimal vinit yatin baldev daljeet gurdeep gurmeet ' +
+    'harjeet jagjit kuldeep lovepreet navjot paramjit ranjit satnam sukhwinder tejinder amandeep arshdeep ' +
+    'jasleen navneet rajveer akhil anoop biju jijo jithin manu midhun nithin sreejith vishnu anjana aswathy ' +
+    'athira gopika lekshmi reshma sruthi balu mani muthu prabhu selvam senthil yuvan aishwarya bhuvana ' +
+    'dharani durga janani kalai kavitha mahalakshmi nithya preethi revathi sangeetha sowmya swetha vaishali ' +
+    'abhijit amitava arindam debashish indranil partha prosenjit sayan soumya subhajit suvendu tanmay ankana ' +
+    'debjani moumita payel piyali rituparna sharmistha sudeshna adarsh ashwin chaitanya harsha manjunath ' +
+    'prajwal raghu santhosh shreyas sudeep vinayak bhavya chaitra deepthi pavithra sahana spoorthi'
   ).split(' '),
 
   /* Indian places (cities, states, rivers): also tried early by attackers. */

@@ -23,6 +23,19 @@
 
   var $ = EDU.$, t = EDU.t;
   var appEl = $('#mm-app'), stage = $('#mm-stage'), vp = $('#mm-vp');
+
+  /* In full screen only the editor box is on screen, so dialogs and messages (which EDU puts on <body>)
+     must live inside it to be seen. They go back to <body> when full screen ends. */
+  function fsEl() { return document.fullscreenElement || document.webkitFullscreenElement || null; }
+  function hostOverlays() {
+    var inside = fsEl() === appEl;
+    EDU.$$('.edu-modal-back, .edu-toast-wrap').forEach(function (n) {
+      if (inside && n.parentNode !== appEl) appEl.appendChild(n);
+      else if (!inside && n.parentNode === appEl) document.body.appendChild(n);
+    });
+  }
+  function toast(msg) { EDU.toast(msg); hostOverlays(); }
+  function modal(content, opts) { var close = EDU.modal(content, opts); hostOverlays(); return close; }
   var gEdges = $('#mm-edges'), gNodes = $('#mm-nodes'), editor = $('#mm-editor'), olBox = $('#mm-outline');
 
   /* ------------------------------------------------------------ model */
@@ -473,11 +486,21 @@
     clearTimeout(saveTimer); saveTimer = null;
     var ok = store.set('maps', maps);
     store.set('cur', map.id); store.set('view', viewMode);
-    if (!ok && !warnedFull) { warnedFull = true; EDU.toast(t('save_failed')); }
+    if (!ok && !warnedFull) { warnedFull = true; toast(t('save_failed')); }
   }
   function save() { map.updated = Date.now(); clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 300); }
-  window.addEventListener('pagehide', function () { if (saveTimer) saveNow(); });
-  document.addEventListener('visibilitychange', function () { if (document.hidden && saveTimer) saveNow(); });
+  /* leaving the page (reload, tab switch, phone app switch) while an idea is being typed: keep what was typed,
+     but never store a new idea that is still empty */
+  function flushSave() {
+    var e = editing, i = e && info(e.id);
+    if (i && e.isNew && !editor.value.trim()) {
+      var s = i.p.children, at = s.indexOf(i.n);
+      if (at >= 0) { s.splice(at, 1); saveNow(); s.splice(at, 0, i.n); return; }
+    }
+    saveNow();
+  }
+  window.addEventListener('pagehide', flushSave);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) flushSave(); });
 
   function render(opts) {
     opts = opts || {};
@@ -518,7 +541,7 @@
     return best;
   }
   function canAdd() {
-    if (reindex() >= MAX_NODES) { EDU.toast(t('too_many', { n: EDU.fmt(MAX_NODES) })); return false; }
+    if (reindex() >= MAX_NODES) { toast(t('too_many', { n: EDU.fmt(MAX_NODES) })); return false; }
     return true;
   }
   function addChildOf(p, index) {
@@ -548,12 +571,12 @@
   function deleteSel() {
     commitEdit();
     var i = info(sel); if (!i) return;
-    if (i.d === 0) { EDU.toast(t('cant_delete_root')); return; }
+    if (i.d === 0) { toast(t('cant_delete_root')); return; }
     var k = countAll(i.n), sibs = i.p.children, at = sibs.indexOf(i.n);
     pushUndo(); removeNode(i);
     sel = (sibs[at - 1] || sibs[at] || i.p).id;
     changed();
-    if (k > 1) EDU.toast(t('deleted_n', { n: EDU.fmt(k) }));
+    if (k > 1) toast(t('deleted_n', { n: EDU.fmt(k) }));
   }
   function isInside(id, n) { var found = false; (function w(x) { if (x.id === id) found = true; else x.children.forEach(w); })(n); return found; }
   function toggleFold(id) {
@@ -564,6 +587,7 @@
     changed();
   }
   function setColor(c) {
+    commitEdit();
     var i = info(sel); if (!i || i.d === 0) return;
     if (i.n.color === c) return;
     pushUndo(); i.n.color = c; changed();
@@ -631,7 +655,7 @@
     var b = L[editing.id], i = info(editing.id); if (!b || !i) return;
     var v = lv(i.d), s = view.s, sw = stage.clientWidth, sh = stage.clientHeight;
     var w = Math.min(sw - 16, Math.max(180, (b.w + 28) * s));
-    editor.style.fontSize = Math.max(15, v.fs * s) + 'px';
+    editor.style.fontSize = Math.max(16, v.fs * s) + 'px';            /* under 16px, iPhones zoom the whole page in */
     editor.style.fontWeight = v.fw;
     editor.style.width = w + 'px';
     editor.style.height = 'auto';
@@ -677,8 +701,10 @@
     if (!editing) return;
     var i = info(editing.id); if (!i) return;
     i.n.text = editor.value.slice(0, MAX_TEXT);
+    if (i.n.text !== editing.before) map.dirty = true;     /* typed text is the user's: a template map must not regenerate */
     syncOutlineValue(i.n.id, i.n.text);
     scheduleMap();
+    save();
   });
   editor.addEventListener('keydown', function (e) {
     if (e.isComposing || e.keyCode === 229) return;
@@ -738,7 +764,7 @@
   });
 
   /* ------------------------------------------------------------ pointer: pan, drag, drop, pinch, tap */
-  var pointers = {}, gesture = null, lastTap = { id: null, t: 0 }, freeToastShown = false;
+  var pointers = {}, gesture = null, lastTap = { id: null, t: 0 }, freeToastShown = false, holdHintShown = false, HOLD_MS = 380;
   function local(e) { var r = stage.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
   function pcount() { return Object.keys(pointers).length; }
   function pinchInfo() {
@@ -773,7 +799,20 @@
     var tog = e.target.closest('.mm-tog');
     if (tog) { gesture = { type: 'none' }; toggleFold(tog.parentNode.getAttribute('data-id')); return; }
     var g = e.target.closest('.mm-node');
-    if (g && !g.hasAttribute('data-root')) gesture = { type: 'node', id: g.getAttribute('data-id'), x0: p.x, y0: p.y, lx: p.x, ly: p.y, moved: false };
+    if (g && !g.hasAttribute('data-root')) {
+      gesture = { type: 'node', id: g.getAttribute('data-id'), x0: p.x, y0: p.y, lx: p.x, ly: p.y, moved: false };
+      /* finger on a phone / smartboard: ideas cover most of the map, so a quick swipe pans the map.
+         Hold the idea for a moment (it gets selected) and then drag to move it. Mouse and pen drag at once. */
+      if (e.pointerType === 'touch') {
+        var gs = gesture; gs.hold = true;
+        gs.timer = setTimeout(function () {
+          if (gesture !== gs || gs.moved) return;
+          gs.hold = false;
+          if (sel !== gs.id) select(gs.id, { noScroll: true });
+          try { if (navigator.vibrate) navigator.vibrate(15); } catch (err) { }
+        }, HOLD_MS);
+      }
+    }
     else gesture = { type: 'pan', x0: p.x, y0: p.y, tx0: view.tx, ty0: view.ty, moved: false, tapId: g ? g.getAttribute('data-id') : null };
   });
   stage.addEventListener('pointermove', function (e) {
@@ -788,6 +827,11 @@
       return;
     }
     var dist = Math.hypot(p.x - gesture.x0, p.y - gesture.y0);
+    if (gesture.type === 'node' && gesture.hold && !gesture.moved && dist >= 7) {   /* quick finger swipe: pan */
+      clearTimeout(gesture.timer);
+      gesture = { type: 'pan', x0: gesture.x0, y0: gesture.y0, tx0: view.tx, ty0: view.ty, moved: false, tapId: null };
+      if (!holdHintShown) { holdHintShown = true; toast(t('hold_to_drag')); }
+    }
     if (gesture.type === 'pan') {
       if (!gesture.moved && dist < 5) return;
       gesture.moved = true; stage.classList.add('panning');
@@ -828,7 +872,7 @@
     var target = dropTarget; dropTarget = null;
     if (target && reparent(gs.id, target, gs.prevLayout)) { changed(); ensureVisible(gs.id); return; }
     (function w(n) { if (n.x !== undefined) { n.x = Math.round(n.x); n.y = Math.round(n.y); } n.children.forEach(w); })(map.root);
-    if (gs.prevLayout !== 'free' && !freeToastShown) { freeToastShown = true; EDU.toast(t('free_toast')); }
+    if (gs.prevLayout !== 'free' && !freeToastShown) { freeToastShown = true; toast(t('free_toast')); }
     map.dirty = true; save(); render({ keepOutline: true });
   }
   stage.addEventListener('pointerup', endPointer);
@@ -903,15 +947,18 @@
   var olSnap = null, olChanged = false;
   olBox.addEventListener('focusin', function (e) {
     if (!e.target.classList.contains('ol-in')) return;
-    if (editing) commitEdit();
     var id = e.target.closest('.ol-row').getAttribute('data-id');
+    if (editing) {
+      commitEdit();                                        /* this redraws the outline, so the clicked box is gone: */
+      if (!olBox.contains(e.target)) { if (rowOf(id)) focusOutline(id); return; }   /* put the caret in the new one */
+    }
     olSnap = snapshot(); olChanged = false;
     if (sel !== id) { sel = id; renderMap(); markOutlineSel(); ensureVisible(id); }
   });
   olBox.addEventListener('input', function (e) {
     if (!e.target.classList.contains('ol-in')) return;
     var i = info(e.target.closest('.ol-row').getAttribute('data-id')); if (!i) return;
-    if (!olChanged) { pushUndo(olSnap); olChanged = true; }
+    if (!olChanged) { pushUndo(olSnap); olChanged = true; updateUI(); }   /* Undo on, Redo off right away */
     autosize(e.target);
     i.n.text = e.target.value.slice(0, MAX_TEXT);
     map.dirty = true; save(); scheduleMap();
@@ -962,7 +1009,7 @@
     saveNow(); renderMapList(); render(); fit();
   }
   function addMap(m) {
-    if (maps.length >= MAX_MAPS) { EDU.toast(t('too_many_maps')); return false; }
+    if (maps.length >= MAX_MAPS) { toast(t('too_many_maps')); return false; }
     var base = m.name || t('untitled'), k = 1, nm = base;
     while (maps.some(function (x) { return x.name === nm; })) { k++; nm = base + ' ' + k; }
     m.name = nm; m.no = k > 1 ? k : 0;
@@ -982,14 +1029,14 @@
         if (addMap(makeMap(k)) && k === 'blank') startEdit(map.root.id);
       } }, EDU.el('i', { 'aria-hidden': 'true', text: TPL_ICON[k] }), EDU.el('b', { text: t('tpl_' + k) }), EDU.el('span', { text: t('tpl_' + k + '_d') })));
     });
-    close = EDU.modal(EDU.el('div', {}, EDU.el('p', { class: 'muted', text: t('choose_template') }), grid), { title: t('tpl_title') });
+    close = modal(EDU.el('div', {}, EDU.el('p', { class: 'muted', text: t('choose_template') }), grid), { title: t('tpl_title') });
     setTimeout(function () { var b = $('#tpl-blank'); if (b) b.focus(); }, 30);
   }
   function renameDialog() {
     commitEdit();
     var inp = EDU.el('input', { type: 'text', id: 'mm-name-in', class: 'w100', maxlength: '120', dir: 'auto' });
     inp.value = map.name;
-    var close = EDU.modal(EDU.el('form', { class: 'stack', onsubmit: function (e) {
+    var close = modal(EDU.el('form', { class: 'stack', onsubmit: function (e) {
       e.preventDefault();
       var v = inp.value.replace(/\s+/g, ' ').trim();
       if (v) { map.name = uniqueName(v.slice(0, 120), map); map.no = 0; map.autoName = false; map.dirty = true; saveNow(); renderMapList(); }
@@ -1025,21 +1072,24 @@
     return out.join('\n');
   }
   function mapFromText(txt) {
-    var lines = String(txt || '').replace(/\r/g, '').split('\n'), root = null, stack = [], count = 0;
+    var lines = String(txt || '').replace(/\r/g, '').split('\n'), root = null, stack = [], count = 0, headInd = null;
     lines.forEach(function (raw) {
       if (count >= MAX_NODES || !raw.trim()) return;
       var lead = raw.match(/^[ \t 　]*/)[0], ind = 0;
       for (var c = 0; c < lead.length; c++) ind += lead[c] === '\t' ? 4 : 1;
       var s = raw.trim(), h = s.match(/^(#{1,6})\s+/);
-      if (h) { ind = (h[1].length - 1) * 4; s = s.slice(h[0].length); }
+      /* Markdown: headings nest by their level, and the lines under a heading belong to that heading */
+      if (h) { ind = headInd = (h[1].length - 1) * 1000; s = s.slice(h[0].length); }
+      else if (headInd !== null) ind += headInd + 500;
       s = s.replace(/^([-*+•●○◦▪■►▸→]|\d{1,3}[.)])\s+/, '').trim().slice(0, MAX_TEXT);
       if (!s) return;
       var node = { id: uid(), text: s, children: [] }; count++;
       if (!root) { root = node; stack = [{ ind: -1, n: root }]; return; }
-      while (stack.length > 1 && stack[stack.length - 1].ind >= ind) stack.pop();
+      /* a heading closes the lines written under earlier headings and goes under the nearest bigger heading */
+      while (stack.length > 1 && (stack[stack.length - 1].ind >= ind || (h && !stack[stack.length - 1].head))) stack.pop();
       if (stack.length > MAX_DEPTH) stack.length = MAX_DEPTH;
       stack[stack.length - 1].n.children.push(node);
-      stack.push({ ind: ind, n: node });
+      stack.push({ ind: ind, n: node, head: !!h });
     });
     if (!root) return null;
     var m = cleanMap({ name: root.text.replace(/\s+/g, ' ').slice(0, 80), root: root, layout: defaultLayout(), dirty: true });
@@ -1049,13 +1099,13 @@
   function fromTextDialog() {
     commitEdit();
     var ta = EDU.el('textarea', { id: 'mm-paste', rows: '9', dir: 'auto', placeholder: t('from_text_example') });
-    var close = EDU.modal(EDU.el('div', { class: 'stack' },
+    var close = modal(EDU.el('div', { class: 'stack' },
       EDU.el('p', { class: 'muted small mb0', text: t('from_text_hint') }),
       EDU.el('label', { for: 'mm-paste', text: t('from_text_label') }), ta,
       EDU.el('div', { class: 'row' },
         EDU.el('button', { type: 'button', class: 'btn btn-primary', id: 'mm-paste-ok', text: t('make_map'), onclick: function () {
           var m = mapFromText(ta.value);
-          if (!m) { EDU.toast(t('paste_empty')); return; }
+          if (!m) { toast(t('paste_empty')); return; }
           close(); addMap(m);
         } }),
         EDU.el('button', { type: 'button', class: 'btn', id: 'mm-paste-ex', text: t('use_example'), onclick: function () { ta.value = t('from_text_example'); ta.focus(); } }))),
@@ -1077,18 +1127,21 @@
     commitEdit();
     EDU.pickFile('.json,.txt,.md,application/json,text/plain').then(function (f) {
       if (!f) return null;
-      if (f.size > 3e6) { EDU.toast(t('bad_file')); return null; }
+      if (f.size > 3e6) { toast(t('bad_file')); return null; }
       return EDU.readText(f).then(function (txt) {
         var m = null, o = null;
         txt = String(txt).replace(/^﻿/, '');
+        /* a picture, PDF or other non-text file: control bytes or many "?" replacement characters */
+        var head = txt.slice(0, 4000);
+        if (/[\u0000-\u0008\u000e-\u001a]/.test(head) || (head.match(/�/g) || []).length > 2) { toast(t('bad_file')); return; }
         try { o = JSON.parse(txt); } catch (e) { o = null; }
         if (o && typeof o === 'object' && o.root) m = cleanMap({ name: o.name, layout: o.layout, root: o.root, dirty: true });
         else if (!o && !/^\s*[[{]/.test(txt)) m = mapFromText(txt);
-        if (!m) { EDU.toast(t('bad_file')); return; }
+        if (!m) { toast(t('bad_file')); return; }
         m.id = uid(); m.dirty = true; m.tpl = null;
-        if (addMap(m)) EDU.toast(t('imported', { name: m.name }));
+        if (addMap(m)) toast(t('imported', { name: m.name }));
       });
-    }).catch(function () { EDU.toast(t('bad_file')); });
+    }).catch(function () { toast(t('bad_file')); });
   }
 
   /* ------------------------------------------------------------ PNG (canvas drawing of the map) + print */
@@ -1153,7 +1206,7 @@
     var c = drawCanvas(4000);
     renderMap();
     EDU.downloadCanvas(c, fileName('png'));
-    EDU.toast(t('png_done'));
+    toast(t('png_done'));
   }
   function buildPrint() {
     if (editing) commitEdit();
@@ -1183,8 +1236,9 @@
     rows.forEach(function (r) {
       tb.appendChild(EDU.el('tr', {}, EDU.el('td', { class: 'no-i18n', dir: 'ltr' }, EDU.el('kbd', { text: r[0] })), EDU.el('td', { text: t(r[1]) })));
     });
-    EDU.modal(EDU.el('div', { id: 'mm-keys-box' }, EDU.el('div', { class: 'scroll-x' }, EDU.el('table', { class: 'table mm-keys' }, tb)),
+    modal(EDU.el('div', { id: 'mm-keys-box' }, EDU.el('div', { class: 'scroll-x' }, EDU.el('table', { class: 'table mm-keys' }, tb)),
       EDU.el('p', { class: 'small muted', style: { marginTop: '10px' }, text: t('sc_pan') }),
+      EDU.el('p', { class: 'small muted', text: t('hold_to_drag') }),
       EDU.el('p', { class: 'small muted mb0', text: t('sc_outline') })), { title: t('shortcuts') });
   }
 
@@ -1215,8 +1269,9 @@
     else { appEl.classList.add('mm-full', 'mm-max'); setTimeout(fit, 50); }
   }
   function onFs() {
-    var on = (document.fullscreenElement || document.webkitFullscreenElement) === appEl;
+    var on = fsEl() === appEl;
     appEl.classList.toggle('mm-full', on || appEl.classList.contains('mm-max'));
+    hostOverlays();
     setTimeout(fit, 80);
   }
   document.addEventListener('fullscreenchange', onFs);
@@ -1227,8 +1282,8 @@
   on('#mm-child', mapAddChild);
   on('#mm-sib', mapAddSibling);
   on('#mm-edit', function () { if (sel) startEdit(sel); });
-  on('#mm-fold', function () { if (sel) toggleFold(sel); });
-  on('#mm-colbtn', function () { toggleColors(); });
+  on('#mm-fold', function () { commitEdit(); if (sel) toggleFold(sel); });
+  on('#mm-colbtn', function () { commitEdit(); toggleColors(); });
   on('#mm-del', deleteSel);
   on('#mm-undo', undo);
   on('#mm-redo', redo);

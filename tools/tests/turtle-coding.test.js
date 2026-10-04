@@ -102,11 +102,51 @@ module.exports = async function ({ page, expect, t, log }) {
     expect(await page.getAttribute('#ch-result', 'data-pass') === 'false', 'a wrong angle does not pass');
   }
 
-  // 9) progress survives a reload
+  await page.click('#apply-code');
+
+  // 9) Undo first throws away text typed in the Code tab (not yet blocks), and nothing else
+  const polyProg = await page.evaluate(() => window.TurtleApp.engine.toCode(window.TurtleApp.state.prog));
+  await page.fill('#code', 'forward 5');
+  expect(await page.isEnabled('#undo'), 'Undo is available while there is typed code');
+  await page.click('#undo');
+  expect(await page.inputValue('#code') === polyProg, 'Undo restored the code text of the program');
+  expect(await page.evaluate(() => window.TurtleApp.engine.toCode(window.TurtleApp.state.prog)) === polyProg, 'Undo of typed text did not change the blocks');
+
+  // 10) a mistake in the code blocks switching, and an example never overwrites the challenge program
+  await page.fill('#code', 'forwrd 5');
+  await page.click('#ch-free');
+  expect(await page.getAttribute('#ch-polygon', 'aria-pressed') === 'true', 'cannot leave the challenge while the code has a mistake');
+  expect(await page.getAttribute('#status', 'data-kind') === 'error', 'status explains the code has a mistake');
+  await page.click('#try-5');
+  expect(await page.getAttribute('#ch-polygon', 'aria-pressed') === 'true' && await page.inputValue('#code') === 'forwrd 5', 'Try button did not replace the challenge program');
+
+  // 11) digits typed on an Indian-language keyboard are understood
+  await page.fill('#code', 'repeat ४ [ forward ५० right ९० ]');
+  await page.click('#apply-code');
+  expect(await page.getAttribute('#code-msg', 'data-kind') === 'ok', 'Devanagari digits are accepted');
+  expect(/repeat 4 \[\s*forward 50\s*right 90\s*\]/.test(await page.inputValue('#code')), 'Devanagari digits became 4 / 50 / 90');
+
+  // 12) saved programs: untitled names never overwrite each other
+  await page.click('#save-btn');
+  await page.click('#save-btn');
+  await page.click('#saved-list li:last-child .btn-danger');      // delete the older one ("… 1")
+  await page.click('#save-btn');
+  const names = await page.$$eval('#saved-list .nm', (l) => l.map((x) => x.textContent));
+  expect(names.length === 2 && names[0] !== names[1], 'two different saved programs: ' + JSON.stringify(names));
+
+  // 13) the axis numbers on the canvas are never mirrored (Urdu is right-to-left)
+  expect(await page.$eval('#cv', (c) => getComputedStyle(c).direction) === 'ltr', 'canvas draws left-to-right');
+
+  // 14) progress and typed (not yet applied) code survive a reload
+  await page.fill('#code', 'repeat 3 [ forward 77 right 120 ]');
   await page.waitForTimeout(300);
   await page.reload({ waitUntil: 'load' });
   await page.waitForSelector('#ch-list .chip');
   expect(await page.getAttribute('#ch-polygon', 'aria-pressed') === 'true', 'current challenge remembered');
   expect((await page.textContent('#ch-square .tc-stars')).trim() === '★★★', 'stars remembered after reload');
+  expect(await page.inputValue('#code') === 'repeat 3 [ forward 77 right 120 ]', 'typed code kept after reload');
+  expect(await page.getAttribute('#tab-code', 'aria-selected') === 'true', 'Code tab reopened with the typed code');
+  await page.click('#tab-blocks');
+  expect(JSON.stringify(await rows()) === '["repeat","fd","rt"]' && await page.inputValue('#prog .tc-row[data-t="fd"] .tc-num') === '77', 'typed code turned into blocks after reload');
   log('progress', (await page.textContent('#ch-progress')).trim());
 };

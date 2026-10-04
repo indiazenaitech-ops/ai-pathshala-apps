@@ -53,6 +53,8 @@
     /* ---------- atom table ---------- */
     .eb-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
     @media (min-width: 980px) { .eb-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } }
+    /* "more than one answer" has no method card: let the atom table use the full width */
+    @media (min-width: 980px) { .eb-grid:has(> #steps-card[hidden]) { grid-template-columns: minmax(0, 760px); } }
     .eb-atoms { min-width: 300px; }
     .eb-atoms th, .eb-atoms td { text-align: center; vertical-align: middle; }
     .eb-atoms thead th { font-size: .85rem; line-height: 1.3; }
@@ -177,7 +179,7 @@
         <div>
           <label class="eb-label" for="eq-in" data-i18n="eq_label"></label>
           <div class="eb-inrow">
-            <input id="eq-in" class="eb-in no-i18n" type="text" dir="ltr" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="300">
+            <input id="eq-in" class="eb-in no-i18n" type="text" dir="ltr" placeholder="Fe + H2O -> Fe3O4 + H2" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="300">
             <button type="button" class="btn btn-primary btn-lg" id="balance-btn" data-i18n="balance_btn"></button>
           </div>
         </div>
@@ -223,7 +225,7 @@
     <section id="p-practice" class="eb-panel" role="tabpanel" aria-labelledby="tab-practice" hidden>
       <div class="card stack no-print">
         <div class="eb-prnav">
-          <label class="field"><span data-i18n="pr_pick"></span><select id="pr-select" class="no-i18n"></select></label>
+          <label class="field"><span data-i18n="pr_pick"></span><select id="pr-select" class="no-i18n" dir="ltr"></select></label>
           <div class="row nowrap">
             <button type="button" class="btn" id="pr-prev" data-i18n="previous"></button>
             <button type="button" class="btn" id="pr-next" data-i18n="next"></button>

@@ -102,7 +102,8 @@
     .frac > span:last-child { padding: 1px 5px 0; }
     .ov { text-decoration: overline; }
     .st-where { list-style: none; padding: 0; margin: 4px 0 8px; display: grid; gap: 4px; }
-    .st-where .fx-sym { display: inline-block; min-width: 7.5em; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .st-where li { display: flex; gap: 6px 12px; align-items: baseline; }
+    .st-where .fx-sym { flex: none; min-width: 7.5em; font-weight: 700; font-variant-numeric: tabular-nums; }
     :root[dir="rtl"] .st-where .fx-sym { text-align: right; }
     .st-ans { margin: 12px 0 4px; font-size: 1.12rem; display: flex; flex-wrap: wrap; gap: 4px 24px; }
     .st-ans b { font-size: 1.25rem; }
@@ -113,6 +114,9 @@
     .st-sorted span.gap { background: none; border: 0; justify-content: center; }
     .st-work:fullscreen { background: var(--bg); padding: 20px 28px; overflow: auto; border-radius: 0; font-size: 1.25rem; }
     .st-work:fullscreen .st-wt, .st-work:fullscreen .fx { font-size: 1.3rem; }
+    .st-work:fullscreen .tabs button, .st-work:fullscreen .st-ctl .seg button { font-size: 1.2rem; }
+    .st-work:fullscreen .st-wt th .th-w { font-size: 1.05rem; }
+    .st-chart:fullscreen .seg button { font-size: 1.15rem; min-height: 48px; }
 
     @media (max-width: 560px) {
       .st-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
@@ -126,6 +130,7 @@
       .st-wt th .th-w { font-size: .74rem; overflow-wrap: anywhere; }
       .fx { font-size: 1rem; padding: 8px 10px; }
       .st-ah .field { width: calc(50% - 5px); }
+      .st-where .fx-sym { min-width: 5.6em; }
     }
 
     /* ---------- print: a clean worked solution ---------- */
@@ -139,9 +144,14 @@
       .st-chart, .st-work { break-inside: auto; }
       .st-print-head { display: block !important; margin-bottom: 10px; }
       .st-print-head h1 { font-size: 1.4rem; margin: 0; }
+      #res-sub { display: none; }
       .st-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
       .st-twrap { overflow: visible; }
       .st-wt tbody tr.hl td { background: #ffe8dc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .st-wt tbody tr.hl2 td { background: #fff4d6 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      /* dark theme on screen must not give pale ink on paper */
+      .st-tile.key .val, .fx b, .st-wt th .sym { color: #0b4f5c !important; }
+      .st-tile.key, .st-sorted span.mid { border-color: #0b4f5c !important; }
       .fx { background: #f4f4f4; overflow: visible; }
       #chart { max-width: 100%; }
       .st-out-panel { break-before: auto; }

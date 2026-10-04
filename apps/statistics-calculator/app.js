@@ -34,6 +34,8 @@
     if (s.disc) state.disc = s.disc.map(function (p) { return { x: String(p[0]), f: String(p[1]) }; });
     if (s.grp) state.grp = s.grp.map(function (p) { return { l: String(p[0]), u: String(p[1]), f: String(p[2]) }; });
   }
+  /* the example name is shown only while its data is on screen (switching to another data type hides it) */
+  function shownSample() { var s = SAMPLES[state.sample]; return s && s.mode === state.mode ? state.sample : ''; }
   function cleanRows(rows, keys) {
     if (!Array.isArray(rows)) return [];
     return rows.slice(0, MAX_ROWS).filter(function (r) { return r && typeof r === 'object'; }).map(function (r) {
@@ -65,6 +67,10 @@
     clearTimeout(saveT);
     saveT = setTimeout(function () { store.set('state', state); }, 250);
   }
+  /* write at once when the page is closed or reloaded, so the last few key presses are not lost */
+  function flush() { clearTimeout(saveT); if (state) store.set('state', state); }
+  window.addEventListener('pagehide', flush);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flush(); });
 
   loadState();
   EDU.init({ slug: SLUG, title: 'app_title' });
@@ -76,8 +82,21 @@
     if (Math.abs(r) < 0.5 / m) r = 0;
     return r;
   }
-  function fmtN(v) { return (v === null || v === undefined || !isFinite(v)) ? '—' : EDU.fmt(roundTo(v, state.dec), { maximumFractionDigits: state.dec }); }
-  function fmtD(v) { return (v === null || v === undefined || !isFinite(v)) ? '—' : EDU.fmt(roundTo(v, 6), { maximumFractionDigits: 6 }); }
+  /* very big numbers (beyond what doubles hold exactly) as 6.67 × 10²⁹ instead of 30 meaningless digits */
+  var SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹', BIG = 1e15;
+  function sci(v, d) {
+    var e = Math.floor(Math.log10(Math.abs(v))), m = roundTo(v / Math.pow(10, e), d);
+    if (Math.abs(m) >= 10) { m = roundTo(m / 10, d); e++; }
+    return EDU.fmt(m, { maximumFractionDigits: d }) + ' × 10' + String(e).replace('-', '⁻').replace(/\d/g, function (c) { return SUP[c]; });
+  }
+  function fmtN(v) {
+    if (v === null || v === undefined || !isFinite(v)) return '—';
+    return Math.abs(v) >= BIG ? sci(v, state.dec) : EDU.fmt(roundTo(v, state.dec), { maximumFractionDigits: state.dec });
+  }
+  function fmtD(v) {
+    if (v === null || v === undefined || !isFinite(v)) return '—';
+    return Math.abs(v) >= BIG ? sci(v, 6) : EDU.fmt(roundTo(v, 6), { maximumFractionDigits: 6 });
+  }
   function plain(v, d) { return isFinite(v) ? String(roundTo(v, d)) : ''; }
   function iso(s) { return LRI + s + PDI; }
   function isoD(v) { return iso(fmtD(v)); }
@@ -174,6 +193,7 @@
       var p = S.parseRaw(state.raw, MAX_RAW);
       r.parsed = p;
       if (p.cut) r.notes.push({ key: 'err_toomany', vars: { n: MAX_RAW }, cls: 'warning' });
+      if (p.thousands) r.notes.push({ key: 'raw_thousands', cls: 'warning' });
       if (p.badCount) r.notes.push({ key: 'raw_ignored', vars: { list: p.bad.join(', ') + (p.badCount > p.bad.length ? ', …' : '') }, cls: 'warning' });
       if (!p.vals.length) { r.errors.push({ key: 'err_empty' }); return r; }
       var it = S.itemsFromValues(p.vals);
@@ -252,8 +272,9 @@
       return '<div class="st-tile' + (tl[2] ? ' key' : '') + '" id="res-' + tl[0] + '" data-value="' + esc(String(d.v)) + '">' +
         '<span class="lbl">' + word(tl[1]) + '</span><span class="val" dir="ltr">' + esc(d.s) + '</span></div>';
     }).join('');
-    $('#res-sub').textContent = state.sample ? t('ex_' + state.sample) : '';
-    $('#print-sub').textContent = state.sample ? t('ex_' + state.sample) : '';
+    var smp = shownSample();
+    $('#res-sub').textContent = smp ? t('ex_' + smp) : '';
+    $('#print-sub').textContent = smp ? t('ex_' + smp) : '';
     $('#copy-res').disabled = !r.st;
   }
 
@@ -313,12 +334,17 @@
   }
 
   /* ------------------------------------------------------------ working: median */
-  function chips(sorted, md) {
-    var n = sorted.length, mids = md.odd ? [md.p - 1] : [md.p - 1, md.q - 1], idx = [];
-    if (n <= MAX_CHIPS) { for (var i = 0; i < n; i++) idx.push(i); }
+  /* the sorted list as numbered chips; `mids` = 0-based positions to highlight. Long lists show the
+     start, the end and a window around every highlighted position. */
+  function chips(sorted, mids) {
+    var n = sorted.length, idx = [], i;
+    if (n <= MAX_CHIPS) { for (i = 0; i < n; i++) idx.push(i); }
     else {
-      var c = Math.floor((n - 1) / 2), add = function (a, b) { for (var j = Math.max(0, a); j <= Math.min(n - 1, b); j++) if (idx.indexOf(j) < 0) idx.push(j); };
-      add(0, 24); idx.push(-1); add(c - 12, c + 13); idx.push(-1); add(n - 25, n - 1);
+      var keep = {}, add = function (a, b) { for (var j = Math.max(0, a); j <= Math.min(n - 1, b); j++) keep[j] = 1; };
+      add(0, 11); add(n - 12, n - 1);
+      mids.forEach(function (m) { add(m - 6, m + 7); });
+      var ks = Object.keys(keep).map(Number).sort(function (a, b) { return a - b; });
+      ks.forEach(function (k, j) { if (j && k !== ks[j - 1] + 1) idx.push(-1); idx.push(k); });
     }
     return '<div class="st-sorted" dir="ltr">' + idx.map(function (i) {
       if (i < 0) return '<span class="gap">…</span>';
@@ -328,7 +354,7 @@
   function medianHTML(r) {
     var st = r.st, n = st.n, md = st.median, h = '', MED = bw('tab_median');
     if (r.mode !== 'grp') {
-      if (r.mode === 'raw') { h += para('med_sorted'); h += chips(r.sorted, md); }
+      if (r.mode === 'raw') { h += para('med_sorted'); h += chips(r.sorted, md.odd ? [md.p - 1] : [md.p - 1, md.q - 1]); }
       h += md.odd ? para('med_odd', { n: isoD(n), p: isoD(md.p) }) : para('med_even', { n: isoD(n), p: isoD(md.p), q: isoD(md.q) });
       if (r.mode === 'disc') {
         h += para('med_cf');
@@ -391,6 +417,7 @@
     if (mo.allEqual) return h + para('mode_none_grp', null, 'callout warning');
     h += para('mode_grp_1', { c: iso(cl(c)) });
     if (mo.ties > 1) h += para('mode_tie', null, 'callout warning');
+    if (!st.equalWidths) h += para('mode_unequal', null, 'callout warning');
     h += fx(ln(MO + ' = <i>l</i> + ' + frac('<i>f</i><sub>1</sub> − <i>f</i><sub>0</sub>', '2<i>f</i><sub>1</sub> − <i>f</i><sub>0</sub> − <i>f</i><sub>2</sub>') + ' × <i>h</i>'));
     h += where([['<i>l</i>', 'sym_l_mode', D(mo.l)], ['<i>f</i><sub>1</sub>', 'sym_f1', D(mo.f1)], ['<i>f</i><sub>0</sub>', 'sym_f0', D(mo.f0)],
       ['<i>f</i><sub>2</sub>', 'sym_f2', D(mo.f2)], ['<i>h</i>', 'sym_h', D(mo.h)]]);
@@ -423,11 +450,16 @@
     var st = r.st, n = st.n, h = '', Q1 = '<i>Q</i><sub>1</sub>', Q3 = '<i>Q</i><sub>3</sub>';
     if (r.mode !== 'grp') {
       h += para('q_pos', { p: isoD((n + 1) / 4), q: isoD(3 * (n + 1) / 4) });
+      /* the positions used for Q1 and Q3 (both neighbours when the position has a decimal part) */
+      var qpos = function (q) { return q.frac ? [q.a, q.b] : [q.a]; };
       if (r.mode === 'disc') {
-        var i1 = r.items.findIndex(function (it) { return it.x === st.q1.v; }), i3 = r.items.findIndex(function (it) { return it.x === st.q3.v; });
+        var i1 = qpos(st.q1).map(st.idxAt), i3 = qpos(st.q3).map(st.idxAt);
         h += table('quart', [COL.x, COL.f, COL.cf], r.items.map(function (it, i) { return [it.x, it.f, st.cf[i]]; }), [t('total'), n, ''],
-          function (i) { return i === i1 ? 'hl' : (i === i3 ? 'hl2' : ''); });
-      } else { h += chips(r.sorted, st.median); COPY.quart = r.sorted.join('\n'); }
+          function (i) { return i1.indexOf(i) >= 0 ? 'hl' : (i3.indexOf(i) >= 0 ? 'hl2' : ''); });
+      } else {
+        h += chips(r.sorted, qpos(st.q1).concat(qpos(st.q3)).map(function (p) { return p - 1; }));
+        COPY.quart = r.sorted.join('\n');
+      }
       h += sub('st_q1') + qList(Q1, st.q1);
       h += sub('st_q3') + qList(Q3, st.q3);
       h += '<p class="muted small">' + word('q_note') + '</p>';
@@ -512,6 +544,8 @@
     return { type: 'classes', classes: cls, n: r.st.n, auto: w };
   }
   function colors(print) {
+    /* also while the browser lays the page out for printing (a resize redraw can happen then) */
+    if (!print && window.matchMedia) { try { print = matchMedia('print').matches; } catch (e) { } }
     if (print) return { surface: '#ffffff', text: '#111111', muted: '#333333', grid: '#d6d6d6', c1: '#0b7285', c2: '#e8590c', c5: '#c2255c' };
     return { surface: EDU.css('--surface') || '#fff', text: EDU.css('--text'), muted: EDU.css('--muted'), grid: EDU.css('--border'), c1: EDU.css('--c1'), c2: EDU.css('--c2'), c5: EDU.css('--c5') };
   }
@@ -663,11 +697,11 @@
     if (ta.value !== state.raw) ta.value = state.raw;
     $('#gw').value = state.gw; $('#gs').value = state.gs;
     renderRows('disc'); renderRows('grp');
-    $('#sample').value = state.sample || '';
+    $('#sample').value = shownSample();
     [1, 2, 3, 4].forEach(function (d) { $('#dec-' + d).setAttribute('aria-pressed', String(state.dec === d)); });
   }
   function edited() {
-    if (state.sample) { state.sample = ''; $('#sample').value = ''; }
+    if (shownSample()) { state.sample = ''; $('#sample').value = ''; }
   }
 
   MODES.forEach(function (m) {
@@ -704,9 +738,10 @@
     if (!cur || !cur.st || state.mode !== 'raw') return;
     var w = S.parseCell(state.gw), s = S.parseCell(state.gs);
     if (w === null || isNaN(w)) w = S.niceWidth(cur.st.min, cur.st.max, cur.st.n);
-    if (s === null || isNaN(s)) s = S.clean(Math.floor(cur.st.min / w) * w);
-    var cls = w > 0 ? S.groupValues(cur.items, s, w, MAX_ROWS) : null;
-    if (!cls) { EDU.toast(t('err_group')); return; }
+    if (s === null || isNaN(s)) s = w > 0 ? S.clean(Math.floor(cur.st.min / w) * w) : 0;
+    if (!(w > 0) || !isFinite(s) || s > cur.st.min + S.EPS) { EDU.toast(t('err_group')); return; }
+    var cls = S.groupValues(cur.items, s, w, MAX_ROWS);
+    if (!cls) { EDU.toast(t('err_group_many', { n: MAX_ROWS })); return; }
     state.grp = cls.map(function (c) { return { l: String(c.l), u: String(c.u), f: String(c.f) }; });
     state.mode = 'grp'; state.sample = ''; state.a = ''; state.h = '';
     renderInputs(); render();
@@ -816,7 +851,7 @@
   $('#copy-res').addEventListener('click', function () {
     if (!cur || !cur.st) return;
     var d = tileData(cur), lines = [t('app_title')];
-    if (state.sample) lines.push(t('ex_' + state.sample));
+    if (shownSample()) lines.push(t('ex_' + state.sample));
     TILES.forEach(function (tl) { lines.push(t(tl[1]) + ': ' + d[tl[0]].s); });
     EDU.copy(lines.join('\n').replace(/[⁦-⁩]/g, ''));
   });

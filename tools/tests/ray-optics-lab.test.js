@@ -12,6 +12,7 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(await res('real') === 'true' && await res('inverted') === 'true' && await res('size') === 'big', 'real, inverted, enlarged');
   expect(await txt('#img-pos') === t('pos_beyond_c'), 'image position "beyond C" shown in this language');
   expect((await page.textContent('#formula')).includes('1/v = −1/30'), 'formula shows 1/v = −1/30');
+  expect(await txt('#ray-1') === t('ray_c'), 'concave mirror ray 2 is "through C"');
 
   // 2) convex lens, type u = 30 cm → v = +15, m = −0.5, power +10 D
   await page.click('#dev-convex_lens');
@@ -20,6 +21,21 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(near(await res('v'), 15) && near(await res('m'), -0.5), 'convex lens u = −30, f = +10: v = +15, m = −0.5');
   expect(await res('row') === 'beyond_2f1', 'object is beyond 2F₁');
   expect((await txt('#out-p')).startsWith('+10'), 'power of a 10 cm convex lens is +10 D: ' + await txt('#out-p'));
+
+  // 2b) number boxes: a value past the end is clamped on Enter (not left at the half-typed "4"), a minus sign is ignored
+  await page.click('#u-num', { clickCount: 3 });
+  await page.keyboard.type('40');
+  await page.keyboard.press('Enter');
+  expect(await res('u') === '-34' && await page.inputValue('#u-num') === '34', 'typing 40 with f = 10 clamps to the farthest place, u = −34; got ' + await res('u'));
+  await page.fill('#u-num', '-20');
+  await page.press('#u-num', 'Enter');
+  expect(await res('u') === '-20' && await res('row') === 'at_2f1', 'typing −20 is read as |u| = 20 (at 2F₁); got ' + await res('u'));
+  await page.fill('#f-num', '500');
+  await page.press('#f-num', 'Enter');
+  expect(await page.evaluate(() => RayLab.state.f) === 30 && await page.inputValue('#f-num') === '30', 'a huge focal length is clamped to 30 cm');
+  await page.fill('#f-num', '10');
+  await page.press('#f-num', 'Enter');
+  expect(await page.evaluate(() => RayLab.sol.f) === 10 && await res('u') === '-20', 'back to f = +10 with the object still at 20 cm');
 
   // 3) drag the object on the canvas to 5 cm (magnifying glass)
   await page.$eval('#rl-canvas', (c) => c.scrollIntoView({ block: 'center' }));
@@ -39,20 +55,26 @@ module.exports = async function ({ page, expect, t, log }) {
   await page.keyboard.press('ArrowLeft');
   expect(await res('u') === '-6', 'arrow key moves the object 1 cm farther');
 
-  // 4) NCERT table row "at 2F₁" → image at 2F₂, same size
+  // 4) NCERT table row "at 2F₁" → image at 2F₂, same size; row "at F₁" → image at infinity
   await page.click('#rowbtn-at_2f1');
   expect(near(await res('u'), -20) && near(await res('v'), 20) && near(await res('m'), -1) && await res('size') === 'same', 'at 2F₁: v = +20, m = −1, same size');
   expect(await page.getAttribute('#ncert-body tr.cur', 'data-row') === 'at_2f1', 'current NCERT row highlighted');
+  await page.click('#rowbtn-at_f1');
+  expect(await res('row') === 'at_f1' && await txt('#img-pos') === t('pos_inf'), 'object at F₁: image at infinity');
+  expect(await txt('#out-v') === '∞' && (await page.textContent('#formula')).includes('v = ∞'), 'v reads ∞ in the readout and in the working');
 
   // 5) convex mirror: always virtual, erect, diminished; object at infinity → image at F behind the mirror
   await page.click('#dev-convex_mirror');
+  await page.click('#rowbtn-front');
   expect(await res('real') === 'false' && await res('size') === 'dim' && Number(await res('v')) > 0 && Number(await res('v')) < 10, 'convex mirror: virtual, diminished, 0 < v < f');
+  expect(await txt('#ray-1') === t('ray_c_to') && await txt('#ray-2') === t('ray_f_to'), 'convex mirror rays are "towards C" and "towards F" (NCERT wording)');
   await page.click('#far');
   expect(await res('row') === 'inf' && near(await res('v'), 10), 'object at infinity: image at F (v = +10)');
   expect(await txt('#img-pos') === t('pos_behind_f'), 'image "at F, behind the mirror"');
 
   // 6) quiz: a fully right answer, then a wrong one
   const q = await page.evaluate(() => RayLab.quiz());
+  expect((await page.textContent('#q-text')).includes('⁦'), 'distances in the quiz question are direction-isolated (Urdu shows "10 cm", not "cm 10")');
   await page.selectOption('#q-pos', q.answer.pos);
   await page.click('#q-nat-' + q.answer.nat);
   await page.click('#q-ori-' + q.answer.ori);
@@ -60,6 +82,8 @@ module.exports = async function ({ page, expect, t, log }) {
   await page.click('#q-check');
   expect(await page.getAttribute('#q-feedback', 'data-right') === '4', 'all four quiz parts marked right');
   expect(await txt('#q-score') === t('q_score', { a: '1', b: '1' }), 'score 1 / 1: ' + await txt('#q-score'));
+  await page.click('#q-check');
+  expect(await txt('#q-score') === t('q_score', { a: '1', b: '1' }), 'checking the same question again does not change the score');
   await page.click('#q-next');
   const q2 = await page.evaluate(() => RayLab.quiz());
   await page.selectOption('#q-pos', q2.answer.pos);
@@ -71,10 +95,24 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(await txt('#q-score') === t('q_score', { a: '1', b: '2' }), 'score 1 / 2');
   log('quiz', q.dev, q.row, '→', q2.dev, q2.row);
 
-  // 7) state survives a reload
+  // 6b) a half-answered new question
+  await page.click('#q-next');
+  const q3 = await page.evaluate(() => RayLab.quiz());
+  await page.click('#q-nat-virtual');
+
+  // 7) state survives a reload (lab, score, and the open quiz question with its chosen answer)
   await page.waitForTimeout(200);
   await page.reload({ waitUntil: 'load' });
   await page.waitForSelector('#stats .rl-stat');
   expect(await res('dev') === 'convex_mirror' && await res('row') === 'inf', 'device and object position remembered after reload');
   expect(await txt('#q-score') === t('q_score', { a: '1', b: '2' }), 'quiz score remembered');
+  const q3b = await page.evaluate(() => RayLab.quiz());
+  expect(q3b.dev === q3.dev && q3b.f === q3.f && q3b.u === q3.u && q3b.row === q3.row, 'the same quiz question is shown after reload');
+  expect(await page.getAttribute('#q-nat-virtual', 'aria-pressed') === 'true', 'the chosen quiz answer is kept after reload');
+
+  // 8) "See it in the lab" loads the quiz question into the lab
+  await page.click('#q-show');
+  const st = await page.evaluate(() => RayLab.state);
+  expect(st.dev === q3.dev && st.f === q3.f && (q3.u == null ? st.inf === true : (st.u === q3.u && !st.inf)), 'quiz set-up copied into the lab');
+  expect(await res('row') === q3.row, 'lab shows the quiz row ' + q3.row + ', got ' + await res('row'));
 };

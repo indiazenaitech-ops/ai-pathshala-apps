@@ -23,7 +23,7 @@
     .sl-bar .hint { flex-basis: 100%; margin: 0; }
 
     /* ---------- tabs ---------- */
-    .tabs { margin-bottom: 0; }
+    .tabs { margin-bottom: 0; flex-wrap: wrap; overflow-x: visible; }   /* on tablets long Tamil/Malayalam tab names must wrap, not hide the 4th tab */
     .tabs button { font-size: 1rem; min-height: 44px; }
     @media (max-width: 560px) {
       .tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 4px; }
@@ -102,8 +102,11 @@
     .align { display: flex; flex-wrap: wrap; gap: 8px; font-size: 1.3rem; line-height: 1.35; }
     .w { display: inline-flex; flex-direction: column; align-items: center; padding: 4px 10px; border-radius: 10px; border: 2px solid transparent; }
     .w-ok { background: var(--success-soft); border-color: color-mix(in srgb, var(--success) 45%, transparent); }
-    .w-close { background: var(--warning-soft); border-color: color-mix(in srgb, var(--warning) 50%, transparent); text-decoration: underline dotted; }
-    .w-miss { background: var(--danger-soft); border-color: color-mix(in srgb, var(--danger) 55%, transparent); text-decoration: underline wavy var(--danger); text-underline-offset: 4px; }
+    .w-close { background: var(--warning-soft); border-color: color-mix(in srgb, var(--warning) 50%, transparent); }
+    .w-miss { background: var(--danger-soft); border-color: color-mix(in srgb, var(--danger) 55%, transparent); }
+    /* underline only the sentence word, not the small "heard" word under it */
+    .w-close > span:first-child { text-decoration: underline dotted; text-underline-offset: 4px; }
+    .w-miss > span:first-child { text-decoration: underline wavy var(--danger); text-underline-offset: 4px; }
     .w-extra { background: transparent; border: 2px dashed var(--border); color: var(--muted); font-size: .8em; }
     .w-h { font-size: .6em; color: var(--muted); text-decoration: none; display: block; }
     .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; }

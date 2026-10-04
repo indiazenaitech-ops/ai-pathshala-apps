@@ -13,9 +13,22 @@
     @media (min-width: 900px) { .pf { grid-template-columns: minmax(0, 1fr) 320px; } }
     .pf-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
     .pf h2 { font-size: 1.12rem; margin-bottom: 4px; }
-    .pf-stage { display: flex; flex-direction: column; gap: 12px; }
+    .pf-stage { display: flex; flex-direction: column; gap: 12px; container-type: inline-size; }
     .pf-stage:fullscreen { background: var(--bg); padding: 16px 20px; overflow: auto; border-radius: 0; border: 0; }
     .pf-stage:-webkit-full-screen { background: var(--bg); padding: 16px 20px; overflow: auto; }
+    /* the controls, stats and message: part of the board card's column normally... */
+    .pf-panel { display: contents; }
+    /* ...but beside the board in full screen on a wide smartboard / projector, so the board can be as big as possible */
+    .pf-stage:fullscreen #draw-tip { display: none; }
+    @media (min-width: 1000px) and (min-height: 940px) {
+      .pf-stage:fullscreen { display: grid; grid-template-columns: minmax(0, 1fr) minmax(330px, 27%); grid-template-rows: auto 1fr; gap: 12px 24px; align-items: start; }
+      .pf-stage:fullscreen > .pf-top { grid-column: 1 / -1; }
+      .pf-stage:fullscreen > .board-wrap { grid-column: 1; grid-row: 2; }
+      .pf-stage:fullscreen > .pf-panel { grid-column: 2; grid-row: 2; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+      .pf-stage:fullscreen .pf-ctrl .chips, .pf-stage:fullscreen .pf-ctrl2 .push { margin-inline-start: 0; }
+      .pf-stage:fullscreen .pf-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .pf-stage:fullscreen .pf-stats .stat:last-child { grid-column: span 2; }
+    }
     .lbl { font-size: .85rem; color: var(--muted); font-weight: 700; }
     .vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 
@@ -45,8 +58,13 @@
     /* stats */
     .pf-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
     .stat { background: var(--surface-2); border-radius: 10px; padding: 6px 10px; min-width: 0; }
-    .stat .lbl { display: block; font-size: .78rem; line-height: 1.3; }
+    .stat .lbl { display: block; font-size: .78rem; line-height: 1.3; overflow-wrap: anywhere; }
     .stat .num { display: block; font-size: 1.4rem; font-weight: 800; line-height: 1.2; font-variant-numeric: tabular-nums; font-family: "Noto Sans", system-ui, "Segoe UI", sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* a narrow board card (side panel on a small laptop, or a phone): 3 + 2 stats, the time gets a double box */
+    @container (max-width: 660px) {
+      .pf-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .pf-stats .stat:last-child { grid-column: span 2; }
+    }
     .pf-msg { margin: 0; min-height: 3.2em; font-weight: 600; display: flex; align-items: center; }
     .pf-msg[data-kind="good"] { border-color: var(--success); background: var(--success-soft); }
     .pf-msg[data-kind="warn"] { border-color: var(--warning); background: var(--warning-soft); }
@@ -66,12 +84,17 @@
     .badges { display: flex; flex-wrap: wrap; gap: 6px; }
     .badges .badge { font-size: .8rem; padding: 3px 9px; white-space: normal; }
     .gen-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-    .gen-grid .btn { justify-content: flex-start; text-align: start; }
+    .gen-grid .btn { flex-direction: column; gap: 2px; padding: 8px 10px; justify-content: center; text-align: center; overflow-wrap: anywhere; }
+    .gen-grid .btn > span[aria-hidden] { font-size: 1.15rem; line-height: 1.2; }
     .seg.full { display: flex; }
     .seg.full button { flex: 1 1 0; min-height: 40px; }
     .sub-lbl { font-size: .86rem; color: var(--muted); font-weight: 700; margin: 0 0 5px; }
     .hint { color: var(--muted); font-size: .84rem; margin: 6px 0 0; font-weight: 400; }
     .side-foot { display: flex; flex-wrap: wrap; gap: 8px; }
+    /* touch targets: at least 40 px tall */
+    #fs-btn, #reset-all, .cmp-table .show-btn { min-height: 40px; }
+    .pf label.check { min-height: 40px; }
+    .help summary { padding-block: 8px; }
 
     /* compare */
     .page-sec { margin-top: 16px; }
@@ -103,6 +126,7 @@
       .pf-stage.card, .pf-side .card { padding: 12px; }
       .pf-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .stat .num { font-size: 1.2rem; }
+      .pf-stats .stat:last-child { grid-column: span 2; }   /* the time ("0.0075 ms") needs more room */
       .pf-ctrl .btn-lg { flex: 1 1 auto; padding-inline: 12px; font-size: 1rem; }
       .pf-ctrl .chips { margin-inline-start: 0; }
       .chips .chip { padding: 6px 12px; }
@@ -153,6 +177,7 @@
         </div>
         <p class="vh" id="kb-live" aria-live="polite"></p>
 
+        <div class="pf-panel" id="pf-panel">
         <div class="pf-ctrl no-print">
           <button type="button" class="btn btn-primary btn-lg" id="run" data-mode="idle"><span aria-hidden="true" id="run-ico">▶</span> <span id="run-txt"></span></button>
           <button type="button" class="btn btn-lg" id="step"><span aria-hidden="true">⏭</span> <span data-i18n="step"></span></button>
@@ -199,6 +224,7 @@
           <li><canvas width="40" height="40" data-sw="path" aria-hidden="true"></canvas><span data-i18n="lg_path"></span></li>
         </ul>
         <p class="small muted nums-note" id="nums-note" hidden></p>
+        </div>
       </section>
 
       <!-- ============ side panel ============ -->

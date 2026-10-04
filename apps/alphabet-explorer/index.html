@@ -79,7 +79,10 @@
     .big-note { margin: 0; }
     .big-acts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
     .big-acts .btn { padding-inline: 6px; text-align: center; }
-    .big-nav { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; }
+    .big-nav { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 8px; }
+    .big-nav .btn { min-width: 0; padding-inline: 8px; }
+    .big-nav #big-fs { min-width: 44px; }
+    @media (max-width: 400px) { .big-nav .btn { font-size: .88rem; gap: 4px; } }
     .tam-join { text-align: center; margin: 0; font-family: var(--sf); font-size: 1.15rem; }
     .forms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
     .form-box { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 4px 2px; border: 1px solid var(--border);
@@ -87,10 +90,17 @@
     .form-box .fx { font-family: var(--sf); font-size: 2.1rem; line-height: 1.9; }
     .form-box .fl { font-size: .74rem; color: var(--muted); text-align: center; }
     .form-box.off { opacity: .4; }
-    #big-card:fullscreen { justify-content: center; padding: 4vh 6vw; background: var(--bg); overflow: auto; }
-    #big-card:fullscreen .big-ch { font-size: min(42vh, 30vw); }
-    #big-card:fullscreen .big-ex .wd { font-size: 3.4rem; }
-    #big-card:fullscreen .big-ex .emo { font-size: 4.5rem; }
+    /* full screen: nothing may shrink (flex items used to squash and overlap); the letter is sized to leave room */
+    #big-card:fullscreen { justify-content: center; padding: 3vh 6vw; background: var(--bg); overflow: auto; }
+    #big-card:fullscreen > * { flex-shrink: 0; }
+    #big-card:fullscreen .big-ch { font-size: min(30vh, 26vw); }
+    .is-arab #big-card:fullscreen .big-ch { font-size: min(17vh, 18vw); }
+    .is-arab #big-card:fullscreen .big-ex .wd { font-size: 2.4rem; }
+    .is-arab #big-card:fullscreen { padding-block: 1.5vh; gap: 8px; }
+    #big-card:fullscreen .big-ex .wd { font-size: 3rem; }
+    #big-card:fullscreen .big-ex .emo { font-size: 4rem; }
+    #big-card:fullscreen .big-roman { font-size: 1.4rem; }
+    #big-card:fullscreen .big-roman b { font-size: 1.8rem; }
 
     /* ---------- vowel signs ---------- */
     .base-bar { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -102,7 +112,8 @@
           background: var(--surface); color: var(--text); cursor: pointer; font: inherit; min-width: 0; }
     .sg:hover { background: var(--surface-2); }
     .sg .v { font-family: var(--sf); font-size: .95rem; color: var(--muted); line-height: var(--sf-lh); }
-    .sg .s { font-family: var(--sf); font-size: 2.3rem; line-height: var(--sf-lh); color: var(--primary); }
+    .sg .s { font-family: var(--sf); font-size: 2.3rem; line-height: var(--sf-lh); color: var(--primary); white-space: nowrap; }
+    .is-wide .sg .s { font-size: 2rem; }   /* கௌ കൈ are wide */
     .sg .ro { font-size: .8rem; color: var(--muted); }
     .sg.playing { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
     .chart-box summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
@@ -127,7 +138,12 @@
     .cover-txt { font-weight: 700; margin: 0; }
     .trace-msg { margin: 0; min-height: 1.5em; font-weight: 600; }
     .stars { font-size: 1.6rem; letter-spacing: 2px; min-height: 1.6em; }
-    #trace-stage:fullscreen { aspect-ratio: auto; border-radius: 0; }
+    #trace-hear, #trace-fs, #chart-print { min-height: 40px; }
+    /* full screen = square canvas + the buttons beside it (below it on a phone held upright) */
+    #trace-wrap:fullscreen { background: var(--bg); padding: 2vh 3vw; grid-template-columns: min(94vh, 62vw) minmax(240px, 1fr);
+                             align-content: center; align-items: center; overflow: auto; }
+    #trace-wrap:fullscreen .trace-side { font-size: 1.1rem; }
+    @media (orientation: portrait) { #trace-wrap:fullscreen { grid-template-columns: minmax(0, 1fr); align-content: start; } }
 
     /* ---------- game ---------- */
     .game-opts-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
@@ -168,8 +184,18 @@
       .is-arab .lt .ch { font-size: 1.4rem; }
       .sign-row { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 6px; }
       .sg .s { font-size: 1.9rem; }
-      .big-acts .btn { font-size: .86rem; }
+      .is-wide .sg .s { font-size: 1.5rem; }
+      /* icon above the label, so long words (சொல்லைக் கேள்) fit inside the button */
+      .big-acts .btn { font-size: .86rem; flex-direction: column; gap: 2px; padding: 6px 4px; }
+      /* Previous | Next, then a wide Clear (తుడిచివేయండి, മുമ്പത്തേത് do not fit in a third of the width) */
+      .trace-btns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #trace-prev { order: 1; } #trace-next { order: 2; } #trace-clear { order: 3; grid-column: 1 / -1; }
       .gopt { min-height: 96px; }
+    }
+    .game-opts-row .seg button { min-height: 42px; }
+    @media (max-width: 360px) {   /* small phones */
+      .is-wide .lt .ch { font-size: 1.35rem; }
+      .big-acts .btn { font-size: .78rem; padding-inline: 2px; }
     }
 
     /* ---------- print ---------- */
@@ -177,7 +203,7 @@
     .sheet-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
     .sheet-row { display: contents; }
     .sheet-cell { border: 1px solid #999; height: 26mm; display: flex; align-items: center; justify-content: center; font-family: var(--sf);
-                  font-size: 17mm; line-height: 1; overflow: hidden; }
+                  font-size: 17mm; line-height: 1; overflow: hidden; break-inside: avoid; }
     .sheet-cell.model { color: #000; font-weight: 600; background: #f3f3f3; }
     .sheet-cell.hollow { color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact;
                            text-shadow: .3mm 0 #8a8a8a, -.3mm 0 #8a8a8a, 0 .3mm #8a8a8a, 0 -.3mm #8a8a8a,
@@ -201,8 +227,15 @@
       .lt[aria-current="true"] { background: none; box-shadow: none; border-color: #999; }
       .chart-box summary { display: none; }
       .chart td button { font-size: 1.15rem; min-height: 0; min-width: 0; color: #000; }
-      .chart { font-size: 11pt; }
-      .card { border: 0; padding: 0; }
+      .chart { font-size: 11pt; width: 100%; min-width: 0; }
+      .chart tr { break-inside: avoid; }
+      .scroll-x { overflow: visible !important; }   /* a scroll box would cut the last columns off the paper */
+      .chart th, .chart td { padding: 2px 1px; }
+      .chart th { position: static; }   /* edu.css makes table headers sticky: in print they landed mid-page */
+      .chart td button { padding: 0; }
+      /* edu.css keeps a .card on one page; these cards are longer than a page (left page 1 blank) */
+      .card { border: 0; padding: 0; break-inside: auto; }
+      .lt, .btn, .gopt { transition: none; }
     }
   </style>
 </head>
@@ -298,7 +331,7 @@
     <section id="panel-trace" role="tabpanel" aria-labelledby="tab-trace" hidden>
       <div class="card stack">
         <p class="muted" data-i18n="trace_help"></p>
-        <div class="trace-wrap">
+        <div class="trace-wrap" id="trace-wrap">
           <div class="stage trace-stage" id="trace-stage">
             <canvas id="trace-canvas" data-i18n-aria-label="canvas_aria" role="img"></canvas>
           </div>

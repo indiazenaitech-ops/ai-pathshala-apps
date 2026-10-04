@@ -26,13 +26,15 @@
     pitch: store.get('pitch', 1),
     voice: obj(store.get('voice', {})),         // { lang: voiceURI }
     allVoices: !!store.get('allVoices', false),
-    mode: store.get('mode', 'speak') === 'type' ? 'type' : 'speak',
+    // without speech recognition (Firefox, many iPhones) start in "Listen & type", which needs no microphone
+    mode: store.get('mode', SR ? 'speak' : 'type') === 'type' ? 'type' : 'speak',
     idx: obj(store.get('idx', {})),             // { lang: sentence index }
     best: obj(store.get('best', {})),           // { lang: { sentence: pct } }
     own: obj(store.get('own', {}))              // { lang: [sentence, ...] }
   };
   if (['dict', 'tts', 'prac', 'how'].indexOf(S.tab) < 0) S.tab = 'dict';
   if (typeof S.pitch !== 'number' || isNaN(S.pitch)) S.pitch = 1;
+  if (typeof S.ttsText !== 'string') S.ttsText = null;
   S.rate = EDU.clamp(S.rate, 0.5, 2); S.pitch = EDU.clamp(S.pitch, 0, 2);
 
   function spLang() { return S.spLang && CODES.indexOf(S.spLang) >= 0 ? S.spLang : EDU.lang; }
@@ -151,6 +153,7 @@
     sel.value = cur;
   }
   var voices = [];
+  var voicesReady = !HAS_TTS;      // browsers load their voice list a moment after the page; don't say "no voice" before that
   function voicesFor(code) {
     var tag = tagOf(code).toLowerCase();
     var list = voices.filter(function (v) {
@@ -170,14 +173,15 @@
     b.dataset.sr = SR ? 'yes' : 'no';
     var n = HAS_TTS ? voicesFor(spLang()).length : 0;
     var v = $('#badge-tts');
-    v.textContent = t('tts_n', { n: EDU.fmt(n) });
-    v.className = 'badge ' + (n ? 'success' : 'warn');
-    v.dataset.n = String(n);
+    v.textContent = t('tts_n', { n: voicesReady ? EDU.fmt(n) : '…' });
+    v.className = 'badge' + (!voicesReady ? '' : n ? ' success' : ' warn');
+    v.dataset.n = voicesReady ? String(n) : '';
   }
   function setSpeechLang(code) {
     if (CODES.indexOf(code) < 0) return;
     stopAll();
     S.spLang = code; store.set('spLang', code);
+    resetPracView();
     renderSpeechLang();
   }
   function renderSpeechLang() {
@@ -236,9 +240,9 @@
     stopTts();
     var r = EDU.recognizer({ lang: spLang(), interim: true, continuous: !!opts.continuous, alternatives: opts.alternatives || 1 });
     if (!r) return null;
-    var s = { r: r, owner: owner, want: true, restarts: 0, noSpeech: 0, gotFinal: false, err: null };
+    var s = { r: r, owner: owner, want: true, restarts: 0, noSpeech: 0, gotFinal: false, err: null, t0: Date.now(), heard: false, quick: 0 };
     r.onstart = function () { if (opts.onstart) opts.onstart(s); };
-    r.onresult = function (e) { s.noSpeech = 0; if (opts.onresult) opts.onresult(e, s); };
+    r.onresult = function (e) { s.noSpeech = 0; s.heard = true; if (opts.onresult) opts.onresult(e, s); };
     r.onerror = function (e) {
       var code = (e && e.error) || 'unknown';
       if (code === 'aborted') return;
@@ -249,8 +253,13 @@
     };
     r.onend = function () {
       if (s.want && opts.keepAlive && !s.err && s.restarts < 200) {
-        s.restarts++;
-        try { r.start(); return; } catch (e) { /* fall through */ }
+        // a recogniser that keeps ending at once without hearing anything (microphone busy, some Android
+        // phones) must not restart and beep in a tight loop: give up after 5 such quick ends in a row
+        s.quick = !s.heard && Date.now() - s.t0 < 1000 ? s.quick + 1 : 0;
+        if (s.quick < 5) {
+          s.restarts++; s.heard = false; s.t0 = Date.now();
+          try { r.start(); return; } catch (e) { /* fall through */ }
+        } else { s.err = 'no-speech'; if (opts.onerror) opts.onerror('no-speech', s); }
       }
       s.want = false;
       if (session === s) session = null;
@@ -326,6 +335,7 @@
   }
   function startDict() {
     if (!SR) { showUnsupported(); return; }
+    stopRecognition(true);             // end any old session first, so its clean-up cannot reset the new state
     dict.state = 'starting'; dict.errCode = null; renderDictState();
     var s = startRecognition('dict', {
       continuous: !IS_ANDROID,          // Android Chrome repeats words in continuous mode; restart instead
@@ -380,6 +390,7 @@
     var kind = b.dataset.p, ch = kind === 'nl' ? '\n' : punctChars(spLang())[kind];
     var v = dictTA.value;
     var atEnd = !lastCaret || lastCaret.s >= v.length;
+    if (atEnd && !v.trim()) { dictTA.focus(); return; }      // nothing to punctuate yet
     if (atEnd) {
       dictTA.value = kind === 'nl' ? v.replace(/[ \t]+$/, '') + '\n' : v.replace(/\s+$/, '') + ch + ' ';
       lastCaret = null;
@@ -404,7 +415,7 @@
   $('#dict-print').addEventListener('click', function () {
     var pa = $('#print-area'); pa.innerHTML = '';
     pa.appendChild(EDU.el('h1', { text: t('dict_title') }));
-    pa.appendChild(EDU.el('p', { class: 'muted', text: t('app_title') + ' · ' + langName(spLang()) + ' · ' + new Date().toLocaleDateString() }));
+    pa.appendChild(EDU.el('p', { class: 'muted', text: t('app_title') + ' · ' + langName(spLang()) + ' · ' + today() }));
     pa.appendChild(EDU.el('div', { class: 'pa-text', lang: spLang(), dir: dirOf(spLang()), text: dictTA.value }));
     doPrint();
   });
@@ -428,8 +439,16 @@
   }
   function pickVoice(code) {
     var uri = S.voice[code];
-    if (uri) { var f = voices.filter(function (v) { return v.voiceURI === uri; })[0]; if (f) return f; }
+    // honour the saved choice only while it is in the list on screen (a voice of another language picked
+    // under "Show voices of all languages" must not stay in use after that box is unticked)
+    var list = S.allVoices ? voices : voicesFor(code);
+    if (uri) { var f = list.filter(function (v) { return v.voiceURI === uri; })[0]; if (f) return f; }
     return voicesFor(code)[0] || EDU.voiceFor(voices, code);
+  }
+  /* run fn once the browser has listed its voices (Chrome fills the list a moment after load) */
+  function withVoices(fn) {
+    if (voicesReady || !HAS_TTS) { fn(); return; }
+    EDU.getVoices().then(function (v) { if (!voicesReady) { voices = (v || []).slice(); voicesReady = true; renderVoices(); } fn(); });
   }
   /* returns false when there is no voice for the language (and force is not set) */
   function speakText(text, code, opts) {
@@ -463,7 +482,7 @@
     var st = $('#tts-status'); if (st) { st.textContent = ''; st.dataset.state = 'idle'; }
   }
   function speakOrHelp(text, code, opts) {
-    if (!speakText(text, code, opts)) EDU.toast(t('no_voice'));
+    withVoices(function () { if (!speakText(text, code, opts)) EDU.toast(t('no_voice')); });
   }
   function renderTtsText() {
     var ta = $('#tts-text');
@@ -480,7 +499,7 @@
     var want = S.voice[code] || '';
     sel.value = list.some(function (v) { return v.voiceURI === want; }) ? want : '';
     $('#tts-all').checked = S.allVoices;
-    var none = HAS_TTS && code !== 'en' && !pickVoice(code);
+    var none = voicesReady && HAS_TTS && code !== 'en' && !pickVoice(code);
     $('#tts-novoice').hidden = !none && HAS_TTS;
     $('#tts-nv-title').textContent = HAS_TTS ? t('tts_none_title', { lang: langName(code) }) : t('no_voice');
     $('#tts-try').hidden = !HAS_TTS;
@@ -493,16 +512,17 @@
   }
   function loadVoices() {
     if (!HAS_TTS) { renderVoices(); return; }
-    EDU.getVoices().then(function (v) { voices = (v || []).slice(); renderVoices(); renderPractice(); });
+    EDU.getVoices().then(function (v) { voices = (v || []).slice(); voicesReady = true; renderVoices(); });
     try {
       window.speechSynthesis.addEventListener('voiceschanged', function () {
-        voices = (window.speechSynthesis.getVoices() || []).slice(); renderVoices();
+        voices = (window.speechSynthesis.getVoices() || []).slice(); voicesReady = true; renderVoices();
       });
     } catch (e) { }
   }
   function ttsPlay(force) {
     var text = $('#tts-text').value.trim();
     if (!text) { $('#tts-text').focus(); return; }
+    if (!voicesReady) { withVoices(function () { ttsPlay(force); }); return; }
     var st = $('#tts-status');
     var ok = speakText(text, spLang(), {
       rate: S.rate, pitch: S.pitch, force: !!force,
@@ -514,7 +534,9 @@
   $('#tts-text').addEventListener('input', function () { S.ttsText = $('#tts-text').value; store.set('ttsText', S.ttsText); });
   $('#tts-sample').addEventListener('click', function () { S.ttsText = null; store.remove('ttsText'); renderTtsText(); });
   $('#tts-from-dict').addEventListener('click', function () {
-    if (!dictTA.value.trim()) { EDU.toast(t('dict_placeholder')); return; }
+    if (!dictTA.value.trim()) {        // nothing spoken yet: take the user to "Speak to text"
+      setTab('dict'); dictTA.focus(); EDU.toast(t('st_idle')); return;
+    }
     $('#tts-text').value = dictTA.value; S.ttsText = dictTA.value; store.set('ttsText', S.ttsText);
   });
   $('#tts-voice').addEventListener('change', function () {
@@ -531,10 +553,21 @@
 
   /* ------------------------------------------------------------ 3. pronunciation practice */
   var prac = { listening: false, result: null, status: '', statusKey: null };
+  function ownList(code) { return (Array.isArray(S.own[code]) ? S.own[code] : []).filter(function (s) { return typeof s === 'string'; }); }
   function sentenceList(code) {
     var base = (content(code).sentences || []).map(function (s) { return { text: s, own: false }; });
-    var own = (Array.isArray(S.own[code]) ? S.own[code] : []).map(function (s) { return { text: s, own: true }; });
+    var own = ownList(code).map(function (s) { return { text: s, own: true }; });
     return base.concat(own);
+  }
+  /* the result on screen belongs to one sentence of one language; drop it when either changes */
+  function curResult() {
+    var r = prac.result;
+    if (r && (r.lang !== spLang() || r.target !== curSentence().text)) r = prac.result = null;
+    return r;
+  }
+  function resetPracView() {
+    prac.result = null; prac.statusKey = null; prac.status = '';
+    var ty = $('#pr-typed'); if (ty) ty.value = '';
   }
   function curIndex() {
     var code = spLang(), list = sentenceList(code);
@@ -593,7 +626,8 @@
     $('#pr-pos').textContent = t('sentence_n', { i: EDU.fmt(i + 1), n: EDU.fmt(list.length) }) + (cur.own ? ' · ★ ' + t('own_badge') : '');
     // target
     var tg = $('#pr-target');
-    var hide = typeMode && !(prac.result && prac.result.typed);
+    var res = curResult();
+    var hide = typeMode && !(res && res.typed);
     tg.classList.toggle('is-hidden', hide);
     tg.dataset.hidden = hide ? 'true' : 'false';
     tg.textContent = hide ? t('hidden_sentence') : cur.text;
@@ -605,7 +639,7 @@
     renderOwn();
   }
   function renderResult() {
-    var box = $('#pr-result'), r = prac.result;
+    var box = $('#pr-result'), r = curResult();
     box.hidden = !r;
     if (!r) return;
     var sc = $('#pr-score');
@@ -613,7 +647,8 @@
     sc.dataset.score = String(r.score);
     sc.className = 'big-number sc-' + scoreClass(r.score);
     $('#pr-line').textContent = t('score_line', { m: EDU.fmt(r.ok), n: EDU.fmt(r.n) });
-    $('#pr-fb').textContent = r.score >= 90 ? t('fb_great') : r.score >= 60 ? t('fb_good') : t('fb_try');
+    // "every word came through" is only true when nothing was missed, wrong or extra
+    $('#pr-fb').textContent = r.errors === 0 && r.n > 0 ? t('fb_great') : r.score >= 60 ? t('fb_good') : t('fb_try');
     $('#pr-heard-lbl').textContent = r.typed ? t('you_typed') : t('heard');
     $('#pr-heard').textContent = r.heard || '—';
     var al = $('#pr-align'); al.innerHTML = '';
@@ -632,7 +667,7 @@
     el.dataset.done = String(done);
   }
   function renderOwn() {
-    var code = spLang(), own = Array.isArray(S.own[code]) ? S.own[code] : [], ul = $('#pr-own');
+    var code = spLang(), own = ownList(code), ul = $('#pr-own');
     ul.innerHTML = '';
     own.forEach(function (s, k) {
       ul.appendChild(EDU.el('li', {}, EDU.el('span', { text: s }),
@@ -641,7 +676,7 @@
     $('#pr-own-empty').hidden = own.length > 0;
   }
   function removeOwn(k) {
-    var code = spLang(), own = (S.own[code] || []).slice();
+    var code = spLang(), own = ownList(code);
     var base = (content(code).sentences || []).length;
     own.splice(k, 1); S.own[code] = own; store.set('own', S.own);
     var i = curIndex();
@@ -653,6 +688,7 @@
     var code = spLang(), text = curSentence().text;
     var b = obj(S.best[code]);
     if (typeof b[text] !== 'number' || res.score > b[text]) { b[text] = res.score; S.best[code] = b; store.set('best', S.best); }
+    res.lang = code; res.target = text;
     prac.result = res;
     renderPractice();
   }
@@ -665,6 +701,7 @@
   }
   function startPrac() {
     if (!SR) { showUnsupported(); return; }
+    stopRecognition(true);             // end any old session first, so its clean-up cannot reset the new state
     prac.result = null; renderResult();
     prac.listening = true; renderPracMic();
     setPracStatus('st_starting', null, 'idle');
@@ -732,7 +769,7 @@
   function addOwn() {
     var v = $('#pr-new').value.replace(/\s+/g, ' ').trim().slice(0, 200);
     if (!tokens(v).length) { $('#pr-new').focus(); return; }
-    var code = spLang(), own = Array.isArray(S.own[code]) ? S.own[code].slice() : [];
+    var code = spLang(), own = ownList(code);
     if (own.indexOf(v) < 0) own.push(v);
     S.own[code] = own; store.set('own', S.own);
     $('#pr-new').value = '';
@@ -765,6 +802,11 @@
   });
 
   /* ------------------------------------------------------------ print helper */
+  function today() {                   // e.g. "4 October 2026" / "4 अक्तूबर 2026": no 10/4 vs 4/10 confusion
+    var d = new Date();
+    try { return d.toLocaleDateString(tagOf(EDU.lang), { day: 'numeric', month: 'long', year: 'numeric', numberingSystem: 'latn' }); }
+    catch (e) { return d.toISOString().slice(0, 10); }
+  }
   function doPrint() {
     document.body.classList.add('sl-printing');
     var done = function () { document.body.classList.remove('sl-printing'); window.removeEventListener('afterprint', done); };
@@ -976,7 +1018,7 @@
     renderTabs();
   }
   EDU.onLang(function () {
-    if (!S.spLang) stopAll();          // the speech language follows the page language
+    if (!S.spLang) { stopAll(); resetPracView(); }     // the speech language follows the page language
     renderAll();
   });
 

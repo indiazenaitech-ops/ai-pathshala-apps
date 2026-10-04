@@ -579,7 +579,7 @@
         '    }',
         '    answer = x / y;',
         '  }',
-        '  answer = Math.round(answer * 1000) / 1000;',
+        '  answer = Number(answer.toFixed(3));',
         '  result.textContent = answer;',
         '  console.log(x, op, y, "=", answer);',
         '}',

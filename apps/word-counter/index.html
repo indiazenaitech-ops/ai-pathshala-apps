@@ -42,16 +42,16 @@
                 border-radius: 10px; background: var(--surface); white-space: pre-wrap; overflow-wrap: anywhere; }
     .wc-check .snt { border-radius: 4px; cursor: pointer; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
     .wc-check .snt:hover { text-decoration: underline; text-decoration-color: var(--primary); text-underline-offset: .2em; }
-    .wc-check .s-long { background: color-mix(in srgb, var(--warning) 26%, transparent); }
-    .wc-check .s-vlong { background: color-mix(in srgb, var(--danger) 24%, transparent); }
+    .wc-check .s-long { background: var(--warning-soft); background: color-mix(in srgb, var(--warning) 26%, transparent); }
+    .wc-check .s-vlong { background: var(--danger-soft); background: color-mix(in srgb, var(--danger) 24%, transparent); }
     .wc-check .flash { animation: wc-flash 1.8s ease-out; }
     @keyframes wc-flash { 0%, 45% { box-shadow: 0 0 0 3px var(--accent); } 100% { box-shadow: 0 0 0 3px transparent; } }
     .wc-check mark { background: #ffd43b; color: #14191b; border-radius: 3px; padding: 0 1px; }
     .wc-check .muted { white-space: normal; }
     .wc-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .86rem; color: var(--muted); align-items: center; }
     .wc-legend i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-inline-end: 6px; border: 1px solid var(--border); }
-    .wc-legend .k-long { background: color-mix(in srgb, var(--warning) 45%, transparent); }
-    .wc-legend .k-vlong { background: color-mix(in srgb, var(--danger) 40%, transparent); }
+    .wc-legend .k-long { background: var(--warning-soft); background: color-mix(in srgb, var(--warning) 45%, transparent); }
+    .wc-legend .k-vlong { background: var(--danger-soft); background: color-mix(in srgb, var(--danger) 40%, transparent); }
     .wc-legend .k-rep { background: #ffd43b; }
 
     /* ---------- word-limit meter ---------- */
@@ -75,7 +75,7 @@
               margin: 18px 6px 30px; }
     .wc-fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: 0; border-radius: 999px; background: var(--wc-col); transition: width .2s; }
     .wc-zone { position: absolute; inset-block: -5px; border: 2px dashed var(--success); border-radius: 6px;
-               background: color-mix(in srgb, var(--success) 14%, transparent); }
+               background: var(--success-soft); background: color-mix(in srgb, var(--success) 14%, transparent); }
     .wc-zone span { position: absolute; top: calc(100% + 4px); font-size: .8rem; font-weight: 700; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
     .wc-zone .lo { inset-inline-end: calc(100% - 4px); }
     .wc-zone .hi { inset-inline-start: calc(100% - 4px); }
@@ -127,7 +127,8 @@
     .wc-note { margin: 10px 0 0; }
 
     .wc-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
-    .wc-chips .chip { min-height: 40px; }
+    .wc-chips .chip { min-height: 40px; max-width: 100%; text-align: start; }
+    .wc-chips .chip > .no-i18n { min-width: 0; overflow-wrap: anywhere; }   /* a pasted web address must not widen the page */
     .wc-chips .chip .n { font-variant-numeric: tabular-nums; font-size: .8rem; opacity: .85; }
 
     /* ---------- format guides ---------- */

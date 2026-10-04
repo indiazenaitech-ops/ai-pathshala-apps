@@ -60,8 +60,9 @@
     .stat .num { font-size: 1.55rem; font-weight: 800; line-height: 1.15; }
     .sv-cv { display: block; width: 100%; height: clamp(230px, 44vh, 430px); border-radius: 10px; border: 1px solid var(--border); background: var(--surface); }
     .sv-main.cmp .sv-cv { height: clamp(220px, 38vh, 380px); }
-    .sv-main:fullscreen .sv-cv { height: calc(100vh - 330px); min-height: 240px; }
-    .sv-main.cmp:fullscreen .sv-cv { height: calc(100vh - 360px); }
+    /* full screen: bars, buttons and the colour legend all fit on one smartboard screen */
+    .sv-main:fullscreen .sv-cv { height: calc(100vh - 445px); min-height: 220px; }
+    .sv-main.cmp:fullscreen .sv-cv { height: calc(100vh - 445px); }
     .sv-msg { margin: 8px 0 10px; min-height: 3.4em; font-weight: 600; display: flex; align-items: center; }
     .sv-msg[data-kind="done"] { border-color: var(--success); background: var(--success-soft); }
     .sv-race { margin-top: 14px; font-weight: 700; }
@@ -107,7 +108,7 @@
     .sv-tbl td.n { font-variant-numeric: tabular-nums; font-family: "Noto Sans", system-ui, sans-serif; white-space: nowrap; }
     .sv-tbl td, .sv-tbl th { vertical-align: middle; }
     .sv-tbl tr.cur td { background: var(--primary-soft); }
-    .sv-tbl .pick { background: none; border: 0; padding: 0; font: inherit; font-weight: 700; color: var(--primary); cursor: pointer; text-align: start; min-height: 32px; }
+    .sv-tbl .pick { background: none; border: 0; padding: 0; font: inherit; font-weight: 700; color: var(--primary); cursor: pointer; text-align: start; min-height: 40px; }
     .sv-tbl .star { color: var(--warning); font-weight: 800; }
     .yes { color: var(--success); font-weight: 700; } .no { color: var(--danger); font-weight: 700; }
     .help ul { margin: 10px 0 0; padding-inline-start: 1.2em; }
@@ -116,6 +117,8 @@
     .page-sec { margin-top: 16px; }
 
     :root[lang="ur"] .stat .num, :root[lang="ur"] .num-font, :root[lang="ur"] .sv-size output { font-family: "Noto Sans", system-ui, sans-serif; }
+    /* Nastaliq needs taller lines, or the lane title and the counter labels touch */
+    :root[lang="ur"] .lbl, :root[lang="ur"] .sv-lane-title { line-height: 1.9; }
 
     @media (max-width: 560px) {
       .sv-stage.card, .sv-side .card, .sv-setup.card { padding: 12px; }
@@ -132,7 +135,7 @@
       .sv-tbl th, .sv-tbl td { padding: 6px 7px; font-size: .86rem; }
       .sv-tbl .cx { font-size: .8rem; }
       .sv-lane-head .sv-stats { margin-inline-start: 0; flex-basis: 100%; }
-      .sv-code { font-size: .74rem; }
+      .sv-code { font-size: .72rem; }
     }
 
     @media print {

@@ -306,7 +306,7 @@
     var nums = [], bad = [];
     toks.forEach(function (tk) {
       var v = Number(tk);
-      if (/^[-+]?(\d+\.?\d*|\.\d+)$/.test(tk) && isFinite(v) && Math.abs(v) < 1e9) nums.push(v); else bad.push(tk);
+      if (/^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(tk) && isFinite(v) && Math.abs(v) < 1e15) nums.push(v); else bad.push(tk);
     });
     return { nums: nums, bad: bad };
   }
@@ -372,11 +372,17 @@
   var lanes = [mkLane('a'), mkLane('b')];
 
   /* ------------------------------------------------------------------ helpers */
-  function nf(v) { return EDU.fmt(v, { maximumFractionDigits: 2 }); }
-  function pyNum(v) { return String(Math.round(v * 100) / 100); }
+  /* Up to 6 decimals, so typed numbers like 0.003 and 0.001 never both show as "0". */
+  function nf(v) { return EDU.fmt(v, { maximumFractionDigits: 6 }); }
+  function pyNum(v) { return String(Math.round(v * 1e6) / 1e6); }
+  /* In Urdu (RTL) every number is wrapped in a left-to-right isolate. Without it, the invisible
+     LRM that Intl puts before a minus sign glues "-5، 3" into one LTR run, so the sentence reads
+     "3 ... -5" from the right and the comparison means the opposite. */
   function fmtVars(mv) {
-    var o = {};
-    Object.keys(mv || {}).forEach(function (k) { o[k] = typeof mv[k] === 'number' ? nf(mv[k]) : mv[k]; });
+    var o = {}, rtl = document.documentElement.dir === 'rtl';
+    Object.keys(mv || {}).forEach(function (k) {
+      o[k] = typeof mv[k] === 'number' ? (rtl ? '⁦' + nf(mv[k]) + '⁩' : nf(mv[k])) : mv[k];
+    });
     return o;
   }
   function totalSteps() {
@@ -399,11 +405,13 @@
       return '<span class="ln" data-ln="' + (i + 1) + '"><span class="no">' + (i + 1) + '</span>' + hiPy(ln) + '</span>';
     }).join('');
   }
-  function renderVars(vv) {
+  /* a = the array in the current frame (sorted on the last frame, not the starting numbers) */
+  function renderVars(vv, a) {
     var box = EDU.$('#vars');
     box.innerHTML = '';
     var keys = Object.keys(vv || {});
-    if (!keys.length) { box.appendChild(EDU.el('code', { class: 'empty', text: 'a = [' + st.arr.slice(0, 12).map(pyNum).join(', ') + (st.arr.length > 12 ? ', …' : '') + ']' })); return; }
+    a = a || st.arr;
+    if (!keys.length) { box.appendChild(EDU.el('code', { class: 'empty', id: 'vars-a', text: 'a = [' + a.slice(0, 12).map(pyNum).join(', ') + (a.length > 12 ? ', …' : '') + ']' })); return; }
     keys.forEach(function (k) {
       var v = vv[k], s;
       if (typeof v === 'boolean') s = v ? 'True' : 'False';
@@ -449,14 +457,18 @@
     var a = f.a, n = a.length, hasAux = L.algo === 'merge' || L.algo === 'insertion';
     var padX = 8, slot = (W - 2 * padX) / n;
     var gap = slot >= 12 ? Math.min(8, slot * 0.16) : (slot >= 5 ? 1 : 0.5), bw = Math.max(1, slot - gap);
-    var labels = slot >= 15;
+    var labels = slot >= 15, vals = labels;
     var font = '"Noto Sans", system-ui, "Segoe UI", sans-serif';
     var fs = Math.max(9, Math.min(17, slot * 0.62));
     if (labels) {                                                  /* shrink so the widest number fits its bar */
       ctx.font = '700 ' + fs + 'px ' + font;
-      var widest = 0;
-      for (var w0 = 0; w0 < n; w0++) widest = Math.max(widest, ctx.measureText(nf(a[w0])).width);
-      if (widest > slot - 2) fs = Math.max(8, fs * (slot - 2) / widest);
+      var widest = 0, src = L.frames.length ? L.frames[0].a : a;    /* every value ever shown (bars, key, copies) comes from the input */
+      for (var w0 = 0; w0 < src.length; w0++) widest = Math.max(widest, ctx.measureText(nf(src[w0])).width);
+      if (widest > slot - 2) {
+        var fit = fs * (slot - 2) / widest;
+        vals = fit >= 7;                                           /* very long numbers: no value labels instead of overlapping text */
+        fs = Math.max(8, fit);
+      }
     }
     var topPad = labels ? fs + 8 : 8, idxH = labels ? 15 : 0, ptrH = labels ? 29 : 8;
     var avail = H - topPad - idxH - ptrH - 4;
@@ -487,7 +499,7 @@
       }
       if (labels) {
         ctx.font = '700 ' + fs + 'px ' + font; ctx.fillStyle = hollow ? COL['--muted'] : COL['--text'];
-        ctx.fillText(nf(a[i]), x + bw / 2, y - 5);
+        if (vals) ctx.fillText(nf(a[i]), x + bw / 2, y - 5);
         ctx.font = '400 ' + Math.min(12, fs) + 'px ' + font; ctx.fillStyle = COL['--muted'];
         ctx.fillText(String(i), x + bw / 2, base + 12);
       }
@@ -511,7 +523,7 @@
       var auxBar = function (idx, v, color, alpha) {
         var x2 = xOf(idx), h2 = hOf(v, auxH), y2 = aBase - h2;
         ctx.globalAlpha = alpha; ctx.fillStyle = color; barPath(ctx, x2, y2, bw, h2); ctx.fill();
-        if (labels) { ctx.font = '700 ' + fs + 'px ' + font; ctx.fillStyle = COL['--text']; ctx.fillText(nf(v), x2 + bw / 2, y2 - 4); }
+        if (vals) { ctx.font = '700 ' + fs + 'px ' + font; ctx.fillStyle = COL['--text']; ctx.fillText(nf(v), x2 + bw / 2, y2 - 4); }
         ctx.globalAlpha = 1;
       };
       var X = f.aux;
@@ -542,7 +554,7 @@
     });
     var fa = frameOf(lanes[0]), on = Array.isArray(fa.line) ? fa.line : [fa.line];
     EDU.$$('#code .ln').forEach(function (el) { el.classList.toggle('on', on.indexOf(+el.getAttribute('data-ln')) >= 0); });
-    renderVars(fa.vv);
+    renderVars(fa.vv, fa.a);
     var scrub = EDU.$('#scrub');
     scrub.max = String(Math.max(1, total)); scrub.value = String(pos);
     EDU.$('#st-step').textContent = EDU.fmt(pos) + ' / ' + EDU.fmt(total);
@@ -556,8 +568,16 @@
     if (!st.compare || pos < total || total === 0) { box.hidden = true; return; }
     var A = lanes[0].frames[lanes[0].frames.length - 1], B = lanes[1].frames[lanes[1].frames.length - 1];
     var nA = EDU.t('algo_' + lanes[0].algo), nB = EDU.t('algo_' + lanes[1].algo);
-    if (A.C === B.C) box.textContent = EDU.t('race_tie', { x: EDU.fmt(A.C) });
-    else box.textContent = EDU.t('race_win', A.C < B.C ? { name: nA, x: EDU.fmt(A.C), y: EDU.fmt(B.C) } : { name: nB, x: EDU.fmt(B.C), y: EDU.fmt(A.C) });
+    var txt = A.C === B.C ? EDU.t('race_tie', { x: EDU.fmt(A.C) })
+      : EDU.t('race_win', A.C < B.C ? { name: nA, x: EDU.fmt(A.C), y: EDU.fmt(B.C) } : { name: nB, x: EDU.fmt(B.C), y: EDU.fmt(A.C) });
+    /* The lanes move one step per tick, so the lane with fewer steps shows "Done!" first. When that is
+       not the comparison winner (e.g. quick vs merge), say why, so the class is not confused. */
+    var sA = lanes[0].frames.length - 1, sB = lanes[1].frames.length - 1;
+    var firstA = sA < sB, winA = A.C < B.C;
+    if (sA !== sB && (A.C === B.C || firstA !== winA)) {
+      txt += ' ' + EDU.t('race_note', firstA ? { name: nA, a: EDU.fmt(sA), b: EDU.fmt(sB) } : { name: nB, a: EDU.fmt(sB), b: EDU.fmt(sA) });
+    }
+    box.textContent = txt;
     box.hidden = false;
   }
 
@@ -629,7 +649,8 @@
     EDU.$('#size-out').textContent = EDU.fmt(st.arr.length);
     EDU.$('#speed').value = String(st.speed);
     var cm = EDU.$('#custom-msg');
-    cm.textContent = customNote ? EDU.t(customNote.key, customNote.vars) : '';
+    var cvars = customNote && customNote.list ? { list: customNote.list.map(function (s) { return document.documentElement.dir === 'rtl' ? '⁦' + s + '⁩' : s; }).join(', ') } : (customNote && customNote.vars);
+    cm.textContent = customNote ? EDU.t(customNote.key, cvars) : '';
     cm.className = 'sv-custom-msg small' + (customNote ? ' ' + customNote.cls : '');
     renderPlay();
     renderAbout();
@@ -705,7 +726,7 @@
     var r = parseNums(customIn.value);
     store.set('custom', customIn.value);
     if (r.bad.length) {
-      customNote = { key: 'custom_err_bad', vars: { list: r.bad.slice(0, 5).join(', ') }, cls: 'bad' };
+      customNote = { key: 'custom_err_bad', list: r.bad.slice(0, 5).map(function (s) { return s.length > 24 ? s.slice(0, 23) + '…' : s; }), cls: 'bad' };
       renderStatic(); return;
     }
     if (r.nums.length < CUSTOM_MIN) { customNote = { key: 'custom_err_empty', vars: null, cls: 'bad' }; renderStatic(); return; }

@@ -61,13 +61,18 @@
   function save() { store.set('state', st); }
   function saveScore() { store.set('score', score); }
 
-  /* A shared link (#x=...) opens the expression lab with that expression. */
-  (function readHash() {
+  /* A shared link (#x=...) opens the expression lab with that expression. The expression is saved and the
+     #x=... part is removed from the address, so a later reload keeps the student's own edits instead of
+     bringing the shared expression back. Returns true when a link was applied. */
+  function readHash() {
     var m = /[#&]x=([A-Za-z0-9_-]+)/.exec(location.hash || '');
-    if (!m) return;
-    var o = EDU.unpack(m[1]);
-    if (o && typeof o.e === 'string' && o.e.length <= L.MAXLEN) { st.expr = o.e; st.tab = 'expr'; }
-  })();
+    if (!m) return false;
+    var o = EDU.unpack(m[1]), ok = !!(o && typeof o.e === 'string' && o.e.length <= L.MAXLEN);
+    if (ok) { st.expr = o.e; st.tab = 'expr'; save(); }
+    try { history.replaceState(history.state, '', location.href.split('#')[0]); } catch (e) { }
+    return ok;
+  }
+  readHash();
 
   EDU.init({ slug: 'logic-gates', title: 'app_title' });
 
@@ -176,7 +181,7 @@
   function envOf(vs, arr) { var e = {}; vs.forEach(function (v, i) { e[v] = arr[i] ? 1 : 0; }); return e; }
   function toggleGateInput(i) {
     var n = st.gate === 'not' ? 1 : st.nIn;
-    if (i >= n) return;
+    if (!(i >= 0 && i < n)) return;
     keepFocus(function () { st.gIn[i] = st.gIn[i] ? 0 : 1; save(); renderGates(); });
   }
   onActivate($('#gx-svg'), '[data-sw]', function (n) { toggleGateInput(+n.getAttribute('data-sw')); });
@@ -271,16 +276,22 @@
       wrap.appendChild(el('button', { type: 'button', class: 'chip mono', dir: 'ltr', text: ex, onclick: function () { st.expr = ex; $('#expr-in').value = ex; save(); renderExpr(); } }));
     });
   })();
-  /* symbol keypad: inserts at the cursor (handy on phones, where · ⊕ ' are hard to type) */
+  /* symbol keypad: inserts at the cursor (handy on phones, where · ⊕ ' are hard to type).
+     Pressing a key must not move focus into the text box: on phones and smartboards that pops up the
+     on-screen keyboard, which then covers this keypad. mousedown.preventDefault keeps focus where it was. */
   $$('#x-keys button').forEach(function (b) {
+    b.addEventListener('mousedown', function (e) { if ($('#expr-in') === document.activeElement) e.preventDefault(); });
     b.addEventListener('click', function () {
       var inp = $('#expr-in'), ins = b.getAttribute('data-ins');
+      clearTimeout(exprTimer);
       var s = inp.selectionStart == null ? inp.value.length : inp.selectionStart, e = inp.selectionEnd == null ? s : inp.selectionEnd;
       if (ins === '⌫') {
         if (s === e && s > 0) s--;
         inp.value = inp.value.slice(0, s) + inp.value.slice(e); e = s;
-      } else { inp.value = inp.value.slice(0, s) + ins + inp.value.slice(e); s = e = s + ins.length; }
-      inp.focus();
+      } else {
+        if (inp.value.length - (e - s) + ins.length > +inp.maxLength && inp.maxLength > 0) return;
+        inp.value = inp.value.slice(0, s) + ins + inp.value.slice(e); s = e = s + ins.length;
+      }
       try { inp.setSelectionRange(e, e); } catch (err) { }
       st.expr = inp.value; save(); renderExpr();
     });
@@ -289,7 +300,14 @@
     var url = location.href.split('#')[0] + '#x=' + EDU.pack({ e: st.expr });
     EDU.copy(url);
   });
-  $('#x-print').addEventListener('click', function () { window.print(); });
+  $('#x-print').addEventListener('click', function () { document.body.classList.remove('print-ws'); window.print(); });
+  /* a second shared link pasted into the same tab only changes the #hash (no reload) */
+  window.addEventListener('hashchange', function () {
+    if (!readHash()) return;
+    $('#expr-in').value = st.expr;
+    renderExpr();
+    showTab('expr');
+  });
 
   /* ----- equivalence ----- */
   var eqTimer = null;
@@ -527,7 +545,7 @@
         tb.appendChild(el('tr', null, q.vars.map(function (vv) { return el('td', { class: 'in ' + (e[vv] ? 'one' : 'zero'), text: String(e[vv]) }); }), el('td', { class: 'o' }, btn)));
       });
       var table = el('table', { class: 'table tt q-tt', dir: 'ltr', id: 'q-table' }, el('thead', null, head), tb);
-      box.appendChild(el('div', { class: 'scroll-x' }, table));
+      box.appendChild(el('div', { class: 'scroll-x tt-wrap', dir: 'ltr' }, table));
       box.appendChild(el('p', { class: 'muted small', text: t('tap_cells') }));
       box.appendChild(el('div', { class: 'row' },
         el('button', { type: 'button', class: 'btn btn-primary', id: 'q-check', i18n: 'check', disabled: P.shown ? true : null, onclick: checkFill }),
@@ -542,7 +560,7 @@
       });
     } else {
       box.appendChild(el('p', { class: 'q-ask', text: t('name_q') }));
-      box.appendChild(el('div', { class: 'scroll-x' }, ttTable(q.vars, [{ head: 'Y', vals: q.answer, out: true }])));
+      box.appendChild(el('div', { class: 'scroll-x tt-wrap', dir: 'ltr' }, ttTable(q.vars, [{ head: 'Y', vals: q.answer, out: true }])));
       var opts = q.n === 3 || st.level !== 'easy' ? ['and', 'or', 'nand', 'nor', 'xor', 'xnor'] : ['and', 'or', 'nand', 'nor'];
       var row = el('div', { class: 'row name-opts', role: 'group', 'aria-label': t('name_q') });
       opts.forEach(function (g) {
@@ -660,10 +678,18 @@
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (tg && tg.isContentEditable)) return;
     var k = String(e.key || '').toUpperCase();
     if (k.length !== 1 || 'ABCDE'.indexOf(k) < 0) return;
-    if (st.tab === 'gates') toggleGateInput('ABC'.indexOf(k));
-    else if (st.tab === 'expr') toggleVar(k);
-    else if (st.tab === 'adders') flipAdder(k.toLowerCase());
-    else return;
+    /* only swallow the key when it really flips an input on the visible tab */
+    if (st.tab === 'gates') {
+      var gi = 'ABC'.indexOf(k);
+      if (gi < 0 || gi >= (st.gate === 'not' ? 1 : st.nIn)) return;
+      toggleGateInput(gi);
+    } else if (st.tab === 'expr') {
+      if (!X.ast || X.vars.indexOf(k) < 0) return;
+      toggleVar(k);
+    } else if (st.tab === 'adders') {
+      if (!(st.adder === 'half' ? 'AB' : st.adder === 'full' ? 'ABC' : '').match(k)) return;
+      flipAdder(k.toLowerCase());
+    } else return;
     e.preventDefault();
   });
 

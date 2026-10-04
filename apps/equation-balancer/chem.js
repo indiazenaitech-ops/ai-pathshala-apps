@@ -40,6 +40,7 @@
   var SUPD = '⁰¹²³⁴⁵⁶⁷⁸⁹';
   function normalize(s) {
     s = String(s == null ? '' : s);
+    s = s.replace(/[​-‍⁠﻿]/g, '');   // invisible joiners (pasted text, or the "->" kept unbroken in help text)
     s = s.replace(/[₀-₉]/g, function (c) { return String(c.charCodeAt(0) - 0x2080); });
     s = s.replace(/[⁰¹²³⁴-⁹⁺⁻]+/g, function (m) {
       return '^' + m.replace(/[\s\S]/g, function (c) {
@@ -52,6 +53,7 @@
     s = s.replace(/[−–—－]/g, '-').replace(/＋/g, '+').replace(/[↑↓]/g, '');
     s = s.replace(/[·•∙⋅・*]/g, '·');
     s = s.replace(/\s+/g, ' ').trim();
+    s = s.replace(/[\s.।۔]+$/, '');      // a full stop typed at the end of the equation (".", Hindi "।", Urdu "۔")
     return s;
   }
 
@@ -66,8 +68,10 @@
       else if (ch === '}') depth = Math.max(0, depth - 1);
       if (ch === '+' && depth === 0) {
         var touching = buf.length > 0 && !/\s$/.test(buf);
-        var nextCh = side.slice(i + 1).replace(/^\s+/, '').charAt(0);
-        var isCharge = /\^\d*$/.test(buf) || (touching && (nextCh === '' || nextCh === '+'));
+        var after = side.slice(i + 1);
+        var nextCh = after.replace(/^\s+/, '').charAt(0);
+        /* "Na+", "Ca++", "Fe^3+", and "Ag+(aq)" / "Na+ (aq)" (NCERT style: a state right after the charge) */
+        var isCharge = /\^\d*$/.test(buf) || (touching && (nextCh === '' || nextCh === '+' || /^\s*\(\s*(s|l|g|aq)\s*\)/i.test(after)));
         if (!isCharge) { out.push(buf); buf = ''; continue; }
       }
       buf += ch;
@@ -81,7 +85,23 @@
     if ((m = /\^\{?(\d*)([+-])\}?$/.exec(s))) { sign = m[2] === '-' ? -1 : 1; return { q: sign * (m[1] ? parseInt(m[1], 10) : 1), rest: s.slice(0, m.index) }; }
     if ((m = /\^\{?([+-])(\d+)\}?$/.exec(s))) { sign = m[1] === '-' ? -1 : 1; return { q: sign * parseInt(m[2], 10), rest: s.slice(0, m.index) }; }
     if ((m = /\{(\d*)([+-])\}$/.exec(s))) { sign = m[2] === '-' ? -1 : 1; return { q: sign * (m[1] ? parseInt(m[1], 10) : 1), rest: s.slice(0, m.index) }; }
-    if ((m = /(\++|-+)$/.exec(s))) { sign = m[1].charAt(0) === '-' ? -1 : 1; return { q: sign * m[1].length, rest: s.slice(0, m.index) }; }
+    if ((m = /(\++|-+)$/.exec(s))) {
+      sign = m[1].charAt(0) === '-' ? -1 : 1;
+      var rest = s.slice(0, m.index), q = sign * m[1].length;
+      /* Plain "Fe3+", "Zn2+", "O2-", "SO42-", "Cr2O72-": the digit before a single sign is the size of the charge when
+         (a) the formula is one element symbol (monatomic ion: Fe3+ = Fe³⁺, O2- = O²⁻), or
+         (b) it ends in 2+ digits whose last digit is 2-9 (SO42- = SO₄²⁻, PO43- = PO₄³⁻, Hg22+ = Hg₂²⁺).
+         Otherwise the digit is a subscript (NH4+ = NH₄⁺, MnO4- = MnO₄⁻, NO3- = NO₃⁻). */
+      var compact = rest.replace(/\s+/g, '');
+      var dm = m[1].length === 1 ? /(\d+)$/.exec(compact) : null;
+      if (dm) {
+        var digits = dm[1], lastD = +digits.charAt(digits.length - 1), head = compact.slice(0, dm.index);
+        if (lastD >= 2 && (digits.length >= 2 || (/^[A-Z][a-z]?$/.test(head) && SYM[head]))) {
+          return { q: sign * lastD, rest: head + digits.slice(0, -1), plain: true };
+        }
+      }
+      return { q: q, rest: rest };
+    }
     return null;
   }
 
@@ -143,17 +163,40 @@
       buf += c;
     }
     parts.push(buf);
-    parts.forEach(function (p, k) {
-      var mult = 1, m = /^(\d+)/.exec(p);
+    /* multiplier of each part: 5 (CuSO4·5H2O), and also halves like plaster of Paris CaSO4·½H2O / CaSO4·1/2H2O */
+    var FR = { '½': [1, 2], '¼': [1, 4], '¾': [3, 4], '⅓': [1, 3], '⅔': [2, 3] };
+    var items = parts.map(function (p, k) {
+      var num = 1, den = 1, m;
+      if ((m = /^(\d*)([½¼¾⅓⅔])/.exec(p))) {
+        var fr = FR[m[2]], w = m[1] ? parseInt(m[1], 10) : 0;
+        num = w * fr[1] + fr[0]; den = fr[1];
+      } else if ((m = /^(\d+)\/(\d+)/.exec(p))) {
+        num = parseInt(m[1], 10); den = parseInt(m[2], 10);
+      } else if ((m = /^(\d+)/.exec(p))) {
+        num = parseInt(m[1], 10);
+      }
       if (m) {
         if (k === 0) throw new Err('err_formula', { f: raw });
-        mult = parseInt(m[1], 10); p = p.slice(m[1].length);
-        if (mult < 1 || mult > 999) throw new Err('err_formula', { f: raw });
+        p = p.slice(m[0].length);
+        if (num < 1 || den < 1 || den > 12 || num / den > 999) throw new Err('err_formula', { f: raw });
       }
       if (!p) throw new Err('err_formula', { f: raw });
-      var g = group(p, 0, null, raw);
+      return { p: p, num: num, den: den };
+    });
+    /* a fractional multiplier: count whole units instead, CaSO4·½H2O → (CaSO4)2·H2O (same substance, written the standard way) */
+    var L = items.reduce(function (a, it) { var x = a, y = it.den; while (y) { var t = x % y; x = y; y = t; } return a / x * it.den; }, 1);
+    items.forEach(function (it, k) {
+      var mult = it.num * (L / it.den);
+      if (mult > 9999) throw new Err('err_formula', { f: raw });
+      var g = group(it.p, 0, null, raw);
       g.order.forEach(function (el) { addTo(acc, el, g.counts[el] * mult); });
     });
+    if (L > 1) {
+      acc.display = items.map(function (it, k) {
+        var mult = it.num * (L / it.den);
+        return k === 0 ? '(' + it.p + ')' + L : (mult > 1 ? mult : '') + it.p;
+      }).join('·');
+    }
     return acc;
   }
 
@@ -163,10 +206,12 @@
     var s = raw.trim();
     if (!s) throw new Err('err_plus');
     var sp = { side: side, raw: s, coef: null, charge: 0, state: '', electron: false, formula: '', counts: {}, order: [], atoms: 0 };
+    if (/^-\s*\d/.test(s) || /^[½¼¾⅓⅔]/.test(s)) throw new Err('err_coef');          // -2H2, ½O2
     var m = /^(\d+)\s*/.exec(s);
     if (m) {
       sp.coef = parseInt(m[1], 10); s = s.slice(m[0].length);
       if (!(sp.coef >= 1) || sp.coef > 99999) throw new Err('err_coef');
+      if (/^[\/.,]\s*\d/.test(s) || /^[½¼¾⅓⅔]/.test(s)) throw new Err('err_coef');   // 1/2O2, 1.5O2
     }
     var st = STATE_RE.exec(s);
     if (st) { sp.state = st[1].toLowerCase(); s = s.slice(0, st.index); }
@@ -181,7 +226,7 @@
       return sp;
     }
     var f = parseFormula(s, raw.trim());
-    sp.formula = s.replace(/\./g, '·');
+    sp.formula = f.display || s.replace(/\./g, '·');
     sp.counts = f.counts; sp.order = f.order;
     sp.atoms = f.order.reduce(function (a, el) { return a + f.counts[el]; }, 0);
     return sp;

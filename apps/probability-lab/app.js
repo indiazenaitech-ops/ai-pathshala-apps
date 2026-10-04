@@ -123,18 +123,25 @@
     });
   }
   var saveTimer = null;
+  function flush() {
+    clearTimeout(saveTimer);
+    saveTimer = null;
+    store.set('state', S);
+    EXPS.forEach(function (id) {
+      var q = seqs[id];
+      if (!q.dirty) return;
+      q.dirty = false;
+      if (q.len) store.set('seq_' + id, encodeSeq(q)); else store.remove('seq_' + id);
+    });
+  }
   function save() {
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(function () {
-      store.set('state', S);
-      EXPS.forEach(function (id) {
-        var q = seqs[id];
-        if (!q.dirty) return;
-        q.dirty = false;
-        if (q.len) store.set('seq_' + id, encodeSeq(q)); else store.remove('seq_' + id);
-      });
-    }, 250);
+    saveTimer = setTimeout(flush, 250);
   }
+  /* a reload or closed tab right after a run must not lose the last 250 ms of changes */
+  function flushPending() { if (saveTimer !== null) flush(); }
+  window.addEventListener('pagehide', flushPending);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushPending(); });
 
   /* ---------------- experiment models ---------------- */
   function colName(i) { return t(BALLS[i].k); }
@@ -248,13 +255,15 @@
   /* describe one raw outcome in words (for "Trial n: ...") */
   function describe(id, raw) {
     var c = S[id];
-    if (id === 'coin') return coinFaces(raw, c.n).join(' ') + (c.n > 1 ? '  →  ' + t('heads_n', { n: popcount(raw) }) : '');
+    var rtl = isRtl();
+    if (id === 'coin') return coinFaces(raw, c.n).join(' ') + (c.n > 1 ? (rtl ? '  ←  ' : '  →  ') + t('heads_n', { n: popcount(raw) }) : '');
     if (id === 'die') return String(raw + 1);
-    if (id === 'dice') { var a = Math.floor(raw / 6) + 1, b = raw % 6 + 1; return a + ' + ' + b + ' = ' + (a + b); }
+    /* maths stays left-to-right inside Urdu sentences (else "3 + 4 = 7" shows as "7 = 4 + 3") */
+    if (id === 'dice') { var a = Math.floor(raw / 6) + 1, b = raw % 6 + 1; return iso(a + ' + ' + b + ' = ' + (a + b)); }
     if (id === 'spinner') return c.sectors[raw] ? sectorName(c.sectors[raw]) : '';
-    if (id === 'bag') return c.draws === 1 ? colName(raw) : colName(Math.floor(raw / 4)) + ', ' + colName(raw % 4);
+    if (id === 'bag') return c.draws === 1 ? colName(raw) : colName(Math.floor(raw / 4)) + (rtl ? '، ' : ', ') + colName(raw % 4);
     var su = SUITS[Math.floor(raw / 13)], rk = raw % 13;
-    return RANKS[rk] + su.s + ' · ' + t('card_name', { r: rankName(rk), s: t(su.k) });
+    return iso(RANKS[rk] + su.s) + ' · ' + t('card_name', { r: rankName(rk), s: t(su.k) });
   }
 
   /* ---------------- quick events ---------------- */
@@ -523,12 +532,14 @@
     var r = c.r.length === 13 ? t('any') : c.r.length ? c.r.map(function (i) { return RANKS[i]; }).join(' ') : '—';
     return t('ev_cards_desc', { s: iso(s), r: iso(r) });
   }
+  /* event as plain text for the CSV row "Event E: …" (no bidi control characters in a spreadsheet) */
   function eventText(m) {
     var id = S.exp, c = S[id];
-    if (id === 'cards') return 'E: ' + cardsText();
+    if (id === 'cards') return plain(cardsText());
     var labs = m.cats.filter(function (ct) { return c.ev.indexOf(ct.key) >= 0; }).map(function (ct) { return ct.label; });
-    return 'E = { ' + labs.join(', ') + ' }';
+    return '{ ' + labs.join(', ') + ' }';
   }
+  function plain(s) { return String(s).replace(/[⁦-⁩]/g, ''); }
 
   function renderPE(m, n, a) {
     var box = $('#pe'), id = S.exp, p = S[id].preset ? findPreset(id) : null;
@@ -672,6 +683,9 @@
   function setRunDisabled() {
     var m = curModel(), full = seqs[S.exp].len >= MAX_TRIALS;
     RUNS.forEach(function (k) { var b = $('#run-' + k); if (b) b.disabled = busy || !!m.invalid || full; });
+    /* say why the run buttons are greyed out once the trial limit is reached */
+    var note = $('#cap-note');
+    if (note) { note.hidden = !full; note.textContent = full ? t('cap_reached', { n: fmtN(MAX_TRIALS) }) : ''; }
   }
   function run(k) {
     if (busy) return;
@@ -688,12 +702,15 @@
     }
     busy = true; setRunDisabled();
     var done = 0, tok = animToken;
+    /* a stopped run (reset, tab or set-up change) must not touch `busy`: a new run may already own it */
     (function next() {
-      if (done >= k || tok !== animToken || S.exp !== id) { busy = false; save(); setRunDisabled(); return; }
+      if (tok !== animToken) return;
+      if (done >= k || S.exp !== id) { busy = false; save(); setRunDisabled(); return; }
       var raw = draw();
       playAnim(id, raw, k === 1).then(function (ok) {
-        if (!ok || S.exp !== id) { busy = false; setRunDisabled(); return; }
+        if (!ok || tok !== animToken || S.exp !== id) return;
         pushRaw(id, raw); done++;
+        save();   /* keep every finished trial, even if the page is reloaded in the middle of ×10 */
         renderResults();
         if (done < k) setTimeout(next, 120); else next();
       });
@@ -751,7 +768,11 @@
     var label = t(heads ? 'h_short' : 't_short');
     g.fillStyle = heads ? '#5c3d00' : '#2f3a45';
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    label = fitText(g, label, r * 1.35, Math.round(r * (label.length > 2 ? 0.48 : 0.8)), '800', fam);
+    /* one text size for both faces, so Heads and Tails look alike (e.g. चित and पट) */
+    var hs = t('h_short'), ts = t('t_short'), fs = Math.round(r * 0.8);
+    g.font = '800 ' + fs + 'px ' + fam;
+    while (fs > 9 && Math.max(g.measureText(hs).width, g.measureText(ts).width) > r * 1.3) { fs--; g.font = '800 ' + fs + 'px ' + fam; }
+    label = fitText(g, label, r * 1.35, fs, '800', fam);
     g.fillText(label, 0, r * 0.04);
     g.restore();
   }
@@ -844,6 +865,16 @@
     var secs = S.spinner.sectors, tot = secs.reduce(function (a, s) { return a + s.size; }, 0), c = 0;
     return secs.map(function (s) { var a = c; c += TAU * s.size / tot; return [a, c]; });
   }
+  /* rotation that puts the pointer (at the top) inside part `raw`; keeps `rot` if it already does.
+     Needed after fast runs and reloads, where the wheel is not animated to the last result. */
+  function aimSpinner(raw, rot) {
+    var sp = spinnerSpans()[raw];
+    if (!sp) return rot;
+    var under = mod(-Math.PI / 2 - rot, TAU), pad = Math.min(0.08, (sp[1] - sp[0]) * 0.1);
+    if (under >= sp[0] + pad && under <= sp[1] - pad) return rot;
+    return mod(-Math.PI / 2 - (sp[0] + sp[1]) / 2, TAU);
+  }
+  function isRtl() { return document.documentElement.dir === 'rtl'; }
   function bagOrder(cn) {
     var balls = [], seed = 7 + cn[0] * 31 + cn[1] * 17 + cn[2] * 13 + cn[3] * 11;
     cn.forEach(function (k, i) { for (var j = 0; j < k; j++) balls.push(i); });
@@ -892,10 +923,13 @@
     var id = S.exp, q = seqs[id];
     var raw = A ? A.raw : (q.len ? q.buf[q.len - 1] : null);
     var p = A ? A.p : 1, moving = A && p < 1;
+    cv.dataset.raw = raw === null ? '' : raw;
+    cv.dataset.pointer = '';
     if (id === 'coin') {
-      var n = S.coin.n, r = Math.min(H * 0.28, (W - 30) / (n * 2.6)), gap = r * 2.6;
+      /* coin 1 is the first face named in the text: leftmost in LTR languages, rightmost in Urdu */
+      var n = S.coin.n, r = Math.min(H * 0.28, (W - 30) / (n * 2.6)), gap = r * 2.6, dirX = isRtl() ? -1 : 1;
       for (var i = 0; i < n; i++) {
-        var x = W / 2 + (i - (n - 1) / 2) * gap, y = H / 2 - 6, heads = raw === null ? true : !!((raw >> i) & 1), sx = 1, face = heads, lift = 0;
+        var x = W / 2 + dirX * (i - (n - 1) / 2) * gap, y = H / 2 - 6, heads = raw === null ? true : !!((raw >> i) & 1), sx = 1, face = heads, lift = 0;
         if (moving) {
           var ph = p * TAU * (A.single ? 4 + i : 2);
           sx = Math.cos(ph); face = sx >= 0 ? heads : !heads;
@@ -927,7 +961,12 @@
         g.fillText(vals[0] + ' + ' + vals[1] + ' = ' + (vals[0] + vals[1]), W / 2, H - 22);
       }
     } else if (id === 'spinner') {
+      if (!A && raw !== null) spinRot = aimSpinner(raw, spinRot);
       var R = H / 2 - 22, rot2 = moving ? A.from + (A.to - A.from) * ease(p) : (A ? A.to : spinRot);
+      if (!moving) {   /* which part the pointer shows (read by the interaction test) */
+        var under = mod(-Math.PI / 2 - rot2, TAU);
+        cv.dataset.pointer = spinnerSpans().findIndex(function (sp) { return under >= sp[0] && under < sp[1]; });
+      }
       drawSpinner(g, W / 2, H / 2 + 10, R, rot2, (!moving && raw !== null) ? raw : -1, fam);
     } else if (id === 'bag') {
       var c = S.bag, cn = c.counts, N = cn[0] + cn[1] + cn[2] + cn[3];
@@ -942,9 +981,9 @@
       });
       if (raw !== null) {
         var drawn = c.draws === 1 ? [raw] : [Math.floor(raw / 4), raw % 4];
-        var rB = Math.min(26, H * 0.11), tx0 = W * (W < 420 ? 0.76 : 0.72);
+        var rB = Math.min(26, H * 0.11), tx0 = W * (W < 420 ? 0.76 : 0.72), dirB = isRtl() ? -1 : 1;
         drawn.forEach(function (ci, k) {
-          var tx = tx0 + (k - (drawn.length - 1) / 2) * rB * 2.7, ty = H * 0.45, x = tx, y = ty, rr2 = rB;
+          var tx = tx0 + dirB * (k - (drawn.length - 1) / 2) * rB * 2.7, ty = H * 0.45, x = tx, y = ty, rr2 = rB;
           if (moving) {
             var p0 = drawn.length === 1 ? 0 : k * 0.5, pp = EDU.clamp((p - p0) / (drawn.length === 1 ? 1 : 0.5), 0, 1);
             if (pp <= 0) return;
@@ -1073,9 +1112,11 @@
       var c = ct.raws.reduce(function (s, r) { return s + q.counts[r]; }, 0), g = gcd(ct.w, m.D);
       rows.push([ct.label, c, n ? r4(c / n) : '', (ct.w / g) + '/' + (m.D / g) + ' (' + r4(ct.w / m.D) + ')', n ? r4(c / n - ct.w / m.D) : '']);
     });
-    rows.push([t('total'), n, n ? 1 : '', 1, '']);
+    rows.push([t('total'), n, n ? 1 : '', m.D ? 1 : '', '']);
     var g2 = gcd(m.fav, m.D);
-    rows.push([t('row_event') + ': ' + eventText(m), a, n ? r4(a / n) : '', (m.fav / g2) + '/' + (m.D / g2) + ' (' + r4(m.fav / m.D) + ')', n ? r4(a / n - m.fav / m.D) : '']);
+    rows.push([t('row_event') + ': ' + eventText(m), a, n ? r4(a / n) : '', m.D ? (m.fav / g2) + '/' + (m.D / g2) + ' (' + r4(m.fav / m.D) + ')' : '',
+      n && m.D ? r4(a / n - m.fav / m.D) : '']);
+    rows = rows.map(function (r) { return r.map(function (v) { return typeof v === 'string' ? plain(v) : v; }); });
     EDU.download(SLUG + '-' + id + '.csv', EDU.csv.stringify(rows), 'text/csv');
   }
 

@@ -117,11 +117,13 @@
 
   function tallyTable(eq, coefs, id) {
     var rows = CH.tally(eq, coefs);
-    var h = '<table class="table eb-atoms" id="' + id + '"><thead><tr><th>' + esc(t('col_element')) + '</th><th>' + esc(t('col_left')) +
-      '</th><th>' + esc(t('col_right')) + '</th><th class="eb-okcol">' + esc(t('col_ok')) + '</th></tr></thead><tbody>';
+    /* The table is always laid out left-to-right (also in Urdu) so the "Left side (reactants)" column sits on the left,
+       like the reactants in the equation. Header text keeps its own direction (dir="auto"). */
+    var h = '<table class="table eb-atoms" dir="ltr" id="' + id + '"><thead><tr><th dir="auto">' + esc(t('col_element')) + '</th><th dir="auto">' + esc(t('col_left')) +
+      '</th><th dir="auto">' + esc(t('col_right')) + '</th><th class="eb-okcol" dir="auto">' + esc(t('col_ok')) + '</th></tr></thead><tbody>';
     rows.forEach(function (r) {
       h += '<tr class="' + (r.ok ? 'eb-yes' : 'eb-no') + '" data-el="' + esc(r.isCharge ? 'charge' : r.label) + '" data-ok="' + (r.ok ? 1 : 0) + '" data-l="' + esc(String(r.l)) + '" data-r="' + esc(String(r.r)) + '">' +
-        '<th scope="row" class="eb-elcell">' + rowLabel(r) + '</th>' +
+        '<th scope="row" class="eb-elcell" dir="auto">' + rowLabel(r) + '</th>' +
         '<td><b class="eb-n">' + esc(countText(r.l)) + '</b><small class="eb-parts" dir="ltr">' + esc(partsText(r.lp, r.isCharge)) + '</small></td>' +
         '<td><b class="eb-n">' + esc(countText(r.r)) + '</b><small class="eb-parts" dir="ltr">' + esc(partsText(r.rp, r.isCharge)) + '</small></td>' +
         '<td class="eb-okcol"><span class="eb-mark ' + (r.ok ? 'ok' : 'bad') + '" aria-label="' + esc(r.ok ? t('yes') : t('no')) + '">' + (r.ok ? '✓' : '✗') + '</span></td></tr>';
@@ -174,7 +176,12 @@
     var vars = {};
     Object.keys(err.vars || {}).forEach(function (k) { vars[k] = err.vars[k]; });
     if (err.idx && eq) vars.f = err.idx.map(function (j) { return CH.speciesText(eq.species[j]); }).join(', ');
-    return t(err.key, vars);
+    return keepArrows(t(err.key, vars));
+  }
+  /* "->" in help text must not wrap between "-" and ">" (a line may break after a hyphen): glue it with a word joiner */
+  function keepArrows(s) { return String(s).replace(/->/g, '-⁠>'); }
+  function fixArrows() {
+    $$('[data-i18n]').forEach(function (el) { if (el.textContent.indexOf('->') >= 0) el.textContent = keepArrows(el.textContent); });
   }
 
   function renderResult() {
@@ -308,13 +315,24 @@
   var prog = store.get('prog', {});
   if (!prog || typeof prog !== 'object') prog = {};
   var pi = EDU.clamp(parseInt(store.get('pi', 0), 10) || 0, 0, REACTIONS.length - 1);
-  var pvals = {};      // typed numbers per reaction (this session)
+  var pvals = loadVals(); // typed numbers per reaction (kept on this device, so a reload does not wipe a half-done answer)
   var pfb = {};        // feedback per reaction: { key, vars, result }
   var ptally = {};     // show tally table per reaction
   var ptype = {};      // type answer per reaction: { pick, ok }
   var phint = {};      // hint level per reaction
   var phinted = {};    // inputs filled by hints: { j: true }
 
+  function loadVals() {
+    var v = store.get('vals', {}), out = {};
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return out;
+    Object.keys(v).forEach(function (i) {
+      var n = parseInt(i, 10);
+      if (!(n >= 0 && n < REACTIONS.length) || !Array.isArray(v[i])) return;
+      out[n] = v[i].slice(0, REACTIONS[n].ans.length).map(function (x) { return /^\d{1,2}$/.test(String(x)) ? String(x) : ''; });
+    });
+    return out;
+  }
+  function saveVals() { store.set('vals', pvals); }
   function P(i) { if (!prog[i]) prog[i] = {}; return prog[i]; }
   function saveProg() { store.set('prog', prog); }
   function solvedCount() { return REACTIONS.filter(function (R, i) { return prog[i] && prog[i].s; }).length; }
@@ -331,6 +349,7 @@
         inp.value = inp.value.replace(/[^0-9]/g, '').slice(0, 2);
         if (!pvals[pi]) pvals[pi] = [];
         pvals[pi][j] = inp.value;
+        saveVals();
         inp.classList.remove('eb-hinted');
         if (phinted[pi]) delete phinted[pi][j];
         if (pfb[pi] || ptally[pi]) { pfb[pi] = null; renderPractice(false); }
@@ -367,7 +386,7 @@
 
     var fb = $('#pr-fb'), f = pfb[pi];
     fb.textContent = f ? t(f.key, f.vars) : '';
-    fb.className = 'eb-fb' + (f ? ' ' + (f.result === 'ok' ? 'ok' : f.result === 'shown' || f.result === 'hint' ? 'info' : 'bad') : '');
+    fb.className = 'eb-fb' + (f ? ' ' + (f.result === 'ok' || f.result === 'seen' ? 'ok' : f.result === 'shown' || f.result === 'hint' ? 'info' : 'bad') : '');
     if (f) fb.setAttribute('data-result', f.result); else fb.removeAttribute('data-result');
 
     var tw = $('#pr-tally');
@@ -433,9 +452,14 @@
     if (bal) {
       var k = CH.multipleOf(vals, R.ans);
       if (String(k) === '1') {
-        pfb[pi] = { key: 'fb_ok', result: 'ok' };
         var p = P(pi);
-        if (!p.s) { p.s = 1; p.h = phint[pi] || 0; saveProg(); }
+        if (!p.s && p.a) {
+          /* "Show answer" then "Check" must not count as solved */
+          pfb[pi] = { key: 'fb_ok_seen', result: 'seen' };
+        } else {
+          pfb[pi] = { key: 'fb_ok', result: 'ok' };
+          if (!p.s) { p.s = 1; p.h = phint[pi] || 0; saveProg(); }
+        }
       } else pfb[pi] = { key: 'fb_multiple', vars: { k: String(k) }, result: 'multiple' };
     } else {
       var bad = tl.filter(function (r) { return !r.ok; }).map(function (r) { return r.label; });
@@ -448,6 +472,7 @@
   function setInput(j, n) {
     if (!pvals[pi]) pvals[pi] = [];
     pvals[pi][j] = String(n);
+    saveVals();
     if (!phinted[pi]) phinted[pi] = {};
     phinted[pi][j] = true;
   }
@@ -462,6 +487,11 @@
     var wrongJ = [];
     vals.forEach(function (v, j) { if (v !== R.ans[j]) wrongJ.push(j); });
     if (!wrongJ.length) { pfb[pi] = { key: 'hint_done', result: 'hint' }; renderPractice(false); return; }
+    if (!bad.length) {
+      /* balanced but not the smallest numbers (e.g. 6, 8, 2, 8): say "divide by k" instead of changing a box */
+      var km = CH.multipleOf(vals, R.ans);
+      if (String(km) !== '0') { pfb[pi] = { key: 'fb_multiple', vars: { k: String(km) }, result: 'hint' }; renderPractice(false); return; }
+    }
     if (bad.length && level % 2 === 1) {
       var r = bad[0];
       var list = eq.species.filter(function (sp) { return sp.counts[r.label]; }).map(function (sp) { return CH.speciesText(sp); });
@@ -480,6 +510,7 @@
   function prShow() {
     var R = REACTIONS[pi];
     pvals[pi] = R.ans.map(String);
+    saveVals();
     phinted[pi] = {};
     var p = P(pi);
     if (!p.s) { p.a = 1; saveProg(); }
@@ -504,7 +535,7 @@
   $('#pr-reset').addEventListener('click', function () {
     if (!confirm(t('confirm_reset'))) return;
     prog = {}; pvals = {}; pfb = {}; ptally = {}; ptype = {}; phint = {}; phinted = {};
-    saveProg();
+    saveProg(); saveVals();
     goTo(0);
   });
 
@@ -534,6 +565,7 @@
 
   /* ---------------- start ---------------- */
   function renderAll() {
+    fixArrows();
     renderResult();
     renderPractice(true);
     $$('#keys .eb-key').forEach(function (b) { b.title = t('keys_aria'); });
@@ -543,6 +575,7 @@
   showTab(tab);
   if (input.value.trim()) runBalance(); else renderResult();
   renderPractice(true);
+  fixArrows();
   $$('#keys .eb-key').forEach(function (b) { b.title = t('keys_aria'); });
   EDU.onLang(renderAll);
 })();

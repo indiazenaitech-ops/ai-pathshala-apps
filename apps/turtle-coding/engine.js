@@ -53,9 +53,19 @@
   /* ---------------- text → blocks ---------------- */
   function ParseError(key, vars) { this.key = key; this.vars = vars || {}; }
 
+  /* Digits typed on an Indian-language keyboard (५०, ৫০, ੫੦, ௫௦, ۵۰ …) or full-width digits become 0-9. */
+  var DIGIT_ZEROS = [0x0660, 0x06F0, 0x0966, 0x09E6, 0x0A66, 0x0AE6, 0x0B66, 0x0BE6, 0x0C66, 0x0CE6, 0x0D66, 0xFF10];
+  function latinDigits(s) {
+    return s.replace(/[٠-٩۰-۹०-९০-৯੦-੯૦-૯୦-୯௦-௯౦-౯೦-೯൦-൯０-９]/g, function (ch) {
+      var c = ch.charCodeAt(0);
+      for (var k = 0; k < DIGIT_ZEROS.length; k++) if (c >= DIGIT_ZEROS[k] && c <= DIGIT_ZEROS[k] + 9) return String(c - DIGIT_ZEROS[k]);
+      return ch;
+    }).replace(/［/g, '[').replace(/］/g, ']');
+  }
+
   function tokenize(src) {
     var toks = [];
-    String(src == null ? '' : src).split(/\r?\n/).forEach(function (line, li) {
+    latinDigits(String(src == null ? '' : src)).split(/\r\n|\r|\n/).forEach(function (line, li) {
       line = line.replace(/(#|\/\/).*$/, '');
       var re = /\[|\]|[^\s\[\]]+/g, m;
       while ((m = re.exec(line))) toks.push({ v: m[0], line: li + 1 });

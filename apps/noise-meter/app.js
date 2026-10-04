@@ -29,7 +29,8 @@
   /* ---------------- saved state ---------------- */
   var S = loadSettings();
   var sess = loadSession();
-  var jar = Math.max(0, Math.floor(num(store.get('jar', 0)) ? store.get('jar', 0) : 0));
+  var JAR_MAX = 99999;
+  var jar = (function () { var j = store.get('jar', 0); return num(j) ? clamp(Math.floor(j), 0, JAR_MAX) : 0; })();
 
   function loadSettings() {
     var d = { threshold: 65, sens: 10, delay: 3, sound: false, flash: true, view: 'meter', goal: 5, deviceId: '' };
@@ -57,12 +58,19 @@
     if (!s || typeof s !== 'object') return n;
     ['t', 'g', 'y', 'r', 'sum', 'peak', 'alerts', 'stars', 'start'].forEach(function (k) { if (num(s[k]) && s[k] >= 0) n[k] = s[k]; });
     n.alerts = Math.floor(n.alerts); n.stars = Math.floor(n.stars); n.peak = Math.min(100, n.peak);
+    // a damaged / hand-edited save must not show "Invalid Date" or shares above 100 %
+    if (isNaN(new Date(n.start).getTime()) || n.start > Date.now() + 864e5) n.start = Date.now();
+    var zt = n.g + n.y + n.r;
+    if (zt > n.t + 1e-6) { var k = n.t / zt; n.g *= k; n.y *= k; n.r *= k; }
+    n.sum = Math.min(n.sum, 100 * n.t);
     if (s.ch && typeof s.ch === 'object') {
       if (GOALS.indexOf(s.ch.goal) >= 0) n.ch.goal = s.ch.goal;
       n.ch.running = !!s.ch.running;
       n.ch.done = !!s.ch.done;
       n.ch.stars = clamp(Math.floor(num(s.ch.stars) ? s.ch.stars : 0), 0, n.ch.goal);
       n.ch.sec = clamp(num(s.ch.sec) ? s.ch.sec : 0, 0, 59.9);
+      if (n.ch.stars >= n.ch.goal) { n.ch.running = false; n.ch.done = true; n.ch.sec = 0; }
+      if (n.ch.running) n.ch.done = false;
     }
     return n;
   }
@@ -82,7 +90,7 @@
     sens: $('#nm-sens'), sensVal: $('#nm-sens-val'), calib: $('#nm-calib'), calibMsg: $('#nm-calib-msg'),
     delay: $('#nm-delay'), delayVal: $('#nm-delay-val'), sound: $('#nm-sound'), flash: $('#nm-flash'),
     deviceField: $('#nm-device-field'), device: $('#nm-device'),
-    goal: $('#nm-goal'), chBtn: $('#nm-ch-btn'), chStatus: $('#nm-ch-status'), jar: $('#nm-jar'), jarEmpty: $('#nm-jar-empty'),
+    goal: $('#nm-goal'), chBtn: $('#nm-ch-btn'), chStatus: $('#nm-ch-status'), chPrint: $('#nm-ch-print'), jar: $('#nm-jar'), jarEmpty: $('#nm-jar-empty'),
     sWhen: $('#nm-s-when'), sTime: $('#nm-s-time'), sAlerts: $('#nm-s-alerts'), sAvg: $('#nm-s-avg'), sPeak: $('#nm-s-peak'), sStars: $('#nm-s-stars'),
     zb: $('#nm-zonebar'), zbG: $('#nm-zb-g'), zbY: $('#nm-zb-y'), zbR: $('#nm-zb-r'), legend: $('#nm-legend'),
     chart: $('#nm-chart'), printMeta: $('#nm-print-meta')
@@ -170,7 +178,7 @@
       ch.sec += dt;
       if (ch.sec >= 60) {
         ch.sec -= 60; ch.stars++; sess.stars++;
-        jar++; store.set('jar', jar); renderJar();
+        jar = Math.min(JAR_MAX, jar + 1); store.set('jar', jar); renderJar();
         if (ch.stars >= ch.goal) finishChallenge();
         else { chime([783.99, 1046.5]); renderChallenge(); }
       }
@@ -245,10 +253,12 @@
     setState('wait');
     var audio = { echoCancellation: false, noiseSuppression: false, autoGainControl: false };
     if (S.deviceId) audio.deviceId = { exact: S.deviceId };
-    return md.getUserMedia({ audio: audio }).catch(function (e) {
-      if (audio.deviceId && (e.name === 'OverconstrainedError' || e.name === 'NotFoundError')) {
+    // some older browsers throw instead of rejecting: keep that inside the promise so the button never stays stuck on "waiting"
+    var gum = function () { return new Promise(function (res) { res(md.getUserMedia({ audio: audio })); }); };
+    return gum().catch(function (e) {
+      if (audio.deviceId && e && (e.name === 'OverconstrainedError' || e.name === 'NotFoundError')) {
         S.deviceId = ''; saveSettings(); delete audio.deviceId;     // saved mic is gone: use the default one
-        return md.getUserMedia({ audio: audio });
+        return gum();
       }
       throw e;
     }).then(function (stream) {
@@ -260,6 +270,8 @@
       A.an.smoothingTimeConstant = 0;
       A.buf = new Float32Array(A.an.fftSize); A.bytes = null;
       A.src.connect(A.an);
+      // a silent (gain 0) path to the speakers: some browsers (older Safari) only process nodes that reach the output
+      try { A.sink = A.ctx.createGain(); A.sink.gain.value = 0; A.an.connect(A.sink); A.sink.connect(A.ctx.destination); } catch (e) { A.sink = null; }
       var tr = stream.getAudioTracks()[0];
       if (tr) tr.addEventListener('ended', function () { if (A.stream === stream) { stopMic(); setMsg('err_ended'); } });
       if (A.ctx.state !== 'running') A.ctx.resume().catch(noop);
@@ -285,7 +297,9 @@
     if (A.timer) { clearInterval(A.timer); A.timer = 0; }
     if (A.stream) A.stream.getTracks().forEach(function (tr) { try { tr.stop(); } catch (e) { } });
     if (A.src) { try { A.src.disconnect(); } catch (e) { } }
-    A.stream = A.src = A.an = null;
+    if (A.an) { try { A.an.disconnect(); } catch (e) { } }
+    if (A.sink) { try { A.sink.disconnect(); } catch (e) { } }
+    A.stream = A.src = A.an = A.sink = null;
     wakeLock(false);
   }
 
@@ -295,6 +309,7 @@
     calib = null;
     if (calibMsg.key === 'calib_run') calibMsg = { key: 'calib_hint' };
     level = 0; alertOn = false; alertUntil = 0; loudFor = 0; quietFor = 0; armed = true;
+    if (banner && banner.until) banner = null;        // short "minute restarts" notes end with the listening
     setState('idle');
     if (was === 'live') saveSession();
     renderCalibMsg();
@@ -342,7 +357,8 @@
     // make the measured quiet show as about 15 on the meter
     var s = Math.round((-40 - (avgDb - 7.5)) / 2);
     var noisy = s < 1;
-    S.sens = clamp(s, 1, 20); saveSettings();
+    // too noisy to learn "quiet": keep the teacher's sensitivity (the message asks them to try again)
+    if (!noisy) { S.sens = clamp(s, 1, 20); saveSettings(); }
     calibMsg = noisy ? { key: 'calib_noisy' } : { key: 'calib_done', vars: { n: fmt(S.sens) } };
     renderSettings(); renderCalibMsg();
   }
@@ -478,6 +494,8 @@
     else if (ch.done) st = t('ch_done', { n: fmt(ch.stars) });
     E.chStatus.textContent = st;
     E.chStatus.hidden = !st;
+    // the stars live on the stage, which is not printed: the report gets its own line
+    E.chPrint.textContent = ch.done ? t('ch_done', { n: fmt(ch.stars) }) : (ch.running ? t('ch_stars', { n: fmt(ch.stars), goal: fmt(ch.goal) }) : '');
     var show = ch.running || ch.done;
     E.chStrip.hidden = !show;
     if (show) {
@@ -563,6 +581,11 @@
 
   /* ---------------- history chart (canvas) ---------------- */
   var colors = {};
+  /* Paper is always white: while printing, the chart uses the light-theme colours (a dark-theme
+     chart would print a near-white line on white paper). */
+  var PRINT_COLORS = { '--text': '#000000', '--primary': '#0b4f5c', '--success': '#15803d', '--warning': '#a15c07', '--danger': '#b42318' };
+  var printing = false;
+  function col(k) { return (printing && PRINT_COLORS[k]) || colors[k]; }
   function readColors() {
     ['--text', '--muted', '--border', '--surface', '--surface-2', '--success', '--warning', '--danger', '--primary', '--accent',
       '--c1', '--c2', '--c3', '--c4', '--c5', '--c6', '--c7', '--c8'].forEach(function (k) { colors[k] = EDU.css(k) || '#888'; });
@@ -581,19 +604,19 @@
     var Y = function (v) { return pad + (h - 2 * pad) * (1 - v / 100); };
     var ys = yellowStart(), th = S.threshold;
     c.globalAlpha = 0.13;
-    c.fillStyle = colors['--success']; c.fillRect(0, Y(ys), w, Y(0) - Y(ys) + pad);
-    c.fillStyle = colors['--warning']; c.fillRect(0, Y(th), w, Y(ys) - Y(th));
-    c.fillStyle = colors['--danger']; c.fillRect(0, 0, w, Y(th));
+    c.fillStyle = col('--success'); c.fillRect(0, Y(ys), w, Y(0) - Y(ys) + pad);
+    c.fillStyle = col('--warning'); c.fillRect(0, Y(th), w, Y(ys) - Y(th));
+    c.fillStyle = col('--danger'); c.fillRect(0, 0, w, Y(th));
     c.globalAlpha = 1;
-    c.setLineDash([6, 5]); c.strokeStyle = colors['--danger']; c.lineWidth = 1.5;
+    c.setLineDash([6, 5]); c.strokeStyle = col('--danger'); c.lineWidth = 1.5;
     c.beginPath(); c.moveTo(0, Y(th)); c.lineTo(w, Y(th)); c.stroke(); c.setLineDash([]);
     if (history.length < 2) return;
     var dx = w / (HIST_LEN - 1), x0 = w - (history.length - 1) * dx;
     c.beginPath();
     history.forEach(function (v, i) { var x = x0 + i * dx; if (i) c.lineTo(x, Y(v)); else c.moveTo(x, Y(v)); });
-    c.strokeStyle = colors['--text']; c.lineWidth = 2; c.lineJoin = 'round'; c.stroke();
+    c.strokeStyle = col('--text'); c.lineWidth = 2; c.lineJoin = 'round'; c.stroke();
     c.lineTo(w, Y(0)); c.lineTo(x0, Y(0)); c.closePath();
-    c.globalAlpha = 0.12; c.fillStyle = colors['--primary']; c.fill(); c.globalAlpha = 1;
+    c.globalAlpha = 0.12; c.fillStyle = col('--primary'); c.fill(); c.globalAlpha = 1;
   }
 
   /* ---------------- bouncing balls (canvas) ---------------- */
@@ -732,8 +755,15 @@
     loudFor = 0; quietFor = 0; armed = true; alertUntil = 0; alertOn = false; banner = null;
     saveSession(); renderAll();
   });
-  $('#nm-print').addEventListener('click', function () { renderPrintMeta(); renderStats(); drawChart(); window.print(); });
-  window.addEventListener('beforeprint', renderPrintMeta);
+  function beginPrint() { printing = true; renderPrintMeta(); renderStats(); renderChallenge(); drawChart(); }
+  function endPrint() { if (!printing) return; printing = false; drawChart(); }
+  $('#nm-print').addEventListener('click', function () {
+    beginPrint();
+    window.print();
+    if (!('onafterprint' in window)) setTimeout(endPrint, 1500);
+  });
+  window.addEventListener('beforeprint', beginPrint);
+  window.addEventListener('afterprint', endPrint);
 
   document.addEventListener('keydown', function (e) {
     if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
@@ -774,7 +804,7 @@
 
   EDU.onLang(function () {
     EDU.$$('button', E.presets).forEach(function (b) { b.children[1].textContent = t(b.dataset.key); });
-    if (!E.deviceField.hidden && E.device.options.length) E.device.options[0].textContent = t('mic_default');
+    if (!E.deviceField.hidden && E.device.options.length) { E.device.options[0].textContent = t('mic_default'); listDevices(); }
     renderAll();
   });
 

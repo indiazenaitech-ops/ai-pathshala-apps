@@ -91,6 +91,11 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(await attr('#badge-sr', 'data-sr') === 'yes', 'speech-to-text badge says ready');
   expect(await txt('#dict-status') === t('st_idle'), 'dictation status is idle: ' + await txt('#dict-status'));
   expect(await page.isHidden('#sr-warn'), 'no "unsupported" warning when recognition exists');
+  /* punctuation buttons do nothing while there is no text yet */
+  await page.click('#dict-punct [data-p="stop"]');
+  expect(await page.inputValue('#dict-text') === '', 'full stop is not added to an empty transcript');
+  /* window.print is replaced so the print buttons can be checked without a dialog */
+  await page.evaluate(() => { window.__printed = 0; window.print = () => { window.__printed++; }; });
 
   /* 2) Dictation: interim text shows live, finals are appended, alternatives listed with confidence */
   const s0 = C.sentences[0], s1 = C.sentences[1];
@@ -146,6 +151,23 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.waitForFunction(() => document.querySelector('#tts-status').dataset.state === 'done', null, { timeout: 3000 });
   const sp = await page.evaluate(() => window.__spoken);
   expect(sp.length === 1 && sp[0].text === s0 && sp[0].rate === 1.5 && sp[0].lang === tag, 'spoken once at 1.5× in ' + tag + ': ' + JSON.stringify(sp));
+  /* a voice of another language picked under "show all voices" is used, and dropped again when the box is unticked */
+  const ownVoice = lang === 'hi' ? 'Test Hindi' : 'Test English India';
+  await page.check('#tts-all');
+  await page.selectOption('#tts-voice', 'test-ta');
+  await page.evaluate(() => { window.__spoken = []; });
+  await page.click('#tts-play');
+  await page.waitForFunction(() => document.querySelector('#tts-status').dataset.state === 'done', null, { timeout: 3000 });
+  expect((await page.evaluate(() => window.__spoken))[0].voice === 'Test Tamil', 'chosen Tamil voice used while all voices are shown');
+  await page.uncheck('#tts-all');
+  await page.evaluate(() => { window.__spoken = []; });
+  await page.click('#tts-play');
+  await page.waitForFunction(() => document.querySelector('#tts-status').dataset.state === 'done', null, { timeout: 3000 });
+  const v2 = (await page.evaluate(() => window.__spoken))[0].voice;
+  expect(v2 === ownVoice && await page.inputValue('#tts-voice') === '', 'after unticking, the list says Automatic and the ' + lang + ' voice speaks: ' + v2);
+  /* "Use my spoken text" copies the transcript */
+  await page.click('#tts-from-dict');
+  expect(await page.inputValue('#tts-text') === await page.inputValue('#dict-text'), 'spoken text copied into Text to speech');
 
   /* 4) Pronunciation practice: one word dropped → word alignment + score */
   await page.click('#tab-prac');
@@ -162,6 +184,7 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(await txt('#pr-heard') === dropped, 'best of the AI guesses is shown');
   expect(await txt('#pr-line') === t('score_line', { m: String(n - 1), n: String(n) }), 'matched line translated');
   expect((await page.evaluate(() => window.__srStarts)).pop().alts === 5, 'asks the recogniser for 5 guesses');
+  expect(await txt('#pr-fb') === t('fb_good'), 'a missed word never gets "every word came through" feedback: ' + await txt('#pr-fb'));
 
   /* perfect attempt → 100%, chip shows the best score */
   await page.evaluate((s) => { window.__srNext.push([{ final: [s] }]); }, s0);
@@ -185,6 +208,21 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(await page.$$eval('#pr-align .w-extra', (e) => e.length) === 1, 'extra word marked');
   expect(await attr('#pr-target', 'data-hidden') === 'false' && await txt('#pr-target') === s1, 'sentence revealed after checking');
   expect(await attr('#pr-progress', 'data-done') === '2', 'two sentences practised');
+
+  /* switching the speech language must not reveal the hidden sentence or keep the old score */
+  await page.fill('#pr-typed', 'abc');
+  await page.selectOption('#sp-lang', 'bn');
+  expect(await attr('#pr-target', 'data-hidden') === 'true', 'Bengali sentence is hidden in Listen & type');
+  expect(await page.isHidden('#pr-result'), 'old result is cleared after a language change');
+  expect(await page.inputValue('#pr-typed') === '', 'typed answer cleared after a language change');
+  await page.selectOption('#sp-lang', lang);
+  expect(await page.isHidden('#pr-result') && await attr('#pr-target', 'data-hidden') === 'true', 'old result not shown again after switching back');
+
+  /* printable practice sheet lists every sentence with a score line */
+  await page.click('#pr-print');
+  await page.waitForFunction(() => window.__printed > 0, null, { timeout: 3000 });
+  expect(await page.$$eval('#print-area .pa-list li', (l) => l.length) === C.sentences.length, 'practice sheet lists all ' + C.sentences.length + ' sentences');
+  expect(await page.$eval('#print-area .pa-list li', (l) => l.textContent.includes('100%')), 'sheet shows the best score of sentence 1');
 
   /* 6) Own sentence is added and selected */
   const own = lang === 'hi' ? 'आज मौसम बहुत सुहाना है।' : 'Today the weather is lovely.';
@@ -222,6 +260,32 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.waitForFunction(() => +document.querySelector('#spec').dataset.frames > 6, null, { timeout: 8000 });
   expect(await page.isHidden('#see-empty'), 'placeholder hidden while drawing');
   expect(await attr('#see-status', 'data-state') === 'demo', 'status says the demo is playing');
+
+  /* tablets: the four tabs wrap instead of hiding the last one off-screen */
+  const vp = page.viewportSize();
+  await page.setViewportSize({ width: 600, height: vp ? vp.height : 900 });
+  const tabsBox = await page.$eval('.tabs', (e) => [e.scrollWidth, e.clientWidth]);
+  expect(tabsBox[0] <= tabsBox[1] + 1, 'tabs fit at 600 px: ' + tabsBox.join(' / '));
+  if (vp) await page.setViewportSize(vp);
+
+  /* the printed transcript carries an unambiguous date (no 10/4 vs 4/10) */
+  await page.evaluate(() => { window.__printed = 0; window.print = () => { window.__printed++; }; });
+  await page.click('#tab-dict');
+  await page.click('#dict-print');
+  await page.waitForFunction(() => window.__printed > 0, null, { timeout: 3000 });
+  const meta = await page.$eval('#print-area p', (p) => p.textContent);
+  expect(/\b20\d\d\b/.test(meta) && !/\d+\/\d+\/\d+/.test(meta), 'print date written out: ' + meta);
+
+  /* a browser without speech recognition (Firefox) gets the warning and starts practice in Listen & type */
+  const p2 = await page.context().newPage();
+  await p2.addInitScript(() => { window.SpeechRecognition = undefined; window.webkitSpeechRecognition = undefined; try { localStorage.removeItem('edu.speech-lab.mode'); } catch (e) { } });
+  await p2.goto(page.url(), { waitUntil: 'load' });
+  await p2.waitForFunction(() => window.EDU_READY && window.SPEECH_LAB);
+  expect(await p2.isVisible('#sr-warn') && await p2.getAttribute('#badge-sr', 'data-sr') === 'no', 'no-recognition warning and badge shown');
+  expect(await p2.getAttribute('#dict-mic', 'aria-disabled') === 'true', 'mic marked disabled');
+  expect(await p2.getAttribute('#pr-mode [data-mode="type"]', 'aria-pressed') === 'true', 'practice starts in Listen & type without recognition');
+  await p2.close();
+  await page.bringToFront();
 
   /* leave a practice result on screen for the screenshot */
   await page.click('#tab-prac');

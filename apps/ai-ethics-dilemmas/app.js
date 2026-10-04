@@ -225,7 +225,7 @@
   });
 
   /* ---------------- read aloud (sentence by sentence: long utterances get cut off in some browsers) ---------------- */
-  var reading = false, readQueue = [], readPoll = null;
+  var reading = false, readQueue = [], readPoll = null, readRun = 0;
   function updateReadBtn() {
     $('#readBtn').setAttribute('aria-pressed', String(reading));
     $('#readIcon').textContent = reading ? '⏹' : '🔊';
@@ -233,25 +233,36 @@
   }
   function stopReading() {
     readQueue = [];
+    readRun++;                       /* late "end" events of a cancelled sentence must not start the next run */
     if (reading) { reading = false; EDU.stopSpeaking(); }
     if (readPoll) { clearInterval(readPoll); readPoll = null; }
     updateReadBtn();
   }
-  function speakNext() {
-    if (!reading) return;
+  function speakNext(run) {
+    if (!reading || run !== readRun) return;
     if (!readQueue.length) { stopReading(); return; }
     var part = readQueue.shift();
-    EDU.speak(part, { onend: function () { setTimeout(speakNext, 120); } }).then(function (ok) {
-      if (!ok) { stopReading(); EDU.toast(t('no_voice'), 5000); }
+    EDU.speak(part, { onend: function () { setTimeout(function () { speakNext(run); }, 120); } }).then(function (ok) {
+      if (!ok && run === readRun) { stopReading(); EDU.toast(t('no_voice'), 5000); }
     });
+  }
+  /* Split into sentences; an option number ("2.") is kept with the option text that follows it. */
+  function sentences(text) {
+    var parts = (text.match(/[^.!?।۔]+[.!?।۔]*["”']?\s*/g) || [text]).map(function (s) { return s.trim(); }).filter(Boolean);
+    var out = [];
+    parts.forEach(function (s) {
+      if (out.length && /^\d+\.$/.test(out[out.length - 1])) out[out.length - 1] += ' ' + s; else out.push(s);
+    });
+    return out;
   }
   function readAloud() {
     if (reading) { stopReading(); return; }
     var c = cardText(state.cur);
     var text = c.title + '. ' + c.story + ' ' + c.options.map(function (o, k) { return (k + 1) + '. ' + o; }).join(' ');
-    readQueue = (text.match(/[^.!?।۔]+[.!?।۔]*["”']?\s*/g) || [text]).map(function (s) { return s.trim(); }).filter(Boolean);
+    stopReading();
+    readQueue = sentences(text);
     reading = true; updateReadBtn();
-    speakNext();
+    speakNext(readRun);
     var idle = 0;
     readPoll = setInterval(function () {           /* safety net if a voice errors without "onend" */
       var busy = 'speechSynthesis' in window && (speechSynthesis.speaking || speechSynthesis.pending);
@@ -306,6 +317,7 @@
       timer.left = Math.max(0, (timer.endAt - Date.now()) / 1000);
       clearInterval(timer.iv); timer.iv = null; timer.running = false;
     } else {
+      unlockAudio();                 /* inside the tap: iOS/Safari only allow sound from a context started by a user gesture */
       if (timer.left <= 0) { timer.left = timer.total; }
       timer.done = false;
       timer.endAt = Date.now() + timer.left * 1000;
@@ -320,11 +332,18 @@
     updateTimer();
   }
   var audioCtx = null;
-  function beep() {
+  function unlockAudio() {
     try {
       var AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return;
+      if (!AC) return null;
       audioCtx = audioCtx || new AC();
+      if (audioCtx.state === 'suspended' && audioCtx.resume) { var p = audioCtx.resume(); if (p && p.catch) p.catch(function () { }); }
+      return audioCtx;
+    } catch (e) { return null; }
+  }
+  function beep() {
+    try {
+      if (!unlockAudio()) return;
       var now = audioCtx.currentTime;
       [0, 0.35, 0.7].forEach(function (d) {
         var o = audioCtx.createOscillator(), g = audioCtx.createGain();
@@ -432,7 +451,7 @@
     if (all) {
       var rules = el('ul', { class: 'p-rules' });
       ['rule_1', 'rule_2', 'rule_3', 'rule_4'].forEach(function (k) { rules.appendChild(el('li', { text: t(k) })); });
-      area.appendChild(el('div', { class: 'p-head' }, el('h1', { text: t('app_title') }), el('strong', { text: t('rules_title') }), rules));
+      area.appendChild(el('div', { class: 'p-head' }, el('h1', { text: t('app_title') }), el('strong', { text: t('rules_title') + ': ' }), rules));
     }
     (all ? CARDS.map(function (_, i) { return i; }) : [state.cur]).forEach(function (i) { area.appendChild(printCard(i)); });
   }
@@ -474,12 +493,16 @@
     setPresenting(true);
     if (!(document.fullscreenElement || document.webkitFullscreenElement)) EDU.fullscreen();
     window.scrollTo(0, 0);
+    $('#exitPresentBtn').focus({ preventScroll: true });   /* the button just pressed is now hidden */
   });
   $('#exitPresentBtn').addEventListener('click', function () {
     setPresenting(false);
     if (document.fullscreenElement || document.webkitFullscreenElement) EDU.fullscreen();
+    $('#presentBtn').focus({ preventScroll: true });
   });
-  document.addEventListener('fullscreenchange', function () { if (!document.fullscreenElement) setPresenting(false); });
+  function onFsChange() { if (!(document.fullscreenElement || document.webkitFullscreenElement)) setPresenting(false); }
+  document.addEventListener('fullscreenchange', onFsChange);
+  document.addEventListener('webkitfullscreenchange', onFsChange);
 
   /* ---------------- toolbar ---------------- */
   $('#prevBtn').addEventListener('click', function () { go(state.cur - 1); });

@@ -36,6 +36,8 @@
   function par(n) { return n < 0 ? '(' + nf(n) + ')' : nf(n); }
   function fr(n, d) { var q = O.frac(n, d); if (q[0] === 0) return '0'; if (q[1] === 1) return nf(q[0]); return (q[0] < 0 ? MINUS : '') + nf(Math.abs(q[0])) + '/' + nf(q[1]); }
   function cm(s) { return s + ' cm'; }
+  /* keep "10 cm", "−30 cm" in left-to-right order when they sit inside an Urdu (RTL) sentence */
+  function iso(s) { return '\u2066' + s + '\u2069'; }
 
   /* ---------- main update ---------- */
   function update(from) {
@@ -67,6 +69,8 @@
   var raysKey = '';
   function rayNames() {
     if (S.inf) return ['ray_n', 'ray_n', 'ray_n'];
+    /* NCERT: for a convex mirror the rays are "directed towards" C and F (both lie behind it) */
+    if (S.dev === 'convex_mirror') return ['ray_par', 'ray_c_to', 'ray_f_to', 'ray_p'];
     if (O.isMirror(S.dev)) return ['ray_par', 'ray_c', 'ray_f', 'ray_p'];
     return ['ray_par', 'ray_o', S.dev === 'convex_lens' ? 'ray_f1' : 'ray_f2'];
   }
@@ -94,7 +98,7 @@
     var h2Txt = R.objInf ? '≈ 0' : (R.imgInf ? '∞' : cm(sg(R.h2)));
     box.textContent = '';
     box.appendChild(stat('r_u', R.objInf ? MINUS + '∞' : cm(nf(R.u)), 'out-u'));
-    box.appendChild(stat('r_v', R.imgInf ? sg(R.v) : cm(sg(R.v)), 'out-v'));
+    box.appendChild(stat('r_v', R.imgInf ? '∞' : cm(sg(R.v)), 'out-v'));
     box.appendChild(stat('r_f', cm(sg(R.f)), 'out-f'));
     box.appendChild(stat('r_m', mTxt, 'out-m'));
     box.appendChild(stat('r_h', cm(nf(R.h)), 'out-h'));
@@ -151,7 +155,9 @@
     else if (R.imgInf) line('m = ∞');
     else {
       line(R.mirror ? 'm = ' + MINUS + 'v/u = ' + MINUS + par(R.v) + '/' + par(u) + ' = ' + sg(R.m) : 'm = v/u = ' + par(R.v) + '/' + par(u) + ' = ' + sg(R.m), 'ans');
-      line('h′ = m × h = ' + par(R.m) + ' × ' + nf(R.h) + ' = ' + cm(sg(R.h2)));
+      /* m is shown to 2 decimals above; if that is rounded, use 3 decimals here so the product checks out (0.258 × 4 ≈ 1.03, not 0.26 × 4 = 1.03) */
+      var mExact = Math.abs(R.m * 100 - Math.round(R.m * 100)) < 1e-7, ms = nf(R.m, mExact ? 2 : 3), eq = mExact ? ' = ' : ' ≈ ';
+      line('h′ = m × h' + eq + (R.m < 0 ? '(' + ms + ')' : ms) + ' × ' + nf(R.h) + eq + cm(sg(R.h2)));
     }
     if (!R.mirror) {
       head('form_power');
@@ -189,7 +195,7 @@
   }
   function sizeCanvas() {
     var lab = $('#lab'), w = Math.max(200, Math.floor($('#stage').clientWidth) - 2), h;
-    if (document.fullscreenElement === lab) {
+    if ((document.fullscreenElement || document.webkitFullscreenElement) === lab) {
       /* height of everything in the card except the canvas stays the same, so this does not feed back */
       var top = lab.getBoundingClientRect().top - lab.scrollTop, last = lab.lastElementChild.getBoundingClientRect().bottom;
       var other = (last - top) + 14 - (CH || 0);
@@ -209,7 +215,7 @@
     var note = '';
     if (sol.objInf) note = t('note_point');
     else if (sol.imgInf) note = t('note_inf_img');
-    else if (viewInfo.imgOff) note = t('note_off', { v: cm(sg(sol.v)) });
+    else if (viewInfo.imgOff) note = t('note_off', { v: iso(cm(sg(sol.v))) });
     var miss = false;
     $$('.rl-ray').forEach(function (b, i) {
       var gone = viewInfo.drawn.indexOf(i) < 0;
@@ -224,25 +230,46 @@
     cv.setAttribute('aria-valuetext', (S.inf ? '∞' : cm(EDU.fmt(S.u))) + ', ' + t(sol.info.obj));
   }
 
-  var dragging = false;
+  var dragging = false, pend = null;
   function evX(e) { var r = cv.getBoundingClientRect(); return (e.clientX - r.left) * (CW / (r.width || CW)); }
   function moveTo(xw) {
     var u = clampInt(-xw, 1, O.uMax(S.f));
     if (u === S.u && !S.inf) return;
     S.u = u; S.inf = false; update();
   }
-  cv.addEventListener('pointerdown', function (e) {
-    if (!viewInfo) return;
-    var xw = viewInfo.wx(evX(e));
-    if (xw > -0.3) return;
-    dragging = true;
+  function startDrag(e, xw) {
+    dragging = true; pend = null;
     try { cv.setPointerCapture(e.pointerId); } catch (er) { }
     try { cv.focus({ preventScroll: true }); } catch (er) { }
     moveTo(xw);
+  }
+  cv.addEventListener('pointerdown', function (e) {
+    if (!viewInfo) return;
+    var px = evX(e), xw = viewInfo.wx(px);
+    if (xw > -0.3) return;
+    /* A finger that lands away from the object may just be scrolling the page (the canvas allows pan-y).
+       Wait: a sideways move starts a drag, lifting the finger is a tap that places the object there. */
+    if (e.pointerType === 'touch' && !(viewInfo.objX != null && Math.abs(px - viewInfo.objX) < 36)) {
+      pend = { id: e.pointerId, x: e.clientX, y: e.clientY };
+      return;
+    }
+    startDrag(e, xw);
     e.preventDefault();
   });
-  cv.addEventListener('pointermove', function (e) { if (dragging && viewInfo) moveTo(viewInfo.wx(evX(e))); });
-  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function (ev) { cv.addEventListener(ev, function () { dragging = false; }); });
+  cv.addEventListener('pointermove', function (e) {
+    if (pend && e.pointerId === pend.id) {
+      var dx = Math.abs(e.clientX - pend.x), dy = Math.abs(e.clientY - pend.y);
+      if (dx > 8 && dx > dy && viewInfo) startDrag(e, viewInfo.wx(evX(e)));
+      else if (dy > 10) pend = null;
+      return;
+    }
+    if (dragging && viewInfo) moveTo(viewInfo.wx(evX(e)));
+  });
+  cv.addEventListener('pointerup', function (e) {
+    if (pend && e.pointerId === pend.id && viewInfo) { var xw = viewInfo.wx(evX(e)); if (xw <= -0.3) moveTo(xw); }
+    pend = null; dragging = false;
+  });
+  ['pointercancel', 'lostpointercapture'].forEach(function (ev) { cv.addEventListener(ev, function () { pend = null; dragging = false; }); });
   cv.addEventListener('keydown', function (e) {
     var k = e.key, u = S.inf ? O.uMax(S.f) : S.u, n = null;
     if (k === 'ArrowLeft' || k === 'ArrowUp') n = u + 1;
@@ -267,16 +294,22 @@
   [['f', '#f-range', '#f-num'], ['u', '#u-range', '#u-num'], ['h', '#h-range', '#h-num']].forEach(function (p) {
     var r = $(p[1]), n = $(p[2]);
     r.addEventListener('input', function () { setVal(p[0], r.value); });
+    /* the boxes hold sizes |f|, |u|, h: a typed minus sign is ignored */
     n.addEventListener('input', function () {
-      var v = parseFloat(n.value);
+      var v = Math.abs(parseFloat(n.value));
       if (n.value === '' || !isFinite(v) || v < +n.min || v > +n.max) return;
       setVal(p[0], v, p[2]);
     });
-    n.addEventListener('change', function () { syncInputs(); });
+    /* on Enter / leaving the box: clamp what was typed (40 → 34, 0 → 1) instead of silently keeping a half-typed value */
+    n.addEventListener('change', function () {
+      var v = Math.abs(parseFloat(n.value));
+      if (n.value !== '' && isFinite(v)) setVal(p[0], v); else syncInputs();
+    });
   });
   $('#far').addEventListener('click', function () { S.inf = !S.inf; update(); });
   $('#fs-btn').addEventListener('click', function () { EDU.fullscreen($('#lab')); });
-  document.addEventListener('fullscreenchange', function () { setTimeout(draw, 80); });
+  if (!($('#lab').requestFullscreen || $('#lab').webkitRequestFullscreen)) $('#fs-btn').hidden = true;
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) { document.addEventListener(ev, function () { setTimeout(draw, 80); }); });
   $('#png-btn').addEventListener('click', function () { EDU.downloadCanvas(cv, 'ray-diagram-' + S.dev.replace('_', '-') + '.png'); });
   $('#print-btn').addEventListener('click', function () { window.print(); });
   window.addEventListener('beforeprint', function () { printing = true; draw(); });
@@ -295,11 +328,16 @@
   var Q = store.get('quiz', null), score = store.get('score', { ok: 0, n: 0 }), ans = {}, checked = false;
   if (!score || !isFinite(score.ok) || !isFinite(score.n)) score = { ok: 0, n: 0 };
   function validQ(q) { return q && O.QUIZ_POS[q.dev] && O.ROWS[q.dev] && q.answer && Array.isArray(q.order) && isFinite(q.f); }
-  if (!validQ(Q)) Q = O.quiz();
-  function newQuestion() { Q = O.quiz(); ans = {}; checked = false; store.set('quiz', Q); renderQuiz(); }
+  function saveQ() { Q.ans = ans; Q.checked = checked; store.set('quiz', Q); }
+  if (!validQ(Q)) { Q = O.quiz(); saveQ(); }
+  else {
+    ['pos', 'nat', 'ori', 'size'].forEach(function (k) { if (Q.ans && typeof Q.ans[k] === 'string') ans[k] = Q.ans[k]; });
+    checked = Q.checked === true && !!Q.done;
+  }
+  function newQuestion() { Q = O.quiz(); ans = {}; checked = false; saveQ(); renderQuiz(); }
   function renderQuiz() {
     $('#q-dev').textContent = t('dev_' + Q.dev);
-    $('#q-text').textContent = Q.u == null ? t('quiz_q_inf', { f: cm(EDU.fmt(Q.f)) }) : t('quiz_q', { u: cm(EDU.fmt(Q.u)), f: cm(EDU.fmt(Q.f)) });
+    $('#q-text').textContent = Q.u == null ? t('quiz_q_inf', { f: iso(cm(EDU.fmt(Q.f))) }) : t('quiz_q', { u: iso(cm(EDU.fmt(Q.u))), f: iso(cm(EDU.fmt(Q.f))) });
     var sel = $('#q-pos');
     sel.textContent = '';
     sel.appendChild(EDU.el('option', { value: '', text: t('q_choose') }));
@@ -326,16 +364,16 @@
     fb.className = 'callout ' + (right === 4 ? 'success' : 'danger');
     fb.dataset.right = right;
     [right === 4 ? t('q_right') : t('q_wrong', { n: right }),
-      t('q_hint', { f: cm(EDU.fmt(Q.f)), c: cm(EDU.fmt(2 * Q.f)) }),
+      t('q_hint', { f: iso(cm(EDU.fmt(Q.f))), c: iso(cm(EDU.fmt(2 * Q.f))) }),
       t('th_obj') + ': ' + t(row.obj),
       t('th_img') + ': ' + t(row.img),
       t('th_size') + ': ' + t('size_' + row.size) + ' · ' + t(row.real ? 'nature_ri' : 'nature_ve')
     ].forEach(function (s) { fb.appendChild(EDU.el('p', { text: s })); });
   }
   $$('#quiz [data-k]').forEach(function (b) {
-    b.addEventListener('click', function () { ans[b.dataset.k] = b.dataset.v; if (checked) { checked = false; } renderQuiz(); });
+    b.addEventListener('click', function () { ans[b.dataset.k] = b.dataset.v; checked = false; saveQ(); renderQuiz(); });
   });
-  $('#q-pos').addEventListener('change', function () { ans.pos = $('#q-pos').value || undefined; checked = false; showFeedback(); });
+  $('#q-pos').addEventListener('change', function () { ans.pos = $('#q-pos').value || undefined; checked = false; saveQ(); showFeedback(); });
   $('#q-check').addEventListener('click', function () {
     ans.pos = $('#q-pos').value || undefined;
     if (!ans.pos || !ans.nat || !ans.ori || !ans.size) {
@@ -344,9 +382,9 @@
     if (!Q.done) {
       var right = ['pos', 'nat', 'ori', 'size'].filter(function (k) { return ans[k] === Q.answer[k]; }).length;
       score.n++; if (right === 4) score.ok++;
-      Q.done = true; store.set('score', score); store.set('quiz', Q);
+      Q.done = true; store.set('score', score);
     }
-    checked = true; renderQuiz();
+    checked = true; saveQ(); renderQuiz();
   });
   $('#q-next').addEventListener('click', newQuestion);
   $('#q-show').addEventListener('click', function () {

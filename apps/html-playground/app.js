@@ -329,11 +329,40 @@
   $('#hpFs').addEventListener('click', function () { EDU.fullscreen($('#hpOut')); });
 
   /* ------------------------------------------------------------ loop guard (instrument JS) */
-  /* Adds `if(__hpLoop("js",LINE))break;` at the start of every for / while / do { } body.
+  /* Adds `if(__hpLoop(FILE,LINE))break;` at the start of every for / while / do { } body.
+     Loops without { } get the check in their condition instead:
+       while (x < 5) x--;        ->  while (!__hpLoop(FILE,LINE)&&(x < 5)) x--;
+       for (;;) n++;             ->  for (;!__hpLoop(FILE,LINE);) n++;
+     FILE is a number (0 html, 1 js, 2 console line), so the added code has no quote marks and
+     also fits inside onclick="…" attributes.
+     (this also covers the `while (...)` at the end of a do … while). A hung preview cannot be
+     recovered without reloading the whole app, so every loop form a beginner types is guarded.
      A small scanner skips strings, comments, template literals and regular expressions. */
+  var LOOP_FILES = ['html', 'js', 'cmd'];
   var KW_RE = /^(return|typeof|instanceof|in|of|new|delete|void|throw|case|do|else|yield|await)$/;
   function guardLoops(src, file, baseLine) {
     var n = src.length, ins = [];
+    function guardCall(line) { return '__hpLoop(' + LOOP_FILES.indexOf(file) + ',' + line + ')'; }
+    /* positions of the `;` that are not nested inside ( ) [ ] { }, strings, comments or regexes */
+    function topSemis(a, b) {
+      var out = [], depth = 0, prev = '(';
+      for (var i = a; i < b;) {
+        var c = src[i];
+        if (c === ' ' || c === '\t' || c === '\n' || c === '\r') { i++; continue; }
+        if (c === '/' && src[i + 1] === '/') { while (i < b && src[i] !== '\n') i++; continue; }
+        if (c === '/' && src[i + 1] === '*') { var e = src.indexOf('*/', i + 2); i = e < 0 ? b : e + 2; continue; }
+        if (c === '"' || c === "'") { i = str(i, c); prev = '"'; continue; }
+        if (c === '`') { i = tpl(i); prev = '`'; continue; }
+        if (c === '/' && '(,=:[!&|?{};+-*%<>~^'.indexOf(prev) >= 0) { i = rx(i); prev = '/'; continue; }
+        if (c === '(' || c === '[' || c === '{') depth++;
+        else if (c === ')' || c === ']' || c === '}') depth--;
+        else if (c === ';' && depth === 0) out.push(i);
+        prev = /[\w$]/.test(c) ? 'a' : c;
+        i++;
+      }
+      return out;
+    }
+    function isEmptyExpr(a, b) { return !src.slice(a, b).replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g, '').trim(); }
     var lineStarts = [0];
     for (var q = 0; q < n; q++) if (src.charCodeAt(q) === 10) lineStarts.push(q + 1);
     function lineAt(p) { var lo = 0, hi = lineStarts.length - 1; while (lo < hi) { var mid = (lo + hi + 1) >> 1; if (lineStarts[mid] <= p) lo = mid; else hi = mid - 1; } return baseLine + lo; }
@@ -372,14 +401,23 @@
             if (src[j] === 'a' && src.slice(j, j + 5) === 'await') j = ws(j + 5);
             if (src[j] === '(') {
               var k = scan(j + 1, ')');
-              var m = ws(k + 1);
-              if (src[m] === '{') ins.push([m + 1, lineAt(s0)]);
+              var m = ws(k + 1), ln = lineAt(s0);
+              if (src[m] === '{') ins.push([m + 1, 0, 'if(' + guardCall(ln) + ')break;']);
+              else if (k < n && w === 'while') {
+                if (!isEmptyExpr(j + 1, k)) { ins.push([j + 1, 0, '!' + guardCall(ln) + '&&(']); ins.push([k, 1, ')']); }
+              } else if (k < n) {
+                var sc = topSemis(j + 1, k);
+                if (sc.length === 2) {
+                  if (isEmptyExpr(sc[0] + 1, sc[1])) ins.push([sc[0] + 1, 0, '!' + guardCall(ln)]);
+                  else { ins.push([sc[0] + 1, 0, '!' + guardCall(ln) + '&&(']); ins.push([sc[1], 1, ')']); }
+                }
+              }
               i = Math.min(n, k + 1); prev = ')'; prevWord = '';
               continue;
             }
           } else if (prev !== '.' && w === 'do') {
             var j2 = ws(i);
-            if (src[j2] === '{') ins.push([j2 + 1, lineAt(s0)]);
+            if (src[j2] === '{') ins.push([j2 + 1, 0, 'if(' + guardCall(lineAt(s0)) + ')break;']);
           }
           prev = 'a'; prevWord = w;
           continue;
@@ -393,9 +431,13 @@
     }
     try { scan(0, null); } catch (e) { return src; }
     if (!ins.length) return src;
-    ins.sort(function (a, b) { return b[0] - a[0]; });
+    /* the same spot can be found twice (a loop inside ${…} of a template literal); keep one */
+    var seen = {};
+    ins = ins.filter(function (x) { var key = x[0] + '|' + x[2]; if (seen[key]) return false; seen[key] = 1; return true; });
+    /* insert from the end so earlier positions stay valid; at the same spot the closing ")" goes in first */
+    ins.sort(function (a, b) { return b[0] - a[0] || b[1] - a[1]; });
     var out = src;
-    ins.forEach(function (x) { out = out.slice(0, x[0]) + 'if(__hpLoop("' + file + '",' + x[1] + '))break;' + out.slice(x[0]); });
+    ins.forEach(function (x) { out = out.slice(0, x[0]) + x[2] + out.slice(x[0]); });
     return out;
   }
   function lineOf(s, pos) { return countNL(s, 0, pos) + 1; }
@@ -407,11 +449,42 @@
       return open + guardLoops(body, 'html', lineOf(html, offset + open.length)) + close;
     });
   }
+  /* onclick="…" and other event attributes can hold loops too: guard them the same way.
+     Comments and the insides of <script> / <style> / <textarea> / <title> are skipped. */
+  var TAG_OR_RAW = /<!--[\s\S]*?(?:-->|$)|<(script|style|textarea|title)\b[^>]*>[\s\S]*?(?:<\/\1\s*>|$)|<[a-zA-Z][\w-]*(?:\s+[^\s"'>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?)*\s*\/?>/gi;
+  function guardHtmlAttrs(html) {
+    return html.replace(TAG_OR_RAW, function (tag, raw, offset) {
+      if (raw || tag.charAt(1) === '!' || !/\son[a-z]+\s*=/i.test(tag) || !/\b(for|while|do)\b/.test(tag)) return tag;
+      return tag.replace(/(\son[a-z]+\s*=\s*)(?:"([^"]*)"|'([^']*)')/gi, function (all, pre, dq, sq, at) {
+        var code = dq != null ? dq : sq, q = dq != null ? '"' : "'";
+        return pre + q + guardLoops(code, 'html', lineOf(html, offset + at)) + q;
+      });
+    });
+  }
 
   /* ------------------------------------------------------------ preview prelude (runs inside the iframe) */
   function PRELUDE(cfg) {
     var P = window.parent, RID = cfg.rid, armed = !cfg.auto;
-    function send(o) { o.__hp = RID; try { P.postMessage(o, '*'); } catch (e) { } }
+    /* Messages are sent in one batch per task. A loop that logs 100 000 lines would otherwise send
+       100 000 messages and freeze the app on a slow phone; only the newest 300 lines are kept
+       (the console shows no more; the same for skipped pop-ups), errors and other messages are never dropped. */
+    var later = window.setTimeout.bind(window), queue = [], nLogs = 0, lost = 0, flushing = false, KEEP = 300;
+    function flush() {
+      flushing = false;
+      if (!queue.length) return;
+      var items = queue, d = lost;
+      queue = []; nLogs = 0; lost = 0;
+      try { P.postMessage({ __hp: RID, t: 'batch', items: items, dropped: d }, '*'); } catch (e) { }
+    }
+    function send(o) {
+      queue.push(o);
+      if ((o.t === 'log' || o.t === 'modal') && ++nLogs > KEEP * 2) {
+        var cut = nLogs - KEEP, kept = [];
+        for (var i = 0; i < queue.length; i++) { if ((queue[i].t === 'log' || queue[i].t === 'modal') && cut > 0) { cut--; lost++; } else kept.push(queue[i]); }
+        queue = kept; nLogs = KEEP;
+      }
+      if (!flushing) { flushing = true; later(flush, 0); }
+    }
     function fmt(v, d, q) {
       try {
         if (typeof v === 'string') return q ? JSON.stringify(v) : v;
@@ -451,6 +524,22 @@
       };
     });
     con.clear = function () { send({ t: 'clear' }); };
+    var counts = {}, timers = {};
+    function label(l) { return l === undefined ? 'default' : String(l); }
+    function out(lv, s) { send({ t: 'log', lv: lv, s: String(s).slice(0, 4000) }); }
+    con.assert = function (ok) {
+      if (ok) return;
+      var parts = ['Assertion failed'];
+      for (var i = 1; i < arguments.length; i++) parts.push(fmt(arguments[i], 0, false));
+      out('error', parts.join(' '));
+    };
+    con.count = function (l) { l = label(l); counts[l] = (counts[l] || 0) + 1; out('log', l + ': ' + counts[l]); };
+    con.countReset = function (l) { counts[label(l)] = 0; };
+    con.time = function (l) { timers[label(l)] = Date.now(); };
+    con.timeLog = function (l) { l = label(l); if (timers[l] != null) out('log', l + ': ' + (Date.now() - timers[l]) + ' ms'); };
+    con.timeEnd = function (l) { con.timeLog(l); delete timers[label(l)]; };
+    con.group = con.groupCollapsed = function () { if (arguments.length) con.log.apply(con, arguments); };
+    con.groupEnd = function () { };
     window.addEventListener('error', function (e) {
       var el = e.target;
       if (el && el !== window && el.tagName) { send({ t: 'res404', s: '<' + el.tagName.toLowerCase() + '> ' + (el.getAttribute('src') || el.getAttribute('href') || '') }); return; }
@@ -462,22 +551,31 @@
       send({ t: 'err', s: 'Uncaught (in promise) ' + (r && r.message ? (r.name || 'Error') + ': ' + r.message : fmt(r, 0, true)), l: 0 });
       e.preventDefault();
     });
-    var t0 = 0, active = false, tripped = false;
+    var t0 = 0, active = false, tripped = false, dialogs = 0;
     window.__hpLoop = function (f, l) {
       var now = Date.now();
-      if (!active) { active = true; t0 = now; tripped = false; setTimeout(function () { active = false; }, 0); }
+      if (!active) { active = true; t0 = now; tripped = false; dialogs = 0; later(function () { active = false; }, 0); }
       if (now - t0 > cfg.limit) { if (!tripped) { tripped = true; send({ t: 'loop', f: f, l: l }); } return true; }
       return false;
     };
-    if (cfg.auto) {
-      ['alert', 'confirm', 'prompt'].forEach(function (k) {
-        var orig = window[k];
-        window[k] = function (m) {
-          if (armed) return orig.apply(window, arguments);
+    /* alert / confirm / prompt: skipped during auto-updates until the student touches the page, and
+       the time spent waiting for an answer does not count for the loop guard (a "guess the number"
+       loop with prompt() must not be stopped while the student is typing). After 20 pop-ups in one
+       loop the waiting counts again, so a loop that never ends with alert() inside still stops. */
+    ['alert', 'confirm', 'prompt'].forEach(function (k) {
+      var orig = window[k];
+      if (typeof orig !== 'function') return;
+      window[k] = function (m) {
+        if (!armed) {
           send({ t: 'modal', f: k, s: m === undefined ? '' : String(m) });
           return k === 'confirm' ? false : (k === 'prompt' ? null : undefined);
-        };
-      });
+        }
+        flush(); /* show earlier console lines before the pop-up blocks the page */
+        var s = Date.now();
+        try { return orig.apply(window, arguments); } finally { if (active && ++dialogs <= 20) t0 += Date.now() - s; }
+      };
+    });
+    if (cfg.auto) {
       var arm = function () { armed = true; };
       window.addEventListener('pointerdown', arm, true);
       window.addEventListener('keydown', arm, true);
@@ -522,7 +620,7 @@
   function buildDoc(o) {
     o = o || {};
     var html = S.html, css = S.css, js = S.js;
-    if (o.preview) { html = guardHtmlScripts(html); js = guardLoops(js, 'js', 1); }
+    if (o.preview) { html = guardHtmlAttrs(guardHtmlScripts(html)); js = guardLoops(js, 'js', 1); }
     var safeCss = css.replace(/<\/style/gi, '<\\/style');
     var safeJs = js.replace(/<\/script/gi, '<\\/script');
     var cssBlock = [{ k: 'inj', s: '<style>\n' }, { k: 'css', s: safeCss, src: 1 }, { k: 'inj', s: (/\n$/.test(safeCss) ? '' : '\n') + '</style>' }];
@@ -589,7 +687,7 @@
     'dfn abbr data time code var samp kbd sub sup i b u mark bdi bdo span br wbr ins del picture source img iframe embed object ' +
     'param video audio track map area table caption colgroup col tbody thead tfoot tr td th form label input button select ' +
     'datalist optgroup option textarea output progress meter fieldset legend details summary dialog menu template slot canvas ' +
-    'svg math center font marquee big tt strike search').split(' ');
+    'svg math center font marquee big tt strike search ruby rt rp').split(' ');
   var OPTIONAL = 'p li dt dd tr td th thead tbody tfoot option optgroup colgroup caption html head body rt rp'.split(' ');
   var P_CLOSERS = 'address article aside blockquote details div dl fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 header hgroup hr main menu nav ol p pre section table ul'.split(' ');
   var RAW = ['script', 'style', 'textarea', 'title'];
@@ -677,6 +775,8 @@
     FILES.forEach(function (f) { renderGutter(f, f === lastCode); });
   }
   function hintFor(msg) {
+    if (/has already been declared|redeclaration of/.test(msg)) return 'err_hint_declared';
+    if (/Assignment to constant|invalid assignment to const|Attempted to assign to readonly/.test(msg)) return 'err_hint_const';
     if (/is not defined/.test(msg)) return 'err_hint_undefined';
     if (/of (null|undefined)|null is not an object|undefined is not an object/.test(msg)) return 'err_hint_null';
     if (/is not a function/.test(msg)) return 'err_hint_notfn';
@@ -697,7 +797,9 @@
     row.appendChild(EDU.el('span', { class: 'hp-con-ico', 'aria-hidden': 'true', text: ICON[x.lv] || '›' }));
     var body = EDU.el('div', { class: 'hp-con-body' });
     var where = x.file && x.line ? t('err_at', { file: LABEL[x.file] || x.file, line: EDU.fmt(x.line) }) : '';
-    if (x.key) body.appendChild(EDU.el('span', { class: 'hp-con-msg', text: t(x.key, Object.assign({ where: where }, x.vars || {})) }));
+    /* a loop typed in the console line has no file + line: say "Console" instead of empty ( ) */
+    var whereText = where || (x.key === 'loop_stopped' ? t('console') : '');
+    if (x.key) body.appendChild(EDU.el('span', { class: 'hp-con-msg', text: t(x.key, Object.assign({ where: whereText }, x.vars || {})) }));
     if (x.text != null && x.text !== '') body.appendChild(EDU.el('span', { class: 'hp-con-text no-i18n', text: x.text }));
     if (x.key2) body.appendChild(EDU.el('span', { class: 'hp-con-msg', text: ' ' + t(x.key2) }));
     if (where && (x.file === 'html' || x.file === 'js') && x.key !== 'loop_stopped') {
@@ -757,18 +859,24 @@
   window.addEventListener('message', function (e) {
     var d = e.data;
     if (!d || e.source !== frame.contentWindow || d.__hp !== runId) return;
+    if (d.t !== 'batch' || !Array.isArray(d.items)) return;
+    if (d.dropped > 0) dropped++;
+    d.items.forEach(function (it) { if (it && typeof it === 'object') onPreviewMsg(it); });
+  });
+  function onPreviewMsg(d) {
     var loc;
     switch (d.t) {
-      case 'log': addEntry({ lv: d.lv, text: d.s }); break;
-      case 'clear': entries = entries.filter(function (x) { return x.file === 'html' && x.lv === 'warn'; }); addEntry({ lv: 'info', key: 'console_cleared' }); break;
+      case 'log': addEntry({ lv: d.lv, text: String(d.s) }); break;
+      case 'clear': entries = entries.filter(function (x) { return x.file === 'html' && x.lv === 'warn'; }); dropped = 0; addEntry({ lv: 'info', key: 'console_cleared' }); break;
       case 'err':
         loc = d.cmd ? null : mapLine(d.l);
         addEntry({ lv: 'error', text: d.s, file: loc && loc.file, line: loc && loc.line, hint: hintFor(d.s) });
         if (loc) mark(loc.file, loc.line, 'err');
         break;
       case 'loop':
-        addEntry({ lv: 'warn', key: 'loop_stopped', file: d.f === 'cmd' ? null : d.f, line: d.l });
-        if (d.f !== 'cmd') mark(d.f, d.l, 'err');
+        var lf = LOOP_FILES[d.f] || 'cmd';
+        addEntry({ lv: 'warn', key: 'loop_stopped', file: lf === 'cmd' ? null : lf, line: d.l });
+        if (lf !== 'cmd') mark(lf, d.l, 'err');
         break;
       case 'modal': addEntry({ lv: 'info', key: 'modal_skipped', vars: { fn: d.f }, text: d.s }); break;
       case 'link': addEntry({ lv: 'info', key: 'link_clicked', text: d.s }); break;
@@ -777,7 +885,7 @@
       case 'res': addEntry({ lv: 'res', text: d.s }); break;
       case 'scroll': S.sy = d.y || 0; schedulePersist(); break;
     }
-  });
+  }
   $('#hpConClear').addEventListener('click', function () { entries = []; dropped = 0; renderConsole(); });
   var history_ = [], histPos = 0;
   $('#hpConForm').addEventListener('submit', function (e) {
@@ -787,7 +895,10 @@
     history_.push(code); if (history_.length > 50) history_.shift(); histPos = history_.length;
     inp.value = '';
     addEntry({ lv: 'cmd', text: code });
-    try { frame.contentWindow.postMessage({ __hpEval: runId, code: guardLoops(code, 'cmd', 1) }, '*'); } catch (x) { }
+    /* `let a = 5` then `a * 2`: let / const inside eval() would vanish after the line, so a
+       leading let / const becomes var and the variable stays for the next lines (like DevTools). */
+    var run1 = code.replace(/^(\s*)(?:let|const)(\s+[A-Za-z_$\[{])/, '$1var$2');
+    try { frame.contentWindow.postMessage({ __hpEval: runId, code: guardLoops(run1, 'cmd', 1) }, '*'); } catch (x) { }
   });
   $('#hpConInput').addEventListener('keydown', function (e) {
     if (e.key === 'ArrowUp' && histPos > 0) { histPos--; this.value = history_[histPos]; e.preventDefault(); }
@@ -985,7 +1096,9 @@
       var low = v.toLowerCase();
       var lim = -1, sIdx = low.search(/<script\b[^>]*src\s*=\s*["']?(\.\/)?script\.js/), bIdx = low.lastIndexOf('</body');
       if (sIdx >= 0) lim = sIdx; else if (bIdx >= 0) lim = bIdx;
-      if (lim >= 0 && (S.caret[g] == null || pos > lim)) {
+      /* a cursor left in <head> (e.g. in <title>) is not a place for page content */
+      var bm = /<body\b[^>]*>/.exec(low), inHead = !!bm && pos < bm.index + bm[0].length;
+      if (lim >= 0 && (S.caret[g] == null || pos > lim || inHead)) {
         lineStart = v.lastIndexOf('\n', lim - 1) + 1;
         var limInd = /^[ \t]*/.exec(v.slice(lineStart))[0];
         if (bIdx === lim && sIdx < 0) limInd += '  ';
@@ -994,10 +1107,28 @@
         return doInsert(g, ta, pos, text);
       }
     }
-    if (g === 'css' && item.sel && braceDepth(v.slice(0, pos)) === 0) {
-      text = item.sel + ' {\n  ' + item.i.split('\n').join('\n  ') + '\n}';
-      if (pos === v.length && v && !/\n\s*$/.test(v)) text = '\n\n' + text;
-      else if (pos === v.length && v && !/\n\n$/.test(v)) text = '\n' + text;
+    if (g === 'css' && braceDepth(v.slice(0, pos)) === 0) {
+      /* outside any { }: a property gets its own rule, and every rule is kept apart by a blank line
+         (rules like :hover or @media used to be glued to the previous "}") */
+      if (item.sel) text = item.sel + ' {\n  ' + item.i.split('\n').join('\n  ') + '\n}';
+      var head = v.slice(0, pos), tail = v.slice(pos);
+      if (head.trim()) {
+        if (!/\n[ \t]*$/.test(head)) text = '\n\n' + text;
+        else if (!/\n[ \t]*\n[ \t]*$/.test(head)) text = '\n' + text;
+      }
+      if (tail.trim()) {
+        if (!/^[ \t]*\n/.test(tail)) text += '\n\n';
+        else if (!/^[ \t]*\n[ \t]*\n/.test(tail)) text += '\n';
+      }
+    } else if (g === 'css' && item.sel) {
+      /* inside a { } rule: a property goes on its own line after the cursor's line,
+         not glued to "color: red;" or into the middle of it */
+      var ls0 = v.lastIndexOf('\n', pos - 1) + 1, before0 = v.slice(ls0, pos);
+      if (before0.trim()) {
+        var extra = /\{\s*$/.test(before0) ? '  ' : '';
+        if (!extra) { var le0 = v.indexOf('\n', pos); pos = le0 < 0 ? v.length : le0; }
+        text = '\n' + extra + item.i.split('\n').join('\n' + extra);
+      }
     }
     lineStart = v.lastIndexOf('\n', pos - 1) + 1;
     prefix = v.slice(lineStart, pos);

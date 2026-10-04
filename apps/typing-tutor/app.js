@@ -31,7 +31,8 @@
     langCode: store.get('langCode', null),
     name: String(store.get('name', '') || '')
   };
-  if (!Array.isArray(S.hist)) S.hist = [];
+  /* saved data can be damaged (old versions, edited by hand): keep only well-formed history rows */
+  S.hist = (Array.isArray(S.hist) ? S.hist : []).filter(function (h) { return h && typeof h === 'object' && !Array.isArray(h); }).slice(0, 30);
   if ([0, 60, 120, 300].indexOf(S.limit) < 0) S.limit = 0;
 
   /* ---------------------------------------------------------------- text helpers */
@@ -75,6 +76,34 @@
   }
   function normTarget(s) { return normCommon(s).replace(/ {2,}/g, ' ').trim(); }
   function normTyped(s) { return normCommon(s); }
+  /* Is the typed letter g the same as the target letter? Indian-language keyboards often have no key for
+     the danda or the Urdu full stop / comma, so the plain keyboard sign is accepted too. */
+  var EQUIV = { '।': '|.', '۔': '.', '،': ',', '؟': '?', '؛': ';' };
+  function same(g, tg) { return g === tg || (g.length === 1 && EQUIV[tg] !== undefined && EQUIV[tg].indexOf(g) >= 0); }
+  /* Is the typed letter g a half-built version of the target letter (the keyboard is still adding to it)?
+     Compared in decomposed form, so two-part vowel signs typed in two steps (Tamil கெ + ா = கொ, Malayalam,
+     Kannada, Bengali, Odia) and Malayalam chillu letters typed as letter + virama + ZWJ are not mistakes. */
+  var CHILLU = { 'ൺ': 'ണ്', 'ൻ': 'ന്', 'ർ': 'ര്', 'ൽ': 'ല്', 'ൾ': 'ള്', 'ൿ': 'ക്' };
+  function cmpKey(s) {
+    try { s = s.normalize('NFD'); } catch (e) { }
+    return s.replace(/[ൺൻർൽൾൿ]/g, function (c) { return CHILLU[c]; }).replace(/[يى]/g, 'ی');
+  }
+  function building(g, tg) {
+    if (!g || g === tg) return false;
+    var kg = cmpKey(g), kt = cmpKey(tg);
+    return kt.length >= kg.length && kt.indexOf(kg) === 0;
+  }
+  /* Which Indian script is a pasted free-practice text written in? null = English / Latin */
+  var SCRIPTS = [['hi', /[ऀ-ॿ]/g], ['bn', /[ঀ-৿]/g], ['pa', /[਀-੿]/g], ['gu', /[઀-૿]/g],
+    ['or', /[଀-୿]/g], ['ta', /[஀-௿]/g], ['te', /[ఀ-౿]/g], ['kn', /[ಀ-೿]/g],
+    ['ml', /[ഀ-ൿ]/g], ['ur', /[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻾]/g]];
+  function scriptLang(s) {
+    var latin = (s.match(/[A-Za-z]/g) || []).length, best = null, bestN = 0;
+    SCRIPTS.forEach(function (x) { var n = (s.match(x[1]) || []).length; if (n > bestN) { bestN = n; best = x[0]; } });
+    if (!best || bestN <= latin) return null;
+    if (best === 'hi' && EDU.lang === 'mr') return 'mr';
+    return best;
+  }
   function easify(s) {
     var out;
     try { out = s.toLowerCase().replace(new RegExp('[^\\p{L}\\p{M}\\p{N} ]', 'gu'), ''); }
@@ -193,15 +222,31 @@
   /* ---------------------------------------------------------------- typing engine */
   var R = null, tick = null;
 
+  /* own-language typing: the "Type in your language" passages, and free practice with a text in an Indian script */
+  function isNat(cfg) { return !!cfg && (cfg.mode === 'lang' || !!cfg.nat); }
+  /* height of the sticky page header, so scrolling never hides the trainer under it */
+  function headerH() {
+    var h = $('.edu-top');
+    if (!h) return 0;
+    var p = getComputedStyle(h).position;
+    return p === 'sticky' || p === 'fixed' ? h.getBoundingClientRect().height : 0;
+  }
+  function reveal(elm, toTop) {
+    var r = elm.getBoundingClientRect(), hh = headerH(), vh = window.innerHeight;
+    if (toTop ? (r.top < hh || r.top > vh * 0.5) : r.top < hh) window.scrollBy(0, r.top - hh - 8);
+    else if (!toTop && r.bottom > vh) window.scrollBy(0, Math.min(r.bottom - vh + 8, r.top - hh - 8));
+  }
+
   function startRun(cfg) {
     stopTick();
-    var lang = cfg.mode === 'lang' ? cfg.lang : 'en';
+    var isLang = isNat(cfg);
+    var lang = cfg.mode === 'lang' ? cfg.lang : (cfg.nat || 'en');
     var text = normTarget(cfg.text);
     if (cfg.easy) text = easify(text);
-    R = { cfg: cfg, lang: lang, text: text, T: graphemes(text, lang), st: [], shown: [], committed: [], typedLen: 0,
+    R = { cfg: cfg, lang: lang, nat: isLang, skip: cfg.mode === 'free' && !isLang, text: text, T: graphemes(text, lang), st: [], shown: [], committed: [], typedLen: 0,
       strokes: 0, errors: 0, start: 0, end: 0, done: false, composing: false, cur: -1 };
     showTrainer();
-    var isLang = cfg.mode === 'lang', nonLatin = /[^\u0000-ɏ\s]/.test(text);
+    var nonLatin = /[^\u0000-ɏ\s]/.test(text);
     target.dir = isLang ? EDU.langInfo(lang).dir : (nonLatin ? 'auto' : 'ltr');
     target.lang = isLang ? lang : (nonLatin ? '' : 'en');
     target.classList.toggle('lang', isLang || nonLatin);
@@ -223,8 +268,7 @@
     renderTrainerChrome();
     updateStats(); updateHint();
     try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); }
-    var tr = $('#trainer');
-    if (tr.getBoundingClientRect().top < 0 || tr.getBoundingClientRect().top > window.innerHeight * 0.5) tr.scrollIntoView({ block: 'start' });
+    reveal($('#trainer'), true);
   }
 
   function renderTarget() {
@@ -250,14 +294,19 @@
     if (G.length && !R.start) { R.start = Date.now(); startTick(); }
     var n = Math.min(G.length, T.length), st = new Array(n);
     for (var i = 0; i < n; i++) {
-      if (G[i] === T[i]) st[i] = 'ok';
-      else if (i === G.length - 1 && T[i].length > G[i].length && T[i].indexOf(G[i]) === 0) st[i] = 'pend';   /* IME still building this letter */
+      if (same(G[i], T[i])) st[i] = 'ok';
+      else if (R.skip && !KEYMAP[T[i]]) st[i] = 'ok';   /* free practice: a sign that is not on the English keyboard (₹, é, emoji) is skipped with any key */
+      else if (i === G.length - 1 && building(G[i], T[i])) st[i] = 'pend';   /* the keyboard is still building this letter */
       else st[i] = 'bad';
     }
-    if (G.length > R.typedLen && G.length <= T.length && R.cfg.mode !== 'lang') flashKey(G[G.length - 1], st[G.length - 1] !== 'bad');
+    if (G.length > R.typedLen && G.length <= T.length && !R.nat) flashKey(G[G.length - 1], st[G.length - 1] !== 'bad');
     R.st = st; R.typedLen = G.length;
-    if (!R.composing) commit(st);
-    if (T.length && G.length >= T.length && st[T.length - 1] !== 'pend') { commit(st); finish('done'); return; }
+    /* Indian-language keyboards show half-built letters while composing, so those are judged when the letter is
+       finished. English drills are judged on every key, also on phone keyboards that compose whole words. */
+    if (!R.composing || !R.nat) commit(st);
+    /* never finish in the middle of a composition: transliteration keyboards (Gboard "namaste → नमस्ते") show
+       Latin letters until the word is converted, which can be longer than the rest of the text */
+    if (T.length && G.length >= T.length && st[T.length - 1] !== 'pend' && !(R.composing && R.nat)) { commit(st); finish('done'); return; }
     paint(); updateStats(); updateHint();
   }
 
@@ -294,7 +343,7 @@
   function correctCount() { var n = 0; for (var i = 0; i < R.st.length; i++) if (R.st[i] === 'ok') n++; return n; }
   function speedNow(ms) {
     var min = Math.max(ms, 1000) / 60000, c = correctCount();
-    return R.cfg.mode === 'lang' ? c / min : c / 5 / min;
+    return R.nat ? c / min : c / 5 / min;
   }
   function accuracy() { return R.strokes ? (R.strokes - R.errors) / R.strokes * 100 : 100; }
   function accShown(a) { var r = Math.round(a); if (r === 100 && R.errors > 0) r = 99; return r; }
@@ -307,6 +356,8 @@
     var e = $('#st-err');
     e.textContent = EDU.fmt(R.errors);
     e.classList.toggle('bad', R.errors > 0);
+    /* label and value change together: "Time left" counts down, and after the time is up it shows the time taken */
+    $('#st-time-lbl').textContent = t(limit && !R.done ? 'time_left' : 'time');
     $('#st-time').textContent = limit && !R.done ? fmtTime(Math.max(0, limit * 1000 - ms) + 999) : fmtTime(R.done ? ms + 500 : ms);
     var pct = R.T.length ? Math.min(100, R.typedLen / R.T.length * 100) : 0;
     if (limit && !R.done) pct = Math.max(pct, 0);
@@ -354,7 +405,7 @@
       store.set('langBest', S.langBest);
     }
     S.hist.unshift({ ts: now, mode: cfg.mode, ref: cfg.mode === 'lesson' ? cfg.lessonId : (cfg.mode === 'lang' ? cfg.lang : ''),
-      idx: cfg.idx || 0, speed: res.speed, unit: cfg.mode === 'lang' ? 'cpm' : 'wpm', acc: res.accShown, err: res.errors, ms: ms });
+      idx: cfg.idx || 0, speed: res.speed, unit: R.nat ? 'cpm' : 'wpm', acc: res.accShown, err: res.errors, ms: ms });
     S.hist = S.hist.slice(0, 30);
     store.set('hist', S.hist);
     R.res = res;
@@ -362,9 +413,8 @@
     target.classList.add('done');
     paint(); updateStats(); updateHint();
     showResult();
-    var r = $('#result');
     try { $('#again').focus({ preventScroll: true }); } catch (e) { }
-    if (r.getBoundingClientRect().top < 0 || r.getBoundingClientRect().bottom > window.innerHeight) r.scrollIntoView({ block: 'nearest' });
+    reveal($('#result'));
   }
 
   /* ---------------------------------------------------------------- trainer UI */
@@ -380,13 +430,14 @@
     b.innerHTML = '';
     if (res.best) b.appendChild(el('span', { class: 'badge success tt-newbest', text: '🏆 ' + t('new_best') }));
     $('#res-speed').textContent = EDU.fmt(res.speed);
-    $('#res-speed-lbl').textContent = t(cfg.mode === 'lang' ? 'speed_cpm' : 'speed_wpm');
+    $('#res-speed-lbl').textContent = t(R.nat ? 'speed_cpm' : 'speed_wpm');
     $('#res-acc').textContent = EDU.fmt(res.accShown) + '%';
     $('#res-err').textContent = EDU.fmt(res.errors);
     $('#res-time').textContent = fmtTime(res.ms + 500);
     var msg;
     if (cfg.mode === 'lesson') msg = 'res_msg' + res.stars;
-    else msg = res.acc >= 95 ? 'res_msg_ok' : (res.acc >= 85 ? 'res_msg1' : 'res_msg0');
+    /* "try a longer text or a time limit" only makes sense after an untimed free-practice text */
+    else msg = res.acc >= 95 ? (cfg.mode === 'free' && !cfg.limit ? 'res_msg_ok' : 'res_msg_good') : (res.acc >= 85 ? 'res_msg1' : 'res_msg0');
     $('#res-msg').textContent = t(msg);
     var det = $('#res-detail');
     det.dataset.correct = String(res.correct);
@@ -408,16 +459,16 @@
       sub.textContent = t('goal_line', { goal: EDU.fmt(L.goal) });
     } else if (cfg.mode === 'free') {
       title.textContent = t('tab_free');
-      sub.textContent = cfg.limit ? t('time_limit') + ': ' + t('min_n', { n: EDU.fmt(cfg.limit / 60) }) : t('time_limit') + ': ' + t('no_limit');
+      sub.textContent = (cfg.nat ? EDU.langInfo(cfg.nat).native + ' · ' : '') +
+        t('time_limit') + ': ' + (cfg.limit ? t('min_n', { n: EDU.fmt(cfg.limit / 60) }) : t('no_limit'));
     } else {
       var P = passages(cfg.lang)[cfg.idx] || {};
       title.appendChild(el('span', { text: EDU.langInfo(cfg.lang).native + ' · ' }));
       title.appendChild(el('span', { lang: cfg.lang, dir: EDU.langInfo(cfg.lang).dir, text: P.title || '' }));
       sub.textContent = t('lang_hint_short');
     }
-    var isLang = cfg.mode === 'lang';
+    var isLang = R.nat;
     $('#st-speed-lbl').textContent = t(isLang ? 'speed_cpm' : 'speed_wpm');
-    $('#st-time-lbl').textContent = t(cfg.limit && !R.done ? 'time_left' : 'time');
     $('#kb-area').hidden = isLang;
     $('#lang-note').hidden = !isLang;
     $('#hint').hidden = isLang;
@@ -459,7 +510,7 @@
     $$('.finger.on', hands).forEach(function (e) { e.classList.remove('on'); });
     hands.classList.remove('active');
     hint.innerHTML = '';
-    if (!R || R.done || R.cfg.mode === 'lang') return;
+    if (!R || R.done || R.nat) return;
     var keys = [], last = R.typedLen - 1;
     if (last >= 0 && last < R.st.length && R.st[last] === 'bad') {
       keys = [['bksp', '']];
@@ -586,7 +637,8 @@
       EDU.toast(t('too_long', { n: EDU.fmt(MAX_FREE) }));
     }
     if (S.easy && !easify(clean)) { EDU.toast(t('free_empty')); return; }
-    startRun({ mode: 'free', text: clean, limit: S.limit, easy: S.easy, idx: 0 });
+    /* a Hindi, Tamil, Urdu… text is typed with that language's keyboard: no English keyboard guide, speed in characters per minute */
+    startRun({ mode: 'free', text: clean, limit: S.limit, easy: S.easy, idx: 0, nat: scriptLang(clean) });
   }
 
   /* ---------------------------------------------------------------- type in your language */

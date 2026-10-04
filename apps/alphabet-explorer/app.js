@@ -13,6 +13,7 @@
   var LANG_SCRIPT = { en: 'deva', hi: 'deva', mr: 'deva', bn: 'beng', pa: 'guru', gu: 'gujr', or: 'orya', ta: 'taml', te: 'telu', kn: 'knda', ml: 'mlym', ur: 'arab' };
   var ROUNDS = 10;
   var ZWJ = '‍';
+  var CARRIES = { 'ੳ': ['ਉ', 'ਊ', 'ਓ'], 'ੲ': ['ਇ', 'ਈ', 'ਏ'] };
   var VIRAMA = /[्্੍્୍்్್്]/;
   var MARK;
   try { MARK = new RegExp('^[\\p{M}\\u200C\\u200D]$', 'u'); } catch (e) { MARK = /^[̀-ͯऀ-ःऺ-ॏ॑-ॗॢॣঁ-ঃ়-ৗৢৣਁ-ਃ਼-ੑੰੱੵઁ-ઃ઼-્ૢૣଁ-ଃ଼-ୗୢୣஂா-ௗఀ-ఄా-ౖౢౣಁ-ಃ಼-ೖೢೣഀ-ഃ഻഼ാ-ൗൢൣً-ٰٟ‌‍]$/; }
@@ -55,27 +56,30 @@
       };
     }
     var set = function (str) { var o = {}; String(str || '').split(' ').forEach(function (c) { if (c) o[c] = 1; }); return o; };
-    var f = s.forms || {};
+    var f = s.forms || {}, same = {};
+    String(s.same || '').split('|').forEach(function (grp, k) { grp.split(' ').forEach(function (c) { if (c) same[c] = k + 1; }); });
     cache[id] = {
-      id: id, s: s, info: info, groups: groups, flat: flat, signs: signs, lang: s.voice[0],
+      id: id, s: s, info: info, groups: groups, flat: flat, signs: signs, lang: s.voice[0], same: same,
       nj: set(f.nj), eo: set(f.eo), ao: set(f.ao), latin: !!s.latin, rtl: s.dir === 'rtl'
     };
     return cache[id];
   }
 
   /* ================================================================ state */
-  function validScript(id) { return id && D.scripts[id] ? id : null; }
+  /* saved values may be missing, old or hand-edited: never trust their type */
+  function validScript(id) { return typeof id === 'string' && Object.prototype.hasOwnProperty.call(D.scripts, id) ? id : null; }
+  function objOf(v) { return v && typeof v === 'object' && !Array.isArray(v) ? v : {}; }
   var state = {
     script: validScript(store.get('script', null)) || LANG_SCRIPT[EDU.lang] || 'deva',
     picked: !!validScript(store.get('script', null)),
     tab: TABS.indexOf(store.get('tab', 'letters')) >= 0 ? store.get('tab', 'letters') : 'letters',
-    sel: store.get('sel', {}) || {},
-    base: store.get('base', {}) || {},
-    traceIdx: store.get('traceIdx', {}) || {},
-    best: store.get('best', {}) || {},
+    sel: objOf(store.get('sel', {})),
+    base: objOf(store.get('base', {})),
+    traceIdx: objOf(store.get('traceIdx', {})),
+    best: objOf(store.get('best', {})),
     slow: !!store.get('slow', false),
     hint: !!store.get('hint', false),
-    pool: store.get('pool', 'all'),
+    pool: String(store.get('pool', 'all')),
     nopt: [3, 4, 6].indexOf(store.get('nopt', 4)) >= 0 ? store.get('nopt', 4) : 4
   };
   function save() {
@@ -113,6 +117,7 @@
     app.style.setProperty('--sf-lh', String(sc.s.lh || 1.4));
     app.classList.toggle('is-arab', sc.id === 'arab');
     app.classList.toggle('is-latn', sc.latin);
+    app.classList.toggle('is-wide', sc.id === 'taml' || sc.id === 'mlym');   /* கௌ കൈ: wide vowel-sign syllables */
     loadFont(sc);
   }
   /* letter content keeps its own language + direction, whatever the page language is */
@@ -185,6 +190,7 @@
     }
     var cl = clusters(w, sc.id === 'taml'), targets = [it.ch];   /* Tamil pulli letters stand alone (no conjuncts) */
     if (it.ch.length > 1 && /^[अঅਅઅଅఅಅഅ]/.test(it.ch)) targets.push(it.ch.slice(1));
+    if (CARRIES[it.ch]) targets = targets.concat(CARRIES[it.ch]);   /* Gurmukhi ੳ is written as ਉ ਊ ਓ inside words */
     if (VIRAMA.test(it.ch.slice(-1))) targets.push(it.ch.slice(0, -1));
     for (var a = 0; a < targets.length; a++) {
       for (var b = 0; b < cl.length; b++) {
@@ -231,11 +237,13 @@
   function setScript(id, byUser) {
     if (!D.scripts[id]) return;
     if (byUser) state.picked = true;
-    if (state.script !== id) { state.script = id; stopGame(); traceStrokes = []; }
+    var hadFocus = !!(document.activeElement && document.activeElement.closest && document.activeElement.closest('#script-bar'));
+    if (state.script !== id) { state.script = id; stopGame(); traceStrokes = []; lastEval = { cover: 0, out: 0 }; }
     save();
     applyScriptStyle();
     checkVoice();
     renderAll();
+    if (hadFocus) { var nb = $('#script-bar [aria-pressed="true"]'); if (nb) nb.focus(); }
   }
   function setTab(tab) {
     if (TABS.indexOf(tab) < 0) tab = 'letters';
@@ -360,7 +368,11 @@
     bar.innerHTML = '';
     sg.bases.forEach(function (b, i) {
       bar.appendChild(el('button', { type: 'button', text: b.ch, 'aria-pressed': i === bi ? 'true' : 'false', dataset: { base: b.ch },
-        onclick: function () { state.base[sc.id] = i; save(); renderSigns(); say(b.ch + sg.marks[0]); } }));
+        onclick: function (e) {
+          var hadFocus = document.activeElement === e.currentTarget;
+          state.base[sc.id] = i; save(); renderSigns(); say(b.ch + sg.marks[0]);
+          if (hadFocus) { var nb = $('#base-bar [aria-pressed="true"]'); if (nb) nb.focus(); }   /* keyboard users keep their place */
+        } }));
     });
     var base = sg.bases[bi], row = scriptAttrs($('#sign-row'), sc);
     row.innerHTML = '';
@@ -428,10 +440,41 @@
     return true;
   }
   function penWidth(W) { return Math.max(8, W * 0.045); }
+  /* The real ink box of a glyph, in em units from the text origin, found by drawing it once
+     and scanning the pixels. measureText() is not enough: for many Indic and Urdu glyphs
+     (and for offline fallback fonts such as Nirmala UI) Chrome reports a descent the glyph
+     does not have, which pushed the letter up and made it ~25% too small. */
+  var inkCache = {};
+  function inkBox(text, stack) {
+    var key = fontGen + '|' + stack + '|' + text;
+    if (Object.prototype.hasOwnProperty.call(inkCache, key)) return inkCache[key];
+    var R = 100, CW = 560, CH = 460, OX = 80, OY = 300, box = null;
+    try {
+      var cv = document.createElement('canvas'); cv.width = CW; cv.height = CH;
+      var c = cv.getContext('2d', { willReadFrequently: true });
+      c.direction = 'ltr'; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+      c.font = R + 'px ' + stack; c.fillStyle = '#000';
+      c.fillText(text, OX, OY);
+      var d = c.getImageData(0, 0, CW, CH).data, x0 = CW, x1 = -1, y0 = CH, y1 = -1, x, y, row;
+      for (y = 0; y < CH; y++) {
+        row = y * CW * 4;
+        for (x = 0; x < CW; x++) if (d[row + x * 4 + 3] > 40) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; y1 = y; }
+      }
+      if (x1 >= x0 && y1 >= y0) box = { l: (x0 - OX) / R, r: (x1 + 1 - OX) / R, t: (y0 - OY) / R, b: (y1 + 1 - OY) / R };
+    } catch (e) { box = null; }
+    inkCache[key] = box;
+    return box;
+  }
   /* place the glyph so that its real ink box fits ~78% of the canvas, centred */
   function fitGlyph(c, text, W, H, stack) {
     /* set direction + alignment before measuring: a canvas inherits dir="rtl" on Urdu pages */
     c.direction = 'ltr'; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+    var ink = inkBox(text, stack);
+    if (ink && ink.r > ink.l && ink.b > ink.t) {
+      var s = Math.min(W * 0.78 / (ink.r - ink.l), H * 0.74 / (ink.b - ink.t), H * 1.6);
+      c.font = s + 'px ' + stack;
+      return { size: s, x: W / 2 - (ink.l + ink.r) / 2 * s, y: H / 2 - (ink.t + ink.b) / 2 * s };
+    }
     var size = H * 0.6;
     c.font = size + 'px ' + stack;
     var m = c.measureText(text);
@@ -491,10 +534,10 @@
       oc.globalCompositeOperation = 'destination-out';
       oc.fillStyle = '#000';
       glyphPath(oc, text, W, H, sc.s.stack, 'fill');
-      g.globalAlpha = dark ? 0.32 : 0.22;
+      g.globalAlpha = dark ? 0.4 : 0.22;
       g.fillStyle = EDU.css('--primary') || '#0b4f5c';
       glyphPath(g, text, W, H, sc.s.stack, 'fill');
-      g.globalAlpha = dark ? 0.7 : 0.55;
+      g.globalAlpha = dark ? 0.8 : 0.55;
       g.drawImage(o, 0, 0);
       g.globalAlpha = 1;
     }
@@ -643,10 +686,15 @@
         onclick: function () { state.nopt = n; save(); stopGame(); renderGameControls(); } }));
     });
     $('#hint-chk').checked = state.hint;
-    var b = state.best[sc.id];
-    $('#game-best').textContent = b !== undefined ? '🏆 ' + t('best', { b: EDU.fmt(b), n: EDU.fmt(ROUNDS) }) : '';
+    var b = bestOf(sc);
+    $('#game-best').textContent = b !== null ? '🏆 ' + t('best', { b: EDU.fmt(b), n: EDU.fmt(ROUNDS) }) : '';
     $('#game-start-lbl').textContent = t(game && game.done ? 'play_again' : 'game_start');
     if (game && !game.done) renderRound();
+    if (game && game.done) renderEnd();
+  }
+  function bestOf(sc) {
+    var b = state.best[sc.id];
+    return typeof b === 'number' && b >= 0 && b <= ROUNDS ? Math.round(b) : null;
   }
   function stopGame() {
     game = null;
@@ -671,11 +719,17 @@
     if (!first) game.round++;
     if (game.round >= ROUNDS) return endGame();
     var sc = cur(), target = game.seq[game.round], n = Math.min(state.nopt, game.pool.length);
-    var others = EDU.shuffle(game.pool.filter(function (c) { return c !== target; })).slice(0, n - 1);
+    /* never offer a letter that sounds the same as the answer (Bengali জ / য), or two answers would be right */
+    var others = EDU.shuffle(game.pool.filter(function (c) { return !soundsSame(sc, c, target); })).slice(0, n - 1);
     game.opts = EDU.shuffle(others.concat([target]));
     game.answered = false;
     renderRound();
     say(letterSay(sc.info[target]));
+  }
+  function soundsSame(sc, a, b) {
+    if (a === b) return true;
+    var ra = sc.info[a].roman, rb = sc.info[b].roman;
+    return !!(ra && ra === rb) || !!(sc.same[a] && sc.same[a] === sc.same[b]);
   }
   function hintOn() { return state.hint || voice.ok === false; }
   function renderGameHint() {
@@ -723,14 +777,17 @@
     $('#game-play').hidden = true;
     $('#game-end').hidden = false;
     $('#game-start').hidden = false;
+    var s = game.score, b = bestOf(sc);
+    if (b === null || s > b) { state.best[sc.id] = s; save(); }
+    renderGameControls();   /* also draws the end card (renderEnd) */
+  }
+  /* end card text: called again on a language change so it never stays in the old language */
+  function renderEnd() {
     var s = game.score;
     $('#end-score').textContent = EDU.fmt(s) + ' / ' + EDU.fmt(ROUNDS);
     $('#end-stars').textContent = Array((s >= 9 ? 3 : s >= 6 ? 2 : 1) + 1).join('⭐');
     $('#end-msg').textContent = t('game_over', { s: EDU.fmt(s), n: EDU.fmt(ROUNDS) }) + ' ' + t(s >= 9 ? 'cheer_hi' : s >= 6 ? 'cheer_mid' : 'cheer_lo');
     $('#game-end').dataset.score = String(s);
-    if (state.best[sc.id] === undefined || s > state.best[sc.id]) { state.best[sc.id] = s; save(); }
-    renderGameControls();
-    $('#game-start-lbl').textContent = t('play_again');
   }
 
   /* ================================================================ print */
@@ -806,7 +863,8 @@
   $('#trace-clear').addEventListener('click', function () { traceStrokes = []; lastEval = { cover: 0, out: 0 }; drawTrace(); });
   $('#trace-guide').addEventListener('change', drawTrace);
   $('#trace-hear').addEventListener('click', function () { var sc = cur(); sayLetter(sc.info[sc.flat[traceIndex(sc)].ch], false); });
-  $('#trace-fs').addEventListener('click', function () { EDU.fullscreen($('#trace-stage')); });
+  /* full screen takes the canvas AND its buttons, so a child at the smartboard can Clear / Next */
+  $('#trace-fs').addEventListener('click', function () { EDU.fullscreen($('#trace-wrap')); });
   $('#sheet-print').addEventListener('click', function () { doPrint('sheet'); });
   $('#game-start').addEventListener('click', startGame);
   $('#game-hear').addEventListener('click', function () { if (game && !game.done) say(letterSay(cur().info[game.seq[game.round]])); });
@@ -830,7 +888,7 @@
   if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', function () { fontGen++; drawTrace(); fitPicker(); });
   EDU.onLang(function (lang) {
     chartFor = null;
-    if (!state.picked && LANG_SCRIPT[lang] && LANG_SCRIPT[lang] !== state.script) { state.script = LANG_SCRIPT[lang]; stopGame(); traceStrokes = []; }
+    if (!state.picked && LANG_SCRIPT[lang] && LANG_SCRIPT[lang] !== state.script) { state.script = LANG_SCRIPT[lang]; stopGame(); traceStrokes = []; lastEval = { cover: 0, out: 0 }; }
     applyScriptStyle();
     checkVoice();
     renderAll();

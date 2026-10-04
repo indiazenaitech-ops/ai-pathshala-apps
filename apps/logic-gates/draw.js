@@ -141,13 +141,14 @@
       N.y = N.kids.length === 1 ? N.kids[0].y : (N.kids[0].y + N.kids[N.kids.length - 1].y) / 2;
     })(root);
     var H = PAD * 2 + slot * SH;
-    var wires = '', gates = '', vals = '', ins = '';
+    var wires = '', gates = '', vals = '', ins = '', leafNo = 0;
     (function draw(N) {
       if (N.leaf) {
         N.out = { x: LEAF_R, y: N.y };
         var pill = '<rect class="pill-b" x="6" y="' + f(N.y - 15) + '" width="' + (LEAF_R - 6) + '" height="30" rx="9"/>' +
           '<text class="pill-t" x="' + f(6 + (LEAF_R - 6) / 2) + '" y="' + f(N.y) + '" dy=".35em">' + esc(N.name) + '</text>';
-        if (N.isVar) ins += '<g class="pill ' + vc(N.v) + '" data-var="' + N.name + '" role="button" tabindex="0" aria-pressed="' + (N.v ? 'true' : 'false') + '" aria-label="' + esc(o.leafAria(N.name, N.v)) + '">' + pill + '</g>';
+        /* data-fk (leaf number) lets app.js put keyboard focus back on the same pill after a redraw */
+        if (N.isVar) ins += '<g class="pill ' + vc(N.v) + '" data-var="' + N.name + '" data-fk="xp-' + (leafNo++) + '" role="button" tabindex="0" aria-pressed="' + (N.v ? 'true' : 'false') + '" aria-label="' + esc(o.leafAria(N.name, N.v)) + '">' + pill + '</g>';
         else ins += '<g class="pill const ' + vc(N.v) + '">' + pill + '</g>';
         return;
       }

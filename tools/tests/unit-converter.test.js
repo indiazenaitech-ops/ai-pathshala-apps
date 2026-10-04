@@ -1,6 +1,6 @@
 /* Interaction test for Unit Converter (run by tools/verify.js in en and hi).
    ctx = { page, lang, expect(cond, msg), t(key, vars) -> string in ctx.lang, log } */
-module.exports = async function ({ page, expect, t, log }) {
+module.exports = async function ({ page, lang, expect, t, log }) {
   const val = (sel) => page.inputValue(sel);
   const txt = async (sel) => ((await page.textContent(sel)) || '').replace(/\s+/g, ' ').trim();
   const num = (s) => Number(String(s).replace(/,/g, ''));
@@ -147,6 +147,88 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(await txt('#in-group') === '3,84,400', 'Moon distance in Indian commas');
   await page.click('#tab-practice');
   expect(await txt('#pr-score') === t('pr_score', { c: '2', n: '3' }), 'practice score survives reload: ' + await txt('#pr-score'));
+
+  /* ---------- ± button: phone number pads have no minus key ---------- */
+  await page.click('#tab-convert');
+  await setup('temp', 'c', 'f');
+  await page.fill('#in-a', '−40');                       /* typographic minus sign */
+  expect(num(await val('#in-b')) === -40, '−40 °C (Unicode minus) = −40 °F, got ' + await val('#in-b'));
+  await page.click('#pm-a');
+  expect(await val('#in-a') === '40' && num(await val('#in-b')) === 104, '± turns −40 into 40 (= 104 °F), got ' + await val('#in-a') + ' / ' + await val('#in-b'));
+  await page.click('#pm-a');
+  expect(await val('#in-a') === '-40', '± again gives -40, got ' + await val('#in-a'));
+
+  /* practice: negative temperature answers can be typed with the ± button */
+  await page.click('#tab-practice');
+  await page.selectOption('#pr-topic', 'temp');
+  await page.click('#pr-hard');
+  const tempAns = (q) => {
+    const c = q.from === 'c' ? q.v : q.from === 'f' ? (q.v - 32) * 5 / 9 : q.v - 273.15;
+    return Number((q.to === 'c' ? c : q.to === 'f' ? c * 9 / 5 + 32 : c + 273.15).toPrecision(12));
+  };
+  let neg = null;
+  for (let i = 0; i < 80 && !neg; i++) {
+    const q = await readQ();
+    if (tempAns(q) < 0) neg = q; else await page.click('#pr-next');
+  }
+  expect(neg, 'a harder temperature question with a negative answer turns up');
+  expect(await page.isVisible('#pr-pm'), '± button is shown for temperature questions');
+  await page.fill('#pr-ans', String(Math.abs(tempAns(neg))));
+  await page.click('#pr-pm');
+  expect(num(await val('#pr-ans')) === tempAns(neg), '± makes the typed answer negative: ' + await val('#pr-ans'));
+  await page.click('#pr-check');
+  expect(await page.getAttribute('#pr-msg', 'data-res') === 'exact', 'negative answer typed with ± is accepted: ' + JSON.stringify(neg));
+  expect(await page.isDisabled('#pr-pm'), '± is locked once the answer is checked');
+  await page.selectOption('#pr-topic', 'length');
+  expect(!(await page.isVisible('#pr-pm')), '± is hidden for length questions');
+
+  /* harder data questions never ask for parts of a bit or of a byte */
+  await page.selectOption('#pr-topic', 'data');
+  await page.check('#ws-show');
+  const dataItems = [];
+  for (let i = 0; i < 8; i++) {
+    await page.click('#ws-new');
+    dataItems.push(...await page.$$eval('#ws-list li', (l) => l.map((x) => x.textContent.replace(/\s+/g, ' ').trim())));
+  }
+  const badData = dataItems.filter((s) => {
+    const m = s.match(/^([\d,.]+) (\S+) = ([\d,.]+) (\S+)$/);
+    if (!m) return true;
+    const whole = (n, u) => !(u === 'bit' || u === 'B') || Number.isInteger(num(n));
+    return !(whole(m[1], m[2]) && whole(m[3], m[4]));
+  });
+  expect(dataItems.length === 80 && !badData.length, 'data worksheet uses whole bits and bytes: ' + badData.slice(0, 3).join(' | '));
+  await page.uncheck('#ws-show');
+
+  /* ---------- numbers tab: empty box is not an error; comparison row shows the number ---------- */
+  await page.click('#tab-numbers');
+  await page.fill('#num-in', '');
+  expect((await txt('#num-err')) === '' && await page.isHidden('#num-out'), 'an empty number box shows no error message');
+  await page.fill('#num-in', '5');
+  await page.click('#cmp tbody tr[data-n="10000000"] .rowbtn');
+  expect(await page.inputValue('#num-in') === '10000000' && await txt('#in-group') === '1,00,00,000', 'comparison row loads 1 crore');
+  expect(await page.evaluate(() => document.activeElement.id !== 'num-in'), 'comparison row does not pop up the keyboard (input not focused)');
+  await page.fill('#num-in', '123456789');
+
+  /* ---------- Urdu (right-to-left): symbols, brackets and the place value chart stay readable ---------- */
+  await page.selectOption('#edu-lang', 'ur');
+  await page.waitForTimeout(300);
+  const pvOrder = await page.$$eval('#pv-in td', (tds) => tds.map((td) => [td.textContent, td.getBoundingClientRect().left]).sort((a, b) => a[1] - b[1]).map((x) => x[0]).join(''));
+  expect(pvOrder === '123456789', 'Urdu place value chart reads 123456789 from left to right, got ' + pvOrder);
+  await page.click('#tab-convert');
+  await page.click('#cats [data-cat="temp"]');
+  const optC = await page.$eval('#unit-a option[value="c"]', (o) => o.textContent);
+  expect(optC.includes('‎°C'), 'Urdu unit list keeps "°C" left-to-right: ' + JSON.stringify(optC));
+  const noteRuns = await page.$$eval('#note .uc-ltr', (s) => s.map((x) => x.textContent));
+  const balanced = (s) => (s.match(/\(/g) || []).length === (s.match(/\)/g) || []).length;
+  expect(noteRuns.length >= 3 && noteRuns.every(balanced), 'Urdu note keeps each bracket pair inside one left-to-right island: ' + JSON.stringify(noteRuns));
+  await page.click('#tab-practice');
+  await page.selectOption('#pr-topic', 'temp');
+  const lblRuns = await page.$$eval('#pr-ans-lbl .uc-ltr', (s) => s.map((x) => x.textContent));
+  expect(lblRuns.length === 1 && !/[()]/.test(lblRuns[0]), 'Urdu answer label isolates only the unit symbol: ' + JSON.stringify(lblRuns));
+  await page.selectOption('#edu-lang', lang);
+  await page.waitForTimeout(300);
+  expect(await txt('#pr-qno') === t('pr_q', { n: await page.$eval('#pr-qno', (e) => e.textContent.replace(/\D+/g, '')) }), 'practice re-renders after switching back from Urdu');
+
   await page.click('#tab-convert');
   log('unit-converter test ok');
 };

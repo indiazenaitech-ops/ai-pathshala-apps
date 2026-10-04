@@ -65,8 +65,8 @@
   /* ---------------- state ---------------- */
   var stats = store.get('stats', null);
   if (!stats || typeof stats !== 'object') stats = { best: -1, rounds: 0 };
-  if (typeof stats.best !== 'number') stats.best = -1;
-  if (typeof stats.rounds !== 'number') stats.rounds = 0;
+  stats.best = typeof stats.best === 'number' && isFinite(stats.best) ? EDU.clamp(Math.floor(stats.best), -1, ROUND_SIZE) : -1;
+  stats.rounds = typeof stats.rounds === 'number' && isFinite(stats.rounds) ? Math.max(0, Math.floor(stats.rounds)) : 0;
 
   function makeRound() {
     var ai = EDU.shuffle(ITEMS.filter(function (i) { return i.ai; })).slice(0, ROUND_SIZE / 2);
@@ -81,23 +81,39 @@
   }
   var round = store.get('round', null);
   if (!validRound(round)) round = makeRound();
-  round.order = round.order.filter(function (id) { return round.place[id]; });
+  round.order = round.order.filter(function (id, i) { return round.place[id] && round.order.indexOf(id) === i; });
   Object.keys(round.place).forEach(function (id) { if (round.order.indexOf(id) < 0) round.order.push(id); });
   if (round.checked && round.order.length !== ROUND_SIZE) round.checked = false;
 
   function makeDeck() { return { order: EDU.shuffle(ITEMS.map(function (i) { return i.id; })), i: 0, revealed: false, ai: 0, no: 0, right: 0, counted: 0 }; }
   var deck = store.get('deck', null);
   if (!deck || !Array.isArray(deck.order) || deck.order.length !== ITEMS.length || deck.order.some(function (id) { return !BY_ID[id]; }) || typeof deck.i !== 'number') deck = makeDeck();
-  ['ai', 'no', 'right', 'counted'].forEach(function (k) { deck[k] = Math.max(0, Math.floor(Number(deck[k]) || 0)); });
+  ['ai', 'no', 'right', 'counted'].forEach(function (k) { deck[k] = EDU.clamp(Math.floor(Number(deck[k]) || 0), 0, 999); });
   deck.i = EDU.clamp(Math.floor(deck.i), 0, ITEMS.length);
+  deck.revealed = !!deck.revealed;
+  if (deck.right > deck.counted) deck.right = deck.counted;
 
   var tab = store.get('tab', 'play');
   if (['play', 'class', 'cards'].indexOf(tab) < 0) tab = 'play';
   var filter = 'all';
   var selected = null;
   var usingKeyboard = false;
+  var focusByKeys = false;   // true once the user moves focus with Tab / arrow keys (a keyboard-only user)
 
   function saveRound() { store.set('round', round); }
+
+  /* Scroll so `node` sits just below the sticky header (it is 2-3 lines tall on phones in Tamil/Urdu,
+     taller than the shared scroll-padding). force=false only scrolls when the top is hidden. */
+  function showTop(node, force, smooth) {
+    if (!node) return;
+    if (document.fullscreenElement || document.webkitFullscreenElement) { if (node.scrollIntoView) node.scrollIntoView({ block: 'nearest' }); return; }
+    var hdr = document.querySelector('.edu-top');
+    var hb = hdr ? Math.max(0, hdr.getBoundingClientRect().bottom) : 0;
+    var top = node.getBoundingClientRect().top;
+    if (!force && top >= hb + 4) return;
+    var y = top + (window.pageYOffset || 0) - hb - 10;
+    try { window.scrollTo({ top: Math.max(0, y), behavior: smooth ? 'smooth' : 'auto' }); } catch (e) { window.scrollTo(0, Math.max(0, y)); }
+  }
   function saveDeck() { store.set('deck', deck); }
   function saveStats() { store.set('stats', stats); }
 
@@ -144,11 +160,11 @@
     saveStats(); saveRound();
     renderPlay(); renderStats();
     var r = $('#results');
-    if (r && r.scrollIntoView) r.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showTop(r, true, true);
   }
   function newRound() {
     round = makeRound(); selected = null; saveRound(); renderPlay();
-    var tw = $('#tray-wrap'); if (tw && tw.scrollIntoView && tw.getBoundingClientRect().top < 0) tw.scrollIntoView({ block: 'start' });
+    showTop($('#tray-wrap'), false, false);
   }
   function resetAll() {
     if (!confirm(t('confirm_reset'))) return;
@@ -340,7 +356,9 @@
     var c = e.target.closest('[data-id]');
     if (c) { select(c.getAttribute('data-id')); return; }
     var b = e.target.closest('[data-bin]');
-    if (b && selected) placeCard(selected, b.getAttribute('data-bin'));
+    if (b && selected) { placeCard(selected, b.getAttribute('data-bin')); return; }
+    // A card picked from a box goes back to the tray when the tray is tapped (desktop has no choose bar).
+    if (selected && round.place[selected] && e.target.closest('#tray-wrap')) unplace(selected);
   });
   $('#check').addEventListener('click', check);
   $('#new-round').addEventListener('click', newRound);
@@ -379,15 +397,19 @@
       if ((deck.ai > deck.no ? 'ai' : 'no') === answerOf(id)) deck.right += 1;
     }
     saveDeck(); renderClass();
-    var nx = $('#next'); if (nx) nx.focus();
+    var nx = $('#next'); if (nx) nx.focus({ preventScroll: true });
+    // On a 1280x800 smartboard the answer can sit below the fold: bring it into view.
+    var ab = $('#class-answer'); if (ab && ab.scrollIntoView) ab.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
   function nextCard() {
     if (deck.i >= deck.order.length) return;
+    EDU.stopSpeaking();
     deck.i += 1; deck.revealed = false; deck.ai = 0; deck.no = 0;
     saveDeck(); renderClass();
-    var rv = $('#reveal'); if (rv) rv.focus(); else { var rs = $('#restart-deck'); if (rs) rs.focus(); }
+    var rv = $('#reveal'); if (rv) rv.focus({ preventScroll: true }); else { var rs = $('#restart-deck'); if (rs) rs.focus({ preventScroll: true }); }
+    showTop($('#class-stage .big-card') || $('#deck-done'), false, false);
   }
-  function restartDeck() { deck = makeDeck(); saveDeck(); renderClass(); }
+  function restartDeck() { EDU.stopSpeaking(); deck = makeDeck(); saveDeck(); renderClass(); }
   function readAloud() {
     if (deck.i >= deck.order.length) return;
     var id = deck.order[deck.i], c = info(id);
@@ -473,7 +495,7 @@
     ps.innerHTML = '';
     var box = function () { return el('span', { class: 'ws-box', 'aria-hidden': 'true' }); };
     var head = el('tr', {}, el('th', { class: 'ws-c', text: '#' }), el('th', { text: t('ws_item') }),
-      el('th', { class: 'ws-c', text: t('bin_ai') }), el('th', { class: 'ws-c', text: t('bin_no') }), el('th', { text: t('ws_reason'), style: { width: '38%' } }));
+      el('th', { class: 'ws-c', text: t('bin_ai') }), el('th', { class: 'ws-c', text: t('bin_no') }), el('th', { class: 'ws-write', text: t('ws_reason') }));
     var body = el('tbody');
     WS_ORDER.forEach(function (id, i) {
       body.appendChild(el('tr', {}, el('td', { class: 'ws-c', text: EDU.fmt(i + 1) }),
@@ -490,10 +512,10 @@
     WS_ORDER.forEach(function (id, i) {
       var c = info(id);
       kb.appendChild(el('tr', {}, el('td', { class: 'ws-c', text: EDU.fmt(i + 1) }), el('td', { text: c.name }),
-        el('td', { text: binName(answerOf(id)) }), el('td', { class: 'ws-small', text: c.why })));
+        el('td', { class: 'ws-c', text: binName(answerOf(id)) }), el('td', { class: 'ws-small', text: c.why })));
     });
     key.appendChild(el('table', { class: 'ws-table' },
-      el('thead', {}, el('tr', {}, el('th', { class: 'ws-c', text: '#' }), el('th', { text: t('ws_item') }), el('th', { text: t('result') }), el('th', { text: t('ws_reason') }))), kb));
+      el('thead', {}, el('tr', {}, el('th', { class: 'ws-c', text: '#' }), el('th', { text: t('ws_item') }), el('th', { class: 'ws-c', text: t('ws_answer') }), el('th', { text: t('ws_reason') }))), kb));
     key.appendChild(el('div', { class: 'ws-sum' },
       el('strong', { text: t('sum_title') }),
       el('ul', {}, el('li', { text: t('tag_learn') + ': ' + t('sum_learn') }), el('li', { text: t('tag_pattern') + ': ' + t('sum_pattern') }), el('li', { text: t('sum_predict_h') + ': ' + t('sum_predict') })),
@@ -532,24 +554,32 @@
   /* ---------------- keyboard shortcuts ---------------- */
   document.addEventListener('keydown', function (e) {
     usingKeyboard = true;
+    if (e.key === 'Tab' || String(e.key || '').indexOf('Arrow') === 0) focusByKeys = true;
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     var tg = e.target, tn = tg && tg.tagName;
     if (tn === 'INPUT' || tn === 'TEXTAREA' || tn === 'SELECT') return;
     var k = (e.key || '').toLowerCase();
+    // Physical A / N keys also work when a Hindi, Tamil or Urdu keyboard layout is active.
+    if (e.code === 'KeyA') k = 'a'; else if (e.code === 'KeyN') k = 'n';
     if (tab === 'play') {
       if (e.key === 'Escape' && selected) { selected = null; renderPlay(); return; }
       if (selected && (k === 'a' || k === 'n')) { placeCard(selected, k === 'a' ? 'ai' : 'no'); e.preventDefault(); }
     } else if (tab === 'class') {
       if (k === 'a') { vote('ai', 1); e.preventDefault(); }
       else if (k === 'n') { vote('no', 1); e.preventDefault(); }
-      else if ((e.key === ' ' || e.key === 'Enter') && (!tn || tn === 'BODY' || tg.id === 'class-stage' || tg.id === 'panel-class')) {
+      else if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) {
+        var neutral = !tn || tn === 'BODY' || tg.id === 'class-stage' || tg.id === 'panel-class';
+        // After clicking "+", "Fullscreen" or the tab with the mouse, Space must reveal / go next
+        // (not press that button again, which would add a vote or leave fullscreen).
+        var clickedBtn = !focusByKeys && tn === 'BUTTON' && !!tg.closest('#panel-class, .tabs');
+        if (!neutral && !clickedBtn) return;
+        if (deck.i >= deck.order.length) { if (neutral) e.preventDefault(); return; }   // let "Shuffle and start again" work
         e.preventDefault();
-        if (deck.i >= deck.order.length) return;
         if (deck.revealed) nextCard(); else reveal();
       }
     }
   });
-  document.addEventListener('pointerdown', function () { usingKeyboard = false; }, true);
+  document.addEventListener('pointerdown', function () { usingKeyboard = false; focusByKeys = false; }, true);
 
   /* ---------------- start ---------------- */
   function renderAll() { renderStats(); renderPlay(); renderClass(); renderGallery(); renderPrint(); }

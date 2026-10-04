@@ -136,7 +136,8 @@ window.RayDraw = (function () {
       if (ctx.measureText(lt).width <= wl && ctx.measureText(rt).width <= wr) { ll = [lt]; rl = [rt]; }
     }
     if (!ll) { ll = fit(ctx, opt, lt, wl, 10); rl = fit(ctx, opt, rt, wr, 10); setFont(ctx, opt, 10); }
-    ll.forEach(function (s, j) { ctx.textAlign = 'left'; ctx.fillText(s, v.pad, (15 + j * 13) * k); });
+    var busy = [];                                                   /* top-left boxes the object label must not cover */
+    ll.forEach(function (s, j) { ctx.textAlign = 'left'; ctx.fillText(s, v.pad, (15 + j * 13) * k); busy.push([v.pad, (4 + j * 13) * k, v.pad + ctx.measureText(s).width, (19 + j * 13) * k]); });
     rl.forEach(function (s, j) { ctx.textAlign = 'right'; ctx.fillText(s, W - v.pad, (15 + j * 13) * k); });
     /* light direction */
     var ly = (15 + ll.length * 13 + 4) * k;
@@ -144,6 +145,7 @@ window.RayDraw = (function () {
     ctx.beginPath(); ctx.moveTo(v.pad, ly); ctx.lineTo(v.pad + 24 * k, ly); ctx.stroke();
     head(ctx, v.pad + 28 * k, ly, 0, 8 * k);
     setFont(ctx, opt, 11, 600); ctx.textAlign = 'left'; ctx.fillText(t('light_dir'), v.pad + 34 * k, ly + 4 * k);
+    busy.push([v.pad, ly - 8 * k, v.pad + 34 * k + ctx.measureText(t('light_dir')).width, ly + 7 * k]);
 
     ltr();
     /* principal axis */
@@ -222,7 +224,11 @@ window.RayDraw = (function () {
       head(ctx, objX - 16 * k, y0, Math.PI, 7 * k); head(ctx, objX + 16 * k, y0, 0, 7 * k);  /* drag handle */
       ctx.lineWidth = 4.5 * k; ctx.beginPath(); ctx.moveTo(objX, y0); ctx.lineTo(objX, oy + 8 * k); ctx.stroke();
       head(ctx, objX, oy, -Math.PI / 2, 14 * k);
-      label(ctx, t('lbl_object'), objX, oy - 8, v, 'center', C.surface);
+      var ot = t('lbl_object'), ow = ctx.measureText(ot).width, ocx = Math.max(v.pad + ow / 2, Math.min(W - v.pad - ow / 2, objX));
+      var clash = busy.some(function (b) { return ocx - ow / 2 < b[2] + 4 && ocx + ow / 2 > b[0] - 4 && oy - 8 - 12 * k < b[3] && oy - 8 + 3 * k > b[1]; });
+      /* a tall object far to the left would sit on the 'Light' legend: put its label beside the shaft instead */
+      if (clash) label(ctx, ot, objX + 9 * k, (y0 + oy) / 2 + 5 * k, v, 'left', C.surface);
+      else label(ctx, ot, objX, oy - 8, v, 'center', C.surface);
     }
 
     /* image */

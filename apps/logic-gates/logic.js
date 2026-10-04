@@ -16,7 +16,9 @@
     '+': 'or', '|': 'or', '∨': 'or',
     '^': 'xor', '⊕': 'xor', '⊙': 'xnor'
   };
-  var MAXLEN = 200, MAXDEPTH = 60;
+  /* MAXDEPTH ≥ MAXLEN: any expression that fits the length limit can be nested as deeply as it likes,
+     so the "too long" message is never shown for a short expression. */
+  var MAXLEN = 200, MAXDEPTH = 200;
 
   function ParseError(key, vars) { this.key = key; this.vars = vars || {}; this.message = key; }
   ParseError.prototype = Object.create(Error.prototype);
@@ -76,6 +78,10 @@
     src = String(src == null ? '' : src);
     if (!src.trim()) throw new ParseError('err_empty');
     if (src.length > MAXLEN) throw new ParseError('err_too_long', { n: MAXLEN });
+    /* Textbooks write "Y = A·B + C" or "F = ...": accept that output name (any single letter except A–E).
+       It is blanked with spaces so error positions still match what the student typed. */
+    src = src.replace(/^(\s*[F-Zf-z]\s*=)(?!=)/, function (m) { return m.replace(/[^\s]/g, ' '); });
+    if (!src.trim()) throw new ParseError('err_empty');
     var toks = withImplicitAnd(tokenize(src)), p = 0, depth = 0;
 
     function level(lv) {

@@ -133,8 +133,8 @@ window.APP_STRINGS.en = {
   mean_step_1: 'Take a = {a} and h = {h}. Find u = (x − a) ÷ h. These are small, easy numbers.',
   same_mean: 'All three methods give the same mean. Use the one that makes the numbers easiest.',
   med_sorted: 'Arrange the values in ascending order (the small number above each value is its position):',
-  med_odd: 'n = {n} is odd, so the median is the ((n + 1) ÷ 2)th value, that is, the {p}th value.',
-  med_even: 'n = {n} is even, so the median is the average of the (n ÷ 2)th and (n ÷ 2 + 1)th values, that is, the {p}th and {q}th values.',
+  med_odd: 'n = {n} is odd, so the median is the value at position (n + 1) ÷ 2 = {p}.',
+  med_even: 'n = {n} is even, so the median is the average of the values at positions n ÷ 2 = {p} and n ÷ 2 + 1 = {q}.',
   med_cf: 'Make a cumulative frequency (cf) column. The value you need is in the first row whose cf reaches that position.',
   med_grp_1: 'n = {n}, so n ÷ 2 = {h}.',
   med_grp_2: 'The median class is the first class whose cumulative frequency is greater than {h}: {c}.',
@@ -156,8 +156,8 @@ window.APP_STRINGS.en = {
   mode_den0: 'Here 2f₁ − f₀ − f₂ = 0, so this formula cannot give the mode.',
   empirical: 'Check with the empirical relation 3 × Median = Mode + 2 × Mean: Mode ≈ 3 × Median − 2 × Mean = {v}.',
   q_pos: 'Q₁ is the value at position (n + 1) ÷ 4 = {p}. Q₃ is the value at position 3(n + 1) ÷ 4 = {q}.',
-  q_between: 'Position {p} lies between the {a}th value ({va}) and the {b}th value ({vb}). Go the decimal part of the way between them:',
-  q_exact: 'The {p}th value is {v}.',
+  q_between: 'Position {p} lies between value number {a} ({va}) and value number {b} ({vb}). Add the decimal part of the position times the difference between them:',
+  q_exact: 'Value number {p} is {v}.',
   q_grp_1: 'n ÷ 4 = {a} and 3n ÷ 4 = {b}.',
   q_grp_2: 'The Q₁ class is the first class whose cumulative frequency is greater than {a}: {c}.',
   q_grp_3: 'The Q₃ class is the first class whose cumulative frequency is greater than {b}: {c}.',
@@ -173,7 +173,10 @@ window.APP_STRINGS.en = {
   var_short_1: 'Short-cut method with a = {a} and h = {h}: find u = (x − a) ÷ h, then fu and fu².',
   sd_1: 'Standard deviation is the positive square root of the variance.',
   sample_note: 'For a sample (college statistics) divide by n − 1 instead: s² = {v}, s = {w}.',
-  cv_na: 'CV cannot be found because the mean is 0.'
+  cv_na: 'CV cannot be found because the mean is 0.',
+  raw_thousands: 'Commas inside numbers like 1,000 were read as thousands separators. To separate numbers with commas, put a space after each comma.',
+  err_group_many: 'With this class width there would be more than {n} classes. Choose a bigger class width.',
+  mode_unequal: 'The class widths are not all equal, but this formula assumes equal widths. Treat this mode as an estimate.'
 };
 
 window.APP_STRINGS.hi = {
@@ -347,7 +350,10 @@ window.APP_STRINGS.hi = {
   var_short_1: 'a = {a} और h = {h} लेकर लघु विधि: u = (x − a) ÷ h निकालें, फिर fu और fu²।',
   sd_1: 'मानक विचलन, प्रसरण का धनात्मक वर्गमूल होता है।',
   sample_note: 'प्रतिदर्श (कॉलेज की सांख्यिकी) के लिए n की जगह n − 1 से भाग दें: s² = {v}, s = {w}।',
-  cv_na: 'माध्य 0 है, इसलिए CV नहीं निकाला जा सकता।'
+  cv_na: 'माध्य 0 है, इसलिए CV नहीं निकाला जा सकता।',
+  raw_thousands: '1,000 जैसी संख्याओं के अंदर के कॉमा को हज़ार वाला कॉमा माना गया है। कॉमा से संख्याएँ अलग करनी हों, तो हर कॉमा के बाद एक स्पेस दें।',
+  err_group_many: 'इस वर्ग चौड़ाई से {n} से ज़्यादा वर्ग बन जाएँगे। बड़ी वर्ग चौड़ाई चुनें।',
+  mode_unequal: 'सभी वर्गों की चौड़ाई बराबर नहीं है, जबकि यह सूत्र बराबर चौड़ाई मानकर चलता है। इसलिए इस बहुलक को अनुमानित मान समझें।'
 };
 
 window.APP_STRINGS.bn = {
@@ -521,7 +527,10 @@ window.APP_STRINGS.bn = {
   var_short_1: 'a = {a} ও h = {h} নিয়ে সংক্ষিপ্ত পদ্ধতি: u = (x − a) ÷ h, তারপর fu ও fu² নির্ণয় করো।',
   sd_1: 'সমক বিচ্যুতি হলো ভেদাঙ্কের ধনাত্মক বর্গমূল।',
   sample_note: 'নমুনার ক্ষেত্রে (কলেজের পরিসংখ্যান) n-এর বদলে n − 1 দিয়ে ভাগ করো: s² = {v}, s = {w}।',
-  cv_na: 'গড় 0, তাই CV নির্ণয় করা যায় না।'
+  cv_na: 'গড় 0, তাই CV নির্ণয় করা যায় না।',
+  raw_thousands: '1,000-এর মতো সংখ্যার ভিতরের কমাকে হাজারের কমা ধরা হয়েছে। কমা দিয়ে সংখ্যা আলাদা করতে চাইলে প্রতিটি কমার পরে একটি স্পেস দাও।',
+  err_group_many: 'এই শ্রেণি-দৈর্ঘ্যে {n}টির বেশি শ্রেণি হয়ে যাবে। আরও বড় শ্রেণি-দৈর্ঘ্য বেছে নাও।',
+  mode_unequal: 'সব শ্রেণির দৈর্ঘ্য সমান নয়, কিন্তু এই সূত্র সমান দৈর্ঘ্য ধরে নেয়। তাই এই সংখ্যাগুরুমানকে আনুমানিক মান হিসেবে ধরো।'
 };
 
 window.APP_STRINGS.mr = {
@@ -695,7 +704,10 @@ window.APP_STRINGS.mr = {
   var_short_1: 'a = {a} आणि h = {h} घेऊन लघु पद्धत: u = (x − a) ÷ h काढा, मग fu आणि fu².',
   sd_1: 'प्रमाण विचलन म्हणजे विचरणाचे धन वर्गमूळ.',
   sample_note: 'नमुन्यासाठी (महाविद्यालयीन सांख्यिकी) n ऐवजी n − 1 ने भागा: s² = {v}, s = {w}.',
-  cv_na: 'मध्य 0 आहे, म्हणून CV काढता येत नाही.'
+  cv_na: 'मध्य 0 आहे, म्हणून CV काढता येत नाही.',
+  raw_thousands: '1,000 सारख्या संख्यांमधील स्वल्पविराम हजारांचा स्वल्पविराम मानला आहे. स्वल्पविरामाने संख्या वेगळ्या करायच्या असतील, तर प्रत्येक स्वल्पविरामानंतर एक स्पेस द्या.',
+  err_group_many: 'या रुंदीने {n} पेक्षा जास्त वर्ग तयार होतील. वर्गाची रुंदी मोठी निवडा.',
+  mode_unequal: 'सर्व वर्गांची रुंदी सारखी नाही, पण हे सूत्र सारखी रुंदी गृहीत धरते. म्हणून हा बहुलक अंदाजे समजा.'
 };
 
 window.APP_STRINGS.gu = {
@@ -869,7 +881,10 @@ window.APP_STRINGS.gu = {
   var_short_1: 'a = {a} અને h = {h} લઈને ટૂંકી રીત: u = (x − a) ÷ h શોધો, પછી fu અને fu².',
   sd_1: 'પ્રમાણિત વિચલન એટલે વિચરણનું ધન વર્ગમૂળ.',
   sample_note: 'નિદર્શ માટે (કૉલેજનું આંકડાશાસ્ત્ર) n ને બદલે n − 1 વડે ભાગો: s² = {v}, s = {w}.',
-  cv_na: 'મધ્યક 0 છે, તેથી CV શોધી શકાતો નથી.'
+  cv_na: 'મધ્યક 0 છે, તેથી CV શોધી શકાતો નથી.',
+  raw_thousands: '1,000 જેવી સંખ્યાઓની અંદરના અલ્પવિરામને હજારના અલ્પવિરામ તરીકે ગણ્યા છે. અલ્પવિરામથી સંખ્યાઓ અલગ કરવી હોય તો દરેક અલ્પવિરામ પછી એક સ્પેસ મૂકો.',
+  err_group_many: 'આ વર્ગલંબાઈથી {n} કરતાં વધુ વર્ગો બની જશે. મોટી વર્ગલંબાઈ પસંદ કરો.',
+  mode_unequal: 'બધા વર્ગોની લંબાઈ સરખી નથી, પણ આ સૂત્ર સરખી લંબાઈ ધારે છે. તેથી આ બહુલકને અંદાજિત કિંમત ગણો.'
 };
 
 window.APP_STRINGS.pa = {
@@ -1043,7 +1058,10 @@ window.APP_STRINGS.pa = {
   var_short_1: 'a = {a} ਅਤੇ h = {h} ਲੈ ਕੇ ਛੋਟੀ ਵਿਧੀ: u = (x − a) ÷ h ਕੱਢੋ, ਫਿਰ fu ਅਤੇ fu²।',
   sd_1: 'ਮਿਆਰੀ ਵਿਚਲਨ, ਪ੍ਰਸਰਣ ਦਾ ਧਨਾਤਮਕ ਵਰਗਮੂਲ ਹੁੰਦਾ ਹੈ।',
   sample_note: 'ਨਮੂਨੇ ਲਈ (ਕਾਲਜ ਦਾ ਅੰਕੜਾ ਵਿਗਿਆਨ) n ਦੀ ਥਾਂ n − 1 ਨਾਲ ਭਾਗ ਕਰੋ: s² = {v}, s = {w}।',
-  cv_na: 'ਮੱਧਮਾਨ 0 ਹੈ, ਇਸ ਲਈ CV ਨਹੀਂ ਕੱਢਿਆ ਜਾ ਸਕਦਾ।'
+  cv_na: 'ਮੱਧਮਾਨ 0 ਹੈ, ਇਸ ਲਈ CV ਨਹੀਂ ਕੱਢਿਆ ਜਾ ਸਕਦਾ।',
+  raw_thousands: '1,000 ਵਰਗੀਆਂ ਸੰਖਿਆਵਾਂ ਦੇ ਅੰਦਰਲੇ ਕਾਮੇ ਨੂੰ ਹਜ਼ਾਰ ਵਾਲਾ ਕਾਮਾ ਮੰਨਿਆ ਗਿਆ ਹੈ। ਜੇ ਕਾਮੇ ਨਾਲ ਸੰਖਿਆਵਾਂ ਵੱਖ ਕਰਨੀਆਂ ਹਨ, ਤਾਂ ਹਰ ਕਾਮੇ ਤੋਂ ਬਾਅਦ ਇੱਕ ਸਪੇਸ ਦਿਓ।',
+  err_group_many: 'ਇਸ ਵਰਗ ਚੌੜਾਈ ਨਾਲ {n} ਤੋਂ ਵੱਧ ਵਰਗ ਬਣ ਜਾਣਗੇ। ਵੱਡੀ ਵਰਗ ਚੌੜਾਈ ਚੁਣੋ।',
+  mode_unequal: 'ਸਾਰੇ ਵਰਗਾਂ ਦੀ ਚੌੜਾਈ ਬਰਾਬਰ ਨਹੀਂ ਹੈ, ਪਰ ਇਹ ਸੂਤਰ ਬਰਾਬਰ ਚੌੜਾਈ ਮੰਨ ਕੇ ਚੱਲਦਾ ਹੈ। ਇਸ ਲਈ ਇਸ ਬਹੁਲਕ ਨੂੰ ਅੰਦਾਜ਼ਨ ਮੁੱਲ ਸਮਝੋ।'
 };
 
 window.APP_STRINGS.or = {
@@ -1217,7 +1235,10 @@ window.APP_STRINGS.or = {
   var_short_1: 'a = {a} ଓ h = {h} ନେଇ ସଂକ୍ଷିପ୍ତ ପଦ୍ଧତି: u = (x − a) ÷ h, ତା’ପରେ fu ଓ fu² ବାହାର କରନ୍ତୁ।',
   sd_1: 'ମାନକ ବିଚ୍ୟୁତି ହେଉଛି ଭେଦାଙ୍କର ଧନାତ୍ମକ ବର୍ଗମୂଳ।',
   sample_note: 'ନମୁନା ପାଇଁ (କଲେଜ ପରିସଂଖ୍ୟାନ) n ବଦଳରେ n − 1 ଦ୍ୱାରା ଭାଗ କରନ୍ତୁ: s² = {v}, s = {w}।',
-  cv_na: 'ମାଧ୍ୟ 0, ତେଣୁ CV ନିର୍ଣ୍ଣୟ କରାଯାଇପାରିବ ନାହିଁ।'
+  cv_na: 'ମାଧ୍ୟ 0, ତେଣୁ CV ନିର୍ଣ୍ଣୟ କରାଯାଇପାରିବ ନାହିଁ।',
+  raw_thousands: '1,000 ପରି ସଂଖ୍ୟା ଭିତରେ ଥିବା କମାକୁ ହଜାରର କମା ବୋଲି ଧରାଯାଇଛି। କମା ଦେଇ ସଂଖ୍ୟା ଅଲଗା କରିବାକୁ ହେଲେ ପ୍ରତ୍ୟେକ କମା ପରେ ଗୋଟିଏ ସ୍ପେସ୍ ଦିଅନ୍ତୁ।',
+  err_group_many: 'ଏହି ଶ୍ରେଣୀ ଦୈର୍ଘ୍ୟରେ {n}ଟିରୁ ଅଧିକ ଶ୍ରେଣୀ ହୋଇଯିବ। ବଡ଼ ଶ୍ରେଣୀ ଦୈର୍ଘ୍ୟ ବାଛନ୍ତୁ।',
+  mode_unequal: 'ସବୁ ଶ୍ରେଣୀର ଦୈର୍ଘ୍ୟ ସମାନ ନୁହେଁ, କିନ୍ତୁ ଏହି ସୂତ୍ର ସମାନ ଦୈର୍ଘ୍ୟ ଧରି ନିଏ। ତେଣୁ ଏହି ଗରିଷ୍ଠକକୁ ଆନୁମାନିକ ମାନ ବୋଲି ଧରନ୍ତୁ।'
 };
 
 window.APP_STRINGS.ta = {
@@ -1391,7 +1412,10 @@ window.APP_STRINGS.ta = {
   var_short_1: 'a = {a}, h = {h} எடுத்துச் சுருக்க முறை: u = (x − a) ÷ h, பின் fu, fu² காணுங்கள்.',
   sd_1: 'திட்ட விலக்கம் என்பது பரவற்படியின் நேர்மறை வர்க்கமூலம்.',
   sample_note: 'மாதிரிக்கு (கல்லூரிப் புள்ளியியல்) n-க்குப் பதிலாக n − 1-ஆல் வகுங்கள்: s² = {v}, s = {w}.',
-  cv_na: 'சராசரி 0 என்பதால் CV கண்டறிய முடியாது.'
+  cv_na: 'சராசரி 0 என்பதால் CV கண்டறிய முடியாது.',
+  raw_thousands: '1,000 போன்ற எண்களுக்குள் உள்ள காற்புள்ளி ஆயிரங்களைப் பிரிக்கும் குறியாக எடுத்துக்கொள்ளப்பட்டது. காற்புள்ளியால் எண்களைப் பிரிக்க, ஒவ்வொரு காற்புள்ளிக்குப் பிறகும் ஓர் இடைவெளி விடுங்கள்.',
+  err_group_many: 'இந்தப் பிரிவு அகலத்தில் {n}-க்கும் மேற்பட்ட பிரிவுகள் வரும். பெரிய பிரிவு அகலத்தைத் தேர்ந்தெடுங்கள்.',
+  mode_unequal: 'எல்லாப் பிரிவுகளின் அகலமும் சமமாக இல்லை; ஆனால் இந்தச் சூத்திரம் சம அகலத்தை எடுத்துக்கொள்கிறது. எனவே இந்த முகட்டை ஒரு தோராய மதிப்பாகக் கொள்ளுங்கள்.'
 };
 
 window.APP_STRINGS.te = {
@@ -1565,7 +1589,10 @@ window.APP_STRINGS.te = {
   var_short_1: 'a = {a}, h = {h} తో సంక్షిప్త పద్ధతి: u = (x − a) ÷ h, తర్వాత fu, fu² కనుగొనండి.',
   sd_1: 'ప్రామాణిక విచలనం అంటే విస్తృతి యొక్క ధన వర్గమూలం.',
   sample_note: 'నమూనా కోసం (కళాశాల సాంఖ్యక శాస్త్రం) n బదులు n − 1 తో భాగించండి: s² = {v}, s = {w}.',
-  cv_na: 'అంకమధ్యమం 0 కాబట్టి CV కనుగొనలేం.'
+  cv_na: 'అంకమధ్యమం 0 కాబట్టి CV కనుగొనలేం.',
+  raw_thousands: '1,000 వంటి సంఖ్యల లోపలి కామాను వేల కామాగా తీసుకున్నాం. కామాతో సంఖ్యలను వేరు చేయాలంటే, ప్రతి కామా తర్వాత ఒక స్పేస్ ఇవ్వండి.',
+  err_group_many: 'ఈ తరగతి వెడల్పుతో {n} కంటే ఎక్కువ తరగతులు వస్తాయి. పెద్ద తరగతి వెడల్పును ఎంచుకోండి.',
+  mode_unequal: 'అన్ని తరగతుల వెడల్పు సమానంగా లేదు, కానీ ఈ సూత్రం సమాన వెడల్పును ఊహిస్తుంది. కాబట్టి ఈ బాహుళకాన్ని ఉజ్జాయింపు విలువగా తీసుకోండి.'
 };
 
 window.APP_STRINGS.kn = {
@@ -1739,7 +1766,10 @@ window.APP_STRINGS.kn = {
   var_short_1: 'a = {a} ಮತ್ತು h = {h} ತೆಗೆದುಕೊಂಡು ಸಂಕ್ಷಿಪ್ತ ವಿಧಾನ: u = (x − a) ÷ h, ನಂತರ fu ಮತ್ತು fu² ಕಂಡುಹಿಡಿಯಿರಿ.',
   sd_1: 'ಮಾನಕ ವಿಚಲನೆ ಎಂದರೆ ಪ್ರಸರಣದ ಧನ ವರ್ಗಮೂಲ.',
   sample_note: 'ಮಾದರಿಗೆ (ಕಾಲೇಜು ಸಂಖ್ಯಾಶಾಸ್ತ್ರ) n ಬದಲು n − 1 ಇಂದ ಭಾಗಿಸಿ: s² = {v}, s = {w}.',
-  cv_na: 'ಸರಾಸರಿ 0 ಆಗಿರುವುದರಿಂದ CV ಕಂಡುಹಿಡಿಯಲಾಗದು.'
+  cv_na: 'ಸರಾಸರಿ 0 ಆಗಿರುವುದರಿಂದ CV ಕಂಡುಹಿಡಿಯಲಾಗದು.',
+  raw_thousands: '1,000 ನಂತಹ ಸಂಖ್ಯೆಗಳ ಒಳಗಿನ ಅಲ್ಪವಿರಾಮವನ್ನು ಸಾವಿರದ ಅಲ್ಪವಿರಾಮ ಎಂದು ತೆಗೆದುಕೊಳ್ಳಲಾಗಿದೆ. ಅಲ್ಪವಿರಾಮದಿಂದ ಸಂಖ್ಯೆಗಳನ್ನು ಬೇರ್ಪಡಿಸಲು ಪ್ರತಿ ಅಲ್ಪವಿರಾಮದ ನಂತರ ಒಂದು ಸ್ಪೇಸ್ ಕೊಡಿ.',
+  err_group_many: 'ಈ ವರ್ಗದ ಅಗಲದಿಂದ {n} ಕ್ಕಿಂತ ಹೆಚ್ಚು ವರ್ಗಗಳಾಗುತ್ತವೆ. ದೊಡ್ಡ ವರ್ಗದ ಅಗಲವನ್ನು ಆರಿಸಿ.',
+  mode_unequal: 'ಎಲ್ಲ ವರ್ಗಗಳ ಅಗಲ ಸಮವಾಗಿಲ್ಲ, ಆದರೆ ಈ ಸೂತ್ರ ಸಮ ಅಗಲವನ್ನು ಊಹಿಸುತ್ತದೆ. ಆದ್ದರಿಂದ ಈ ಬಹುಲಕವನ್ನು ಅಂದಾಜು ಬೆಲೆ ಎಂದು ತಿಳಿಯಿರಿ.'
 };
 
 window.APP_STRINGS.ml = {
@@ -1913,7 +1943,10 @@ window.APP_STRINGS.ml = {
   var_short_1: 'a = {a}, h = {h} എടുത്ത് ചുരുക്കുവഴി: u = (x − a) ÷ h, പിന്നെ fu, fu² എന്നിവ കണ്ടെത്തുക.',
   sd_1: 'വേരിയൻസിന്റെ അധിസംഖ്യാ വർഗമൂലമാണ് മാനക വ്യതിയാനം.',
   sample_note: 'സാമ്പിളിന് (കോളേജ് സ്ഥിതിവിവരക്കണക്ക്) n-നു പകരം n − 1 കൊണ്ട് ഹരിക്കുക: s² = {v}, s = {w}.',
-  cv_na: 'മാധ്യം 0 ആയതിനാൽ CV കണ്ടെത്താനാവില്ല.'
+  cv_na: 'മാധ്യം 0 ആയതിനാൽ CV കണ്ടെത്താനാവില്ല.',
+  raw_thousands: '1,000 പോലുള്ള സംഖ്യകൾക്കുള്ളിലെ കോമ ആയിരങ്ങൾ വേർതിരിക്കുന്ന കോമയായി എടുത്തു. കോമ കൊണ്ട് സംഖ്യകൾ വേർതിരിക്കാൻ ഓരോ കോമയ്ക്കും ശേഷം ഒരു സ്പേസ് ഇടുക.',
+  err_group_many: 'ഈ ക്ലാസ് വീതിയിൽ {n}-ൽ കൂടുതൽ ക്ലാസുകൾ ഉണ്ടാകും. വലിയ ക്ലാസ് വീതി തിരഞ്ഞെടുക്കുക.',
+  mode_unequal: 'എല്ലാ ക്ലാസുകളുടെയും വീതി തുല്യമല്ല, പക്ഷേ ഈ സൂത്രവാക്യം തുല്യ വീതി അനുമാനിക്കുന്നു. അതിനാൽ ഈ ബഹുലകം ഏകദേശ വിലയായി കാണുക.'
 };
 
 window.APP_STRINGS.ur = {
@@ -2087,5 +2120,8 @@ window.APP_STRINGS.ur = {
   var_short_1: '⁦a = {a}⁩ اور ⁦h = {h}⁩ لے کر مختصر طریقہ: ⁦u = (x − a) ÷ h⁩ نکالیں، پھر fu اور fu²۔',
   sd_1: 'معیاری انحراف تغیّریت کا مثبت جذر ہوتا ہے۔',
   sample_note: 'نمونے کے لیے (کالج کی شماریات) n کی جگہ ⁦n − 1⁩ سے تقسیم کریں: ⁦s² = {v}⁩، ⁦s = {w}⁩۔',
-  cv_na: 'اوسط 0 ہے، اس لیے CV نہیں نکالا جا سکتا۔'
+  cv_na: 'اوسط 0 ہے، اس لیے CV نہیں نکالا جا سکتا۔',
+  raw_thousands: '⁦1,000⁩ جیسے اعداد کے اندر والے کاما کو ہزار کا کاما مانا گیا ہے۔ اگر کاما سے اعداد الگ کرنے ہیں تو ہر کاما کے بعد ایک اسپیس دیں۔',
+  err_group_many: 'اس جماعتی چوڑائی سے {n} سے زیادہ جماعتیں بن جائیں گی۔ بڑی جماعتی چوڑائی چنیں۔',
+  mode_unequal: 'سب جماعتوں کی چوڑائی برابر نہیں ہے، جبکہ یہ فارمولا برابر چوڑائی مان کر چلتا ہے۔ اس لیے اس عادہ کو تخمینی قیمت سمجھیں۔'
 };

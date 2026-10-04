@@ -101,6 +101,84 @@ module.exports = async function ({ page, expect, t, log }) {
   await page.waitForFunction(() => document.querySelector('#prog-table tr[data-lesson="l1"] .tt-stars').dataset.stars === '0');
   expect((await page.$$('#hist-table tbody tr')).length === 0, 'reset clears recent practice');
 
+  /* ---------------- own-language keyboards: letters typed in parts, danda / Urdu signs from the plain keyboard ---------------- */
+  await page.click('#tab-lang');
+  const typeParts = (code, idx, prep) => page.evaluate(([code, idx, prep]) => {
+    const sel = document.querySelector('#lang-sel');
+    sel.value = code; sel.dispatchEvent(new Event('change'));
+    document.querySelector(`#passages [data-idx="${idx}"]`).click();
+    let s = APP_CONTENT[code].passages[idx].text.normalize('NFD');   /* worst case: every vowel sign in two steps */
+    if (prep === 'pipe') s = s.replace(/।/g, '|');
+    if (prep === 'dot') s = s.replace(/۔/g, '.').replace(/،/g, ',');
+    if (prep === 'zwj') s = APP_CONTENT[code].passages[idx].text.replace(/[ൺൻർൽൾ]/g, (c) => ({ 'ൺ': 'ണ്‍', 'ൻ': 'ന്‍', 'ർ': 'ര്‍', 'ൽ': 'ല്‍', 'ൾ': 'ള്‍' })[c]);
+    const ta = document.querySelector('#typein');
+    let v = '', maxErr = 0;
+    for (const c of Array.from(s)) {
+      v += c; ta.value = v; ta.dispatchEvent(new Event('input'));
+      maxErr = Math.max(maxErr, +document.querySelector('#st-err').textContent);
+      if (ta.disabled) break;
+    }
+    const r = { done: ta.disabled, maxErr, err: document.querySelector('#res-err').textContent, msg: document.querySelector('#res-msg').textContent };
+    document.querySelector('#back').click();
+    return r;
+  }, [code, idx, prep]);
+  for (const [code, idx, prep] of [['ta', 1, ''], ['ml', 1, ''], ['kn', 2, ''], ['bn', 2, ''], ['hi', 0, 'pipe'], ['ur', 2, 'dot'], ['ml', 0, 'zwj']]) {
+    const r = await typeParts(code, idx, prep);
+    expect(r.done && r.maxErr === 0, `${code} passage ${idx} typed letter by letter (${prep || 'vowel signs in two parts'}) has no false mistakes: ` + JSON.stringify(r));
+  }
+  const r2 = await typeParts('hi', 1, '');
+  expect(r2.msg === t('res_msg_good'), 'own-language result does not suggest a time limit (there is none there): ' + r2.msg);
+
+  /* ---------------- free practice: Indian-language text, signs not on the keyboard, time limit ---------------- */
+  await page.click('#tab-free');
+  await page.fill('#free-text', 'हम सब भारत के लोग हैं।');
+  await page.click('#free-start');
+  expect(await page.isHidden('#kb-area') && await page.isVisible('#lang-note'), 'a Hindi free-practice text hides the English keyboard and shows the keyboard tips');
+  expect(await txt('#st-speed-lbl') === t('speed_cpm'), 'a Hindi free-practice text is measured in characters per minute');
+  await page.click('#back');
+  await page.fill('#free-text', 'Pay ₹50 now');
+  await page.click('#free-start');
+  await page.focus('#typein');
+  await page.keyboard.type('Pay ');
+  expect((await txt('#hint')).includes(t('hint_nokey')), 'the hint says ₹ is not on the English keyboard');
+  await page.keyboard.type('x50 now');
+  await page.waitForSelector('#result', { state: 'visible', timeout: 10000 });
+  expect(await num('#res-err') === 0 && await num('#res-acc') === 100, '₹ is skipped with any key, no mistake: ' + await txt('#res-err'));
+  await page.click('#back');
+  await page.click('#limit button[data-limit="60"]');
+  await page.fill('#free-text', 'A computer helps us write and learn.');
+  await page.click('#free-start');
+  expect(await txt('#st-time-lbl') === t('time_left') && await txt('#st-time') === '1:00', 'a 1 minute limit counts down from 1:00');
+  await page.focus('#typein');
+  await page.keyboard.type('A comp');
+  await page.evaluate(() => { window.__realNow = Date.now; Date.now = () => window.__realNow() + 61000; });
+  await page.waitForSelector('#result', { state: 'visible', timeout: 5000 });
+  await page.evaluate(() => { Date.now = window.__realNow; });
+  expect(await txt('#res-title') === t('res_time_up'), 'the run stops when the minute is over');
+  expect(await txt('#st-time-lbl') === t('time') && await txt('#st-time') === '1:00', 'after the time is up the stat reads "Time 1:00", not "Time left": ' + await txt('#st-time-lbl'));
+  expect(await page.getAttribute('#res-detail', 'data-correct') === '6', '6 characters were typed before the time ran out');
+  await page.click('#back');
+  await page.click('#limit button[data-limit="0"]');
+
+  /* ---------------- phone keyboards that compose whole words still count a fixed mistake ---------------- */
+  await page.click('#tab-lessons');
+  await page.click('#lesson-list [data-lesson="l3"]');
+  const comp = await page.evaluate(() => {
+    const ta = document.querySelector('#typein'), T = document.querySelector('#target').dataset.text;
+    const fire = (type) => ta.dispatchEvent(new CompositionEvent(type, { data: '' }));
+    const set = (v) => { ta.value = v; ta.dispatchEvent(new InputEvent('input', { isComposing: true })); };
+    fire('compositionstart'); set('x'); set(''); set(T[0]); fire('compositionend');
+    return +document.querySelector('#st-err').textContent;
+  });
+  expect(comp === 1, 'a wrong letter fixed inside a phone-keyboard word still counts as 1 mistake, got ' + comp);
+
+  /* ---------------- damaged saved data does not break the progress page ---------------- */
+  await page.evaluate(() => { localStorage.setItem('edu.typing-tutor.hist', '[null, 5, "x", {"mode":"lang","ref":"zz","idx":9,"speed":40,"acc":90}]'); localStorage.setItem('edu.typing-tutor.prog', '"bad"'); localStorage.setItem('edu.typing-tutor.tab', '"progress"'); });
+  await page.reload();
+  await page.waitForSelector('#panel-progress', { state: 'visible' });
+  expect((await page.$$('#hist-table tbody tr')).length === 1, 'only the 1 well-formed history row is shown after damaged storage');
+  await page.click('#reset-progress');
+
   /* ---------------- leave lesson 7 open half-way (keyboard + hands show in the screenshot) ---------------- */
   await page.click('#tab-lessons');
   expect(await page.getAttribute('#continue', 'data-lesson') === 'l1', 'after reset, Continue points at lesson 1 again');

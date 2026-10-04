@@ -100,6 +100,9 @@
     .tt th.s, .tt td.s { background: color-mix(in srgb, var(--surface-2) 55%, transparent); }
     .tt th.txt { font-family: var(--font); font-size: .9rem; }
     .tt .idx { color: var(--muted); font-size: .8rem; padding-inline: 8px; }
+    /* truth tables read left to right in every language: their scroll box is LTR, so a wide table starts at
+       column A (not cut off on the left in Urdu), and in RTL a narrow table still sits on the right */
+    :root[dir="rtl"] .tt-wrap > table { margin-left: auto; }
     .tt.clickable tbody tr { cursor: pointer; }
     .tt.clickable tbody tr:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
     .tt tbody tr.cur td { background: var(--accent-soft); }
@@ -198,13 +201,14 @@
       .ws-h { margin: 0; font-size: 1.3rem; }
       .ws-meta { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 12px 0; }
       .ws-line { display: inline-block; min-width: 150px; border-bottom: 1px solid #000; }
-      .ws-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-      .ws-q { border: 1px solid #888; border-radius: 8px; padding: 8px 10px; break-inside: avoid; }
-      .ws-qt { font-weight: 600; margin-bottom: 4px; }
-      .expr-ws { font-family: "Cambria Math", "STIX Two Math", serif; font-size: 1.1rem; font-weight: 700; }
-      .ws-sym .lg-svg { width: 160px; }
+      /* 3 columns + compact cells: all 8 questions fit on ONE sheet (the answer key is on the next page) */
+      .ws-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+      .ws-q { border: 1px solid #888; border-radius: 8px; padding: 6px 8px; break-inside: avoid; }
+      .ws-qt { font-weight: 600; margin-bottom: 4px; overflow-wrap: anywhere; }
+      .expr-ws { font-family: "Cambria Math", "STIX Two Math", serif; font-size: 1.02rem; font-weight: 700; }
+      .ws-sym .lg-svg { width: 132px; }
       .ws-tt { border-collapse: collapse; margin-top: 4px; }
-      .ws-tt th, .ws-tt td { border: 1px solid #555; padding: 2px 12px; text-align: center; font-family: var(--mono); }
+      .ws-tt th, .ws-tt td { border: 1px solid #555; padding: 1px 10px; text-align: center; font-family: var(--mono); font-size: .92rem; line-height: 1.35; }
       .ws-tt td.blank { min-width: 52px; }
       .ws-key { break-before: page; }
       .ws-keylist { font-family: var(--mono); line-height: 1.9; }
@@ -266,14 +270,14 @@
           <p id="gx-univ" class="callout small mb0" data-i18n="universal"></p>
           <div>
             <h3 data-i18n="truth_table"></h3>
-            <div class="scroll-x" id="gx-tt"></div>
+            <div class="scroll-x tt-wrap" id="gx-tt" dir="ltr"></div>
           </div>
         </div>
       </div>
       <details class="card">
         <summary data-i18n="all_gates"></summary>
         <p class="muted small" data-i18n="all_gates_hint"></p>
-        <div class="scroll-x" id="all-tt"></div>
+        <div class="scroll-x tt-wrap" id="all-tt" dir="ltr"></div>
       </details>
     </section>
 
@@ -325,7 +329,7 @@
               <h3 class="mb0" data-i18n="truth_table"></h3>
               <label class="check small no-print"><input type="checkbox" id="steps-on"> <span data-i18n="show_steps"></span></label>
             </div>
-            <div class="scroll-x" id="x-tt"></div>
+            <div class="scroll-x tt-wrap" id="x-tt" dir="ltr"></div>
             <p class="small mb0" id="x-sum" aria-live="polite"></p>
             <p class="muted small mb0 no-print" data-i18n="row_hint"></p>
           </div>
@@ -351,7 +355,7 @@
         </div>
         <div class="no-print"><button type="button" class="btn btn-primary" id="eq-check" data-i18n="check"></button></div>
         <div id="eq-res" class="callout" aria-live="polite"></div>
-        <div class="scroll-x" id="eq-tt"></div>
+        <div class="scroll-x tt-wrap" id="eq-tt" dir="ltr"></div>
       </div>
     </section>
 
@@ -376,7 +380,7 @@
         <div class="card stack">
           <div class="eqs no-i18n" dir="ltr"><div>S = A ⊕ B</div><div>C = A·B</div></div>
           <div id="ha-read" class="stack" aria-live="polite"></div>
-          <div class="scroll-x" id="ha-tt"></div>
+          <div class="scroll-x tt-wrap" id="ha-tt" dir="ltr"></div>
           <p class="callout small mb0" data-i18n="why_carry"></p>
         </div>
       </div>
@@ -392,7 +396,7 @@
         <div class="card stack">
           <div class="eqs no-i18n" dir="ltr"><div>S = A ⊕ B ⊕ Cin</div><div>Cout = A·B + Cin·(A ⊕ B)</div></div>
           <div id="fa-read" class="stack" aria-live="polite"></div>
-          <div class="scroll-x" id="fa-tt"></div>
+          <div class="scroll-x tt-wrap" id="fa-tt" dir="ltr"></div>
           <p class="callout small mb0" data-i18n="fa_how"></p>
         </div>
       </div>

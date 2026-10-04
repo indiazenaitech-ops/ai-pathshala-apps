@@ -16,6 +16,7 @@
   var REV1 = 0.35;                          // revision 1 = 35 % of the first-study time
   var PRAC_MIN = 120;                       // practice paper time per subject
   var MAX_DAYS = 366;
+  var MAX_SUBJ = 20, MAX_CH = 60;
   var KINDS = ['learn', 'rev1', 'prac', 'rev2'];
   /* sample: Class 10 half-yearly. off = exam day after today; ch = [difficulty, confidence] */
   var SAMPLE = [
@@ -91,11 +92,11 @@
     ['light', 'rest', 'prac', 'sample', 'hideNote', 'dirty', 'showPast'].forEach(function (k) { out[k] = !!out[k]; });
     out.name = String(out.name || '').slice(0, 60); out.cls = String(out.cls || '').slice(0, 30);
     out.seq = num(out.seq, 1, 1e9, 1);
-    out.subjects = out.subjects.filter(function (x) { return x && typeof x === 'object' && x.id; }).slice(0, 20).map(function (x, i) {
+    out.subjects = out.subjects.filter(function (x) { return x && typeof x === 'object' && x.id; }).slice(0, MAX_SUBJ).map(function (x, i) {
       return {
         id: String(x.id), ck: typeof x.ck === 'number' ? x.ck : null, own: !!x.own, name: String(x.name || '').slice(0, 80),
         exam: validDate(x.exam) ? x.exam : '', col: num(x.col, 0, 7, i % 8) | 0,
-        ch: (Array.isArray(x.ch) ? x.ch : []).filter(function (c) { return c && c.id; }).slice(0, 60).map(function (c) {
+        ch: (Array.isArray(x.ch) ? x.ch : []).filter(function (c) { return c && c.id; }).slice(0, MAX_CH).map(function (c) {
           return { id: String(c.id), ck: typeof c.ck === 'number' ? c.ck : null, own: !!c.own, name: String(c.name || '').slice(0, 120),
             d: DW[c.d] ? c.d : 'm', c: CW[c.c] ? c.c : 'o' };
         })
@@ -152,16 +153,18 @@
   /* ------------------------------------------------------------ planner */
   function planStart() { var d = today(); return st.start > d ? st.start : d; }
 
-  /* Days from `from` to the last exam with their study capacity (in sessions). */
+  /* Days from `from` to the last exam with their study capacity (in sessions).
+     Exam days come from every subject (also one whose paper is on the first day and is not planned any more). */
   function buildDays(from, active, doneOn) {
-    var exIdx = {}, last = 0;
+    var exIdx = {}, last = 0, examAt = {};
     active.forEach(function (s) { exIdx[s.id] = diffDays(from, s.exam); if (exIdx[s.id] > last) last = exIdx[s.id]; });
+    st.subjects.forEach(function (s) { if (validDate(s.exam) && s.exam >= from) examAt[diffDays(from, s.exam)] = 1; });
     var days = [];
     for (var i = 0; i <= last; i++) {
-      var d = addDays(from, i), exams = [], light = [];
-      active.forEach(function (s) { if (exIdx[s.id] === i) exams.push(s.id); if (st.light && exIdx[s.id] === i + 1) light.push(s.id); });
+      var d = addDays(from, i), light = [];
+      active.forEach(function (s) { if (st.light && exIdx[s.id] === i + 1) light.push(s.id); });
       var normal = slotsFor(d), cap = normal, kind = 'normal';
-      if (exams.length) { kind = 'exam'; cap = st.rest ? 0 : Math.floor(normal / 2); }
+      if (examAt[i]) { kind = 'exam'; cap = st.rest ? 0 : Math.floor(normal / 2); }
       else if (light.length) { kind = 'light'; cap = Math.ceil(normal / 2); }
       cap = Math.max(0, cap - ((doneOn && doneOn[d]) || 0));
       days.push({ d: d, cap: cap, kind: kind, light: light, out: [] });
@@ -169,8 +172,9 @@
     return { days: days, exIdx: exIdx };
   }
 
+  /* subjects to plan: the exam is after the first plan day (on the exam day itself there is nothing left to plan) */
   function sortedActive(from) {
-    return st.subjects.filter(function (s) { return validDate(s.exam) && s.exam >= from && diffDays(from, s.exam) <= MAX_DAYS; })
+    return st.subjects.filter(function (s) { return validDate(s.exam) && s.exam > from && diffDays(from, s.exam) <= MAX_DAYS; })
       .sort(function (a, b) { return a.exam < b.exam ? -1 : a.exam > b.exam ? 1 : 0; });
   }
 
@@ -205,13 +209,17 @@
     var P = [0];
     for (var i = 0; i < fcap.length; i++) P.push(P[i] + fcap[i]);
     var cuts = active.map(function (s) { return cut[s.id]; }).filter(function (c, i, a) { return a.indexOf(c) === i; }).sort(function (a, b) { return a - b; });
-    var dropped = 0;
+    /* over[c] = must-keep sessions due by deadline c that can never fit (they end up "unplaced");
+       they use no time, so later deadlines are checked without them instead of giving up there */
+    var over = {}, dropped = 0;
+    function overTo(c) { var o = 0; for (var x in over) if (+x <= c) o += over[x]; return o; }
     for (var guard = 0; guard < 20000; guard++) {
-      var bad = -1;
+      var bad = -1, excess = 0;
       for (var k = 0; k < cuts.length && bad < 0; k++) {
         var c = cuts[k], dem = 0;
         active.forEach(function (s) { if (cut[s.id] <= c) dem += queues[s.id].length; });
-        if (dem > P[Math.min(c, fcap.length)]) bad = c;
+        excess = dem - overTo(c) - P[Math.min(c, fcap.length)];
+        if (excess > 0) bad = c;
       }
       if (bad < 0) break;
       var best = null;
@@ -223,7 +231,7 @@
           if (!best || q[j].pr < best.pr || (q[j].pr === best.pr && q.length > best.len)) best = { s: s.id, j: j, pr: q[j].pr, len: q.length };
         }
       });
-      if (!best) break;
+      if (!best) { over[bad] = (over[bad] || 0) + excess; continue; }
       queues[best.s].splice(best.j, 1);
       dropped++;
     }
@@ -239,6 +247,28 @@
     var maxCut = cuts.length ? cuts[cuts.length - 1] : 0;
     var block = work() === 25 ? 2 : 1;
     function capTo(c, i, left) { return left + P[Math.min(c, N)] - P[i + 1]; }
+    /* can the coming days alone (after day i) still hold every remaining task before its exam? */
+    function futureFits(i) {
+      for (var y = 0; y < cuts.length; y++) {
+        var cc = cuts[y];
+        if (cc <= i) continue;
+        var DD = 0;
+        active.forEach(function (s) { if (cut[s.id] > i && cut[s.id] <= cc) DD += queues[s.id].length; });
+        if (DD > capTo(cc, i, 0)) return false;
+      }
+      return true;
+    }
+    function pracRun(q) { var n = 0; while (n < q.length && q[n].k === 'prac') n++; return n; }
+    /* a practice paper is solved in one sitting: don't start it on a day that has too few slots left
+       when a day before the exam has room for the whole paper */
+    function pracWaits(s, i, left) {
+      var q = queues[s.id];
+      if (!q.length || q[0].k !== 'prac') return false;
+      var n = pracRun(q);
+      if (n <= left) return false;
+      for (var j = i + 1; j < Math.min(cut[s.id], N); j++) if (fcap[j] >= n) return true;
+      return false;
+    }
     for (i = 0; i < N; i++) {
       var cap = fcap[i];
       if (!cap) continue;
@@ -249,7 +279,7 @@
       var rho = remC > 0 ? remD / remC : 1;
       var target = Math.min(cap, Math.ceil(cap * Math.min(1, rho * 1.15)));
       var maxDistinct = Math.max(1, Math.min(3, Math.ceil(target / block)));
-      var used = {}, distinct = 0, last = null, run = 0, lastK = '';
+      var used = {}, distinct = 0, last = null, lastS = null, run = 0, lastK = '';
       for (var k = 0; k < cap; k++) {
         var left = cap - k, forced = null;
         for (var x = 0; x < cuts.length && !forced; x++) {
@@ -261,31 +291,27 @@
             active.forEach(function (s) { if (!forced && cut[s.id] > i && queues[s.id].length) forced = s; });   // active is sorted by exam date: EDF
           }
         }
-        if (!forced && k >= target) {
+        /* a practice paper started today is finished in the same sitting */
+        var cont = !forced && lastK === 'prac' && lastS && queues[lastS.id].length && queues[lastS.id][0].k === 'prac' ? lastS : null;
+        if (!forced && !cont && k >= target) {
           /* stop for today only if the coming days alone can still hold every remaining task */
-          var mustGo = false;
-          for (var y = 0; y < cuts.length && !mustGo; y++) {
-            var cc = cuts[y];
-            if (cc <= i) continue;
-            var DD = 0;
-            active.forEach(function (s) { if (cut[s.id] > i && cut[s.id] <= cc) DD += queues[s.id].length; });
-            if (DD > capTo(cc, i, 0)) mustGo = true;
-          }
-          if (!mustGo) break;
+          if (futureFits(i)) break;
           active.forEach(function (s) { if (!forced && cut[s.id] > i && queues[s.id].length) forced = s; });
         }
-        var pick = forced;
+        var pick = forced || cont;
         if (!pick) {
-          var best = -1;
+          var best = -1, waiting = null;
           active.forEach(function (s) {
             var q = queues[s.id];
             if (!q.length || cut[s.id] <= i) return;
+            if (pracWaits(s, i, left)) { waiting = waiting || s; return; }
             var sc = q.length / Math.max(1, capTo(cut[s.id], i, left));
-            if (s.id === last && (run < block || (q[0].k === 'prac' && lastK === 'prac'))) sc *= 4;   // a practice paper is solved in one sitting
+            if (s.id === last && run < block) sc *= 4;
             else if (used[s.id]) sc *= 0.5;
             else if (distinct >= maxDistinct) sc *= 0.2;
             if (sc > best) { best = sc; pick = s; }
           });
+          if (!pick && waiting && !futureFits(i)) pick = waiting;
         }
         if (!pick) break;
         var tk = queues[pick.id].shift();
@@ -294,6 +320,7 @@
         if (!used[pick.id]) { used[pick.id] = 0; distinct++; }
         used[pick.id]++;
         if (pick.id === last) run++; else { last = pick.id; run = 1; }
+        lastS = pick;
       }
     }
     var unplaced = 0;
@@ -354,6 +381,7 @@
     sessions.sort(function (a, b) { return a.d < b.d ? -1 : a.d > b.d ? 1 : 0; });
     st.plan = { made: today(), from: from, sessions: sessions, skipped: skipped, unplaced: unplaced, past: past, far: far, pomo: W };
     st.dirty = false;
+    st.showPast = false;          // a new plan starts with the earlier days folded away again
     save();
     return st.plan;
   }
@@ -377,12 +405,13 @@
   function examsOn(d) { return st.subjects.filter(function (s) { return s.exam === d; }); }
   function lightFor(d) { if (!st.light || examsOn(d).length) return []; var n = addDays(d, 1); return st.subjects.filter(function (s) { return s.exam === n; }); }
   function names(list) { return list.map(sName).join(', '); }
-  function lastExam() { var m = ''; st.subjects.forEach(function (s) { if (validDate(s.exam) && s.exam > m) m = s.exam; }); return m; }
+  function lastExam(upTo) { var m = ''; st.subjects.forEach(function (s) { if (validDate(s.exam) && s.exam > m && (!upTo || s.exam <= upTo)) m = s.exam; }); return m; }
   function displayRange() {
-    var list = planSessions(), first = st.plan ? (st.plan.from || st.start) : st.start;
+    var list = planSessions(), anchor = st.plan ? (st.plan.from || st.start) : planStart(), first = anchor;
     if (st.start < first) first = st.start;
     if (list.length && list[0].d < first) first = list[0].d;
-    var last = lastExam();
+    /* an exam left out because it is more than a year away (often a typo in the year) does not stretch the list */
+    var last = lastExam(addDays(anchor, MAX_DAYS));
     if (list.length && list[list.length - 1].d > last) last = list[list.length - 1].d;
     if (!last || last < first) last = first;
     if (diffDays(first, last) > MAX_DAYS + 60) last = addDays(first, MAX_DAYS + 60);
@@ -431,7 +460,7 @@
       cdU.textContent = n === 0 ? t('exam_today') : n === 1 ? t('day_left') : t('days_left');
       cdW.textContent = names(same) + ' · ' + dShort(first);
       var rest = next.filter(function (s) { return s.exam !== first; });
-      if (rest.length) cdL.textContent = t('then_exam', { subject: sName(rest[0]), n: EDU.fmt(diffDays(td, rest[0].exam)) });
+      if (rest.length) { var n2 = diffDays(td, rest[0].exam); cdL.textContent = n2 === 1 ? t('then_exam_1', { subject: sName(rest[0]) }) : t('then_exam', { subject: sName(rest[0]), n: EDU.fmt(n2) }); }
     }
   }
   function renderProgress() {
@@ -483,7 +512,7 @@
     var out = [];
     list.forEach(function (x) {
       var g = out[out.length - 1];
-      if (g && g[0].s === x.s && g[0].c === x.c && g[0].k === x.k && g[0].d === x.d) g.push(x); else out.push([x]);
+      if (g && g[0].s === x.s && g[0].c === x.c && g[0].k === x.k && g[0].d === x.d && (g[0].m || 25) === (x.m || 25)) g.push(x); else out.push([x]);
     });
     return out;
   }
@@ -910,9 +939,29 @@
     });
     return el('li', { class: 'ch-row', 'data-cid': c.id }, el('span', { class: 'ch-num', 'aria-hidden': 'true', text: EDU.fmt(i + 1) + '.' }), name, dSel, cSel, est, del);
   }
+  function subjWarn(s) {
+    if (!validDate(s.exam)) return el('p', { class: 'callout warning small subj-warn', text: t('no_date') });
+    if (s.exam < planStart()) return el('p', { class: 'callout small subj-warn', text: t('exam_before_start') });
+    return null;
+  }
   function updInfo(s) {
     var card = $('.subj[data-sid="' + s.id + '"]');
-    if (card) $('.subj-info', card).textContent = examInfo(s);
+    if (!card) return;
+    var info = $('.subj-info', card), old = $('.subj-warn', card), w = subjWarn(s);
+    info.textContent = examInfo(s);
+    card.setAttribute('data-exam', s.exam || '');
+    if (old) old.remove();
+    if (w) info.parentNode.insertBefore(w, info.nextSibling);
+  }
+  /* keep the date sheet in exam-date order by moving the existing cards (typing and focus are kept) */
+  function resortExams() {
+    var box = $('#subj-list'), a = document.activeElement;
+    var cards = sortedSubjects().map(function (s) { return $('.subj[data-sid="' + s.id + '"]', box); });
+    if (cards.some(function (c) { return !c; })) return;
+    var cur = $$('.subj', box);
+    if (cur.length === cards.length && cur.every(function (c, i) { return c === cards[i]; })) return;
+    cards.forEach(function (c) { box.appendChild(c); });
+    if (a && box.contains(a) && document.activeElement !== a) a.focus();
   }
   function newChapter(s, name) { var c = { id: uid('c'), ck: null, own: true, name: name || '', d: 'm', c: 'o' }; s.ch.push(c); return c; }
 
@@ -922,11 +971,13 @@
     nameIn.addEventListener('input', function () { s.own = true; s.name = nameIn.value; markEdited(); });
     var dateIn = el('input', { type: 'date', class: 'in-exam' });
     dateIn.value = s.exam || '';
+    /* no re-render while the date is typed (that would reset the half-typed date); re-sort when the field is left */
     dateIn.addEventListener('change', function () {
-      s.exam = validDate(dateIn.value) ? dateIn.value : '';
-      markEdited(); renderExams(); renderSummary();
-      var again = $('.subj[data-sid="' + s.id + '"] .in-exam'); if (again) again.focus();
+      var v = validDate(dateIn.value) ? dateIn.value : '';
+      if (v !== s.exam) { s.exam = v; markEdited(); updInfo(s); renderSummary(); }
+      if (document.activeElement !== dateIn) resortExams();
     });
+    dateIn.addEventListener('blur', function () { setTimeout(resortExams, 0); });
     var del = el('button', { type: 'button', class: 'btn btn-danger del-subj', 'aria-label': t('delete_subject'), title: t('delete_subject'), text: '🗑' });
     del.addEventListener('click', function () {
       if (!confirm(t('confirm_delete_subject', { name: sName(s) }))) return;
@@ -939,9 +990,7 @@
         el('label', { class: 'field f-name' }, el('span', {}, el('span', { class: 'sdot', 'aria-hidden': 'true' }), ' ', t('subject')), nameIn),
         el('label', { class: 'field' }, el('span', { text: t('exam_date') }), dateIn),
         del),
-      el('p', { class: 'small muted subj-info', text: examInfo(s) }));
-    if (!validDate(s.exam)) card.appendChild(el('p', { class: 'callout warning small subj-warn', text: t('no_date') }));
-    else if (s.exam < planStart()) card.appendChild(el('p', { class: 'callout small subj-warn', text: t('exam_before_start') }));
+      el('p', { class: 'small muted subj-info', text: examInfo(s) }), subjWarn(s));
     if (s.ch.length) {
       card.appendChild(el('div', { class: 'ch-head', 'aria-hidden': 'true' },
         el('span', { class: 'h-name', text: t('chapters') }), el('span', { class: 'h-d', text: t('difficulty') }),
@@ -950,12 +999,13 @@
       s.ch.forEach(function (c, i) { ol.appendChild(chRow(s, c, i)); });
       card.appendChild(ol);
     } else card.appendChild(el('p', { class: 'muted small', text: t('no_chapters') }));
-    var addBtn = el('button', { type: 'button', class: 'btn btn-sm add-ch', text: '＋ ' + t('add_chapter') });
+    var addBtn = el('button', { type: 'button', class: 'btn btn-sm add-ch', text: '＋ ' + t('add_chapter'), disabled: s.ch.length >= MAX_CH });
+    var pasteBtn = el('button', { type: 'button', class: 'btn btn-sm paste-ch', text: '📋 ' + t('paste_chapters'), disabled: s.ch.length >= MAX_CH && !s.ch.some(function (c) { return c.own && !c.name.trim(); }) });
     addBtn.addEventListener('click', function () {
+      if (s.ch.length >= MAX_CH) return;
       newChapter(s, ''); markEdited(); renderExams();
       var ins = $$('.subj[data-sid="' + s.id + '"] .in-cname'); if (ins.length) ins[ins.length - 1].focus();
     });
-    var pasteBtn = el('button', { type: 'button', class: 'btn btn-sm paste-ch', text: '📋 ' + t('paste_chapters') });
     pasteBtn.addEventListener('click', function () { pasteDialog(s); });
     card.appendChild(el('div', { class: 'row' }, addBtn, pasteBtn));
     return card;
@@ -965,8 +1015,15 @@
     var ok = el('button', { type: 'button', class: 'btn btn-primary', id: 'paste-ok', text: t('add') });
     var close = EDU.modal(el('div', { class: 'stack' }, el('p', { class: 'muted', text: t('paste_help') }), ta, el('div', { class: 'row' }, ok)), { title: t('paste_chapters') + ': ' + sName(s) });
     ok.addEventListener('click', function () {
-      var lines = ta.value.split(/\r?\n/).map(function (x) { return x.replace(/^\s*(\d+[.)]|[-*•])\s*/, '').trim(); }).filter(Boolean).slice(0, 60 - s.ch.length);
-      lines.forEach(function (l) { newChapter(s, l.slice(0, 120)); });
+      var lines = ta.value.split(/\r?\n/).map(function (x) { return x.replace(/^\s*(\d+[.)]|[-*•])\s*/, '').trim(); }).filter(Boolean);
+      if (lines.length) {
+        /* the empty "Chapter 1" row that a new subject starts with is replaced by the pasted list */
+        var blank = s.ch.filter(function (c) { return c.own && !c.name.trim(); });
+        blank.forEach(function (c) { s.ch.splice(s.ch.indexOf(c), 1); });
+        if (st.plan && blank.length) st.plan.sessions = st.plan.sessions.filter(function (x) { return !(x.s === s.id && blank.some(function (c) { return c.id === x.c; })); });
+        lines = lines.slice(0, MAX_CH - s.ch.length);
+        lines.forEach(function (l) { newChapter(s, l.slice(0, 120)); });
+      }
       close();
       if (lines.length) { markEdited(); renderExams(); EDU.toast(t('chapters_added', { n: EDU.fmt(lines.length) })); }
     });
@@ -979,7 +1036,7 @@
     box.innerHTML = '';
     if (!st.subjects.length) box.appendChild(el('p', { class: 'card muted', text: t('no_subjects') }));
     sortedSubjects().forEach(function (s) { box.appendChild(subjCard(s)); });
-    $('#add-subject').disabled = st.subjects.length >= 20;
+    $('#add-subject').disabled = st.subjects.length >= MAX_SUBJ;
   }
   function newSubject() {
     var usedCols = st.subjects.map(function (s) { return s.col; }), col = 0;
@@ -993,7 +1050,7 @@
     return s;
   }
   $('#add-subject').addEventListener('click', function () {
-    if (st.subjects.length >= 20) return;
+    if (st.subjects.length >= MAX_SUBJ) return;
     var s = newSubject(); markEdited(); renderExams();
     var inp = $('.subj[data-sid="' + s.id + '"] .in-sname');
     if (inp) { inp.focus(); inp.scrollIntoView({ block: 'center' }); }
@@ -1040,6 +1097,7 @@
       inp.addEventListener('input', function () {
         st.hours[i] = num(inp.value, 0, 16, 0); markEdited(); hintFor(i, hint); renderCap();
       });
+      inp.addEventListener('change', function () { inp.value = String(st.hours[i]); });   // show the value used (0–16)
       hintFor(i, hint);
       g.appendChild(el('label', { class: 'field', for: 'hours-' + i }, el('span', { class: 'lbl', style: { color: 'var(--text)', fontWeight: '600' }, text: names2[i] }), inp, hint));
     });
@@ -1060,8 +1118,10 @@
     box.innerHTML = '';
     var from = planStart(), active = sortedActive(from);
     if (!active.length) { box.className = 'callout'; box.appendChild(el('p', { class: 'mb0', text: t('need_exam') })); return; }
-    var B = buildDays(from, active, null), have = 0, need = 0, W = work();
-    B.days.forEach(function (D) { have += D.cap; });
+    var B = buildDays(from, active, null), have = 0, need = 0, W = work(), r2 = {};
+    active.forEach(function (s) { r2[s.id] = rev2N(s); });
+    /* a light day only holds the final revision of the next paper, so only that part of it counts */
+    B.days.forEach(function (D) { have += D.kind === 'light' ? Math.min(D.cap, D.light.reduce(function (a, id) { return a + r2[id]; }, 0)) : D.cap; });
     active.forEach(function (s) {
       need += rev2N(s) + (st.prac ? pracN() : 0);
       s.ch.forEach(function (c) { need += learnN(c) + rev1N(c); });
@@ -1072,12 +1132,14 @@
     box.appendChild(el('div', { class: 'progress', style: { '--sc': ok ? 'var(--success)' : 'var(--danger)' }, 'aria-hidden': 'true' }, el('span', { style: { width: ratio + '%' } })));
     box.appendChild(el('p', { class: 'mb0 small', id: 'cap-verdict', text: ok ? t('cap_ok') : t('cap_short') }));
   }
+  /* a half-typed date (e.g. year 0002 while typing 2026) is ignored; an invalid date is put back only when the field is left */
   $('#in-start').addEventListener('change', function () {
-    if (validDate(this.value)) { st.start = this.value; markEdited(); renderCap(); renderExams(); }
-    else this.value = st.start;
+    if (validDate(this.value) && this.value !== st.start) { st.start = this.value; markEdited(); renderCap(); renderExams(); }
   });
+  $('#in-start').addEventListener('blur', function () { if (!validDate(this.value)) this.value = st.start; });
   $('#in-leave').addEventListener('change', function () { st.leaveFrom = validDate(this.value) ? this.value : ''; markEdited(); renderCap(); });
   $('#in-leave-h').addEventListener('input', function () { st.leaveHours = num(this.value, 0, 16, 0); markEdited(); renderCap(); });
+  $('#in-leave-h').addEventListener('change', function () { this.value = String(st.leaveHours); });   // show the value used (0–16)
   ['25', '50'].forEach(function (v) {
     $('#pomo-' + v).addEventListener('click', function () {
       st.pomo = +v; markEdited(); renderTime(); renderExams();

@@ -258,16 +258,16 @@
     var sp = SPEEDS[S.speed];
     if (!sp) { done(); return; }
     var dt = lastT ? Math.min(100, ts - lastT) : 16; lastT = ts;
-    var n;
+    var n, changed = false;
     if (V.evi < R.events.length) {
       acc += dt * sp[0] / 1000; n = Math.floor(acc); acc -= n;
-      while (n-- > 0 && V.evi < R.events.length) applyEvent(R.events[V.evi]);
+      while (n-- > 0 && V.evi < R.events.length) { applyEvent(R.events[V.evi]); changed = true; }
     } else if (R.found && V.pathN < R.path.length) {
-      V.cur = -1;
+      if (V.cur !== -1) { V.cur = -1; changed = true; }
       acc += dt * sp[1] / 1000; n = Math.floor(acc); acc -= n;
-      V.pathN = Math.min(R.path.length, V.pathN + n);
+      if (n > 0) { V.pathN = Math.min(R.path.length, V.pathN + n); changed = true; }
     } else { done(); return; }
-    draw(); renderStats();
+    if (changed) { draw(); renderStats(); }     // slow speeds: don't repaint the whole board on frames where nothing moved
     raf = requestAnimationFrame(loop);
   }
   function done() {
@@ -290,10 +290,10 @@
     if (V.evi < R.events.length) {
       applyEvent(R.events[V.evi]);
       if (V.evi === R.events.length && !R.found) { done(); return; }
-      var ev = V.last, i = V.evi, k = ev.a.length / 2, r = rowOf(ev.c) + 1, c = colOf(ev.c) + 1, isGoal = ev.c === G.goal;
+      var ev = V.last, i = V.evi, k = ev.a.length / 2, r = rowOf(ev.c) + 1, c = colOf(ev.c) + 1, isGoal = ev.c === G.goal, alg = R.alg;
       setMsg(function () {
-        var s = t('msg_step', { i: fmt(i), alg: t('alg_' + R.alg), r: fmt(r), c: fmt(c), k: fmt(k) });
-        if (isGoal) s = t('msg_step_goal', { i: fmt(i), alg: t('alg_' + R.alg) });
+        var s = t('msg_step', { i: fmt(i), alg: t('alg_' + alg), r: fmt(r), c: fmt(c), k: fmt(k) });
+        if (isGoal) s = t('msg_step_goal', { i: fmt(i), alg: t('alg_' + alg) });
         return [s, 'step'];
       });
       draw(); renderStats(); renderRun();
@@ -350,8 +350,25 @@
     if (!W) return;
     if (!force && W === lastWrapW && canvas.width) return;
     lastWrapW = W;
-    var fs = (document.fullscreenElement || document.webkitFullscreenElement) === $('#stage');
-    var maxH = fs ? Math.max(200, window.innerHeight - 270) : Math.max(260, window.innerHeight * 0.8);
+    var stage = $('#stage');
+    var fs = (document.fullscreenElement || document.webkitFullscreenElement) === stage;
+    var maxH = Math.max(260, window.innerHeight * 0.8);
+    if (fs && getComputedStyle($('#pf-panel')).display !== 'contents') {
+      // full screen on a wide screen: the controls sit beside the board, so the board can use the whole height
+      var cs0 = getComputedStyle(stage);
+      var top = wrap.getBoundingClientRect().top - stage.getBoundingClientRect().top + stage.scrollTop;
+      maxH = Math.max(200, window.innerHeight - top - (parseFloat(cs0.paddingBottom) || 0) - 6);
+    } else if (fs) {   // full screen: leave room for the buttons, stats, message and legend so nothing needs scrolling
+      var kids = [].slice.call(stage.children).concat([].slice.call($('#pf-panel').children)).filter(function (k) {
+        return k.offsetParent !== null && getComputedStyle(k).position !== 'absolute';
+      });
+      var cs = getComputedStyle(stage), pad = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+      var lo = Infinity, hi = -Infinity;
+      kids.forEach(function (k) { var b = k.getBoundingClientRect(); if (b.top < lo) lo = b.top; if (b.bottom > hi) hi = b.bottom; });
+      var contentH = kids.length ? hi - lo : 0;
+      // ...but on a phone a big board with a little scrolling is better than a tiny one
+      maxH = Math.max(200, window.innerWidth < 700 ? window.innerHeight * 0.5 : 0, window.innerHeight - (contentH - wrap.offsetHeight) - pad - 6);
+    }
     var cssW = Math.min(W, maxH * G.cols / G.rows);
     var cssH = cssW * G.rows / G.cols;
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -621,19 +638,20 @@
 
   canvas.addEventListener('pointerdown', function (e) {
     if (e.button > 0) return;
+    if (drag && drag.id !== e.pointerId) return;   // a second finger or a resting palm on a smartboard: ignore it
     var i = cellAt(e); if (i < 0) return;
     e.preventDefault();
     try { canvas.setPointerCapture(e.pointerId); } catch (er) { }
     cursor = i;
-    if (i === G.start) drag = { kind: 'start' };
-    else if (i === G.goal) drag = { kind: 'goal' };
+    if (i === G.start) drag = { kind: 'start', id: e.pointerId };
+    else if (i === G.goal) drag = { kind: 'goal', id: e.pointerId };
     else {
-      drag = { kind: 'paint', val: toolValue(i), last: i };
+      drag = { kind: 'paint', val: toolValue(i), last: i, id: e.pointerId };
       if (setCell(i, drag.val)) afterGridChange(true); else draw();
     }
   });
   canvas.addEventListener('pointermove', function (e) {
-    if (!drag) return;
+    if (!drag || e.pointerId !== drag.id) return;
     var i = cellAt(e); if (i < 0) return;
     if (drag.kind === 'paint') {
       if (i === drag.last) return;
@@ -641,14 +659,17 @@
       if (ch) afterGridChange(true);
     } else if (moveEnd(drag.kind, i)) { cursor = i; afterGridChange(true); }
   });
-  function pointerEnd() { if (!drag) return; drag = null; endEdit(); }
+  function pointerEnd(e) { if (!drag || (e && e.pointerId !== drag.id)) return; drag = null; endEdit(); }
   canvas.addEventListener('pointerup', pointerEnd);
   canvas.addEventListener('pointercancel', pointerEnd);
   canvas.addEventListener('lostpointercapture', pointerEnd);
+  window.addEventListener('pointerup', pointerEnd);        // released outside the board without capture: never get stuck
+  window.addEventListener('pointercancel', pointerEnd);
 
   canvas.addEventListener('focus', function () { focused = true; if (cursor < 0) cursor = G.start; draw(); });
   canvas.addEventListener('blur', function () { focused = false; draw(); });
   canvas.addEventListener('keydown', function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;      // leave Ctrl+S, Ctrl+P etc. to the browser
     if (cursor < 0 || cursor >= G.cells.length) cursor = G.start;
     var r = rowOf(cursor), c = colOf(cursor), key = e.key, changed = false, moved = false;
     if (key === 'ArrowUp') { r--; moved = true; } else if (key === 'ArrowDown') { r++; moved = true; }
@@ -753,7 +774,7 @@
   $$('#size [data-size]').forEach(function (b) {
     b.addEventListener('click', function () { S.size = b.dataset.size; saveSettings(); newGrid(demoGrid(dimsFor(S.size))); });
   });
-  $('#nums').addEventListener('change', function () { S.nums = this.checked; saveSettings(); renderChoices(); draw(); });
+  $('#nums').addEventListener('change', function () { S.nums = this.checked; saveSettings(); renderChoices(); fitCanvas(true); draw(); });
   $('#loops').addEventListener('change', function () { S.loops = this.checked; saveSettings(); });
   $('#run').addEventListener('click', run);
   $('#step').addEventListener('click', step);

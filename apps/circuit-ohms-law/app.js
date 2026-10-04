@@ -19,7 +19,15 @@
   }
   function shown(x) { var a = Math.abs(x); return a >= 1000 ? Math.round(x) : a >= 100 ? Math.round(x * 10) / 10 : sig3(x); }
   /* " = 6" when the shown number is exact, " ≈ 6.67" when it was rounded */
-  function eq(x) { return (Math.abs(shown(x) - x) <= 1e-9 * Math.max(1, Math.abs(x)) ? ' = ' : ' ≈ ') + nf(x); }
+  function exact(x) { return Math.abs(shown(x) - x) <= 1e-9 * Math.max(1, Math.abs(x)); }
+  /* eq(result, input1, input2 ...): " ≈ " also when a number used in the working was itself rounded
+     (so "6 / 6.67 ≈ 0.9", not "= 0.9") */
+  function eq(x) {
+    var ok = exact(x);
+    for (var i = 1; i < arguments.length; i++) if (!exact(arguments[i])) ok = false;
+    return (ok ? ' = ' : ' ≈ ') + nf(x);
+  }
+  function gcd(a, b) { while (b) { var c = a % b; a = b; b = c; } return a; }
   var SUB = '₀₁₂₃₄₅₆₇₈₉';
   function sub(s) { return String(s).replace(/\d/g, function (d) { return SUB.charAt(+d); }); }
   function rn(k) { return 'R' + sub(k + 1); }
@@ -28,6 +36,8 @@
   /* table header: full words on wide screens, the physics symbol + unit on phones */
   function hth(key, sym) { return el('th', { class: 'n', title: t(key) }, el('span', { class: 'hw', text: t(key) }), el('bdi', { class: 'hs', dir: 'ltr', text: sym })); }
   function numTd(text) { return el('td', { class: 'n' }, el('bdi', { dir: 'ltr', text: text })); }
+  /* keep a number and its unit together when a line of working wraps ("1.4 A", not "1.4 / A") */
+  function nb(s) { return String(s).replace(/(\d) (?=(Ω|V|A|W|kW|kWh|h)(?![A-Za-z]))/g, '$1 '); }
   function setNum(input, v, force) { if (!force && document.activeElement === input && input.type === 'number') return; input.value = v; }
 
   /* ================= tabs ================= */
@@ -43,7 +53,7 @@
   }
   function goTab(name) {
     tab = name; store.set('tab', tab); renderTabs();
-    if (tab === 'lab') renderLab();
+    if (tab === 'lab') { renderLab(); fitLabels(); }
     if (tab === 'exp') renderExp();
     if (tab === 'prac' && !q) newProblem();
   }
@@ -160,9 +170,13 @@
     if (low) $('#warn-low').textContent = t('warn_low', { r: nf(res.req), i: nf(res.I) });
     var bn = $('#bright-note');
     if (lab.bulbs && res.I > 0 && n > 1) {
-      var best = 0, low2 = 0;
-      for (k = 1; k < n; k++) { if (res.Pk[k] > res.Pk[best] + 1e-12) best = k; if (res.Pk[k] < res.Pk[low2]) low2 = k; }
-      bn.textContent = res.Pk[best] - res.Pk[low2] <= 0.005 * res.Pk[best] ? t('equal_bulbs', { p: nf(res.Pk[best]) }) : t('brightest', { name: rn(best), p: nf(res.Pk[best]) });
+      var pmax = Math.max.apply(null, res.Pk), pmin = Math.min.apply(null, res.Pk), top = [];
+      /* every bulb within 0.5 % of the brightest glows just as brightly: name them all */
+      for (k = 0; k < n; k++) if (res.Pk[k] >= pmax * 0.995) top.push(rn(k));
+      if (pmax - pmin <= 0.005 * pmax) bn.textContent = t('equal_bulbs', { p: nf(pmax) });
+      else if (top.length > 1) bn.textContent = t('brightest_tie', { name: '⁦' + top.join(', ') + '⁩', p: nf(pmax) });
+      else bn.textContent = t('brightest', { name: top[0], p: nf(pmax) });
+      bn.setAttribute('data-top', top.join(','));
       bn.hidden = false;
     } else bn.hidden = true;
     $('#dot-key').className = 'cl-dotkey' + (lab.flow === 'elec' ? ' elec' : '');
@@ -178,7 +192,7 @@
     function step(title, lines, note) {
       var d = el('div', { class: 'cl-step' }, el('h4', { text: title }));
       if (note) d.appendChild(el('p', { class: 'small', text: note }));
-      lines.forEach(function (l) { d.appendChild(el('div', { class: 'math no-i18n', text: l })); });
+      lines.forEach(function (l) { d.appendChild(el('div', { class: 'math no-i18n', text: nb(l) })); });
       box.appendChild(d);
     }
     /* 1. equivalent resistance */
@@ -187,12 +201,25 @@
       L1.push(n === 1 ? 'R = R₁ = ' + vals[0] + ' Ω' : 'R = ' + names.join(' + ') + ' = ' + vals.join(' + ') + eq(res.req) + ' Ω');
     } else if (res.kind === 'parallel') {
       note1 = t('note_parallel');
-      L1.push('1/R = ' + names.map(function (x) { return '1/' + x; }).join(' + ') + ' = ' + vals.map(function (x) { return '1/' + x; }).join(' + ') + eq(res.parts.inv));
-      L1.push('R = 1 / ' + nf(res.parts.inv) + eq(res.req) + ' Ω');
+      var head = '1/R = ' + names.map(function (x) { return '1/' + x; }).join(' + ') + ' = ' + vals.map(function (x) { return '1/' + x; }).join(' + ');
+      var lcm = r.reduce(function (a, x) { return a / gcd(a, x) * x; }, 1);
+      if (r.every(function (x) { return x === Math.round(x); }) && lcm <= 1000) {
+        /* the NCERT way: common denominator, add, then turn the fraction upside down */
+        var nums = r.map(function (x) { return lcm / x; }), S = nums.reduce(function (a, x) { return a + x; }, 0), g = gcd(S, lcm);
+        var terms = nums.map(function (x) { return x + '/' + lcm; }).join(' + ');
+        var line = head + (lcm === r[0] && r.every(function (x) { return x === r[0]; }) ? '' : ' = ' + terms) + ' = ' + S + '/' + lcm;
+        if (g > 1) line += ' = ' + (S / g) + '/' + (lcm / g);
+        L1.push(line);
+        L1.push(S / g === 1 ? 'R = ' + (lcm / g) + ' Ω' : 'R = ' + (lcm / g) + '/' + (S / g) + eq(res.req) + ' Ω');
+      } else {
+        var inv4 = EDU.fmt(res.parts.inv, { maximumSignificantDigits: 4 });
+        L1.push(head + ' ≈ ' + inv4);
+        L1.push('R = 1 / ' + inv4 + ' ≈ ' + nf(res.req) + ' Ω');
+      }
     } else if (res.kind === 'mixedA') {
       note1 = t('note_mixedA');
       L1.push('R₂₃ = (R₂ × R₃) / (R₂ + R₃) = (' + vals[1] + ' × ' + vals[2] + ') / (' + vals[1] + ' + ' + vals[2] + ')' + eq(res.parts.r23) + ' Ω');
-      L1.push('R = R₁ + R₂₃ = ' + vals[0] + ' + ' + nf(res.parts.r23) + eq(res.req) + ' Ω');
+      L1.push('R = R₁ + R₂₃ = ' + vals[0] + ' + ' + nf(res.parts.r23) + eq(res.req, res.parts.r23) + ' Ω');
     } else {
       note1 = t('note_mixedB');
       var r12 = nf(res.parts.r12);
@@ -204,30 +231,30 @@
     /* 2. total current */
     if (!res.closed) step(t('step_i'), ['I = 0 A'], t('open_i'));
     else if (res.shorted) step(t('step_i'), ['R ≈ 0 Ω', 'I = V / R = ' + nf(V) + ' / 0 → ∞'], t('short_i'));
-    else step(t('step_i'), ['I = V / R = ' + nf(V) + ' / ' + nf(res.req) + eq(I) + ' A']);
+    else step(t('step_i'), ['I = V / R = ' + nf(V) + ' / ' + nf(res.req) + eq(I, res.req) + ' A']);
 
     /* 3. each part, 4. power */
     if (I > 0) {
       var L3 = [], Vk = res.Vk, Ik = res.Ik;
       var vn = function (i) { return 'V' + sub(i + 1); }, inn = function (i) { return 'I' + sub(i + 1); };
       if (res.kind === 'series') {
-        for (k = 0; k < n; k++) L3.push(vn(k) + ' = I × ' + rn(k) + ' = ' + nf(I) + ' × ' + vals[k] + eq(Vk[k]) + ' V');
+        for (k = 0; k < n; k++) L3.push(vn(k) + ' = I × ' + rn(k) + ' = ' + nf(I) + ' × ' + vals[k] + eq(Vk[k], I) + ' V');
       } else if (res.kind === 'parallel') {
         for (k = 0; k < n; k++) L3.push(inn(k) + ' = V / ' + rn(k) + ' = ' + nf(V) + ' / ' + vals[k] + eq(Ik[k]) + ' A');
       } else if (res.kind === 'mixedA') {
-        L3.push('V₁ = I × R₁ = ' + nf(I) + ' × ' + vals[0] + eq(Vk[0]) + ' V');
-        L3.push('V₂₃ = I × R₂₃ = ' + nf(I) + ' × ' + nf(res.parts.r23) + eq(Vk[1]) + ' V');
-        L3.push('I₂ = V₂₃ / R₂ = ' + nf(Vk[1]) + ' / ' + vals[1] + eq(Ik[1]) + ' A');
-        L3.push('I₃ = V₂₃ / R₃ = ' + nf(Vk[2]) + ' / ' + vals[2] + eq(Ik[2]) + ' A');
+        L3.push('V₁ = I × R₁ = ' + nf(I) + ' × ' + vals[0] + eq(Vk[0], I) + ' V');
+        L3.push('V₂₃ = I × R₂₃ = ' + nf(I) + ' × ' + nf(res.parts.r23) + eq(Vk[1], I, res.parts.r23) + ' V');
+        L3.push('I₂ = V₂₃ / R₂ = ' + nf(Vk[1]) + ' / ' + vals[1] + eq(Ik[1], Vk[1]) + ' A');
+        L3.push('I₃ = V₂₃ / R₃ = ' + nf(Vk[2]) + ' / ' + vals[2] + eq(Ik[2], Vk[2]) + ' A');
       } else {
         L3.push('I₁₂ = V / R₁₂ = ' + nf(V) + ' / ' + nf(res.parts.r12) + eq(Ik[0]) + ' A');
-        L3.push('V₁ = I₁₂ × R₁ = ' + nf(Ik[0]) + ' × ' + vals[0] + eq(Vk[0]) + ' V');
-        L3.push('V₂ = I₁₂ × R₂ = ' + nf(Ik[0]) + ' × ' + vals[1] + eq(Vk[1]) + ' V');
+        L3.push('V₁ = I₁₂ × R₁ = ' + nf(Ik[0]) + ' × ' + vals[0] + eq(Vk[0], Ik[0]) + ' V');
+        L3.push('V₂ = I₁₂ × R₂ = ' + nf(Ik[0]) + ' × ' + vals[1] + eq(Vk[1], Ik[0]) + ' V');
         L3.push('I₃ = V / R₃ = ' + nf(V) + ' / ' + vals[2] + eq(Ik[2]) + ' A');
       }
       if (n > 1) step(t('step_parts'), L3);
-      var L4 = ['P = V × I = ' + nf(V) + ' × ' + nf(I) + eq(res.P) + ' W'];
-      if (n > 1) for (k = 0; k < n; k++) L4.push('P' + sub(k + 1) + ' = ' + vn(k) + ' × ' + inn(k) + ' = ' + nf(Vk[k]) + ' × ' + nf(Ik[k]) + eq(res.Pk[k]) + ' W');
+      var L4 = ['P = V × I = ' + nf(V) + ' × ' + nf(I) + eq(res.P, I) + ' W'];
+      if (n > 1) for (k = 0; k < n; k++) L4.push('P' + sub(k + 1) + ' = ' + vn(k) + ' × ' + inn(k) + ' = ' + nf(Vk[k]) + ' × ' + nf(Ik[k]) + eq(res.Pk[k], Vk[k], Ik[k]) + ' W');
       step(t(n > 1 ? 'step_p' : 'step_p1'), L4);
     }
 
@@ -263,7 +290,7 @@
         lines.push('I₁ + I₃ = ' + sumStr([res.Ik[0], res.Ik[2]], 'A') + eq(I) + ' A = I ✓');
       }
       chk.appendChild(el('p', { text: t(key) }));
-      lines.forEach(function (l) { chk.appendChild(el('div', { class: 'math no-i18n', text: l })); });
+      lines.forEach(function (l) { chk.appendChild(el('div', { class: 'math no-i18n', text: nb(l) })); });
       chk.hidden = false;
     } else chk.hidden = true;
   }
@@ -286,9 +313,10 @@
   $('#vm-sel').addEventListener('change', function () { lab.vm = this.value; saveLab(); renderLab(); });
   $('#btn-short').addEventListener('click', function () { lab.short = !lab.short; saveLab(); renderLab(); });
   $('#btn-reset').addEventListener('click', function () { lab = JSON.parse(JSON.stringify(DEF)); saveLab(); renderLab(); EDU.toast(t('reset_done')); });
-  $('#btn-fs').addEventListener('click', function () { EDU.fullscreen($('#diag-card')); });
+  $('#btn-fs').addEventListener('click', function () { EDU.fullscreen($('.cl-lab')); });
 
   /* ================= V–I experiment ================= */
+  var MAX_ROWS = 40;
   var MYST = [4.7, 5.6, 6.8, 8.2, 10, 12, 15, 18, 22, 27, 33, 39, 47];
   function loadExp() {
     var s = store.get('exp', {}) || {};
@@ -297,7 +325,7 @@
       mR: MYST.indexOf(s.mR) >= 0 ? s.mR : EDU.pick(MYST),
       cells: EDU.clamp(Math.round(Number(s.cells) || 1), 1, 8), noise: !!s.noise, revealed: !!s.revealed, rows: []
     };
-    if (Array.isArray(s.rows)) s.rows.slice(0, 40).forEach(function (r) {
+    if (Array.isArray(s.rows)) s.rows.slice(0, MAX_ROWS).forEach(function (r) {
       if (r && isFinite(r.V) && isFinite(r.I) && r.V > 0 && r.I > 0) o.rows.push({ cells: EDU.clamp(Math.round(Number(r.cells) || 1), 1, 8), V: Number(r.V), I: Number(r.I) });
     });
     return o;
@@ -345,8 +373,8 @@
   function renderExpTable() {
     var tb = $('#exp-table'); tb.innerHTML = '';
     tb.appendChild(el('thead', null, el('tr', null,
-      el('th', { class: 'n', text: t('col_no') }), el('th', { class: 'n', text: t('col_cells') }), el('th', { class: 'n', text: t('col_v') }),
-      el('th', { class: 'n', text: t('col_i') }), el('th', { class: 'n', text: t('col_vi') }), el('th', { class: 'no-print', text: '' }))));
+      el('th', { class: 'n', text: t('col_no') }), el('th', { class: 'n', text: t('col_cells') }), hth('col_v', 'V (V)'),
+      hth('col_i', 'I (A)'), hth('col_vi', 'V/I (Ω)'), el('th', { class: 'no-print', text: '' }))));
     var body = el('tbody');
     if (!exp.rows.length) body.appendChild(el('tr', null, el('td', { colspan: 6, class: 'muted', text: t('exp_empty') })));
     exp.rows.forEach(function (r, i) {
@@ -357,6 +385,7 @@
     });
     tb.appendChild(body);
     $('#exp-csv').disabled = !exp.rows.length;
+    $('#exp-record').disabled = exp.rows.length >= MAX_ROWS;
     $('#exp-clear').disabled = !exp.rows.length;
   }
 
@@ -370,6 +399,26 @@
     if (text !== undefined) e.textContent = text;
     if (parent) parent.appendChild(e);
     return e;
+  }
+
+  /* a centred message in the graph, broken into lines that fit (one long SVG line would be cut off) */
+  function wrapText(parent, x, y, text, cls, maxW, dir) {
+    var probe = S('text', { x: 0, y: -999, class: cls }, parent), lines = [], cur = '';
+    var width = function (str) {
+      probe.textContent = str;
+      var w = 0; try { w = probe.getComputedTextLength(); } catch (e) { }
+      return w || str.length * 10;   /* hidden pane: rough guess, redrawn when the tab opens */
+    };
+    String(text).split(/\s+/).forEach(function (wd) {
+      var tryLine = cur ? cur + ' ' + wd : wd;
+      if (cur && width(tryLine) > maxW) { lines.push(cur); cur = wd; } else cur = tryLine;
+    });
+    if (cur) lines.push(cur);
+    var lh = 1.35 * (parseFloat(getComputedStyle(probe).fontSize) || 17);
+    parent.removeChild(probe);
+    var te = S('text', { x: x, y: y - (lines.length - 1) * lh / 2, 'text-anchor': 'middle', class: cls, direction: dir }, parent);
+    lines.forEach(function (l, i) { S('tspan', { x: x, dy: i ? lh : 0 }, te, l); });
+    return te;
   }
 
   function renderGraph() {
@@ -393,14 +442,18 @@
     }
     S('line', { x1: ml, y1: mt + ph, x2: ml + pw, y2: mt + ph, class: 'axis' }, g);
     S('line', { x1: ml, y1: mt, x2: ml, y2: mt + ph, class: 'axis' }, g);
-    S('text', { x: ml + pw / 2, y: H - 10, 'text-anchor': 'middle', class: 'alab' }, g, t('axis_i'));
-    S('text', { x: 0, y: 0, 'text-anchor': 'middle', class: 'alab', transform: 'translate(18 ' + (mt + ph / 2) + ') rotate(-90)' }, g, t('axis_v'));
+    var tdir = document.documentElement.dir === 'rtl' ? 'rtl' : 'ltr';   /* words in the graph follow the page direction (Urdu) */
+    S('text', { x: ml + pw / 2, y: H - 10, 'text-anchor': 'middle', class: 'alab', direction: tdir }, g, t('axis_i'));
+    S('text', { x: 0, y: 0, 'text-anchor': 'middle', class: 'alab', direction: tdir, transform: 'translate(18 ' + (mt + ph / 2) + ') rotate(-90)' }, g, t('axis_v'));
     svg.setAttribute('aria-label', t('graph_title'));
 
     var res = $('#exp-result'); res.innerHTML = '';
-    var distinct = {}; pts.forEach(function (p) { distinct[p.I] = 1; });
-    if (Object.keys(distinct).length < 2) {
-      if (!pts.length) S('text', { x: ml + pw / 2, y: mt + ph / 2, 'text-anchor': 'middle', class: 'empty' }, g, t('need2'));
+    /* the slope needs two different voltages (numbers of cells): two readings with the same cells
+       but small meter errors would give a meaningless, even negative, ΔV / ΔI */
+    var byCells = exp.rows.slice().sort(function (a, b) { return a.cells - b.cells; });
+    var lo = byCells[0], hi = byCells[byCells.length - 1];
+    if (!lo || lo.cells === hi.cells || !(hi.I > lo.I)) {
+      if (!pts.length) wrapText(g, ml + pw / 2, mt + ph / 2, t('need2'), 'empty', pw - 30, tdir);
       pts.forEach(function (p) { S('circle', { cx: X(p.I), cy: Y(p.V), r: 6.5, class: 'pt' }, g); });
       res.appendChild(el('p', { class: 'muted small', text: t('need2') }));
       if (exp.mode === 'mystery' && exp.revealed) res.appendChild(el('p', { class: 'callout accent', text: t('exp_revealed_only', { r: nf(exp.mR) }) }));
@@ -412,9 +465,8 @@
     var fit = sVI / sII, mean = sR / pts.length;
     var xEnd = Math.min(xmax, ymax / fit);
     S('line', { x1: X(0), y1: Y(0), x2: X(xEnd), y2: Y(fit * xEnd), class: 'fit' }, g);
-    /* slope triangle between the smallest and largest current */
-    var sorted = pts.slice().sort(function (a, b) { return a.I - b.I; });
-    var p1 = sorted[0], p2 = sorted[sorted.length - 1];
+    /* slope triangle between the readings with the fewest and the most cells */
+    var p1 = lo, p2 = hi;
     var slope = (p2.V - p1.V) / (p2.I - p1.I);
     S('polyline', { points: [X(p1.I), Y(p1.V), X(p2.I), Y(p1.V), X(p2.I), Y(p2.V)].join(' '), class: 'tri' }, g);
     S('text', { x: (X(p1.I) + X(p2.I)) / 2, y: Y(p1.V) + 22, 'text-anchor': 'middle', class: 'tril' }, g, 'ΔI');
@@ -424,7 +476,7 @@
     var dV = p2.V - p1.V, dI = p2.I - p1.I;
     res.appendChild(el('p', { class: 'small', html: '<b>' + EDU.esc(t('slope_lbl')) + '</b>' }));
     res.appendChild(el('div', { class: 'math no-i18n ans', id: 'exp-slope', 'data-value': slope,
-      text: 'R = ΔV / ΔI = (' + nf(p2.V) + ' − ' + nf(p1.V) + ') / (' + nf(p2.I) + ' − ' + nf(p1.I) + ') = ' + nf(dV) + ' / ' + nf(dI) + eq(slope) + ' Ω' }));
+      text: nb('R = ΔV / ΔI = (' + nf(p2.V) + ' − ' + nf(p1.V) + ') / (' + nf(p2.I) + ' − ' + nf(p1.I) + ')' + (exact(dV) && exact(dI) ? ' = ' : ' ≈ ') + nf(dV) + ' / ' + nf(dI) + eq(slope, dV, dI) + ' Ω') }));
     res.appendChild(el('p', { class: 'small', style: { marginTop: '8px' } }, t('fit_lbl') + ': ', el('bdi', { class: 'math no-i18n', id: 'exp-fit', 'data-value': fit, text: 'R ≈ ' + nf(fit) + ' Ω' })));
     res.appendChild(el('p', { class: 'small' }, t('mean_lbl') + ': ', el('bdi', { class: 'math no-i18n', text: nf(mean) + ' Ω' })));
     res.appendChild(el('p', { class: 'callout success', text: t('exp_concl') }));
@@ -452,7 +504,7 @@
   $('#exp-cells').addEventListener('input', function () { exp.cells = EDU.clamp(Math.round(Number(this.value) || 1), 1, 8); newReading(); saveExp(); renderExp(); });
   $('#exp-noise').addEventListener('change', function () { exp.noise = this.checked; newReading(); saveExp(); renderExp(); });
   $('#exp-record').addEventListener('click', function () {
-    if (exp.rows.length >= 40) return;
+    if (exp.rows.length >= MAX_ROWS) return;
     exp.rows.push({ cells: reading.cells, V: reading.V, I: reading.I });
     EDU.toast(t('recorded', { n: exp.rows.length }));
     newReading(); saveExp(); renderExp();
@@ -532,10 +584,10 @@
           return { type: type, vars: { I: I, R: R }, ans: s, unit: 'W', sol: ['P = I² × R = ' + nf(I) + '² × ' + nf(R) + ' = ' + nf(s) + ' W'],
             lab: V >= 1.5 && V <= 12 && Math.abs(V * 2 - Math.round(V * 2)) < 1e-9 ? { preset: 'single', V: V, R: [R] } : null };
         case 'cost':
-          var pw = P([500, 1000, 1500, 2000]), h = P([1, 2, 3]), d = P([10, 15, 30]), rate = P([5, 6, 7, 8]);
+          var pw = P([500, 1000, 1500, 2000]), h = P([2, 3]), d = P([10, 15, 30]), rate = P([5, 6, 7, 8]);
           var kwh = pw / 1000 * h * d, cost = kwh * rate;
           return { type: type, vars: { P: pw, h: h, d: d, rate: rate }, ans: cost, unit: '₹',
-            sol: ['E = P × t = ' + nf(pw / 1000) + ' kW × ' + nf(h) + ' h × ' + nf(d) + ' = ' + nf(kwh) + ' kWh', nf(kwh) + ' kWh × ₹' + nf(rate) + ' = ₹' + nf(cost)], lab: null };
+            sol: ['t = ' + nf(h) + ' h × ' + nf(d) + ' = ' + nf(h * d) + ' h', 'E = P × t = ' + nf(pw / 1000) + ' kW × ' + nf(h * d) + ' h = ' + nf(kwh) + ' kWh', nf(kwh) + ' kWh × ₹' + nf(rate) + ' = ₹' + nf(cost)], lab: null };
       }
     }
     return gen('series');
@@ -554,9 +606,13 @@
       for (var i = 0; i < DIGIT_ZERO.length; i++) if (c >= DIGIT_ZERO[i] && c <= DIGIT_ZERO[i] + 9) return String(c - DIGIT_ZERO[i]);
       return ch;
     });
-    s = s.replace(/[\s₹]/g, '').replace(/[٫]/g, '.').replace(/[−–]/g, '-');
-    if (/^-?\d{1,3}(,\d{2,3})+(\.\d+)?/.test(s)) s = s.replace(/,/g, '');
-    else if (/^-?\d+,\d+/.test(s) && s.indexOf('.') < 0) s = s.replace(',', '.');
+    s = s.replace(/[\s₹]/g, '').replace(/[٫]/g, '.').replace(/[−–]/g, '-').replace(/[÷⁄]/g, '/');
+    /* "R = 40", "I=0.15", "Rs 50": drop a short label in front of the number */
+    s = s.replace(/^(rs\.?|inr|[A-Za-zΩ₀-₉]{0,4}=)/i, '');
+    if (/^-?[1-9]\d{0,2}(,\d{2,3})+(\.\d+)?/.test(s)) s = s.replace(/,/g, '');   /* 1,440 · 1,44,000 */
+    else if (/^-?\d+,\d+/.test(s) && s.indexOf('.') < 0) s = s.replace(',', '.');   /* 0,25 → 0.25 */
+    var f = s.match(/^(-?\d*\.?\d+)\/(\d*\.?\d+)(?![\d.])/);   /* a fraction such as 3/40 */
+    if (f) return Number(f[2]) ? Number(f[1]) / Number(f[2]) : NaN;
     var m = s.match(/^-?\d*\.?\d+(e-?\d+)?/i);
     return m ? Number(m[0]) : NaN;
   }
@@ -591,7 +647,7 @@
     sol.innerHTML = '';
     if (q.result === 'right' || q.result === 'wrong') {
       sol.appendChild(el('h4', { text: t('solution') }));
-      q.sol.forEach(function (l) { sol.appendChild(el('div', { class: 'math no-i18n', text: l })); });
+      q.sol.forEach(function (l) { sol.appendChild(el('div', { class: 'math no-i18n', text: nb(l) })); });
       if (q.type === 'cost') sol.appendChild(el('p', { class: 'small muted mb0', text: t('cost_note') }));
       sol.hidden = false;
     } else sol.hidden = true;
@@ -664,12 +720,35 @@
     setTimeout(function () { document.body.classList.remove('cl-print-ws'); }, 800);
   });
 
+  /* ================= fit long labels ================= */
+  /* Long words (Tamil, Malayalam ...) in narrow boxes on phones: switch that group to a stacked layout
+     instead of clipping the word or breaking it in the middle. Measured in the normal layout each time. */
+  var FIT = [['#presets', '.cl-preset .pt, .cl-preset .pt > span'], ['.cl-syms', '.cl-sym > span'], ['.cl-stats', '.cl-stat .k']];
+  function fitLabels() {
+    FIT.forEach(function (f) {
+      $$(f[0]).forEach(function (box) {
+        if (!box.getClientRects().length) return;
+        box.classList.remove('stack');
+        var over = $$(f[1], box).some(function (e) { return e.scrollWidth > e.clientWidth + 1; });
+        box.classList.toggle('stack', over);
+      });
+    });
+  }
+  var fitQueued = false;
+  function queueFit() {
+    if (fitQueued) return; fitQueued = true;
+    (window.requestAnimationFrame || setTimeout)(function () { fitQueued = false; fitLabels(); });
+  }
+  window.addEventListener('resize', queueFit);
+  try { if (document.fonts) { document.fonts.ready.then(queueFit); document.fonts.addEventListener('loadingdone', queueFit); } } catch (e) { }
+
   /* ================= start ================= */
-  function renderAll() { renderLab(); renderExp(); renderPrac(); renderWs(); }
+  function renderAll() { renderLab(); renderExp(); renderPrac(); renderWs(); fitLabels(); }
   EDU.onLang(renderAll);
   renderTabs();
   renderLab();
   renderExp();
   newProblem();
   renderWs();
+  fitLabels();
 })();

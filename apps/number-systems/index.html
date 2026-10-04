@@ -49,7 +49,7 @@
     .ns-res-row.src { border-color: var(--primary); background: var(--primary-soft); }
     .ns-res-name { font-weight: 700; line-height: 1.25; }
     .ns-res-name small { display: block; font-weight: 500; color: var(--muted); font-size: .78rem; }
-    .ns-val { font-size: 1.35rem; font-weight: 700; word-break: break-all; direction: ltr; unicode-bidi: isolate; }
+    .ns-val { font-size: 1.35rem; font-weight: 700; overflow-wrap: anywhere; direction: ltr; unicode-bidi: isolate; }
     .ns-val sub, .ns-q sub, .ns-sub { font-size: .6em; color: var(--muted); font-weight: 600; }
     .ns-approx { color: var(--warning); font-weight: 800; }
     @media (max-width: 560px) {
@@ -67,7 +67,7 @@
     .ns-step:first-child { border-top: 0; margin-top: 4px; padding-top: 0; }
     .ns-step-h { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
     .ns-step-h h3 { margin: 0 0 4px; }
-    .ns-step-n { background: var(--accent); color: #fff; border-radius: 999px; padding: 1px 10px; font-size: .8rem; font-weight: 700; white-space: nowrap; }
+    .ns-step-n { background: var(--accent); color: var(--surface); border-radius: 999px; padding: 1px 10px; font-size: .8rem; font-weight: 700; white-space: nowrap; }
     .ns-div, .ns-mul, .ns-place { border-collapse: collapse; font-size: 1.15rem; direction: ltr; margin-block: 8px; }
     .ns-div th, .ns-mul th, .ns-place th { font-family: var(--font); font-size: .78rem; font-weight: 600; color: var(--muted); padding: 2px 10px; text-align: center; vertical-align: bottom; }
     .ns-div td { padding: 3px 12px; text-align: end; white-space: nowrap; }
@@ -83,6 +83,7 @@
     .ns-arrow.down::after { bottom: 0; border-top: 12px solid var(--accent); border-bottom: 0; }
     .ns-mul td, .ns-place td { padding: 4px 12px; border-bottom: 1px solid var(--border); white-space: nowrap; text-align: end; }
     .ns-mul td b, .ns-place td b { color: var(--accent); }
+    .ns-mul td:nth-child(2) { text-align: start; }
     .ns-place tr.zero td { color: var(--muted); }
     .ns-place td.dg { text-align: center; font-weight: 800; color: var(--primary); }
     .ns-formula, .ns-sumline { font-size: 1.1rem; line-height: 2; direction: ltr; unicode-bidi: isolate; word-break: break-word; }
@@ -141,7 +142,9 @@
     .ns-add tr.sum td.d { font-weight: 800; color: var(--primary); }
     .ns-add td.hl { background: var(--accent-soft); }
     .ns-cols { margin: 0; padding-inline-start: 1.3em; }
-    .ns-cols li { margin-bottom: 4px; }
+    .ns-cols li { margin-bottom: 4px; border-radius: 6px; padding-inline: 4px; cursor: pointer; }
+    .ns-cols li.on { background: var(--accent-soft); }
+    .ns-cols li:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
     .ns-rules { display: flex; flex-wrap: wrap; gap: 6px; }
     .ns-rules .badge { font-family: var(--mono); font-size: .9rem; padding: 4px 10px; }
 
@@ -167,7 +170,7 @@
     #enc-text { font-size: 1.3rem; min-height: 80px; }
 
     /* ---------- quiz ---------- */
-    .ns-q { font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 800; text-align: center; word-break: break-all; direction: ltr; padding: 10px 0; }
+    .ns-q { font-size: clamp(1.8rem, 6vw, 3rem); font-weight: 800; text-align: center; overflow-wrap: anywhere; direction: ltr; padding: 10px 0; }
     .ns-q .qm { color: var(--accent); }
     .ns-ansrow { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
     .ns-ansrow .field { flex: 1 1 220px; }
@@ -191,6 +194,8 @@
       body.ns-printing #print-area { display: block !important; padding: 0 6px; }
       .ns-g, .ns-tile, .ns-res-row { break-inside: avoid; }
       .ns-bit button[aria-pressed="true"] { background: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      /* light text on a coloured chip: keep the chip colour, or the text prints white on white */
+      .ns-step-n, .ns-pick .btn[aria-pressed="true"] { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       details.card:not([open]) { display: none; }
     }
   </style>
@@ -216,7 +221,7 @@
         <div class="card stack">
           <div>
             <label class="ns-label" for="num-in" data-i18n="number_in"></label>
-            <input id="num-in" class="ns-big-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="48" dir="ltr">
+            <input id="num-in" class="ns-big-in" type="text" aria-describedby="conv-msg" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="48" dir="ltr">
           </div>
           <div>
             <span class="ns-label" id="from-l" data-i18n="from_base"></span>

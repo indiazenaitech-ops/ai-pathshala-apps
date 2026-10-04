@@ -12,9 +12,9 @@
 
   /* Example data (numbers are language independent; names and units live in content.js). */
   var BASE = {
-    study: { icon: '📚', ax: { xmin: 0, xmax: 20, ymin: 0, ymax: 100 }, rx: 0.5, ry: 1, predX: 12,
+    study: { icon: '📚', ax: { xmin: 0, xmax: 20, ymin: 0, ymax: 100 }, rx: 0.5, ry: 1, predX: 12, xFloor: 0,
       pts: [[1, 30], [2, 38], [3, 35], [4, 45], [5, 48], [6, 55], [7, 50], [8, 60], [9, 66], [10, 61], [11, 70], [12, 74], [13, 69], [14, 80], [16, 82], [18, 91]] },
-    house: { icon: '🏠', ax: { xmin: 0, xmax: 2500, ymin: 0, ymax: 120 }, rx: 10, ry: 0.5, predX: 1200,
+    house: { icon: '🏠', ax: { xmin: 0, xmax: 2500, ymin: 0, ymax: 120 }, rx: 10, ry: 0.5, predX: 1200, xFloor: 0,
       pts: [[450, 22], [550, 24], [600, 30], [700, 29], [800, 38], [850, 36], [950, 45], [1000, 41], [1100, 52], [1200, 50], [1300, 61], [1450, 58], [1500, 70], [1650, 68], [1800, 82], [2000, 84], [2200, 98]] },
     ice: { icon: '🍦', ax: { xmin: 0, xmax: 45, ymin: 0, ymax: 350 }, rx: 0.5, ry: 1, predX: 32,
       pts: [[14, 40], [16, 75], [18, 62], [20, 100], [22, 98], [24, 130], [25, 125], [27, 160], [28, 145], [30, 190], [31, 170], [33, 215], [35, 205], [36, 245], [38, 240], [40, 275], [42, 268], [44, 310]] },
@@ -174,17 +174,29 @@
   EPOCH_OPTS.forEach(function (n) { epSel.appendChild(EDU.el('option', { value: String(n), text: String(n) })); });
 
   /* ------------------------------------------------------------ saving */
-  var saveT = 0;
+  /* Saving is debounced, but every dataset that changed is remembered in `dirty`, so a change
+     made just before switching dataset (or closing the page) is never lost. */
+  var saveT = 0, dirty = {}, noSave = false;
   function save() {
+    dirty[S.ds] = 1;
     clearTimeout(saveT);
-    saveT = setTimeout(function () {
-      store.set('state', { ds: S.ds, tab: S.tab, lr: S.lr, epochs: S.epochs, speed: S.speed, show: S.show });
-      var d = cur(), o = { m: isNum(d.m) ? d.m : 0, c: isNum(d.c) ? d.c : 0, predX: d.predX };
-      if (d.modified || S.ds === 'own') o.pts = d.pts;
-      if (S.ds === 'own') { o.ax = d.ax; o.names = d.names; }
-      store.set('d_' + S.ds, o);
-    }, 250);
+    saveT = setTimeout(flushSave, 250);
   }
+  function flushSave() {
+    clearTimeout(saveT); saveT = 0;
+    if (noSave) return;
+    store.set('state', { ds: S.ds, tab: S.tab, lr: S.lr, epochs: S.epochs, speed: S.speed, show: S.show });
+    Object.keys(dirty).forEach(function (id) {
+      var d = D[id], o = { m: isNum(d.m) ? d.m : 0, c: isNum(d.c) ? d.c : 0, predX: d.predX };
+      if (d.modified || id === 'own') o.pts = d.pts;
+      if (id === 'own') { o.ax = d.ax; o.names = d.names; }
+      store.set('d_' + id, o);
+    });
+    dirty = {};
+  }
+  function flushNow() { dirty[S.ds] = 1; flushSave(); }
+  window.addEventListener('pagehide', flushNow);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushNow(); });
 
   /* ------------------------------------------------------------ line + points changes */
   function clampLine(m, c) {
@@ -356,9 +368,9 @@
   function readFont() { try { FONT = getComputedStyle(document.body).fontFamily || 'sans-serif'; } catch (e) { FONT = 'sans-serif'; } }
   function fontPx(px, w) { return (w || 600) + ' ' + Math.round(px) + 'px ' + FONT; }
   function numFont(px, w) { return (w || 600) + ' ' + Math.round(px) + 'px "Noto Sans", system-ui, "Segoe UI", sans-serif'; }
-  function prep(cv) {
-    var dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
-    var w = cv.clientWidth || 600, h = cv.clientHeight || 400;
+  function prep(cv, fw, fh) {
+    var dpr = Math.max(fw ? 2 : 1, Math.min(3, window.devicePixelRatio || 1));
+    var w = fw || cv.clientWidth || 600, h = fh || cv.clientHeight || 400;
     var W = Math.round(w * dpr), H = Math.round(h * dpr);
     if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
     var ctx = cv.getContext('2d');
@@ -429,7 +441,8 @@
   /* ------------------------------------------------------------ draw the main plot */
   function draw() {
     if (!plot.clientWidth) return;
-    var P = prep(plot), ctx = P.ctx, w = P.w, h = P.h, col = COLORS = readColors();
+    /* print: a fixed 16:10 bitmap that matches the print CSS box, so nothing is stretched on paper */
+    var P = printing ? prep(plot, 720, 450) : prep(plot), ctx = P.ctx, w = P.w, h = P.h, col = COLORS = readColors();
     var d = cur(), a = viewAx(), T = txt(), g = GEO = geom(w, h), fs = g.fs;
     var st = stats(d.pts);
 
@@ -481,17 +494,43 @@
         ctx.fillRect(left, Math.min(py, ph), s, s); ctx.strokeRect(left + 0.5, Math.min(py, ph) + 0.5, s - 1, s - 1);
       });
     }
-    /* best line (dashed) and "before" ghost */
+    var lineOk2 = isFinite(d.m) && isFinite(d.c);
+    /* prediction point + the box of its "ŷ = …" chip (computed first so other labels can avoid it) */
+    var predMark = null, taken = [], lineLabels = [];
+    if (S.tab === 'predict' && lineOk2 && isNum(d.predX)) {
+      var px = g.X(d.predX), yh = d.m * d.predX + d.c, py = g.Y(yh);
+      /* a prediction too far away to fit even the widened axes gets no marker (its guides would cover the model line) */
+      if (px >= g.l - 1 && px <= g.r + 1 && py >= g.t - 1 && py <= g.b + 1) {
+        var pr0 = fs * 0.62, plab = 'ŷ = ' + fmtMax(yh, decs().y);
+        ctx.font = numFont(fs * 0.95, 800);
+        var pbw = ctx.measureText(plab).width + 12, pbh = fs * 1.5;
+        var pbx = px + pr0 + 6; if (pbx + pbw > g.r - 2) pbx = px - pr0 - 6 - pbw;
+        var pby = py - pr0 - pbh - 2; if (pby < g.t + 2) pby = py + pr0 + 4;
+        predMark = { px: px, py: py, r: pr0, lab: plab, bx: pbx, by: pby, bw: pbw, bh: pbh };
+        taken.push({ x: pbx, y: pby, w: pbw, h: pbh }, { x: px - pr0, y: py - pr0, w: pr0 * 2, h: pr0 * 2 });
+      }
+    }
+    var hits = function (q) { return taken.some(function (o) { return q.x < o.x + o.w && q.x + q.w > o.x && q.y < o.y + o.h && q.y + q.h > o.y; }); };
+    /* best line (dashed) and "before" ghost; each label goes where it does not cover another label or the ŷ chip */
     function dashed(m, c, color, label) {
       ctx.save(); ctx.setLineDash([9, 7]); ctx.strokeStyle = color; ctx.lineWidth = 2.5;
       ctx.beginPath(); ctx.moveTo(g.X(a.xmin), g.Y(m * a.xmin + c)); ctx.lineTo(g.X(a.xmax), g.Y(m * a.xmax + c)); ctx.stroke();
       ctx.restore();
       var seg = visibleSeg({ ax: a, m: m, c: c });
-      if (seg && label) {
-        var lx = seg[0] + (seg[1] - seg[0]) * 0.93, ly = m * lx + c;
-        ctx.font = fontPx(fs * 0.85, 700); ctx.fillStyle = color; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
-        ctx.fillText(label, g.X(lx), g.Y(ly) - 6);
-      }
+      if (!seg || !label) return;
+      ctx.font = fontPx(fs * 0.85, 700);
+      var tw = ctx.measureText(label).width, lh = fs * 1.05, pick = null;
+      [0.93, 0.78, 0.07, 0.5, 0.25].some(function (f) {
+        var lx = seg[0] + (seg[1] - seg[0]) * f, X0 = g.X(lx), Y0 = g.Y(m * lx + c), right = f > 0.6;
+        var x0 = right ? X0 - tw : f < 0.4 ? X0 : X0 - tw / 2;
+        var y0 = Y0 - 6 - lh; if (y0 < g.t) y0 = Y0 + 6;          /* line leaves through the top: label below it */
+        var q = { x: x0, y: y0, w: tw, h: lh };
+        if (!pick) pick = q;
+        if (!hits(q)) { pick = q; return true; }
+        return false;
+      });
+      taken.push(pick);
+      lineLabels.push({ q: pick, color: color, text: label });   /* drawn after the dots so no dot hides it */
     }
     if (ghost) dashed(ghost.m, ghost.c, col.muted, EDU.t('before_label'));
     if (S.show.best && st.ok) dashed(st.m, st.c, col.success, EDU.t('best_label'));
@@ -508,19 +547,9 @@
       ctx.beginPath(); ctx.moveTo(g.X(a.xmin), g.Y(d.m * a.xmin + d.c)); ctx.lineTo(g.X(a.xmax), g.Y(d.m * a.xmax + d.c)); ctx.stroke();
     }
     /* prediction guides */
-    if (S.tab === 'predict' && lineOk && isNum(d.predX)) {
-      var px = g.X(d.predX), yh = d.m * d.predX + d.c, py = g.Y(yh);
+    if (predMark) {
       ctx.save(); ctx.setLineDash([6, 5]); ctx.strokeStyle = col.c3; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(px, g.b); ctx.lineTo(px, py); ctx.lineTo(g.l, py); ctx.stroke(); ctx.restore();
-      ctx.fillStyle = col.c3; ctx.strokeStyle = col.surface; ctx.lineWidth = 2;
-      var r = fs * 0.62;
-      ctx.beginPath(); ctx.moveTo(px, py - r); ctx.lineTo(px + r, py); ctx.lineTo(px, py + r); ctx.lineTo(px - r, py); ctx.closePath(); ctx.fill(); ctx.stroke();
-      var lab = 'ŷ = ' + fmtMax(yh, decs().y);
-      ctx.font = numFont(fs * 0.95, 800); ctx.textBaseline = 'bottom';
-      var tw = ctx.measureText(lab).width, lx2 = px + r + 6;
-      ctx.textAlign = lx2 + tw > g.r - 4 ? 'right' : 'left';
-      if (ctx.textAlign === 'right') lx2 = px - r - 6;
-      ctx.fillText(lab, lx2, py - 4);
+      ctx.beginPath(); ctx.moveTo(predMark.px, g.b); ctx.lineTo(predMark.px, predMark.py); ctx.lineTo(g.l, predMark.py); ctx.stroke(); ctx.restore();
     }
     /* dots */
     var pr = EDU.clamp(w / 105, 5, 9);
@@ -540,6 +569,25 @@
         ctx.lineWidth = 3.5; ctx.strokeStyle = col.accent; ctx.stroke();
         ctx.beginPath(); ctx.arc(x, y, hr * 0.38, 0, Math.PI * 2); ctx.fillStyle = col.accent; ctx.fill();
       });
+    }
+    /* labels of the dashed lines, on a soft backdrop */
+    lineLabels.forEach(function (L) {
+      ctx.font = fontPx(fs * 0.85, 700);
+      ctx.fillStyle = alpha(col.surface, 0.8);
+      ctx.fillRect(L.q.x - 3, L.q.y, L.q.w + 6, L.q.h);
+      ctx.fillStyle = L.color; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      ctx.fillText(L.text, L.q.x, L.q.y + (L.q.h - fs * 0.85) / 2);
+    });
+    /* prediction marker + label on a solid chip, drawn last so no other label can cover it */
+    if (predMark) {
+      var M0 = predMark, r = M0.r;
+      ctx.fillStyle = col.c3; ctx.strokeStyle = col.surface; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(M0.px, M0.py - r); ctx.lineTo(M0.px + r, M0.py); ctx.lineTo(M0.px, M0.py + r); ctx.lineTo(M0.px - r, M0.py); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.font = numFont(fs * 0.95, 800);
+      ctx.fillStyle = alpha(col.surface, 0.94); ctx.strokeStyle = col.c3; ctx.lineWidth = 1.5;
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(M0.bx, M0.by, M0.bw, M0.bh, 6); else ctx.rect(M0.bx, M0.by, M0.bw, M0.bh); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = col.c3; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(M0.lab, M0.bx + 6, M0.by + M0.bh / 2 + 1);
     }
     ctx.restore();
 
@@ -606,10 +654,14 @@
       ctx.fillText(EDU.t('best_possible'), r - 2, Y(st.mse) - 3);
     }
     var stride = Math.max(1, Math.floor(n / ((r - l) * 2)));
+    /* the curve may leave the chart through the top (exploding loss) instead of flat-lining at the cap */
+    var Yc = function (v) { return b - Math.min(isFinite(v) ? v : ymax * 4, ymax * 4) / ymax * (b - t); };
+    ctx.save(); ctx.beginPath(); ctx.rect(l, t - 2, r - l + 2, b - t + 4); ctx.clip();
     ctx.strokeStyle = col.c3; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.beginPath();
-    for (var e = 0; e < n; e += stride) { var v = isFinite(H[e]) ? H[e] : ymax * 2; if (e === 0) ctx.moveTo(X(e), Y(v)); else ctx.lineTo(X(e), Y(v)); }
-    ctx.lineTo(X(n - 1), Y(isFinite(H[n - 1]) ? H[n - 1] : ymax * 2));
+    for (var e = 0; e < n; e += stride) { if (e === 0) ctx.moveTo(X(e), Yc(H[e])); else ctx.lineTo(X(e), Yc(H[e])); }
+    ctx.lineTo(X(n - 1), Yc(H[n - 1]));
     ctx.stroke();
+    ctx.restore();
     var last = H[n - 1];
     ctx.beginPath(); ctx.arc(X(n - 1), Y(last), 4.5, 0, Math.PI * 2); ctx.fillStyle = last > ymax ? col.danger : col.c3; ctx.fill();
     if (last > ymax) { ctx.fillStyle = col.danger; ctx.font = fontPx(fs * 1.2, 800); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('↑', X(n - 1) - 10, t); }
@@ -699,10 +751,11 @@
           return;
         }
         lastTap = { idx: dr.idx, t: now };
-      } else if (dr.kind === 'empty') {
+      } else if (dr.kind === 'empty' || dr.kind === 'line') {
+        /* a tap on the line that was not dragged also adds a dot (on a phone the line's grab band is wide) */
         lastTap = null;
         var x = g.toX(dr.start.x), y = g.toY(dr.start.y);
-        if (S.tab === 'predict') { setPredX(roundTo(x, d.rx)); }
+        if (S.tab === 'predict') { setPredX(roundTo(x, d.rx), true); }
         else if (d.pts.length >= MAX_PTS) { EDU.toast(EDU.t('max_points', { n: MAX_PTS })); }
         else { var q = clampToBox(x, y); d.pts.push([roundTo(q[0], d.rx), roundTo(q[1], d.ry)]); pointsChanged(true); }
       }
@@ -722,6 +775,9 @@
     cR.min = r.cLo; cR.max = r.cHi; cR.step = (r.cHi - r.cLo) / 1000;
     var dc = decs();
     mN.step = Math.pow(10, -dc.m); cN.step = Math.pow(10, -dc.c);
+    var d = cur(), lo = BASE[S.ds].xFloor;
+    pR.min = isNum(lo) ? Math.max(lo, d.ax.xmin) : d.ax.xmin; pR.max = d.ax.xmax; pR.step = d.rx;
+    if (isNum(lo)) pX.min = lo; else pX.removeAttribute('min');
   }
   function syncSliders() {
     var d = cur(), dc = decs();
@@ -779,7 +835,11 @@
     if (S.follow) { if (!fitExact(true)) setFollow(false); }
   });
   var lrIn = $('#lr');
-  lrIn.addEventListener('input', function () { S.lr = EDU.clamp(parseInt(lrIn.value, 10) || 0, 0, LRS.length - 1); save(); syncLr(); refresh(); });
+  lrIn.addEventListener('input', function () {
+    S.lr = EDU.clamp(parseInt(lrIn.value, 10) || 0, 0, LRS.length - 1);
+    if (expCode && expCode !== 'outlier') hideExp();   /* those messages name a fixed rate (0.01, 0.6, 1.5) */
+    save(); syncLr(); refresh();
+  });
   function syncLr() {
     lrIn.value = S.lr;
     $('#lr-out').textContent = EDU.fmt(LRS[S.lr]);
@@ -802,16 +862,19 @@
 
   /* ------------------------------------------------------------ predict */
   var pX = $('#pred-x'), pR = $('#pred-range');
-  function setPredX(v) {
+  /* force: the value came from the graph or the slider, so the x box must show it even if it has focus */
+  function setPredX(v, force) {
     var d = cur();
     if (!isFinite(v)) return;
+    var lo = BASE[S.ds].xFloor;
+    if (isNum(lo) && v < lo) v = lo;           /* hours and sq ft cannot be negative */
     d.predX = v; save();
-    if (document.activeElement !== pX) pX.value = v;
+    if (force || document.activeElement !== pX) pX.value = v;
     refresh();
   }
   pX.addEventListener('input', function () { var v = parseFloat(pX.value); if (isFinite(v) && Math.abs(v) < 1e9) setPredX(v); });
   pX.addEventListener('blur', function () { pX.value = cur().predX; });
-  pR.addEventListener('input', function () { setPredX(roundTo(Number(pR.value), cur().rx)); pX.value = cur().predX; });
+  pR.addEventListener('input', function () { setPredX(roundTo(Number(pR.value), cur().rx), true); });
 
   /* ------------------------------------------------------------ dataset switching */
   function selectDs(id) {
@@ -831,10 +894,8 @@
       $('.nm', b).textContent = C().datasets[id].name;
     });
     $('#ds-about').textContent = txt().about;
-    $('#restore').hidden = S.ds === 'own' ? !d.pts.length : !d.modified;
     $('#restore').textContent = EDU.t(S.ds === 'own' ? 'clear_dots' : 'restore');
     setupSliders();
-    pR.min = d.ax.xmin; pR.max = d.ax.xmax; pR.step = d.rx;
     pX.value = d.predX;
     renderTable();
     refresh();
@@ -842,9 +903,9 @@
   }
   $('#restore').addEventListener('click', function () {
     var d = cur();
+    if (S.ds === 'own' && !confirm(EDU.t('confirm_clear'))) return;   /* cancel changes nothing */
     stopRun(); stopTween(); ghost = null; hideExp();
     if (S.ds === 'own') {
-      if (!confirm(EDU.t('confirm_clear'))) return;
       d.pts = []; d.names = { x: '', y: '' }; d.ax = Object.assign({}, BASE.own.ax); setOwnSteps(d);
       d.m = 0; d.c = 5; d.predX = BASE.own.predX;
     } else {
@@ -972,8 +1033,15 @@
     var close = EDU.modal(box, { title: EDU.t('paste_title') });
     setTimeout(function () { ta.focus(); }, 30);
     function go() {
-      var rows = EDU.csv.parse(ta.value || ''), pts = [], hdr = null;
-      var num = function (s) { s = String(s == null ? '' : s).trim().replace(/\s/g, ''); if (/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) s = s.replace(/,/g, ''); var v = Number(s); return s !== '' && isFinite(v) ? v : null; };
+      /* Excel / Sheets paste is tab-separated. Numbers there may contain commas (1,200 or Indian 1,45,000),
+         which would fool comma-vs-tab auto-detection, so any tab in the text means "tab-separated". */
+      var raw = ta.value || '';
+      var rows = EDU.csv.parse(raw, raw.indexOf('\t') >= 0 ? '\t' : undefined), pts = [], hdr = null;
+      var num = function (s) {
+        s = String(s == null ? '' : s).trim().replace(/\s/g, '').replace(/^−/, '-');
+        if (/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s) || /^-?\d{1,2}(,\d{2})*,\d{3}(\.\d+)?$/.test(s)) s = s.replace(/,/g, '');
+        var v = Number(s); return s !== '' && isFinite(v) ? v : null;
+      };
       rows.forEach(function (r) {
         var cells = r.length === 1 ? String(r[0]).trim().split(/\s+/) : r;
         var nums = cells.map(num).filter(function (v) { return v !== null; });
@@ -1011,7 +1079,6 @@
     d.pts.push([x, roundTo(y, d.ry)]);
     setFollow(true);
     pointsChanged(true);
-    $('#restore').hidden = false;
     showExp('outlier');
     toLab();
   });
@@ -1034,11 +1101,12 @@
   /* ------------------------------------------------------------ toolbar */
   $('#print-btn').addEventListener('click', function () { window.print(); });
   $('#fs-btn').addEventListener('click', function () { EDU.fullscreen($('#lab')); });
+  $('#fs-exit').addEventListener('click', function () { if (document.fullscreenElement || document.webkitFullscreenElement) EDU.fullscreen(); });
   $('#reset-all').addEventListener('click', function () {
     if (!confirm(EDU.t('confirm_reset'))) return;
     stopRun(); stopTween();
+    clearTimeout(saveT); dirty = {}; noSave = true;   /* nothing may be written back while the page reloads */
     ['state'].concat(ORDER.map(function (id) { return 'd_' + id; })).forEach(function (k) { store.remove(k); });
-    clearTimeout(saveT);
     location.reload();
   });
   window.addEventListener('beforeprint', function () { printing = true; $('#print-title').textContent = EDU.t('app_title') + ': ' + C().datasets[S.ds].name; draw(); });
@@ -1074,7 +1142,8 @@
     $('#slope-meaning').textContent = lineOk && n ? fill(T.slope, { m: signed(d.m, dc.m), m100: signed(d.m * 100, Math.max(0, dc.m - 2)), xs: T.xs, ys: T.ys }) : '';
     /* counts + hints */
     var pc = $('#pt-count'); pc.setAttribute('data-value', String(n)); pc.textContent = EDU.t('points_n', { n: EDU.fmt(n) });
-    $('#restore').hidden = S.ds === 'own' ? !n : !d.modified;
+    /* disabled, never hidden: a button appearing after the first tap would wrap the toolbar and move the graph */
+    $('#restore').disabled = S.ds === 'own' ? !n : !d.modified;
     $('#canvas-hint').textContent = EDU.t('canvas_hint_' + S.tab);
     /* manual coach */
     var mc = !st.ok ? 'need' : pct >= 98 ? 'm3' : pct >= 80 ? 'm2' : pct >= 30 ? 'm1' : 'm0';

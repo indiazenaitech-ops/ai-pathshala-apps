@@ -171,5 +171,82 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect((await svgTexts()).some((s) => s.includes(T1)), 'saved idea text is back after reload');
   await page.click('#mm-delmap');
   expect((await attr('maps')) === '3', 'map deleted');
+
+  /* 17. Markdown notes: the lines under a heading belong to that heading; a picture file is refused */
+  const openFile = async (name, mimeType, buffer) => { const [fc2] = await Promise.all([page.waitForEvent('filechooser'), page.click('#mm-open')]); await fc2.setFiles({ name, mimeType, buffer }); };
+  await openFile('science.md', 'text/markdown', Buffer.from('# Science\nIntro\n## Physics\n- Force\n- Motion\n## Chemistry\n1. Acids\n2. Bases\n'));
+  await page.waitForFunction(() => document.getElementById('mm-app').dataset.maps === '4');
+  m = await model();
+  expect(m.root.text === 'Science' && m.root.children.map((k) => k.text).join() === 'Intro,Physics,Chemistry', 'markdown headings become the main branches: ' + m.root.children.map((k) => k.text).join());
+  expect(m.root.children[1].children.map((k) => k.text).join() === 'Force,Motion' && m.root.children[2].children.length === 2, 'list items sit under their heading');
+  await openFile('photo.png', 'image/png', Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0x0d, 0x49, 0x48, 0x44, 0x52, 255, 254, 200]));
+  await page.waitForTimeout(400);
+  expect((await attr('maps')) === '4', 'a picture file is not turned into a map');
+
+  /* 18. clicking the outline while an idea is typed on the map: the typing is kept and the caret lands in the outline */
+  const root2 = await page.getAttribute('#mm-nodes g[data-root="1"]', 'data-id');
+  await tap(root2);
+  await page.click('#mm-child');
+  await page.waitForSelector('#mm-editor:not([hidden])');
+  await page.keyboard.type('Energy');
+  const rowB = await page.getAttribute('#mm-outline .ol-row[aria-level="2"]', 'data-id');
+  await page.click(`.ol-row[data-id="${rowB}"] .ol-in`);
+  await page.keyboard.type('!');
+  expect((await olValues()).includes('Energy'), 'idea typed on the map is kept');
+  expect((await page.inputValue(`.ol-row[data-id="${rowB}"] .ol-in`)) === 'Intro!', 'typing goes on in the outline row that was clicked');
+
+  /* 19. reload while an idea is still being typed: the text is kept, an empty new idea is not */
+  const c19 = await count();
+  await tap(root2);
+  await page.click('#mm-child');
+  await page.waitForSelector('#mm-editor:not([hidden])');
+  await page.waitForTimeout(400);
+  await page.keyboard.type('Half typed');
+  await page.reload();
+  await page.waitForSelector('#mm-nodes g[data-root="1"]');
+  expect((await count()) === c19 + 1 && (await olValues()).includes('Half typed'), 'typed text survives a reload');
+  await tap(await page.getAttribute('#mm-nodes g[data-root="1"]', 'data-id'));
+  await page.click('#mm-child');
+  await page.waitForSelector('#mm-editor:not([hidden])');
+  await page.waitForTimeout(400);
+  await page.reload();
+  await page.waitForSelector('#mm-nodes g[data-root="1"]');
+  expect((await count()) === c19 + 1 && !(await olValues()).includes(''), 'an empty new idea is not saved');
+
+  /* 20. finger on an idea: a quick swipe pans the map, holding it first moves the idea */
+  const forceId = await page.getAttribute('#mm-outline .ol-row[aria-level="3"]', 'data-id');
+  await page.click('#mm-fit');
+  const touchDrag = (id, dx, dy, holdMs) => page.evaluate(async ({ id, dx, dy, holdMs }) => {
+    const box = document.querySelector(`#mm-nodes g[data-id="${id}"] .mm-box`), r = box.getBoundingClientRect(), stage = document.getElementById('mm-stage');
+    const x = r.left + r.width / 2, y = r.top + r.height / 2, o = { pointerId: 7, pointerType: 'touch', isPrimary: true, bubbles: true, button: 0 };
+    box.dispatchEvent(new PointerEvent('pointerdown', { ...o, clientX: x, clientY: y }));
+    if (holdMs) await new Promise((res) => setTimeout(res, holdMs));
+    for (let i = 1; i <= 10; i++) { stage.dispatchEvent(new PointerEvent('pointermove', { ...o, clientX: x + dx * i / 10, clientY: y + dy * i / 10 })); await new Promise((res) => requestAnimationFrame(res)); }
+    stage.dispatchEvent(new PointerEvent('pointerup', { ...o, clientX: x + dx, clientY: y + dy }));
+  }, { id, dx, dy, holdMs });
+  const vpT = () => page.getAttribute('#mm-vp', 'transform');
+  const p0 = await pos(forceId), v0 = await vpT();
+  await touchDrag(forceId, 0, -90, 0);
+  await page.waitForTimeout(100);
+  expect((await vpT()) !== v0 && (await attr('layout')) === 'both', 'a quick finger swipe that starts on an idea pans the map');
+  expect(JSON.stringify(await pos(forceId)) === JSON.stringify(p0), 'the swiped idea did not move');
+  expect((await page.textContent('.edu-toast-wrap')).includes(t('hold_to_drag')), 'the hold-to-move hint is shown');
+  await touchDrag(forceId, -60, 140, 500);
+  await page.waitForTimeout(450);
+  expect(JSON.stringify(await pos(forceId)) !== JSON.stringify(p0), 'holding an idea and then dragging moves it');
+  await page.click('#mm-undo');
+  expect((await attr('layout')) === 'both' && JSON.stringify(await pos(forceId)) === JSON.stringify(p0), 'undo puts it back');
+
+  /* 21. full screen (smartboard): the map and the Arrange bar fit, dialogs show inside full screen */
+  await page.click('#mm-full');
+  await page.waitForFunction(() => document.getElementById('mm-app').classList.contains('mm-full'));
+  await page.waitForTimeout(250);
+  const g21 = await page.evaluate(() => { const r = (s) => document.querySelector(s).getBoundingClientRect(); return { stage: r('#mm-stage').bottom, side: r('.mm-side').bottom, bar: r('.mm-bar2').top, barB: r('.mm-bar2').bottom, h: innerHeight }; });
+  expect(g21.stage <= g21.bar + 1 && g21.side <= g21.bar + 1 && g21.barB <= g21.h + 1, 'map, outline and Arrange bar fit the full screen: ' + JSON.stringify(g21));
+  await page.click('#mm-keys');
+  expect(await page.evaluate(() => { const b = document.querySelector('.edu-modal-back'), fe = document.fullscreenElement; return !!b && (!fe || fe.contains(b)); }), 'shortcuts dialog is shown inside full screen');
+  await page.keyboard.press('Escape');
+  await page.click('#mm-full');
+  await page.waitForFunction(() => !document.getElementById('mm-app').classList.contains('mm-full'));
   log('ok', n0, exLines);
 };

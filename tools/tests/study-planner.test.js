@@ -124,4 +124,81 @@ module.exports = async function ({ page, expect, t, log }) {
   await reloadAt(new Date(2026, 2, 10, 9, 0, 0));
   expect(await txt('#cd-days') === '18', 'old sample refreshed: countdown 18 days again, got ' + await txt('#cd-days'));
   expect(await count('#today-body .sess-cb') > 0, 'refreshed sample has sessions today');
+
+  /* 10) a practice paper is solved in one sitting: all its sessions are on one day */
+  const pracDays = await page.$$eval('#plan-list .sess[data-k="prac"]', els => {
+    const m = {}; els.forEach(e => { (m[e.dataset.s] = m[e.dataset.s] || new Set()).add(e.dataset.date); });
+    return Object.values(m).map(s => s.size);
+  });
+  expect(pracDays.length === 4 && pracDays.every(n => n === 1), 'each practice paper is planned on a single day: ' + JSON.stringify(pracDays));
+
+  /* 11) on the day of a paper: re-planning does not plan (or complain about) the subject whose exam is today */
+  await reloadAt(new Date(2026, 2, 28, 9, 0, 0));          // sample from 10 Mar: English exam on 28 Mar
+  expect(await txt('#cd-days') === '0', 'English exam is today: ' + await txt('#cd-days'));
+  await page.click('#reschedule');
+  expect(!(await page.isVisible('#msg-unplaced')), 'no "not enough time" warning on exam day');
+  const onExam = await page.$$eval('#plan-list .sess-cb:not(:checked)', els => els.map(cb => { const e = cb.closest('.sess'); return e.dataset.s + '@' + e.dataset.date; }));
+  expect(onExam.length > 0 && !onExam.some(x => x.startsWith('s1@')) && !onExam.some(x => x.endsWith('@2026-03-28')), 'nothing planned for English or on the exam day');
+
+  /* 12) own plan: the date is typed with the keyboard, chapters are pasted, hours are clamped */
+  await page.evaluate(() => localStorage.removeItem('edu.study-planner.state'));
+  await reloadAt(new Date(2026, 0, 5, 9, 0, 0));
+  await page.click('#tab-exams');
+  await page.click('#start-empty');
+  expect(await count('#subj-list .subj') === 1 && await count('#subj-list .ch-row') === 1, 'own plan starts with one subject and one empty chapter');
+  const dateBox = await (await page.$('#subj-list .in-exam')).boundingBox();
+  await page.mouse.click(dateBox.x + 14, dateBox.y + dateBox.height / 2);
+  await page.keyboard.type('05022026', { delay: 30 });
+  await page.fill('#subj-list .in-sname', 'Hindi');
+  const typed = await page.getAttribute('#subj-list .subj', 'data-exam');
+  expect(typed === '2026-02-05' || typed === '2026-05-02', 'exam date typed digit by digit is kept (not reset while typing): ' + typed);
+  await page.click('#subj-list .paste-ch');
+  await page.fill('#paste-ta', '1. Kabir ki Sakhi\n2) Meera ke Pad\n- Manushyata\n\n');
+  await page.click('#paste-ok');
+  const chs = await page.$$eval('#subj-list .in-cname', els => els.map(e => e.value));
+  expect(JSON.stringify(chs) === JSON.stringify(['Kabir ki Sakhi', 'Meera ke Pad', 'Manushyata']), 'pasted list replaces the empty first chapter, numbers stripped: ' + JSON.stringify(chs));
+  await page.click('#tab-time');
+  await page.fill('#hours-0', '99');
+  await page.press('#hours-0', 'Tab');
+  expect(await page.inputValue('#hours-0') === '16' && await txt('#hours-hint-0') === t('n_sessions', { n: '32', m: '25' }), '99 hours is shown and used as 16: ' + await page.inputValue('#hours-0'));
+  await page.fill('#hours-0', '3');
+  await page.press('#hours-0', 'Tab');
+
+  /* 13) a mistyped far-away exam (year 2028) is left out and does not stretch the plan to a year of empty days */
+  await page.click('#tab-exams');
+  await page.click('#add-subject');
+  await page.fill('#subj-list .subj:last-child .in-sname', 'Sanskrit');
+  await page.fill('#subj-list .subj:last-child .in-exam', '2028-03-01');
+  await page.dispatchEvent('#subj-list .subj:last-child .in-exam', 'change');
+  await page.click('#make-plan');
+  const days = await page.$$eval('#plan-list .day', els => els.map(e => e.dataset.date));
+  const span = Math.round((Date.UTC(+typed.slice(0, 4), +typed.slice(5, 7) - 1, +typed.slice(8, 10)) - Date.UTC(2026, 0, 5)) / 864e5) + 1;
+  expect(days.length === span && days[days.length - 1] === typed, 'list ends at the planned exam, not in 2028: ' + days.length + ' days, last ' + days[days.length - 1]);
+  expect((await txt('#plan-msgs')).includes(t('exams_far', { n: '1' })), 'far exam reported');
+
+  /* 14) exam tomorrow (only a light day left) + a tight later exam: optional work is dropped so every chapter of the later subject still gets studied */
+  const subj = (id, name, exam, list) => ({ id, ck: null, own: true, name, exam, col: id === 'sa' ? 0 : 1,
+    ch: list.map((c, j) => ({ id: id + 'c' + j, ck: null, own: true, name: name + ' ' + (j + 1), d: c[0], c: c[1] })) });
+  await page.evaluate(s => localStorage.setItem('edu.study-planner.state', JSON.stringify(s)), {
+    v: 1, sample: false, hideNote: true, name: '', cls: '', start: '2026-01-05', hours: [1, 1, 1, 1, 1, 1, 1], leaveFrom: '', leaveHours: 7,
+    pomo: 25, light: true, rest: true, prac: true, plan: null, dirty: false, seq: 10, view: 'list', tab: 'exams', showPast: false, calSel: '',
+    subjects: [subj('sa', 'English', '2026-01-06', [['m', 'o'], ['m', 'o'], ['m', 'o']]), subj('sb', 'Maths', '2026-01-15', [['h', 'l'], ['h', 'l'], ['h', 'l'], ['h', 'l'], ['h', 'l'], ['h', 'l']])]
+  });
+  await page.clock.setFixedTime(new Date(2026, 0, 5, 9, 0, 0));
+  await page.reload();
+  await page.waitForSelector('#make-plan');
+  await page.click('#make-plan');
+  const studied = await page.$$eval('#plan-list .sess[data-s="sb"][data-k="learn"]', els => [...new Set(els.map(e => e.dataset.c))].length);
+  expect(studied === 6, 'all 6 Maths chapters get study time, got ' + studied);
+  expect(await page.isVisible('#msg-skipped'), 'dropped optional sessions are reported');
+  expect(await txt('#msg-unplaced') === t('tight_unplaced', { n: '3', time: t('dur_hm', { h: '1', m: '15' }) }), 'only the 3 English chapters do not fit: ' + await txt('#msg-unplaced'));
+  expect(await count('#plan-list .sess[data-date="2026-01-06"]') === 0, 'no study on the English exam day');
+
+  /* 15) "Reset to sample" brings back the sample date sheet and a fresh plan */
+  await page.click('#tab-exams');
+  await page.click('#reset-all');
+  await page.waitForTimeout(200);
+  expect(await count('#subj-list .subj') === 4 && await txt('#cd-days') === '18', 'sample restored: 4 subjects, 18 days to the first exam');
+  expect(await txt('#done-of') === t('done_of', { done: '0', total: String(total) }), 'fresh sample plan with no ticks: ' + await txt('#done-of'));
+  expect(!(await page.isVisible('#msg-unplaced')) && !(await page.isVisible('#msg-skipped')), 'the sample plan fits its time');
 };

@@ -141,17 +141,31 @@
     #worksheet { display: none; }
     .ws-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
     .ws-table th, .ws-table td { border: 1px solid #888; padding: 8px; text-align: start; vertical-align: top; }
-    .ws-table .pw { font-family: var(--mono); font-size: 12pt; direction: ltr; unicode-bidi: isolate; }
+    .ws-table .pw { font-family: var(--mono); font-size: 11pt; direction: ltr; unicode-bidi: isolate; overflow-wrap: anywhere; }
+    .ws-table { table-layout: fixed; }
+    .ws-table th:first-child { width: 7%; }
+    .ws-q th:nth-child(2), .ws-q th:nth-child(3) { width: 31%; }
+    .ws-k th:nth-child(2) { width: 6%; }
+    .ws-k th:nth-child(3) { width: 30%; }
     .ws-box { display: inline-block; width: 14px; height: 14px; border: 1.5px solid #000; margin-inline-end: 6px; vertical-align: middle; }
-    .ws-why { height: 28px; }
+    .ws-why { height: 34px; }
 
     /* Urdu Nastaliq needs taller lines */
     :root[lang="ur"] .stat span, :root[lang="ur"] .piece .knd, :root[lang="ur"] .rule p, :root[lang="ur"] .fb li { line-height: 2.1; }
     :root[lang="ur"] .level-label, :root[lang="ur"] .crack-time { line-height: 1.9; }
     :root[lang="ur"] .btn, :root[lang="ur"] .seg button, :root[lang="ur"] .tabs button { line-height: 1.8; }
 
+    .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
     @media print {
       @page { size: A4; margin: 12mm; }
+      /* paper is always light: the dark-theme colours (light text on dark boxes) would print unreadable */
+      :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+        --primary: #0b4f5c; --primary-ink: #ffffff; --accent: #d9501c;
+        --success: #15803d; --success-soft: #dcfce7; --danger: #b42318; --danger-soft: #fee4e2;
+        --warning: #a15c07; --warning-soft: #fef0c7; --info: #0b69a3; --info-soft: #e0f2fe;
+        --c1: #0b7285; --c2: #e8590c; --c3: #5f3dc4; --c4: #2b8a3e; --c5: #c2255c; --c6: #b08900; --c7: #1971c2; --c8: #868e96;
+      }
       .tabs, #howto, .edu-intro, .privacy, #inside { display: none !important; }
       body { font-size: 12pt; }
       .check-grid, .gen-grid { display: block; }
@@ -180,7 +194,7 @@
       .helpline .hl-big { font-size: 32pt; }
       .helpline h3 { font-size: 15pt; }
       .helpline p { font-size: 12pt; }
-      .ws-key { break-before: page; }
+      .ws-key { break-before: page; padding-top: 3mm; }   /* padding (not margin) survives the page break, so tall letters stay on page 2 */
       .ws-table tr { break-inside: avoid; }
     }
   </style>
@@ -219,7 +233,8 @@
           </div>
         </div>
 
-        <div class="card stack" id="result" aria-live="polite"></div>
+        <div class="card stack" id="result"></div>
+        <p class="sr-only" id="result-live" aria-live="polite" aria-atomic="true"></p>
       </div>
 
       <details class="card" id="inside" style="margin-top:16px">
@@ -292,6 +307,7 @@
       <div class="card stack" id="quiz"></div>
       <div class="row" style="margin-top:12px">
         <button type="button" class="btn" id="quiz-print">🖨️ <span data-i18n="quiz_print"></span></button>
+        <button type="button" class="btn btn-ghost" id="reset">↺ <span data-i18n="reset"></span></button>
       </div>
     </section>
 

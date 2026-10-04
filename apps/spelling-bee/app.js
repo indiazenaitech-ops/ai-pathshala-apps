@@ -26,7 +26,7 @@
   function escRe(s) { return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
   function validWord(w) { return typeof w === 'string' && w.length > 0 && w.length <= 40 && /^[A-Za-z](?:[A-Za-z' -]*[A-Za-z])?$/.test(w); }
   function cleanItems(v) {
-    var seen = {}, out = [];
+    var seen = Object.create(null), out = [];
     arr(v).forEach(function (x) {
       if (!x || !validWord(x.w) || seen[x.w.toLowerCase()]) return;
       seen[x.w.toLowerCase()] = 1;
@@ -38,7 +38,7 @@
   function setKey(node, key) { if (!node) return; node.setAttribute('data-i18n', key); node.textContent = t(key); }
 
   /* every built-in word, so a teacher's list can reuse our sentences and meanings */
-  var BUILTIN = {};
+  var BUILTIN = Object.create(null);   /* no prototype: a teacher may add words like "constructor" */
   LEVELS.forEach(function (L) {
     arr(L.words).forEach(function (x) { BUILTIN[x.w.toLowerCase()] = { w: x.w, s: x.s, alt: arr(x.alt), lv: String(L.id) }; });
   });
@@ -50,8 +50,16 @@
   cfg.second = cfg.second !== false; cfg.auto = cfg.auto !== false;
   if (['practise', 'bee', 'lists'].indexOf(cfg.tab) < 0) cfg.tab = 'practise';
   var stats = Object.assign({ words: 0, correct: 0, bestStreak: 0, rounds: 0 }, obj(store.get('stats', {})));
-  ['words', 'correct', 'bestStreak', 'rounds'].forEach(function (k) { stats[k] = Math.max(0, Math.floor(num(stats[k], 0))); });
-  var best = obj(store.get('best', {}));
+  ['words', 'correct', 'bestStreak', 'rounds'].forEach(function (k) { stats[k] = EDU.clamp(Math.floor(num(stats[k], 0)), 0, 1e7); });
+  if (stats.correct > stats.words) stats.correct = stats.words;
+  /* best score per level: { id: {s, n} } with 0 <= s <= n (storage may hold anything) */
+  var best = {};
+  (function (b) {
+    Object.keys(b).forEach(function (id) {
+      var e = obj(b[id]), s = Math.floor(num(e.s, -1)), n = Math.floor(num(e.n, 0));
+      if (n > 0 && n <= 300 && s >= 0 && s <= n) best[id] = { s: s, n: n };
+    });
+  })(obj(store.get('best', {})));
   var recent = obj(store.get('recent', {}));
   var custom = cleanItems(store.get('custom', []));
   var review = cleanItems(store.get('review', []));
@@ -64,6 +72,20 @@
   if (!validLevel(beeCfg.level) || beeCfg.level === 'review') beeCfg.level = '1';
 
   function saveCfg() { store.set('cfg', cfg); }
+  /* a word item as saved inside an unfinished round or bee (validated when read back) */
+  function slim(x) { return { w: x.w, s: x.s || '', m: x.m || '', lv: x.lv || '', alt: arr(x.alt).filter(validWord).slice(0, 4) }; }
+  function runItems(v) {
+    var seen = Object.create(null), out = [];
+    arr(v).forEach(function (x) {
+      x = obj(x);
+      if (!validWord(x.w) || seen[x.w.toLowerCase()]) return;
+      seen[x.w.toLowerCase()] = 1;
+      out.push({ w: x.w, s: str(x.s).slice(0, 200), m: str(x.m).slice(0, 120), lv: str(x.lv).slice(0, 10), alt: arr(x.alt).filter(validWord).slice(0, 4) });
+    });
+    return out;
+  }
+  var RUN_TTL = 12 * 3600 * 1000;   /* an unfinished round / class bee is picked up again after a reload for 12 hours */
+  function freshRun(r) { var at = num(r.at, 0); return at > 0 && Date.now() - at < RUN_TTL && at < Date.now() + 60000; }
   function saveBee() { store.set('bee', beeCfg); }
   function validLevel(id) { return LEVEL_IDS.indexOf(id) >= 0 || id === 'custom' || id === 'review'; }
 
@@ -91,8 +113,9 @@
   function meaningOf(item) {
     if (item.m) return { text: item.m, user: true };
     var C = window.APP_CONTENT || {}, key = item.w.toLowerCase();
-    var v = C[EDU.lang] && C[EDU.lang].m && C[EDU.lang].m[key];
-    return v ? { text: v, user: false } : null;
+    var M = C[EDU.lang] && C[EDU.lang].m;
+    var v = M && Object.prototype.hasOwnProperty.call(M, key) ? M[key] : '';
+    return v && typeof v === 'string' ? { text: v, user: false } : null;
   }
 
   /* ---------------- speech ---------------- */
@@ -218,6 +241,8 @@
     function setWord(item, auto) {
       st.item = item; st.state = 'ask'; st.tries = 0; st.hints = {}; st.jumble = []; st.used = []; st.freeJumble = false;
       st.fb = null; st.sentHeard = false; st.typed = '';
+      /* a double tap on "Next" must not land on "Show answer" / the teacher's ✓ ✗ of the new word */
+      st.readyAt = Date.now() + 350;
       input.value = ''; input.readOnly = false;
       delete wrap.dataset.result;
       render();
@@ -244,7 +269,8 @@
       st.jumble = out; st.freeJumble = !!free; st.jDirty = true;
     }
     function syncTiles() {
-      var typed = Array.from(norm(input.value)), used = st.jumble.map(function () { return false; });
+      /* not norm(): that trims, so a tapped space tile ("ice ") would light up again */
+      var typed = Array.from(input.value.toLowerCase().replace(/[‘’`]/g, "'")), used = st.jumble.map(function () { return false; });
       typed.forEach(function (ch) {
         for (var i = 0; i < st.jumble.length; i++) if (!used[i] && st.jumble[i] === ch) { used[i] = true; break; }
       });
@@ -268,12 +294,14 @@
       if (!st.item || st.state === 'done') return;
       var typed = norm(input.value);
       if (!typed) { st.fb = { k: 'empty' }; renderFb(); focusInput(); return; }
+      /* a double click / double tap on Check must not use up the second try with the same answer */
+      if (st.state === 'retry' && typed === st.typed && Date.now() - (st.retryAt || 0) < 1500) { try { input.select(); } catch (e) { } return; }
       st.tries++;
       var target = norm(st.item.w);
       if (typed === target) return finish(true, typed, false);
       if (arr(st.item.alt).map(norm).indexOf(typed) >= 0) return finish(true, typed, true);
       if (st.tries < 2 && opts.second()) {
-        st.state = 'retry'; st.typed = typed;
+        st.state = 'retry'; st.typed = typed; st.retryAt = Date.now();
         st.fb = { k: 'retry', ops: align(typed, target) };
         render();
         try { input.select(); } catch (e) { }
@@ -289,8 +317,9 @@
       render();
       opts.onDone({ ok: ok, tries: st.tries, hints: hintsUsed(), item: st.item, typed: st.typed });
     }
-    function reveal() { if (st.item && st.state !== 'done') finish(false, norm(input.value), false, 'shown'); }
-    function judge(ok) { if (st.item && st.state !== 'done') finish(ok, ok ? '' : norm(input.value), false, ok ? '' : 'judged'); }
+    function settled() { return Date.now() >= (st.readyAt || 0); }
+    function reveal() { if (st.item && st.state !== 'done' && settled()) finish(false, norm(input.value), false, 'shown'); }
+    function judge(ok) { if (st.item && st.state !== 'done' && settled()) finish(ok, ok ? '' : norm(input.value), false, ok ? '' : 'judged'); }
 
     function renderSentence(show) {
       var s = st.item.s, w = st.item.w;
@@ -466,10 +495,40 @@
     var r = $('tabs').getBoundingClientRect();
     if (r.top < 0 || r.top > window.innerHeight * 0.5) try { $('tabs').scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) { }
   }
-  function showWord() {
+  function showWord(auto) {
     $('p-next').hidden = true;
     renderPlayHead();
-    pPanel.setWord(PR.list[PR.i], true);
+    pPanel.setWord(PR.list[PR.i], auto !== false);
+    saveRun();
+  }
+  /* the unfinished round is kept in storage, so a reload (or Android closing the tab) does not lose it */
+  function saveRun() {
+    if (!PR) { store.remove('run'); return; }
+    store.set('run', { at: Date.now(), id: PR.id, base: PR.base, redo: PR.redo, i: PR.i, list: PR.list.map(slim),
+      results: PR.results.map(function (r) { return { w: r.item.w, ok: !!r.ok, tries: r.tries || 0, hints: r.hints || 0, typed: str(r.typed).slice(0, 40) }; }) });
+  }
+  function restoreRun() {
+    var r = obj(store.get('run', null));
+    if (!freshRun(r) || !validLevel(String(r.id))) { store.remove('run'); return; }
+    var list = runItems(r.list).slice(0, ROUND), res = [];
+    arr(r.results).some(function (x, k) {
+      x = obj(x);
+      if (k >= list.length || x.w !== list[k].w) return true;
+      res.push({ ok: x.ok === true, tries: EDU.clamp(Math.floor(num(x.tries, 0)), 0, 2), hints: EDU.clamp(Math.floor(num(x.hints, 0)), 0, 3), typed: str(x.typed).slice(0, 40), item: list[k] });
+    });
+    var i = Math.floor(num(r.i, -1));
+    if (!list.length || i < 0 || i >= list.length || (res.length !== i && res.length !== i + 1)) { store.remove('run'); return; }
+    PR = { id: String(r.id), base: validLevel(String(r.base)) ? String(r.base) : String(r.id), redo: r.redo === true, list: list, i: i, score: 0, streak: 0, bestStreak: 0, hints: 0, results: res };
+    res.forEach(function (x) {
+      if (x.ok) { PR.score++; PR.streak++; if (PR.streak > PR.bestStreak) PR.bestStreak = PR.streak; } else PR.streak = 0;
+      PR.hints += x.hints;
+    });
+    $('p-setup').hidden = true; $('p-summary').hidden = true; $('p-play').hidden = false;
+    if (res.length === i + 1) {           /* that word was already answered: go on with the next one */
+      PR.i++;
+      if (PR.i >= list.length) { finishRound(); return; }
+    }
+    showWord(false);
   }
   function renderPlayHead(bump) {
     if (!PR) return;
@@ -496,6 +555,7 @@
     PR.hints += res.hints;
     PR.results.push(res);
     store.set('stats', stats);
+    saveRun();
     renderPlayHead(res.ok);
     renderStats();
     setKey($('p-next-lbl'), PR.i >= PR.list.length - 1 ? 'see_result' : 'next_word');
@@ -521,6 +581,7 @@
   }
   function finishRound() {
     if (!PR) return;
+    store.remove('run');
     stats.rounds++; store.set('stats', stats);
     var n = PR.results.length;
     PR.list = PR.list.slice(0, n);
@@ -554,7 +615,7 @@
         el('button', { type: 'button', class: 'btn btn-sm', 'aria-label': t('listen_to', { w: r.item.w }), title: t('listen_to', { w: r.item.w }), text: '🔊', onclick: function () { say(r.item.w, cfg.rate); } }),
         el('span', { class: 'mw no-i18n', dir: 'ltr', text: r.item.w }),
         r.typed ? el('span', { class: 'mt no-i18n', dir: 'ltr', text: r.typed }) : null,
-        mm ? el('span', { class: 'mm' + (mm.user ? ' no-i18n' : ''), text: mm.text }) : null));
+        mm ? el('span', { class: 'mm' + (mm.user ? ' no-i18n' : ''), dir: mm.user ? 'auto' : null, text: mm.text }) : null));
     });
     $('sum-mist-wrap').hidden = !mist.length;
     $('sum-redo').hidden = !mist.length;
@@ -562,7 +623,7 @@
   }
   function backToSetup() {
     EDU.stopSpeaking();
-    PR = null;
+    PR = null; store.remove('run');
     $('p-play').hidden = true; $('p-summary').hidden = true; $('p-setup').hidden = false;
     renderLevels(); renderRoundInfo();
   }
@@ -669,7 +730,7 @@
       pool: pool, queue: EDU.shuffle(pool), cur: -1, ko: beeCfg.type === 'ko', per: beeCfg.per, level: beeCfg.level, done: false, item: null, knocked: 0
     };
     $('b-setup').hidden = true; $('b-endcard').hidden = true; $('b-stage').hidden = false;
-    nextTurn();
+    nextTurn(true);
     scrollToTabs();
   }
   function nextIndex() {
@@ -682,7 +743,7 @@
     }
     return -1;
   }
-  function nextTurn() {
+  function nextTurn(auto) {
     var j = nextIndex();
     if (j < 0) return endBee();
     BE.cur = j;
@@ -690,7 +751,39 @@
     BE.item = BE.queue.shift();
     $('b-next').hidden = true; $('b-judge').hidden = false;
     renderBoard(); renderTurn();
-    bPanel.setWord(BE.item, true);
+    bPanel.setWord(BE.item, auto !== false);
+    saveBeeRun();
+  }
+  /* the scoreboard of a running bee survives a reload of the smartboard browser */
+  function saveBeeRun() {
+    if (!BE || BE.done) { store.remove('beeRun'); return; }
+    store.set('beeRun', { at: Date.now(), ko: BE.ko, per: BE.per, level: BE.level, cur: BE.cur, knocked: BE.knocked,
+      judged: bPanel.state().state === 'done', item: BE.item ? BE.item.w : '',
+      players: BE.players.map(function (p) { return { name: p.name, score: p.score, lives: p.lives, out: p.out, outAt: p.outAt, turns: p.turns }; }),
+      pool: BE.pool.map(slim), queue: BE.queue.map(function (x) { return x.w; }) });
+  }
+  function restoreBeeRun() {
+    var r = obj(store.get('beeRun', null));
+    if (!freshRun(r)) { store.remove('beeRun'); return; }
+    var pool = runItems(r.pool).slice(0, 300), byW = Object.create(null);
+    pool.forEach(function (x) { byW[x.w] = x; });
+    var int = function (v, d, lo, hi) { return EDU.clamp(Math.floor(num(v, d)), lo, hi); };
+    var players = arr(r.players).slice(0, 8).map(function (p, i) {
+      p = obj(p);
+      return { name: str(p.name).trim().slice(0, 24), idx: i, score: int(p.score, 0, 0, 1e6), lives: int(p.lives, 3, 0, 3), out: p.out === true,
+        outAt: int(p.outAt, 0, 0, 8), turns: int(p.turns, 0, 0, 1e6) };
+    });
+    var cur = Math.floor(num(r.cur, -1)), item = byW[str(r.item)] || null;
+    if (!pool.length || !players.length || cur < 0 || cur >= players.length || !item) { store.remove('beeRun'); return; }
+    var level = String(r.level);
+    BE = { players: players, pool: pool, cur: cur, ko: r.ko === true, per: [2, 3, 5, 10].indexOf(+r.per) >= 0 ? +r.per : 3,
+      level: validLevel(level) && level !== 'review' ? level : '1', done: false, item: item, knocked: int(r.knocked, 0, 0, 8),
+      queue: arr(r.queue).map(function (w) { return byW[str(w)]; }).filter(Boolean) };
+    $('b-setup').hidden = true; $('b-endcard').hidden = true; $('b-stage').hidden = false;
+    if (r.judged === true) { nextTurn(false); return; }   /* that turn was already scored: next player */
+    $('b-next').hidden = true; $('b-judge').hidden = false;
+    renderBoard(); renderTurn();
+    bPanel.setWord(item, false);
   }
   function onBeeDone(res) {
     if (!BE || BE.done) return;
@@ -699,6 +792,7 @@
     if (res.ok) p.score++;
     else if (BE.ko) { p.lives--; if (p.lives <= 0) { p.out = true; p.outAt = ++BE.knocked; } }
     $('b-judge').hidden = true;
+    saveBeeRun();
     renderBoard(); renderTurn();
     setKey($('b-next-lbl'), nextIndex() < 0 ? 'see_winner' : 'next_player');
     $('b-next').hidden = false;
@@ -727,6 +821,7 @@
   function endBee() {
     if (!BE) return;
     BE.done = true;
+    store.remove('beeRun');
     EDU.stopSpeaking();
     if (document.fullscreenElement || document.webkitFullscreenElement) EDU.fullscreen();
     $('b-stage').hidden = true; $('b-endcard').hidden = false;
@@ -748,7 +843,7 @@
     var box = $('b-winner'); box.textContent = '';
     box.dataset.winner = winners.length === 1 ? String(top.idx) : 'tie';
     box.appendChild(el('div', { class: 'trophy', 'aria-hidden': 'true', text: winners.length === 1 ? '🏆' : '🤝' }));
-    box.appendChild(el('h2', { id: 'b-winner-title', text: winners.length === 1 ? t('winner_is', { name: pname(top) }) : t('winners_tie', { names: winners.map(pname).join(', ') }) }));
+    box.appendChild(el('h2', { id: 'b-winner-title', text: winners.length === 1 ? t('winner_is', { name: pname(top) }) : t('winners_tie', { names: winners.map(pname).join(EDU.lang === 'ur' ? '، ' : ', ') }) }));
     box.appendChild(el('p', { class: 'muted mb0', text: t('final_note') }));
     var tb = $('b-final'); tb.textContent = '';
     tb.appendChild(el('thead', {}, el('tr', {}, el('th', { class: 'num', text: '#' }), el('th', { text: t('col_player') }), el('th', { class: 'num', text: t('score') }), BE.ko ? el('th', { text: t('col_lives') }) : null)));
@@ -765,13 +860,13 @@
     tb.appendChild(tbody);
   }
   $('b-start').addEventListener('click', startBee);
-  $('b-next').addEventListener('click', function () { if (BE && !BE.done) nextTurn(); });
+  $('b-next').addEventListener('click', function () { if (BE && !BE.done) nextTurn(true); });
   $('b-ok').addEventListener('click', function () { bPanel.judge(true); });
   $('b-bad').addEventListener('click', function () { bPanel.judge(false); });
   $('b-end').addEventListener('click', function () { if (BE && confirm(t('confirm_end'))) endBee(); });
   $('b-fs').addEventListener('click', function () { EDU.fullscreen($('b-stage')); });
   $('b-again').addEventListener('click', startBee);
-  $('b-settings').addEventListener('click', function () { BE = null; $('b-endcard').hidden = true; $('b-stage').hidden = true; $('b-setup').hidden = false; renderBeeSetup(); });
+  $('b-settings').addEventListener('click', function () { BE = null; store.remove('beeRun'); $('b-endcard').hidden = true; $('b-stage').hidden = true; $('b-setup').hidden = false; renderBeeSetup(); });
 
   /* ======================================================================
      WORD LISTS (teacher list, share link, print)
@@ -780,14 +875,18 @@
   var shared = null;      // a list opened from a share link, waiting for "Use this list"
 
   function parseList(text) {
-    var lines = String(text || '').split(/\r?\n/);
-    var nonEmpty = lines.filter(function (l) { return l.trim(); });
-    if (nonEmpty.length === 1 && nonEmpty[0].indexOf('|') < 0 && /[,;]/.test(nonEmpty[0])) lines = nonEmpty[0].split(/[,;]/);
-    var items = [], seen = {}, skipped = 0;
+    var lines = [];
+    /* "cat, dog, sun" (a line without | or tab) holds several words */
+    String(text || '').split(/\r?\n/).forEach(function (l) {
+      if (l.indexOf('|') < 0 && l.indexOf('\t') < 0 && /[,;]/.test(l)) lines = lines.concat(l.split(/[,;]/)); else lines.push(l);
+    });
+    var items = [], seen = Object.create(null), skipped = 0;
     lines.forEach(function (line) {
       if (!line.trim()) return;
       var parts = line.replace(/\t/g, '|').split('|');
-      var w = parts[0].replace(/[‘’`]/g, "'").replace(/\s+/g, ' ').trim();
+      /* lists copied from a worksheet: "1. cat", "2) dog", "• sun", "fish." */
+      var w = parts[0].replace(/[‘’`]/g, "'").replace(/\s+/g, ' ').trim()
+        .replace(/^(?:\d{1,3}\s*[.):-]|[-•*·])\s*/, '').replace(/[.!?:]+$/, '').trim();
       if (!validWord(w) || items.length >= 300) { skipped++; return; }
       var k = w.toLowerCase();
       if (seen[k]) return;
@@ -810,9 +909,13 @@
     });
   }
   function setMsg(lines) { lmsg = lines; renderLMsg(); }
+  function wordKey(items) { return items.map(function (x) { return x.w.toLowerCase(); }).join('|'); }
   function saveCustom(items) {
+    var before = wordKey(custom);
     custom = cleanItems(items);
     store.set('custom', custom);
+    /* a different list: its old best score and "recently asked" words no longer apply */
+    if (wordKey(custom) !== before) { delete best.custom; delete recent.custom; store.set('best', best); store.set('recent', recent); }
     renderLevels(); renderRoundInfo(); renderBeeSetup(); renderListView();
   }
   function saveFromBox() {
@@ -827,7 +930,18 @@
   }
   $('l-text').value = listToText(custom);
   $('l-save').addEventListener('click', saveFromBox);
-  $('l-example').addEventListener('click', function () { $('l-text').value = DATA.example || ''; saveFromBox(); });
+  /* never replace a teacher's own list without asking */
+  function okToReplace(items) {
+    var box = parseList($('l-text').value).items;
+    var n = Math.max(custom.length, box.length);
+    if (!n || (wordKey(custom) === wordKey(items) && wordKey(box) === wordKey(items))) return true;
+    return confirm(t('confirm_replace_list', { n: fmt(n) }));
+  }
+  $('l-example').addEventListener('click', function () {
+    var ex = DATA.example || '';
+    if (!okToReplace(parseList(ex).items)) return;
+    $('l-text').value = ex; saveFromBox();
+  });
   $('l-clear').addEventListener('click', function () {
     if (!custom.length && !$('l-text').value.trim()) return;
     if (!confirm(t('confirm_clear_list'))) return;
@@ -850,7 +964,7 @@
     if (!m) return;
     var data = EDU.unpack(m[1]);
     var items = cleanItems(arr(data && data.w).map(function (r) {
-      return Array.isArray(r) ? { w: String(r[0] || '').trim(), s: str(r[1]), m: str(r[2]), lv: 'custom' } : null;
+      return Array.isArray(r) ? { w: String(r[0] || '').replace(/[‘’`]/g, "'").replace(/\s+/g, ' ').trim(), s: str(r[1]), m: str(r[2]), lv: 'custom' } : null;
     }).filter(Boolean)).slice(0, 300);
     if (!items.length) return;
     shared = items;
@@ -862,7 +976,7 @@
   }
   function clearHash() { try { history.replaceState(history.state, '', location.href.split('#')[0]); } catch (e) { } }
   $('l-shared-use').addEventListener('click', function () {
-    if (!shared) return;
+    if (!shared || !okToReplace(shared)) return;
     saveCustom(shared);
     $('l-text').value = listToText(custom);
     shared = null; clearHash(); renderShared();
@@ -896,7 +1010,7 @@
       body.appendChild(el('tr', {},
         el('td', { class: 'n', text: fmt(i + 1) }),
         el('td', { class: 'w no-i18n', dir: 'ltr', text: x.w }),
-        el('td', { class: 'm' + (mm && mm.user ? ' no-i18n' : ''), text: mm ? mm.text : '' }),
+        el('td', { class: 'm' + (mm && mm.user ? ' no-i18n' : ''), dir: mm && mm.user ? 'auto' : null, text: mm ? mm.text : '' }),
         el('td', { class: 's no-i18n', dir: 'ltr', text: x.s || '' }),
         el('td', {}, el('button', { type: 'button', class: 'btn btn-sm', 'aria-label': t('listen_to', { w: x.w }), title: t('listen_to', { w: x.w }), text: '🔊', onclick: function () { say(x.w, cfg.rate); } }))));
     });
@@ -909,7 +1023,7 @@
   function testItems(id, pool) {
     var o = testOrder;
     if (!o || o.id !== id || o.words.length !== pool.length) return pool;
-    var byW = {};
+    var byW = Object.create(null);
     pool.forEach(function (x) { byW[x.w] = x; });
     var out = o.words.map(function (w) { return byW[w]; }).filter(Boolean);
     return out.length === pool.length ? out : pool;
@@ -919,7 +1033,9 @@
     var area = $('print-area'); area.textContent = '';
     var rows = pool.map(function (x, i) {
       var mm = meaningOf(x);
-      return el('tr', {}, el('td', { text: fmt(i + 1) }), el('td', { style: { fontWeight: '700' }, text: x.w }), el('td', { text: mm ? mm.text : '' }), el('td', { text: x.s || '' }));
+      /* English cells are marked ltr, or an Urdu (RTL) page prints the full stop at the wrong end */
+      return el('tr', {}, el('td', { text: fmt(i + 1) }), el('td', { style: { fontWeight: '700' }, dir: 'ltr', lang: 'en', text: x.w }),
+        el('td', { dir: mm && mm.user ? 'auto' : null, text: mm ? mm.text : '' }), el('td', { dir: 'ltr', lang: 'en', text: x.s || '' }));
     });
     area.appendChild(el('div', { class: 'print-sheet list-sheet' },
       el('h1', { text: t('print_title', { level: lvl }) }),
@@ -934,9 +1050,10 @@
         el('span', { text: t('print_date') + ': ____________' })),
       el('p', { text: t('test_instr') }),
       el('ol', { class: 'test-lines' }, testPool.map(function (x) { var mm = meaningOf(x); return el('li', {}, el('div', { class: 'tl' }, el('span', { class: 'line' }), el('span', { class: 'clue-p', text: mm ? mm.text : '' }))); })),
-      el('div', { class: 'answer-key' }, el('h2', { text: t('answer_key') }), el('ol', { class: 'key-list' }, testPool.map(function (x) { return el('li', { text: x.w }); })))));
+      el('div', { class: 'answer-key' }, el('h2', { text: t('answer_key') }), el('ol', { class: 'key-list' }, testPool.map(function (x) { return el('li', {}, el('span', { dir: 'ltr', lang: 'en', text: x.w })); })))));
   }
   function doPrint(test) {
+    if (!poolFor(cfg.listView).length) { EDU.toast(t('custom_none')); return; }
     if (test) testOrder = { id: cfg.listView, words: EDU.shuffle(poolFor(cfg.listView)).map(function (x) { return x.w; }) };
     renderPrint();
     document.body.classList.toggle('sb-print-test', !!test);
@@ -977,7 +1094,7 @@
     var tg = e.target && e.target.tagName;
     if (tg === 'BUTTON' || tg === 'A' || tg === 'TEXTAREA' || tg === 'SELECT') return;
     if (!$('view-practise').hidden && !$('p-next').hidden && !$('p-play').hidden) { e.preventDefault(); nextWord(); }
-    else if (!$('view-bee').hidden && !$('b-next').hidden && !$('b-stage').hidden) { e.preventDefault(); if (BE && !BE.done) nextTurn(); }
+    else if (!$('view-bee').hidden && !$('b-next').hidden && !$('b-stage').hidden) { e.preventDefault(); if (BE && !BE.done) nextTurn(true); }
   });
 
   /* ---------------- start ---------------- */
@@ -990,6 +1107,8 @@
     if (BE) { renderBoard(); renderTurn(); renderBeeEnd(); }
     renderListView(); renderLMsg(); renderShared();
   }
+  restoreRun();
+  restoreBeeRun();
   readShared();
   showTab(cfg.tab);
   renderAll();

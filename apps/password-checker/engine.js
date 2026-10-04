@@ -11,7 +11,7 @@
   'use strict';
   var D = root.PW_DATA || { common: [], en: [], hi: [], names: [], places: [], famousDates: [], pairs: [] };
   var RATE = 1e10;
-  var MAXLEN = 160;            /* longer input is analysed in chunks of this many characters */
+  var MAXLEN = 256;            /* = the input's maxlength; longer input (never typed in the app) is analysed in chunks */
   var MAXW = 20;               /* longest dictionary word we look for */
   var REF_YEAR = new Date().getFullYear();
   var POOL = { lower: 26, upper: 26, digit: 10, symbol: 33, other: 100 };
@@ -37,6 +37,9 @@
   addList(PLACES, 'place', function () { return PLACES.length; });
   addList(EN, 'word', function () { return EN.length; });
   addList(HI, 'hindi', function () { return HI.length; });
+  /* everyday English words that are not passphrase words (mylife, bestfriend): 1 of all the English words we know */
+  var EXTRA = uniq(D.enExtra || []).filter(function (w) { return !DICT[w] && /^[a-z]{3,}$/.test(w); });
+  addList(EXTRA, 'word', function () { return EN.length + EXTRA.length; });
 
   var LEET = { '4': ['a'], '@': ['a'], '3': ['e'], '1': ['i', 'l'], '!': ['i'], '|': ['i', 'l'], '0': ['o'], '$': ['s'], '5': ['s'], '7': ['t'], '+': ['t'], '9': ['g'], '6': ['g'], '8': ['b'], '2': ['z'] };
 
@@ -263,11 +266,14 @@
     var n = s.length;
     function eq(a, b, len) { for (var q = 0; q < len; q++) if (s[a + q] !== s[b + q]) return false; return true; }
     for (var i = 0; i < n; i++) {
+      var bmin = 0;   /* shortest block already repeating from i: its multiples ("abab" in "abababab") add nothing */
       for (var b = 1; i + 2 * b <= n; b++) {
         if (i - b >= 0 && eq(i - b, i, b)) continue;  /* not the start of this repeat */
+        if (bmin && b % bmin === 0 && eq(i, i + bmin, b - bmin)) continue;
         var k = 1;
         while (i + (k + 1) * b <= n && eq(i, i + k * b, b)) k++;
         if (k < 2 || k * b < 3) continue;
+        if (!bmin) bmin = b;
         var block = s.slice(i, i + b).join(''), base;
         if (depth > 0) base = Math.pow(poolOf(s.slice(i, i + b)), b);
         else { if (memo[block] === undefined) memo[block] = Math.pow(2, analyze(block, 1).bits); base = memo[block]; }
@@ -324,6 +330,7 @@
   }
 
   /* ---------------- main ---------------- */
+  var DICT_KINDS = { common: 1, word: 1, hindi: 1, name: 1, place: 1 };
   function analyze(pw, depth) {
     depth = depth || 0;
     var all = Array.from(String(pw == null ? '' : pw));
@@ -370,9 +377,14 @@
       var o = {}; for (var k in m) o[k] = m[k];
       o.token = all.slice(m.i, m.j).join('');
       if (o.kind === 'random') { o.g = Math.pow(pool, m.j - m.i); o.lg = (m.j - m.i) * lp; }
-      totalLg += o.lg;
       return o;
     });
+    /* "Capital First Letter Of Every Word" is ONE rule for an attacker, not a new choice for every word */
+    var dictSegs = segs.filter(function (o) { return DICT_KINDS[o.kind]; });
+    if (dictSegs.length >= 2 && dictSegs.every(function (o) { return o.caps === 'first'; })) {
+      dictSegs.slice(1).forEach(function (o) { o.g /= 2; o.lg -= 1; o.capsRule = true; });
+    }
+    segs.forEach(function (o) { totalLg += o.lg; });
     if (all.length > n) totalLg += analyze(all.slice(n).join(''), depth).bits;   /* very long input: next chunk */
     var bits = Math.min(totalLg, res.simpleBits);
     res.segments = segs; res.bits = bits; res.guessesLog2 = bits; res.sep = sep;
@@ -454,6 +466,6 @@
     level: level, timeParts: timeParts, guessParts: guessParts, secondsFor: secondsFor,
     generate: generate, genBits: genBits, listSize: function (name) { return listFor(name).length; },
     RATE: RATE, LEVEL_SECS: LEVEL_SECS, POOL: POOL, classOf: classOf,
-    sizes: { common: COMMON.length, en: EN.length, hi: HI.length, both: BOTH.length, names: NAMES.length, places: PLACES.length }
+    sizes: { common: COMMON.length, en: EN.length, hi: HI.length, both: BOTH.length, names: NAMES.length, places: PLACES.length, extra: EXTRA.length }
   };
 })(window);

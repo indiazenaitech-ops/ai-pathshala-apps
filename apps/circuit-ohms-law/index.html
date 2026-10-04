@@ -24,19 +24,28 @@
     .cl-head { gap: 8px; }
     .cl-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 10px 0 6px; }
     .cl-stat { background: var(--surface-2); border-radius: var(--radius-sm); padding: 8px 10px; min-width: 0; }
-    .cl-stat .k { display: block; font-size: .8rem; color: var(--muted); font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+    .cl-stat .k { display: block; font-size: .8rem; color: var(--muted); font-weight: 600; line-height: 1.3; }
     @media (max-width: 420px) { .cl-stats { gap: 6px; } .cl-stat { padding: 7px 8px; } .cl-stat .k { font-size: .74rem; } }
     .cl-stat .v { display: block; font-size: clamp(1.1rem, 3.4vw, 1.65rem); font-weight: 800; line-height: 1.3; overflow-wrap: anywhere;
       font-family: "Noto Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; unicode-bidi: plaintext; }
     .cl-stat.hot { background: var(--danger-soft); } .cl-stat.hot .v { color: var(--danger); }
+    /* .stack is set from app.js when a label word is too long for a narrow column (Tamil, Malayalam on phones) */
+    .cl-stats.stack { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+    .cl-stats.stack .cl-stat { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 6px 10px; }
+    .cl-stats.stack .k { font-size: .86rem; overflow-wrap: anywhere; min-width: 0; }
+    .cl-stats.stack .v { font-size: 1.25rem; flex: none; max-width: 60%; text-align: end; }
     .cl-svgwrap { background: var(--surface); border-radius: var(--radius-sm); }
     .cl-diag .callout { margin-top: 10px; }
     .cl-note { margin: 10px 0 0; }
     .cl-dotkey { display: inline-block; width: 11px; height: 11px; border-radius: 50%; background: var(--accent); margin-inline-end: 6px; vertical-align: -1px; }
     .cl-dotkey.elec { background: var(--c7); }
-    #diag-card:fullscreen { overflow: auto; background: var(--bg); padding: 20px 28px; font-size: 1.2rem; }
-    #diag-card:fullscreen .cv { max-height: 68vh; width: auto; max-width: 100%; margin: 0 auto; }
-    #diag-card:-webkit-full-screen { overflow: auto; background: var(--bg); padding: 20px 28px; }
+    /* full screen (smartboard): the whole lab, so the teacher can still move the sliders while the class watches */
+    .cl-lab:fullscreen { overflow: auto; background: var(--bg); padding: 18px 24px; align-content: start; }
+    .cl-lab:-webkit-full-screen { overflow: auto; background: var(--bg); padding: 18px 24px; }
+    @media (min-width: 700px) {
+      .cl-lab:fullscreen { grid-template-columns: minmax(280px, 340px) minmax(0, 1fr); grid-template-areas: "ctrl diag" "ctrl calc"; }
+    }
+    .cl-lab:fullscreen .cv { max-height: 68vh; width: auto; max-width: 100%; margin: 0 auto; }
 
     /* ---------- circuit svg ---------- */
     .cv { display: block; width: 100%; height: auto; direction: ltr; font-family: var(--font); user-select: none; -webkit-user-select: none; }
@@ -89,6 +98,9 @@
     .cl-preset .pico path, .cl-preset .pico line { stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; }
     .cl-preset .pico rect { stroke: currentColor; stroke-width: 2; fill: var(--surface); }
     .cl-preset .pt { display: flex; flex-direction: column; min-width: 0; }
+    .cl-presets.stack .cl-preset { flex-direction: column; justify-content: center; text-align: center; gap: 4px; padding: 8px 6px; }
+    .cl-presets.stack .cl-preset .pt { align-items: center; overflow-wrap: anywhere; max-width: 100%; }
+    [dir="rtl"] .cl-presets.stack .cl-preset .pf { text-align: center; }
     .cl-preset .pf { font-family: "Noto Sans", system-ui, sans-serif; font-size: .76rem; color: var(--muted); font-weight: 700; direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
     [dir="rtl"] .cl-preset .pf { text-align: right; }
     .cl-sl { margin-top: 16px; }
@@ -132,7 +144,9 @@
     .cl-syms { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
     .cl-sym { display: flex; align-items: center; gap: 10px; padding: 6px 8px; background: var(--surface-2); border-radius: var(--radius-sm); font-size: .88rem; font-weight: 600; line-height: 1.3; min-width: 0; }
     .cl-sym svg { flex: none; width: 56px; height: 28px; color: var(--text); }
-    .cl-sym span { min-width: 0; overflow-wrap: anywhere; }
+    .cl-sym span { min-width: 0; }
+    .cl-syms.stack .cl-sym { flex-direction: column; text-align: center; gap: 4px; padding: 8px 6px; }
+    .cl-syms.stack .cl-sym span { overflow-wrap: anywhere; max-width: 100%; }
     @media (max-width: 420px) { .cl-syms { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cl-sym { gap: 6px; padding: 6px; } .cl-sym svg { width: 46px; } }
     .cl-sym svg * { stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
     .cl-sym svg .f { fill: currentColor; stroke: none; }
@@ -170,13 +184,15 @@
     .graph .empty { font-size: 17px; fill: var(--muted); font-family: var(--font); }
     .cl-tbl-tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
     #exp-table td.n, #exp-table th.n { text-align: end; font-family: "Noto Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; }
-    #exp-table .btn-sm { min-height: 34px; min-width: 34px; padding: 4px 8px; }
+    #exp-table .btn-sm { min-height: 40px; min-width: 40px; padding: 4px 8px; }
     .cl-result { margin-top: 12px; }
     .cl-result p { margin: 0 0 6px; }
     .cl-result p .math { font-size: 1rem; font-weight: 700; }
     @media (max-width: 600px) {
       #exp-table th, #exp-table td, .cl-table th, .cl-table td { padding: 6px 5px; font-size: .86rem; }
-      .graph .tick { font-size: 21px; } .graph .alab { font-size: 22px; } .graph .tril { font-size: 21px; }
+      #exp-table th, #exp-table td { padding-inline: 3px; } #exp-table th { font-size: .78rem; white-space: normal; }
+      #exp-table .btn-sm { padding: 4px; }
+      .graph .tick { font-size: 21px; } .graph .alab { font-size: 22px; } .graph .tril { font-size: 21px; } .graph .empty { font-size: 22px; }
     }
 
     /* ---------- practice ---------- */
@@ -218,6 +234,7 @@
       .cl-stat { border: 1px solid #bbb; }
       .ws-head { display: block; }
       .ws-key-wrap.no-key { display: none !important; }
+      body.cl-print-ws .ws-key-wrap { break-before: page; }
       body.cl-print-ws #pane-lab, body.cl-print-ws #pane-exp { display: none !important; }
       body.cl-print-ws #ws-card { border: 0; padding: 0; }
       body.cl-print-ws #ws-card > h2, body.cl-print-ws #ws-card > .muted { display: none; }
@@ -401,7 +418,7 @@
 
         <div class="card" id="exp-res-card">
           <h2 data-i18n="exp_table"></h2>
-          <div class="scroll-x"><table class="table" id="exp-table"></table></div>
+          <div class="scroll-x"><table class="table cl-table" id="exp-table"></table></div>
           <div class="cl-tbl-tools">
             <button type="button" class="btn btn-sm" id="exp-csv" data-i18n="download"></button>
             <button type="button" class="btn btn-sm" id="exp-print" data-i18n="print"></button>

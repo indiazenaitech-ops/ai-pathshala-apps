@@ -87,7 +87,7 @@
       }
       case 'tri_heron': {
         var A = v.a, B = v.b, C = v.c;
-        if (A + B <= C || B + C <= A || A + C <= B) return { err: 'err_triangle', res: [], notes: [] };
+        if (A + B <= C || B + C <= A || A + C <= B) return { err: 'err_triangle', res: [], notes: [], bad: ['a', 'b', 'c'] };
         var per = R('perimeter', A + B + C, 1, 'a + b + c', [nf(A) + ' + ' + nf(B) + ' + ' + nf(C)]);
         var s = R('s', per / 2, 1, '(a + b + c) ÷ 2', [nf(per) + ' ÷ 2']);
         var prod = s * (s - A) * (s - B) * (s - C);
@@ -99,7 +99,7 @@
         break;
       }
       case 'parallelogram': {
-        if (v.h > v.a) return { err: 'err_para', res: [], notes: [] };
+        if (v.h > v.a) return { err: 'err_para', res: [], notes: [], bad: ['a', 'h'] };
         R('area', v.b * v.h, 2, 'b × h', [nf(v.b) + ' × ' + nf(v.h)]);
         R('perimeter', 2 * (v.a + v.b), 1, '2 × (a + b)', ['2 × (' + nf(v.a) + ' + ' + nf(v.b) + ')', '2 × ' + nf(v.a + v.b)]);
         break;
@@ -133,7 +133,7 @@
         break;
       }
       case 'ring': {
-        if (v.R <= v.r) return { err: 'err_ring', res: [], notes: [] };
+        if (v.R <= v.r) return { err: 'err_ring', res: [], notes: [], bad: ['R', 'r'] };
         R('width', v.R - v.r, 1, 'R − r', [nf(v.R) + ' − ' + nf(v.r)]);
         R('area', P * (v.R * v.R - v.r * v.r), 2, 'π × (R² − r²)', [PS + ' × (' + sq(v.R) + ' − ' + sq(v.r) + ')', PS + ' × (' + nf(v.R * v.R) + ' − ' + nf(v.r * v.r) + ')', PS + ' × ' + nf(v.R * v.R - v.r * v.r)]);
         break;
@@ -216,20 +216,27 @@
     var rad = function () { return p22 ? pk([7, 14, 21, 3.5, 28, 35, 10.5]) : ri(2, 20); };
     switch (shape) {
       case 'square': return { a: ri(3, 30) };
-      case 'rectangle': { var l = ri(6, 40); return { l: l, b: ri(2, l - 1) }; }
-      case 'tri_bh': return { b: ri(4, 30), h: ri(3, 24) };
+      case 'rectangle': { var l = ri(6, 40); return { l: l, b: ri(Math.max(2, Math.ceil(l / 5)), l - 1) }; }
+      /* keep the shapes in sensible proportions so the drawing and its labels stay clear */
+      case 'tri_bh': { var tb = ri(4, 30); return { b: tb, h: ri(Math.max(3, Math.ceil(tb / 3)), Math.min(24, 3 * tb)) }; }
       case 'tri_heron': { var t = pk(HERON), k = pk([1, 1, 2, 3]); return { a: t[0] * k, b: t[1] * k, c: t[2] * k }; }
-      case 'parallelogram': { var a = ri(5, 16); return { b: ri(6, 25), a: a, h: ri(3, a - 1) }; }
+      case 'parallelogram': {
+        var a = ri(5, 16), ph = ri(Math.ceil(a * 0.55), a - 1), off = Math.sqrt(a * a - ph * ph), lo = Math.max(6, Math.ceil(off));
+        return { b: ri(lo, Math.max(lo, Math.min(25, 3 * ph))), a: a, h: ph };
+      }
       case 'rhombus': { var d = pk(RHOMB); return { d1: d[0], d2: d[1] }; }
-      case 'trapezium': { var ta = ri(8, 30); return { a: ta, b: ri(4, ta - 2), h: ri(3, 16) }; }
+      case 'trapezium': { var ta = ri(8, 30); return { a: ta, b: ri(4, ta - 2), h: ri(Math.max(3, Math.ceil(ta / 4)), 16) }; }
       case 'circle': case 'semicircle': case 'sphere': case 'hemisphere': return { r: rad() };
-      case 'ring': { var rr = rad(); return { r: rr, R: rr + (p22 ? pk([7, 3.5, 14]) : ri(1, 6)) }; }
+      case 'ring': {
+        var rr = rad(), lo2 = Math.max(1, Math.ceil(rr / 4));
+        return { r: rr, R: rr + (p22 ? pk(rr >= 21 ? [7, 14] : [7, 3.5, 14]) : ri(lo2, lo2 + 5)) };
+      }
       case 'cube': return { a: ri(2, 15) };
       case 'cuboid': return { l: ri(4, 25), b: ri(3, 15), h: ri(2, 12) };
       case 'cylinder': return { r: rad(), h: ri(3, 30) };
       case 'cone': {
         if (p22) { var c = pk([[7, 24], [14, 48], [21, 28], [21, 20], [7, 24], [35, 12]]); return { r: c[0], h: c[1] }; }
-        var tr = pk(TRIPLES); return Math.random() < 0.5 ? { r: tr[0], h: tr[1] } : { r: tr[1], h: tr[0] };
+        var tr = pk(TRIPLES); return (Math.random() < 0.5 && tr[1] < 2 * tr[0]) ? { r: tr[1], h: tr[0] } : { r: tr[0], h: tr[1] };
       }
       case 'frustum': {
         if (p22) { var r2 = pk([7, 14]); return { r1: r2 + 7, r2: r2, h: 24 }; }

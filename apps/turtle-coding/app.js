@@ -132,7 +132,10 @@
   }
   function delBlock(id) {
     var f = find(id); if (!f) return;
+    var near = f.list[f.i + 1] || f.list[f.i - 1] || f.parent;   /* keep keyboard focus nearby */
     mutate(function () { f.list.splice(f.i, 1); if (S.target && contains(f.b, S.target)) S.target = null; });
+    var r = near && rowEl(near.id), btn = r && r.querySelector('[data-act="del"]');
+    if (btn) btn.focus({ preventScroll: true });
   }
   function setProgram(code) {
     var p = safeParse(code);
@@ -140,6 +143,10 @@
     syncCode();
   }
   function undo() {
+    if (S.codeDirty) {   /* first undo = throw away the text typed in the Code tab that is not yet blocks */
+      S.codeDirty = false; clearDraft(); setCodeMsg(null); syncCode(); updateCounts();
+      return;
+    }
     if (!S.undo.length) return;
     haltForEdit();
     S.prog = safeParse(S.undo.pop()); S.target = null; S.codeDirty = false;
@@ -254,13 +261,22 @@
   }
   function updateCounts() {
     $('#blk-count').textContent = t('n_blocks', { n: fmt(E.countBlocks(S.prog)) });
-    $('#undo').disabled = !S.undo.length;
+    $('#undo').disabled = !S.undo.length && !S.codeDirty;
   }
 
   /* ---------------- code tab ---------------- */
+  /* Text typed in the Code tab but not yet turned into blocks is kept as a draft, so a reload does not lose it. */
+  function saveDraft() { store.set('draft', { ws: S.cur, code: $('#code').value }); }
+  function clearDraft() { store.remove('draft'); }
+  function restoreDraft() {
+    var d = store.get('draft', null);
+    if (!d || typeof d !== 'object' || d.ws !== S.cur || typeof d.code !== 'string' || d.code === E.toCode(S.prog)) { clearDraft(); return false; }
+    $('#code').value = d.code; S.codeDirty = true;
+    return true;
+  }
   function syncCode() {
     var code = E.toCode(S.prog);
-    if (!S.codeDirty) $('#code').value = code;
+    if (!S.codeDirty) { $('#code').value = code; clearDraft(); }
     $('#print-code').textContent = code;
   }
   function setCodeMsg(m) { S.codeMsg = m; renderCodeMsg(); }
@@ -303,7 +319,7 @@
     rows.forEach(function (r) {
       body.appendChild(el('tr', {}, el('td', {}, el('code', { text: r[0] })), el('td', {}, ICON[r[1]] + ' ' + t('blk_' + r[1]))));
     });
-    body.appendChild(el('tr', {}, el('td', {}, el('code', { text: E.COLORS.join(' ') })),
+    body.appendChild(el('tr', {}, el('td', {}, el('code', { class: 'tc-wrapcode', text: E.COLORS.join(' ') })),
       el('td', { text: E.COLORS.map(function (c) { return t('col_' + c); }).join(', ') })));
     tb.appendChild(body);
   }
@@ -344,6 +360,7 @@
     g.globalAlpha = 0.5; g.strokeStyle = col.muted; g.lineWidth = 1.5 * d; g.beginPath();
     g.moveTo(X(0), 0); g.lineTo(X(0), W); g.moveTo(0, Y(0)); g.lineTo(W, Y(0)); g.stroke(); g.globalAlpha = 1;
     g.fillStyle = col.muted; g.font = Math.round(11 * d) + 'px system-ui, sans-serif';
+    g.direction = 'ltr';   /* in Urdu (RTL) the canvas would otherwise print -200 as "200-" */
     [-200, -100, 100, 200].forEach(function (v) {
       g.textAlign = v > 0 ? 'right' : 'left'; g.textBaseline = 'bottom';
       g.fillText(String(v), X(v) + (v > 0 ? -3 : 3) * d, Y(0) - 3 * d);
@@ -618,17 +635,19 @@
     computeTarget(); S.result = null;
     renderChallengePanel(); draw();
   }
+  /* Returns false (and says why) when the Code tab has a mistake that must be fixed first. */
   function switchWs(id) {
-    if (S.codeDirty && !applyCode(true)) return;
+    if (S.codeDirty && !applyCode(true)) { setStatus('err_in_code', null, 'error'); EDU.toast(t('err_in_code')); return false; }
     haltForEdit();
     loadWorkspace(id);
     resetCanvasState(); A.mode = 'idle';
     renderAll();
     setStatus('status_ready');
     updateButtons();
+    return true;
   }
   function loadExample(id) {
-    if (S.cur !== 'free') switchWs('free');
+    if (S.cur !== 'free' && !switchWs('free')) return;   /* never overwrite a challenge's program */
     setProgram(EXAMPLES[id]);
     run();
   }
@@ -650,7 +669,12 @@
   }
   function saveProgram() {
     if (!applyCode(true)) return;
-    var inp = $('#save-name'), name = inp.value.trim().slice(0, 60) || t('untitled', { n: S.saved.length + 1 });
+    var inp = $('#save-name'), name = inp.value.trim().slice(0, 60);
+    if (!name) {   /* "My drawing 3": pick a number that is not used yet, so nothing is overwritten */
+      var k = S.saved.length + 1, taken = function (nm) { return S.saved.some(function (s) { return s.name === nm; }); };
+      while (taken(t('untitled', { n: k }))) k++;
+      name = t('untitled', { n: k });
+    }
     S.saved = S.saved.filter(function (s) { return s.name !== name; });
     S.saved.unshift({ name: name, code: E.toCode(S.prog) });
     if (S.saved.length > 60) S.saved.length = 60;
@@ -698,7 +722,7 @@
         el('div', { class: 'small' }, t('turn') + ': ', el('b', { class: 'num', text: fmt(a) + '°' }), ' ', el('span', { class: 'muted num', text: '(360 ÷ ' + fmt(n) + ')' })),
         el('div', { class: 'small' }, t('inner') + ': ', el('b', { class: 'num', text: fmt(180 - a) + '°' })),
         el('button', { type: 'button', class: 'btn btn-sm', id: 'try-' + n, text: '▶ ' + t('try_it'), 'aria-label': t('try_it') + ': ' + t('sh_' + n), onclick: function () {
-          if (S.cur !== 'free') switchWs('free');
+          if (S.cur !== 'free' && !switchWs('free')) return;
           setProgram(['repeat ' + n + ' [', '  forward ' + ANGLE_ROWS[n], '  right ' + a, ']'].join('\n'));
           run(); scrollToStage();
         } })));
@@ -845,7 +869,12 @@
   $('#fs-btn').addEventListener('click', function () { EDU.fullscreen($('#stage')); });
   $('#tab-blocks').addEventListener('click', function () { showTab('blocks'); });
   $('#tab-code').addEventListener('click', function () { showTab('code'); });
-  $('#code').addEventListener('input', function () { S.codeDirty = true; if (S.codeMsg) setCodeMsg(null); });
+  $('#code').addEventListener('input', function () {
+    var was = S.codeDirty;
+    S.codeDirty = true; saveDraft();
+    if (S.codeMsg) setCodeMsg(null);
+    if (!was) updateCounts();
+  });
   $('#code').addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); run(); }
   });
@@ -859,7 +888,7 @@
     EDU.pickFile('.txt,.logo,text/plain').then(function (f) {
       if (!f) return;
       if (f.size > 200000) { EDU.toast(t('err_file')); return; }
-      return EDU.readText(f).then(function (txt) { $('#code').value = txt; S.codeDirty = true; showTab('code', true); applyCode(false); });
+      return EDU.readText(f).then(function (txt) { $('#code').value = txt; S.codeDirty = true; saveDraft(); showTab('code', true); applyCode(false); });
     }).catch(function () { EDU.toast(t('err_file')); });
   });
   $('#save-btn').addEventListener('click', saveProgram);
@@ -867,8 +896,8 @@
   $('#share-btn').addEventListener('click', shareLink);
   $('#reset-all').addEventListener('click', function () {
     if (!confirm(t('confirm_reset'))) return;
-    ['ws', 'stars', 'polyN', 'cur', 'saved', 'tab'].forEach(function (k) { store.remove(k); });
-    S.ws = {}; S.stars = {}; S.saved = []; S.polyN = 6;
+    ['ws', 'stars', 'polyN', 'cur', 'saved', 'tab', 'draft'].forEach(function (k) { store.remove(k); });
+    S.ws = {}; S.stars = {}; S.saved = []; S.polyN = 6; S.codeDirty = false; S.codeMsg = null;
     switchWs('free'); instantRun(); draw();
   });
   window.addEventListener('beforeprint', function () { printing = true; readColors(); redrawLayer(); draw(); });
@@ -882,9 +911,10 @@
   readColors();
   var fromLink = readLink();
   if (!fromLink) loadWorkspace(S.cur);
+  var hadDraft = !fromLink && restoreDraft();
   $('#speed').value = String(S.speed);
   $('#grid').checked = S.grid;
-  showTab(store.get('tab', 'blocks') === 'code' ? 'code' : 'blocks', true);
+  showTab(hadDraft || store.get('tab', 'blocks') === 'code' ? 'code' : 'blocks', true);
   renderAll();
   resize(true);
   if (S.cur === 'free' && !fromLink) instantRun();

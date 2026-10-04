@@ -30,8 +30,9 @@
     var p = decParts(n, d);
     if (!p.digits.length) return String(p.ip);
     if (p.rep < 0) return p.ip + '.' + p.digits.join('');
+    /* the whole repeating block gets the bar (1/17 has 16 repeating digits; the number may wrap, see .fl-dec) */
     var non = p.digits.slice(0, p.rep).join(''), rp = p.digits.slice(p.rep);
-    if (rp.length <= 6) return p.ip + '.' + non + '<span class="fl-rep">' + rp.join('') + '</span>';
+    if (rp.length <= 24) return p.ip + '.' + non + '<span class="fl-rep">' + rp.join('') + '</span>';
     return p.ip + '.' + p.digits.slice(0, 8).join('') + '…';
   }
   function isRepeating(n, d) { return decParts(n, d).rep >= 0; }
@@ -57,6 +58,20 @@
     return esc(t(key)).replace(/\{(\w+)\}/g, function (m, k) { return vars && vars[k] !== undefined ? String(vars[k]) : m; });
   }
   function tE(key, vars) { return esc(t(key, vars)); }
+  /* "₹1" inside Urdu (RTL) text after Arabic letters is shown as "1₹" by the bidi algorithm: keep money amounts left to right */
+  function money(h) { return String(h).replace(/₹\s?\d+/g, function (m) { return '<span dir="ltr">' + m + '</span>'; }); }
+  /* students and teachers may type digits in their own script (०१२, ০১২, ۱۲۳ …): read them as 0-9 */
+  var DIGIT0 = [0x660, 0x6F0, 0x966, 0x9E6, 0xA66, 0xAE6, 0xB66, 0xBE6, 0xC66, 0xCE6, 0xD66];
+  function latinDigits(s) {
+    return String(s == null ? '' : s).replace(/[٠-٩۰-۹०-९০-৯੦-੯૦-૯୦-୯௦-௯౦-౯೦-೯൦-൯]/g, function (c) {
+      var x = c.charCodeAt(0);
+      for (var i = 0; i < DIGIT0.length; i++) if (x >= DIGIT0[i] && x <= DIGIT0[i] + 9) return String(x - DIGIT0[i]);
+      return c;
+    });
+  }
+  /* a button that replaces itself (Check → Next in the same spot) must not take the second click of a double-click
+     or an auto-repeated Enter as a new press, or the feedback is skipped before anyone can read it */
+  var GUARD_MS = 450;
   var TIMES = ' × ', DIVS = ' ÷ ', MINUS = '−';
   var SIGNKEY = { '>': 'gt', '<': 'lt', '=': 'eq' };
 
@@ -105,29 +120,35 @@
 
   /* A row of bars on one scale: `per` parts in each whole, `wholes` bars, segs = [[count, cls], ...] coloured from the start,
      mainEvery = thick line every N parts (the original cuts). */
+  /* o.perRow: wholes side by side before the next line starts (3–4 wholes in one line made 10 px thin bars on phones) */
   function bars(o) {
-    var per = o.per, W = o.wholes || 1, WW = 600, GAP = 34, H = o.h || 84;
-    var total = W * WW + (W - 1) * GAP, pw = WW / per, me = o.mainEvery || 1;
-    var s = sv('svg', { viewBox: '-4 -4 ' + (total + 8) + ' ' + (H + 8), preserveAspectRatio: 'xMinYMid meet', class: 'fl-svg fl-bars' + (o.click ? ' fl-click' : ''), 'aria-hidden': 'true' });
+    var per = o.per, W = o.wholes || 1, WW = 600, GAP = 34, RGAP = 18, H = o.h || 84;
+    var PR = clamp(o.perRow || W, 1, W), NR = Math.ceil(W / PR);
+    var total = PR * WW + (PR - 1) * GAP, totalH = NR * H + (NR - 1) * RGAP, pw = WW / per, me = o.mainEvery || 1;
+    var s = sv('svg', { viewBox: '-4 -4 ' + (total + 8) + ' ' + (totalH + 8), preserveAspectRatio: 'xMinYMid meet', class: 'fl-svg fl-bars' + (o.click ? ' fl-click' : ''), 'aria-hidden': 'true' });
+    if (NR > 1) s.style.maxHeight = (NR * 96) + 'px';   /* .fl-rows caps one line of bars at 96 px */
     var clsAt = [];
     (o.segs || []).forEach(function (sg) { for (var i = 0; i < sg[0]; i++) clsAt.push(sg[1]); });
     var fine = me > 1 || pw < 10, g = 0;
     for (var w = 0; w < W; w++) {
-      var x0 = w * (WW + GAP);
+      var x0 = (w % PR) * (WW + GAP), y0 = Math.floor(w / PR) * (H + RGAP);
       for (var p = 0; p < per; p++, g++) {
         var cls = clsAt[g] || '';
-        sv('rect', { x: r2(x0 + p * pw), y: 0, width: r2(pw), height: H, class: 'pt' + (cls ? ' ' + cls : '') + (fine ? ' fine' : ''), 'data-idx': Math.floor(p / me), 'data-whole': w }, s);
+        sv('rect', { x: r2(x0 + p * pw), y: y0, width: r2(pw), height: H, class: 'pt' + (cls ? ' ' + cls : '') + (fine ? ' fine' : ''), 'data-idx': Math.floor(p / me), 'data-whole': w }, s);
         if (cls === 'taken') {
-          var m = Math.min(pw, H) * 0.32, cx = x0 + (p + 0.5) * pw, cy = H / 2;
+          var m = Math.min(pw, H) * 0.32, cx = x0 + (p + 0.5) * pw, cy = y0 + H / 2;
           sv('line', { x1: r2(cx - m), y1: r2(cy - m), x2: r2(cx + m), y2: r2(cy + m), class: 'xmark' }, s);
           sv('line', { x1: r2(cx - m), y1: r2(cy + m), x2: r2(cx + m), y2: r2(cy - m), class: 'xmark' }, s);
         }
       }
-      if (me > 1) for (var q = me; q < per; q += me) sv('line', { x1: r2(x0 + q * pw), y1: 0, x2: r2(x0 + q * pw), y2: H, class: 'main' }, s);
-      sv('rect', { x: x0, y: 0, width: WW, height: H, class: 'rim', rx: 3 }, s);
+      if (me > 1) for (var q = me; q < per; q += me) sv('line', { x1: r2(x0 + q * pw), y1: y0, x2: r2(x0 + q * pw), y2: y0 + H, class: 'main' }, s);
+      sv('rect', { x: x0, y: y0, width: WW, height: H, class: 'rim', rx: 3 }, s);
     }
     return s;
   }
+
+  function isNarrow() { return (window.innerWidth || 1000) < 600; }
+  function wholesPerRow(W) { return isNarrow() ? 1 : Math.min(W, 2); }
 
   /* Set model: a box of d laddoos, `shaded` of them coloured. */
   function setCols(d) {
@@ -188,7 +209,7 @@
       p: { types: TYPES.slice(), level: 'junior', c: 0, n: 0, streak: 0, best: 0 }
     };
   }
-  function int(v, lo, hi, def) { v = Math.round(Number(v)); return isFinite(v) ? clamp(v, lo, hi) : def; }
+  function int(v, lo, hi, def) { if (v === null || v === '' || typeof v === 'boolean') return def; v = Math.round(Number(v)); return isFinite(v) ? clamp(v, lo, hi) : def; }
   function load() {
     var D = defaults(), s = store.get('state', null);
     if (!s || typeof s !== 'object') return D;
@@ -248,29 +269,35 @@
     wrap.appendChild(el('div', { class: 'fl-ed-line', 'aria-hidden': 'true' })); if (cfg.labels) wrap.appendChild(el('div'));
     wrap.appendChild(D.box); if (tD) wrap.appendChild(tD);
 
+    /* Only re-render when the value really changes: the blur that happens when you tap a slice, a chip or
+       "Simplify it" right after typing must not rebuild (and so swallow) the very thing you tapped,
+       or reset the step-by-step / guess progress of the tab. */
     function apply(n, d) {
       d = clamp(d, cfg.dMin, cfg.dMax);
       n = clamp(n, 0, cfg.nMax(d));
+      var v = cfg.get();
+      if (v[0] === n && v[1] === d) return;
       cfg.set(n, d);
     }
     function step(part, delta) {
       var v = cfg.get();
       if (part === 'n') apply(v[0] + delta, v[1]); else apply(v[0], v[1] + delta);
     }
+    function num(input) { return parseInt(latinDigits(input.value), 10); }
     function typed(part, input) {
-      var x = parseInt(input.value, 10), v = cfg.get(), n = v[0], d = v[1];
+      var x = num(input), v = cfg.get(), n = v[0], d = v[1];
       if (isNaN(x)) return;
       if (part === 'n') n = x; else d = x;
       if (d < cfg.dMin || d > cfg.dMax || n < 0 || n > cfg.nMax(d)) return;   // wait for blur / Enter
-      cfg.set(n, d);
+      if (n !== v[0] || d !== v[1]) cfg.set(n, d);
     }
     function normalize() {
-      var v = cfg.get(), n = parseInt(N.input.value, 10), d = parseInt(D.input.value, 10);
+      var v = cfg.get(), n = num(N.input), d = num(D.input);
       apply(isNaN(n) ? v[0] : n, isNaN(d) ? v[1] : d);
       update(true);
     }
     function setVal(input, x, force) {
-      if (!force && document.activeElement === input && parseInt(input.value, 10) === x) return;
+      if (!force && document.activeElement === input && num(input) === x) return;
       input.value = String(x);
     }
     function update(force) {
@@ -396,10 +423,10 @@
     h += fact(t('f_mixed'), '<span id="b-mixed" data-w="' + (n >= d ? w : 0) + '" data-r="' + (n >= d ? rem : n) + '" data-d="' + d + '">' + mm + '</span>', mt);
     // decimal
     var rep = isRepeating(n, d);
-    h += fact(t('f_decimal'), M(n + DIVS + d + O('=') + '<span id="b-dec" data-v="' + decPlain(n, d) + '">' + decHTML(n, d) + '</span>' + (rep ? O('≈') + approx(n, d) : '')), P(rep ? tE('rep_note') : tE('dec_note')));
+    h += fact(t('f_decimal'), M(n + DIVS + d + O('=') + '<span class="fl-dec" id="b-dec" data-v="' + decPlain(n, d) + '">' + decHTML(n, d) + '</span>' + (rep ? O('≈') + approx(n, d) : '')), P(rep ? tE('rep_note') : tE('dec_note')));
     // percent
     var prep = isRepeating(n * 100, d);
-    h += fact(t('f_percent'), M(F(n, d) + TIMES + '100%' + O('=') + '<span id="b-pct" data-v="' + decPlain(n * 100, d) + '%">' + decHTML(n * 100, d) + '%</span>' + (prep ? O('≈') + approx(n * 100, d) + '%' : '')), P(tE('pct_note')));
+    h += fact(t('f_percent'), M(F(n, d) + TIMES + '100%' + O('=') + '<span class="fl-dec" id="b-pct" data-v="' + decPlain(n * 100, d) + '%">' + decHTML(n * 100, d) + '%</span>' + (prep ? O('≈') + approx(n * 100, d) + '%' : '')), P(tE('pct_note')));
     $('#b-facts').innerHTML = h;
   }
 
@@ -473,7 +500,7 @@
       var per = c.cut ? L : f[1], sh = c.cut ? f[0] * L / f[1] : f[0];
       var lab = c.cut && L !== f[1] ? F(f[0], f[1]) + O('=') + F(sh, L) : F(f[0], f[1]);
       rows.appendChild(el('div', { class: 'fl-math', dir: 'ltr', html: lab }));
-      var svg = bars({ per: per, wholes: W, segs: [[sh, f[2]]], mainEvery: c.cut ? L / f[1] : 1, h: 76 });
+      var svg = bars({ per: per, wholes: W, perRow: wholesPerRow(W), segs: [[sh, f[2]]], mainEvery: c.cut ? L / f[1] : 1, h: 76 });
       rows.appendChild(svg);
     });
     var ex = $('#c-explain');
@@ -632,7 +659,7 @@
     ];
     rows.forEach(function (rw, idx) {
       vis.appendChild(el('div', { class: 'fl-math', dir: 'ltr', html: rw[0] }));
-      var svg = bars({ per: R.L, wholes: W, segs: rw[1], mainEvery: 1, h: 70 });
+      var svg = bars({ per: R.L, wholes: W, perRow: wholesPerRow(W), segs: rw[1], mainEvery: 1, h: 70 });
       svg.setAttribute('data-row', idx);
       vis.appendChild(svg);
     });
@@ -750,17 +777,20 @@
     var r = s.getBoundingClientRect(), x = (e.clientX - r.left) * NL.W / (r.width || 1);
     return (x - NL.x0) / (NL.x1 - NL.x0) * LV[st.l.level].R;
   }
+  var lineCheckedAt = 0;
   function lineCheck() {
     if (!game || game.checked || game.over) return;
     var tv = game.target.n / game.target.d, diff = Math.abs(game.value - tv);
     game.ok = LV[st.l.level].snap ? diff < 1e-6 : diff <= 0.04 + 1e-9;
     game.checked = true;
+    lineCheckedAt = Date.now();
     if (game.ok) game.score++;
     renderLine();
     var nx = $('#l-next'); if (nx && !nx.hidden) nx.focus();
   }
   function lineNext() {
     if (!game || !game.checked) return;
+    if (Date.now() - lineCheckedAt < GUARD_MS) return;   // double-click on Check / held Enter
     if (game.round >= ROUNDS) {
       game.over = true;
       var L = st.l.level;
@@ -883,7 +913,7 @@
         if (q.kind === 'pizza' || q.kind === 'class') { v.n = q.n; v.d = q.d; }
         else if (q.kind === 'paise') v.n = q.n;
         else { v.a = M(F(q.a[0], q.a[1])); v.b = M(F(q.b[0], q.b[1])); }
-        return tH('sq_' + q.kind, v);
+        return money(tH('sq_' + q.kind, v));
     }
     return '';
   }
@@ -902,10 +932,14 @@
     return q.model === 'pie' ? pie(q.n, q.d, { cls: 's1' }) : bars({ per: q.d, wholes: 1, segs: [[q.n, 's1']], h: small ? 70 : 84 });
   }
   function ansHTML(q) {
-    if (q.type === 'compare') return q.ans;
+    if (q.type === 'compare') return esc(q.ans);
     if (q.type === 'mixed' && q.dir === 'tm') {
       var w = Math.floor(q.n / q.d), r = q.n % q.d, g = gcd(r, q.d);
       return MX(w, r, q.d) + (g > 1 ? O('=') + MX(w, r / g, q.d / g) : '');
+    }
+    if (q.type === 'mixed') {   /* mixed → improper: the answer is the improper fraction (not the mixed number again) */
+      var rr = reduce(q.ans[0], q.ans[1]);
+      return F(q.ans[0], q.ans[1]) + (rr[1] !== q.ans[1] ? O('=') + F(rr[0], rr[1]) : '');
     }
     return nice(q.ans[0], q.ans[1]);
   }
@@ -930,7 +964,7 @@
       case 'shaded': return P(tE('cap_parts', { n: q.n, d: q.d })) + ML(F(q.n, q.d) + (gcd(q.n, q.d) > 1 ? O('=') + nice(q.n, q.d) : ''));
       case 'story':
         if (q.kind === 'walk' || q.kind === 'milk') return addChain(q.a, q.b, q.kind === 'milk');
-        if (q.kind === 'paise') return P(tE('paise_how')) + ML(F(q.n, 100) + O('=') + nice(q.n, 100));
+        if (q.kind === 'paise') return P(money(tE('paise_how'))) + ML(F(q.n, 100) + O('=') + nice(q.n, 100));
         return ML(F(q.n, q.d) + (gcd(q.n, q.d) > 1 ? O('=') + nice(q.n, q.d) : ''));
     }
     return '';
@@ -939,7 +973,7 @@
   function newQuestion() {
     var types = st.p.types.length ? st.p.types : TYPES, q, tries = 0;
     do { q = genQ(types, st.p.level); } while (pq && qKey(q) === qKey(pq.q) && ++tries < 12);
-    pq = { q: q, result: null, hint: null, num: (pq ? pq.num : 0) + 1 };
+    pq = { q: q, result: null, hint: null, num: pq ? (pq.result ? pq.num + 1 : pq.num) : 1 };
     ['#p-whole', '#p-num', '#p-den'].forEach(function (s) { var i = $(s); i.value = ''; i.disabled = false; });
     $$('#p-signs button').forEach(function (b) { b.disabled = false; b.classList.remove('right', 'wrongpick'); });
     renderPractice();
@@ -977,7 +1011,7 @@
     $('#p-type').textContent = t('q_' + q.type);
     $('#p-num-lbl').textContent = t('q_n', { n: pq.num });
     $('#p-prompt').innerHTML = qPrompt(q);
-    var mh = qMath(q, pq.result && q.type !== 'compare' ? M(ansHTML(q)) : (pq.result && q.type === 'compare' ? '<span class="fl-qbox">' + q.ans + '</span>' : box));
+    var mh = qMath(q, pq.result && q.type !== 'compare' ? M(ansHTML(q)) : (pq.result && q.type === 'compare' ? '<span class="fl-qbox">' + esc(q.ans) + '</span>' : box));
     $('#p-math').innerHTML = q.type === 'story' || q.type === 'shaded' ? '' : mh;
     var pic = $('#p-pic'); pic.textContent = '';
     var svg = qPic(q); if (svg) pic.appendChild(svg);
@@ -1000,12 +1034,14 @@
     else { fb.className = 'fl-feedback'; fb.innerHTML = ''; }
   }
   function readNum(sel) {
-    var v = $(sel).value.trim();
+    var v = latinDigits($(sel).value).trim();
     if (v === '') return null;
     if (!/^\d{1,4}$/.test(v)) return NaN;
     return parseInt(v, 10);
   }
+  var practiceAt = 0;
   function practiceRecord(ok, note) {
+    practiceAt = Date.now();
     var p = st.p;
     p.n++;
     if (ok) { p.c++; p.streak++; if (p.streak > p.best) p.best = p.streak; } else p.streak = 0;
@@ -1034,7 +1070,10 @@
     practiceRecord(ok, note);
   }
   $('#p-check').addEventListener('click', practiceCheck);
-  $('#p-next').addEventListener('click', function () { newQuestion(); var f = pq.q.type === 'compare' ? $('#p-s-gt') : (pq.q.whole ? $('#p-whole') : $('#p-num')); if (f) f.focus(); });
+  $('#p-next').addEventListener('click', function () {
+    if (Date.now() - practiceAt < GUARD_MS) return;   // double-click on Check / held Enter would skip the feedback
+    newQuestion(); var f = pq.q.type === 'compare' ? $('#p-s-gt') : (pq.q.whole ? $('#p-whole') : $('#p-num')); if (f) f.focus();
+  });
   ['#p-whole', '#p-num', '#p-den'].forEach(function (s) {
     $(s).addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); practiceCheck(); } });
     $(s).addEventListener('input', function () { if (pq && pq.hint) { pq.hint = null; renderPractice(); } });
@@ -1097,10 +1136,15 @@
     if (pq) renderPractice(); else renderPracticeSettings();
   }
   EDU.onLang(renderAll);
-  var lastW = window.innerWidth, rT = null;
+  var lastW = window.innerWidth, lastNarrow = isNarrow(), rT = null;
   window.addEventListener('resize', function () {
     clearTimeout(rT);
-    rT = setTimeout(function () { if (window.innerWidth !== lastW) { lastW = window.innerWidth; if (st.tab === 'line' && !dragging) renderLine(); } }, 200);
+    rT = setTimeout(function () {
+      if (window.innerWidth === lastW) return;
+      lastW = window.innerWidth;
+      if (st.tab === 'line' && !dragging) renderLine();
+      if (isNarrow() !== lastNarrow) { lastNarrow = isNarrow(); renderCompare(); renderAdd(); }   // bars: one whole per line on phones
+    }, 200);
   });
   if (st.a.steps) addReveal = 1;
   renderAll();

@@ -25,22 +25,38 @@
     unit: UNITS.indexOf(saved.unit) >= 0 ? saved.unit : 'cm',
     pi: saved.pi === '314' ? '314' : '227',
     pg: ['2', '3', 'b'].indexOf(saved.pg) >= 0 ? saved.pg : 'b',
-    score: (saved.score && typeof saved.score.c === 'number') ? saved.score : { c: 0, n: 0, streak: 0 },
+    score: (function (sc) {
+      var n = function (x) { return (typeof x === 'number' && isFinite(x) && x >= 0) ? Math.floor(x) : 0; };
+      sc = sc && typeof sc === 'object' ? sc : {};
+      return { c: n(sc.c), n: Math.max(n(sc.n), n(sc.c)), streak: n(sc.streak) };
+    })(saved.score),
     cvKind: CONV[saved.cvKind] ? saved.cvKind : 'area',
     cvVal: typeof saved.cvVal === 'string' ? saved.cvVal : '1',
     cvFrom: typeof saved.cvFrom === 'string' ? saved.cvFrom : 'm²'
   };
+  if (!st.vals || typeof st.vals !== 'object' || Array.isArray(st.vals)) st.vals = {};
   var q = null, ws = null;
+  /* the current practice question and the worksheet are saved too, so a reload does not lose them */
+  function packQ(x) {
+    return { shape: x.shape, vals: x.vals, unit: x.unit, k: x.k, pm: x.pm, done: !!x.done, shown: !!x.shown, fb: x.fb || null, typed: x.typed || '' };
+  }
   function save() {
     store.set('state', { tab: st.tab, grp: st.grp, shape2: st.shape2, shape3: st.shape3, vals: st.vals, unit: st.unit, pi: st.pi,
-      pg: st.pg, score: st.score, cvKind: st.cvKind, cvVal: st.cvVal, cvFrom: st.cvFrom });
+      pg: st.pg, score: st.score, cvKind: st.cvKind, cvVal: st.cvVal, cvFrom: st.cvFrom,
+      q: q ? packQ(q) : null, ws: ws ? { pm: ws.pm, items: ws.items.map(packQ) } : null });
   }
 
   EDU.init({ slug: 'mensuration-lab', title: 'app_title' });
 
   /* ---------------- number helpers ---------------- */
   function round(x, d) { var f = Math.pow(10, d); return Math.round(x * f) / f; }
-  function nf(x) { return EDU.fmt(round(x, 4), { maximumFractionDigits: 4 }); }
+  /* numbers inside the working: up to 4 decimals, but never round a tiny value down to 0 */
+  function nf(x) {
+    var ax = Math.abs(x);
+    if (ax && (ax < 1e-4 || ax >= 1e15)) return smart(x);
+    if (ax && ax < 0.01) return EDU.fmt(x, { maximumSignificantDigits: 4 });
+    return EDU.fmt(round(x, 4), { maximumFractionDigits: 4 });
+  }
   function ans2(x) {
     var ax = Math.abs(x);
     if (ax && (ax < 0.01 || ax >= 1e15)) return smart(x);
@@ -56,8 +72,21 @@
     if (Math.abs(m) >= 9.9995) { m /= 10; e += 1; }
     return EDU.fmt(m, { maximumFractionDigits: 3 }) + ' × 10' + String(e).split('').map(function (c) { return SUP[c] || c; }).join('');
   }
+  /* digits typed on an Indian-language or Urdu keyboard (Devanagari, Bengali, Tamil, Arabic-Indic ...) count as 0-9;
+     Arabic thousands/decimal separators and the minus sign are understood too */
+  var DIGIT0 = [0x0660, 0x06F0, 0x0966, 0x09E6, 0x0A66, 0x0AE6, 0x0B66, 0x0BE6, 0x0C66, 0x0CE6, 0x0D66];
+  function latinDigits(s) {
+    var out = '';
+    for (var j = 0; j < s.length; j++) {
+      var k = s.charCodeAt(j), c = s.charAt(j);
+      for (var i = 0; i < DIGIT0.length; i++) if (k >= DIGIT0[i] && k <= DIGIT0[i] + 9) { c = String(k - DIGIT0[i]); break; }
+      if (k === 0x066B) c = '.'; else if (k === 0x066C) c = ','; else if (k === 0x2212) c = '-';
+      out += c;
+    }
+    return out;
+  }
   function parseNum(s) {
-    s = String(s == null ? '' : s).trim().replace(/[,\s]/g, '').replace(/[٫]/g, '.');
+    s = latinDigits(String(s == null ? '' : s)).trim().replace(/[,\s]/g, '');
     if (!s || !/^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(s)) return NaN;
     return Number(s);
   }
@@ -166,7 +195,8 @@
     var out = S.compute(sh, nv, st.pi, nf);
     S.DEFS[sh].dims.forEach(function (d) {
       var i = $('#in-' + d[0]); if (!i) return;
-      var x = nv[d[0]]; i.setAttribute('aria-invalid', (!isFinite(x) || x <= 0 || x > S.MAX) ? 'true' : 'false');
+      var x = nv[d[0]], bad = !isFinite(x) || x <= 0 || x > S.MAX || (out.bad && out.bad.indexOf(d[0]) >= 0);
+      i.setAttribute('aria-invalid', bad ? 'true' : 'false');
     });
     $('#shape-name').textContent = t('sh_' + sh);
     $('#shape-real').textContent = t('real_life', { x: t('ex_' + sh) });
@@ -230,17 +260,31 @@
 
   /* ---------------- practice ---------------- */
   function poolFor(pg) { return pg === '2' ? S.ORDER2 : pg === '3' ? S.ORDER3 : S.ORDER2.concat(S.ORDER3); }
-  function makeQuestion(pg, pm) {
-    var shape = EDU.pick(poolFor(pg)), vals = S.gen(shape, pm), unit = EDU.pick(['cm', 'cm', 'cm', 'm']);
-    var k = EDU.pick(S.ASK[shape]);
+  function qFrom(shape, vals, unit, k, pm) {
     var out = S.compute(shape, vals, pm, nf);
-    var r = out.res.filter(function (x) { return x.k === k; })[0];
-    return { shape: shape, vals: vals, unit: unit, k: k, d: r.d, ans: round(r.v, 2), pm: pm, done: false };
+    var r = out.err ? null : out.res.filter(function (x) { return x.k === k; })[0];
+    return r ? { shape: shape, vals: vals, unit: unit, k: k, d: r.d, ans: round(r.v, 2), pm: pm, done: false } : null;
+  }
+  function makeQuestion(pg, pm, shape, k) {
+    shape = shape || EDU.pick(poolFor(pg));
+    return qFrom(shape, S.gen(shape, pm), EDU.pick(['cm', 'cm', 'cm', 'm']), k || EDU.pick(S.ASK[shape]), pm);
+  }
+  /* a saved question is checked again before it is used: unknown shapes or bad numbers are dropped */
+  function unpackQ(o) {
+    if (!o || typeof o !== 'object' || !S.DEFS[o.shape] || S.ASK[o.shape].indexOf(o.k) < 0 || ['cm', 'm'].indexOf(o.unit) < 0) return null;
+    var vals = {}, ok = S.DEFS[o.shape].dims.every(function (d) {
+      var x = o.vals ? Number(o.vals[d[0]]) : NaN; vals[d[0]] = x; return isFinite(x) && x > 0 && x <= S.MAX;
+    });
+    var x = ok ? qFrom(o.shape, vals, o.unit, o.k, o.pm === '314' ? '314' : '227') : null;
+    if (!x) return null;
+    x.done = !!o.done; x.shown = !!o.shown; x.typed = typeof o.typed === 'string' ? o.typed.slice(0, 40) : '';
+    if (o.fb && typeof o.fb === 'object' && ['pr_right', 'pr_wrong', 'pr_enter'].indexOf(o.fb.key) >= 0) x.fb = { ok: !!o.fb.ok, key: o.fb.key };
+    return x;
   }
   function newQuestion() {
     q = makeQuestion(st.pg, st.pi);
     $('#q-ans').value = '';
-    $('#q-feedback').textContent = ''; $('#q-feedback').className = 'callout';
+    save();
     renderQuestion();
   }
   function givenLines(shape, vals, unit) {
@@ -254,6 +298,9 @@
     };
     return DRAW(shape, vals, { lab: gl, small: small, fs: fs, title: t('fig_aria') + ': ' + t('sh_' + shape) });
   }
+  /* the solution shows the asked result plus only the in-between results its working uses */
+  var HELPERS = { tri_heron: { area: ['s'] }, rhombus: { perimeter: ['side'] }, trapezium: { perimeter: ['leg'] },
+    cone: { csa: ['slant'], tsa: ['slant'] }, frustum: { csa: ['slant'], tsa: ['slant', 'csa'] } };
   function renderQuestion() {
     renderScore();
     $$('#pane-practice [data-pg]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.pg === st.pg ? 'true' : 'false'); });
@@ -268,16 +315,19 @@
     $('#q-round').textContent = t('pr_round', { pi: S.piStr(q.pm) });
     var sol = $('#q-solution');
     if (q.done || q.shown) {
-      var out = S.compute(q.shape, q.vals, q.pm, nf);
-      out.res = out.res.filter(function (r) { return r.k === q.k || (r.k === 'slant' && q.k !== 'volume') || r.k === 's' || r.k === 'side' || r.k === 'leg'; });
+      var out = S.compute(q.shape, q.vals, q.pm, nf), need = (HELPERS[q.shape] && HELPERS[q.shape][q.k]) || [];
+      out.res = out.res.filter(function (r) { return r.k === q.k || need.indexOf(r.k) >= 0; });
       sol.innerHTML = stepsHtml(out, q.unit); sol.hidden = false;
     } else { sol.hidden = true; sol.innerHTML = ''; }
+    var fb = $('#q-feedback');
     if (q.fb) {
-      var fb = $('#q-feedback');
-      fb.className = 'callout ' + (q.fb.ok ? 'success' : 'danger');
-      fb.dataset.result = q.fb.ok ? 'right' : 'wrong';
-      fb.textContent = q.fb.key === 'pr_enter' ? t('pr_enter') : t(q.fb.key, { ans: withU(ans2(q.ans), q.unit, q.d) });
-    }
+      var empty = q.fb.key === 'pr_enter';
+      fb.className = 'callout ' + (empty ? 'warning' : q.fb.ok ? 'success' : 'danger');
+      fb.dataset.result = empty ? 'empty' : q.fb.ok ? 'right' : 'wrong';
+      /* the answer with its unit stays left-to-right ("2,464 m²") inside an Urdu sentence */
+      if (empty) fb.textContent = t('pr_enter');
+      else fb.innerHTML = EDU.esc(t(q.fb.key, { ans: '@@A@@' })).replace('@@A@@', bdi(withU(ans2(q.ans), q.unit, q.d)));
+    } else { fb.textContent = ''; fb.className = 'callout'; delete fb.dataset.result; }
   }
   function renderScore() {
     $('#score').textContent = t('pr_score', { c: EDU.fmt(st.score.c), n: EDU.fmt(st.score.n) });
@@ -286,22 +336,24 @@
   }
   function check() {
     if (!q) newQuestion();
-    var x = parseNum($('#q-ans').value);
-    if (!isFinite(x)) { q.fb = { ok: false, key: 'pr_enter' }; renderQuestion(); $('#q-feedback').className = 'callout warning'; $('#q-feedback').dataset.result = 'empty'; return; }
+    /* "154 cm²", "≈ 154" and "154cm2" are read as 154: the number is what is checked */
+    var typed = $('#q-ans').value;
+    var x = parseNum(latinDigits(typed).replace(/^\s*[≈~=]\s*/, '').replace(/\s*(mm|cm|km|m|ml|l|litres?)\s*[²³23]?\s*$/i, ''));
+    if (!isFinite(x)) { q.fb = { ok: false, key: 'pr_enter' }; save(); renderQuestion(); return; }
     var ok = Math.abs(x - q.ans) <= Math.max(0.011, Math.abs(q.ans) * 0.002);
     if (!q.done && !q.shown) {
       st.score.n++;
       if (ok) { st.score.c++; st.score.streak++; } else st.score.streak = 0;
-      save();
     }
-    q.done = true;
+    q.done = true; q.typed = typed;
     q.fb = { ok: ok, key: ok ? 'pr_right' : 'pr_wrong' };
+    save();
     renderQuestion();
   }
   $('#q-check').addEventListener('click', check);
   $('#q-ans').addEventListener('keydown', function (e) { if (e.key === 'Enter') check(); });
   $('#q-new').addEventListener('click', function () { newQuestion(); $('#q-ans').focus(); });
-  $('#q-show').addEventListener('click', function () { if (!q) return; q.shown = true; renderQuestion(); });
+  $('#q-show').addEventListener('click', function () { if (!q) return; q.shown = true; save(); renderQuestion(); });
   $$('#pane-practice [data-pg]').forEach(function (b) { b.addEventListener('click', function () { st.pg = b.dataset.pg; save(); newQuestion(); }); });
   $('#score-reset').addEventListener('click', function () {
     if (!confirm(t('confirm_reset'))) return;
@@ -315,31 +367,46 @@
     $('#ws-print').disabled = !ws;
     $('#ws-sheet').hidden = !ws;
     if (!ws) { box.innerHTML = ''; return; }
+    var wasOpen = !!($('#ws-keybox') && $('#ws-keybox').open);
     var items = ws.items.map(function (it) {
       return '<li class="ws-item"><h4>' + EDU.esc(t('sh_' + it.shape)) + '</h4>' + figFor(it.shape, it.vals, it.unit, true, 19) +
         '<p>' + givenLines(it.shape, it.vals, it.unit) + '</p><p><b>' + EDU.esc(t('pr_find')) + ':</b> ' + EDU.esc(t('r_' + it.k)) + ' (' + bdi(uStr(it.unit, it.d)) + ')</p>' +
         '<p class="ws-line">' + EDU.esc(t('ws_line')) + '</p></li>';
     }).join('');
     var key = ws.items.map(function (it) { return '<li>' + bdi(withU(ans2(it.ans), it.unit, it.d)) + '</li>'; }).join('');
+    /* the answer key stays folded on screen (the sheet may be shown to the class) and prints on its own page */
     box.innerHTML = '<h3 class="ml-sub mt0">' + EDU.esc(t('ws_title')) + '</h3><p class="ws-head">' + EDU.esc(t('ws_head')) + '</p>' +
       '<p class="small muted">' + EDU.esc(t('pr_round', { pi: S.piStr(ws.pm) })) + '</p>' +
-      '<ol class="ws-list" id="ws-list">' + items + '</ol><h3 class="ml-sub">' + EDU.esc(t('ws_answers')) + '</h3><ol class="ws-key" id="ws-key">' + key + '</ol>';
+      '<ol class="ws-list" id="ws-list">' + items + '</ol>' +
+      '<details class="ws-keybox" id="ws-keybox"' + (wasOpen ? ' open' : '') + '><summary class="ml-sub">' + EDU.esc(t('ws_answers')) + '</summary>' +
+      '<ol class="ws-key" id="ws-key">' + key + '</ol></details>';
   }
   $('#ws-make').addEventListener('click', function () {
-    var items = [], pool = poolFor(st.pg), used = {};
-    for (var i = 0; i < 10; i++) {
-      var it, tries = 0;
-      do { it = makeQuestion(st.pg, st.pi); tries++; } while (used[it.shape + it.k] && tries < 12 && Object.keys(used).length < pool.length * 2);
-      used[it.shape + it.k] = 1; items.push(it);
-    }
+    /* 10 questions: different shapes first; a shape comes again only when there are fewer than 10, then with another question */
+    var pool = poolFor(st.pg), shapes = [], usedK = {}, items = [];
+    while (shapes.length < 10) shapes = shapes.concat(EDU.shuffle(pool));
+    shapes.slice(0, 10).forEach(function (sh) {
+      var ks = S.ASK[sh].filter(function (k) { return !usedK[sh + k]; });
+      var k = EDU.pick(ks.length ? ks : S.ASK[sh]);
+      usedK[sh + k] = 1;
+      items.push(makeQuestion(st.pg, st.pi, sh, k));
+    });
     ws = { items: items, pm: st.pi };
+    save();
     renderWs();
   });
+  /* open the answer key while printing and put it back the way it was afterwards */
+  var keyWasOpen = null;
+  function beforePrint() { var kb = $('#ws-keybox'); if (kb && keyWasOpen === null) { keyWasOpen = kb.open; kb.open = true; } }
+  function afterPrint() { var kb = $('#ws-keybox'); if (kb && keyWasOpen !== null) kb.open = keyWasOpen; keyWasOpen = null; document.body.classList.remove('ml-print-ws'); }
+  window.addEventListener('beforeprint', beforePrint);
+  window.addEventListener('afterprint', afterPrint);
   $('#ws-print').addEventListener('click', function () {
     if (!ws) return;
     document.body.classList.add('ml-print-ws');
+    beforePrint();
     window.print();
-    setTimeout(function () { document.body.classList.remove('ml-print-ws'); }, 1000);
+    setTimeout(afterPrint, 1000);
   });
 
   /* ---------------- unit converter ---------------- */
@@ -367,7 +434,13 @@
   $('#cv-from').addEventListener('change', function () { st.cvFrom = this.value; save(); renderUnits(); });
 
   /* ---------------- all ---------------- */
-  function renderAll() { renderTabs(); renderCalc(); renderQuestion(); renderWsNote(); renderWs(); renderUnits(); }
+  /* the full-screen button says Close while the drawing is full screen */
+  function renderFsBtn() {
+    var on = (document.fullscreenElement || document.webkitFullscreenElement) === $('#view-card');
+    $('#fs-btn').textContent = t(on ? 'close' : 'fullscreen');
+    $('#fs-btn').setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  function renderAll() { renderTabs(); renderCalc(); renderQuestion(); renderWsNote(); renderWs(); renderUnits(); renderFsBtn(); }
   EDU.onLang(renderAll);
   var rsz = null, lastW = window.innerWidth;
   window.addEventListener('resize', function () {
@@ -375,7 +448,15 @@
     lastW = window.innerWidth; clearTimeout(rsz);
     rsz = setTimeout(function () { if (st.tab === 'calc') renderOut(); else if (st.tab === 'practice') renderQuestion(); }, 200);
   });
-  document.addEventListener('fullscreenchange', function () { setTimeout(renderOut, 120); });
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) {
+    document.addEventListener(ev, function () { renderFsBtn(); setTimeout(renderOut, 120); });
+  });
+  q = unpackQ(saved.q);
+  if (q && q.typed) $('#q-ans').value = q.typed;
+  if (saved.ws && Array.isArray(saved.ws.items) && saved.ws.items.length) {
+    var wsItems = saved.ws.items.slice(0, 10).map(unpackQ);
+    if (wsItems.every(Boolean)) ws = { items: wsItems, pm: saved.ws.pm === '314' ? '314' : '227' };
+  }
   renderAll();
   if (!q) newQuestion();
   window.MensurationLab = { compute: S.compute, state: st };

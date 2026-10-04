@@ -70,6 +70,12 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   sp = await spoken();
   expect(sp[0].text === 'இக்' && sp[0].lang === 'ta-IN', 'mei letter spoken as இக் with the Tamil voice: ' + JSON.stringify(sp[0]));
 
+  /* 3b) Gurmukhi: the vowel carrier ੳ is highlighted as ਉ inside its picture word ਉੱਲੂ */
+  await page.click('#script-bar [data-script="guru"]');
+  await page.click('#groups .lt[data-ch="ੳ"]');
+  expect(await txt('#big-word') === 'ਉੱਲੂ' && await page.$eval('#big-word mark', (m) => m.textContent).catch(() => '') === 'ਉੱ', 'ੳ highlighted as ਉ in ਉੱਲੂ');
+  await page.click('#script-bar [data-script="taml"]');
+
   /* 4) Vowel signs: uyirmei row for க, then for ம, and the full 18-row chart */
   await page.click('#tab-signs');
   expect(await page.isVisible('#panel-signs') && await txt('#tab-signs-lbl') === t('tab_signs'), 'signs tab open');
@@ -102,8 +108,21 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.click('#script-bar [data-script="deva"]');
   await page.click('#tab-trace');
   await page.waitForFunction(() => document.querySelector('#trace-stage').dataset.letter);
+  await page.evaluate(() => document.querySelector('#trace-stage').scrollIntoView({ block: 'center' }));   /* mouse events only reach what is on screen */
   const box = await page.locator('#trace-canvas').boundingBox();
   expect(box && box.width > 200 && Math.abs(box.width - box.height) < 2, 'square tracing canvas: ' + JSON.stringify(box));
+  /* the faint letter is centred and fills ~3/4 of the canvas (measureText reported a phantom descent, so it used to sit high and small) */
+  const ink = await page.evaluate(() => {
+    const cv = document.querySelector('#trace-canvas'), g = cv.getContext('2d'), W = cv.width, H = cv.height, chk = document.querySelector('#trace-guide');
+    chk.checked = false; chk.dispatchEvent(new Event('change'));
+    const a = g.getImageData(0, 0, W, H).data;
+    chk.checked = true; chk.dispatchEvent(new Event('change'));
+    const b = g.getImageData(0, 0, W, H).data;
+    let x0 = W, x1 = -1, y0 = H, y1 = -1;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const k = (y * W + x) * 4; if (Math.abs(a[k] - b[k]) + Math.abs(a[k + 1] - b[k + 1]) + Math.abs(a[k + 2] - b[k + 2]) > 30) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } }
+    return { cx: (x0 + x1) / 2 / W, cy: (y0 + y1) / 2 / H, fill: Math.max((x1 - x0) / W / 0.78, (y1 - y0) / H / 0.74) };
+  });
+  expect(Math.abs(ink.cx - 0.5) < 0.03 && Math.abs(ink.cy - 0.5) < 0.03 && ink.fill > 0.92 && ink.fill < 1.08, 'faint letter centred and big: ' + JSON.stringify(ink));
   await page.mouse.move(box.x + box.width * 0.2, box.y + box.height * 0.5);
   await page.mouse.down();
   await page.mouse.move(box.x + box.width * 0.8, box.y + box.height * 0.5, { steps: 12 });
@@ -124,6 +143,35 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   const before = await page.getAttribute('#trace-stage', 'data-letter');
   await page.click('#trace-next');
   expect(before === 'अ' && await page.getAttribute('#trace-stage', 'data-letter') === 'आ', 'Next goes from अ to आ');
+  /* a score from one script must not show on another script's letter */
+  await page.mouse.move(box.x + box.width * 0.2, box.y + box.height * 0.5);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.8, box.y + box.height * 0.5, { steps: 8 });
+  await page.mouse.up();
+  expect(+(await page.getAttribute('#trace-stage', 'data-cover')) > 0, 'stroke on आ scores');
+  await page.click('#script-bar [data-script="knda"]');
+  expect(await page.getAttribute('#trace-stage', 'data-cover') === '0' && await txt('#cover-txt') === t('cover', { p: '0' }) && await txt('#trace-msg') === t('trace_start'),
+    'switching script clears the old coverage: ' + await txt('#cover-txt'));
+  /* full screen takes the canvas and its buttons (Clear / Next stay usable on a smartboard) */
+  await page.click('#trace-fs');
+  await page.waitForTimeout(300);
+  const fsId = await page.evaluate(() => document.fullscreenElement && document.fullscreenElement.id);
+  if (fsId !== null) {
+    expect(fsId === 'trace-wrap' && await page.isVisible('#trace-next'), 'trace full screen includes the buttons: ' + fsId);
+    await page.click('#trace-next');
+    expect(await page.getAttribute('#trace-stage', 'data-letter') === 'ಆ', 'Next works in full screen');
+    await page.evaluate(() => EDU.fullscreen());
+    await page.waitForTimeout(200);
+  }
+  /* printable worksheet: model / outline / faint / empty box per letter, rows never split across pages */
+  await page.evaluate(() => { window.print = () => { window.__printed = document.body.dataset.print; }; });
+  await page.click('#sheet-print');
+  expect(await page.evaluate(() => window.__printed) === 'sheet' && await count('#print-sheet .sheet-cell') === 13 * 4, 'worksheet for the 13 Kannada vowels');
+  await page.emulateMedia({ media: 'print' });
+  const pr = await page.evaluate(() => ({ cell: getComputedStyle(document.querySelector('#print-sheet .sheet-cell')).breakInside, sheet: getComputedStyle(document.querySelector('#print-sheet')).display, pick: getComputedStyle(document.querySelector('.ae-pick')).display }));
+  await page.emulateMedia({ media: 'screen' });
+  await page.evaluate(() => { delete document.body.dataset.print; });
+  expect(pr.cell === 'avoid' && pr.sheet === 'block' && pr.pick === 'none', 'print shows only the worksheet, rows kept whole: ' + JSON.stringify(pr));
 
   /* 7) Listen & tap with Bengali (no Bengali voice): the sound hint is shown in English letters */
   await page.click('#script-bar [data-script="beng"]');
@@ -142,26 +190,79 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.click('#game-opts .gopt:not([data-ch="' + ans + '"])');
   expect(await txt('#game-score') === t('score_n', { s: '1' }), 'wrong tap does not score');
   expect((await txt('#game-fb')).includes(ans), 'feedback shows the right letter');
+  /* Bengali জ and য are both "jô" (and ই/ঈ, শ/ষ/স sound alike): a round never offers two letters that sound like the answer */
+  const sameSoundOpts = () => page.evaluate(() => {
+    const s = window.AE_DATA.scripts.beng, ans = document.querySelector('#game-q').dataset.answer;
+    const grp = {}; String(s.same).split('|').forEach((g, k) => g.split(' ').forEach((c) => { grp[c] = k + 1; }));
+    const ro = (c) => s.L[c].split('|')[0];
+    return [...document.querySelectorAll('#game-opts .gopt')].map((b) => b.dataset.ch)
+      .filter((c) => c !== ans && (ro(c) === ro(ans) || (grp[c] && grp[c] === grp[ans])));
+  });
+  let clash = await sameSoundOpts();
   for (let r = 3; r <= 10; r++) {
     await page.waitForFunction((n) => document.querySelector('#game-q').dataset.round === String(n), r, { timeout: 6000 });
+    clash = clash.concat(await sameSoundOpts());
     ans = await page.getAttribute('#game-q', 'data-answer');
     await page.click('#game-opts .gopt[data-ch="' + ans + '"]');
   }
+  expect(clash.length === 0, 'no same-sounding distractors: ' + clash.join(' '));
   await page.waitForSelector('#game-end:not([hidden])', { timeout: 6000 });
   expect(await page.getAttribute('#game-end', 'data-score') === '9', 'final score 9 / 10');
   expect(await txt('#game-best') === '🏆 ' + t('best', { b: '9', n: '10' }), 'best score saved: ' + await txt('#game-best'));
+  /* the end card follows a language change (it used to stay in the old language) */
+  const other = lang === 'hi' ? 'ta' : 'hi';
+  await page.evaluate((l) => EDU.setLang(l), other);
+  const wantEnd = await page.evaluate((l) => { const S = window.APP_STRINGS[l]; return S.game_over.replace('{s}', '9').replace('{n}', '10') + ' ' + S.cheer_hi; }, other);
+  const gotEnd = await txt('#end-msg');
+  await page.evaluate((l) => EDU.setLang(l), lang);
+  expect(gotEnd === wantEnd, 'end message re-rendered in ' + other + ': ' + gotEnd);
+  expect(await pressed('#script-bar [data-script="beng"]') === 'true', 'a picked script stays when the language changes');
+
+  /* deterministic same-sound check: vowels only, 6 choices, shuffles that keep the order.
+     Rounds 3-6 ask ই ঈ উ ঊ; before the fix their look-alike partner was always among the choices. */
+  await page.click('#pool-seg button[data-pool="vowels"]');
+  await page.click('#n-seg button[data-n="6"]');
+  await page.evaluate(() => { window.__rnd = Math.random; Math.random = () => 0.999; });
+  await page.click('#game-start');
+  const asked = [];
+  for (let r = 1; r <= 6; r++) {
+    await page.waitForFunction((n) => document.querySelector('#game-q').dataset.round === String(n), r, { timeout: 6000 });
+    ans = await page.getAttribute('#game-q', 'data-answer');
+    asked.push(ans);
+    if (r >= 3) clash = clash.concat(await sameSoundOpts());
+    expect(await count('#game-opts .gopt') === 6, '6 choices in round ' + r);
+    await page.click('#game-opts .gopt[data-ch="' + ans + '"]');
+  }
+  await page.evaluate(() => { Math.random = window.__rnd; });
+  expect(asked.slice(2).join(' ') === 'ই ঈ উ ঊ' && clash.length === 0, 'ই ঈ উ ঊ asked without their partner: ' + asked.join(' ') + ' / ' + clash.join(' '));
 
   /* 8) Choices survive a reload */
   await page.reload({ waitUntil: 'load' });
   await page.waitForFunction(() => window.EDU_READY && document.querySelectorAll('#script-bar .sc-btn').length === 11);
   expect(await pressed('#script-bar [data-script="beng"]') === 'true' && await page.getAttribute('#tab-game', 'aria-selected') === 'true', 'script and tab restored');
   expect(await txt('#game-best') === '🏆 ' + t('best', { b: '9', n: '10' }), 'best score restored');
+  expect(await pressed('#pool-seg button[data-pool="vowels"]') === 'true' && await pressed('#n-seg button[data-n="6"]') === 'true', 'game options restored');
 
   /* 9) Reset goes back to the defaults */
   await page.click('#reset-btn');
   await page.waitForTimeout(150);
   expect(await pressed('#script-bar [data-script="deva"]') === 'true' && await page.isVisible('#panel-letters') && await txt('#big-ch') === 'अ', 'reset: Devanagari letters, first letter');
   expect(await txt('#game-best') === '', 'reset clears the best score');
+
+  /* 10) Damaged saved data (old version, hand-edited) must not stop the app: it used to crash on load */
+  await page.evaluate(() => {
+    const p = 'edu.alphabet-explorer.';
+    localStorage.setItem(p + 'script', '"constructor"'); localStorage.setItem(p + 'sel', '5'); localStorage.setItem(p + 'best', '"x"');
+    localStorage.setItem(p + 'traceIdx', '[1,2]'); localStorage.setItem(p + 'base', 'true'); localStorage.setItem(p + 'pool', '7');
+  });
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForFunction(() => window.EDU_READY && document.querySelectorAll('#script-bar .sc-btn').length === 11, null, { timeout: 5000 });
+  await page.click('#groups .lt[data-ch="ग"]');
+  expect(await pressed('#script-bar [data-script="deva"]') === 'true' && await txt('#big-ch') === 'ग' && await txt('#game-best') === '', 'damaged storage ignored, app works');
+  await page.click('#tab-game');
+  await page.click('#game-start');
+  await page.waitForFunction(() => document.querySelector('#game-q').dataset.round === '1');
+  await page.click('#tab-letters');
 
   await page.click('#groups .lt[data-ch="म"]');
   await page.evaluate(() => window.scrollTo(0, 0));

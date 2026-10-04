@@ -86,4 +86,43 @@ module.exports = async function ({ page, expect, t, log }) {
   expect((await page.$$('#trails li')).length === 2, 'game trails remembered');
   await page.click('#mode-explore');
   expect((await page.$$('#trails li')).length === 2, 'explore trails remembered (30° and 60°)');
+
+  // 9) trail list: every number+unit piece is its own bidi-isolated span (stays readable in Urdu RTL)
+  const parts = await page.$$eval('#trails li:first-child .pt.lat', (els) => els.map((e) => e.textContent));
+  expect(parts.includes('20 m/s') && parts.includes('60°') && parts.some((p) => /^R = /.test(p)), 'trail parts isolated: ' + parts.join(' | '));
+  // results table column titles may wrap, so the formula column stays on screen on phones (long Tamil/Malayalam titles)
+  expect(await page.$eval('#col-formula', (e) => getComputedStyle(e).whiteSpace) === 'normal', 'formula column title wraps');
+
+  // 10) the best-angle answer belongs to one set of settings: hidden after switching mode
+  await page.click('#find-best');
+  expect(!(await page.isHidden('#best-box')), 'best angle shown');
+  await page.click('#mode-game');
+  expect(await page.isHidden('#best-box'), 'best-angle box hidden after switching to the game');
+
+  // 11) a game ball still in the air when the page is reloaded is still judged (the attempt was counted)
+  await page.click('#new-target');
+  const x2 = Number(await page.getAttribute('#target-info', 'data-x'));
+  const g2 = Number(await page.getAttribute('#target-info', 'data-g'));
+  await page.fill('#angle-num', '45');
+  await page.fill('#speed-num', Math.sqrt(x2 * g2).toFixed(1));
+  await page.check('#slow');
+  await page.click('#launch');
+  await page.waitForFunction(() => document.getElementById('cv').dataset.busy === '1', null, { timeout: 3000 }).catch(() => {});
+  log('busy at reload', await page.getAttribute('#cv', 'data-busy'));
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForSelector('#res-R-sim');
+  expect(await page.getAttribute('#game-msg', 'data-state') === 'hit', 'shot that was mid-air at reload is judged as a hit');
+  expect(await page.getAttribute('#g-attempts', 'data-n') === '1', 'one attempt for the new target');
+  expect(/2/.test(await page.textContent('#g-hits')), 'two targets hit in total: ' + (await page.textContent('#g-hits')));
+  await page.uncheck('#slow');
+
+  // 12) printing from dark mode draws the trails with the light (paper) palette
+  await page.click('#edu-theme');
+  expect(await page.evaluate(() => EDU.theme()) === 'dark', 'dark theme on');
+  const darkCol = await page.$eval('#trails li .pm-dot', (e) => e.style.getPropertyValue('--col').trim().toLowerCase());
+  await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+  const printCol = await page.$eval('#trails li .pm-dot', (e) => e.style.getPropertyValue('--col').trim().toLowerCase());
+  await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+  expect(darkCol !== printCol && printCol === '#0b7285', 'print uses light trail colours: ' + darkCol + ' → ' + printCol);
+  await page.click('#edu-theme');
 };
