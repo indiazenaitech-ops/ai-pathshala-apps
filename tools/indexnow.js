@@ -65,7 +65,10 @@ async function get(url) {
   const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8' }, body: JSON.stringify(body) });
   const text = await r.text();
   /* 200 OK, 202 Accepted (key check pending); 400 bad request, 403 key not valid, 422 URLs not on the host, 429 too many requests */
-  const meaning = { 200: 'OK: URLs submitted', 202: 'Accepted: received, key validation pending', 400: 'Bad request', 403: 'Forbidden: key not valid (key file not found or wrong)', 422: 'Unprocessable: URLs do not belong to the host or key mismatch', 429: 'Too many requests (do not resend soon)' }[r.status] || '';
+  /* a 403 with errorCode SiteVerificationNotCompleted means the key file was found but the engine has not finished
+     checking it yet (usual on the first run after a new key goes live): run once more later, e.g. the next day */
+  let meaning = { 200: 'OK: URLs submitted', 202: 'Accepted: received, key validation pending', 400: 'Bad request', 403: 'Forbidden: key not valid (key file not found or wrong)', 422: 'Unprocessable: URLs do not belong to the host or key mismatch', 429: 'Too many requests (do not resend soon)' }[r.status] || '';
+  if (r.status === 403 && /SiteVerificationNotCompleted/.test(text)) meaning = 'Key verification still pending at the search engine: run once more later (not every few minutes)';
   console.log(`IndexNow ${ENDPOINT} → HTTP ${r.status} ${meaning}${text ? ' · ' + text.slice(0, 300) : ''}`);
   const log = path.join(__dirname, 'reports', 'indexnow.json');
   let hist = [];

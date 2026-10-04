@@ -1,4 +1,4 @@
-# App list (79)
+# App list (80)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -75,6 +75,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 💳 | [UPI QR & Payment Standee](https://apnipathshala.ai/apps/upi-qr-standee/) | business | all | Make a printable Scan & Pay UPI QR standee, table tent or stickers for your shop, plus a counter mode with the bill amount. |
 | 🪔 | [Festival Greeting & Offer Poster](https://apnipathshala.ai/apps/festival-poster-maker/) | marketing | all | Festival wishes and shop offer posters with your logo, photo and UPI QR, for WhatsApp, Instagram and print. Photos stay on your device. |
 | 🖼️ | [Image Compressor & Resizer](https://apnipathshala.ai/apps/image-compressor/) | marketing | all | Resize, compress and watermark 100 photos at once for Instagram, WhatsApp, YouTube, Amazon and websites. Photos never leave your device. |
+| 📐 | [Social Post Resizer](https://apnipathshala.ai/apps/social-post-resizer/) | marketing | all | One photo or poster into every size: Instagram post, story, YouTube thumbnail, WhatsApp DP, Facebook cover and more. Drag, zoom, download. |
 | 💬 | [WhatsApp Business Link Kit](https://apnipathshala.ai/apps/whatsapp-business-kit/) | marketing | all | Click-to-chat links, ready messages in 12 languages, payment reminders for a customer list and a website chat button. |
 | 🎂 | [Age & Date Calculator](https://apnipathshala.ai/apps/age-date-calculator/) | everyday | all | Exact age on any date, exam/job age eligibility, days between dates, add working days, notice period and countdown. Works offline. |
 | 🧮 | [EMI, SIP & FD Calculator](https://apnipathshala.ai/apps/emi-savings-calculator/) | everyday | all | Loan EMI with schedule, prepayment, rate change, APR and flat-rate checks, plus SIP, FD, RD and PPF calculators. Private, works offline. |
