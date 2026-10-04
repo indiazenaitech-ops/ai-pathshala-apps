@@ -1,4 +1,4 @@
-# App list (78)
+# App list (79)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -76,6 +76,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🪔 | [Festival Greeting & Offer Poster](https://apnipathshala.ai/apps/festival-poster-maker/) | marketing | all | Festival wishes and shop offer posters with your logo, photo and UPI QR, for WhatsApp, Instagram and print. Photos stay on your device. |
 | 🖼️ | [Image Compressor & Resizer](https://apnipathshala.ai/apps/image-compressor/) | marketing | all | Resize, compress and watermark 100 photos at once for Instagram, WhatsApp, YouTube, Amazon and websites. Photos never leave your device. |
 | 💬 | [WhatsApp Business Link Kit](https://apnipathshala.ai/apps/whatsapp-business-kit/) | marketing | all | Click-to-chat links, ready messages in 12 languages, payment reminders for a customer list and a website chat button. |
+| 🎂 | [Age & Date Calculator](https://apnipathshala.ai/apps/age-date-calculator/) | everyday | all | Exact age on any date, exam/job age eligibility, days between dates, add working days, notice period and countdown. Works offline. |
 | 🧮 | [EMI, SIP & FD Calculator](https://apnipathshala.ai/apps/emi-savings-calculator/) | everyday | all | Loan EMI with schedule, prepayment, rate change, APR and flat-rate checks, plus SIP, FD, RD and PPF calculators. Private, works offline. |
 | 🪪 | [Form Photo & Signature Resizer](https://apnipathshala.ai/apps/form-photo-resizer/) | everyday | all | Resize photo, signature or thumb to the exact px, cm and KB for SSC, UPSC, IBPS, NEET or PAN forms. Nothing is uploaded. |
 | 💌 | [Invitation Card Maker](https://apnipathshala.ai/apps/invitation-card-maker/) | everyday | all | Wedding, birthday, griha pravesh, pooja and shop invitations with Indian motifs, for WhatsApp or A5 print. Details stay on your device. |
