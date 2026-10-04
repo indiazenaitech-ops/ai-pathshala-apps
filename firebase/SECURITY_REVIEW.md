@@ -36,7 +36,7 @@ residual risks and what would reduce them.
   places where the apps show student-written text.
 - **`firebase/tests/rules.test.js`** (Firestore emulator) has a test for every fix (`ATTACK (fixed)`), next to the
   existing attack tests. **It had not been run at the time of this review** (no Java). It has been run since, with the
-  updates-list tests: 122/122 pass (§7b); with the sign-up counter tests 134/134 (§7c). Run `cd firebase && npm run test:emulator` after every rules change.
+  updates-list tests: 122/122 pass (§7b); with the sign-up counter tests 135/135 (§7c, incl. a two-increments-in-one-batch attack). Run `cd firebase && npm run test:emulator` after every rules change.
 - **`firebase/tests/firebase_mode.sim.js`** (new) runs the real `cloud.js` in Firebase mode against a fake Firebase SDK and
   an in-memory Firestore. That Firestore enforces a JavaScript port of the rules and counts what Firestore bills. The port
   takes the nickname character lists from `firestore.rules`, so the two cannot drift apart. It plays one teacher and 40
@@ -289,7 +289,7 @@ client also signs in one new anonymous account per sign-up (Firebase Auth, free)
 The form shows "Join 120+ teachers & learners getting free AI apps" (from 25 sign-ups on, rounded down to tens). The
 number comes from ONE public document `stats/signups = {count}`. Rules: `match /stats/{docId}` at the end of
 `firestore.rules`. Tests: the `stats/signups (public sign-up counter)` suite in `firebase/tests/rules.test.js` (12 tests);
-the emulator run passed **134/134** (122 earlier + 12). `firebase/tests/signup.emulator.e2e.js` runs the real
+the emulator run passed **135/135** (122 earlier + 13; the 13th, added by the 4 Oct verifier, refuses two +1 writes in one sign-up batch). `firebase/tests/signup.emulator.e2e.js` runs the real
 `cloud.js` with the real Firebase SDK against the emulator (batch, count read, the form, the fallback): 21/21.
 `firebase/tests/firebase_mode.sim.js` (G) models the same rules and checks the billing.
 

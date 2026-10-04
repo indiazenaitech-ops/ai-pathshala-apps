@@ -83,7 +83,7 @@ What the rules allow: the website can **add** a sign-up and nothing else. Nobody
 list from a browser, not even the person who signed up. Each sign-up uses its own new anonymous account, and each
 anonymous account can add only one sign-up. The counter can only go **up by exactly 1**, and only in the same write as a
 **new** sign-up of that same account; anyone may read the number (it is only a number, no names or emails). Details:
-`firebase/SECURITY_REVIEW.md` §7b and §7c. Tests: `cd firebase && npm run test:emulator` (134/134 passed on 4 Oct 2026),
+`firebase/SECURITY_REVIEW.md` §7b and §7c. Tests: `cd firebase && npm run test:emulator` (135/135 passed on 4 Oct 2026),
 plus `npx firebase emulators:exec --project demo-apni-pathshala --only firestore,auth "node tests/signup.emulator.e2e.js"`
 (the real form against the real rules in the emulator; needs internet for the Firebase library).
 
