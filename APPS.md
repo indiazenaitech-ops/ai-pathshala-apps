@@ -1,4 +1,4 @@
-# App list (83)
+# App list (84)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -71,6 +71,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🔤 | [Kruti Dev - Unicode Converter](https://apnipathshala.ai/apps/krutidev-unicode/) | business | all | Convert Kruti Dev 010 typing to Unicode Hindi and back, for Hindi, Marathi and Sanskrit. Your text never leaves your device. |
 | 📑 | [PDF Merge, Split & Organise](https://apnipathshala.ai/apps/pdf-merge-split/) | business | all | Merge PDFs and photos, split by page ranges, reorder, rotate, add page numbers or KYC watermarks. Files never leave your device. |
 | 💰 | [Salary & Income Tax Calculator](https://apnipathshala.ai/apps/salary-tax-calculator/) | business | all | CTC to monthly in-hand pay, old vs new regime, salary hike and in-hand to CTC for Tax Year 2026-27. Private: nothing leaves your device. |
+| 🧾 | [Salary Slip Maker](https://apnipathshala.ai/apps/salary-slip-maker/) | business | all | Monthly payslips with PF, ESI, professional tax, LOP and net pay in words. Print or save as PDF, batch from CSV. Nothing leaves your device. |
 | 🎬 | [Screen Recorder](https://apnipathshala.ai/apps/screen-recorder/) | business | all | Record your screen, a window or a tab with voice and a camera bubble. No upload, no time limit, no watermark. Videos stay on your device. |
 | 🌍 | [Time Zone Meeting Planner](https://apnipathshala.ai/apps/timezone-meeting-planner/) | business | all | Find a meeting time that works in India, the US, UK, Gulf and more: local times, best slots, invite text and a calendar file. |
 | 📒 | [Udhaar Khata (Credit Book)](https://apnipathshala.ai/apps/udhaar-khata/) | business | all | Private credit book for your shop: who owes you, daily cash book, WhatsApp reminders with your UPI ID, CSV export and encrypted backup. |
