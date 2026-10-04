@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UPI QR &amp; Payment Standee · AI Pathshala</title>
+  <meta name="description" content="Free UPI QR code standee maker for shops, tuition classes, stalls and freelancers: print a Scan &amp; Pay standee, table tent or sticker sheet, or use counter mode with the bill amount. Your UPI ID never leaves your device.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    /* ---------- page layout ---------- */
+    .upi-privacy { margin: 0 0 16px; display: flex; gap: 8px; align-items: flex-start; }
+    .upi-layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; margin-bottom: 16px; }
+    @media (min-width: 980px) { .upi-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 470px); } }
+    .upi-layout h2 { font-size: 1.15rem; margin: 0; }
+    .two { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+    @media (max-width: 560px) { .two { grid-template-columns: minmax(0, 1fr); } }
+    .field input, .field select { width: 100%; }
+    .opt { font-weight: 400; color: var(--muted); font-size: .82rem; }
+    .lbl { font-weight: 600; font-size: .92rem; }
+    #vpa, #amt { font-size: 1.05rem; }
+    input[dir="ltr"] { text-align: start; }
+    .count { font-variant-numeric: tabular-nums; }
+    .msgs { display: grid; gap: 8px; }
+    .msgs:empty { display: none; }
+
+    /* saved UPI IDs */
+    .saved-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    .sv { display: inline-flex; align-items: stretch; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); max-width: 100%; }
+    .sv[data-on="true"] { border-color: var(--primary); background: var(--primary-soft); }
+    .sv-use { border: 0; background: none; color: var(--text); font: inherit; font-weight: 600; font-size: .88rem; padding: 6px 4px 6px 12px; padding-inline: 12px 4px; cursor: pointer;
+      min-height: 40px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; line-height: 1.2; min-width: 0; text-align: start; }
+    .sv-use small { color: var(--muted); font-weight: 500; font-size: .76rem; direction: ltr; unicode-bidi: isolate; }
+    .sv-use span, .sv-use small { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sv-del { border: 0; background: none; color: var(--muted); width: 40px; min-height: 40px; border-radius: 999px; cursor: pointer; font-size: .95rem; }
+    .sv-del:hover { color: var(--danger); background: var(--danger-soft); }
+    .saved-none { margin: 0; }
+
+    /* logo + colour */
+    .logo-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .logo-prev { width: 48px; height: 48px; object-fit: contain; border: 1px solid var(--border); border-radius: 10px; background: #fff; padding: 3px; }
+    .swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+    .swatch { width: 40px; height: 40px; border-radius: 50%; border: 3px solid var(--surface); box-shadow: 0 0 0 1px var(--border); cursor: pointer; padding: 0; }
+    .swatch[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--text); }
+
+    /* design picker */
+    .designs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+    .dz { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 64px; min-width: 0; padding: 8px 4px;
+      border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); font: inherit; font-weight: 600; font-size: .84rem;
+      line-height: 1.2; text-align: center; cursor: pointer; overflow-wrap: anywhere; }
+    .dz:hover { background: var(--surface-2); }
+    .dz .ico { font-size: 1.4rem; line-height: 1; }
+    .dz[aria-pressed="true"] { background: var(--primary-soft); border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
+    :root[lang="ta"] .dz, :root[lang="ml"] .dz { font-size: .76rem; }
+    @media (max-width: 420px) { .designs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .subopts { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .head-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+
+    /* preview */
+    .pv-wrap { background: var(--surface-2); border-radius: var(--radius-sm); padding: 14px; display: flex; justify-content: center; }
+    .pv-wrap canvas { display: block; width: 100%; max-width: 330px; height: auto; border-radius: 6px; box-shadow: var(--shadow); background: #fff; }
+    .pv-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .pv-actions .btn { min-height: 44px; min-width: 0; }
+    .pv-actions .wide { grid-column: 1 / -1; }
+    .inside summary, .help summary { cursor: pointer; font-weight: 700; min-height: 32px; }
+    .inside pre { white-space: pre-wrap; word-break: break-all; text-align: start; background: var(--surface-2); color: var(--text); padding: 10px; border-radius: 8px; font-size: .85rem; margin: 8px 0; }
+    .help ul, .safe-list { margin: 10px 0 0; padding-inline-start: 0; list-style: none; display: grid; gap: 10px; }
+    .help ul { padding-inline-start: 1.3em; list-style: disc; }
+    .safe-list li { display: flex; gap: 10px; align-items: flex-start; }
+    .safe-list .ic { flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: var(--warning-soft); font-size: 1.1rem; }
+    .safety { margin-bottom: 16px; border-inline-start: 4px solid var(--warning); }
+    .safety h2 { font-size: 1.15rem; }
+    .reset-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 16px; }
+
+    /* ---------- the printable sheet: everything sized in cqw so screen preview = print ---------- */
+    .sheet { container-type: inline-size; position: relative; width: 100%; max-width: 360px; margin: 0 auto; background: #fff; color: #111; overflow: hidden;
+      box-shadow: var(--shadow-lg); border-radius: 4px; font-family: var(--sfont, var(--font)); line-height: 1.3; --band: #0b4f5c; --qrw: 62; }
+    .sheet.p-A5 { aspect-ratio: 148 / 209; }
+    .sheet.p-A4 { aspect-ratio: 210 / 296; }
+    .sheet.is-ur { line-height: 1.75; }
+    .sheet .lat-txt { font-family: "Noto Sans", system-ui, "Segoe UI", sans-serif; line-height: 1.25; }
+    .sheet.is-ur .st-scan { font-size: 4.6cqw; }
+    .sheet.is-ur .tt-scan { font-size: 4cqw; }
+    .sheet .ltr { direction: ltr; unicode-bidi: isolate; font-family: "Noto Sans", system-ui, "Segoe UI", sans-serif; }
+    .sheet .lat { font-family: "Noto Sans", system-ui, "Segoe UI", sans-serif; }
+    .qrbox { background: #fff; border: .6cqw solid var(--band); border-radius: 3cqw; padding: 1cqw; }
+    .qrbox svg { display: block; width: 100%; height: auto; }
+    .sheet.is-off .qrbox svg { opacity: .1; }
+    .sheet.is-off .qrbox { border-style: dashed; }
+    .clamp2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+
+    /* counter standee */
+    .d-standee { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .st-band { width: 100%; background: var(--band); color: #fff; padding: 5cqw 6cqw 4.5cqw; display: flex; flex-direction: column; align-items: center; gap: 2cqw; }
+    .st-logo { width: 14cqw; height: 14cqw; object-fit: contain; background: #fff; border-radius: 2.5cqw; padding: 1cqw; }
+    .st-shop { font-size: 7.2cqw; font-weight: 800; overflow-wrap: anywhere; max-width: 100%; }
+    .st-mid { flex: 1 0 auto; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding: 2cqw 6cqw; min-height: 0; }
+    .st-scan { font-size: 5.2cqw; font-weight: 800; }
+    .st-mid > * + * { margin-top: 1.8cqw; }
+    .st-en { font-size: 3.4cqw; color: #444; margin-top: .6cqw; }
+    .st-qr { width: calc(var(--qrw) * 1cqw); }
+    .st-amt { font-size: 7cqw; font-weight: 800; }
+    .st-amt small { font-size: 3.4cqw; font-weight: 700; color: #444; display: block; }
+    .st-payee { font-size: 4.2cqw; font-weight: 700; overflow-wrap: anywhere; }
+    .st-vpa { font-size: 3.6cqw; color: #222; overflow-wrap: anywhere; }
+    .st-foot { width: 100%; background: var(--band); color: #fff; font-size: 2.9cqw; padding: 2.4cqw 5cqw; font-weight: 600; }
+
+    /* table tent: two panels, the top one upside down so both sides read after folding */
+    .d-tent { display: grid; grid-template-rows: 1fr 1fr; }
+    .tt-panel { display: flex; flex-direction: column; min-height: 0; overflow: hidden; padding-top: 2.6cqw; padding-bottom: 2cqw; }   /* white strip along the fold */
+    .tt-panel.flip { transform: rotate(180deg); }
+    .tt-band { background: var(--band); color: #fff; display: flex; align-items: center; justify-content: center; gap: 3cqw; padding: 3cqw 5cqw; text-align: center; }
+    .tt-band img { width: 9cqw; height: 9cqw; object-fit: contain; background: #fff; border-radius: 1.6cqw; padding: .6cqw; flex: none; }
+    .tt-shop { font-size: 5.4cqw; font-weight: 800; overflow-wrap: anywhere; }
+    .tt-scanrow { padding: 2.6cqw 6cqw 0; text-align: center; }
+    .tt-body { flex: 1 0 auto; display: flex; align-items: center; justify-content: center; gap: 5cqw; padding: 2cqw 6cqw 3cqw; min-height: 0; }
+    .tt-qr { width: calc(var(--qrw) * 1cqw); flex: none; }
+    .tt-text { flex: 0 1 auto; min-width: 0; max-width: 52cqw; display: flex; flex-direction: column; gap: 1.6cqw; text-align: start; }
+    .tt-scan { font-size: 4.4cqw; font-weight: 800; }
+    .tt-en { font-size: 3cqw; color: #444; }
+    .tt-amt { font-size: 6cqw; font-weight: 800; }
+    .tt-payee { font-size: 3.8cqw; font-weight: 700; overflow-wrap: anywhere; }
+    .tt-vpa { font-size: 3.2cqw; overflow-wrap: anywhere; }
+    .tt-check { font-size: 2.6cqw; color: #444; }
+    .tt-fold { position: absolute; inset-inline: 0; top: 50%; border-top: .3cqw dashed #888; height: 0; }
+    .tt-fold span { position: absolute; inset-inline-start: 2cqw; top: -1.5cqw; background: #fff; color: #777; font-size: 1.9cqw; padding-inline: 1cqw; line-height: 1.4; }
+
+    /* sticker sheet */
+    .d-stickers { display: grid; padding: 3cqw; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); grid-template-rows: repeat(var(--rows), minmax(0, 1fr)); }
+    .sk { container-type: inline-size; border: 1px dashed #9a9a9a; display: flex; text-align: center; padding: 0; min-height: 0; min-width: 0; overflow: hidden; }
+    /* auto margins centre the block but collapse to 0 when it is too tall, so the overflow check sees it */
+    .sk-in { margin: auto; width: 100%; padding: 5cqw 6cqw; display: flex; flex-direction: column; align-items: center; gap: 2.4cqw; }
+    .sk-shop { font-size: 7cqw; font-weight: 800; color: var(--band); max-width: 100%; overflow-wrap: anywhere; }
+    .sk-qr { width: calc(var(--qrw) * 1cqw); }
+    .sk-scan { font-size: 5.4cqw; font-weight: 700; }
+    .sk-vpa { font-size: 5cqw; color: #222; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sk .qrbox { border-width: 1.2cqw; padding: 1.6cqw; border-radius: 4cqw; }
+
+    /* tight: smaller text when a long name, a logo, an amount and a tall script do not fit */
+    .tight .st-band { padding: 3cqw 5cqw; gap: 1.2cqw; }
+    .tight .st-logo { width: 10cqw; height: 10cqw; }
+    .tight .st-shop { font-size: 5.8cqw; }
+    .tight .st-scan { font-size: 4.2cqw; }
+    .tight .st-amt { font-size: 6cqw; }
+    .tight .st-mid > * + * { margin-top: 1cqw; }
+    .tight .tt-band { padding: 2cqw 5cqw; }
+    .tight .tt-shop { font-size: 4.4cqw; }
+    .tight .tt-scan { font-size: 3.6cqw; }
+    .tight .sk-shop { font-size: 6cqw; }
+    .tight .sk-scan { font-size: 4.6cqw; }
+
+    /* ---------- counter mode (customer-facing, always black on white) ---------- */
+    .cm { position: fixed; inset: 0; z-index: 1000; background: #fff; color: #111; display: flex; flex-direction: column; overflow: auto; }
+    .cm-bar { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; padding: 10px 14px; background: #f3f4f6; border-bottom: 1px solid #ddd; }
+    .cm-bar label { font-weight: 700; color: #111; }
+    .cm-in { display: flex; align-items: center; gap: 6px; flex: 1 1 180px; max-width: 420px; font-size: 1.6rem; font-weight: 800; }
+    .cm-in input { flex: 1 1 auto; min-width: 0; width: 100%; font-size: 1.6rem; font-weight: 800; padding: 6px 12px; background: #fff; color: #111; border: 2px solid #0b4f5c; border-radius: 10px; font-family: system-ui, "Segoe UI", Roboto, sans-serif; }
+    .cm-bar .btn { background: #fff; color: #111; border-color: #bbb; }
+    .cm-body { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px; text-align: center; }
+    .cm-shop { font-size: clamp(1.1rem, 3.2vw, 1.8rem); font-weight: 800; overflow-wrap: anywhere; }
+    .cm-qr { width: min(78vw, 52vh, 460px); }
+    .cm-qr svg { display: block; width: 100%; height: auto; }
+    .cm-qr.is-off { visibility: hidden; height: 0; }
+    .cm-amount { font-size: clamp(2.2rem, 9vw, 4rem); font-weight: 800; line-height: 1.1; font-family: system-ui, "Segoe UI", Roboto, sans-serif; font-variant-numeric: tabular-nums; }
+    .cm-scan { font-size: clamp(1rem, 3vw, 1.4rem); font-weight: 700; }
+    .cm-payee { color: #333; overflow-wrap: anywhere; }
+    .cm-msg { font-size: 1.1rem; font-weight: 600; color: #444; margin: 0; }
+    .cm-msg.err { color: #b42318; }
+    .cm-paid { margin: 0; padding: 8px 14px; background: #fef0c7; color: #5c3a00; font-size: .9rem; text-align: center; }
+    :root[lang="ur"] .cm-scan, :root[lang="ur"] .cm-paid, :root[lang="ur"] .cm-msg { line-height: 1.9; }
+
+    /* ---------- print: only the sheet ---------- */
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .cm { display: none !important; }
+      .edu-main > :not(.upi-layout) { display: none !important; }
+      .upi-layout { display: block; margin: 0; }
+      .upi-layout > :not(#designCard) { display: none !important; }
+      #designCard { position: static; max-height: none; overflow: visible; border: 0; padding: 0; box-shadow: none; }
+      #designCard > :not(.pv-wrap) { display: none !important; }
+      .pv-wrap { padding: 0; background: none; display: block; }
+      .sheet { box-shadow: none; border-radius: 0; max-width: none; margin: 0 auto; }
+      .sheet.p-A5 { width: 148mm; height: 209mm; aspect-ratio: auto; }
+      .sheet.p-A4 { width: 210mm; height: 296mm; aspect-ratio: auto; }
+      .pv-wrap canvas { width: auto; max-width: 100%; max-height: 280mm; margin: 0 auto; box-shadow: none; border-radius: 0; }
+    }
+  </style>
+  <style id="pageSize">@page { size: A5 portrait; margin: 0; }</style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="callout success small upi-privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+
+    <div class="upi-layout">
+      <section class="card stack" id="detailsCard" aria-labelledby="hDetails">
+        <h2 id="hDetails" data-i18n="h_details"></h2>
+
+        <div>
+          <div class="lbl" id="savedLbl" data-i18n="saved_ids"></div>
+          <div class="saved-row" id="savedRow" role="group" aria-labelledby="savedLbl"></div>
+        </div>
+
+        <div class="field">
+          <label for="vpa" data-i18n="f_vpa"></label>
+          <input id="vpa" type="text" dir="ltr" inputmode="email" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="400" aria-describedby="vpaHint">
+          <span class="hint" id="vpaHint" data-i18n="f_vpa_hint"></span>
+        </div>
+        <div class="msgs" id="vpaMsgs" aria-live="polite">
+          <div class="callout danger small" id="vpaErr" hidden></div>
+          <div class="callout small" id="sampleNote" data-i18n="sample_note" hidden></div>
+        </div>
+
+        <div class="two">
+          <div class="field">
+            <label for="pn" data-i18n="f_pn"></label>
+            <input id="pn" type="text" dir="auto" autocomplete="off" spellcheck="false" maxlength="99">
+            <span class="hint" data-i18n="f_pn_hint"></span>
+          </div>
+          <div class="field">
+            <label for="shop" data-i18n="f_shop"></label>
+            <input id="shop" type="text" dir="auto" autocomplete="off" maxlength="60">
+            <span class="hint" data-i18n="f_shop_hint"></span>
+          </div>
+        </div>
+        <div class="msgs" aria-live="polite"><div class="callout warning small" id="pnWarn" hidden></div></div>
+
+        <div class="two">
+          <div class="field">
+            <label for="amt"><span data-i18n="f_amt"></span> <span class="opt">· <span data-i18n="optional"></span></span></label>
+            <input id="amt" type="text" inputmode="decimal" dir="ltr" autocomplete="off" maxlength="14" placeholder="250">
+            <span class="hint" data-i18n="f_amt_hint"></span>
+          </div>
+          <div class="field">
+            <label for="note"><span data-i18n="f_note"></span> <span class="opt">· <span data-i18n="optional"></span></span></label>
+            <input id="note" type="text" dir="auto" autocomplete="off" maxlength="120">
+            <span class="hint"><span data-i18n="f_note_hint"></span> <span class="count badge" id="noteCount"></span></span>
+          </div>
+        </div>
+        <div class="msgs" id="amtMsgs" aria-live="polite">
+          <div class="callout danger small" id="amtErr" hidden></div>
+          <div class="callout warning small" id="amtWarn" data-i18n="warn_amt_big" hidden></div>
+          <div class="callout small" id="noteCut" data-i18n="note_cut" hidden></div>
+        </div>
+
+        <div class="field">
+          <div class="lbl"><span data-i18n="f_logo"></span> <span class="opt">· <span data-i18n="optional"></span></span></div>
+          <div class="logo-row">
+            <img class="logo-prev" id="logoPrev" alt="" hidden>
+            <button type="button" class="btn" id="btnLogo"><span aria-hidden="true">🖼</span> <span data-i18n="btn_logo"></span></button>
+            <button type="button" class="btn btn-danger btn-sm" id="btnLogoDel" data-i18n="btn_logo_remove" hidden></button>
+          </div>
+        </div>
+
+        <div class="two">
+          <div class="field">
+            <label for="slang" data-i18n="f_slang"></label>
+            <select id="slang"></select>
+          </div>
+          <div class="field">
+            <div class="lbl" id="colorLbl" data-i18n="f_color"></div>
+            <div class="swatches" id="swatches" role="group" aria-labelledby="colorLbl"></div>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" id="addEn"> <span data-i18n="f_add_en"></span></label>
+
+        <div class="row">
+          <button type="button" class="btn btn-primary" id="btnSave"><span aria-hidden="true">💾</span> <span data-i18n="btn_save_id"></span></button>
+        </div>
+      </section>
+
+      <section class="card stack" id="designCard" aria-labelledby="hDesign">
+        <div class="head-row">
+          <h2 id="hDesign" data-i18n="h_design"></h2>
+          <button type="button" class="btn btn-accent" id="btnCounter"><span aria-hidden="true">🧾</span> <span data-i18n="btn_counter"></span></button>
+        </div>
+        <p class="small muted mb0" data-i18n="counter_hint"></p>
+        <div class="designs" id="designs" role="group" aria-labelledby="hDesign"></div>
+        <div class="subopts">
+          <div class="seg" id="segPaper" role="group" data-i18n-aria-label="paper">
+            <button type="button" id="paper-A5" data-v="A5">A5</button><button type="button" id="paper-A4" data-v="A4">A4</button>
+          </div>
+          <div class="seg" id="segStk" role="group" data-i18n-aria-label="d_stickers">
+            <button type="button" id="stk-6" data-v="6"></button><button type="button" id="stk-12" data-v="12"></button>
+          </div>
+          <div class="seg" id="segImg" role="group" data-i18n-aria-label="d_image">
+            <button type="button" id="img-status" data-v="status" data-i18n="img_status"></button><button type="button" id="img-square" data-v="square" data-i18n="img_square"></button>
+          </div>
+        </div>
+        <div class="pv-wrap" id="pvWrap" role="region" data-i18n-aria-label="h_preview">
+          <div id="sheet" class="sheet no-i18n" role="img"></div>
+          <canvas id="imgCanvas" class="no-i18n" width="1080" height="1920" role="img" hidden></canvas>
+        </div>
+        <p class="small muted mb0" id="sizeInfo" aria-live="polite"></p>
+        <div class="callout warning small" id="sizeWarn" data-i18n="size_small" hidden></div>
+        <div class="pv-actions">
+          <button type="button" class="btn btn-primary" id="btnPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
+          <button type="button" class="btn btn-primary" id="btnPng"><span aria-hidden="true">⬇</span> <span data-i18n="btn_png"></span></button>
+          <button type="button" class="btn wide" id="btnCopy"><span aria-hidden="true">⧉</span> <span data-i18n="btn_copy_link"></span></button>
+        </div>
+        <details class="inside">
+          <summary data-i18n="payload_title"></summary>
+          <pre id="payload" class="no-i18n" dir="ltr"></pre>
+          <p class="small muted mb0" data-i18n="payload_hint"></p>
+        </details>
+      </section>
+    </div>
+
+    <section class="card safety" aria-labelledby="hSafety">
+      <h2 id="hSafety"><span aria-hidden="true">🛡</span> <span data-i18n="h_safety"></span></h2>
+      <ul class="safe-list">
+        <li><span class="ic" aria-hidden="true">🧪</span><span data-i18n="safe_1"></span></li>
+        <li><span class="ic" aria-hidden="true">🚫</span><span data-i18n="safe_2"></span></li>
+        <li><span class="ic" aria-hidden="true">👀</span><span data-i18n="safe_3"></span></li>
+        <li><span class="ic" aria-hidden="true">✅</span><span data-i18n="safe_4"></span></li>
+        <li><span class="ic" aria-hidden="true">🏦</span><span data-i18n="safe_5"></span></li>
+        <li><span class="ic" aria-hidden="true">🔒</span><span data-i18n="safe_6"></span></li>
+      </ul>
+    </section>
+
+    <details class="card help">
+      <summary data-i18n="help_title"></summary>
+      <ul>
+        <li data-i18n="tip_1"></li>
+        <li data-i18n="tip_2"></li>
+        <li data-i18n="tip_3"></li>
+        <li data-i18n="tip_4"></li>
+        <li data-i18n="tip_5"></li>
+      </ul>
+    </details>
+
+    <div class="reset-row no-print">
+      <button type="button" class="btn btn-danger btn-sm" id="btnReset" data-i18n="reset"></button>
+      <span class="tiny muted" data-i18n="saved_local"></span>
+    </div>
+  </main>
+
+  <div class="cm" id="counter" role="dialog" aria-modal="true" aria-labelledby="cmLbl" hidden>
+    <div class="cm-bar">
+      <label id="cmLbl" for="cmAmt" data-i18n="cm_amount"></label>
+      <div class="cm-in"><span aria-hidden="true">₹</span><input id="cmAmt" type="text" inputmode="decimal" dir="ltr" autocomplete="off" maxlength="14"></div>
+      <button type="button" class="btn" id="cmNew" data-i18n="cm_new"></button>
+      <button type="button" class="btn" id="cmClose"><span aria-hidden="true">✕</span> <span data-i18n="close"></span></button>
+    </div>
+    <div class="cm-body">
+      <div class="cm-shop no-i18n" id="cmShop" dir="auto"></div>
+      <div class="cm-qr is-off" id="cmQr" role="img"></div>
+      <div class="cm-amount no-i18n" id="cmAmount" aria-live="polite"></div>
+      <div class="cm-scan" data-i18n="st_scan"></div>
+      <div class="cm-payee no-i18n" id="cmPayee"></div>
+      <p class="cm-msg" id="cmMsg" aria-live="polite"></p>
+    </div>
+    <p class="cm-paid" data-i18n="cm_paid"></p>
+  </div>
+
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="qr.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

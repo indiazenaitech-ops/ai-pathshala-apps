@@ -1,4 +1,4 @@
-# App list (61)
+# App list (63)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -65,3 +65,5 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | ⌨️ | [Typing Tutor](https://apnipathshala.ai/apps/typing-tutor/) | study-skills | 3-12 | Learn touch typing with colour-coded fingers, live speed and accuracy, stars for every lesson and practice in 12 Indian languages. |
 | 🔐 | [Password Strength Lab](https://apnipathshala.ai/apps/password-checker/) | digital-safety | 6-12 | See how fast a password can be guessed, spot the patterns attackers try first, and make strong passphrases. All on your device. |
 | 🚩 | [Spot the Scam](https://apnipathshala.ai/apps/phishing-spotter/) | digital-safety | 6-12 | A cyber-safety game: decide if Indian SMS, WhatsApp and call messages are safe or scams, and learn the red flags. |
+| 💳 | [UPI QR & Payment Standee](https://apnipathshala.ai/apps/upi-qr-standee/) | business | all | Make a printable Scan & Pay UPI QR standee, table tent or stickers for your shop, plus a counter mode with the bill amount. |
+| 🖼️ | [Image Compressor & Resizer](https://apnipathshala.ai/apps/image-compressor/) | marketing | all | Resize, compress and watermark 100 photos at once for Instagram, WhatsApp, YouTube, Amazon and websites. Photos never leave your device. |

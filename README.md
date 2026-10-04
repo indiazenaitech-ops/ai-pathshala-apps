@@ -7,14 +7,19 @@ These are free classroom web apps for schools and colleges. They teach AI, maths
 languages, study skills and digital safety. The library comes from the YouTube channel
 [AI की पाठशाला](https://www.youtube.com/@Apni_Pathshala_AI) ([subscribe](https://www.youtube.com/@Apni_Pathshala_AI?sub_confirmation=1)).
 
-- **Free forever.** No sign-up, no ads, no tracking, no fees.
+- **Free forever.** No sign-up for students, no ads, no tracking, no fees. Teachers can optionally sign in with Google
+  to host the online Live Class Quiz.
 - **12 languages.** English, हिन्दी, বাংলা, मराठी, ગુજરાતી, ਪੰਜਾਬੀ, ଓଡ଼ିଆ, தமிழ், తెలుగు, ಕನ್ನಡ, മലയാളം and اردو.
 - **Runs anywhere.** Smartboards, laptops and low-cost Android phones, in any modern browser.
-- **Private.** Everything runs on the device, and whatever students type stays there.
+- **Private.** Every app except the Live Class Quiz runs on the device, and whatever students type stays there.
+  The optional Live Class Quiz runs online (Google Firebase, Mumbai region): students join with a code and a
+  nickname only, and their nicknames and answers are deleted after 30 days, when the teacher deletes the session, or
+  when they tap "Remove me". Details: [privacy policy](https://apnipathshala.ai/legal/privacy.html).
 - **Works offline.** An app keeps working without internet once it has been opened. A school with no internet can
   [download all apps as a ZIP](https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip)
   (or the green **Code** button → *Download ZIP*), unzip it and open `index.html`.
-  A few apps (Python, SQL, image AI) need internet the first time to load their engine.
+  A few apps (Python, SQL, image AI) need internet the first time to load their engine. The Live Class Quiz needs
+  internet while it runs.
 - **Easy to share.** Every app has a WhatsApp button in its header that sends the app's public link.
 
 See [APPS.md](APPS.md) for the full list of apps.
