@@ -35,8 +35,8 @@ residual risks and what would reduce them.
 - Every rule and every Firestore call in `cloud.js` was read line by line against LIVE_SPEC.md, together with all the
   places where the apps show student-written text.
 - **`firebase/tests/rules.test.js`** (Firestore emulator) has a test for every fix (`ATTACK (fixed)`), next to the
-  existing attack tests. **It has not been run yet**: this computer has no Java, and the emulator needs it. Run
-  `cd firebase && npm run test:emulator` before going live (see §6, R8).
+  existing attack tests. **It had not been run at the time of this review** (no Java). It has been run since, with the
+  updates-list tests: 122/122 pass (§7b). Run `cd firebase && npm run test:emulator` after every rules change.
 - **`firebase/tests/firebase_mode.sim.js`** (new) runs the real `cloud.js` in Firebase mode against a fake Firebase SDK and
   an in-memory Firestore. That Firestore enforces a JavaScript port of the rules and counts what Firestore bills. The port
   takes the nickname character lists from `firestore.rules`, so the two cannot drift apart. It plays one teacher and 40
@@ -211,9 +211,78 @@ the quiz is live; the sentence is still correct as written.
 | R5 | Lobby flooding by scripted anonymous accounts. | Lock + kick. A removed uid can't rejoin. | App Check; a cap on players per session (needs a counter). |
 | R6 | A teacher who never opens the app again keeps old sessions forever on Spark. | Stated honestly in the privacy policy ("deleted on request"). | Blaze + TTL (`expireAt` is already on every doc), or a scheduled Cloud Function. |
 | R7 | Anonymous Auth records (uid plus creation time, no personal data) pile up in Firebase Authentication. | None needed for privacy. | Identity Platform's automatic clean-up of anonymous users, if the project is upgraded. |
-| R8 | **The rules were not run against the real emulator in this review** (no Java). The simulation uses a JavaScript model of them. | `rules.test.js` has tests for every rule and every fix. | Install Java 11+ and run `cd firebase && npm run test:emulator` before publishing the config. The console's rules editor also compiles the file on Publish. |
+| R8 | **The rules were not run against the real emulator in this review** (no Java). The simulation uses a JavaScript model of them. | `rules.test.js` has tests for every rule and every fix. **Update 4 Oct 2026:** a local Java runtime (`tools/jre`) now runs the emulator; all 122 tests pass (§7b). | Install Java 11+ and run `cd firebase && npm run test:emulator` before publishing the config. The console's rules editor also compiles the file on Publish. |
 | R9 | A student can rejoin under a new nickname mid-quiz while the session is unlocked (leave, then join). Their answers stay, and their score starts again from 0. | The teacher locks the session once everyone has joined. | — |
 | R10 | Large quizzes cost more downloads: the session doc, with every question, is re-sent to every phone on each change. With today's limits (200 questions of 1,000 characters) a single doc can reach ~0.5 MB. | Reads run out first for normal quizzes (§5). | Option c in §5, or lower `LIMITS.questions`. |
+
+## 7b. Addendum (4 Oct 2026): `interest/{uid}`, the email updates list
+
+The "Stay updated" form (`shared/signup.js` → `EDUCloud.registerInterest`) adds one document per sign-up to the collection
+`interest`. It holds personal data of adults (email, optional name, organisation and place), so it was reviewed as its own
+attack surface. Rules: `match /interest/{id}` at the end of `firestore.rules`. Tests: the `interest (updates list)` suite
+in `firebase/tests/rules.test.js` (22 tests). The Firestore emulator run passed **122/122** (100 older tests + 22).
+
+**What the rules allow.** Only `create`, and only when all of the following hold:
+- **Signed in** (anonymous is enough). Signed-out writes are refused.
+- **Document id == your own uid**, and `uid` in the record == your uid. Writing the same id again counts as an update,
+  which is denied, so one Firebase account can add **exactly one** sign-up and can never overwrite one (its own or
+  anyone else's).
+- **Exact field set:** `keys().hasOnly/hasAll` on `{name, email, role, org, place, prefLang, topics, consent, lang, page,
+  createdAt, uid}`. A missing or extra field is refused.
+- **Field checks:**
+  - `consent == true` (a bool; `'true'`, `1` or a missing field are refused);
+  - `createdAt == request.time` (server time);
+  - email: 6–254 characters, lower case, trimmed, no spaces or control characters, `x@y.zz` shape (Indian-script
+    addresses pass);
+  - name ≤ 60, org ≤ 80, place ≤ 60 characters: strings, may be empty, no control characters or line breaks;
+  - `role` from `teacher principal student parent org other`;
+  - `topics`: a list of 1–3 **different** values from `apps videos training`;
+  - `prefLang` and `lang`: one of the 12 language codes;
+  - `page`: `home schools business other`.
+- The form allows exactly these values (`INTEREST` and `validateInterest()` in `shared/cloud-mock.js`), so a real sign-up
+  never hits a rule.
+
+**What the rules deny.** No `get`, `list`, `update` or `delete` rule exists, so for every website user (anonymous,
+Google teacher or signed out) these are refused:
+- reading your own sign-up;
+- reading a missing id (no existence oracle);
+- listing the collection or querying it by `uid` or `email`;
+- changing or deleting any sign-up.
+
+The owner reads and deletes in the Firebase console, which bypasses the rules.
+
+**Cost.** The rule has no `get()`/`exists()`, so a sign-up is **1 write and 0 reads** (measured in the simulation). The
+client also signs in one new anonymous account per sign-up (Firebase Auth, free).
+
+| # | Threat | Result | Why / mitigation |
+|---|---|---|---|
+| I1 | **Email harvesting**: read or list the emails from a browser | Not possible | No read rule of any kind. Tests cover get (own, other, missing id), list, `where uid ==` and `where email ==` queries, as an anonymous user, a teacher and signed out. The page never reads the list back. |
+| I2 | **Tampering**: change, overwrite or delete someone's sign-up, or unsubscribe them | Not possible | No update or delete rule. Ids are uids, and you can only create at your own uid. A second `set` on an existing id is an update, which is denied. |
+| I3 | **Spam sign-ups** (junk entries) | Limited | Each document needs its own Firebase account, because the id must be the writer's uid. Firebase Auth limits new accounts per IP address (about 100 per hour by default; Authentication → Settings → sign-up quota). The form's hidden honeypot field stops simple bots before anything is sent. The field limits keep each entry small (< 1 KB). Junk can never be read by others, and it never changes real entries. |
+| I4 | **Quota abuse** (use up the shared Spark write quota, 20,000 writes/day, which the Live Class Quiz needs too) | Reduced, not removed | Before this change, one anonymous account could loop writes until the day's quota was gone. Now one account = one write, so a flood from one IP is capped by the sign-up quota (≈2,400 writes/day per IP at the default). A botnet with many IPs could still use up the day's writes. Spark never charges money; the quiz shows "Today's free limit is used up" until the reset. The real fix is **App Check** (R1), which would cover this collection too. |
+| I5 | **Signing up someone else's email** (no double opt-in) | Possible, like any open form | The owner's first email to a new address should be a short welcome/confirmation with a one-line "reply unsubscribe" note. Delete addresses that bounce or reply "unsubscribe", within 30 days. |
+| I6 | **Formula / CSV injection** when the owner copies the list into a spreadsheet (a name such as `=HYPERLINK(...)`) | Owner-side risk | Text is single-line and length-limited, but may start with `=`, `+`, `-` or `@`. When pasting into Excel or Sheets, paste as plain text, or prefix such cells with `'`. Never enable macros or "update links" for this file. |
+| I7 | **Linking a sign-up to a person's quiz or teacher account** | Not possible | Separate app instance `'edu-interest'` with its own **new** anonymous account per sign-up, signed out right after. It is never the teacher (Google) or quiz-player identity. No IP address is stored. |
+| I8 | **Children** signing up | Text-only control | The consent text says 18+. Students in the quiz never see the form (it is only on home, schools.html and business.html). The rules cannot check age. Delete any entry that is clearly a child's. |
+
+**Client changes that go with the rules** (`shared/cloud.js`, `shared/cloud-mock.js`):
+- `registerInterest` writes `interest/{uid}` with `set()` on the new account's uid.
+- Before each sign-up, the client signs out any left-over interest account (for example from a closed tab) and signs
+  in anonymously **fresh**. It signs out again afterwards, whether the write succeeded or failed.
+- Because of this, a second person on a shared school computer can sign up. A retry after a lost reply never runs into
+  "already exists". No sign-up identity stays on the device.
+- Calls run one after another, so two quick clicks cannot mix up accounts.
+- Demo mode stores under the same kind of id (`anon-…`).
+- The client's email check now also refuses control characters, like the rules.
+
+**Verified:**
+- `firebase/tests/firebase_mode.sim.js` (G) checks that a sign-up costs 1 write, that the id is the uid, and that the
+  account is signed out afterwards.
+- It also checks that 3 sign-ups from one device (two of them sent at the same moment) get 3 different ids, and that
+  the quiz player's own id is never used.
+- A scripted second write with the same account, or a write under another id, is refused.
+- A mutation check (weakening the rules in a copy: no id check, duplicate topics allowed, a read rule added) made the
+  matching emulator tests fail every time.
 
 ## 8. Changes made in this review
 

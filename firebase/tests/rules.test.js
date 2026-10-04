@@ -11,9 +11,12 @@
  * enumerating sessions, and a teacher reading another teacher's quizzes or sessions.
  * Tests marked "ATTACK (fixed)" cover the holes closed in the security review (firebase/SECURITY_REVIEW.md):
  * look-alike / invisible-character nicknames, nickname squatting, reading other students' nickname
- * reservations, and reading ended or forgotten sessions by guessing codes. */
+ * reservations, and reading ended or forgotten sessions by guessing codes.
+ * The "Stay updated" list (interest/{uid}) is tested last: create only, one sign-up per account, exact shape, and no
+ * reads, lists, changes or deletes for anyone. */
 'use strict';
 const { describe, test, before, after, beforeEach } = require('node:test');
+const assert = require('node:assert');
 const fs = require('fs');
 const net = require('net');
 const path = require('path');
@@ -557,5 +560,155 @@ describe('everything else is denied', () => {
     await assertFails(setDoc(doc(teacher('tA'), 'analytics/x'), { a: 1 }));
     await assertFails(getDoc(doc(teacher('tA'), 'users/tA')));
     await assertFails(setDoc(doc(student('s1'), 'sessions/123456/chat/m1'), { text: 'hi' }));
+  });
+});
+
+/* ================================================================== interest/{uid}: the "Stay updated" list
+   What cloud.js does: a NEW anonymous account per sign-up, then ONE setDoc on interest/{that uid}. The rules allow
+   create only, once per account; nobody (not even the person who signed up) can read, list, change or delete it. */
+describe('interest (updates list)', () => {
+  const FIELDS = ['name', 'email', 'role', 'org', 'place', 'prefLang', 'topics', 'consent', 'lang', 'page', 'createdAt', 'uid'];
+  const LANGS = ['en', 'hi', 'bn', 'mr', 'gu', 'pa', 'or', 'ta', 'te', 'kn', 'ml', 'ur'];
+  const rec = (uid, over) => Object.assign({
+    name: 'Asha Verma', email: 'asha@example.com', role: 'teacher', org: 'DPS Bhopal', place: 'Bhopal',
+    prefLang: 'hi', topics: ['apps', 'videos'], consent: true, lang: 'hi', page: 'schools', createdAt: serverTimestamp(), uid
+  }, over || {});
+  /* uid signs up at interest/{uid} (as an anonymous user unless db is given) */
+  const add = (uid, over, db) => setDoc(doc(db || student(uid), 'interest/' + uid), rec(uid, over));
+  /* v0 signed up earlier */
+  beforeEach(async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'interest/v0'), rec('v0', { createdAt: Timestamp.now() }));
+    });
+  });
+
+  test('valid: an anonymous visitor signs up at interest/{own uid}', async () => {
+    await assertSucceeds(add('v1'));
+    let stored = null;
+    await env.withSecurityRulesDisabled(async (ctx) => { stored = (await getDoc(doc(ctx.firestore(), 'interest/v1'))).data(); });
+    assert.deepStrictEqual(Object.keys(stored).sort(), FIELDS.slice().sort());
+    assert.strictEqual(stored.uid, 'v1');
+  });
+  test('valid: empty optional fields, every role / page / language / topic set from the fixed lists', async () => {
+    await assertSucceeds(add('v1', { name: '', org: '', place: '', topics: ['training'], page: 'business', role: 'org' }));
+    let n = 0;
+    for (const role of ['teacher', 'principal', 'student', 'parent', 'org', 'other']) await assertSucceeds(add('r' + n++, { role }));
+    for (const page of ['home', 'schools', 'business', 'other']) await assertSucceeds(add('r' + n++, { page }));
+    for (const l of LANGS) await assertSucceeds(add('r' + n++, { lang: l, prefLang: l }));
+    for (const topics of [['apps'], ['videos'], ['training'], ['videos', 'apps'], ['apps', 'videos', 'training']]) await assertSucceeds(add('r' + n++, { topics }));
+  });
+  test('valid: Indian-language text and email addresses, and the exact length limits', async () => {
+    await assertSucceeds(add('v1', { name: 'आशा वर्मा', org: 'केन्द्रीय विद्यालय', place: 'भोपाल', email: 'राम@उदाहरण.भारत' }));
+    await assertSucceeds(add('v2', { name: 'n'.repeat(60), org: 'o'.repeat(80), place: 'p'.repeat(60) }));
+    await assertSucceeds(add('v3', { email: 'a'.repeat(242) + '@example.com' }));     /* 254 characters */
+    await assertSucceeds(add('v4', { email: 'a.b+tag@sub.example.co.in' }));
+  });
+  test('valid: a teacher signed in with Google may sign up too (own uid)', async () => {
+    await assertSucceeds(add('tA', { role: 'teacher' }, teacher('tA')));
+  });
+  test('ATTACK: signed-out visitors cannot sign up', async () => {
+    await assertFails(setDoc(doc(nobody(), 'interest/x'), rec('x')));
+    await assertFails(setDoc(doc(collection(nobody(), 'interest')), rec('x')));
+  });
+  test('consent: missing, false or not exactly true is refused', async () => {
+    const r = rec('v1'); delete r.consent;
+    await assertFails(setDoc(doc(student('v1'), 'interest/v1'), r));
+    for (const consent of [false, 'true', 'yes', 1, null]) await assertFails(add('v1', { consent }));
+  });
+  test('email: must look like an email, lower case, without spaces, 6–254 characters', async () => {
+    for (const email of ['', 'asha', 'asha@x', 'asha@example', '@example.com', 'asha@.com', 'a@@b.com', 'a b@example.com',
+      'Asha@Example.com', ' asha@example.com', 'asha@example.com ', 'a@b.c', 'ab@c.d', 'asha@example.c',
+      'a'.repeat(243) + '@example.com', 123, null, ['asha@example.com']]) {
+      await assertFails(add('v1', { email }));
+    }
+  });
+  test('ATTACK: extra fields are refused', async () => {
+    for (const extra of [{ phone: '9999999999' }, { demo: true }, { admin: true }, { notes: '' }]) await assertFails(add('v1', extra));
+  });
+  test('every field is required: leaving out any one is refused', async () => {
+    for (const k of FIELDS) {
+      const r = rec('v1'); delete r[k];
+      await assertFails(setDoc(doc(student('v1'), 'interest/v1'), r));
+    }
+  });
+  test('too long: name over 60, organisation over 80, place over 60 characters', async () => {
+    await assertFails(add('v1', { name: 'n'.repeat(61) }));
+    await assertFails(add('v1', { org: 'o'.repeat(81) }));
+    await assertFails(add('v1', { place: 'p'.repeat(61) }));
+    await assertFails(add('v1', { name: 'आ'.repeat(61) }));
+  });
+  test('ATTACK: control characters and line breaks in any text are refused', async () => {
+    await assertFails(add('v1', { name: 'line\nbreak' }));
+    await assertFails(add('v1', { org: 'tab\there' }));
+    await assertFails(add('v1', { place: 'nul\u0000' }));
+    await assertFails(add('v1', { name: 'bell\u0007' }));
+    await assertFails(add('v1', { email: 'as\u0001ha@example.com' }));
+  });
+  test('wrong types are refused', async () => {
+    for (const over of [{ name: 5 }, { org: null }, { place: ['Bhopal'] }, { role: 1 }, { page: 0 }, { lang: ['hi'] },
+      { prefLang: null }, { topics: 'apps' }, { topics: { 0: 'apps' } }, { createdAt: 'now' }, { uid: 1 }]) {
+      await assertFails(add('v1', over));
+    }
+  });
+  test('role, page and languages must come from the fixed lists', async () => {
+    for (const over of [{ role: 'admin' }, { role: 'Teacher' }, { page: 'evil' }, { page: 'x'.repeat(61) }, { prefLang: 'fr' },
+      { prefLang: 'HI' }, { lang: 'xx' }, { lang: '' }]) {
+      await assertFails(add('v1', over));
+    }
+  });
+  test('topics: 1 to 3 different topics from the list', async () => {
+    for (const topics of [[], ['spam'], ['apps', 'spam'], ['apps', 'apps'], ['apps', 'videos', 'training', 'apps'], [1]]) {
+      await assertFails(add('v1', { topics }));
+    }
+  });
+  test('ATTACK: the uid inside the record must be your own', async () => {
+    await assertFails(add('v1', { uid: 'v2' }));
+    await assertFails(add('v1', { uid: '' }));
+  });
+  test('ATTACK: the document id must be your own uid (no random ids, no signing up someone else)', async () => {
+    await assertFails(setDoc(doc(collection(student('v1'), 'interest')), rec('v1')));
+    await assertFails(setDoc(doc(student('v1'), 'interest/v2'), rec('v1')));
+    await assertFails(setDoc(doc(student('v1'), 'interest/v2'), rec('v2')));
+    await assertFails(setDoc(doc(teacher('tA'), 'interest/v9'), rec('tA')));
+  });
+  test('ATTACK: createdAt must be the server time', async () => {
+    await assertFails(add('v1', { createdAt: Timestamp.fromMillis(Date.now() - DAY) }));
+    await assertFails(add('v1', { createdAt: Timestamp.fromMillis(Date.now() + DAY) }));
+    await assertFails(add('v1', { createdAt: Date.now() }));
+  });
+  test('ATTACK: one sign-up per account: a second write, a merge or a batch of several is refused', async () => {
+    await assertSucceeds(add('v1'));
+    await assertFails(add('v1', { email: 'second@example.com' }));
+    await assertFails(setDoc(doc(student('v1'), 'interest/v1'), { topics: ['apps'] }, { merge: true }));
+    await assertFails(add('v0', { email: 'takeover@example.com' }));
+    const db = student('v2'), b = writeBatch(db);
+    b.set(doc(db, 'interest/v2'), rec('v2'));
+    b.set(doc(db, 'interest/v2b'), rec('v2'));
+    await assertFails(b.commit());
+  });
+  test('ATTACK: nobody can read a sign-up, not even their own, and a missing id reads as refused too', async () => {
+    await assertFails(getDoc(doc(student('v0'), 'interest/v0')));
+    await assertFails(getDoc(doc(student('v1'), 'interest/v0')));
+    await assertFails(getDoc(doc(teacher('tA'), 'interest/v0')));
+    await assertFails(getDoc(doc(nobody(), 'interest/v0')));
+    await assertFails(getDoc(doc(student('v9'), 'interest/v9')));
+  });
+  test('ATTACK: nobody can list or search the list (no email harvesting)', async () => {
+    await assertFails(getDocs(collection(student('v1'), 'interest')));
+    await assertFails(getDocs(query(collection(student('v0'), 'interest'), where('uid', '==', 'v0'))));
+    await assertFails(getDocs(query(collection(teacher('tA'), 'interest'), where('email', '==', 'asha@example.com'))));
+    await assertFails(getDocs(collection(nobody(), 'interest')));
+  });
+  test('ATTACK: nobody can change a sign-up', async () => {
+    await assertFails(updateDoc(doc(student('v0'), 'interest/v0'), { topics: ['apps'] }));
+    await assertFails(updateDoc(doc(student('v0'), 'interest/v0'), { consent: false }));
+    await assertFails(setDoc(doc(student('v0'), 'interest/v0'), rec('v0')));
+    await assertFails(updateDoc(doc(teacher('tA'), 'interest/v0'), { email: 'x@example.com' }));
+  });
+  test('ATTACK: nobody can delete a sign-up', async () => {
+    await assertFails(deleteDoc(doc(student('v0'), 'interest/v0')));
+    await assertFails(deleteDoc(doc(teacher('tA'), 'interest/v0')));
+    await assertFails(deleteDoc(doc(nobody(), 'interest/v0')));
+    await assertFails(deleteDoc(doc(student('v9'), 'interest/v9')));
   });
 });

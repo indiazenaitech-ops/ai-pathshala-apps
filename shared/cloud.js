@@ -15,6 +15,9 @@
  *   - teachers sign in with Google (popup; full-page redirect when the popup is blocked / not supported),
  *   - students get an anonymous uid in a SEPARATE Firebase app instance ('edu-student'), so a teacher and a
  *     student on the same browser never mix; it is remembered on the device, so a reload = same player,
+ *   - the "Stay updated" form (shared/signup.js) calls registerInterest(): one write to interest/{uid} as a NEW
+ *     anonymous user of a THIRD app instance ('edu-interest'), signed out right after, so a sign-up is never linked
+ *     to a teacher account or a quiz player; the record is never read back (firestore.rules: create only, once per uid),
  *   - no Analytics, no tracking, nothing else is loaded.
  * All async functions reject with an Error whose .code is one of EDUCloud.ERRORS.
  * Classic script, never throws at load time. */
@@ -24,12 +27,13 @@
   var SDK_VERSION = '12.19.0';
   var SDK_BASE = 'https://cdn.jsdelivr.net/npm/firebase@' + SDK_VERSION + '/';
   var STUDENT_APP = 'edu-student';
+  var INTEREST_APP = 'edu-interest';
   var PENDING_DELETE = 'edu.cloud.pendingDelete';
   var CLOCK_KEY = 'edu.cloud.clock';
   var API = ['ready', 'onTeacher', 'signInTeacher', 'signOut', 'deleteTeacherAccount', 'listQuizzes', 'getQuiz',
     'saveQuiz', 'deleteQuiz', 'createSession', 'hostWatch', 'startQuestion', 'revealQuestion', 'writeScores',
     'lockSession', 'kickPlayer', 'endSession', 'listSessions', 'sessionResults', 'deleteSession', 'joinSession',
-    'playerWatch', 'submitAnswer', 'leaveSession', 'purgeExpired'];
+    'playerWatch', 'submitAnswer', 'leaveSession', 'purgeExpired', 'registerInterest'];
 
   function detectMode() {
     try {
@@ -216,6 +220,7 @@
     var S = {
       readyP: null, fb: null, app: null, auth: null, db: null, authKnown: false,
       stuP: null, sAuth: null, sDb: null,
+      intA: null, intQ: null, iAuth: null, iDb: null,
       teacher: null, teacherLs: [], teacherDocs: {}, redirectError: null, purged: {},
       host: {},   /* code → {session, players, key}: what the host page knows (from hostWatch / own writes) */
       stu: {}     /* code → {session, my:{i:choice}, changed()}: what the student page knows */
@@ -1155,6 +1160,57 @@
       }).catch(rethrow);
     }
 
+    /* ------------------------------------------------------------ "Stay updated" list
+       interest/{uid} = the fields of U.validateInterest() + createdAt (server time) + uid. Create only: the page never
+       reads it back and firestore.rules has no read rule for it, so only the owner sees the list (Firebase console).
+       Its own app instance ('edu-interest'), never the teacher or quiz-player identity.
+       The rules allow ONE document per anonymous account (document id = uid; writing it again is an update, which
+       is denied). So every sign-up signs in as a NEW anonymous account and signs it out afterwards: a second person
+       on a shared school computer can sign up too, a retry after a lost reply never hits "already exists", and no
+       sign-up identity stays on the device. Sign-ups run one after another (S.intQ). */
+    function interestAuth() {
+      if (S.intA) return S.intA;
+      var p = ready().then(function () {
+        var app = findApp(S.fb, INTEREST_APP) || S.fb.initializeApp(cfgCopy(), INTEREST_APP);
+        var x = setupApp(app);
+        S.iAuth = x.auth; S.iDb = x.db;
+        /* wait until a saved user (left over from a closed tab) is loaded, so that it can be signed out */
+        return new Promise(function (resolve, reject) {
+          var done = false, off = null;
+          off = S.iAuth.onAuthStateChanged(function () {
+            if (done) return;
+            done = true;
+            if (off) off();
+            resolve(S.iAuth);
+          }, function (e) { if (!done) { done = true; reject(e); } });
+        });
+      });
+      S.intA = p.catch(function (e) { S.intA = null; throw mapError(e); });
+      return S.intA;
+    }
+    function interestSignOut() {
+      var a = S.iAuth;
+      if (!a || !a.currentUser) return Promise.resolve();
+      return timeout(a.signOut(), 5000).catch(function () { });
+    }
+    function registerInterest(data) {
+      if (!U.validateInterest) return Promise.reject(cloudError('not-configured', 'Reload the page (shared/cloud-mock.js is out of date).'));
+      var rec;
+      try { rec = U.validateInterest(data); } catch (e) { return Promise.reject(mapError(e)); }
+      var p = (S.intQ || Promise.resolve()).then(interestAuth).then(function (auth) {
+        return interestSignOut().then(function () { return timeout(auth.signInAnonymously()); });
+      }).then(function (cred) {
+        var uid = cred.user.uid;
+        rec.createdAt = ST();
+        rec.uid = uid;
+        var ref = S.iDb.collection('interest').doc(uid);     /* id = my new uid: no read, one write */
+        return timeout(ref.set(rec)).then(function () { return { id: ref.id }; });
+      });
+      /* saved or not, the throw-away account is signed out before the next sign-up starts */
+      S.intQ = p.then(interestSignOut, interestSignOut);
+      return p.catch(rethrow);
+    }
+
     var FB = {
       ready: ready, onTeacher: onTeacher, signInTeacher: signInTeacher, signOut: signOut,
       deleteTeacherAccount: deleteTeacherAccount, listQuizzes: listQuizzes, getQuiz: getQuiz, saveQuiz: saveQuiz,
@@ -1162,7 +1218,7 @@
       revealQuestion: revealQuestion, writeScores: writeScores, lockSession: lockSession, kickPlayer: kickPlayer,
       endSession: endSession, listSessions: listSessions, sessionResults: sessionResults, deleteSession: deleteSession,
       joinSession: joinSession, playerWatch: playerWatch, submitAnswer: submitAnswer, leaveSession: leaveSession,
-      purgeExpired: purgeExpired
+      purgeExpired: purgeExpired, registerInterest: registerInterest
     };
 
     /* ------------------------------------------------------------ public object */
@@ -1179,6 +1235,9 @@
       computeScores: U.computeScores,
       rankPlayers: U.rankPlayers,
       demoUrl: U.demoUrl,
+      /* "Stay updated" form: allowed roles / topics / pages / languages and length limits; email check */
+      INTEREST: U.INTEREST,
+      validEmail: U.validEmail,
       /* estimated server time in ms: use it for countdowns (questionStartedAt is server time) */
       now: function () { return MODE === 'mock' ? Date.now() : now(); },
       /* an error from a finished sign-in redirect (e.g. not-configured when the domain is not authorised) */

@@ -1,4 +1,5 @@
-/* "For schools" page (schools.html): roll-out guide for principals, CBSE alignment, workshop offer, FAQ.
+/* "For schools" page (schools.html): roll-out guide for principals, CBSE alignment, FAQ; the "Stay updated" form
+   (#updates) is shared/signup.js.
    Strings: shared/schools-strings.js (window.SCHOOLS_STRINGS). Apps: catalog.js (window.EDU_CATALOG).
    Contact address and links come from EDU.SITE (shared/edu.js), the one config place. */
 (function () {
@@ -116,11 +117,6 @@
     var msg = t('parents_msg', { url: libUrl() });
     $('#parents-msg').value = msg;
     $('#wa-parents').href = EDU.waLink(msg);
-    var mail = CONF.contact || '';
-    var mailto = 'mailto:' + mail + '?subject=' + encodeURIComponent(t('ws_subject')) + '&body=' + encodeURIComponent(t('ws_body'));
-    $('#ws-mail').href = mailto;
-    $('#ws-email').textContent = mail;
-    $('#ws-email').href = mailto;
     $('#subscribe').href = CONF.subscribe || EDU.YOUTUBE;
     var press = SITE.press || null;
     var flyer = press && ((EDU.lang === 'hi' || EDU.lang === 'mr' ? press.flyer_hi : press.flyer_en) || press.flyer);
@@ -133,7 +129,6 @@
   }
 
   $('#copy-msg').addEventListener('click', function () { EDU.copy($('#parents-msg').value); });
-  $('#copy-email').addEventListener('click', function () { EDU.copy(CONF.contact || ''); });
   EDU.onLang(render);
   render();
 })();

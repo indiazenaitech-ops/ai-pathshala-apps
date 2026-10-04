@@ -1,5 +1,5 @@
-/* "For business & teams" page (business.html): why teams use the tools, use cases, AI workshops for employees,
-   custom tools, FAQ. Strings: shared/business-strings.js (window.BUSINESS_STRINGS). Apps: catalog.js (window.EDU_CATALOG).
+/* "For business & teams" page (business.html): why teams use the tools, use cases, "suggest a tool", FAQ; the
+   "Stay updated" form (#updates) is shared/signup.js. Strings: shared/business-strings.js (window.BUSINESS_STRINGS). Apps: catalog.js (window.EDU_CATALOG).
    Contact address and links come from EDU.SITE (shared/edu.js), the one config place. No prices on this page. */
 (function () {
   'use strict';
@@ -86,10 +86,7 @@
     $('#open-tools').href = 'index.html?for=business&lang=' + EDU.lang;
     $('#wa-page').href = EDU.waLink(t('wa_business', { url: EDU.shareUrl() }));
     $('#wa-page-2').href = $('#wa-page').href;
-    $('#ws-mail').href = mailto('ws_subject', 'ws_body');
     $('#custom-mail').href = mailto('custom_subject', 'custom_body');
-    $('#ws-email').textContent = CONF.contact || '';
-    $('#ws-email').href = $('#ws-mail').href;
     $('#subscribe').href = CONF.subscribe || EDU.YOUTUBE;
     renderUses();
     renderFaq();
@@ -97,7 +94,6 @@
     setMeta('description', t('doc_desc'));
   }
 
-  $('#copy-email').addEventListener('click', function () { EDU.copy(CONF.contact || ''); });
   EDU.onLang(render);
   render();
 })();

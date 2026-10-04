@@ -124,6 +124,22 @@
         if (op === 'create') return isTeacher(R) && shape && keysAll(inc, ['owner', 'title', 'questions', 'lang', 'createdAt', 'updatedAt']) && inc.owner === uid && tsEq(inc.createdAt, R) && tsEq(inc.updatedAt, R);
         if (op === 'update') return isTeacher(R) && res.owner === uid && shape && inc.owner === res.owner && same(inc.createdAt, res.createdAt) && tsEq(inc.updatedAt, R);
       }
+      if (s.length === 2 && s[0] === 'interest') {     /* the "Stay updated" list: create only, id = own uid (match /interest/{id}) */
+        if (op !== 'create') return false;
+        var F = ['name', 'email', 'role', 'org', 'place', 'prefLang', 'topics', 'consent', 'lang', 'page', 'createdAt', 'uid'];
+        var LG = ['en', 'hi', 'bn', 'mr', 'gu', 'pa', 'or', 'ta', 'te', 'kn', 'ml', 'ur'];
+        var CTRL = /[\u0000-\u001f\u007f]/;     /* RE2 [[:cntrl:]] */
+        var txt = function (t, max) { return typeof t === 'string' && size(t) <= max && !CTRL.test(t); };
+        var e = inc.email, tp = inc.topics;
+        return signedIn(R) && s[1] === uid && keysOnly(inc, F) && keysAll(inc, F) && inc.uid === uid && tsEq(inc.createdAt, R) && inc.consent === true
+          && typeof e === 'string' && size(e) >= 6 && size(e) <= 254 && e === e.toLowerCase() && e === trimRules(e)
+          && /^[^@ ]+@[^@ ]+[.][^@ .]{2,}$/.test(e) && !CTRL.test(e)
+          && txt(inc.name, 60) && txt(inc.org, 80) && txt(inc.place, 60)
+          && ['teacher', 'principal', 'student', 'parent', 'org', 'other'].indexOf(inc.role) >= 0
+          && Array.isArray(tp) && tp.length >= 1 && tp.length <= 3
+          && tp.every(function (t, k) { return ['apps', 'videos', 'training'].indexOf(t) >= 0 && tp.indexOf(t) === k; })
+          && LG.indexOf(inc.prefLang) >= 0 && LG.indexOf(inc.lang) >= 0 && ['home', 'schools', 'business', 'other'].indexOf(inc.page) >= 0;
+      }
       if (s[0] !== 'sessions') return false;
       var code = s[1];
       if (s.length === 2) {

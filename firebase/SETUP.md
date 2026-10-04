@@ -58,6 +58,61 @@ other players. Nobody can change scores except the teacher who owns the session.
 A quiz session can be opened by its code only while it is running (less than 1 day old and not ended); after that only
 the teacher and the students who played it can see it. Details: `firebase/SECURITY_REVIEW.md`.
 
+### 4b. Re-paste the rules for the "Stay updated" form (4 Oct 2026, owner action)
+
+`firestore.rules` now ends with a `match /interest/{id}` block for the email updates list. The rules running in the
+console are the old ones, so until you publish the new file **every sign-up on apnipathshala.ai fails**. The form then
+shows a friendly "sorry, please email us instead" message with a ready-made email link. Nothing else is affected: the
+Live Class Quiz rules in the file are unchanged.
+
+1. Open `https://github.com/indiazenaitech-ops/ai-pathshala-apps/blob/main/firebase/firestore.rules` → **Raw**.
+   Check that it contains `match /interest/{id}` and the line `&& id == request.auth.uid`. If it does not, the
+   auto-publisher has not pushed the new version yet: wait 15 minutes and reload.
+2. Select all, copy. In the Firebase console: Firestore Database → **Rules** → select all the old text → paste →
+   **Publish**. (As in step 4: always copy the whole file from Raw, never retype it; the "hidden characters" warning
+   is expected.)
+3. Test it: open **https://apnipathshala.ai/#updates**, fill in the form with your own email, tick the consent box and
+   press the button. You should see the thank-you message. In Firestore Database → **Data** you will now see a
+   collection `interest` with one document. Delete that test document afterwards if you like (see below).
+
+The rules allow the website to **add** a sign-up and nothing else. Nobody can read, search, change or delete the list
+from a browser, not even the person who signed up. Each sign-up uses its own new anonymous account, and each anonymous
+account can add only one sign-up. Details: `firebase/SECURITY_REVIEW.md` §7b. Tests: `cd firebase && npm run test:emulator`
+(122/122 passed on 4 Oct 2026).
+
+### 4c. Working with the updates list (only you, in the console)
+
+The console ignores the security rules, so you see everything. Treat the list as private: never share a screenshot.
+
+- **See the list:** Firestore Database → **Data** → collection `interest`. Each document is one sign-up. Its id is a
+  random code (the anonymous account that sent it). Fields:
+  - `email`, `name`, `org` (school or organisation), `place`;
+  - `role` (teacher, principal, student, parent, org, other);
+  - `topics` (`apps` = new free apps, `videos` = Hindi AI video lessons, `training` = AI training for a school or
+    organisation);
+  - `prefLang` (language for your emails);
+  - `lang` and `page` (where they signed up);
+  - `createdAt`, `consent` (always true), `uid`.
+- **Find a person:** above the document list, click the **filter** button (funnel icon) → field `email` → `==` → their
+  address (lower case) → **Apply**. One person may have signed up more than once; each sign-up is its own document.
+- **Unsubscribe / delete request:** find every document with that email (filter above). Open each one → **⋮** →
+  **Delete document**. Do it within 30 days of the request; the privacy policy promises this. Also delete addresses that
+  bounce.
+- **Copy the emails:** the free plan has no "download as CSV" button for Firestore data. Google's managed export needs
+  the paid Blaze plan, so don't use it. For a short list, copy the addresses from the Data tab into your email
+  program's BCC field, or into a private Google Sheet. When the list grows, ask Claude for a small export script. It
+  needs a service-account key, and that key must be kept **outside** `C:\Claude\projects\edu_apps_library`, because that
+  folder is published to GitHub every 15 minutes.
+- **Pasting into a spreadsheet:** paste as plain text. If a name or organisation starts with `=`, `+`, `-` or `@`, put
+  a `'` in front of it, so the spreadsheet does not treat it as a formula. A bot could have typed one.
+- **Sending emails:**
+  - Always use **BCC**, never To/CC, so people don't see each other's addresses.
+  - Make the first email to a new address a short welcome. Anyone can type someone else's email into the form.
+  - End every email with a line like "Reply 'unsubscribe' and we will remove you."
+  - Send in the person's `prefLang` where you can.
+- **Clutter in Authentication → Users:** every sign-up (and every quiz student) leaves an anonymous user with no name
+  or email. That is expected and harmless. Deleting them does not delete sign-ups.
+
 ## 5. Optional: automatic deletion by Google (TTL)
 
 Our privacy policy promises that live-quiz data is deleted after 30 days. **The apps already do this themselves**:
@@ -127,6 +182,8 @@ and the privacy policy says so.
 - Teachers: their Google name and email stay in Firebase Authentication. Firestore stores only the name, their quizzes and
   sessions. "Delete my account and data" in the teacher app removes all of it.
 - Data location: Firestore in `asia-south1` (Mumbai).
+- Email updates list (adults only, with consent): `interest` collection, readable only by you in the console. Delete a
+  person's documents within 30 days of an unsubscribe or delete request (step 4c).
 - Grievance contact: `window.EDU_CONTACT_EMAIL` in `shared/firebase-config.js`, shown on `legal/privacy.html`.
 
 ## Optional hardening
@@ -149,8 +206,18 @@ npm install                 # rules-unit-testing, firebase, firebase-tools (loca
 npm run test:emulator       # = firebase emulators:exec --project demo-apni-pathshala --only firestore "npm test"
 ```
 
-All tests must pass. They cover every allow and deny case, including attacks such as a student writing their
-own score, reading the answer key, answering twice or joining a locked session.
+All tests must pass (122 on 4 Oct 2026). They cover every allow and deny case, including attacks such as a student
+writing their own score, reading the answer key, answering twice or joining a locked session, and for the updates list:
+reading or listing emails, a second sign-up from the same account, extra fields and too-long text.
+
+On the project's Windows PC a portable Java is in `tools/jre/` (not published). In PowerShell:
+
+```powershell
+$env:JAVA_HOME = 'C:\Claude\projects\edu_apps_library\tools\jre\jdk-21.0.12.1+1-jre'
+$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+$env:JAVA_TOOL_OPTIONS = '-Djdk.net.unixdomain.tmpdir=C:\Claude\tmp_uds'   # a short folder that exists
+cd C:\Claude\projects\edu_apps_library\firebase; npm run test:emulator
+```
 
 Without Java you can still run `node firebase/tests/firebase_mode.sim.js` from the project root (no internet needed). It
 runs the real `shared/cloud.js` in Firebase mode against a fake SDK and an in-memory database with a model of the rules,
@@ -174,6 +241,7 @@ The stored data stays in Firebase (until TTL deletes it, if step 5 worked). To r
 | Sign-in popup closes and the app says "not set up" | Step 2.3: add the domain to **Authorized domains** |
 | "not set up" when a student joins | Step 2.2: **Anonymous** provider not enabled |
 | Everything says "No permission" | Step 4: rules not published, or published from an old copy |
+| "Stay updated" form says "sorry, please email us instead" | Step 4b: the new rules (with `match /interest/{id}`) are not published yet |
 | "Today's free limit is used up" | Spark daily limit reached. Wait for the reset (about 1 pm IST), or see Sign-up quota above |
 | Works on Wi-Fi but not at school | The school network may block Google services. Try mobile data; Demo mode always works |
 | Phone shows "open in browser" or sign-in fails inside WhatsApp | Open the link in Chrome (in-app browsers block Google sign-in) |

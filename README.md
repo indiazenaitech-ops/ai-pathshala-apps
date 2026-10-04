@@ -1,7 +1,7 @@
 # AI Pathshala Apps: free learning apps for schools
 
 **Open the library:** https://apnipathshala.ai
-**For principals and teachers:** https://apnipathshala.ai/schools.html (one-day roll-out plan, CBSE AI 417/843, CS and IP chapter list, FAQ, free teacher workshop)
+**For principals and teachers:** https://apnipathshala.ai/schools.html (one-day roll-out plan, CBSE AI 417/843, CS and IP chapter list, FAQ, email updates about new apps)
 
 These are free classroom web apps for schools and colleges. They teach AI, maths, science, coding,
 languages, study skills and digital safety. The library comes from the YouTube channel
@@ -15,6 +15,9 @@ languages, study skills and digital safety. The library comes from the YouTube c
   The optional Live Class Quiz runs online (Google Firebase, Mumbai region): students join with a code and a
   nickname only, and their nicknames and answers are deleted after 30 days, when the teacher deletes the session, or
   when they tap "Remove me". Details: [privacy policy](https://apnipathshala.ai/legal/privacy.html).
+- **Stay updated (optional, adults only).** The home, schools and business pages have a short form to join our email
+  list: new free apps, Hindi AI video lessons, and what schools and organisations would like next. Nothing is sent until
+  you tick the consent box; you can unsubscribe at any time ([how we use it](https://apnipathshala.ai/legal/privacy.html#updates)).
 - **Works offline.** An app keeps working without internet once it has been opened. A school with no internet can
   [download all apps as a ZIP](https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip)
   (or the green **Code** button → *Download ZIP*), unzip it and open `index.html`.
@@ -34,6 +37,7 @@ cd tools && npm install            # playwright-core (uses your installed Chrome
 node tools/verify.js <slug>        # static + 12-language + interaction + offline checks
 node tools/verify.js home          # the library home page
 node tools/verify_pages.js schools # the For-schools page (same checks)
+node tools/tests/_signup.check.js  # the "Stay updated" form on home, schools and business (Demo mode, 12 languages)
 node tools/build_catalog.js        # regenerate catalog.js, APPS.md, sitemap.xml and the apps JSON-LD in index.html
 ```
 
@@ -52,6 +56,10 @@ node tools/build_catalog.js        # regenerate catalog.js, APPS.md, sitemap.xml
 - **Per-app share tags:** `node tools/inject_og.js` (dry run) / `--write` adds or refreshes a canonical + Open Graph
   block in each `apps/<slug>/index.html` from its `meta.json`. It edits app files, so run it only when no app is being
   edited, then re-run `node tools/verify.js <slug> --quick` for those apps.
+- **"Stay updated" form:** `shared/signup.js` + `shared/signup-strings.js` (12 languages) mount into
+  `<section id="updates" data-signup="home|schools|business">` and call `EDUCloud.registerInterest()` (shared/cloud.js):
+  one create-only write to the Firestore collection `interest` (rules in `firebase/firestore.rules`), never read back.
+  Local test servers stay in Demo mode (saved in the browser only); `file://` shows an email link instead.
 - **No analytics, no tracking, no third-party cookies.** Keep it that way: the site is used by children.
 - `tools/publish.sh` rebuilds the catalog and publishes verified apps plus the site files to GitHub Pages.
 

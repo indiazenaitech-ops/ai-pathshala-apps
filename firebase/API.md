@@ -202,7 +202,38 @@ Details per phase and other sizes: [SECURITY_REVIEW.md](SECURITY_REVIEW.md) §5.
 ("123 456" → "123456", else null) · `points()` · `computeScores(state, i)` · `rankPlayers(players)` · `demoUrl()` ·
 `redirectError()` (error from a finished sign-in redirect, or null) · `purgeExpired()` · `isDemo` · `sdkVersion`.
 
-## 10. Testing
+## 10. "Stay updated" list (registerInterest)
+
+The form in `shared/signup.js` (home, schools.html, business.html) is the only caller. Apps do not use it.
+
+```js
+await EDUCloud.registerInterest({
+  email: 'asha@example.com',            // required; trimmed + lower-cased; EDUCloud.validEmail(s) → clean email | null
+  name: '', org: '', place: '',         // optional; cut to 60 / 80 / 60 characters
+  role: 'teacher',                      // EDUCloud.INTEREST.roles: teacher principal student parent org other
+  prefLang: 'hi',                       // language for our emails (one of the 12)
+  topics: ['apps', 'videos'],           // 1–3 of EDUCloud.INTEREST.topics: apps videos training
+  consent: true,                        // must be exactly true (18+, agrees to occasional emails)
+  lang: EDU.lang, page: 'home'          // UI language; page = home | schools | business
+});   // → {id} (Firebase) or {id, demo:true} (Demo mode). Errors: invalid-input, offline, quota-exceeded,
+      //   permission-denied (rules not published yet), not-configured, unknown.
+```
+
+- **Firebase mode:** a third app instance (`'edu-interest'`, never the teacher or quiz-player identity) signs in as a
+  **new** anonymous account for every sign-up, then makes ONE write: `set()` on `interest/{that uid}` = exactly the
+  fields above + `createdAt` (server time) + `uid`. Afterwards (saved or not) that account is signed out, so nothing
+  stays on the device and the next sign-up on the same browser (a shared school computer) gets a new id. Calls run one
+  after another. No reads. `firestore.rules` allows **create only**, with this exact shape, at your own uid, once per
+  account: writing it again is an update, which is denied. Nobody can read, list, change or delete sign-ups from a
+  browser. The owner works with them in the Firebase console (`firebase/SETUP.md` §4c).
+- **Demo mode:** saved in this browser under `edu.cloudmock.interest/anon-…` (a new id per sign-up, the same as the
+  record's `uid`) with `demo: true`; nothing is sent.
+- The honeypot field, consent box, validation and translated messages live in `signup.js`, not here.
+- Cost: 1 write per sign-up (+1 free anonymous Auth account per sign-up). No reads.
+- Until the owner publishes the rules with `match /interest/{id}` (SETUP.md §4b), Firebase mode rejects with
+  `permission-denied` and the form shows "please email us instead".
+
+## 11. Testing
 
 - `node tools/tests/_cloud_mock.e2e.js` runs the whole Demo-mode flow (host + 2 students in one browser, rule checks,
   reload, file://) and must print PASS.
@@ -212,5 +243,6 @@ Details per phase and other sizes: [SECURITY_REVIEW.md](SECURITY_REVIEW.md) §5.
 - `node firebase/tests/firebase_mode.sim.js` runs the real cloud.js in **Firebase mode** against a fake SDK and an in-memory
   Firestore with a model of the rules (no Java, no internet, ~10 s): one teacher, 40 students, 10 questions, lock, kick, nickname
   rules, ended sessions, reload, "Remove me", deletes. It prints the reads / writes / deletes / downloads of each phase.
+- `node tools/tests/_signup.check.js` checks the sign-up form (Demo mode, 12 languages, validation, honeypot, errors).
 - Firebase emulators from a local page: `http://localhost:…/apps/live-quiz/?emulator=1` (or `emulator: true` in the config)
   connects to Auth on 127.0.0.1:9099 and Firestore on 127.0.0.1:8080.

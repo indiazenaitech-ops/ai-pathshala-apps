@@ -269,6 +269,56 @@
     return list.sort(function (a, b) { return ((a.joinedAt || 0) - (b.joinedAt || 0)) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0); });
   }
 
+  /* "Stay updated" list (shared/signup.js → EDUCloud.registerInterest). Adults only; the form asks for consent.
+     firestore.rules (match /interest/{id}) checks the same shape: keep both in step. */
+  var INTEREST = {
+    name: 60, org: 80, place: 60, email: 254,
+    roles: ['teacher', 'principal', 'student', 'parent', 'org', 'other'],
+    topics: ['apps', 'videos', 'training'],
+    pages: ['home', 'schools', 'business', 'other'],
+    langs: ['en', 'hi', 'bn', 'mr', 'gu', 'pa', 'or', 'ta', 'te', 'kn', 'ml', 'ur']
+  };
+  /* firestore.rules (validEmail) also refuses control characters, so the client refuses them too */
+  var EMAIL_RE = /^[^\s\u0000-\u001f\u007f@<>()[\]\\,;:"]+@[^\s\u0000-\u001f\u007f@<>()[\]\\,;:"]+\.[^\s\u0000-\u001f\u007f@<>()[\]\\,;:".]{2,}$/;
+  /* one line of text, at most max UTF-16 units (so the rules' size() limit holds however it counts) */
+  function shortText(v, max) {
+    var s = cleanText(v, false).replace(/\s+/g, ' ');
+    if (s.length > max) s = s.slice(0, max).replace(/[\ud800-\udbff]$/, '').trim();
+    return s;
+  }
+  function validEmail(v) {
+    var e = String(v === null || v === undefined ? '' : v).trim().toLowerCase();
+    return e.length >= 6 && e.length <= INTEREST.email && EMAIL_RE.test(e) ? e : null;
+  }
+  /* The record stored for one sign-up (exactly these fields; createdAt and uid are added by the backend).
+     Throws invalid-input for a bad email, role, topic list or missing consent. */
+  function validateInterest(d) {
+    d = d || {};
+    var email = validEmail(d.email);
+    if (!email) throw bad('Please give a valid email address.');
+    if (INTEREST.roles.indexOf(d.role) < 0) throw bad('Unknown role.');
+    var topics = [];
+    (Array.isArray(d.topics) ? d.topics : []).forEach(function (x) {
+      if (INTEREST.topics.indexOf(x) < 0) throw bad('Unknown topic.');
+      if (topics.indexOf(x) < 0) topics.push(x);
+    });
+    if (!topics.length) throw bad('Choose at least one topic.');
+    if (d.consent !== true) throw bad('Consent is required.');
+    function lang(v) { return INTEREST.langs.indexOf(v) >= 0 ? v : 'en'; }
+    return {
+      name: shortText(d.name, INTEREST.name),
+      email: email,
+      role: d.role,
+      org: shortText(d.org, INTEREST.org),
+      place: shortText(d.place, INTEREST.place),
+      prefLang: lang(d.prefLang),
+      topics: topics,
+      consent: true,
+      lang: lang(d.lang),
+      page: INTEREST.pages.indexOf(d.page) >= 0 ? d.page : 'other'
+    };
+  }
+
   /* Page URL with ?mock=1 added (for a "use Demo mode instead" link). */
   function demoUrl() {
     try {
@@ -286,7 +336,7 @@
     normalizeCode: normalizeCode, validateQuiz: validateQuiz, buildSession: buildSession, points: points,
     scoreFields: scoreFields, computeScores: computeScores, rankPlayers: rankPlayers,
     publicSession: publicSession, answersFrom: answersFrom, cleanPlayer: cleanPlayer, sortPlayers: sortPlayers,
-    demoUrl: demoUrl
+    demoUrl: demoUrl, INTEREST: INTEREST, validEmail: validEmail, validateInterest: validateInterest
   };
 
   /* =========================================================== mock storage */
@@ -882,6 +932,21 @@
       return run(function () { return purgeOwn(requireTeacher().uid); });
     },
 
+    /* "Stay updated" sign-up (shared/signup.js). Demo mode keeps it in this browser only, marked demo:true;
+       nothing is sent anywhere. Like Firebase mode, every sign-up gets its own new anonymous id (never the quiz
+       player's) and is stored under that id. → {id, demo:true} */
+    registerInterest: function (data) {
+      return run(function () {
+        var rec = validateInterest(data);
+        var id = 'anon-' + rid(16);
+        rec.createdAt = Date.now();
+        rec.uid = id;
+        rec.demo = true;
+        sSet(P + 'interest/' + id, rec);
+        return { id: id, demo: true };
+      });
+    },
+
     /* helpers (same on EDUCloud) */
     ERRORS: ERROR_CODES.slice(),
     LIMITS: LIMITS,
@@ -891,6 +956,8 @@
     computeScores: computeScores,
     rankPlayers: rankPlayers,
     demoUrl: demoUrl,
+    INTEREST: INTEREST,
+    validEmail: validEmail,
 
     /* test helper: wipe every demo-mode record in this browser */
     _reset: function () {

@@ -19,7 +19,7 @@ done
 if [ -d press ]; then git add press; fi
 # Live Quiz: legal pages, short links, Firebase rules/tests (node_modules is gitignored), spec + e2e tests
 for d in legal join teacher firebase; do if [ -d "$d" ]; then git add "$d"; fi; done
-for f in LIVE_SPEC.md tools/tests/_live_e2e.js tools/tests/_cloud_mock.e2e.js tools/tests/_legal.check.js; do if [ -f "$f" ]; then git add "$f"; fi; done
+for f in LIVE_SPEC.md tools/tests/_live_e2e.js tools/tests/_cloud_mock.e2e.js tools/tests/_legal.check.js tools/tests/_signup.check.js; do if [ -f "$f" ]; then git add "$f"; fi; done
 for slug in $(cat tools/.publish_stage); do
   git add "apps/$slug"
   [ -f "tools/tests/$slug.test.js" ] && git add "tools/tests/$slug.test.js"

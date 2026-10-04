@@ -97,7 +97,7 @@ async function main() {
     const host = await open('host');
     eq(await host.evaluate(() => [EDUCloud.mode, EDUCloud.isDemo, typeof EDUCloudMock, typeof EDU_CONTACT_EMAIL]), ['mock', true, 'object', 'string'], 'local test server → mock (real config never used locally)');
     const missing = await host.evaluate(() => {
-      const names = ['ready', 'onTeacher', 'signInTeacher', 'signOut', 'deleteTeacherAccount', 'listQuizzes', 'getQuiz', 'saveQuiz', 'deleteQuiz', 'createSession', 'hostWatch', 'startQuestion', 'revealQuestion', 'writeScores', 'lockSession', 'kickPlayer', 'endSession', 'listSessions', 'sessionResults', 'deleteSession', 'joinSession', 'playerWatch', 'submitAnswer', 'leaveSession', 'purgeExpired'];
+      const names = ['ready', 'onTeacher', 'signInTeacher', 'signOut', 'deleteTeacherAccount', 'listQuizzes', 'getQuiz', 'saveQuiz', 'deleteQuiz', 'createSession', 'hostWatch', 'startQuestion', 'revealQuestion', 'writeScores', 'lockSession', 'kickPlayer', 'endSession', 'listSessions', 'sessionResults', 'deleteSession', 'joinSession', 'playerWatch', 'submitAnswer', 'leaveSession', 'purgeExpired', 'registerInterest'];
       return names.filter(n => typeof EDUCloud[n] !== 'function' || typeof EDUCloudMock[n] !== 'function');
     });
     eq(missing, [], 'every LIVE_SPEC function exists on EDUCloud and EDUCloudMock');

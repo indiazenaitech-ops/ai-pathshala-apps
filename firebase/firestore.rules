@@ -354,6 +354,60 @@ service cloud.firestore {
       }
     }
 
+    // ------------------------------------------------------------------ interest/{uid}
+    // The optional "Stay updated" list (shared/signup.js → EDUCloud.registerInterest), adults only, with consent:
+    // {name, email, role, org, place, prefLang, topics, consent, lang, page, createdAt, uid}.
+    // CREATE ONLY. Nobody can read, list, change or delete a sign-up from the website; only the project owner
+    // sees the list (Firebase console). Allowed values: INTEREST in shared/cloud-mock.js (keep both in step).
+    // ONE sign-up per anonymous account: the document id must be the writer's own uid, and a second write to it
+    // counts as an update, which is denied. A flood therefore needs a new Firebase account per document, and new
+    // accounts are rate-limited per IP address (Authentication → Settings → sign-up quota). cloud.js uses a fresh
+    // anonymous account for every sign-up, so a second person on a shared computer can still sign up.
+    // No get()/exists() here, so a sign-up costs one write and no reads.
+    function validEmail(e) {
+      return e is string && e.size() >= 6 && e.size() <= 254
+        && e == e.lower() && e == e.trim()
+        && e.matches('[^@ ]+@[^@ ]+[.][^@ .]{2,}')
+        && !e.matches('(?s).*[[:cntrl:]].*');
+    }
+    // An optional one-line text: may be empty, at most max characters, no control characters (no line breaks).
+    function optText(t, max) {
+      return t is string && t.size() <= max && !t.matches('(?s).*[[:cntrl:]].*');
+    }
+    function isLang(l) {
+      return l is string && l in ['en', 'hi', 'bn', 'mr', 'gu', 'pa', 'or', 'ta', 'te', 'kn', 'ml', 'ur'];
+    }
+    // 1 to 3 different topics from the fixed list.
+    function validTopics(t) {
+      return t is list && t.size() >= 1 && t.size() <= 3
+        && t.hasOnly(['apps', 'videos', 'training'])
+        && t.toSet().size() == t.size();
+    }
+    match /interest/{id} {
+      allow create: if signedIn()
+        && id == request.auth.uid
+        && incoming().keys().hasOnly(['name', 'email', 'role', 'org', 'place', 'prefLang', 'topics', 'consent',
+                                      'lang', 'page', 'createdAt', 'uid'])
+        && incoming().keys().hasAll(['name', 'email', 'role', 'org', 'place', 'prefLang', 'topics', 'consent',
+                                     'lang', 'page', 'createdAt', 'uid'])
+        && incoming().uid == request.auth.uid
+        && incoming().createdAt == request.time
+        && incoming().consent == true
+        && validEmail(incoming().email)
+        && optText(incoming().name, 60)
+        && optText(incoming().org, 80)
+        && optText(incoming().place, 60)
+        && incoming().role is string
+        && incoming().role in ['teacher', 'principal', 'student', 'parent', 'org', 'other']
+        && validTopics(incoming().topics)
+        && isLang(incoming().prefLang)
+        && isLang(incoming().lang)
+        && incoming().page is string
+        && incoming().page in ['home', 'schools', 'business', 'other'];
+      // No get / list / update / delete rule = denied for everyone, even for the person who signed up (the owner
+      // reads and deletes sign-ups in the Firebase console, which ignores these rules).
+    }
+
     // Everything else (other collections, other paths) has no rule and is therefore denied.
   }
 }

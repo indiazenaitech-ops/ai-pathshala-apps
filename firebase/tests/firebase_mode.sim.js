@@ -112,7 +112,7 @@ async function main() {
       const f = document.createElement('iframe');
       f.name = dev; f.src = src; f.onload = () => res(); f.onerror = rej;
       document.body.appendChild(f);
-    }), [dev, '/__sim/client.html?dev=' + dev]);
+    }), [dev, '/__sim/client.html?live=1&dev=' + dev]);
     const fr = page.frames().find(f => f.name() === dev);
     await fr.waitForFunction(() => window.EDUCloud && window.EDUCloud.mode === 'firebase');
     return fr;
@@ -249,7 +249,7 @@ async function main() {
       'a stranger with the code of an ended session sees only "ended" (no title, no questions, no error)');
     eq((await tryJoin(X3, 'Stranger')).code, 'session-ended', 'joining an ended session → session-ended');
     eq(await X1.evaluate(() => [window.__P.session.state, window.__P.kicked, window.__pErr]), ['ended', true, null], 'the removed student: ended, still kicked, no error');
-    await S[1].goto(base + '/__sim/client.html?dev=s01');
+    await S[1].goto(base + '/__sim/client.html?live=1&dev=s01');
     await S[1].waitForFunction(() => window.EDUCloud && window.EDUCloud.mode === 'firebase');
     const rj = await S[1].evaluate(c => EDUCloud.joinSession(c, 'anything'), code);
     eq([rj.name, rj.rejoined], [nick(1), true], 'after a reload the student is the same player (rejoin)');
@@ -284,6 +284,54 @@ async function main() {
     eq([await docs('quizzes/'), await docs('sessions/'), await docs('teachers/')], [[], [], []], 'deleteTeacherAccount: no quiz, session (with its players) or teacher record left');
     eq(await host.evaluate(() => __try(() => EDUCloud.listQuizzes()).then(r => r.code)), 'permission-denied', 'signed out after the account is deleted');
     await phase('extra: second session + delete the teacher account', { extra: true });
+
+    /* ------------------------------------------------ G. the "Stay updated" list (EDUCloud.registerInterest) */
+    const su = await device('signup');
+    const r1 = await su.evaluate(() => __try(() => EDUCloud.registerInterest({ email: ' Asha.Verma@School.EDU.in ', name: 'Asha  Verma', role: 'teacher', org: 'KV No. 1', place: 'Bhopal', prefLang: 'hi', topics: ['apps', 'training', 'apps'], consent: true, lang: 'hi', page: 'schools' })));
+    check(r1.ok && r1.v && typeof r1.v.id === 'string', 'registerInterest saves a sign-up ' + JSON.stringify(r1));
+    const ip = await docs('interest/');
+    eq(ip.length, 1, 'one document in interest/');
+    const rec = await page.evaluate(p => window.__FakeFirestore.data(p), ip[0]);
+    eq(Object.keys(rec).sort(), ['consent', 'createdAt', 'email', 'lang', 'name', 'org', 'page', 'place', 'prefLang', 'role', 'topics', 'uid'], 'sign-up has exactly the agreed fields');
+    eq([rec.email, rec.name, rec.role, rec.org, rec.place, rec.prefLang, rec.topics, rec.consent, rec.lang, rec.page], ['asha.verma@school.edu.in', 'Asha Verma', 'teacher', 'KV No. 1', 'Bhopal', 'hi', ['apps', 'training'], true, 'hi', 'schools'], 'sign-up values (email lower case, topics de-duplicated)');
+    check(rec.createdAt && rec.createdAt.__ts !== undefined && /^anon/.test(rec.uid), 'createdAt = server time, uid = an anonymous id');
+    eq([ip[0], r1.v.id], ['interest/' + rec.uid, rec.uid], 'the document id is the anonymous uid (one sign-up per account)');
+    const intUser = () => su.evaluate(() => { const a = firebase.apps.find(x => x.name === 'edu-interest'); return a && a.auth().currentUser ? a.auth().currentUser.uid : null; });
+    await su.waitForFunction(() => { const a = firebase.apps.find(x => x.name === 'edu-interest'); return a && !a.auth().currentUser; });
+    eq(await intUser(), null, 'after the sign-up the throw-away account is signed out (no sign-up identity stays on the device)');
+    eq(await su.evaluate(() => __try(() => EDUCloud.registerInterest({ email: 'x@y.in', role: 'parent', topics: ['videos'], consent: false })).then(r => r.code)), 'invalid-input', 'no consent → invalid-input before anything is sent');
+    eq(await su.evaluate(() => __try(() => EDUCloud.registerInterest({ email: 'not-an-email', role: 'parent', topics: ['videos'], consent: true })).then(r => r.code)), 'invalid-input', 'bad email → invalid-input');
+    /* a second person on the same computer, and two sign-ups sent at the same moment (they run one after another) */
+    const r2 = await su.evaluate(() => Promise.all([
+      __try(() => EDUCloud.registerInterest({ email: 'hr@company.example', role: 'org', topics: ['training'], consent: true, lang: 'en', prefLang: 'en', page: 'business' })),
+      __try(() => EDUCloud.registerInterest({ email: 'principal@school.example', role: 'principal', topics: ['apps', 'videos', 'training'], consent: true, lang: 'mr', prefLang: 'mr', page: 'home' }))]));
+    check(r2.every(r => r.ok), 'two more sign-ups from the same device both succeed ' + JSON.stringify(r2));
+    const ip2 = await docs('interest/');
+    const recs = await Promise.all(ip2.map(p => page.evaluate(q => window.__FakeFirestore.data(q), p)));
+    check(ip2.length === 3 && new Set(recs.map(d => d.uid)).size === 3 && ip2.every((p, i) => p === 'interest/' + recs[i].uid),
+      'every sign-up on the same device gets a new anonymous id, used as its document id');
+    const stuUid = await S[0].evaluate(() => (firebase.apps.find(a => a.name === 'edu-student') || { auth: () => ({}) }).auth().currentUser);
+    await S[0].evaluate(() => EDUCloud.registerInterest({ email: 'parent@example.in', role: 'parent', topics: ['videos'], consent: true, lang: 'ta', prefLang: 'ta', page: 'home' }));
+    const ip3 = await docs('interest/');
+    const mine = (await Promise.all(ip3.map(p => page.evaluate(q => window.__FakeFirestore.data(q), p)))).find(d => d.email === 'parent@example.in');
+    check(mine && stuUid && mine.uid !== stuUid.uid, 'the sign-up uses its own anonymous id, never the quiz player’s');
+    eq(await S[0].evaluate(() => (firebase.apps.find(a => a.name === 'edu-student') || { auth: () => ({}) }).auth().currentUser.uid), stuUid.uid, 'the quiz player stays signed in');
+    const rb = await su.evaluate(p => __try(() => firebase.apps.find(a => a.name === 'edu-interest').firestore().collection('interest').doc(p.split('/')[1]).get()), ip[0]);
+    eq([rb.ok, rb.code], [false, 'permission-denied'], 'nobody can read a sign-up back, not even the device that wrote it');
+    /* ATTACK: a script that keeps one anonymous account and writes again → refused (one document per account) */
+    const atk = await su.evaluate(async () => {
+      const app = firebase.apps.find(a => a.name === 'edu-interest'), db = app.firestore();
+      const u = (await app.auth().signInAnonymously()).user;
+      const r = id => ({ name: '', email: 'spam' + id.length + '@example.com', role: 'other', org: '', place: '', prefLang: 'en', topics: ['apps'], consent: true, lang: 'en', page: 'home', createdAt: firebase.firestore.FieldValue.serverTimestamp(), uid: u.uid });
+      const out = [];
+      out.push(await __try(() => db.collection('interest').doc(u.uid).set(r(u.uid))));
+      out.push(await __try(() => db.collection('interest').doc(u.uid).set(r(u.uid))));
+      out.push(await __try(() => db.collection('interest').doc('other-id').set(r('other-id'))));
+      await app.auth().signOut();
+      return out.map(x => x.ok ? 'ok' : x.code);
+    });
+    eq(atk, ['ok', 'permission-denied', 'permission-denied'], 'one account = one sign-up: writing again, or under another id, is refused');
+    await phase('extra: "Stay updated": 5 writes (4 sign-ups), 3 refused attacks', { extra: true, expectDenied: 3 });
 
     eq(await host.evaluate(() => window.__hostErr), null, 'no hostWatch errors');
     const pErrs = await Promise.all(S.slice(Math.floor(N / 2)).map(f => f.evaluate(() => window.__pErr)));

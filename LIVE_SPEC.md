@@ -182,6 +182,14 @@ the SDK loads from jsDelivr and every failure is a translated message. No API ch
 labels "Delete my account and data" and "Remove me" now match the words quoted in legal/privacy-strings.js; keep them in
 step when either side changes.
 
+## Updates list (2026-10-04, owner decision: no workshops yet, build an audience first)
+`EDUCloud.registerInterest(data)` (both modes) stores one sign-up of the "Stay updated" form (`shared/signup.js`, on home,
+schools.html and business.html). Firestore collection `interest/{uid}`: `{name, email, role, org, place, prefLang,
+topics, consent:true, lang, page, createdAt, uid}`, create-only in the rules, once per anonymous account (document id ==
+uid; no reads by anyone but the owner in the console). Anonymous auth in a separate app instance `'edu-interest'`, a new
+account per sign-up, signed out right after. Adults only (consent text says 18+). Kept until
+unsubscribe; deleted within 30 days of a request (manual, by the owner). Details: firebase/API.md §10, legal/privacy.html#updates.
+
 ## Security review (2026-10-04): deviations
 Full report: **firebase/SECURITY_REVIEW.md**. The EDUCloud API did not change; these are rule and behaviour changes,
 the same in Demo mode:
