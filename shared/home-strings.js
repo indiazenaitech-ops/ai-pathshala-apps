@@ -745,3 +745,22 @@ window.HOME_STRINGS = {
     yt_text: "ہمارے YouTube چینل AI پاٹھ شالہ پر آسان ہندی میں AI ٹولز کے مفت اسباق۔ نئی ویڈیوز پانے کے لیے سبسکرائب کریں۔"
   }
 };
+
+/* collapsible categories (added 2026-10-04) */
+(function () {
+  var x = {
+    en: { expand_all: 'Expand all', collapse_all: 'Collapse all' },
+    hi: { expand_all: 'सब खोलें', collapse_all: 'सब बंद करें' },
+    bn: { expand_all: 'সব খুলুন', collapse_all: 'সব বন্ধ করুন' },
+    mr: { expand_all: 'सर्व उघडा', collapse_all: 'सर्व बंद करा' },
+    gu: { expand_all: 'બધું ખોલો', collapse_all: 'બધું બંધ કરો' },
+    pa: { expand_all: 'ਸਭ ਖੋਲ੍ਹੋ', collapse_all: 'ਸਭ ਬੰਦ ਕਰੋ' },
+    or: { expand_all: 'ସବୁ ଖୋଲନ୍ତୁ', collapse_all: 'ସବୁ ବନ୍ଦ କରନ୍ତୁ' },
+    ta: { expand_all: 'அனைத்தையும் திற', collapse_all: 'அனைத்தையும் மூடு' },
+    te: { expand_all: 'అన్నీ తెరవండి', collapse_all: 'అన్నీ మూసివేయండి' },
+    kn: { expand_all: 'ಎಲ್ಲವನ್ನೂ ತೆರೆಯಿರಿ', collapse_all: 'ಎಲ್ಲವನ್ನೂ ಮುಚ್ಚಿ' },
+    ml: { expand_all: 'എല്ലാം തുറക്കുക', collapse_all: 'എല്ലാം അടയ്ക്കുക' },
+    ur: { expand_all: 'سب کھولیں', collapse_all: 'سب بند کریں' }
+  };
+  for (var l in x) if (window.HOME_STRINGS && window.HOME_STRINGS[l]) for (var k in x[l]) window.HOME_STRINGS[l][k] = x[l][k];
+})();

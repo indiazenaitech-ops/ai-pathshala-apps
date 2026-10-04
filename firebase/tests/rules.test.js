@@ -846,6 +846,27 @@ describe('stats/signups (public sign-up counter)', () => {
     }
     assert.deepStrictEqual(await stored(), { count: 10 });
   });
+  test('ATTACK: two +1 writes to the counter in the SAME batch as one sign-up are refused (no +2 per account)', async () => {
+    await seedCount(10);
+    const db = student('v1'), b = writeBatch(db);
+    b.set(doc(db, 'interest/v1'), rec('v1'));
+    b.set(doc(db, COUNTER), { count: increment(1) }, { merge: true });
+    b.set(doc(db, COUNTER), { count: increment(1) }, { merge: true });
+    await assertFails(b.commit());
+    const db2 = student('v2'), b2 = writeBatch(db2);
+    b2.set(doc(db2, 'interest/v2'), rec('v2'));
+    b2.set(doc(db2, COUNTER), { count: 11 });
+    b2.update(doc(db2, COUNTER), { count: increment(1) });
+    await assertFails(b2.commit());
+    assert.deepStrictEqual(await stored(), { count: 10 });
+    const db3 = student('v3'), b3 = writeBatch(db3);                      /* first sign-up: create twice in one batch */
+    await env.withSecurityRulesDisabled(async (ctx) => { await deleteDoc(doc(ctx.firestore(), COUNTER)); });
+    b3.set(doc(db3, 'interest/v3'), rec('v3'));
+    b3.set(doc(db3, COUNTER), { count: increment(1) }, { merge: true });
+    b3.set(doc(db3, COUNTER), { count: increment(1) }, { merge: true });
+    await assertFails(b3.commit());
+    assert.strictEqual(await stored(), null);
+  });
   test('a run of sign-ups from new accounts counts each one exactly once', async () => {
     for (let i = 1; i <= 6; i++) await assertSucceeds(signup('n' + i));
     await assertFails(signup('n3'));

@@ -106,6 +106,17 @@
     #updates-link { border-color: var(--accent); }
     #updates { margin-top: 30px; }
     :root[lang="ur"] .hero h1, :root[lang="ur"] .cta-card h2, :root[lang="ur"] .aud-btn, :root[lang="ur"] .section-title, :root[lang="ur"] .cat-head h2, :root[lang="ur"] .app-card h3, :root[lang="ur"] .how h3 { line-height: 2.15; }
+
+    .cat-tools { justify-content: flex-end; margin: 4px 0 0; }
+    details.cat-group { border-bottom: 1px solid var(--border); }
+    details.cat-group > summary { list-style: none; cursor: pointer; user-select: none; padding: 6px 0; border-radius: 10px; }
+    details.cat-group > summary::-webkit-details-marker { display: none; }
+    details.cat-group > summary:hover h2 { color: var(--primary); }
+    details.cat-group > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    details.cat-group > .apps { margin-bottom: 18px; }
+    .cat-chev { display: inline-block; width: 1.2em; font-size: 1.5rem; line-height: 1; color: var(--muted); transition: transform .15s; }
+    details.cat-group[open] > summary .cat-chev { transform: rotate(90deg); }
+    [dir="rtl"] details.cat-group:not([open]) > summary .cat-chev { transform: scaleX(-1); }
   </style>
 </head>
 <body>
@@ -153,6 +164,10 @@
       <a class="btn" id="zip" hidden>⬇ <span data-i18n="download_zip"></span></a>
     </div>
     <div class="cats" id="cats" role="toolbar"></div>
+    <div class="row cat-tools no-print" id="cat-tools">
+      <button class="btn btn-sm" type="button" id="cat-expand">⊞ <span data-i18n="expand_all"></span></button>
+      <button class="btn btn-sm" type="button" id="cat-collapse">⊟ <span data-i18n="collapse_all"></span></button>
+    </div>
     <div id="list"></div>
     <p class="muted center" id="empty" hidden data-i18n="no_results"></p>
 

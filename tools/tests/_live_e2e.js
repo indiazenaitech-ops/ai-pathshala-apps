@@ -16,8 +16,8 @@
  *    same player, final podium + table, every phone's final rank = the host's rank, CSV rows, "Remove me".
  *    No console errors, no page errors, no request outside the test server except the QR library and fonts.
  * B. Firebase-mode readiness without a project: a FAKE window.EDU_FIREBASE is injected with
- *    context.addInitScript (as a property that keeps the fake value when shared/firebase-config.js
- *    later assigns null). The compat SDK must load from jsDelivr, nothing may crash, and errors must
+ *    context.addInitScript (as a property that keeps the fake value whatever shared/firebase-config.js
+ *    later assigns). The compat SDK must load from jsDelivr, nothing may crash, and errors must
  *    show as translated messages (not stack traces): teacher sign-in in hi, student code check in ur,
  *    and the same with jsDelivr blocked (→ "offline" message).
  * Not part of verify.js (the leading "_" keeps it out of the per-app tests). */
@@ -536,16 +536,19 @@ async function partA(browser, base) {
 async function partB(browser, base) {
   step('B. Firebase mode with a FAKE config (no project exists)');
   const FAKE = { apiKey: 'fake', projectId: 'fake', authDomain: 'fake.firebaseapp.com', appId: '1:1:web:1' };
-  /* shared/firebase-config.js assigns null after this runs: keep the fake value through that assignment */
+  /* shared/firebase-config.js assigns its own value after this runs (the REAL project since 3 Oct): ignore every later
+     assignment, so part B never talks to the live project, only to the fake one */
   const inject = (cfg) => {
     let v = cfg;
-    Object.defineProperty(window, 'EDU_FIREBASE', { configurable: true, get() { return v; }, set(x) { if (x) v = x; } });
+    Object.defineProperty(window, 'EDU_FIREBASE', { configurable: true, get() { return v; }, set(x) { } });
   };
   const RAW = /firebase|auth\/|firestore|stack|TypeError|ReferenceError|\bat\s+\S+\s*\(/i;
 
   async function context(blockSdk) {
     const ctx = await browser.newContext({ viewport: PROJECTOR });
     await ctx.addInitScript(inject, FAKE);
+    /* belt and braces: never let part B reach the real project, whatever the page config says */
+    await ctx.route(u => /studio-7387948978-ac74c/.test(String(u)), r => { console.log('  FAIL request to the LIVE project blocked: ' + r.request().url()); process.exitCode = 1; return r.abort('blockedbyclient'); });
     if (blockSdk) await ctx.route(u => String(u).startsWith(SDK), r => r.abort('internetdisconnected'));
     return ctx;
   }
@@ -569,7 +572,7 @@ async function partB(browser, base) {
     const ctx = await context(false);
     const p = await ctx.newPage(), log = {};
     track(p, 'teacher', log);
-    await p.goto(base + 'apps/live-quiz/index.html?lang=hi', { waitUntil: 'load' });
+    await p.goto(base + 'apps/live-quiz/index.html?lang=hi&live=1', { waitUntil: 'load' });
     eq(await p.evaluate(() => [EDUCloud.mode, EDUCloud.isDemo]), ['firebase', false], 'fake config on http → Firebase mode');
     check(!(await p.isVisible('#demoBanner')), 'no Demo banner in Firebase mode');
     const btnReady = await p.waitForSelector('#signIn.btn-google:not([disabled]), #signinErr:not([hidden])', { timeout: 40000 }).then(() => true, () => false);
@@ -622,7 +625,7 @@ async function partB(browser, base) {
     const p = await ctx.newPage(), log = {};
     track(p, 'student', log);
     await p.setViewportSize(PHONE);
-    await p.goto(base + 'apps/quiz-join/index.html?lang=ur', { waitUntil: 'load' });
+    await p.goto(base + 'apps/quiz-join/index.html?lang=ur&live=1', { waitUntil: 'load' });
     eq(await p.evaluate(() => EDUCloud.mode), 'firebase', 'student page in Firebase mode');
     check(!(await p.isVisible('#demoBanner')), 'no Demo banner on the student page');
     await sleep(1500);
@@ -653,7 +656,7 @@ async function partB(browser, base) {
     const ctx = await context(true);
     const t = await ctx.newPage(), tlog = {};
     track(t, 'teacher-offline', tlog);
-    await t.goto(base + 'apps/live-quiz/index.html?lang=en', { waitUntil: 'load' });
+    await t.goto(base + 'apps/live-quiz/index.html?lang=en&live=1', { waitUntil: 'load' });
     await t.waitForSelector('#signinErr:not([hidden])', { timeout: 40000 }).catch(() => { });
     eq((await t.textContent('#signinErr span').catch(() => '')).trim(), await t.evaluate(() => EDU.t('err_offline')), 'teacher: SDK blocked → "No internet" message');
     check(await t.$('#signinErr a[href*="mock=1"]') !== null, 'teacher: offline message offers Demo mode');
@@ -664,7 +667,7 @@ async function partB(browser, base) {
     }
     const s = await t.context().newPage(), slog = {};
     track(s, 'student-offline', slog);
-    await s.goto(base + 'apps/quiz-join/index.html?lang=en&code=654321', { waitUntil: 'load' });
+    await s.goto(base + 'apps/quiz-join/index.html?lang=en&code=654321&live=1', { waitUntil: 'load' });
     await s.waitForSelector('#codeErr:not([hidden])', { timeout: 40000 }).catch(() => { });
     eq((await s.textContent('#codeErr')).trim(), await s.evaluate(() => EDU.t('err_offline')), 'student: SDK blocked → "No internet" message');
     eq(tlog.errs.concat(slog.errs), [], 'offline: no uncaught page errors');
