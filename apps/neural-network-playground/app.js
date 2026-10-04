@@ -59,16 +59,23 @@
   }
 
   function loadCfg() {
+    var own = sanitize(store.get('cfg', null));
     try {
       var u = new URL(location.href), s = u.searchParams.get('setup');
       if (s) {
         var shared = EDU.unpack(s);
         u.searchParams.delete('setup');
         history.replaceState(history.state, '', u.toString());
-        if (shared) return sanitize(shared);
+        if (shared && typeof shared === 'object') {
+          /* a shared setup replaces the settings (and is remembered), but keeps the points this student drew */
+          if (!Array.isArray(shared.draw) || !shared.draw.length) shared.draw = own.draw;
+          var c = sanitize(shared);
+          store.set('cfg', c);
+          return c;
+        }
       }
     } catch (e) { /* ignore bad links */ }
-    return sanitize(store.get('cfg', null));
+    return own;
   }
   var cfg = loadCfg();
   function save() { store.set('cfg', cfg); }
@@ -143,7 +150,9 @@
   function readColors() {
     ['--c2', '--c7', '--surface', '--surface-2', '--text', '--muted', '--border', '--c1', '--c5', '--accent'].forEach(function (k) { COL[k] = EDU.css(k) || '#888'; });
     COL.orange = parseColor(COL['--c2']); COL.blue = parseColor(COL['--c7']); COL.bg = parseColor(COL['--surface']);
-    COL.k = EDU.theme() === 'dark' ? 0.85 : 0.72;          /* dark surfaces need stronger tints */
+    /* how strongly the background is tinted: in dark mode a full tint would be the same colour as the
+       points and hide them, so the background stays a deeper shade and the bright points stand out */
+    COL.k = EDU.theme() === 'dark' ? 0.55 : 0.72;
   }
   function rgb(c) { return 'rgb(' + c.join(',') + ')'; }
 
@@ -289,7 +298,10 @@
   function buildDiagram() {
     var W = Math.round(netWrap.clientWidth || 400);
     var sizes = net.sizes, cols = sizes.length, maxN = Math.max.apply(null, sizes);
-    var padL = 56, padR = 8, top = 34;
+    /* room on the left for the input names (sin(x₁) is longer than x₁) */
+    var longest = Math.max.apply(null, D.fns.map(function (f) { return f.label.length; }));
+    var padL = Math.max(56, Math.round(longest * 8.6 + 12)), padR = 8, top = 34;
+    hoverPreview = null;   /* the old squares are gone, so nothing is hovered any more */
     var s = Math.round(EDU.clamp(Math.min(48, (W - padL - padR) / (cols * 1.55)), 24, 48));
     var gap = Math.max(8, Math.round(s * 0.3));
     var H = top + maxN * (s + gap) + 6;
@@ -424,7 +436,7 @@
     setStat('#train-acc', fmtPct(ev.tr.acc), isFinite(ev.tr.acc) ? ev.tr.acc.toFixed(4) : '');
     setStat('#test-acc', fmtPct(ev.te.acc), isFinite(ev.te.acc) ? ev.te.acc.toFixed(4) : '');
   }
-  var COACH_ICON = { explode: '💥', need_points: '✏️', line: '📏', linear: '📏', overfit: '📚', great: '🎉', great_draw: '🎉', slow: '🐢', stuck: '🤔', training: '🧠', paused: '⏸', start: '💡' };
+  var COACH_ICON = { explode: '💥', need_points: '✏️', line: '📏', linear: '📏', overfit: '📚', great: '🎉', great_draw: '🎉', big_lr: '⚠️', slow: '🐢', stuck: '🤔', training: '🧠', paused: '⏸', start: '💡' };
   function coachCode() {
     if (broken) return 'explode';
     if (cfg.ds === 'draw') {
@@ -440,6 +452,7 @@
     if (D.test.length && epoch >= 100 && ev.tr.loss < 0.08 && ev.te.loss > ev.tr.loss + 0.12) return 'overfit';
     var acc = D.test.length ? ev.te.acc : ev.tr.acc;
     if (epoch > 0 && acc >= 0.97) return D.test.length ? 'great' : 'great_draw';
+    if (cfg.lr >= 1 && epoch >= 30 && ev.tr.loss > 0.1) return 'big_lr';
     if (cfg.lr <= 0.003 && epoch >= 150 && ev.tr.loss > 0.25) return 'slow';
     if (epoch >= 500 && ev.tr.acc < 0.8) return 'stuck';
     if (playing) return 'training';
@@ -462,9 +475,9 @@
   function drawAll() {
     if (!net) return;
     computeGrid();
-    drawOutput();
     var key = Math.round(netWrap.clientWidth || 400) + '|' + net.sizes.join(',') + '|' + cfg.feats.join(',') + '|' + EDU.lang;
     if (key !== diag.key) buildDiagram(); else { updateLinks(); paintNodes(); }
+    drawOutput();
     drawChart(); updateStats(); updateCoach(); updatePreviewBar();
   }
 
@@ -562,10 +575,11 @@
   var lrSel = $('#lr');
   LRS.forEach(function (v) { lrSel.appendChild(el('option', { value: String(v), text: String(v) })); });
   $('#act').addEventListener('change', function () { cfg.act = this.value; changeArch(); });
+  /* a new learning rate starts again from the same first weights, so two rates can be compared fairly
+     (and a network that got stuck with a giant rate does not stay stuck when a small one is chosen) */
   lrSel.addEventListener('change', function () {
     cfg.lr = Number(this.value); save();
-    if (broken) { newNet(); }
-    drawAll();
+    newNet(); drawAll();
   });
   EDU.$$('#speed button').forEach(function (b) {
     b.addEventListener('click', function () { cfg.speed = b.getAttribute('data-speed'); save(); syncControls(); });
@@ -622,6 +636,8 @@
   $('#step').addEventListener('click', function () { setPlaying(false); trainOne(); drawAll(); });
   $('#reset').addEventListener('click', function () { wseed++; newNet(); drawAll(); });
   $('#fs').addEventListener('click', function () { EDU.fullscreen($('#playground')); });
+  /* iPhones cannot show a page element full screen: hide a button that would do nothing */
+  if (!(document.fullscreenEnabled || document.webkitFullscreenEnabled)) $('#fs').hidden = true;
   document.addEventListener('keydown', function (e) {
     if (e.key !== ' ' || e.ctrlKey || e.altKey || e.metaKey) return;
     if (e.target && e.target.closest && e.target.closest('button, input, select, textarea, summary, a, [contenteditable], .edu-modal-back')) return;
@@ -636,7 +652,8 @@
   $('#share').addEventListener('click', function () {
     var c = clone(cfg); if (c.ds !== 'draw') delete c.draw;
     var u;
-    try { u = new URL(location.href); u.searchParams.set('lang', EDU.lang); u.searchParams.set('setup', EDU.pack(c)); u = u.toString(); }
+    /* opened from a downloaded folder (file://): a file path is useless to students, so link to the public site */
+    try { u = new URL(location.protocol === 'file:' ? EDU.shareUrl() : location.href); u.hash = ''; u.searchParams.set('lang', EDU.lang); u.searchParams.set('setup', EDU.pack(c)); u = u.toString(); }
     catch (e) { u = location.href; }
     /* phones: native share sheet (WhatsApp etc.); laptops/smartboards: copy the link */
     var touch = window.matchMedia && matchMedia('(pointer: coarse)').matches;
@@ -692,6 +709,7 @@
     var isDraw = cfg.ds === 'draw';
     $('#draw-box').hidden = !isDraw;
     $('#gen-box').hidden = isDraw;
+    $('#show-test-lbl').hidden = isDraw;        /* drawn points are all training points: no test points to show */
     outCv.classList.toggle('drawing', isDraw);
     EDU.$$('#tools button').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-tool') === cfg.tool ? 'true' : 'false'); });
     EDU.$$('#speed button').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-speed') === cfg.speed ? 'true' : 'false'); });
@@ -727,5 +745,10 @@
   function onResize() { clearTimeout(resizeT); resizeT = setTimeout(function () { if (!playing) drawAll(); else { drawOutput(); drawChart(); var k = Math.round(netWrap.clientWidth || 400); if (diag.key.split('|')[0] !== String(k)) buildDiagram(); } }, 60); }
   if (window.ResizeObserver) { var ro = new ResizeObserver(onResize); ro.observe(netWrap); ro.observe(outCv); ro.observe(chartCv); }
   else window.addEventListener('resize', onResize);
+  /* the column titles of the diagram are shrunk to fit using the font on screen; Indian-language fonts
+     arrive a moment later, so measure again once they have loaded */
+  if (document.fonts && document.fonts.addEventListener) {
+    document.fonts.addEventListener('loadingdone', function () { if (net) { buildDiagram(); drawOutput(); updatePreviewBar(); } });
+  }
   window.addEventListener('beforeprint', function () { setPlaying(false); });
 })();

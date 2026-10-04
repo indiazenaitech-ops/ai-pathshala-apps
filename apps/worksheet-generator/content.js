@@ -17,8 +17,8 @@ window.APP_CONTENT = {
       m_unit: '{n} {items} cost {total}. What is the cost of {k} {items}?'
     },
     time: {
-      t_end: 'The school picnic bus leaves at {t1}. The journey takes {d}. At what time does the bus reach?',
-      t_dur: '{name} started studying at {t1} and stopped at {t2}. For how long did {name} study?',
+      t_end: 'The school picnic bus leaves at {t1} and the journey takes {d}. At what time does the bus reach?',
+      t_dur: '{name} studied from {t1} to {t2} on Sunday. For how long did {name} study?',
       t_h2m: 'A cricket match went on for {d}. How many minutes is that?',
       t_m2h: 'A train takes {m} minutes to go from Delhi to Agra. Write this time in hours and minutes.',
       t_days: 'The Diwali holidays are {w} weeks and {d} days long. How many days is that in all?'

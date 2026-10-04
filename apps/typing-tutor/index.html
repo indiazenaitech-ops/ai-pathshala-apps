@@ -22,7 +22,7 @@
     /* ---------- lesson list ---------- */
     .tt-top-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
     .tt-stage { margin-top: 18px; }
-    .tt-stage h3 { display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--muted); margin-bottom: 8px; }
+    .tt-stage h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 1rem; color: var(--muted); margin-bottom: 8px; }
     .tt-stage h3 .badge { font-size: .74rem; }
     .tt-lessons { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr)); }
     .tt-lesson { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 64px; padding: 9px 12px; text-align: start;
@@ -97,12 +97,14 @@
     .key.home::after { content: ""; position: absolute; bottom: 10%; width: 28%; height: 2px; border-radius: 2px; background: currentColor; opacity: .8; }
     .key.next { background: var(--fc); border-color: var(--fc); color: var(--bg); transform: translateY(1px); box-shadow: 0 0 0 3px var(--accent); animation: tt-pulse 1.1s ease-in-out infinite; z-index: 1; }
     @keyframes tt-pulse { 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 45%, transparent); } }
+    .key.hit-ok { outline: 3px solid var(--success); outline-offset: 1px; }
+    .key.hit-bad { outline: 3px solid var(--danger); outline-offset: 1px; background: var(--danger-soft); }
     .tt-handrow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 20px; align-items: center; max-width: 940px; margin: 12px auto 0; }
     @media (max-width: 700px) { .tt-handrow { grid-template-columns: minmax(0, 1fr); } }
     .tt-hands { direction: ltr; }
     .tt-hands svg { display: block; width: 100%; max-width: 440px; height: auto; margin-inline: auto; }
     .tt-hands .hand-lbls { display: flex; justify-content: space-around; max-width: 440px; margin: 2px auto 0; font-size: .82rem; color: var(--muted); font-weight: 600; }
-    .tt-hands .palm { fill: var(--surface-3); stroke: var(--border); stroke-width: 2; }
+    .tt-hands .palm { fill: var(--surface-3); stroke: color-mix(in srgb, var(--muted) 45%, var(--border)); stroke-width: 2; }
     .tt-hands .finger { fill: color-mix(in srgb, var(--fc) 32%, var(--surface)); stroke: var(--fc); stroke-width: 2.5; transition: opacity .15s, fill .15s; }
     .tt-hands.active .finger { opacity: .35; }
     .tt-hands .finger.on { opacity: 1; fill: var(--fc); stroke: var(--text); stroke-width: 3; }
@@ -125,8 +127,15 @@
     .tt-newbest { display: inline-block; margin: 4px 0; }
     [dir="rtl"] .tt-fwd { display: inline-block; transform: scaleX(-1); }
     @media (max-width: 560px) {
-      .tt-stats, .tt-res-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .tt-target { padding: 10px 12px; }
+      .tt-res-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      /* phones: one compact row of stats and a shorter text box, so the text and the input
+         both stay visible above the on-screen keyboard */
+      .tt-stats { gap: 5px; margin-top: 10px; }
+      .tt-stat { padding: 5px 3px; border-radius: 8px; }
+      .tt-stat b { font-size: 1.3rem; }
+      .tt-stat span { font-size: .68rem; line-height: 1.2; }
+      .tt-target { padding: 8px 12px; max-height: 32vh; }
+      #typein { min-height: 54px; }
     }
 
     /* ---------- free practice / language ---------- */

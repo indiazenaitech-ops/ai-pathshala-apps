@@ -36,17 +36,23 @@
   }
 
   /* ---------------- state ---------------- */
-  var meta, classes = {};
+  /* classes is a prototype-free map so ids from a restored file (e.g. "__proto__") can never break lookups */
+  var meta, classes = Object.create(null);
   var ui = { date: todayStr(), ym: null, q: '' };
+  var followToday = true;   /* the daily view moves to the new day at midnight if it was showing "today" */
   var uidN = 0;
+  var ID_RE = /^[A-Za-z0-9_-]{1,40}$/;
   function uid() { return Date.now().toString(36).slice(-5) + Math.random().toString(36).slice(2, 6) + (uidN++).toString(36); }
+  /* ids like 'toString' or '__proto__' would collide with object built-ins in the marks maps */
+  function okId(x) { return typeof x === 'string' && ID_RE.test(x) && !(x in Object.prototype); }
+  function str(x) { return typeof x === 'string' ? x : typeof x === 'number' && isFinite(x) ? String(x) : ''; }
 
   function defaultsMeta(m) {
     m = m && typeof m === 'object' ? m : {};
     var out = {
       v: 1,
-      order: Array.isArray(m.order) ? m.order.filter(function (x) { return typeof x === 'string'; }) : [],
-      active: typeof m.active === 'string' ? m.active : '',
+      order: Array.isArray(m.order) ? m.order.filter(okId) : [],
+      active: okId(m.active) ? m.active : '',
       tab: ['day', 'month', 'students'].indexOf(m.tab) >= 0 ? m.tab : 'day',
       school: typeof m.school === 'string' ? m.school.slice(0, 100) : '',
       sundaysOff: m.sundaysOff !== false,
@@ -60,24 +66,26 @@
     return out;
   }
 
-  function sanitizeClass(c) {
-    if (!c || typeof c !== 'object' || typeof c.id !== 'string' || !c.id) return null;
-    var out = { id: c.id, name: String(c.name || t('my_class')).slice(0, 60), sample: !!c.sample, students: [], marks: {} };
-    var seen = {};
+  /* Clean a class read from storage or from a backup file. forcedId keeps the storage key's id. */
+  function sanitizeClass(c, forcedId) {
+    if (!c || typeof c !== 'object' || Array.isArray(c)) return null;
+    var name = str(c.name).trim().slice(0, 60);
+    var out = { id: forcedId || (okId(c.id) ? c.id : uid()), name: name || t('my_class'), sample: !!c.sample, students: [], marks: {} };
+    var seen = Object.create(null);
     (Array.isArray(c.students) ? c.students : []).forEach(function (s) {
       if (!s || typeof s !== 'object') return;
-      var id = typeof s.id === 'string' && s.id && !seen[s.id] ? s.id : uid();
-      var name = String(s.name == null ? '' : s.name).trim().slice(0, 80);
-      if (!name) return;
+      var id = okId(s.id) && !seen[s.id] ? s.id : uid();
+      var nm = str(s.name).replace(/\s+/g, ' ').trim().slice(0, 80);
+      if (!nm) return;
       seen[id] = 1;
-      out.students.push({ id: id, roll: String(s.roll == null ? '' : s.roll).trim().slice(0, 8), name: name });
+      out.students.push({ id: id, roll: str(s.roll).trim().slice(0, 8), name: nm });
     });
     if (c.marks && typeof c.marks === 'object') {
       Object.keys(c.marks).forEach(function (d) {
         var day = c.marks[d];
         if (!parseDate(d) || !day || typeof day !== 'object') return;
         var clean = {}, any = false;
-        Object.keys(day).forEach(function (sid) { if (seen[sid] && CODES.indexOf(day[sid]) >= 0) { clean[sid] = day[sid]; any = true; } });
+        Object.keys(day).forEach(function (sid) { if (seen[sid] === 1 && CODES.indexOf(day[sid]) >= 0) { clean[sid] = day[sid]; any = true; } });
         if (any) out.marks[d] = clean;
       });
     }
@@ -124,13 +132,13 @@
   }
 
   /* ---------------- persistence ---------------- */
-  var dirty = {}, timer = null;
+  var dirty = Object.create(null), timer = null;
   function saveMeta() { store.set('meta', meta); }
   function touch(id) { dirty[id || meta.active] = 1; if (!timer) timer = setTimeout(flush, 250); }
   function flush() {
     clearTimeout(timer); timer = null;
     Object.keys(dirty).forEach(function (id) { if (classes[id]) store.set('c_' + id, classes[id]); });
-    dirty = {};
+    dirty = Object.create(null);
   }
   window.addEventListener('pagehide', flush);
   window.addEventListener('beforeunload', flush);
@@ -154,7 +162,7 @@
 
   function load() {
     meta = defaultsMeta(store.get('meta', null));
-    meta.order.forEach(function (id) { var c = sanitizeClass(store.get('c_' + id, null)); if (c) classes[c.id] = c; });
+    meta.order.forEach(function (id) { var c = sanitizeClass(store.get('c_' + id, null), id); if (c) classes[c.id] = c; });
     meta.order = meta.order.filter(function (id, i, a) { return classes[id] && a.indexOf(id) === i; });
     if (!meta.order.length) addClassObj(makeSample());
     if (!classes[meta.active]) meta.active = meta.order[0];
@@ -280,11 +288,26 @@
   function goDate(s) {
     if (!parseDate(s)) return;
     ui.date = s;
+    followToday = s === todayStr();
     var d = parseDate(s);
     ui.ym = [d.getFullYear(), d.getMonth()];
     renderDay();
   }
+  /* A smartboard tab left open overnight must not keep marking yesterday: if the daily view was on
+     "today", move it to the new today when the date changes. */
+  function checkToday() {
+    var now = todayStr();
+    if (!followToday || ui.date === now) return;
+    ui.date = now;
+    if (meta.tab !== 'month') { var d = parseDate(now); ui.ym = [d.getFullYear(), d.getMonth()]; }
+    if (meta.tab === 'day') renderDay();
+  }
+  setInterval(checkToday, 60000);
+  window.addEventListener('focus', checkToday);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') checkToday(); });
+  /* An emptied or invalid date box snaps back to the date being shown when it loses focus. */
   $('#day-date').addEventListener('change', function () { if (parseDate(this.value)) goDate(this.value); });
+  $('#day-date').addEventListener('blur', function () { if (!parseDate(this.value)) this.value = ui.date; });
   $('#day-prev').addEventListener('click', function () { goDate(addDays(ui.date, -1)); });
   $('#day-next').addEventListener('click', function () { goDate(addDays(ui.date, 1)); });
   $('#day-today').addEventListener('click', function () { goDate(todayStr()); });
@@ -320,7 +343,7 @@
   function onSearch(v) {
     ui.q = String(v || '').trim();
     if (meta.tab === 'day') {
-      var cls = cur(), byId = {};
+      var cls = cur(), byId = Object.create(null);
       cls.students.forEach(function (s) { byId[s.id] = s; });
       $$('#day-grid .stu').forEach(function (b) { var s = byId[b.getAttribute('data-sid')]; b.hidden = !(s && matches(s, ui.q)); });
       updateNoMatch();
@@ -334,7 +357,7 @@
   function fmtPct(p) { return p === null || p === undefined ? '–' : EDU.fmt(p, { maximumFractionDigits: 1 }) + '%'; }
 
   function monthStats(cls, y, m) {
-    var n = daysIn(y, m), dates = [], hol = [], taken = [], ids = {};
+    var n = daysIn(y, m), dates = [], hol = [], taken = [], ids = Object.create(null);
     cls.students.forEach(function (s) { ids[s.id] = 1; });
     for (var d = 1; d <= n; d++) {
       var s = dateOf(y, m, d), h = !!holidayKind(s), mk = cls.marks[s], any = false;
@@ -364,6 +387,35 @@
       workDays: taken.filter(Boolean).length, below: rows.filter(function (r) { return r.low; }).length };
   }
 
+  /* One student's row of the register (string-built: 60 × 31 cells stay fast on phones). */
+  function rowHtml(cls, S, r, today) {
+    var h = '<tr data-sid="' + esc(r.stu.id) + '"' + (r.low ? ' class="low"' : '') + (matches(r.stu, ui.q) ? '' : ' hidden') + '>' +
+      '<th scope="row" class="nm"><span class="rl">' + esc(r.stu.roll) + '</span><span class="no-i18n">' + esc(r.stu.name) + '</span></th>';
+    S.dates.forEach(function (s, i) {
+      var v = (cls.marks[s] && cls.marks[s][r.stu.id]) || '';
+      if (S.hol[i]) h += '<td class="hol">' + (v ? '<span class="ghost">' + esc(stShort(v)) + '</span>' : '') + '</td>';
+      else h += '<td' + (s > today ? ' class="fut"' : '') + '><button type="button" class="mc' + (v ? ' ' + v : '') + '" data-i="' + i +
+        '" aria-label="' + esc((i + 1) + ' · ' + stName(v)) + '">' + esc(stShort(v)) + '</button></td>';
+    });
+    CODES.forEach(function (k) { h += '<td class="tot">' + EDU.fmt(r.c[k]) + '</td>'; });
+    return h + '<td class="tot">' + EDU.fmt(r.days) + '</td><td class="tot pct' + (r.low ? ' low' : '') + '">' + fmtPct(r.pct) + '</td></tr>';
+  }
+  function footHtml(S) {
+    var h = '<tr><th scope="row" class="nm">' + esc(t('day_present')) + '</th>';
+    S.perDay.forEach(function (v, i) { h += '<td class="tot' + (S.hol[i] ? ' hol' : '') + '">' + (v === null ? '' : EDU.fmt(v)) + '</td>'; });
+    var sum = { P: 0, A: 0, T: 0, V: 0 }, dsum = 0;
+    S.rows.forEach(function (r) { CODES.forEach(function (k) { sum[k] += r.c[k]; }); dsum += r.days; });
+    CODES.forEach(function (k) { h += '<td class="tot">' + EDU.fmt(sum[k]) + '</td>'; });
+    return h + '<td class="tot">' + EDU.fmt(dsum) + '</td><td class="tot pct">' + fmtPct(S.avg) + '</td></tr>';
+  }
+  function renderTiles(S) {
+    $('#m-days').textContent = EDU.fmt(S.workDays);
+    $('#m-avg').textContent = fmtPct(S.avg);
+    $('#m-below-l').textContent = t('stat_below', { p: EDU.fmt(meta.minPct) });
+    $('#m-below').textContent = EDU.fmt(S.below);
+    $('#m-below').classList.toggle('bad', S.below > 0);
+  }
+
   function renderMonth() {
     var cls = cur(), y = ui.ym[0], m = ui.ym[1], S = monthStats(cls, y, m), today = todayStr();
     $('#m-label').textContent = monthLabel(y, m);
@@ -371,11 +423,7 @@
     $('#opt-leave').checked = meta.leaveCounts;
     if (document.activeElement !== $('#opt-min')) $('#opt-min').value = meta.minPct;
     $('#m-search').value = ui.q;
-    $('#m-days').textContent = EDU.fmt(S.workDays);
-    $('#m-avg').textContent = fmtPct(S.avg);
-    $('#m-below-l').textContent = t('stat_below', { p: EDU.fmt(meta.minPct) });
-    $('#m-below').textContent = EDU.fmt(S.below);
-    $('#m-below').classList.toggle('bad', S.below > 0);
+    renderTiles(S);
     $('#ph-school').textContent = meta.school;
     $('#ph-meta').textContent = t('print_meta', { cls: cls.name, month: monthLabel(y, m) });
     $('#ph-date').textContent = t('printed_on', { date: longDate(today) });
@@ -384,41 +432,27 @@
     var h = '<thead><tr><th class="nm" scope="col"><span class="rl">' + esc(t('col_roll')) + '</span>' + esc(t('col_name')) + '</th>';
     S.dates.forEach(function (s, i) {
       var d = parseDate(s), cl = (S.hol[i] ? 'hol' : '') + (s === today ? ' today' : '');
-      h += '<th scope="col"' + (cl.trim() ? ' class="' + cl.trim() + '"' : '') + '><button type="button" class="dh" data-date="' + s + '" aria-label="' +
-        esc(longDate(s) + (S.hol[i] ? ' · ' + t('holiday') : '') + ' · ' + t(S.hol[i] ? 'take_anyway' : 'make_holiday')) + '">' + (i + 1) +
-        '<small>' + esc(S.hol[i] ? t('sh_H') : wd[d.getDay()]) + '</small></button></th>';
+      var lab = (i + 1) + '<small>' + esc(S.hol[i] ? t('sh_H') : wd[d.getDay()]) + '</small>';
+      /* print gets plain text: Chrome leaves buttons blank in the header it repeats on page 2 */
+      h += '<th scope="col"' + (cl.trim() ? ' class="' + cl.trim() + '"' : '') + '><button type="button" class="dh no-print" data-date="' + s + '" aria-label="' +
+        esc(longDate(s) + (S.hol[i] ? ' · ' + t('holiday') : '') + ' · ' + t(S.hol[i] ? 'take_anyway' : 'make_holiday')) + '">' + lab +
+        '</button><span class="pd print-only" aria-hidden="true">' + lab + '</span></th>';
     });
     CODES.forEach(function (k) { h += '<th scope="col" class="tot" title="' + esc(t('st_' + k)) + '">' + esc(t('sh_' + k)) + '</th>'; });
     h += '<th scope="col" class="tot">' + esc(t('col_days')) + '</th><th scope="col" class="tot pct">' + esc(t('col_pct')) + '</th></tr></thead><tbody>';
-    S.rows.forEach(function (r) {
-      h += '<tr data-sid="' + esc(r.stu.id) + '"' + (r.low ? ' class="low"' : '') + (matches(r.stu, ui.q) ? '' : ' hidden') + '>' +
-        '<th scope="row" class="nm"><span class="rl">' + esc(r.stu.roll) + '</span><span class="no-i18n">' + esc(r.stu.name) + '</span></th>';
-      S.dates.forEach(function (s, i) {
-        var v = (cls.marks[s] && cls.marks[s][r.stu.id]) || '';
-        if (S.hol[i]) h += '<td class="hol">' + (v ? '<span class="ghost">' + esc(stShort(v)) + '</span>' : '') + '</td>';
-        else h += '<td' + (s > today ? ' class="fut"' : '') + '><button type="button" class="mc' + (v ? ' ' + v : '') + '" data-i="' + i +
-          '" aria-label="' + esc((i + 1) + ' · ' + stName(v)) + '">' + esc(stShort(v)) + '</button></td>';
-      });
-      CODES.forEach(function (k) { h += '<td class="tot">' + EDU.fmt(r.c[k]) + '</td>'; });
-      h += '<td class="tot">' + EDU.fmt(r.days) + '</td><td class="tot pct' + (r.low ? ' low' : '') + '">' + fmtPct(r.pct) + '</td></tr>';
-    });
-    h += '</tbody><tfoot><tr><th scope="row" class="nm">' + esc(t('day_present')) + '</th>';
-    S.perDay.forEach(function (v, i) { h += '<td class="tot' + (S.hol[i] ? ' hol' : '') + '">' + (v === null ? '' : EDU.fmt(v)) + '</td>'; });
-    var sum = { P: 0, A: 0, T: 0, V: 0 }, dsum = 0;
-    S.rows.forEach(function (r) { CODES.forEach(function (k) { sum[k] += r.c[k]; }); dsum += r.days; });
-    CODES.forEach(function (k) { h += '<td class="tot">' + EDU.fmt(sum[k]) + '</td>'; });
-    h += '<td class="tot">' + EDU.fmt(dsum) + '</td><td class="tot pct">' + fmtPct(S.avg) + '</td></tr></tfoot>';
+    S.rows.forEach(function (r) { h += rowHtml(cls, S, r, today); });
+    h += '</tbody><tfoot>' + footHtml(S) + '</tfoot>';
     $('#month-table').innerHTML = h;
 
     var lg = '';
     CODES.forEach(function (k) { lg += '<span class="lg"><b class="' + k + '">' + esc(t('sh_' + k)) + '</b>' + esc(t('st_' + k)) + '</span>'; });
     lg += '<span class="lg"><b class="H">' + esc(t('sh_H')) + '</b>' + esc(t('holiday')) + '</span>';
-    lg += '<span class="muted small">' + esc(t('late_note')) + (meta.leaveCounts ? ' ' + esc(t('leave_counts')) + '.' : '') + '</span>';
+    lg += '<span class="muted small">' + esc(t('late_note')) + (meta.leaveCounts ? ' ' + esc(t('leave_note')) : '') + '</span>';
     $('#m-legend').innerHTML = lg;
   }
 
   function filterMonthRows() {
-    var cls = cur(), byId = {};
+    var cls = cur(), byId = Object.create(null);
     cls.students.forEach(function (s) { byId[s.id] = s; });
     $$('#month-table tbody tr').forEach(function (tr) { var s = byId[tr.getAttribute('data-sid')]; tr.hidden = !(s && matches(s, ui.q)); });
   }
@@ -437,7 +471,17 @@
     var s = dateOf(ui.ym[0], ui.ym[1], i + 1), cls = cur();
     var v = (cls.marks[s] && cls.marks[s][sid]) || '';
     setMark(cls, s, sid, NEXT[v]);
-    renderMonth();
+    /* Patch only this row, the footer and the tiles: re-building all 60 × 31 cells on every tap is slow on phones. */
+    var S = monthStats(cls, ui.ym[0], ui.ym[1]), r = S.rows.filter(function (x) { return x.stu.id === sid; })[0];
+    var foot = $('#month-table tfoot');
+    if (!r || !foot) { renderMonth(); }
+    else {
+      var tb = document.createElement('tbody');
+      tb.innerHTML = rowHtml(cls, S, r, todayStr());
+      tr.parentNode.replaceChild(tb.firstChild, tr);
+      foot.innerHTML = footHtml(S);
+      renderTiles(S);
+    }
     var again = $('#month-table tr[data-sid="' + sid + '"] .mc[data-i="' + i + '"]');
     if (again) again.focus({ preventScroll: true });
   });
@@ -459,6 +503,8 @@
   });
   $('#m-search').addEventListener('input', function () { onSearch(this.value); });
 
+  /* A typed name like =HYPERLINK(...) must not run as a formula when the CSV is opened in Excel/Sheets. */
+  function csvSafe(v) { v = String(v); return /^[=+\-@\t\r]/.test(v) && !/^-?\d+(\.\d+)?$/.test(v) ? "'" + v : v; }
   function safeName(s) { return String(s).replace(/[\\/:*?"<>|\s·]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'class'; }
   $('#export-csv').addEventListener('click', function () {
     flush();
@@ -469,7 +515,7 @@
     head.push(t('col_days'), t('col_pct'));
     var rows = [head];
     S.rows.forEach(function (r) {
-      var row = [r.stu.roll, r.stu.name];
+      var row = [csvSafe(r.stu.roll), csvSafe(r.stu.name)];
       S.dates.forEach(function (s, i) {
         var v = (cls.marks[s] && cls.marks[s][r.stu.id]) || '';
         row.push(S.hol[i] ? t('sh_H') : stShort(v));
@@ -494,17 +540,21 @@
   }
   function findStu(cls, sid) { return cls.students.filter(function (s) { return s.id === sid; })[0]; }
 
-  function renderStudents() {
-    var cls = cur();
-    if (document.activeElement !== $('#cls-name')) $('#cls-name').value = cls.name;
-    if (document.activeElement !== $('#school')) $('#school').value = meta.school;
+  /* count, next roll no. placeholder and the duplicate-roll warning */
+  function renderStudentsInfo(cls) {
     $('#stu-count').textContent = t('students_n', { n: EDU.fmt(cls.students.length) });
     $('#one-roll').placeholder = nextRoll(cls);
-    var seen = {}, dups = [];
+    var seen = Object.create(null), dups = [];
     cls.students.forEach(function (s) { if (!s.roll) return; if (seen[s.roll] === 1) dups.push(s.roll); seen[s.roll] = (seen[s.roll] || 0) + 1; });
     var dw = $('#dup-warn');
     dw.hidden = !dups.length;
     dw.textContent = dups.length ? t('dup_rolls', { list: dups.join(', ') }) : '';
+  }
+  function renderStudents() {
+    var cls = cur();
+    if (document.activeElement !== $('#cls-name')) $('#cls-name').value = cls.name;
+    if (document.activeElement !== $('#school')) $('#school').value = meta.school;
+    renderStudentsInfo(cls);
     var html = '';
     sorted(cls).forEach(function (s) {
       var rm = esc(t('remove_student', { name: s.name }));
@@ -517,15 +567,40 @@
   }
 
   function studentsChanged(cls) { touch(cls.id); renderBar(); renderStudents(); }
+  /* Re-render the list after the focus has moved (Tab from a roll box to the name box), then put the
+     focus back on the same box of the same student, so keyboard editing is not interrupted. */
+  var relistTimer = null;
+  function relistKeepFocus(cls) {
+    touch(cls.id); renderBar();
+    clearTimeout(relistTimer);
+    relistTimer = setTimeout(function () {
+      if (meta.tab !== 'students') return;
+      /* order unchanged: leave the rows alone (a click on another row's button is not lost) */
+      var order = sorted(cls).map(function (x) { return x.id; }).join('|');
+      if (order === $$('#stu-list .srow').map(function (r) { return r.getAttribute('data-sid'); }).join('|')) { renderStudentsInfo(cls); return; }
+      var ae = document.activeElement, row = ae && ae.closest ? ae.closest('#stu-list .srow') : null;
+      var sid = row ? row.getAttribute('data-sid') : '', k = '';
+      if (row) k = ae.classList.contains('nm') ? '.nm' : ae.classList.contains('r') ? '.r' : ae.classList.contains('del') ? '.del' : '';
+      var a = null, b = null;
+      try { a = ae.selectionStart; b = ae.selectionEnd; } catch (e) { }
+      var listEl = $('#stu-list'), top = listEl.scrollTop;
+      renderStudents();
+      listEl.scrollTop = top;
+      if (sid && k && ID_RE.test(sid)) {
+        var el = $('#stu-list .srow[data-sid="' + sid + '"] ' + k);
+        if (el) { el.focus({ preventScroll: true }); try { if (a !== null) el.setSelectionRange(a, b); } catch (e) { } }
+      }
+    }, 0);
+  }
 
   $('#stu-list').addEventListener('change', function (e) {
     var row = e.target.closest('.srow'); if (!row) return;
     var cls = cur(), stu = findStu(cls, row.getAttribute('data-sid')); if (!stu) return;
     if (e.target.classList.contains('r')) {
       stu.roll = e.target.value.trim().slice(0, 8);
-      studentsChanged(cls);
+      relistKeepFocus(cls);
     } else if (e.target.classList.contains('nm')) {
-      var v = e.target.value.trim().slice(0, 80);
+      var v = e.target.value.replace(/\s+/g, ' ').trim().slice(0, 80);
       if (!v) { e.target.value = stu.name; EDU.toast(t('need_name')); return; }
       stu.name = v;
       touch(cls.id);
@@ -555,44 +630,93 @@
     $('#one-name').focus();
   });
 
-  /* Parse rows of cells into [{roll, name}]. Handles "12, Priya", "12 Priya", "Priya<TAB>12", name-only lines and a header row. */
+  /* Parse rows of cells into [{roll, name}]. Handles "12, Priya", "12 Priya", "Priya<TAB>12", name-only lines,
+     and a header row in any of the 12 languages. When the header names the columns ("Roll No", "Student Name",
+     "रोल", "नाम"…), those columns are used, so school lists with extra columns and this app's own CSV export
+     import cleanly (its "Present each day" footer row is skipped). */
   var IS_ROLL = /^\d{1,6}[A-Za-z]?$/;
+  var HDR = null;
+  function headerWords() {
+    if (HDR) return HDR;
+    var S = window.APP_STRINGS || {}, roll = ['roll'], name = ['name'], foot = [];
+    function add(arr, w) { w = String(w || '').trim().toLowerCase(); if (w.length > 1 && arr.indexOf(w) < 0) arr.push(w); }
+    Object.keys(S).forEach(function (L) {
+      add(roll, S[L].col_roll); add(roll, S[L].roll_ph);
+      add(name, S[L].col_name); add(name, S[L].name_ph);
+      add(foot, S[L].day_present);
+    });
+    HDR = { roll: roll, name: name, foot: foot };
+    return HDR;
+  }
+  /* whole-word match, so a name like "नामदेव" or "Rollins" is not taken for a header */
+  function toks(x) { return ' ' + String(x).toLowerCase().split(/[\s.,:;()\/_#-]+/).filter(Boolean).join(' ') + ' '; }
+  function hasWord(cell, words) {
+    var c = toks(cell);
+    return words.some(function (w) { var k = toks(w); return k.length > 2 && c.indexOf(k) >= 0; });
+  }
+  var PARENT = /father|mother|parent|guardian|पिता|माता|अभिभावक|والد|বাবা|অভিভাবক|அப்பா|அம்மா|தந்தை|தாய்/i;
+  var SERIAL = /^(s\.? ?no\.?|sr\.? ?no\.?|sl\.? ?no\.?|serial( no\.?)?|#)$/i;
   function parseRows(rows) {
-    var out = [], first = true;
-    rows.forEach(function (cells) {
-      cells = (cells || []).map(function (c) { return String(c == null ? '' : c).replace(/^["']+|["']+$/g, '').trim(); }).filter(Boolean);
+    var out = [], first = true, col = null, W = headerWords();
+    rows.forEach(function (raw) {
+      var all = (raw || []).map(function (c) { return String(c == null ? '' : c).replace(/^["']+|["']+$/g, '').trim(); });
+      var cells = all.filter(Boolean);
       if (!cells.length) return;
       var roll = '', name = '';
-      if (cells.length === 1) {
+      if (first) {
+        first = false;
+        var nameCol = -1, rollCol = -1, serialCol = -1;
+        all.forEach(function (c, i) {
+          if (!c) return;
+          if (nameCol < 0 && hasWord(c, W.name) && !PARENT.test(c)) nameCol = i;
+          else if (rollCol < 0 && hasWord(c, W.roll)) rollCol = i;
+          else if (serialCol < 0 && SERIAL.test(c)) serialCol = i;
+        });
+        var anyRoll = cells.some(function (c) { return IS_ROLL.test(c); });
+        /* "Roll, Name, 1, 2…" (this app's export) or "S.No, Student Name, Father Name" are headers;
+           "1, Name Surname" is a student */
+        if (cells.length > 1 && nameCol >= 0 && (rollCol >= 0 || !anyRoll)) { col = { name: nameCol, roll: rollCol >= 0 ? rollCol : serialCol }; return; }
+        if (cells.length > 1 && !anyRoll) return;   /* some other header row, e.g. "Admission No, Student" */
+        if (cells.length === 1 && (/^(names?|students?|student name|roll|s\.? ?no\.?)$/i.test(cells[0]) ||
+          W.name.indexOf(cells[0].toLowerCase()) >= 0 || W.roll.indexOf(cells[0].toLowerCase()) >= 0)) return;
+      }
+      if (col && all[col.name]) {
+        name = all[col.name];
+        roll = col.roll >= 0 ? (all[col.roll] || '') : '';
+      } else if (cells.length === 1) {
         var mm = /^(\d{1,6}[A-Za-z]?)[\s.,;:)\]\-–]+(.+)$/.exec(cells[0]);
         if (mm) { roll = mm[1]; name = mm[2].trim(); } else name = cells[0];
       } else {
         var ri = -1, ni = -1;
         cells.forEach(function (c, i) { if (ri < 0 && IS_ROLL.test(c)) ri = i; else if (ni < 0 && !IS_ROLL.test(c)) ni = i; });
-        if (ri < 0 && first) { first = false; return; } /* header row like "Roll, Name" */
         roll = ri >= 0 ? cells[ri] : '';
         name = ni >= 0 ? cells[ni] : '';
       }
-      if (first && !roll && /^(names?|student|students|student name|roll|s\.? ?no\.?)$/i.test(name)) { first = false; return; }
-      first = false;
-      name = name.replace(/\s+/g, ' ').slice(0, 80);
-      if (name) out.push({ roll: roll.slice(0, 8), name: name });
+      name = name.replace(/\s+/g, ' ').trim().slice(0, 80);
+      if (!name || W.foot.indexOf(name.toLowerCase()) >= 0) return;
+      out.push({ roll: roll.trim().slice(0, 8), name: name });
     });
     return out.slice(0, 500);
   }
+  /* Adds parsed students; the same roll no. + name pasted twice is added only once. */
   function addParsed(items) {
     var cls = cur();
     if (!items.length) { EDU.toast(t('nothing_added')); return 0; }
+    var have = Object.create(null), added = 0;
+    function key(r, nm) { return r + '\u0001' + nm.toLowerCase(); }
+    cls.students.forEach(function (s) { have[key(s.roll, s.name)] = 1; });
     var n = parseInt(nextRoll(cls), 10);
     items.forEach(function (it) {
-      var roll = it.roll;
-      if (!roll) { roll = String(n); }
+      if (it.roll && have[key(it.roll, it.name)]) return;
+      var roll = it.roll || String(n);
       var num = parseInt(roll, 10);
       if (!isNaN(num) && num >= n) n = num + 1;
+      have[key(roll, it.name)] = 1;
       cls.students.push({ id: uid(), roll: roll, name: it.name });
+      added++;
     });
     studentsChanged(cls);
-    EDU.toast(t('added_n', { n: EDU.fmt(items.length) }));
+    EDU.toast(t('added_n', { n: EDU.fmt(added) }));
     return items.length;
   }
   $('#paste-add').addEventListener('click', function () {
@@ -625,6 +749,7 @@
   }
   $('#cls-save').addEventListener('click', saveClassName);
   $('#cls-name').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); saveClassName(); } });
+  $('#cls-name').addEventListener('change', saveClassName);   /* typed a new name and left the box without pressing Save */
   $('#cls-del').addEventListener('click', function () {
     var cls = cur();
     if (!confirm(t('confirm_delete_class', { name: cls.name }))) return;
@@ -641,11 +766,11 @@
   });
   function restoreFrom(obj) {
     if (!obj || obj.app !== SLUG || !Array.isArray(obj.classes)) { EDU.toast(t('restore_bad')); return; }
-    var got = obj.classes.map(sanitizeClass).filter(Boolean);
+    var got = obj.classes.map(function (c) { return sanitizeClass(c); }).filter(Boolean);
     if (!got.length) { EDU.toast(t('restore_bad')); return; }
     if (!confirm(t('confirm_restore'))) return;
     meta.order.forEach(function (id) { store.remove('c_' + id); });
-    classes = {}; dirty = {};
+    classes = Object.create(null); dirty = Object.create(null);
     var tab = meta.tab;
     meta = defaultsMeta(obj.meta);
     meta.order = []; meta.tab = tab;
@@ -671,7 +796,7 @@
   $('#reset-btn').addEventListener('click', function () {
     if (!confirm(t('confirm_reset'))) return;
     meta.order.forEach(function (id) { store.remove('c_' + id); });
-    classes = {}; dirty = {};
+    classes = Object.create(null); dirty = Object.create(null);
     var tab = meta.tab;
     meta = defaultsMeta(null); meta.tab = tab;
     addClassObj(newClass(t('my_class')));
@@ -699,7 +824,30 @@
 
   load();
   (function () { var d = parseDate(ui.date); ui.ym = [d.getFullYear(), d.getMonth()]; })();
-  EDU.onLang(renderAll);
+  /* The sample class and the default "My class" name are app content, not typed by the teacher, so they
+     follow the language: names still equal to a built-in default are switched to the new language. */
+  function relocalizeDefaults() {
+    var S = window.APP_STRINGS || {}, langs = Object.keys(S);
+    function all(key) { return langs.map(function (L) { return S[L][key]; }); }
+    var sampleCls = all('sample_class'), myCls = all('my_class');
+    var nameLists = langs.map(function (L) { return String(S[L].sample_names || '').split(',').map(function (x) { return x.trim(); }); });
+    var mine = list('sample_names');
+    meta.order.forEach(function (id) {
+      var c = classes[id], changed = false;
+      if (!c) return;
+      var want = c.sample && sampleCls.indexOf(c.name) >= 0 ? t('sample_class') : myCls.indexOf(c.name) >= 0 ? t('my_class') : c.name;
+      if (want !== c.name) { c.name = want; changed = true; }
+      if (c.sample) c.students.forEach(function (st) {
+        for (var k = 0; k < nameLists.length; k++) {
+          var i = nameLists[k].indexOf(st.name);
+          if (i >= 0) { if (mine[i] && mine[i] !== st.name) { st.name = mine[i]; changed = true; } break; }
+        }
+      });
+      if (changed) touch(c.id);
+    });
+  }
+  EDU.onLang(function () { relocalizeDefaults(); renderAll(); });
+  relocalizeDefaults();   /* also when the page is opened straight in another language (?lang=…) */
   renderBar();
   setTab(meta.tab);
 })();

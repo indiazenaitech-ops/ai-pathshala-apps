@@ -651,6 +651,7 @@
     EDU.$$('#b-per button').forEach(function (b) { b.setAttribute('aria-pressed', +b.dataset.per === beeCfg.per ? 'true' : 'false'); });
     EDU.$$('#b-type button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.type === beeCfg.type ? 'true' : 'false'); });
     setText($('b-type-help'), t(beeCfg.type === 'ko' ? 'type_ko_help' : 'type_points_help'));
+    $('b-per-field').hidden = beeCfg.type === 'ko';   /* knock-out goes on until one player is left */
   }
   $('b-add').addEventListener('click', function () {
     if (beeCfg.names.length >= 8) return;
@@ -664,8 +665,8 @@
     var pool = poolFor(beeCfg.level);
     if (!pool.length) { EDU.toast(t('custom_none')); return; }
     BE = {
-      players: beeCfg.names.map(function (nm, i) { return { name: String(nm || '').trim(), idx: i, score: 0, lives: 3, out: false, turns: 0 }; }),
-      pool: pool, queue: EDU.shuffle(pool), cur: -1, ko: beeCfg.type === 'ko', per: beeCfg.per, level: beeCfg.level, done: false, item: null
+      players: beeCfg.names.map(function (nm, i) { return { name: String(nm || '').trim(), idx: i, score: 0, lives: 3, out: false, outAt: 0, turns: 0 }; }),
+      pool: pool, queue: EDU.shuffle(pool), cur: -1, ko: beeCfg.type === 'ko', per: beeCfg.per, level: beeCfg.level, done: false, item: null, knocked: 0
     };
     $('b-setup').hidden = true; $('b-endcard').hidden = true; $('b-stage').hidden = false;
     nextTurn();
@@ -677,7 +678,7 @@
     if (!active.length || (BE.ko && n > 1 && active.length <= 1)) return -1;
     for (var k = 1; k <= n; k++) {
       var j = (BE.cur + k + n) % n, p = BE.players[j];
-      if (!p.out && p.turns < BE.per) return j;
+      if (!p.out && (BE.ko || p.turns < BE.per)) return j;
     }
     return -1;
   }
@@ -696,7 +697,7 @@
     var p = BE.players[BE.cur];
     p.turns++;
     if (res.ok) p.score++;
-    else if (BE.ko) { p.lives--; if (p.lives <= 0) p.out = true; }
+    else if (BE.ko) { p.lives--; if (p.lives <= 0) { p.out = true; p.outAt = ++BE.knocked; } }
     $('b-judge').hidden = true;
     renderBoard(); renderTurn();
     setKey($('b-next-lbl'), nextIndex() < 0 ? 'see_winner' : 'next_player');
@@ -719,7 +720,8 @@
     if (!BE || BE.cur < 0) return;
     var p = BE.players[BE.cur];
     setText($('b-turn'), t('turn_of', { name: pname(p) }));
-    var sub = t('bee_round', { i: fmt(Math.min(p.turns + (bPanel.state().state === 'done' ? 0 : 1), BE.per)), n: fmt(BE.per) }) + ' · ' + levelLabel(BE.level);
+    var sub = (BE.ko ? t('lives_n', { n: fmt(Math.max(0, p.lives)) })
+      : t('bee_round', { i: fmt(Math.min(p.turns + (bPanel.state().state === 'done' ? 0 : 1), BE.per)), n: fmt(BE.per) })) + ' · ' + levelLabel(BE.level);
     setText($('b-turn-sub'), sub);
   }
   function endBee() {
@@ -732,14 +734,16 @@
     scrollToTabs();
   }
   function ranked() {
+    /* knock-out: players still in first (most lives, then most correct); the later someone was knocked out, the higher */
     return BE.players.slice().sort(function (a, b) {
-      return (BE.ko ? (a.out - b.out) : 0) || (b.score - a.score) || (BE.ko ? b.lives - a.lives : 0) || (a.idx - b.idx);
+      if (BE.ko) return (a.out - b.out) || (b.outAt - a.outAt) || (b.lives - a.lives) || (b.score - a.score) || (a.idx - b.idx);
+      return (b.score - a.score) || (a.idx - b.idx);
     });
   }
   function renderBeeEnd() {
     if (!BE || !BE.done) return;
     var r = ranked(), top = r[0];
-    var same = function (a, b) { return a.out === b.out && a.score === b.score && (!BE.ko || a.lives === b.lives); };
+    var same = function (a, b) { return BE.ko ? (a.out === b.out && a.outAt === b.outAt && a.lives === b.lives && a.score === b.score) : a.score === b.score; };
     var winners = r.filter(function (p) { return same(p, top); });
     var box = $('b-winner'); box.textContent = '';
     box.dataset.winner = winners.length === 1 ? String(top.idx) : 'tie';
@@ -892,15 +896,26 @@
       body.appendChild(el('tr', {},
         el('td', { class: 'n', text: fmt(i + 1) }),
         el('td', { class: 'w no-i18n', dir: 'ltr', text: x.w }),
-        el('td', { class: mm && mm.user ? 'no-i18n' : '', text: mm ? mm.text : '' }),
+        el('td', { class: 'm' + (mm && mm.user ? ' no-i18n' : ''), text: mm ? mm.text : '' }),
         el('td', { class: 's no-i18n', dir: 'ltr', text: x.s || '' }),
         el('td', {}, el('button', { type: 'button', class: 'btn btn-sm', 'aria-label': t('listen_to', { w: x.w }), title: t('listen_to', { w: x.w }), text: '🔊', onclick: function () { say(x.w, cfg.rate); } }))));
     });
     tb.appendChild(body);
     renderPrint();
   }
+  /* the printed test asks the words in a shuffled order (made fresh each time "Print spelling test" is pressed);
+     the answer key follows the same order */
+  var testOrder = null;
+  function testItems(id, pool) {
+    var o = testOrder;
+    if (!o || o.id !== id || o.words.length !== pool.length) return pool;
+    var byW = {};
+    pool.forEach(function (x) { byW[x.w] = x; });
+    var out = o.words.map(function (w) { return byW[w]; }).filter(Boolean);
+    return out.length === pool.length ? out : pool;
+  }
   function renderPrint() {
-    var id = cfg.listView, pool = poolFor(id), lvl = levelLabel(id);
+    var id = cfg.listView, pool = poolFor(id), lvl = levelLabel(id), testPool = testItems(id, pool);
     var area = $('print-area'); area.textContent = '';
     var rows = pool.map(function (x, i) {
       var mm = meaningOf(x);
@@ -918,10 +933,11 @@
         el('span', { text: t('print_class') + ': ________' }),
         el('span', { text: t('print_date') + ': ____________' })),
       el('p', { text: t('test_instr') }),
-      el('ol', { class: 'test-lines' }, pool.map(function (x) { var mm = meaningOf(x); return el('li', {}, el('div', { class: 'tl' }, el('span', { class: 'line' }), el('span', { class: 'clue-p', text: mm ? mm.text : '' }))); })),
-      el('div', { class: 'answer-key' }, el('h2', { text: t('answer_key') }), el('ol', { class: 'key-list' }, pool.map(function (x) { return el('li', { text: x.w }); })))));
+      el('ol', { class: 'test-lines' }, testPool.map(function (x) { var mm = meaningOf(x); return el('li', {}, el('div', { class: 'tl' }, el('span', { class: 'line' }), el('span', { class: 'clue-p', text: mm ? mm.text : '' }))); })),
+      el('div', { class: 'answer-key' }, el('h2', { text: t('answer_key') }), el('ol', { class: 'key-list' }, testPool.map(function (x) { return el('li', { text: x.w }); })))));
   }
   function doPrint(test) {
+    if (test) testOrder = { id: cfg.listView, words: EDU.shuffle(poolFor(cfg.listView)).map(function (x) { return x.w; }) };
     renderPrint();
     document.body.classList.toggle('sb-print-test', !!test);
     try { window.print(); } catch (e) { }

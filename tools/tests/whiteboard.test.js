@@ -40,7 +40,9 @@ module.exports = async function ({ page, expect, t, log }) {
   await page.click('#tool-pen');
   expect(await attr('#wb-colors .wb-sw[data-color="p0"]', 'aria-pressed') === 'true', 'pen is still black');
 
-  /* 2. rectangle */
+  /* 2. rectangle (shortcuts also work on a Hindi InScript keyboard, where the A key types "ो") */
+  await page.evaluate(() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ो', code: 'KeyA', bubbles: true })));
+  expect(await attr('#tool-arrow', 'aria-pressed') === 'true', 'tool shortcut works with a non-Latin keyboard layout');
   await page.keyboard.press('r');
   expect(await attr('#tool-rect', 'aria-pressed') === 'true', 'R key picks the rectangle tool');
   await drag([0.55, 0.2], [0.85, 0.5]);
@@ -82,6 +84,31 @@ module.exports = async function ({ page, expect, t, log }) {
   d = await saved();
   expect(d.pages[0].s.map((x) => x.t).join(',') === 'pen,text', 'the rectangle was erased, the rest stayed');
 
+  /* 5b. picking a colour while typing recolours the text (the box stays open, typing goes on),
+         and Enter used by an Indian-language typing tool (IME) does not finish the text */
+  await page.click('#tool-text');
+  box = await page.locator('#wb-live').boundingBox();
+  await page.mouse.click(...at(0.6, 0.72));
+  await page.waitForSelector('#wb-text:not([hidden])', { timeout: 3000 });
+  await page.keyboard.type('AB');
+  const sw = await page.locator('#wb-colors .wb-sw[data-color="p2"]').boundingBox();
+  await page.mouse.move(sw.x + sw.width / 2, sw.y + sw.height / 2);
+  await page.mouse.down(); await sleep(120); await page.mouse.up();            /* a human-speed click */
+  expect(!(await page.$eval('#wb-text', (e) => e.hidden)), 'text box stays open while a colour is picked');
+  await page.keyboard.type('C');
+  const imeKept = await page.evaluate(() => {
+    const ta = document.getElementById('wb-text');
+    ta.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 229, isComposing: true, bubbles: true, cancelable: true }));
+    return !ta.hidden;
+  });
+  expect(imeKept, 'Enter while an IME is composing does not finish the text');
+  await page.keyboard.press('Enter');
+  await sleep(450);
+  d = await saved();
+  const t2 = d.pages[0].s[2];
+  expect(d.pages[0].s.length === 3 && t2.tx === 'ABC' && t2.c === 'p2', 'text typed before and after the colour click is one red text: ' + JSON.stringify(t2 && [t2.tx, t2.c]));
+  expect(await page.evaluate(() => WBDraw.textDir('سلام دنیا') === 'rtl' && WBDraw.textDir('x = लंबाई') === 'ltr'), 'Urdu text keeps right-to-left reading order on the canvas');
+
   /* 6. background + chalkboard mode */
   await page.selectOption('#wb-bg', 'grid');
   await page.click('#wb-boards button[data-board="green"]');
@@ -93,6 +120,19 @@ module.exports = async function ({ page, expect, t, log }) {
   await page.click('#wb-undo');
   expect((await pixel(0.01, 0.01))[0] > 240, 'undo brings the white board back');
   await page.click('#wb-redo');
+
+  /* 6b. the browser's own Print (Ctrl+P) is not blank, and a chalkboard prints on white paper */
+  await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+  const pr = await page.evaluate(() => {
+    const cs = document.querySelectorAll('#wb-print canvas'), c = cs[0];
+    const at = (fx, fy) => c && Array.from(c.getContext('2d').getImageData(Math.round(c.width * fx), Math.round(c.height * fy), 1, 1).data);
+    return { n: cs.length, paper: at(0.005, 0.005), ink: at(0.25, 0.3) };
+  });
+  expect(pr.n === 1, 'Ctrl+P prints one picture per page, got ' + pr.n);
+  expect(pr.paper[0] > 240 && pr.paper[1] > 240 && pr.paper[2] > 240, 'chalkboard page prints on white paper: ' + pr.paper);
+  expect(pr.ink[0] < 90 && pr.ink[1] < 90, 'chalk ink prints dark: ' + pr.ink);
+  await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+  expect(await page.$$eval('#wb-print > *', (x) => x.length) === 0, 'print pictures removed after printing');
 
   /* 7. pages */
   await page.locator('#wb-add').scrollIntoViewIfNeeded();            /* Playwright scrolls before clicking; measure after that */
@@ -108,23 +148,40 @@ module.exports = async function ({ page, expect, t, log }) {
   await drag([0.2, 0.2], [0.6, 0.6]);
   expect(await count() === 1, 'line drawn on page 2');
   await page.click('#wb-prev');
-  expect(await attr('#wb', 'data-page') === '1' && await count() === 2, 'back on page 1 with its 2 strokes');
+  expect(await attr('#wb', 'data-page') === '1' && await count() === 3, 'back on page 1 with its 3 strokes');
 
   /* 8. tall page shape keeps strokes (logical coordinates) */
   await page.click('#wb-shape button[data-shape="tall"]');
   box = await page.locator('#wb-live').boundingBox();
   expect(box.height > box.width, 'tall page is taller than wide');
-  expect(await count() === 2, 'strokes kept after changing the page shape');
+  expect(await count() === 3, 'strokes kept after changing the page shape');
   await page.click('#wb-undo');
   box = await page.locator('#wb-live').boundingBox();
   expect(box.width > box.height, 'undo restores the wide page');
 
-  /* 9. everything survives a reload */
+  /* 8b. browser storage full (other apps can fill it): the teacher is warned, and saving resumes later */
   await sleep(500);
+  expect(await attr('#wb', 'data-saved') === '1', 'board saved normally');
+  await page.evaluate(() => {
+    let s = 'x'.repeat(512 * 1024), n = 0;
+    while (s.length > 8 && n < 60) { try { localStorage.setItem('wbtest-junk' + n, s); n++; } catch (e) { s = s.slice(0, s.length >> 1); } }
+  });
+  await page.click('#tool-pen');
+  await drag([0.5, 0.45], [0.8, 0.5]);                        /* a new stroke makes the saved board bigger */
+  await sleep(500);
+  expect(await attr('#wb', 'data-saved') === '0', 'a failed save is detected');
+  expect((await page.$$eval('.edu-toast', (x) => x.map((n) => n.textContent))).includes(t('save_failed')), 'the teacher is told the board could not be saved');
+  await page.evaluate(() => Object.keys(localStorage).filter((k) => k.indexOf('wbtest-junk') === 0).forEach((k) => localStorage.removeItem(k)));
+  await page.click('#wb-undo');
+  await page.click('#tool-line');
+  await sleep(500);
+  expect(await attr('#wb', 'data-saved') === '1', 'saving works again once there is space');
+
+  /* 9. everything survives a reload */
   await page.reload();
   await sleep(900);
   expect(await attr('#wb', 'data-pages') === '2', 'two pages after reload');
-  expect(await count() === 2, 'page 1 strokes after reload');
+  expect(await count() === 3, 'page 1 strokes after reload');
   expect(await attr('#tool-line', 'aria-pressed') === 'true', 'last tool remembered');
 
   /* 10. save page as PNG */
@@ -134,6 +191,32 @@ module.exports = async function ({ page, expect, t, log }) {
   /* 11. delete page 2 (confirm is auto-accepted) */
   await page.click('#wb-next');
   await page.click('#wb-del');
-  expect(await attr('#wb', 'data-pages') === '1' && await count() === 2, 'page 2 deleted, page 1 left');
+  expect(await attr('#wb', 'data-pages') === '1' && await count() === 3, 'page 2 deleted, page 1 left');
+
+  /* 12. open a board file: bad file refused, a 70-page file is capped at 50 pages */
+  const openFile = async (name, text) => {
+    const [fc] = await Promise.all([page.waitForEvent('filechooser', { timeout: 5000 }), page.click('#wb-import')]);
+    await fc.setFiles({ name, mimeType: 'application/json', buffer: Buffer.from(text) });
+    await sleep(600);
+  };
+  await openFile('notes.json', 'this is not json');
+  expect(await attr('#wb', 'data-pages') === '1' && await count() === 3, 'a bad file leaves the board alone');
+  const big = { app: 'ai-pathshala-whiteboard', v: 1, pages: Array.from({ length: 70 }, (_, i) => ({ bg: 'grid', s: [{ t: 'text', c: 'p1', w: 1, p: [100, 100 + i], s: 40, tx: 'سلام ' + i }] })) };
+  await openFile('board.json', JSON.stringify(big));
+  expect(await attr('#wb', 'data-pages') === '50', 'opened board is capped at 50 pages, got ' + await attr('#wb', 'data-pages'));
+  expect(await count() === 1 && await page.$eval('#wb-bg', (s) => s.value) === 'grid', 'opened page shows its text on squares');
+
+  /* 13. a 390 px phone: no sideways scroll, all tools on one row, the board uses the full width */
+  const vp = page.viewportSize();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await sleep(500);
+  const ph = await page.evaluate(() => ({
+    hs: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    rows: new Set(Array.from(document.querySelectorAll('#wb-tools .wb-ib')).map((b) => Math.round(b.getBoundingClientRect().top))).size,
+    board: document.getElementById('wb-live').getBoundingClientRect().width, stage: document.getElementById('wb-stage').clientWidth
+  }));
+  expect(ph.hs <= 0 && ph.rows === 1 && ph.board >= ph.stage * 0.9, 'phone layout: ' + JSON.stringify(ph));
+  await page.setViewportSize(vp);
+  await sleep(400);
   log('whiteboard ok');
 };

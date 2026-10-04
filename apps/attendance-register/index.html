@@ -60,7 +60,8 @@
     .stu:active { transform: scale(.98); }
     .stu-roll { flex: none; min-width: 2.2ch; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; font-size: .9rem; text-align: center; }
     .stu-name { flex: 1 1 auto; min-width: 0; font-weight: 600; line-height: 1.25; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
-    .stu-mark { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 1.05rem; border: 2px dashed var(--border); color: var(--muted); line-height: 1; }
+    /* a pill that grows for wide letters such as Malayalam "വൈ"; a circle for one-letter marks */
+    .stu-mark { flex: none; min-width: 40px; height: 40px; padding-inline: 5px; box-sizing: border-box; border-radius: 999px; display: grid; place-items: center; font-weight: 800; font-size: 1.05rem; border: 2px dashed var(--border); color: var(--muted); line-height: 1; white-space: nowrap; }
     .stu[data-st="P"] { background: var(--success-soft); border-color: color-mix(in srgb, var(--success) 50%, transparent); }
     .stu[data-st="A"] { background: var(--danger-soft); border-color: color-mix(in srgb, var(--danger) 60%, transparent); }
     .stu[data-st="T"] { background: var(--warning-soft); border-color: color-mix(in srgb, var(--warning) 55%, transparent); }
@@ -75,14 +76,14 @@
       .day-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
       .stu { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "roll . mark" "name name name"; align-items: center; gap: 2px 6px; padding: 6px 8px 7px; min-height: 64px; }
       .stu-roll { grid-area: roll; text-align: start; }
-      .stu-mark { grid-area: mark; width: 30px; height: 30px; font-size: .9rem; }
+      .stu-mark { grid-area: mark; min-width: 30px; height: 30px; padding-inline: 4px; font-size: .9rem; }
       .stu-name { grid-area: name; font-size: .95rem; }
       .day-actions #all-present { flex: 1 1 100%; }
       .sum-chip { padding: 4px 10px; font-size: .92rem; }
       .sum-chip b { font-size: 1.1rem; }
     }
     .edu-fullscreen-on .stu { min-height: 72px; font-size: 1.2rem; }
-    .edu-fullscreen-on .stu-mark { width: 50px; height: 50px; font-size: 1.3rem; }
+    .edu-fullscreen-on .stu-mark { min-width: 50px; height: 50px; font-size: 1.3rem; }
     .edu-fullscreen-on .edu-main { max-width: none; }
 
     /* ---------- monthly ---------- */
@@ -116,7 +117,7 @@
     .reg .dh { width: 34px; min-height: 42px; border: 0; background: transparent; font: inherit; color: inherit; cursor: pointer; padding: 3px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.15; }
     .reg .dh small { font-weight: 500; font-size: .7rem; color: var(--muted); }
     .reg th.today { box-shadow: inset 0 -3px 0 var(--accent); }
-    .reg .mc { width: 34px; height: 36px; border: 0; background: transparent; font: inherit; font-weight: 700; cursor: pointer; color: var(--text); padding: 0; display: block; }
+    .reg .mc { min-width: 34px; width: 100%; height: 36px; border: 0; background: transparent; font: inherit; font-weight: 700; cursor: pointer; color: var(--text); padding: 0 3px; display: block; white-space: nowrap; }
     .reg .mc:hover { outline: 2px solid var(--primary); outline-offset: -2px; }
     .reg .mc.P { color: var(--success); }
     .reg .mc.A { color: var(--danger); background: var(--danger-soft); }
@@ -173,12 +174,24 @@
       .print-head .ph-school { font-size: 12pt; font-weight: 800; }
       .print-head p { margin: 0; font-size: 9pt; }
       .reg-wrap { max-height: none; overflow: visible; border: 0; margin: 0; }
-      table.reg { width: 100%; font-size: 7pt; border-collapse: collapse; }
-      .reg th, .reg td { position: static !important; border: .5pt solid #666 !important; background: #fff !important; color: #000 !important; background-image: none !important; }
-      .reg .nm { min-width: 0; max-width: 46mm; padding: 1px 3px; }
+      /* fixed layout: 31 equal day columns, a name column that wraps, narrow totals */
+      table.reg { width: 100%; font-size: 7pt; border-collapse: collapse; table-layout: fixed; }
+      .reg thead .nm { width: 40mm; }
+      .reg thead .tot { width: 7mm; }
+      .reg thead .tot.pct { width: 11mm; min-width: 0; }
+      .reg th, .reg td { position: static !important; border: .5pt solid #666 !important; background: #fff !important; color: #000 !important; background-image: none !important; overflow: hidden; }
+      .reg .nm { min-width: 0; max-width: none; padding: 1px 3px; white-space: normal; overflow-wrap: anywhere; text-overflow: clip; }
       .reg .rl { color: #000; }
-      .reg .dh, .reg .mc { width: 100%; min-width: 0; height: auto; min-height: 0; padding: 1px 0; font-size: 7pt; text-align: center; align-items: center; color: #000 !important; background: transparent !important; }
-      .reg .dh small { font-size: 5.5pt; color: #000; }
+      /* a register is never printed half: rows hidden by the search box are printed too */
+      .reg tbody tr[hidden] { display: table-row !important; }
+      /* totals row once, at the end (not repeated at the foot of every page) */
+      .reg tfoot { display: table-row-group; }
+      .reg th.today { box-shadow: none; }
+      .reg .dh, .reg .mc { display: block; width: 100%; min-width: 0; height: auto; min-height: 0; padding: 1px 0; font-size: 7pt; text-align: center; color: #000 !important; background: transparent !important; white-space: nowrap; }
+      .reg .dh small { display: block; font-size: 5.5pt; color: #000; }
+      .reg .pd { padding: 1px 0; font-size: 7pt; line-height: 1.15; text-align: center; font-weight: 700; white-space: nowrap; }
+      .reg .pd small { display: block; font-size: 5.5pt; font-weight: 500; }
+      .reg .tot { padding: 1px 1px; }
       .reg .mc.A { font-weight: 900; }
       .reg .hol, .reg thead th.hol { background: #e6e6e6 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .reg td.low { font-weight: 900; text-decoration: underline; }

@@ -26,7 +26,7 @@
     /* laptops, projectors, smartboards: three columns */
     @media (min-width: 1140px) {
       .nnp { grid-template-columns: 300px minmax(0, 1fr) minmax(360px, 480px); grid-template-areas: "tool tool tool" "a b c"; }
-      .nnp-col-b { display: flex; }
+      .nnp-col-b { display: flex; align-items: stretch; }   /* cards fill the column width */
     }
     .nnp:fullscreen { background: var(--bg); padding: 16px; overflow: auto; align-content: start; }
     .nnp:-webkit-full-screen { background: var(--bg); padding: 16px; overflow: auto; }
@@ -48,7 +48,7 @@
     .coach .ico { font-size: 1.3rem; flex: none; }
     .coach[data-code="explode"], .coach[data-code="overfit"] { border-color: var(--danger); background: var(--danger-soft); }
     .coach[data-code="great"], .coach[data-code="great_draw"] { border-color: var(--success); background: var(--success-soft); }
-    .coach[data-code="line"], .coach[data-code="linear"], .coach[data-code="slow"], .coach[data-code="stuck"], .coach[data-code="need_points"] { border-color: var(--warning); background: var(--warning-soft); }
+    .coach[data-code="line"], .coach[data-code="linear"], .coach[data-code="big_lr"], .coach[data-code="slow"], .coach[data-code="stuck"], .coach[data-code="need_points"] { border-color: var(--warning); background: var(--warning-soft); }
 
     /* data sets */
     .ds-grid { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(82px, 1fr)); }
@@ -102,7 +102,7 @@
     .inspector .formula { text-align: start; margin: 6px 0; overflow-wrap: anywhere; font-size: .9rem; }
 
     /* network diagram (kept left-to-right in every language, like a picture) */
-    .net-wrap { position: relative; width: 100%; min-height: 220px; }
+    .net-wrap { position: relative; width: 100%; min-height: 220px; margin-top: 10px; }
     .net-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
     .net-wrap svg text { fill: var(--muted); font-family: var(--font); font-weight: 600; }
     .net-wrap svg .feat-lbl { fill: var(--text); font-family: var(--mono); font-weight: 700; }
@@ -235,7 +235,7 @@
             <button class="btn btn-sm" type="button" id="new-data"><span aria-hidden="true">🎲</span> <span data-i18n="new_data"></span></button>
           </div>
           <div class="checks">
-            <label class="check"><input type="checkbox" id="show-test"> <span data-i18n="show_test"></span></label>
+            <label class="check" id="show-test-lbl"><input type="checkbox" id="show-test"> <span data-i18n="show_test"></span></label>
             <label class="check"><input type="checkbox" id="sharp"> <span data-i18n="sharp"></span></label>
           </div>
         </div>

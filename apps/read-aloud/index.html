@@ -33,12 +33,15 @@
             white-space: normal; text-align: center; overflow-wrap: anywhere; }
     .tbtn .ic { font-size: 1.45rem; line-height: 1; }
     .tbtn:disabled { opacity: .45; }
+    /* right-to-left pages: "back" points to the right, "next" to the left, like the reading direction */
+    [dir="rtl"] #prev-btn .ic, [dir="rtl"] #next-btn .ic, [dir="rtl"] #echo-next .ic { display: inline-block; transform: scaleX(-1); }
     .reader-card > .transport { margin-top: 0; }   /* the hidden print header must not add a gap */
     @media (max-width: 560px) {
       /* phones: a big full-width Play button, the other four controls below it */
       .transport { grid-template-columns: repeat(4, minmax(0, 1fr)); }
       .transport #play-btn { grid-column: 1 / -1; flex-direction: row; gap: 10px; min-height: 54px; font-size: 1.05rem; }
       .tbtn { min-height: 60px; font-size: .8rem; }
+      .tools-row .btn, #clear-btn { min-height: 40px; }   /* finger-sized */
       .samples-row #sample-lang { order: 1; }
       .samples-row .sample-btns { order: 2; flex-basis: 100%; }
     }
@@ -64,8 +67,10 @@
     .reader:lang(ur) { line-height: calc(var(--ra-line) * 1.2); }
     .reader-empty { color: var(--muted); font-size: 1.05rem; line-height: 1.6; }
 
+    /* sticky: the "your turn" prompt stays on screen even when the reading view is taller than the window */
     .echo-box { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border-radius: var(--radius-sm);
-                background: var(--accent-soft); border: 2px solid var(--accent); }
+                background: var(--accent-soft); border: 2px solid var(--accent); position: sticky; bottom: 10px; z-index: 3;
+                box-shadow: 0 6px 22px rgba(0, 0, 0, .18); }
     .echo-ic { font-size: 2rem; line-height: 1; }
     .echo-main { flex: 1 1 200px; min-width: 0; }
     .echo-msg { display: block; font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; }
@@ -88,6 +93,8 @@
     .range-lbl { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
     .range-lbl output { font-variant-numeric: tabular-nums; color: var(--primary); font-weight: 700; }
     .seg button { min-height: 40px; }
+    .ra-side .seg { display: flex; }                   /* long labels (Tamil, Malayalam) wrap into full-width rows */
+    .ra-side .seg button { flex: 1 1 auto; }
     #voice-sel { width: 100%; }
     #voice-info { overflow-wrap: anywhere; margin: 0; }
 
@@ -112,6 +119,7 @@
       .ra-layout { display: block; }
       .reader-card { border: 0 !important; padding: 0 !important; }
       .reader { max-height: none !important; overflow: visible !important; border: 0; padding: 0; font-size: calc(var(--ra-font) * .8); color: #000; background: #fff; }
+      .reader .w { transition: none !important; text-decoration: none !important; }
       .reader .s.cur, .reader .w.on { background: none !important; box-shadow: none !important; color: #000 !important; }
     }
   </style>
@@ -160,7 +168,7 @@
           <div class="tools-row no-print">
             <button class="btn btn-sm" id="echo-btn" type="button" aria-pressed="false"><span aria-hidden="true">🗣️</span> <span data-i18n="echo_mode"></span></button>
             <span class="sp"></span>
-            <button class="btn btn-sm" id="fs-btn" type="button"><span aria-hidden="true">⛶</span> <span data-i18n="fullscreen"></span></button>
+            <button class="btn btn-sm" id="fs-btn" type="button" aria-pressed="false"><span aria-hidden="true">⛶</span> <span id="fs-lbl" data-i18n="fullscreen"></span></button>
             <button class="btn btn-sm" id="print-btn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_passage"></span></button>
           </div>
           <div class="progress no-print" aria-hidden="true"><span id="prog" style="width:0%"></span></div>
@@ -172,7 +180,7 @@
               <strong class="echo-msg" id="echo-msg" data-i18n="your_turn"></strong>
               <div class="progress" id="echo-prog-wrap"><span id="echo-prog"></span></div>
             </div>
-            <button class="btn btn-accent" id="echo-next" type="button"><span data-i18n="b_next"></span> <span aria-hidden="true">⏭</span></button>
+            <button class="btn btn-accent" id="echo-next" type="button"><span data-i18n="b_next"></span> <span class="ic" aria-hidden="true">⏭</span></button>
           </div>
           <p id="status" class="status no-print" aria-live="polite"></p>
           <p id="boundary-note" class="muted small no-print mb0" hidden data-i18n="no_boundary"></p>

@@ -1,0 +1,359 @@
+rules_version = '2';
+
+// AI Pathshala Apps: Firestore security rules for the optional teacher accounts + Live Class Quiz.
+//
+// Data model: LIVE_SPEC.md. The only client is shared/cloud.js. Tests: firebase/tests/rules.test.js.
+// Security review (threats, fixes, costs): firebase/SECURITY_REVIEW.md.
+// Who is who:
+//   teacher = signed in with Google            (request.auth.token.firebase.sign_in_provider != 'anonymous')
+//   student = signed in anonymously (no name, no email; the uid lives only on their device)
+// Anything that is not explicitly allowed below is DENIED (Firestore's default).
+//
+// Cost note: every get()/exists()/getAfter()/existsAfter() below is one billed document read; several calls
+// for the same document in one request are counted once.
+//
+// NOTE: two regular expressions below contain INVISIBLE characters on purpose (written literally, so no
+// backslash escaping is involved). Edit this file with a UTF-8 editor and keep them; the comments list them.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ------------------------------------------------------------------ helper functions
+
+    // Any signed-in user: a teacher (Google) or a student (anonymous).
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // A teacher: signed in with a real account (Google), not anonymously.
+    function isTeacher() {
+      return signedIn() && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
+    // The data a write wants to store / the data that is stored now.
+    function incoming() {
+      return request.resource.data;
+    }
+    function existing() {
+      return resource.data;
+    }
+
+    // Paths inside a session.
+    function sessionPath(code) {
+      return /databases/$(database)/documents/sessions/$(code);
+    }
+    function playerPath(code, uid) {
+      return /databases/$(database)/documents/sessions/$(code)/players/$(uid);
+    }
+    function namePath(code, key) {
+      return /databases/$(database)/documents/sessions/$(code)/names/$(key);
+    }
+
+    // The session document as it is now (one read).
+    function sessionData(code) {
+      return get(sessionPath(code)).data;
+    }
+
+    // The signed-in teacher owns this session.
+    function isSessionOwner(code) {
+      return isTeacher() && sessionData(code).owner == request.auth.uid;
+    }
+
+    // A session is LIVE while it has not ended and is less than 1 day old. Anyone signed in who knows the
+    // code can read a live session (that is how students join). Afterwards only its owner and its own
+    // players can read it, so guessing codes does not reveal old quizzes, and nobody joins a stale one.
+    function isLive(s) {
+      return s.state != 'ended' && s.createdAt > request.time - duration.value(1, 'd');
+    }
+
+    // expireAt drives the 30-day TTL (automatic deletion) policy. Clients send "now + 30 days";
+    // 25..35 days leaves room for a device clock that is a few days wrong.
+    function validExpire(t) {
+      return t is timestamp
+        && t > request.time + duration.value(25, 'd')
+        && t < request.time + duration.value(35, 'd');
+    }
+
+    // The id of a nickname in names/ (unique per session): lower case, without the invisible joiners
+    // ZWNJ U+200C, ZWJ U+200D and the variation selectors U+FE0E, U+FE0F, so "Asha" and "Asha"+ZWJ are the
+    // same nickname. Must stay equal to nameKey() in shared/cloud-mock.js.
+    function nameKey(n) {
+      return n.lower().replace('[‌‍︎️]', '');
+    }
+
+    // A student nickname: 1-20 characters, already trimmed, single spaces only, and none of these
+    // characters (invisible, or able to reorder text, so that a nickname could look like another one):
+    //   ASCII control characters ([[:cntrl:]]), '/', U+00A0 U+00AD U+034F U+061C U+115F U+1160 U+1680
+    //   U+17B4 U+17B5 U+180B-U+180F U+2000-U+200B U+200E U+200F U+202A-U+202F U+205F-U+206F U+3000
+    //   U+3164 U+FEFF U+FFA0 U+FFF9-U+FFFB.
+    // normalizeName() in shared/cloud-mock.js removes or replaces all of them before a join.
+    // Its id (nameKey) must be a valid document id: not empty, not only dots, not __x__.
+    function validName(n) {
+      return n is string
+        && n.size() >= 1 && n.size() <= 20
+        && n == n.trim()
+        && !n.matches('(?s).*[[:cntrl:]/ ­͏؜ᅟᅠ ឴឵᠋-᠏ -​‎‏‪-  -⁯　ㅤ﻿ﾠ￹-￻].*')
+        && !n.matches('.*  .*')
+        && nameKey(n).size() >= 1
+        && !nameKey(n).matches('[.]+')
+        && !nameKey(n).matches('__.*__');
+    }
+
+    // A quiz or session title.
+    function validTitle(t) {
+      return t is string && t.size() >= 1 && t.size() <= 150;
+    }
+
+    // Shape of a quiz document (question details are checked by the app; the 1 MiB document limit caps size).
+    function validQuiz(q) {
+      return validTitle(q.title)
+        && q.questions is list && q.questions.size() >= 1 && q.questions.size() <= 200
+        && q.lang is string && q.lang.size() <= 20;
+    }
+
+    // Shape of a session document (fields listed in LIVE_SPEC.md; no correct answers in it).
+    function validSession(s) {
+      return s.keys().hasOnly(['owner', 'title', 'lang', 'state', 'current', 'questionStartedAt', 'starts',
+                               'timePerQ', 'locked', 'createdAt', 'expireAt', 'questions', 'reveal',
+                               'playerCount', 'kicked', 'quizId'])
+        && s.keys().hasAll(['owner', 'title', 'state', 'current', 'timePerQ', 'locked', 'createdAt',
+                            'expireAt', 'questions'])
+        && validTitle(s.title)
+        && s.state in ['lobby', 'question', 'reveal', 'ended']
+        && s.questions is list && s.questions.size() >= 1 && s.questions.size() <= 200
+        && s.current is int && s.current >= -1 && s.current < s.questions.size()
+        && s.locked is bool
+        && s.timePerQ is int && s.timePerQ >= 5 && s.timePerQ <= 600
+        && s.get('kicked', []) is list;
+    }
+
+    // ------------------------------------------------------------------ teachers/{uid}
+    // {name, createdAt, plan:'free'}: only the teacher themself can see or change it.
+    match /teachers/{uid} {
+      // Read: only your own profile.
+      allow get: if isTeacher() && request.auth.uid == uid;
+
+      // Create: only your own, created now, on the free plan (nobody can give themselves another plan).
+      allow create: if isTeacher() && request.auth.uid == uid
+        && incoming().keys().hasOnly(['name', 'createdAt', 'plan'])
+        && incoming().keys().hasAll(['name', 'createdAt', 'plan'])
+        && incoming().name is string && incoming().name.size() <= 100
+        && incoming().createdAt == request.time
+        && incoming().plan == 'free';
+
+      // Update: only the display name may change.
+      allow update: if isTeacher() && request.auth.uid == uid
+        && incoming().diff(existing()).affectedKeys().hasOnly(['name'])
+        && incoming().name is string && incoming().name.size() <= 100;
+
+      // Delete: your own profile ("Delete my account and data").
+      allow delete: if isTeacher() && request.auth.uid == uid;
+    }
+
+    // ------------------------------------------------------------------ quizzes/{quizId}
+    // {owner, title, questions[], lang, createdAt, updatedAt}: private to the teacher who made it.
+    match /quizzes/{quizId} {
+      // Read one: only your own quiz (reading an id that does not exist is allowed and just says "missing").
+      allow get: if isTeacher() && (resource == null || existing().owner == request.auth.uid);
+
+      // List: only a query limited to your own quizzes (where owner == your uid).
+      allow list: if isTeacher() && existing().owner == request.auth.uid;
+
+      // Create: owner must be you, timestamps are the server's, shape is valid.
+      allow create: if isTeacher()
+        && incoming().keys().hasOnly(['owner', 'title', 'questions', 'lang', 'createdAt', 'updatedAt'])
+        && incoming().keys().hasAll(['owner', 'title', 'questions', 'lang', 'createdAt', 'updatedAt'])
+        && incoming().owner == request.auth.uid
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && validQuiz(incoming());
+
+      // Update: only your own quiz; owner and createdAt never change; updatedAt is the server's time.
+      allow update: if isTeacher() && existing().owner == request.auth.uid
+        && incoming().keys().hasOnly(['owner', 'title', 'questions', 'lang', 'createdAt', 'updatedAt'])
+        && incoming().owner == existing().owner
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && validQuiz(incoming());
+
+      // Delete: only your own quiz (deleting a missing id is harmless).
+      allow delete: if isTeacher() && (resource == null || existing().owner == request.auth.uid);
+    }
+
+    // ------------------------------------------------------------------ sessions/{code}
+    // A live quiz. It holds the questions WITHOUT the correct answers.
+    match /sessions/{code} {
+      // Read one: any signed-in user who knows the code while the session is LIVE (see isLive);
+      // after that only the owner and the session's players (a missing code reads as "missing").
+      // The players check (one read) only runs for ended or stale sessions.
+      allow get: if signedIn() && (resource == null || isLive(existing())
+        || existing().owner == request.auth.uid
+        || exists(playerPath(code, request.auth.uid)));
+
+      // List: only a teacher's query for their OWN sessions; nobody can list all codes.
+      allow list: if isTeacher() && existing().owner == request.auth.uid;
+
+      // Create: a teacher, a 6-digit code, owner = you, starts in the lobby, unlocked, no players,
+      // createdAt = server time, expireAt about 30 days ahead. (A code that exists already counts as
+      // an update by a non-owner, so it is refused: codes are unique.)
+      allow create: if isTeacher()
+        && code.matches('[0-9]{6}')
+        && validSession(incoming())
+        && incoming().owner == request.auth.uid
+        && incoming().state == 'lobby'
+        && incoming().current == -1
+        && incoming().locked == false
+        && incoming().createdAt == request.time
+        && validExpire(incoming().expireAt)
+        && incoming().get('playerCount', 0) == 0
+        && incoming().get('kicked', []).size() == 0
+        && incoming().get('reveal', null) == null;
+
+      // Update: only the owner (the host screen). Owner, createdAt, expireAt and the questions are fixed,
+      // so answers already given always match the questions they were checked against.
+      allow update: if isTeacher() && existing().owner == request.auth.uid
+        && validSession(incoming())
+        && incoming().owner == existing().owner
+        && incoming().createdAt == existing().createdAt
+        && incoming().expireAt == existing().expireAt
+        && incoming().questions == existing().questions;
+
+      // Delete: only the owner.
+      allow delete: if isTeacher() && existing().owner == request.auth.uid;
+
+      // ---------------------------------------------------------------- sessions/{code}/private/key
+      // {owner, correct[], explain[], expireAt}: the answer key. Only the session owner ever sees it.
+      match /private/{docId} {
+        // Read: only the owner (a missing key reads as "missing").
+        allow get: if isTeacher() && (resource == null || existing().owner == request.auth.uid);
+
+        // Create: only "key", by the teacher who owns the session (checked after this write, because the
+        // session and its key are created together in one transaction).
+        allow create: if isTeacher()
+          && docId == 'key'
+          && incoming().keys().hasOnly(['owner', 'correct', 'explain', 'expireAt'])
+          && incoming().keys().hasAll(['owner', 'correct', 'explain', 'expireAt'])
+          && incoming().owner == request.auth.uid
+          && incoming().correct is list
+          && incoming().explain is list
+          && validExpire(incoming().expireAt)
+          && getAfter(sessionPath(code)).data.owner == request.auth.uid;
+
+        // The key never changes once the session exists (no update rule = denied).
+
+        // Delete: only the owner (deleting a missing key is harmless).
+        allow delete: if isTeacher() && (resource == null || existing().owner == request.auth.uid);
+      }
+
+      // ---------------------------------------------------------------- sessions/{code}/players/{uid}
+      // {name, score, joinedAt, expireAt, last?, lastQ?, rank?}: one per student, id = the student's uid.
+      match /players/{uid} {
+        // Read one: yourself, or the session owner (host screen).
+        allow get: if (signedIn() && request.auth.uid == uid) || isSessionOwner(code);
+
+        // List: only the session owner (students never see the other players' documents).
+        allow list: if isSessionOwner(code);
+
+        // Create (= join): only yourself (no impersonation), a valid nickname, score 0, joinedAt = server
+        // time; the session must exist, be live (not ended, less than 1 day old) and not locked, and you
+        // must not have been removed. The nickname must be reserved for you in names/ in the SAME write,
+        // which makes it unique.
+        allow create: if signedIn() && request.auth.uid == uid
+          && incoming().keys().hasOnly(['name', 'score', 'joinedAt', 'expireAt'])
+          && incoming().keys().hasAll(['name', 'score', 'joinedAt', 'expireAt'])
+          && validName(incoming().name)
+          && incoming().score == 0
+          && incoming().joinedAt == request.time
+          && validExpire(incoming().expireAt)
+          && isLive(sessionData(code))
+          && sessionData(code).locked == false
+          && !(request.auth.uid in sessionData(code).get('kicked', []))
+          && getAfter(namePath(code, nameKey(incoming().name))).data.uid == request.auth.uid;
+
+        // Update: only the session owner, and only the score fields. A student can never change a score
+        // (not even their own) and nobody can rename a player.
+        allow update: if isSessionOwner(code)
+          && incoming().diff(existing()).affectedKeys().hasOnly(['score', 'last', 'lastQ', 'rank'])
+          && incoming().score is int && incoming().score >= 0
+          && (!('last' in incoming()) || (incoming().last is int && incoming().last >= 0))
+          && (!('lastQ' in incoming()) || (incoming().lastQ is int && incoming().lastQ >= 0))
+          && (!('rank' in incoming()) || (incoming().rank is int && incoming().rank >= 1));
+
+        // Delete: yourself (leave), but only together with your nickname reservation (so a student cannot
+        // leave and rejoin to reserve many nicknames), or the session owner (remove a player / delete).
+        allow delete: if (signedIn() && request.auth.uid == uid
+            && !existsAfter(namePath(code, nameKey(existing().name))))
+          || isSessionOwner(code);
+      }
+
+      // ---------------------------------------------------------------- sessions/{code}/names/{key}
+      // {uid, expireAt}: reserves a nickname (id = nameKey(nickname)) so it is unique per session.
+      match /names/{key} {
+        // Read one: only your own reservation, or a free nickname (reads as "missing"). Someone else's
+        // reservation is refused, which tells the app "this nickname is taken" without showing their id.
+        allow get: if signedIn() && (resource == null || existing().uid == request.auth.uid);
+
+        // List: only the session owner (to clean up when the session is deleted).
+        allow list: if isSessionOwner(code);
+
+        // Create: only for yourself, and only together with your player document whose nickname
+        // gives exactly this id. A taken nickname already exists, so creating it again counts as an
+        // update and is refused.
+        allow create: if signedIn()
+          && incoming().keys().hasOnly(['uid', 'expireAt'])
+          && incoming().keys().hasAll(['uid', 'expireAt'])
+          && incoming().uid == request.auth.uid
+          && validExpire(incoming().expireAt)
+          && nameKey(getAfter(playerPath(code, request.auth.uid)).data.name) == key;
+
+        // Never updated (no update rule = denied).
+
+        // Delete: the session owner, or the student who holds the nickname, but only when they leave
+        // (their player document is deleted in the same write, or is already gone).
+        allow delete: if isSessionOwner(code)
+          || (signedIn() && resource != null && existing().uid == request.auth.uid
+              && !existsAfter(playerPath(code, request.auth.uid)));
+      }
+
+      // ---------------------------------------------------------------- sessions/{code}/answers/{uid}_{i}
+      // {uid, i, choice, at, expireAt}: one answer per student per question.
+      match /answers/{answerId} {
+        // Read one: your own answers (id starts with your uid), or the session owner.
+        allow get: if (signedIn() && answerId.matches(request.auth.uid + '_[0-9]+')) || isSessionOwner(code);
+
+        // List: the session owner, or a query limited to your own answers (where uid == your uid).
+        // Nobody can read another student's answers.
+        allow list: if (signedIn() && existing().uid == request.auth.uid) || isSessionOwner(code);
+
+        // Create: only your own answer, id "<your uid>_<i>", answer time = server time, and only while the
+        // session shows exactly this question (state 'question', current == i), with a choice that exists,
+        // and only if you are a player of this session. Creating it again counts as an update and is
+        // refused, so each student answers each question once.
+        allow create: if signedIn()
+          && incoming().keys().hasOnly(['uid', 'i', 'choice', 'at', 'expireAt'])
+          && incoming().keys().hasAll(['uid', 'i', 'choice', 'at', 'expireAt'])
+          && incoming().uid == request.auth.uid
+          && incoming().i is int && incoming().i >= 0
+          && answerId == request.auth.uid + '_' + string(incoming().i)
+          && incoming().choice is int && incoming().choice >= 0
+          && incoming().at == request.time
+          && validExpire(incoming().expireAt)
+          && sessionData(code).state == 'question'
+          && sessionData(code).current == incoming().i
+          && incoming().choice < sessionData(code).questions[incoming().i].options.size()
+          && exists(playerPath(code, request.auth.uid));
+
+        // Answers are never changed (no update rule = denied).
+
+        // Delete: the session owner (when deleting the session), or the student who gave the answer, but only
+        // after the session has ended or been deleted ("Remove me" on the final screen). During a quiz a student
+        // cannot take an answer back and answer again.
+        allow delete: if isSessionOwner(code)
+          || (signedIn() && resource != null && existing().uid == request.auth.uid
+              && (!exists(sessionPath(code)) || sessionData(code).state == 'ended'));
+      }
+    }
+
+    // Everything else (other collections, other paths) has no rule and is therefore denied.
+  }
+}

@@ -61,6 +61,13 @@
     .tk.unk { background: var(--danger-soft); border: 2px dashed var(--danger); }
     .tk.unk .id { color: var(--danger); font-weight: 700; }
     .sp { color: var(--muted); font-weight: 400; }
+    .sp.zw { font-family: var(--mono); font-size: .62em; border: 1px dashed var(--muted); border-radius: 4px; padding: 0 3px; margin: 0 1px; }
+    /* bigger touch targets on phones and tablets (the app's small buttons, the slider, the checkbox row) */
+    @media (pointer: coarse) {
+      #app .btn-sm { min-height: 40px; }
+      #result-card .check { min-height: 40px; }
+    }
+    #merges { min-height: 36px; cursor: pointer; }
     .ids-box { font-family: var(--mono); font-size: .85rem; background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px; margin: 0; max-height: 160px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
     .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; font-size: .88rem; }
     .sw { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-inline-end: 6px; }
@@ -70,6 +77,7 @@
     .cmp-row { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 4px 14px; align-items: center; padding: 8px 10px; border-radius: var(--radius-sm); }
     .cmp-row:nth-child(odd) { background: var(--surface-2); }
     .cmp-row.me { outline: 2px solid var(--accent); }
+    .cmp-row.focus { outline: 2px dashed var(--accent); }
     .cmp-lang b { display: block; }
     .cmp-sent { display: block; font-size: .8rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .bar-line { display: flex; align-items: center; gap: 8px; min-height: 22px; }
@@ -91,6 +99,11 @@
     .edu-fullscreen-on .chips { font-size: 1.6rem; max-height: none; }
     .edu-fullscreen-on .edu-main { max-width: none; }
     @media print {
+      /* printing from dark mode: shared print styles reset the surfaces to white but not these colours */
+      :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+        --primary: #0b4f5c; --accent: #d9501c; --danger: #b42318; --danger-soft: #fee4e2;
+        --c1: #0b7285; --c2: #e8590c; --c3: #5f3dc4; --c4: #2b8a3e; --c5: #c2255c; --c6: #b08900; --c7: #1971c2; --c8: #868e96;
+      }
       .lab { grid-template-columns: minmax(0, 1fr); }
       .chips { max-height: none; overflow: visible; background: #fff; }
       .tk, .stat, .cmp-row, .bar, .sw { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -171,7 +184,7 @@
                 <div class="range-ends tiny muted no-print"><span data-i18n="merges_few"></span><span data-i18n="merges_many"></span></div>
               </div>
               <p class="small mb0" id="vocab-size"></p>
-              <p class="callout warning small mb0" id="merges-early" hidden></p>
+              <p class="callout small mb0" id="merges-early" aria-live="polite" hidden></p>
               <div class="row no-print">
                 <button type="button" class="btn btn-accent" id="play" data-i18n="play"></button>
                 <span class="small muted" data-i18n="play_hint"></span>
@@ -202,6 +215,7 @@
         </div>
         <div class="chips no-i18n" id="chips" dir="auto"></div>
         <p class="muted small mb0" id="chips-more" hidden></p>
+        <p class="callout warning small mb0" id="input-cut" aria-live="polite" hidden></p>
         <p class="muted small mb0" id="chips-hint"></p>
         <div id="ids-wrap" class="stack">
           <div class="row spread">
@@ -234,6 +248,7 @@
         </ul>
       </div>
       <p class="muted small mb0" data-i18n="cmp_bytes_note"></p>
+      <p class="muted small mb0" id="cmp-real" data-i18n="cmp_real"></p>
     </section>
 
     <!-- Inside -->

@@ -170,6 +170,7 @@
         var r = [x, y, x + w, y + fp + 2];
         if (boxes.some(function (b) { return r[0] < b[2] && r[2] > b[0] && r[1] < b[3] && r[3] > b[1]; })) return;
         boxes.push(r);
+        ctx.globalAlpha = 0.8; ctx.fillStyle = c.bg; ctx.fillRect(x - 2, y - 1, w + 4, fp + 4); ctx.globalAlpha = 1;   // readable over a curve
         text(s, x, y, c.text, c.bg, 'left', 'top', fp + 'px system-ui, sans-serif');
       });
     }

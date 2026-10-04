@@ -31,9 +31,9 @@
     .hub {
       place-self: center; width: 24%; aspect-ratio: 1 / 1; border-radius: 50%;
       border: 4px solid var(--surface); background: var(--primary); color: var(--primary-ink);
-      font: inherit; font-weight: 800; font-size: 1rem; font-size: clamp(.75rem, 4cqw, 1.6rem); line-height: 1.1;
+      font: inherit; font-weight: 800; font-size: 1rem; font-size: clamp(.8rem, 5cqw, 1.8rem); line-height: 1.1;
       padding: 4px; cursor: pointer; box-shadow: var(--shadow-lg); display: grid; place-items: center;
-      overflow: hidden; overflow-wrap: anywhere; transition: transform .15s;
+      overflow: hidden; white-space: nowrap; transition: transform .15s;
     }
     .hub:hover { transform: scale(1.05); }
     .hub:disabled { cursor: progress; transform: none; }
@@ -63,27 +63,29 @@
     .stepper input { width: 4.4em; text-align: center; border-radius: 0; border-inline-width: 0; font-weight: 700; -moz-appearance: textfield; appearance: textfield; }
     .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .lbl { font-weight: 600; font-size: .92rem; }
+    /* touch targets: at least 40px everywhere in this app */
+    #app .btn-sm, #app .seg button { min-height: 40px; }
     .h-sm { font-size: 1.05rem; margin-bottom: 10px; }
-    /* local workaround: the shared header title clips tall Nastaliq glyphs (overflow hidden + line-height 1.25) */
-    :root[lang="ur"] .edu-title { line-height: 1.9; }
 
     /* card flip mode */
     .cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-content: center; min-height: 300px; padding: 8px; perspective: 1200px; cursor: pointer; }
-    .flip { width: min(100%, 380px); aspect-ratio: 3 / 2; }
-    @media (max-width: 560px) { .cards { min-height: 220px; } }
+    .flip { width: min(100%, 380px); aspect-ratio: 3 / 2; container-type: inline-size; }
     .cards.few .flip { width: calc(50% - 7px); max-width: 280px; }
     .cards.many .flip { width: calc(33.33% - 10px); max-width: 210px; }
+    @media (max-width: 560px) {
+      .cards { min-height: 220px; gap: 10px; }
+      .cards.many .flip { width: calc(50% - 5px); }
+    }
     .flip-in { position: relative; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2, .7, .2, 1); transform-style: preserve-3d; }
     .flip.flipped .flip-in { transform: rotateY(180deg); }
-    .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--radius); display: grid; place-items: center; padding: 10px; text-align: center; font-weight: 800; }
+    .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--radius); display: grid; place-items: center; padding: 6px; text-align: center; font-weight: 800; }
     .face.back {
       color: var(--primary-ink); font-size: 3rem; border: 4px solid var(--surface); box-shadow: var(--shadow);
       background: repeating-linear-gradient(45deg, var(--primary) 0 14px, color-mix(in srgb, var(--primary) 78%, var(--accent)) 14px 28px);
     }
     .cards.many .face.back { font-size: 2rem; }
-    .face.front { background: var(--surface); color: var(--text); border: 3px solid var(--accent); box-shadow: var(--shadow); transform: rotateY(180deg); font-size: clamp(1.5rem, 4.5vw, 2.8rem); line-height: 1.15; overflow-wrap: anywhere; }
-    .cards.few .face.front { font-size: clamp(1.1rem, 3vw, 2rem); }
-    .cards.many .face.front { font-size: clamp(.95rem, 2.2vw, 1.4rem); }
+    .face.front { background: var(--surface); color: var(--text); border: 3px solid var(--accent); box-shadow: var(--shadow); transform: rotateY(180deg); font-size: 1.3rem; font-size: clamp(.95rem, 12.5cqw, 3.2rem); line-height: 1.2; overflow-wrap: break-word; min-width: 0; }
+    :root[lang="ur"] .face.front { line-height: 1.9; font-size: 1.2rem; font-size: clamp(.95rem, 11cqw, 2.8rem); }
     .cards.shuffling .flip { animation: np-wobble .3s ease-in-out infinite alternate; }
     .cards.shuffling .flip:nth-child(2n) { animation-delay: -.15s; }
     @keyframes np-wobble { from { transform: rotate(-5deg) translateY(0); } to { transform: rotate(5deg) translateY(-8px); } }
@@ -105,6 +107,8 @@
     .ghead { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
     .ghead h3 { margin: 0; font-size: 1.15rem; }
     .gmembers { margin: 0; padding-inline-start: 1.5em; font-size: 1.05rem; line-height: 1.65; overflow-wrap: anywhere; }
+    :root[lang="ur"] .gmembers, :root[lang="ur"] .pairs li { line-height: 2.1; }
+    :root[lang="ur"] .winner-name { line-height: 1.8; }
     .apart summary { cursor: pointer; font-weight: 700; min-height: 40px; display: flex; align-items: center; }
     .pairs { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
     .pairs li { display: inline-flex; align-items: center; gap: 2px; padding-inline-start: 12px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); font-weight: 600; font-size: .92rem; }
@@ -119,6 +123,10 @@
     .help ul { margin: 10px 0 0; padding-inline-start: 1.3em; }
     .help li + li { margin-top: 6px; }
     .help summary { cursor: pointer; min-height: 40px; display: flex; align-items: center; }
+    .apart summary, .help summary { gap: 8px; list-style: none; }
+    .apart summary::-webkit-details-marker, .help summary::-webkit-details-marker { display: none; }
+    .apart summary::after, .help summary::after { content: "▾"; margin-inline-start: auto; color: var(--muted); font-size: 1.1em; transition: transform .2s; }
+    .apart[open] > summary::after, .help[open] > summary::after { transform: rotate(180deg); }
     .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
     /* ---------- projector / full screen ---------- */
@@ -133,6 +141,7 @@
     #pickCard:fullscreen .cards { min-height: 75vh; }
     #pickCard:fullscreen .cards .flip { max-width: none; }
     #pickCard:fullscreen .cards.one .flip { width: min(100%, 60vw); }
+    #pickCard:fullscreen .face.front { font-size: 2.6rem; font-size: clamp(1.2rem, 13cqw, 6rem); }
     #groupsOut:fullscreen { background: var(--bg); overflow: auto; padding: 3vh 3vw; border-radius: 0; }
     #groupsOut:fullscreen .groups { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
     #groupsOut:fullscreen .ghead h3 { font-size: 1.7rem; }
@@ -193,7 +202,7 @@
 
             <div class="winner" id="winner" aria-live="polite" aria-atomic="true"></div>
 
-            <button type="button" class="btn btn-primary btn-lg spin-btn" id="spinBtn"><span aria-hidden="true">🎡</span><span id="spinLbl" data-i18n="spin"></span></button>
+            <button type="button" class="btn btn-primary btn-lg spin-btn" id="spinBtn"><span aria-hidden="true" id="spinIc">🎡</span><span id="spinLbl" data-i18n="spin"></span></button>
             <p class="muted tiny mb0 center" id="wheelTip" data-i18n="wheel_tip"></p>
 
             <div class="remain">

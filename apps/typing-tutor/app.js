@@ -144,27 +144,33 @@
 
   var SVGNS = 'http://www.w3.org/2000/svg';
   function svg(tag, attrs) { var e = document.createElementNS(SVGNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  /* Two hands seen from above, palms down on the keyboard. The left hand is drawn and the right hand
+     is its mirror image. Fingers fan out slightly and the thumbs meet over the space bar. */
   function buildHands(box) {
     box.innerHTML = '';
-    var s = svg('svg', { viewBox: '0 0 440 172', 'aria-hidden': 'true', focusable: 'false' });
-    var FING = [[12, 62, 28, '5'], [46, 34, 30, '4'], [82, 22, 30, '3'], [118, 38, 30, '2']];
+    var s = svg('svg', { viewBox: '0 0 440 200', 'aria-hidden': 'true', focusable: 'false' });
+    var BASE = 156;   /* y where the fingers join the palm (hidden under it) */
+    /* [x, top y, width, fan angle in degrees, finger] for little, ring, middle, index */
+    var FING = [[24, 74, 30, -9, '5'], [60, 38, 32, -3, '4'], [98, 22, 32, 1, '3'], [136, 42, 32, 6, '2']];
     var HOME = { L5: 'A', L4: 'S', L3: 'D', L2: 'F', R2: 'J', R3: 'K', R4: 'L', R5: ';' };
+    function rot(cx, y, a) { var r = a * Math.PI / 180, dy = y - BASE; return [cx - dy * Math.sin(r), BASE + dy * Math.cos(r)]; }
     ['L', 'R'].forEach(function (side) {
       var g = svg('g', side === 'R' ? { transform: 'translate(440,0) scale(-1,1)' } : {});
       FING.forEach(function (fg) {
-        var code = side + fg[3];
-        var r = svg('rect', { x: fg[0], y: fg[1], width: fg[2], height: 122 - fg[1], rx: 14, class: 'finger', 'data-f': code });
+        var code = side + fg[4], cx = fg[0] + fg[2] / 2;
+        var r = svg('rect', { x: fg[0], y: fg[1], width: fg[2], height: BASE + 10 - fg[1], rx: fg[2] / 2, class: 'finger', 'data-f': code,
+          transform: 'rotate(' + fg[3] + ' ' + cx + ' ' + BASE + ')' });
         r.style.setProperty('--fc', 'var(' + FINGER_VAR[code] + ')');
         g.appendChild(r);
       });
-      g.appendChild(svg('rect', { x: 8, y: 96, width: 146, height: 70, rx: 28, class: 'palm' }));
-      var th = svg('rect', { x: 146, y: 92, width: 28, height: 62, rx: 14, transform: 'rotate(38 160 150)', class: 'finger', 'data-f': 'T' });
+      var th = svg('rect', { x: -16, y: -70, width: 32, height: 84, rx: 16, transform: 'translate(152,174) rotate(50)', class: 'finger', 'data-f': 'T' });
       th.style.setProperty('--fc', 'var(--c8)');
       g.appendChild(th);
+      g.appendChild(svg('path', { class: 'palm', d: 'M20 124 Q20 104 42 104 H150 Q172 104 172 126 V150 Q172 194 128 194 H62 Q20 194 20 152 Z' }));
       s.appendChild(g);
       FING.forEach(function (fg) {
-        var code = side + fg[3], cx = fg[0] + fg[2] / 2;
-        var tx = svg('text', { x: side === 'L' ? cx : 440 - cx, y: fg[1] + 24 });
+        var code = side + fg[4], p = rot(fg[0] + fg[2] / 2, fg[1] + 22, fg[3]);
+        var tx = svg('text', { x: (side === 'L' ? p[0] : 440 - p[0]).toFixed(1), y: p[1].toFixed(1) });
         tx.textContent = HOME[code];
         s.appendChild(tx);
       });
@@ -248,6 +254,7 @@
       else if (i === G.length - 1 && T[i].length > G[i].length && T[i].indexOf(G[i]) === 0) st[i] = 'pend';   /* IME still building this letter */
       else st[i] = 'bad';
     }
+    if (G.length > R.typedLen && G.length <= T.length && R.cfg.mode !== 'lang') flashKey(G[G.length - 1], st[G.length - 1] !== 'bad');
     R.st = st; R.typedLen = G.length;
     if (!R.composing) commit(st);
     if (T.length && G.length >= T.length && st[T.length - 1] !== 'pend') { commit(st); finish('done'); return; }
@@ -335,8 +342,9 @@
     if (cfg.mode === 'lesson') {
       var L = lessonById(cfg.lessonId), p = obj(S.prog[cfg.lessonId]);
       res.stars = starsFor(acc, res.speed, L.goal);
-      res.best = (p.tries || 0) > 0 && res.speed > (p.best || 0) && acc >= 80;
-      S.prog[cfg.lessonId] = { stars: Math.max(p.stars || 0, res.stars), best: Math.max(p.best || 0, res.speed),
+      /* a fast but sloppy run (under 80% accuracy) does not count as a best speed */
+      res.best = (p.best || 0) > 0 && res.speed > p.best && acc >= 80;
+      S.prog[cfg.lessonId] = { stars: Math.max(p.stars || 0, res.stars), best: acc >= 80 ? Math.max(p.best || 0, res.speed) : (p.best || 0),
         acc: Math.max(p.acc || 0, res.accShown), tries: (p.tries || 0) + 1, last: now };
       store.set('prog', S.prog);
     } else if (cfg.mode === 'lang') {
@@ -434,6 +442,17 @@
     for (var i = 0; i < all.length; i++) if (all[i].dataset.k === k) return all[i];
     return null;
   }
+  /* brief green / red flash on the key that was just typed */
+  function flashKey(ch, ok) {
+    var m = KEYMAP[ch];
+    if (!m || !S.showKbd) return;
+    var ke = keyEl($('#kbd'), m.k);
+    if (!ke) return;
+    clearTimeout(ke._flash);
+    ke.classList.remove('hit-ok', 'hit-bad');
+    ke.classList.add(ok ? 'hit-ok' : 'hit-bad');
+    ke._flash = setTimeout(function () { ke.classList.remove('hit-ok', 'hit-bad'); }, 260);
+  }
   function updateHint() {
     var hint = $('#hint'), kbd = $('#kbd'), hands = $('#hands');
     $$('.key.next', kbd).forEach(function (e) { e.classList.remove('next'); });
@@ -504,11 +523,13 @@
   function renderLessons() {
     var box = $('#lesson-list'), nx = nextLessonId();
     box.innerHTML = '';
-    D.stages.forEach(function (stage) {
-      var list = LESSONS.filter(function (L) { return L.stage === stage; });
+    (D.groups || D.stages.map(function (s) { return [s]; })).forEach(function (group) {
+      var list = LESSONS.filter(function (L) { return group.indexOf(L.stage) >= 0; });
+      if (!list.length) return;
       var got = list.reduce(function (a, L) { return a + (obj(S.prog[L.id]).stars || 0); }, 0);
-      var sec = el('div', { class: 'tt-stage' },
-        el('h3', {}, el('span', { text: t('stage_' + stage) }), el('span', { class: 'badge', text: EDU.fmt(got) + '/' + EDU.fmt(list.length * 3) + ' ★' })));
+      var name = group.map(function (s) { return t('stage_' + s); }).join(' · ');
+      var sec = el('div', { class: 'tt-stage', dataset: { stages: group.join(' ') } },
+        el('h3', {}, el('span', { text: name }), el('span', { class: 'badge', text: EDU.fmt(got) + '/' + EDU.fmt(list.length * 3) + ' ★' })));
       var grid = el('div', { class: 'tt-lessons' });
       list.forEach(function (L) {
         var p = obj(S.prog[L.id]), n = lessonNo(L.id);
@@ -519,7 +540,7 @@
           small.appendChild(ks);
         }
         small.appendChild(el('span', { text: t('goal_wpm', { n: EDU.fmt(L.goal) }) }));
-        if (p.tries) small.appendChild(el('span', { text: '· ' + t('best_n', { n: EDU.fmt(p.best || 0) }) }));
+        if (p.best) small.appendChild(el('span', { text: '· ' + t('best_n', { n: EDU.fmt(p.best) }) }));
         if (L.id === nx) small.appendChild(el('span', { class: 'badge accent tt-upnext', text: t('up_next') }));
         var btn = el('button', { type: 'button', class: 'tt-lesson' + (L.id === nx ? ' is-next' : '') + (p.stars ? ' done' : ''), dataset: { lesson: L.id } },
           el('span', { class: 'num', text: EDU.fmt(n) }),
@@ -636,7 +657,7 @@
     LESSONS.forEach(function (L, i) {
       var p = obj(S.prog[L.id]);
       body.appendChild(el('tr', { dataset: { lesson: L.id } }, el('td', { class: 'n', text: EDU.fmt(i + 1) }), el('td', { text: t('les_' + L.id) }),
-        el('td', {}, starsEl(p.stars || 0)), el('td', { class: 'n', text: p.tries ? EDU.fmt(p.best || 0) : '–' }),
+        el('td', {}, starsEl(p.stars || 0)), el('td', { class: 'n', text: p.best ? EDU.fmt(p.best) : '–' }),
         el('td', { class: 'n', text: p.tries ? EDU.fmt(p.acc || 0) + '%' : '–' }), el('td', { class: 'n', text: EDU.fmt(p.tries || 0) })));
     });
     tb.appendChild(body);
@@ -699,7 +720,6 @@
   function printChart() {
     doPrint(function (a) {
       a.appendChild(el('h1', { text: '⌨️ ' + t('chart_title') }));
-      a.appendChild(el('p', { text: t('legend_note') }));
       var k = el('div', { class: 'tt-kbd' }); buildKeyboard(k); a.appendChild(k);
       var hands = el('div', { class: 'tt-hands' }); buildHands(hands);
       var leg = el('div', { class: 'tt-legend' }); buildLegend(leg);

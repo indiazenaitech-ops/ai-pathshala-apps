@@ -11,7 +11,9 @@
   var FLAG_ICON = { sender: '📵', urgent: '⏰', threat: '😨', link: '🔗', secret: '🔑', money: '💸', prize: '🎁', odd: '✍️', upi: '📲', alone: '🤫', ok: '✅' };
   var CH_ICON = { sms: '💬', wa: '📱', email: '✉️', dm: '📷', call: '📹' };
   var MARK = /\[\[(\w+)\|([^\]]*)\]\]/g;
-  var URL_RE = /(?:[a-z0-9-]+\.)+(?:xyz|top|net|com|org|in|info|link|site|online)(?:\/[\w\-./?=&]*)?/gi;
+  /* Group 1: a web address (shown as an inert fake link). Group 2: a masked phone number such as
+     "98301 XXXXX", kept left-to-right so it does not turn into "XXXXX 98301" inside Urdu text. */
+  var TOKEN_RE = /((?:[a-z0-9-]+\.)+(?:xyz|top|net|com|org|in|info|link|site|online)(?:\/[\w\-./?=&]*)?)|((?:\+\d{1,3} )?\d{4,5} X{4,6})/gi;
 
   EDU.init({ slug: SLUG, title: 'app_title' });
   var $ = EDU.$, el = EDU.el, t = EDU.t;
@@ -42,31 +44,46 @@
     return list;
   }
   function n(x) { return EDU.fmt(x); }
-  function onFakeLink(e) { e.preventDefault(); EDU.toast(t('link_tap'), 3800); }
 
-  function addUrlText(parent, s, revealed) {
+  /* Toasts appended to <body> are invisible while an element is full screen, so in full screen
+     the class panel's own copy of the message is shown instead. */
+  function toast(msg, ms) {
+    var fs = document.fullscreenElement || document.webkitFullscreenElement;
+    if (!fs || fs === document.documentElement) return EDU.toast(msg, ms);
+    var wrap = el('div', { class: 'edu-toast-wrap', role: 'status', 'aria-live': 'polite' }, el('div', { class: 'edu-toast', text: msg }));
+    fs.appendChild(wrap);
+    setTimeout(function () { wrap.remove(); }, ms || 2600);
+  }
+
+  /* Fake links never open. Before the answer (and in genuine messages) the toast must not give
+     the answer away; after a scam is revealed it warns. */
+  function addUrlText(parent, s, warn) {
     var last = 0, m;
-    URL_RE.lastIndex = 0;
-    while ((m = URL_RE.exec(s))) {
+    TOKEN_RE.lastIndex = 0;
+    while ((m = TOKEN_RE.exec(s))) {
       if (m.index > last) parent.appendChild(document.createTextNode(s.slice(last, m.index)));
-      var u = el('button', { type: 'button', class: 'lnk no-i18n', dir: 'ltr', text: m[0] });
-      u.addEventListener('click', onFakeLink);
-      parent.appendChild(u);
-      last = URL_RE.lastIndex;
+      if (m[1]) {
+        var u = el('button', { type: 'button', class: 'lnk no-i18n', dir: 'ltr', text: m[1] });
+        u.addEventListener('click', function (e) { e.preventDefault(); toast(t(warn ? 'link_tap' : 'link_game'), 4200); });
+        parent.appendChild(u);
+      } else {
+        parent.appendChild(el('bdi', { class: 'no-i18n', dir: 'ltr', text: m[2] }));
+      }
+      last = TOKEN_RE.lastIndex;
     }
     if (last < s.length) parent.appendChild(document.createTextNode(s.slice(last)));
   }
 
-  function renderText(container, text, revealed, nums) {
+  function renderText(container, text, revealed, nums, warn) {
     parse(text).forEach(function (seg) {
       if (seg.code && revealed) {
         var ok = seg.code === 'ok';
         var mk = el('mark', { class: ok ? 'ok' : 'rf', title: t('flag_' + seg.code) });
-        addUrlText(mk, seg.s, revealed);
+        addUrlText(mk, seg.s, warn);
         if (!ok && nums[seg.code]) mk.appendChild(el('span', { class: 'fnum', 'aria-hidden': 'true', text: String(nums[seg.code]) }));
         container.appendChild(mk);
       } else {
-        addUrlText(container, seg.s, revealed);
+        addUrlText(container, seg.s, warn);
       }
     });
   }
@@ -103,7 +120,7 @@
       el('span', { class: 'ph-av', 'aria-hidden': 'true', text: CH_ICON[m.ch] || '💬' }),
       el('div', { class: 'ph-who' }, nameEl, subEl));
     var body = el('div', { class: 'ph-text no-i18n' });
-    renderText(body, c.text, revealed, nums);
+    renderText(body, c.text, revealed, nums, !!opts.warn);
     var bubble = el('div', { class: 'ph-bubble' });
     if (m.attach === 'qr') bubble.appendChild(qrSvg());
     bubble.appendChild(body);
@@ -116,7 +133,7 @@
   function readAloudBtn(m) {
     return el('button', { type: 'button', class: 'btn btn-sm', onclick: function () {
       var c = C(m.id);
-      EDU.speak(plain((c.who ? c.who + '. ' : '') + c.text)).then(function (ok) { if (!ok) EDU.toast(t('no_voice')); });
+      EDU.speak(plain((c.who ? c.who + '. ' : '') + c.text)).then(function (ok) { if (!ok) toast(t('no_voice')); });
     } }, '🔊 ', el('span', { text: t('read_aloud') }));
   }
 
@@ -148,6 +165,7 @@
   var activeTab = store.get('tab', 'play');
   if (TABS.indexOf(activeTab) < 0) activeTab = 'play';
   function showTab(name) {
+    if (name !== activeTab) EDU.stopSpeaking();
     activeTab = name;
     store.set('tab', name);
     TABS.forEach(function (x) {
@@ -185,6 +203,12 @@
     g.streak = g.streak || 0; g.bestStreak = g.bestStreak || 0;
     return g;
   }
+  /* Saved numbers are checked, so damaged or hand-edited saved data never shows NaN. */
+  function getBest() {
+    var b = store.get('best', null);
+    return b && isFinite(b.score) && isFinite(b.n) && b.n > 0 && b.score >= 0 && b.score <= b.n ? b : null;
+  }
+  function getNum(k) { var v = Number(store.get(k, 0)); return isFinite(v) && v > 0 ? Math.floor(v) : 0; }
   function saveGame() { if (game) store.set('game', game); else store.remove('game'); }
   function scoreOf(g) {
     var s = 0;
@@ -199,15 +223,42 @@
     return EDU.shuffle(safe.slice(0, nSafe).concat(scam.slice(0, len - nSafe))).map(function (m) { return m.id; });
   }
   function newGame() {
+    EDU.stopSpeaking();
     game = { ids: pickIds(lenPref), answers: [], idx: 0, revealed: false, streak: 0, bestStreak: 0 };
     saveGame();
     view = 'game';
     renderPlay();
     scrollToTop('#play-game');
+    focusQuestion();
+  }
+  /* The sticky header covers the top of the page (one row on desktop, two or three on phones),
+     so "top of the screen" means just below it. In full screen the panel itself scrolls. */
+  function headerBottom() {
+    var h = $('.edu-top');
+    if (!h || !h.offsetHeight) return 0;
+    return Math.max(0, h.getBoundingClientRect().bottom);
+  }
+  function scrollToEl(e, smooth) {
+    var fs = document.fullscreenElement || document.webkitFullscreenElement;
+    if (fs && fs !== document.documentElement && fs.contains(e)) {
+      fs.scrollTop += e.getBoundingClientRect().top - fs.getBoundingClientRect().top - (e === fs ? 0 : 8);
+      return;
+    }
+    var y = window.pageYOffset + e.getBoundingClientRect().top - headerBottom() - 8;
+    try { window.scrollTo({ top: Math.max(0, y), behavior: smooth ? 'smooth' : 'auto' }); } catch (x) { window.scrollTo(0, Math.max(0, y)); }
   }
   function scrollToTop(sel) {
     var e = $(sel);
-    if (e && e.getBoundingClientRect().top < 0) e.scrollIntoView({ block: 'start' });
+    if (!e) return;
+    var fs = document.fullscreenElement || document.webkitFullscreenElement;
+    if (fs && fs === e) { fs.scrollTop = 0; return; }
+    if (e.getBoundingClientRect().top < headerBottom()) scrollToEl(e);
+  }
+  /* After "Next", focus the question (not the Safe button): a second Enter press, or a held-down
+     key, must not answer the new message by accident. */
+  function focusQuestion() {
+    var q = $('#ask');
+    if (q) q.focus({ preventScroll: true });
   }
 
   function renderPlay() {
@@ -222,7 +273,7 @@
   function renderStart() {
     var root = $('#play-start');
     root.innerHTML = '';
-    var best = store.get('best', null), bestStreak = store.get('bestStreak', 0), played = store.get('played', 0);
+    var best = getBest(), bestStreak = getNum('bestStreak'), played = getNum('played');
     var seg = el('div', { class: 'seg', role: 'group', 'aria-label': t('len_label') });
     [8, 16].forEach(function (len) {
       seg.appendChild(el('button', { type: 'button', id: 'len-' + len, 'aria-pressed': lenPref === len ? 'true' : 'false', text: t('len_n', { n: n(len) }),
@@ -231,7 +282,7 @@
     var btns = el('div', { class: 'row' },
       el('button', { type: 'button', class: 'btn btn-primary btn-lg', id: 'start', onclick: newGame }, '▶ ', el('span', { text: t('start_game') })));
     if (game) {
-      btns.appendChild(el('button', { type: 'button', class: 'btn btn-lg', id: 'continue', onclick: function () { view = 'game'; renderPlay(); } },
+      btns.appendChild(el('button', { type: 'button', class: 'btn btn-lg', id: 'continue', onclick: function () { view = 'game'; renderPlay(); scrollToTop('#play-game'); if (!game.revealed) focusQuestion(); else { var nb = $('#next'); if (nb) nb.focus({ preventScroll: true }); } } },
         '⏯ ', el('span', { text: t('continue_game', { i: n(game.idx + 1), n: n(game.ids.length) }) })));
     }
     var stats = el('div', { class: 'stats' },
@@ -247,7 +298,7 @@
         el('span', { class: 'tiny muted', text: '🔒 ' + t('saved_local') }),
         el('button', { type: 'button', class: 'btn btn-sm btn-ghost', id: 'reset-scores', onclick: resetScores }, '↺ ', el('span', { text: t('reset_scores') }))));
     var demo = BY_ID.kyc || MSGS[0];
-    var right = el('div', null, phone(demo, { id: 'preview-phone' }), el('p', { class: 'preview-cap', text: t('preview_q') }));
+    var right = el('div', null, phone(demo, { id: 'preview-phone', warn: true }), el('p', { class: 'preview-cap', text: t('preview_q') }));
     root.appendChild(el('div', { class: 'card hero' }, left, right));
   }
 
@@ -255,7 +306,7 @@
     if (!confirm(t('confirm_reset'))) return;
     ['best', 'bestStreak', 'played', 'game'].forEach(function (k) { store.remove(k); });
     game = null; lastGame = null;
-    EDU.toast(t('scores_cleared'));
+    toast(t('scores_cleared'));
     renderStart();
   }
 
@@ -274,12 +325,12 @@
 
     var left = el('div', null,
       c.ctx ? el('p', { class: 'ctx' }, el('span', { class: 'badge primary', text: t('situation') }), el('span', { text: c.ctx })) : null,
-      phone(m, { revealed: game.revealed, id: 'phone' }),
+      phone(m, { revealed: game.revealed, warn: game.revealed && m.scam, id: 'phone' }),
       el('div', { class: 'row', style: { marginTop: '10px', justifyContent: 'center' } }, readAloudBtn(m)));
 
     var side = el('div', { class: 'stack', 'aria-live': 'polite', id: 'side' });
     if (!game.revealed) {
-      side.appendChild(el('h2', { class: 'mb0', text: t('ask') }));
+      side.appendChild(el('h2', { class: 'mb0', id: 'ask', tabindex: '-1', text: t('ask') }));
       side.appendChild(el('div', { class: 'answers' },
         el('button', { type: 'button', class: 'btn ans ans-safe', id: 'ans-safe', onclick: function () { answer('safe'); } },
           el('span', { class: 'ic', 'aria-hidden': 'true', text: '✅' }), el('span', { text: t('btn_safe') })),
@@ -313,25 +364,27 @@
     var nb = $('#next');
     if (nb) nb.focus({ preventScroll: true });
     var v = $('#verdict');
-    if (v && window.innerWidth < 900) v.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (v && window.innerWidth < 900) scrollToEl(v, true);
   }
 
   function next() {
     if (!game || !game.revealed) return;
     if (game.idx < game.ids.length - 1) {
+      EDU.stopSpeaking();
       game.idx++; game.revealed = false; saveGame(); renderGame(); scrollToTop('#play-game');
-      var b = $('#ans-safe'); if (b) b.focus({ preventScroll: true });
+      focusQuestion();
       return;
     }
     finish();
   }
 
   function finish() {
+    EDU.stopSpeaking();
     var s = scoreOf(game), total = game.ids.length;
-    var best = store.get('best', null);
+    var best = getBest();
     if (!best || s / total > best.score / best.n || (s / total === best.score / best.n && total > best.n)) store.set('best', { score: s, n: total });
-    store.set('bestStreak', Math.max(store.get('bestStreak', 0), game.bestStreak));
-    store.set('played', store.get('played', 0) + 1);
+    store.set('bestStreak', Math.max(getNum('bestStreak'), game.bestStreak));
+    store.set('played', getNum('played') + 1);
     lastGame = game; game = null; saveGame();
     view = 'results';
     renderPlay();
@@ -372,15 +425,35 @@
     root.appendChild(el('div', { class: 'card stack', style: { marginTop: '16px' } }, el('h3', { class: 'mb0', text: t('review_title') }), ul));
   }
 
+  var review = null;   // {m, close} while the "See again" window is open
   function openReview(m) {
-    var box = el('div', { class: 'stack' }, phone(m, { revealed: true }), el('p', { class: 'verdict-big', text: m.scam ? '🚩 ' + t('verdict_scam') : '✅ ' + t('verdict_safe') }), revealInfo(m));
-    EDU.modal(box, { title: t('see_again') });
+    var box = el('div', { class: 'stack' }, phone(m, { revealed: true, warn: m.scam }), el('p', { class: 'verdict-big', text: m.scam ? '🚩 ' + t('verdict_scam') : '✅ ' + t('verdict_safe') }), revealInfo(m));
+    var me = { m: m };
+    me.close = EDU.modal(box, { title: t('see_again'), onClose: function () { if (review === me) review = null; } });
+    review = me;
   }
 
   /* ---------------- class mode ---------------- */
-  var cls = null;   // {ids, idx, votes:[{safe,scam}], revealed, results:[]}
+  /* {ids, idx, votes:{safe,scam}, revealed, results:[1 right | 0 wrong | -1 tie], done}. Saved, so a
+     reload of the smartboard browser does not throw away a half-played class game. */
+  function toCount(v) { v = Number(v); return EDU.clamp(isFinite(v) ? Math.round(v) : 0, 0, 999); }
+  function loadCls() {
+    var c = store.get('cls', null);
+    if (!c || !Array.isArray(c.ids) || !c.ids.length || c.ids.some(function (id) { return !BY_ID[id]; })) return null;
+    c.idx = EDU.clamp(parseInt(c.idx, 10) || 0, 0, c.ids.length - 1);
+    c.votes = { safe: toCount(c.votes && c.votes.safe), scam: toCount(c.votes && c.votes.scam) };
+    c.results = (Array.isArray(c.results) ? c.results : []).slice(0, c.idx + 1).map(function (r) { return r === 1 ? 1 : r === 0 ? 0 : -1; });
+    c.revealed = !!c.revealed && c.results.length > c.idx;
+    if (!c.revealed) c.results = c.results.slice(0, c.idx);
+    c.done = !!c.done && c.revealed && c.idx === c.ids.length - 1;
+    return c;
+  }
+  function saveCls() { if (cls) store.set('cls', cls); else store.remove('cls'); }
+  var cls = loadCls();
   function classStart() {
+    EDU.stopSpeaking();
     cls = { ids: EDU.shuffle(MSGS).map(function (m) { return m.id; }), idx: 0, votes: { safe: 0, scam: 0 }, revealed: false, results: [] };
+    saveCls();
     renderClass();
   }
   function renderClass() {
@@ -415,7 +488,7 @@
 
     var left = el('div', null,
       c.ctx ? el('p', { class: 'ctx' }, el('span', { class: 'badge primary', text: t('situation') }), el('span', { text: c.ctx })) : null,
-      phone(m, { revealed: cls.revealed, big: true, id: 'class-phone' }));
+      phone(m, { revealed: cls.revealed, warn: cls.revealed && m.scam, big: true, id: 'class-phone' }));
     var side = el('div', { class: 'stack', 'aria-live': 'polite' });
     side.appendChild(el('h2', { class: 'mb0', text: t('ask') }));
     side.appendChild(el('div', { class: 'votes' }, voteBox('safe'), voteBox('scam')));
@@ -440,9 +513,10 @@
 
   function voteBox(kind) {
     var input = el('input', { type: 'number', min: '0', max: '999', inputmode: 'numeric', id: 'v-' + kind, value: String(cls.votes[kind]), disabled: cls.revealed });
-    function set(v) { cls.votes[kind] = EDU.clamp(isFinite(v) ? Math.round(v) : 0, 0, 999); input.value = String(cls.votes[kind]); }
-    input.addEventListener('input', function () { var v = parseInt(input.value, 10); cls.votes[kind] = EDU.clamp(isNaN(v) ? 0 : v, 0, 999); });
-    input.addEventListener('change', function () { set(parseInt(input.value, 10)); });
+    function set(v) { cls.votes[kind] = toCount(v); input.value = String(cls.votes[kind]); saveCls(); }
+    /* An empty or half-typed box counts as 0; the box itself is tidied when the teacher leaves it. */
+    input.addEventListener('input', function () { cls.votes[kind] = input.value.trim() === '' ? 0 : toCount(input.value); saveCls(); });
+    input.addEventListener('change', function () { set(input.value.trim() === '' ? 0 : input.value); });
     return el('div', { class: 'vote-box ' + kind },
       el('label', { for: 'v-' + kind, text: (kind === 'safe' ? '✅ ' : '🚩 ') + t(kind === 'safe' ? 'votes_safe' : 'votes_scam') }),
       el('div', { class: 'vote-ctrl' },
@@ -456,11 +530,14 @@
     var res = v.scam === v.safe ? -1 : ((v.scam > v.safe) === m.scam ? 1 : 0);
     cls.results[cls.idx] = res;
     cls.revealed = true;
+    saveCls();
     renderClass();
   }
   function classNext() {
-    if (cls.idx >= cls.ids.length - 1) { cls.done = true; renderClass(); return; }
+    EDU.stopSpeaking();
+    if (cls.idx >= cls.ids.length - 1) { cls.done = true; saveCls(); renderClass(); scrollToTop('#panel-class'); return; }
     cls.idx++; cls.revealed = false; cls.votes = { safe: 0, scam: 0 };
+    saveCls();
     renderClass();
     scrollToTop('#panel-class');
   }
@@ -470,18 +547,26 @@
 
   document.addEventListener('keydown', function (e) {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
-    var tg = e.target && e.target.tagName;
-    if (tg === 'INPUT' || tg === 'TEXTAREA' || tg === 'SELECT') return;
+    var tgt = e.target, tg = tgt && tgt.tagName;
+    if (tg === 'INPUT' || tg === 'TEXTAREA' || tg === 'SELECT' || (tgt && tgt.isContentEditable)) return;
     if (document.querySelector('.edu-modal-back')) return;
     if (activeTab !== 'play' || view !== 'game' || !game) return;
     if (!game.revealed && (e.key === '1' || e.key === '2')) { e.preventDefault(); answer(e.key === '1' ? 'safe' : 'scam'); }
-    else if (game.revealed && (e.key === 'Enter' || e.key === 'ArrowRight' || e.key === 'ArrowLeft') && tg !== 'BUTTON') { e.preventDefault(); next(); }
+    else if (game.revealed && (e.key === 'Enter' || e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+      /* Links, buttons, <summary> and tabs keep their own Enter / arrow behaviour. */
+      if (tgt && tgt.closest && tgt.closest('a[href], button, summary, [role="tab"], select')) return;
+      e.preventDefault(); next();
+    }
   });
 
   function renderAll() {
     if (activeTab === 'play') renderPlay();
     else if (activeTab === 'class') renderClass();
   }
-  EDU.onLang(renderAll);
+  EDU.onLang(function () {
+    EDU.stopSpeaking();
+    renderAll();
+    if (review) { var m = review.m; review.close(); openReview(m); }
+  });
   showTab(activeTab);
 })();

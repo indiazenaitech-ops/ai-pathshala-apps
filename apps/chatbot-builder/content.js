@@ -2,7 +2,7 @@
    for every language. Same shape in all 12 languages: 6 intents x 6 examples x 3 replies. */
 window.APP_CONTENT = {
   en: {
-    stopwords: 'a an the is are am was were be been do does did i me my mine you your we our us it its this that these those he she they them his her their of to in on at for from by with and or but so if what whats when where which who whom how why can could will would shall should may might must please tell want need know about there here any some much many very just also get got has have had',
+    stopwords: 'a an the is are am was were be been do does did i me my mine you your we our us it its this that these those he she they them his her their of to in on at for from by with and or but so if what whats when where which who whom how why can could will would shall should may might must please tell want need know about there here any some much many very just also get got has have had dont doesnt didnt cant cannot wont isnt arent wasnt im ive id youre',
     tricky: ['I need a libary card', 'Who is our principal?', 'I don’t want to know about fees'],
     sample: {
       name: 'Mitra', avatar: '🦉',
@@ -40,7 +40,7 @@ window.APP_CONTENT = {
       fallback: ['माफ़ कीजिए, मैं समझ नहीं पाया। आप मुझसे समय, लाइब्रेरी, खेल दिवस, फ़ीस, छुट्टियों या कैंटीन के बारे में पूछ सकते हैं।', 'हम्म, यह मुझे अभी नहीं पता। स्कूल ऑफ़िस से पूछिए या दूसरे शब्दों में लिखकर देखिए।'],
       intents: [
         { name: 'स्कूल का समय',
-          examples: ['समय', 'स्कूल कितने बजे लगता है', 'स्कूल कितने बजे बंद होता है', 'प्रार्थना सभा कब होती है', 'school timing', 'क्या शनिवार को स्कूल खुला है'],
+          examples: ['समय', 'स्कूल कितने बजे लगता है', 'स्कूल कब शुरू होता है', 'प्रार्थना सभा कब होती है', 'school timing', 'क्या शनिवार को स्कूल खुला है'],
           replies: ['स्कूल सुबह 7:50 बजे प्रार्थना सभा से शुरू होता है और दोपहर 1:50 बजे बंद होता है।', 'स्कूल सोमवार से शनिवार तक खुला रहता है। हर महीने के दूसरे शनिवार को छुट्टी रहती है।', 'कृपया 7:45 बजे तक पहुँच जाइए। गेट 7:55 बजे बंद हो जाता है!'] },
         { name: 'लाइब्रेरी',
           examples: ['लाइब्रेरी', 'पुस्तकालय', 'लाइब्रेरी का समय', 'कितनी किताबें ले सकते हैं', 'किताब वापस कैसे करें', 'मेरी लाइब्रेरी की किताब खो गई'],
@@ -160,7 +160,7 @@ window.APP_CONTENT = {
       fallback: ['ਮਾਫ਼ ਕਰਨਾ, ਮੈਨੂੰ ਸਮਝ ਨਹੀਂ ਆਇਆ। ਤੁਸੀਂ ਸਮੇਂ, ਲਾਇਬ੍ਰੇਰੀ, ਖੇਡ ਦਿਵਸ, ਫੀਸ, ਛੁੱਟੀਆਂ ਜਾਂ ਕੰਟੀਨ ਬਾਰੇ ਪੁੱਛ ਸਕਦੇ ਹੋ।', 'ਹੰਮ, ਇਹ ਮੈਨੂੰ ਅਜੇ ਨਹੀਂ ਪਤਾ। ਸਕੂਲ ਦਫ਼ਤਰ ਤੋਂ ਪੁੱਛੋ ਜਾਂ ਹੋਰ ਸ਼ਬਦਾਂ ਵਿੱਚ ਲਿਖ ਕੇ ਦੇਖੋ।'],
       intents: [
         { name: 'ਸਕੂਲ ਦਾ ਸਮਾਂ',
-          examples: ['ਸਮਾਂ', 'ਸਕੂਲ ਕਿੰਨੇ ਵਜੇ ਲੱਗਦਾ ਹੈ', 'ਸਕੂਲ ਕਿੰਨੇ ਵਜੇ ਬੰਦ ਹੁੰਦਾ ਹੈ', 'ਸਵੇਰ ਦੀ ਸਭਾ ਕਦੋਂ ਹੁੰਦੀ ਹੈ', 'school timing', 'ਕੀ ਸ਼ਨੀਵਾਰ ਨੂੰ ਸਕੂਲ ਖੁੱਲ੍ਹਾ ਹੈ'],
+          examples: ['ਸਮਾਂ', 'ਸਕੂਲ ਕਿੰਨੇ ਵਜੇ ਲੱਗਦਾ ਹੈ', 'ਸਕੂਲ ਕਦੋਂ ਸ਼ੁਰੂ ਹੁੰਦਾ ਹੈ', 'ਸਵੇਰ ਦੀ ਸਭਾ ਕਦੋਂ ਹੁੰਦੀ ਹੈ', 'school timing', 'ਕੀ ਸ਼ਨੀਵਾਰ ਨੂੰ ਸਕੂਲ ਖੁੱਲ੍ਹਾ ਹੈ'],
           replies: ['ਸਕੂਲ ਸਵੇਰੇ 7:50 ਵਜੇ ਸਵੇਰ ਦੀ ਸਭਾ ਨਾਲ ਸ਼ੁਰੂ ਹੁੰਦਾ ਹੈ ਅਤੇ ਦੁਪਹਿਰ 1:50 ਵਜੇ ਬੰਦ ਹੁੰਦਾ ਹੈ।', 'ਸਕੂਲ ਸੋਮਵਾਰ ਤੋਂ ਸ਼ਨੀਵਾਰ ਤੱਕ ਖੁੱਲ੍ਹਾ ਰਹਿੰਦਾ ਹੈ। ਹਰ ਮਹੀਨੇ ਦੇ ਦੂਜੇ ਸ਼ਨੀਵਾਰ ਛੁੱਟੀ ਹੁੰਦੀ ਹੈ।', 'ਕਿਰਪਾ ਕਰਕੇ 7:45 ਤੱਕ ਪਹੁੰਚ ਜਾਓ। ਗੇਟ 7:55 ਵਜੇ ਬੰਦ ਹੋ ਜਾਂਦਾ ਹੈ!'] },
         { name: 'ਲਾਇਬ੍ਰੇਰੀ',
           examples: ['ਲਾਇਬ੍ਰੇਰੀ', 'ਕਿਤਾਬਾਂ', 'ਲਾਇਬ੍ਰੇਰੀ ਦਾ ਸਮਾਂ', 'ਕਿੰਨੀਆਂ ਕਿਤਾਬਾਂ ਲੈ ਸਕਦੇ ਹਾਂ', 'ਕਿਤਾਬ ਵਾਪਸ ਕਿਵੇਂ ਕਰੀਏ', 'ਮੇਰੀ ਲਾਇਬ੍ਰੇਰੀ ਦੀ ਕਿਤਾਬ ਗੁੰਮ ਹੋ ਗਈ'],
@@ -340,7 +340,7 @@ window.APP_CONTENT = {
       fallback: ['معاف کیجیے، میں سمجھ نہیں پایا۔ آپ مجھ سے اوقات، لائبریری، کھیلوں کے دن، فیس، چھٹیوں یا کینٹین کے بارے میں پوچھ سکتے ہیں۔', 'ہمم، یہ مجھے ابھی معلوم نہیں۔ اسکول کے دفتر سے پوچھیے یا دوسرے الفاظ میں لکھ کر دیکھیے۔'],
       intents: [
         { name: 'اسکول کے اوقات',
-          examples: ['وقت', 'اسکول کتنے بجے لگتا ہے', 'اسکول کتنے بجے بند ہوتا ہے', 'اسمبلی کب ہوتی ہے', 'school timing', 'کیا ہفتے کو اسکول کھلا ہے'],
+          examples: ['وقت', 'اسکول کتنے بجے لگتا ہے', 'اسکول کب شروع ہوتا ہے', 'اسمبلی کب ہوتی ہے', 'school timing', 'کیا ہفتے کو اسکول کھلا ہے'],
           replies: ['اسکول صبح 7:50 بجے اسمبلی سے شروع ہوتا ہے اور دوپہر 1:50 بجے بند ہوتا ہے۔', 'اسکول پیر سے ہفتے تک کھلا رہتا ہے۔ ہر مہینے کے دوسرے ہفتے کو چھٹی ہوتی ہے۔', 'براہ کرم 7:45 بجے تک پہنچ جائیں۔ گیٹ 7:55 بجے بند ہو جاتا ہے!'] },
         { name: 'لائبریری',
           examples: ['لائبریری', 'کتب خانہ', 'لائبریری کا وقت', 'کتنی کتابیں لے سکتے ہیں', 'کتاب واپس کیسے کریں', 'میری لائبریری کی کتاب کھو گئی'],

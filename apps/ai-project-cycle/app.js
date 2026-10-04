@@ -7,6 +7,7 @@
   var store = EDU.store(SLUG);
   var $ = EDU.$, $$ = EDU.$$, el = EDU.el, t = EDU.t;
   var STEPS = 8;
+  var MAXLEN = 8000;   /* longest answer kept per field (UI maxlength and import/load clean-up use the same limit) */
 
   var TEXT_FIELDS = ['title', 'team', 'cls', 'who', 'who_know', 'what', 'what_evidence', 'where', 'why_value', 'why_improve',
     'ps_who', 'ps_what', 'ps_where', 'ps_why', 'features', 'source_details', 'data_check', 'explore_q', 'explore_notes',
@@ -94,7 +95,7 @@
     p.sampleOf = (o.sampleOf === 0 || o.sampleOf === 1 || o.sampleOf === 2) ? o.sampleOf : null;
     p.edited = !!o.edited;
     var tt = o.t && typeof o.t === 'object' ? o.t : {};
-    TEXT_FIELDS.forEach(function (f) { if (typeof tt[f] === 'string') p.t[f] = tt[f].slice(0, 8000); });
+    TEXT_FIELDS.forEach(function (f) { if (typeof tt[f] === 'string') p.t[f] = tt[f].slice(0, MAXLEN); });
     var g = Number(o.sdg); p.sdg = g >= 1 && g <= 17 && Math.floor(g) === g ? g : 0;
     p.sources = ids(o.sources, SOURCES); p.charts = ids(o.charts, CHARTS); p.metrics = ids(o.metrics, METRICS);
     p.checks = ids(o.checks, CHECKS);
@@ -134,16 +135,23 @@
   function find(id) { for (var i = 0; i < projects.length; i++) if (projects[i].id === id) return projects[i]; return null; }
 
   /* ---------------- saving ---------------- */
-  var saveTimer = null;
+  var saveTimer = null, saveOk = true, warnedSave = false;
   function saveNow() {
     clearTimeout(saveTimer); saveTimer = null;
-    store.set('projects', projects);
+    /* EDU.store.set returns false when the browser refuses (storage full, private mode, blocked site data) */
+    saveOk = store.set('projects', projects) !== false;
     store.set('current', cur.id);
     showSaved();
+    if (!saveOk && !warnedSave) { warnedSave = true; EDU.toast(t('save_failed'), 6000); }
+    if (saveOk) warnedSave = false;
   }
   function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 300); }
   function touched() { cur.edited = true; cur.updated = Date.now(); scheduleSave(); }
-  function showSaved() { $('#save-status').textContent = t('saved_local'); }
+  function showSaved() {
+    var s = $('#save-status');
+    s.textContent = t(saveOk ? 'saved_local' : 'save_failed');
+    s.classList.toggle('save-bad', !saveOk);
+  }
   window.addEventListener('pagehide', function () { if (saveTimer) saveNow(); });
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden' && saveTimer) saveNow(); });
 
@@ -161,8 +169,10 @@
     for (var s = 1; s <= 7; s++) STAGES[s].forEach(function (it) { if (isFilled(it, p)) n++; });
     return Math.round(n * 100 / TOTAL_ITEMS);
   }
+  /* p === null means "no project" (the blank worksheet): ask the neutral question */
   function qLabel(it, p) {
-    if (it.f === 'model_how') return t(p.approach === 'rule' ? 'q_model_how_rule' : p.approach === 'learn' ? 'q_model_how_learn' : 'q_model_how_none');
+    var ap = p ? p.approach : '';
+    if (it.f === 'model_how') return t(ap === 'rule' ? 'q_model_how_rule' : ap === 'learn' ? 'q_model_how_learn' : 'q_model_how_none');
     return t(it.q);
   }
 
@@ -186,7 +196,7 @@
     if (!hasPS(cur)) { box.appendChild(el('span', { class: 'muted', text: t('ps_empty') })); return; }
     appendTemplate(box, t('ps_sentence'), psVals(cur));
   }
-  function firstLine(s) { return trim(String(s || '').split(/\r?\n/)[0]).replace(/[.,;:!?।۔]+$/, '').trim(); }
+  function firstLine(s) { return trim(String(s || '').split(/\r?\n/)[0]).replace(/[.,;:!?।॥۔؟،]+$/, '').trim(); }
 
   /* ---------------- rendering ---------------- */
   function renderProjectSelect() {
@@ -338,7 +348,7 @@
     }));
   }
   function answerNode(it, p, blank) {
-    if (it.f) return qa(qLabel(it, p), p.t[it.f], blank, it.lines);
+    if (it.f) return qa(qLabel(it, blank ? null : p), p.t[it.f], blank, it.lines);
     var label = el('div', { class: 'q', text: t(it.q) }), body;
     if (it.list) {
       var L = LISTS[it.list];
@@ -476,6 +486,7 @@
     var f = e.target && e.target.getAttribute ? e.target.getAttribute('data-field') : null;
     if (!f || TEXT_FIELDS.indexOf(f) < 0) return;
     if (e.target.classList.contains('one-line') && /[\r\n]/.test(e.target.value)) e.target.value = e.target.value.replace(/\s*[\r\n]+\s*/g, ' ');
+    if (e.target.value.length > MAXLEN) e.target.value = e.target.value.slice(0, MAXLEN);
     cur.t[f] = e.target.value;
     if (e.target.tagName === 'TEXTAREA') autosize(e.target);
     touched();
@@ -497,7 +508,16 @@
     else if (d.ap) { cur.approach = d.ap; touched(); renderModel(); renderProgress(); }
     else if (d.task) { cur.task = d.task; touched(); renderModel(); }
     else if (d.sample !== undefined) {
-      var p = sampleProject(+d.sample, EDU.lang);
+      /* reopen an untouched copy of this sample instead of piling up identical copies on every click */
+      var si = +d.sample, p = null;
+      for (var k = 0; k < projects.length; k++) if (projects[k].sampleOf === si && !projects[k].edited) { p = projects[k]; break; }
+      if (p) {
+        p.step = 1;
+        if (p !== cur) switchTo(p); else { saveNow(); renderStep(); }
+        EDU.toast(t('sample_opened'));
+        return;
+      }
+      p = sampleProject(si, EDU.lang);
       projects.push(p);
       switchTo(p);
       EDU.toast(t('sample_loaded'));
@@ -510,6 +530,8 @@
   var resizeTimer = null;
   window.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(autosizeAll, 150); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(autosizeAll).catch(function () { });
+  /* a script font downloaded after a language switch changes line heights: fit the boxes again */
+  if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', function () { autosizeAll(); });
 
   $('#checks').addEventListener('change', function (e) {
     var c = e.target && e.target.getAttribute('data-check');
@@ -578,11 +600,16 @@
     }).catch(function () { EDU.toast(t('import_bad')); });
   });
 
-  var printBlank = false;
+  var printBlank = false, blankAt = 0;
+  function endBlank() { if (printBlank) { printBlank = false; renderCanvas(false); } }
   window.addEventListener('beforeprint', function () { renderCanvas(printBlank); });
-  window.addEventListener('afterprint', function () { if (printBlank) { printBlank = false; renderCanvas(false); } });
+  window.addEventListener('afterprint', endBlank);
+  /* browsers that never fire afterprint: show the filled canvas again on the next tap or key press */
+  ['pointerdown', 'keydown'].forEach(function (ev) {
+    document.addEventListener(ev, function () { if (printBlank && Date.now() - blankAt > 1500) endBlank(); }, true);
+  });
   $('#btn-print').addEventListener('click', function () { printBlank = false; renderCanvas(false); window.print(); });
-  $('#btn-print-blank').addEventListener('click', function () { printBlank = true; renderCanvas(true); window.print(); });
+  $('#btn-print-blank').addEventListener('click', function () { printBlank = true; blankAt = Date.now(); renderCanvas(true); window.print(); });
   $('#btn-txt').addEventListener('click', function () { EDU.download(fileBase(cur) + '.txt', '﻿' + buildText(cur), 'text/plain'); });
   $('#btn-copy').addEventListener('click', function () { EDU.copy(buildText(cur)); });
   $('#btn-fs').addEventListener('click', function () { EDU.fullscreen($('#canvas-body')); });
@@ -596,6 +623,9 @@
     if (changed) { fillForm(); scheduleSave(); }
     renderAll();
   });
+
+  /* the same limit the loader keeps, so nothing is cut silently after a reload */
+  $$('textarea[data-field]').forEach(function (ta) { if (!ta.hasAttribute('maxlength')) ta.maxLength = MAXLEN; });
 
   fillForm();
   renderAll();

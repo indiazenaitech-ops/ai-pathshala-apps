@@ -21,15 +21,32 @@
   function tag() { return EDU.langInfo(EDU.lang).tag; }
   function pct(p) {
     if (!isFinite(p)) p = 0;
-    if (p > 0.995 && p < 1) return '>' + EDU.fmt(0.99, { style: 'percent' });
-    if (p > 0 && p < 0.005) return '<' + EDU.fmt(0.01, { style: 'percent' });
+    // A Naive Bayes share is never truly 0 or 100 %; rounding must not make the model look "100% sure".
+    if (p >= 0.995) return '>' + EDU.fmt(0.99, { style: 'percent' });
+    if (p < 0.005) return '<' + EDU.fmt(0.01, { style: 'percent' });
     return EDU.fmt(p, { style: 'percent', maximumFractionDigits: 0 });
+  }
+  /* Accuracy: 299 right out of 300 must not round up to 100 %. */
+  function acc(p) {
+    p = isFinite(p) ? p : 0;
+    var r = Math.round(p * 100);
+    if (p < 1 && r >= 100) r = 99;
+    return EDU.fmt(r / 100, { style: 'percent', maximumFractionDigits: 0 });
   }
   function smallPct(p) { return EDU.fmt(p, { style: 'percent', minimumSignificantDigits: 2, maximumSignificantDigits: 2 }); }
   function times(x) { return EDU.fmt(x, { maximumFractionDigits: x < 10 ? 1 : 0 }); }
   function hash(str) { var h = 5381; for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0; return h; }
   function lc(l) { return 'var(--c' + l.color + ')'; }
   function nSent(n) { return n === 1 ? t('one_sentence') : t('n_sentences', { n: EDU.fmt(n) }); }
+  /* Writing direction of a typed sentence, from its first letter: an English sentence in the Urdu page
+     (or an Urdu sentence in an English page) must keep its own word order in the coloured-word view. */
+  var RTL_RE = null, LETTER_RE = null;
+  try { RTL_RE = new RegExp('[\\p{Script=Arabic}\\p{Script=Hebrew}\\p{Script=Syriac}\\p{Script=Thaana}]', 'u'); LETTER_RE = new RegExp('\\p{L}', 'u'); } catch (e) { }
+  function textDir(s) {
+    if (!LETTER_RE) return null;
+    var m = String(s || '').match(LETTER_RE);
+    return m ? (RTL_RE.test(m[0]) ? 'rtl' : 'ltr') : null;
+  }
 
   /* ---------------- state ---------------- */
   var S, model = null, evalRes = null, trainedRows = [], trainedSig = null;
@@ -48,7 +65,7 @@
     return rows;
   }
   function defaultState() {
-    S = { v: 1, seq: 0, labels: [], rows: [], edited: false, dataLang: EDU.lang, pairs: false, test: '', trained: false };
+    S = { v: 1, seq: 0, labels: [], rows: [], edited: false, dataLang: EDU.lang, ui: EDU.lang, pairs: false, test: '', trained: false };
     S.labels = [mkPreset('happy'), mkPreset('sad')];
     S.rows = allSampleRows();
     S.test = content().tries.happy;
@@ -74,11 +91,12 @@
         .map(function (r, i) { return { id: typeof r.id === 'string' ? r.id : 'x' + i, text: r.text.slice(0, MAX_LEN), label: r.label }; });
       S = { v: 1, seq: Math.max(seq, labels.length + rows.length + 1), labels: labels, rows: rows, edited: !!s.edited,
         dataLang: EDU.LANGS.some(function (x) { return x.code === s.dataLang; }) ? s.dataLang : 'en', pairs: !!s.pairs,
+        ui: EDU.LANGS.some(function (x) { return x.code === s.ui; }) ? s.ui : null,
         test: typeof s.test === 'string' ? s.test.slice(0, MAX_LEN) : '', trained: !!s.trained };
       return S;
     } catch (e) { return defaultState(); }
   }
-  function save() { store.set('state', S); }
+  function save() { S.ui = EDU.lang; store.set('state', S); }
   function labelById(id) { for (var i = 0; i < S.labels.length; i++) if (S.labels[i].id === id) return S.labels[i]; return null; }
   function labelName(l) {
     if (!l) return '?';
@@ -98,7 +116,7 @@
   /* ---------------- the model ---------------- */
   function featsOf(text) {
     var toks = NB.tokenize(text, tag());
-    var feats = NB.features(toks, S.pairs), display = {};
+    var feats = NB.features(toks, S.pairs), display = Object.create(null);   // no prototype: words like "constructor" are plain keys
     toks.forEach(function (k, i) {
       var d = k.raw.toLowerCase();
       if (!display[k.tok]) display[k.tok] = d;
@@ -150,6 +168,15 @@
       if (S.labels.length <= 2) del.disabled = true;
 
       var inp = el('input', { type: 'text', class: 'add-input no-i18n', maxlength: String(MAX_LEN), placeholder: t('add_sentence_ph'), 'aria-label': t('add_sentence_ph'), dataset: { label: l.id }, autocomplete: 'off' });
+      // A one-line <input> silently strips line breaks from pasted text, so several pasted lines would
+      // become one long sentence. Catch multi-line pastes and add every line as its own sentence.
+      inp.addEventListener('paste', function (e) {
+        var txt = '';
+        try { txt = (e.clipboardData || window.clipboardData).getData('text') || ''; } catch (er) { txt = ''; }
+        if (!/[\r\n]/.test(txt.trim())) return;
+        e.preventDefault();
+        addSentences(l.id, (inp.value.trim() ? inp.value + '\n' : '') + txt);
+      });
       var form = el('form', { class: 'add-row no-print', onsubmit: function (e) { e.preventDefault(); addSentences(l.id, inp.value); } },
         inp, el('button', { type: 'submit', class: 'btn btn-sm', text: t('add') }));
 
@@ -260,8 +287,14 @@
   /* ---------------- CSV ---------------- */
   function exportCSV() {
     if (!S.rows.length) { EDU.toast(t('nothing_export')); return; }
-    var rows = [['text', 'label', 'emoji']];
-    S.rows.forEach(function (r) { var l = labelById(r.label); rows.push([r.text, labelName(l), l ? l.emoji : '']); });
+    var rows = [['text', 'label', 'emoji']], csvName = {}, used = Object.create(null);
+    // Two labels may carry the same name; give them different names in the file, or importing it would merge them.
+    S.labels.forEach(function (l) {
+      var base = labelName(l), nm = base, k = 2;
+      while (used[nm.toLowerCase()]) nm = base + ' (' + (k++) + ')';
+      used[nm.toLowerCase()] = 1; csvName[l.id] = nm;
+    });
+    S.rows.forEach(function (r) { var l = labelById(r.label); rows.push([r.text, l ? csvName[l.id] : '?', l ? l.emoji : '']); });
     EDU.download('mood-dataset.csv', EDU.csv.stringify(rows), 'text/csv');
   }
   function importCSV() {
@@ -283,7 +316,7 @@
       else if (ei < 0 && h === 'emoji') ei = i;
     });
     if (ti >= 0 && li >= 0) rows = rows.slice(1); else { ti = 0; li = 1; ei = -1; }
-    var data = [], names = [], emo = {};
+    var data = [], names = [], emo = Object.create(null);
     rows.forEach(function (r) {
       var tx = String(r[ti] || '').trim().slice(0, MAX_LEN), lb = String(r[li] || '').trim().slice(0, MAX_NAME);
       if (!tx || !lb) return;
@@ -294,7 +327,7 @@
     if (!data.length) { EDU.toast(t('import_bad')); return false; }
     if (names.length < 2) { EDU.toast(t('import_two')); return false; }
     if (names.length > MAX_LABELS) { EDU.toast(t('import_too_many', { n: MAX_LABELS })); return false; }
-    if (S.rows.length && !confirm(t('confirm_import', { n: EDU.fmt(data.length) }))) return false;
+    if (S.rows.length && !confirm(t('confirm_import', { n: EDU.fmt(Math.min(data.length, MAX_ROWS)) }))) return false;
     var usedC = {}, labels = [];
     names.forEach(function (nm) {
       var ex = S.labels.filter(function (l) { return labelName(l).toLowerCase() === nm.toLowerCase(); })[0];
@@ -307,7 +340,7 @@
       if (!l.color) { l.color = COLORS.filter(function (c) { return !usedC[c]; })[0] || COLORS[0]; usedC[l.color] = 1; }
       if (!l.emoji) { l.emoji = EMOJIS.filter(function (e) { return !usedE[e]; })[0] || '🏷️'; usedE[l.emoji] = 1; }
     });
-    var byName = {};
+    var byName = Object.create(null);
     names.forEach(function (nm, i) { byName[nm] = labels[i].id; });
     S.labels = labels;
     S.rows = data.slice(0, MAX_ROWS).map(function (d) { return { id: newId('r'), text: d.text, label: byName[d.label] }; });
@@ -341,14 +374,21 @@
     renderModel();
   }
   function countWords() { var n = 0; for (var f in model.vocab) if (f.indexOf(' ') < 0) n++; return n; }
+  /* Words counted under one label (word pairs, when switched on, are extra features, not words). */
+  function wordTotal(id) {
+    if (!model.pairsOn) return model.total[id];
+    var n = 0, cnt = model.counts[id];
+    for (var f in cnt) if (f.indexOf(' ') < 0) n += cnt[f];
+    return n;
+  }
   function renderModel() {
     var mv = $('#model-view');
     if (!model) { mv.hidden = true; return; }
     mv.hidden = false;
     $('#st-sentences').textContent = EDU.fmt(model.N);
     $('#st-vocab').textContent = EDU.fmt(countWords());
-    $('#st-train-acc').textContent = pct(evalRes.trainAcc);
-    $('#st-fair-acc').textContent = pct(evalRes.fairAcc);
+    $('#st-train-acc').textContent = acc(evalRes.trainAcc);
+    $('#st-fair-acc').textContent = acc(evalRes.fairAcc);
     $('#st-fair-acc').dataset.v = String(evalRes.fairAcc);
 
     var ls = $('#lab-stats'); ls.innerHTML = '';
@@ -362,7 +402,7 @@
       clues.appendChild(cl);
       ls.appendChild(el('div', { class: 'lab-stat', style: { '--lc': lc(l) } },
         el('div', { class: 'ls-head' }, el('span', { class: 'ls-name' }, l.emoji + ' ', el('span', { class: 'no-i18n', text: labelName(l) })),
-          el('span', { class: 'ls-nums', text: t('label_nums', { s: nSent(model.docs[id]), p: pct(model.docs[id] / model.N), w: EDU.fmt(model.total[id]) }) })),
+          el('span', { class: 'ls-nums', text: t('label_nums', { s: nSent(model.docs[id]), p: pct(model.docs[id] / model.N), w: EDU.fmt(wordTotal(id)) }) })),
         clues));
       ls.lastChild.style.setProperty('--lc', lc(l));
     });
@@ -449,7 +489,9 @@
     var text = S.test.trim();
     if (!model) { res.appendChild(el('p', { class: 'callout mb0', text: t('train_first') })); ex.hidden = true; res.removeAttribute('data-label'); return; }
     if (!text) { res.appendChild(el('p', { class: 'muted mb0', text: t('type_something') })); ex.hidden = true; res.removeAttribute('data-label'); return; }
-    var p = predictText(text);
+    // Tokenize the text exactly as typed (not trimmed): renderWords() uses the token positions to
+    // rebuild the sentence, so a leading space would otherwise shift every word and garble the view.
+    var p = predictText(S.test);
     var win = labelById(model.labels[p.best]);
     res.dataset.label = win.id;
     res.dataset.idx = String(p.best);
@@ -477,9 +519,10 @@
     renderMaths(p);
   }
   function renderWords(p) {
-    var text = S.test, w = $('#words');
+    var text = S.test, w = $('#words'), dir = textDir(text);
     w.innerHTML = '';
-    var pos = 0, strongest = null, strongPush = -1, present = {};
+    if (dir) w.setAttribute('dir', dir); else w.removeAttribute('dir');
+    var pos = 0, strongest = null, strongPush = -1, present = Object.create(null);
     p.toks.forEach(function (k) {
       if (k.start > pos) w.appendChild(document.createTextNode(text.slice(pos, k.start)));
       pos = k.end;
@@ -502,7 +545,7 @@
     // pairs
     var pu = $('#pairs-used'); pu.innerHTML = '';
     if (model.pairsOn) {
-      var seen = {};
+      var seen = Object.create(null);
       for (var i = 0; i + 1 < p.toks.length; i++) {
         var f = p.toks[i].tok + ' ' + p.toks[i + 1].tok;
         if (seen[f] || !model.vocab[f]) continue;
@@ -589,7 +632,7 @@
       body.appendChild(tr);
     });
     var rs = el('tr', { class: 'sum' }, el('td', { text: t('maths_mult') }));
-    p.scores.forEach(function (s) { rs.appendChild(el('td', { class: 'n', html: sci(s) })); });
+    p.scores.forEach(function (s) { rs.appendChild(el('td', { class: 'n' }, el('span', { dir: 'ltr', html: sci(s) }))); });   // "3.4 × 10⁻⁸" must not be reordered in Urdu
     body.appendChild(rs);
     var rf = el('tr', { class: 'sum win-row' }, el('td', { text: t('maths_share') }));
     p.probs.forEach(function (q, i) {
@@ -653,7 +696,7 @@
     snapshot();
     S.rows = left; S.edited = true;
     train();
-    expRes.exp1 = { msg: t('exp1_done', { n: EDU.fmt(hits.length), word: tok.raw }), text: text, before: before, after: text ? outcome(text) : null, focus: before ? before.labels[before.best] : null };
+    expRes.exp1 = { msg: ['exp1_done', { n: hits.length, word: tok.raw }], text: text, before: before, after: text ? outcome(text) : null, focus: before ? before.labels[before.best] : null };
     exp1Touched = false;
     finishExp();
   }
@@ -667,7 +710,7 @@
     S.edited = true;
     train();
     S.test = c.bias.test; $('#test-input').value = S.test; selectedFeat = NB.norm(NB.tokenize(c.bias.word, tag()).map(function (k) { return k.tok; })[0] || '');
-    expRes.exp2 = { msg: t('exp2_lesson', { word: c.bias.word, label: labelName(tl) }), text: c.bias.test, before: before, after: outcome(c.bias.test), focus: tl.id };
+    expRes.exp2 = { msg: ['exp2_lesson', { word: c.bias.word }, tl.id], text: c.bias.test, before: before, after: outcome(c.bias.test), focus: tl.id };
     finishExp();
   }
   function runExp3() {
@@ -680,7 +723,7 @@
     S.edited = true;
     train();
     S.test = c.tries.neg; $('#test-input').value = S.test;
-    expRes.exp3 = { msg: t('exp3_lesson'), text: c.tries.neg, before: before, after: outcome(c.tries.neg), focus: tl.id };
+    expRes.exp3 = { msg: ['exp3_lesson', {}], text: c.tries.neg, before: before, after: outcome(c.tries.neg), focus: tl.id };
     finishExp();
   }
   function finishExp() {
@@ -690,7 +733,9 @@
   function undoExp() {
     var snap = undoStack.pop();
     if (!snap) return;
-    S.labels = snap.labels; S.rows = snap.rows; S.edited = snap.edited; S.test = snap.test;
+    // Experiments only change sentences: keep any label renamed or re-emojied since then as it is now.
+    S.labels = snap.labels.map(function (sl) { return labelById(sl.id) || sl; });
+    S.rows = snap.rows; S.edited = snap.edited; S.test = snap.test;
     $('#test-input').value = S.test;
     expRes = {};
     if (model) { if (emptyLabel()) model = null; else train(); }
@@ -698,10 +743,18 @@
     renderAll();
     EDU.toast(t('undone'));
   }
+  /* Experiment messages are kept as [key, vars, labelId] and translated when drawn, so they follow a language switch. */
+  function expMsg(m) {
+    var v = {}, k;
+    for (k in m[1]) v[k] = m[1][k];
+    if (typeof v.n === 'number') v.n = EDU.fmt(v.n);
+    if (m[2]) v.label = labelName(labelById(m[2]));
+    return t(m[0], v);
+  }
   function renderBA(box, r) {
     box.innerHTML = '';
     if (!r) return;
-    var wrap = el('div', { class: 'ba' }, el('p', { class: 'ba-msg mb0', text: r.msg }));
+    var wrap = el('div', { class: 'ba' }, el('p', { class: 'ba-msg mb0', text: expMsg(r.msg) }));
     if (r.before && r.after) {
       var fi = r.before.labels.indexOf(r.focus);
       var fiA = r.after.labels.indexOf(r.focus);
@@ -788,11 +841,22 @@
     save(); renderAll();
   });
 
+  /* If the test box still holds one of the ready-made sentences (a "try" chip or the bias test) from the
+     previous language (S.ui = language of the last save) or from the data's language, show it in the new one. */
+  function translateTest(fromLangs) {
+    var nc = content();
+    fromLangs.forEach(function (L) {
+      var oc = L && content(L);
+      if (!oc || oc === nc) return;
+      TRY_KINDS.forEach(function (k) { if (S.test === oc.tries[k]) S.test = nc.tries[k]; });
+      if (S.test === oc.bias.test) S.test = nc.bias.test;
+    });
+  }
+
   /* Switching language: if the sentences are still the samples, swap them for the new language. */
   EDU.onLang(function () {
-    var oldL = S.dataLang, oc = content(oldL), nc = content();
-    TRY_KINDS.forEach(function (k) { if (S.test === oc.tries[k]) S.test = nc.tries[k]; });
-    if (S.test === oc.bias.test) S.test = nc.bias.test;
+    var oldL = S.dataLang;
+    translateTest([S.ui, oldL]);
     if (!S.edited && oldL !== EDU.lang) {
       S.rows = allSampleRows(); S.dataLang = EDU.lang;
       undoStack = []; expRes = {};
@@ -805,11 +869,8 @@
 
   /* ---------------- start ---------------- */
   loadState();
-  if (!S.edited && S.dataLang !== EDU.lang) {
-    var oc0 = content(S.dataLang), nc0 = content();
-    TRY_KINDS.forEach(function (k) { if (S.test === oc0.tries[k]) S.test = nc0.tries[k]; });
-    S.rows = allSampleRows(); S.dataLang = EDU.lang;
-  }
+  translateTest([S.ui, S.dataLang]);
+  if (!S.edited && S.dataLang !== EDU.lang) { S.rows = allSampleRows(); S.dataLang = EDU.lang; }
   if (S.trained && !emptyLabel()) train();
   save();
   renderAll();

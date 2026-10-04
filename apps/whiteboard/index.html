@@ -53,6 +53,7 @@
     .wb[data-tool="eraser"] #wb-live { cursor: none; }
     .wb-text { position: absolute; z-index: 3; margin: 0; padding: 0 2px; min-height: 0; border: 2px dashed #3b82f6; border-radius: 4px;
       background: rgba(255, 255, 255, .06); resize: none; overflow: hidden; white-space: pre; outline: none;
+      text-align: left;   /* the board is never mirrored: Urdu text stays where it was tapped, as on the canvas */
       font-family: "Noto Sans", "Nirmala UI", "Noto Sans Devanagari", "Noto Nastaliq Urdu", system-ui, sans-serif; font-weight: 500; }
     .wb-show { position: absolute; top: 6px; inset-inline-end: 6px; z-index: 4; box-shadow: var(--shadow); }
     .wb.wb-notools .wb-bar { display: none; }
@@ -73,8 +74,10 @@
     .wb.wb-max { position: fixed; inset: 0; z-index: 800; }
     .wb.wb-full .wb-stage { flex: 1 1 auto; min-height: 0; align-items: center; }
     .wb.wb-full .wb-thumbs { display: none; }
-    .wb.wb-full .wb-ib { min-width: 50px; min-height: 50px; }
-    .wb.wb-full .wb-ib svg { width: 26px; height: 26px; }
+    @media (min-width: 761px) {           /* bigger buttons for a smartboard; phones keep their compact bar */
+      .wb.wb-full .wb-ib { min-width: 50px; min-height: 50px; }
+      .wb.wb-full .wb-ib svg { width: 26px; height: 26px; }
+    }
 
     /* ---------- phones ---------- */
     @media (max-width: 760px) {
@@ -84,11 +87,15 @@
       .wb-group { gap: 2px; padding: 2px; }
       .wb-ib { min-width: 40px; min-height: 40px; padding: 3px; }
       .wb-sw { width: 28px; height: 28px; margin: 3px 2px; border-width: 2px; }
+      .wb-sw::before { content: ""; position: absolute; inset: -8px -4px; }   /* 40 px tall touch target */
       .wb-custom { width: 32px; height: 32px; }
       .wb-custom i { width: 14px; height: 14px; }
       .wb-bgsel { max-width: 10.5rem; font-size: .88rem; }
       .wb-thumb canvas { height: 46px; }
       .wb-pageno { min-width: 5.5rem; font-size: .9rem; }
+    }
+    @media (max-width: 374px) {           /* 360 px phones: keep all 8 tools on one row (no lone Text button) */
+      #wb-tools .wb-ib { min-width: 36px; padding: 3px 1px; }
     }
 
     .wb-settings .row > .field { flex: 1 1 220px; }
@@ -101,7 +108,8 @@
     /* ---------- print: every page as a picture ---------- */
     .wb-print figure { margin: 0 0 8mm; break-inside: avoid; page-break-inside: avoid; }
     .wb-print figure + figure { break-before: page; page-break-before: always; }
-    .wb-print img { width: 100%; height: auto; border: 1px solid #999; }
+    .wb-print img, .wb-print canvas { display: block; width: auto; height: auto; max-width: 100%; max-height: 235mm;
+      max-height: min(235mm, 86vh); margin: 0 auto; border: 1px solid #999; }   /* one sheet per page, with its caption, portrait or landscape */
     .wb-print figcaption { font-size: 12pt; font-weight: 700; margin-top: 2mm; }
     @media print {
       .wb, .wb-settings, details.card, .edu-intro { display: none !important; }

@@ -69,7 +69,8 @@
       border: 1px solid color-mix(in srgb, var(--k) 60%, var(--surface)); border-radius: 6px;
       transition: transform .08s, opacity .15s, filter .15s; touch-action: manipulation;
     }
-    .pt-tile:hover { transform: scale(1.08); z-index: 2; box-shadow: var(--shadow); }
+    /* only real pointers zoom on hover; on phones a tapped tile would otherwise stay enlarged */
+    @media (hover: hover) { .pt-tile:hover { transform: scale(1.08); z-index: 2; box-shadow: var(--shadow); } }
     .pt-tile:focus-visible { z-index: 3; }
     .pt-tile.sel { outline: 3px solid var(--accent); outline-offset: 1px; z-index: 2; }
     .pt-tile.hit { box-shadow: 0 0 0 3px var(--accent); z-index: 2; }
@@ -112,7 +113,11 @@
     .pt-legend .chip[aria-pressed="true"] .pt-sw { border-color: var(--primary-ink); }
 
     .pt-card:fullscreen { overflow: auto; background: var(--bg); padding: 2vh 2vw; }
-    .pt-card:fullscreen .pt-sizer { min-width: 0; }
+    /* full screen on a smartboard: size the table by the screen height so all rows (with the f-block)
+       and the legend fit without scrolling; the grid is about 0.56 × as tall as it is wide */
+    .pt-card:fullscreen .pt-sizer { min-width: 0; max-width: max(640px, calc((100vh - 250px) * 1.75)); margin-inline: auto; }
+    .pt-card:fullscreen .pt-legend { justify-content: center; margin-top: 6px; }
+    .pt-card:fullscreen .pt-legend .chip { min-height: 34px; padding-block: 4px; }
 
     /* ---------- detail ---------- */
     .pt-detail { margin-top: 16px; }
@@ -195,8 +200,14 @@
         --k-solid: #748094; --k-liquid: #1c7ed6; --k-gas: #e8590c; --k-unknown: #adb5bd; --tile-mix: 22%;
       }
       .pt-scroll { overflow: visible; }
-      .pt-sizer { min-width: 0; }
+      /* A4 landscape: keep the whole chart (title, 10 rows, legend) on ONE page */
+      .pt-sizer { min-width: 0; max-width: 255mm; margin-inline: auto; }
+      .pt-name, .pt-mass { display: block; }   /* a wall chart shows names and masses at any width */
+      .pt-tile { min-height: 0; }
       .pt-tile:hover { transform: none; box-shadow: none; }
+      .pt-legend { gap: 4px 6px; margin-top: 4px; justify-content: center; }
+      .pt-legend .chip { min-height: 0; padding: 2px 8px; font-size: 8.5pt; }
+      .pt-legend .pt-sw { width: 11px; height: 11px; }
       body:not([data-print="ws"]) #ws { display: none !important; }
       body[data-print="ws"] .edu-main > :not(#ws) { display: none !important; }
       body[data-print="ws"] #ws { display: block !important; }

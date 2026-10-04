@@ -50,29 +50,37 @@
   }
 
   /* webcam snapshot (optional; works without a camera too) */
-  var stream = null, camKey = '', video = $('#cam-video');
+  var stream = null, camKey = '', video = $('#cam-video'), camReq = 0, camPending = false;
   function camMsg(key, state) {
     camKey = key || '';
     var m = $('#cam-msg');
     m.textContent = camKey ? t(camKey) : '';
     m.setAttribute('data-state', state || '');
   }
+  function stopTracks(s) { s.getTracks().forEach(function (tr) { try { tr.stop(); } catch (e) { } }); }
   function stopCam() {
-    if (stream) { stream.getTracks().forEach(function (tr) { try { tr.stop(); } catch (e) { } }); stream = null; }
+    camReq++; camPending = false;      // a camera that answers after "Close" is switched off at once
+    if (stream) { stopTracks(stream); stream = null; }
     video.srcObject = null;
     $('#cam-box').hidden = true; $('#cam-snap').disabled = true; camMsg('');
   }
   function openCam() {
-    $('#cam-box').hidden = false; $('#cam-snap').disabled = true;
-    if (stream) return;
+    $('#cam-box').hidden = false;
+    if (stream || camPending) return;  // already on (or still asking): never open a second camera
+    $('#cam-snap').disabled = true;
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { camMsg('cam_none', 'error'); return; }
     camMsg('cam_starting', 'wait');
+    var my = ++camReq; camPending = true;
     navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } }, audio: false })
       .then(function (s) {
+        if (my !== camReq) { stopTracks(s); return; }
+        camPending = false;
         stream = s; video.srcObject = s;
         var p = video.play(); if (p && p.catch) p.catch(function () { });
       })
       .catch(function (e) {
+        if (my !== camReq) return;
+        camPending = false;
         var n = e && e.name;
         camMsg(n === 'NotAllowedError' || n === 'SecurityError' ? 'cam_denied' : n === 'NotFoundError' || n === 'OverconstrainedError' || n === 'NotReadableError' ? 'cam_none' : 'cam_error', 'error');
       });
@@ -191,7 +199,7 @@
     if (S.nums && canNums) {
       var c = P.c, x, y, j;
       c.save(); c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.font = '700 ' + Math.floor(P.k * 0.3) + 'px ui-monospace, Consolas, monospace';
+      c.font = '700 ' + Math.floor(P.k * 0.36) + 'px ui-monospace, Consolas, monospace';   // "255" still fits in one cell
       for (y = 0; y < n; y++) for (x = 0; x < n; x++) {
         j = y * n + x;
         c.fillStyle = I.ink(I.grey(A[0][j], A[1][j], A[2][j]));
@@ -237,10 +245,15 @@
     cl.setAttribute('data-pixels', String(n * n)); cl.setAttribute('data-numbers', String(n * n * 3));
   }
 
+  /* CSV of the numbers being shown: one table for Grey / Red / Green / Blue, three labelled tables for Colour */
   $('#dl-csv').addEventListener('click', function () {
-    var n = I.N, ch = S.ch === 'rgb' ? 'grey' : S.ch, arr = numberArray(ch), rows = [], y, x, row;
-    for (y = 0; y < n; y++) { row = []; for (x = 0; x < n; x++) row.push(arr[y * n + x]); rows.push(row); }
-    EDU.download('pixels-' + ch + '-' + n + 'x' + n + '.csv', EDU.csv.stringify(rows), 'text/csv');
+    var n = I.N, chs = S.ch === 'rgb' ? ['r', 'g', 'b'] : [S.ch], rows = [];
+    chs.forEach(function (ch, ci) {
+      var arr = numberArray(ch), y, x, row;
+      if (chs.length > 1) { if (ci) rows.push([]); rows.push([t('ch_' + ch)]); }
+      for (y = 0; y < n; y++) { row = []; for (x = 0; x < n; x++) row.push(arr[y * n + x]); rows.push(row); }
+    });
+    EDU.download('pixels-' + S.ch + '-' + n + 'x' + n + '.csv', EDU.csv.stringify(rows), 'text/csv');
   });
 
   /* ============================================================ panel 2: filters */
@@ -282,6 +295,8 @@
           S.custom.k[i] = inp.value.trim() !== '' && isFinite(v) ? EDU.clamp(v, -999, 999) : 0;
           kernelChanged();
         });
+        // when the student leaves the box, show the number really used (empty → 0, 5000 → 999)
+        inp.addEventListener('change', function () { if (S.filter === 'custom') inp.value = String(S.custom.k[i]); });
         grid.appendChild(inp);
       })(i);
     }
@@ -292,6 +307,7 @@
       S.custom.div = div.value.trim() === '' || !isFinite(v) ? 1 : v;
       kernelChanged();
     });
+    div.addEventListener('change', function () { if (S.filter === 'custom') div.value = String(S.custom.div); });
     var abs = EDU.el('input', { type: 'checkbox', id: 'k-abs' });
     abs.addEventListener('change', function () { toCustom(); S.custom.abs = abs.checked; kernelChanged(); });
     area.appendChild(EDU.el('div', { class: 'kernel-wrap' }, grid,
@@ -324,26 +340,26 @@
     b.firstElementChild.textContent = slide ? '■' : '▶';
     $('#slide-lbl').textContent = slide ? t('stop') : t('slide_btn');
   }
+  /* The sliding window only borrows the selection (IPF.setSlidePos): the pixel the student chose is
+     neither changed nor saved, so a reload mid-slide and the end of the slide both bring it back. */
   function startSlide() {
-    var p = I.sel();
-    slide = { t0: performance.now(), idx: 0, keep: S.sel ? S.sel.slice() : null };
+    var me = slide = { t0: performance.now(), idx: 0 };
     renderSlideBtn();
-    requestAnimationFrame(tick);
+    requestAnimationFrame(function tick(now) {
+      if (slide !== me || S.tab !== 'filters') return;   // stopped, or restarted: only one loop ever runs
+      var n = I.N, pps = Math.max(6, n * n / 8);
+      me.idx = Math.max(0, Math.floor((now - me.t0) / 1000 * pps));
+      if (me.idx >= n * n) { stopSlide(false); return; }
+      I.setSlidePos([me.idx % n, Math.floor(me.idx / n)]);
+      renderFilterCanvases(); renderMath();
+      requestAnimationFrame(tick);
+    });
   }
   function stopSlide(quiet) {
     if (!slide) return;
-    S.sel = slide.keep; slide = null;
+    slide = null; I.setSlidePos(null);
     renderSlideBtn();
     if (!quiet && S.tab === 'filters') renderFilters();
-  }
-  function tick(now) {
-    if (!slide || S.tab !== 'filters') return;
-    var n = I.N, pps = Math.max(6, n * n / 8);
-    slide.idx = Math.floor((now - slide.t0) / 1000 * pps);
-    if (slide.idx >= n * n) { stopSlide(false); return; }
-    I.setSel(slide.idx % n, Math.floor(slide.idx / n), true);
-    renderFilterCanvases(); renderMath();
-    requestAnimationFrame(tick);
   }
   $('#slide-btn').addEventListener('click', function () { if (slide) stopSlide(false); else startSlide(); });
 
@@ -381,12 +397,15 @@
   }
   function sq(v) { return (v < 0 ? '(' + I.fn(v) + ')' : I.fn(v)) + '²'; }
   function r2(v) { return Math.round(v * 100) / 100; }
+  function approx(v) { return r2(v) === v ? ' = ' : ' ≈ '; }      // "=" when the answer is exact, "≈" only when rounded
 
   function renderMath() {
     var area = $('#math-area'); area.innerHTML = '';
     var p = I.sel(), f = I.spec(S.filter), rgb = S.mode === 'rgb', n = I.N, i = p.y * n + p.x;
     var v = I.neigh(rgb ? I.Rv : I.Yv, p.x, p.y, 1);
-    $('#math-pos').textContent = t('math_pos', { r: p.y + 1, c: p.x + 1 }) + ' · ' + t(rgb ? 'ch_r' : 'ch_grey');
+    var mp = $('#math-pos');
+    mp.textContent = t('math_pos', { r: p.y + 1, c: p.x + 1 }) + ' · ' + t(rgb ? 'ch_r' : 'ch_grey');
+    mp.setAttribute('data-x', String(p.x)); mp.setAttribute('data-y', String(p.y));
     var math = EDU.el('div', { class: 'math' }), steps = EDU.el('div', { class: 'steps' }), result;
     if (f.post === 'mag') {
       var px = v.map(function (a, j) { return a * I.GX[j]; }), py = v.map(function (a, j) { return a * I.GY[j]; });
@@ -399,7 +418,7 @@
       math.appendChild(mgrid('Gy', I.GY));
       steps.appendChild(step('Gx =', expr(px) + ' = ' + I.fn(sx)));
       steps.appendChild(step('Gy =', expr(py) + ' = ' + I.fn(sy)));
-      steps.appendChild(step(t('m_sobel'), '√(' + sq(sx) + ' + ' + sq(sy) + ') ≈ ' + I.fn(r2(m))));
+      steps.appendChild(step(t('m_sobel'), '√(' + sq(sx) + ' + ' + sq(sy) + ')' + approx(m) + I.fn(r2(m))));
       steps.appendChild(step(t('m_round255'), I.fn(r2(m)) + ' → ' + result));
     } else {
       var pr = v.map(function (a, j) { return a * f.k[j]; });
@@ -411,7 +430,7 @@
       math.appendChild(op('='));
       math.appendChild(mgrid(t('m_products'), pr.map(r2), 'm-prod'));
       steps.appendChild(step(t('m_sum'), expr(pr.map(r2)) + ' = ' + I.fn(r2(s)), false, 'm-sum', s));
-      if (f.div !== 1) steps.appendChild(step(t('m_div', { d: I.fn(f.div) }), I.fn(r2(s)) + ' ÷ ' + I.fn(f.div) + ' ≈ ' + I.fn(r2(qv))));
+      if (f.div !== 1) steps.appendChild(step(t('m_div', { d: I.fn(f.div) }), I.fn(r2(s)) + ' ÷ ' + I.fn(f.div) + approx(qv) + I.fn(r2(qv))));
       steps.appendChild(step(t(f.post === 'abs' ? 'm_abs' : 'm_clamp'), I.fn(r2(qv)) + ' → ' + result));
     }
     steps.appendChild(step(t('m_result'), String(result), true, 'math-result', result));
@@ -479,16 +498,20 @@
     if ($('#ws-answers').checked) ws.appendChild(EDU.el('div', { class: 'ws-key' }, EDU.el('h2', { text: t('ws_key') }), table('t-key', arows)));
   }
   $('#print-btn').addEventListener('click', function () { stopSlide(true); buildWorksheet(); window.print(); });
+  // Ctrl+P / the browser menu prints the worksheet too (it used to come out as an empty page)
+  window.addEventListener('beforeprint', function () { stopSlide(true); buildWorksheet(); });
 
   /* ============================================================ panel 3: what a CNN sees */
   var fmGrid = $('#fm-grid');
+  var mixOk = !!(window.CSS && CSS.supports && CSS.supports('color', 'color-mix(in srgb, red 50%, blue)'));   // older phones: plain colours
   I.FMAPS.forEach(function (m) {
     var foot;
     if (m.k) {
       var heat = EDU.el('div', { class: 'heat', 'aria-hidden': 'true' }), mx = Math.max.apply(null, m.k.map(Math.abs));
       m.k.forEach(function (v) {
-        var pct = Math.round(20 + 80 * Math.abs(v) / mx);
-        heat.appendChild(EDU.el('span', { text: I.fn(v), style: { background: v > 0 ? 'color-mix(in srgb, var(--c7) ' + pct + '%, var(--surface))' : v < 0 ? 'color-mix(in srgb, var(--c2) ' + pct + '%, var(--surface))' : 'var(--surface)' } }));
+        var pct = mixOk ? Math.round(20 + 80 * Math.abs(v) / mx) : 100, base = v > 0 ? 'var(--c7)' : 'var(--c2)';
+        // strong colours get the surface colour as text (white on light, dark on dark theme) so the number stays readable
+        heat.appendChild(EDU.el('span', { text: I.fn(v), style: { color: v && pct >= 80 ? 'var(--surface)' : '', background: !v ? 'var(--surface)' : pct >= 100 ? base : 'color-mix(in srgb, ' + base + ' ' + pct + '%, var(--surface))' } }));
       });
       foot = heat;
     } else foot = EDU.el('span', { class: 'fm-size', text: '√(Gx² + Gy²)' });
@@ -536,18 +559,29 @@
   }
 
   /* ============================================================ panel 4: guess the filter */
-  var G = { f: null, opts: [], picked: null, score: 0, total: 0 };
+  var G = { f: null, opts: [], picked: null, right: false, score: 0, total: 0 };
+  /* Do two filters give exactly the same picture here? (On a flat photo every edge filter is all black.) */
+  function sameOut(a, b) {
+    if (a === b) return true;
+    var p = I.filtered(a, 'grey')[0], q = I.filtered(b, 'grey')[0], i;
+    for (i = 0; i < p.length; i++) if (p[i] !== q[i]) return false;
+    return true;
+  }
   function newRound() {
     var f, tries = 0;
     do { f = EDU.pick(I.G_POOL); tries++; } while (f === G.f && tries < 20);
     G.f = f;
-    G.opts = EDU.shuffle(EDU.shuffle(I.G_POOL.filter(function (x) { return x !== f; })).slice(0, 3).concat([f]));
-    G.picked = null;
+    // wrong options should look different from the answer on this picture
+    var others = EDU.shuffle(I.G_POOL.filter(function (x) { return x !== f; }));
+    var fair = others.filter(function (x) { return !sameOut(x, f); });
+    G.opts = EDU.shuffle(fair.concat(others.filter(function (x) { return fair.indexOf(x) < 0; })).slice(0, 3).concat([f]));
+    G.picked = null; G.right = false;
   }
   function answer(id) {
     if (G.picked) return;
     G.picked = id; G.total++;
-    if (id === G.f) G.score++;
+    G.right = sameOut(id, G.f);        // a filter that makes exactly the same picture also counts as right
+    if (G.right) G.score++;
     renderGame();
   }
   function renderGame() {
@@ -558,7 +592,7 @@
     var box = $('#g-options'); box.innerHTML = '';
     G.opts.forEach(function (id) {
       var cls = 'btn';
-      if (G.picked) cls += id === G.f ? ' right' : id === G.picked ? ' wrongpick' : '';
+      if (G.picked) cls += id === G.f || (id === G.picked && G.right) ? ' right' : id === G.picked ? ' wrongpick' : '';
       box.appendChild(EDU.el('button', { class: cls, type: 'button', 'data-f': id, disabled: !!G.picked, i18n: 'f_' + id, onclick: function () { answer(id); } }));
     });
     var sc = $('#g-score');
@@ -566,8 +600,8 @@
     sc.setAttribute('data-score', String(G.score)); sc.setAttribute('data-total', String(G.total));
     var fb = $('#g-feedback');
     if (G.picked) {
-      fb.className = 'callout ' + (G.picked === G.f ? 'success' : 'danger');
-      fb.textContent = t(G.picked === G.f ? 'g_right' : 'g_wrong', { name: t('f_' + G.f) }) + ' ' + t('d_' + G.f);
+      fb.className = 'callout ' + (G.right ? 'success' : 'danger');
+      fb.textContent = t(G.right ? 'g_right' : 'g_wrong', { name: t('f_' + G.f) }) + ' ' + t('d_' + G.f);
     } else { fb.className = 'callout'; fb.textContent = ''; }
   }
   $('#g-next').addEventListener('click', function () { newRound(); renderGame(); });

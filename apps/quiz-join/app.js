@@ -125,13 +125,38 @@
   var codeInput = $('#codeInput'), nameInput = $('#nameInput');
 
   /* ------------------------------------------------------------------ memory (this device only) */
+  /* The remembered quiz has the same scope as the player: online, one device = one player (EDU.store);
+     in Demo mode every TAB is its own player (cloud-mock keeps its id in sessionStorage), so it is kept per
+     tab. Otherwise student tabs of one browser would overwrite (or, when removed, delete) each other's record. */
+  var mem = (function () {
+    if (!Cloud.isDemo) return store;
+    var K = 'edu.' + SLUG + '.', box = {};
+    function ss() { try { return window.sessionStorage; } catch (e) { return null; } }
+    return {
+      get: function (k, d) {
+        var raw = null;
+        try { var s = ss(); raw = s ? s.getItem(K + k) : (k in box ? box[k] : null); } catch (e) { raw = k in box ? box[k] : null; }
+        if (raw === null || raw === undefined) return d;
+        try { return JSON.parse(raw); } catch (e) { return d; }
+      },
+      set: function (k, v) {
+        var raw = JSON.stringify(v);
+        box[k] = raw;
+        try { var s = ss(); if (s) s.setItem(K + k, raw); } catch (e) { }
+      },
+      remove: function (k) {
+        delete box[k];
+        try { var s = ss(); if (s) s.removeItem(K + k); } catch (e) { }
+      }
+    };
+  })();
   function remember() {
     if (!S.code) return;
-    store.set('current', { code: S.code, name: S.name || '', at: Date.now(), reveals: S.reveals });
+    mem.set('current', { code: S.code, name: S.name || '', at: Date.now(), reveals: S.reveals });
   }
-  function forget() { store.remove('current'); }
+  function forget() { mem.remove('current'); }
   function loadSaved() {
-    var v = store.get('current', null);
+    var v = mem.get('current', null);
     if (!v || typeof v !== 'object' || !Cloud.normalizeCode(v.code)) return null;
     if (!(Date.now() - (Number(v.at) || 0) < KEEP_MS)) { forget(); return null; }
     return v;
@@ -188,7 +213,7 @@
     jb.setAttribute('aria-busy', p === 'joining' ? 'true' : 'false');
     jb.textContent = t(p === 'joining' ? 'joining' : 'join_btn');
     nameInput.readOnly = p === 'joining';
-    $('#privacyLink').href = EDU.ROOT + 'legal/privacy.html?lang=' + EDU.lang;
+    $('#privacyLink').href = EDU.ROOT + 'legal/privacy.html?lang=' + EDU.lang + '#students';
     paintErrors();
   }
 

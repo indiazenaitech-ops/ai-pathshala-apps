@@ -69,6 +69,8 @@
      (library home page, ?lang= link) since the last visit. */
   quizzes = quizzes.map(function (q) { return q.sample && q.sample !== EDU.lang ? sampleQuiz(EDU.lang, q.id) : q; });
   var currentId = store.get('current', quizzes[0].id);
+  /* keep the first sample quiz's id from now on (a practice / class quiz in progress is found again by it after a reload) */
+  if (!Array.isArray(store.get('quizzes', null))) { store.set('quizzes', quizzes); store.set('current', currentId); }
   var settings = Object.assign({ timer: 0, teams: 4, shuffleQ: false, shuffleO: false, names: ['', '', '', ''], key: true, lines: true, expl: false }, store.get('settings', {}));
   if (!Array.isArray(settings.names)) settings.names = ['', '', '', ''];
   if ([0, 2, 3, 4].indexOf(settings.teams) < 0) settings.teams = 4;
@@ -222,7 +224,12 @@
     render();
   }
   EDU.$$('#tabs button').forEach(function (b) {
-    b.addEventListener('click', function () { setTab(b.getAttribute('data-tab')); });
+    b.addEventListener('click', function (e) {
+      setTab(b.getAttribute('data-tab'));
+      /* Back on a running class quiz after a mouse / touch click on the tab: give focus back to the page,
+         so the presenter clicker's → / ← go to the next question instead of switching tabs (tab arrow keys). */
+      if (e.detail > 0 && tab === 'class' && cq && document.activeElement === b) b.blur();
+    });
     b.addEventListener('keydown', function (e) {
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
       var rtl = document.documentElement.dir === 'rtl';
@@ -243,9 +250,12 @@
 
   /* ---------------------------------------------------------------- editor */
   var ed = { id: null, type: 'mcq', options: ['', '', '', ''], answer: -1 };
+  /* editor message as a key, so it is shown again in the new language after a language change */
+  var edMsgKey = null, edMsgVars = null;
+  function setEdMsg(key, vars) { edMsgKey = key || null; edMsgVars = vars || null; $('#edMsg').textContent = key ? t(key, vars) : ''; }
   function resetEditor(keepType) {
     ed = { id: null, type: keepType ? ed.type : 'mcq', options: ['', '', '', ''], answer: -1 };
-    $('#qText').value = ''; $('#qExplain').value = ''; $('#edMsg').textContent = '';
+    $('#qText').value = ''; $('#qExplain').value = ''; setEdMsg(null);
     $('#tfTrue').checked = true;
   }
   function renderOptRows() {
@@ -254,7 +264,7 @@
     ed.options.forEach(function (val, i) {
       var radio = el('input', { type: 'radio', name: 'mcqAns', id: 'ans' + i, 'aria-label': t('mark_correct', { n: LETTERS[i] }), title: t('mark_correct', { n: LETTERS[i] }) });
       radio.checked = ed.answer === i;
-      radio.addEventListener('change', function () { if (radio.checked) { ed.answer = i; $('#edMsg').textContent = ''; } });
+      radio.addEventListener('change', function () { if (radio.checked) { ed.answer = i; setEdMsg(null); } });
       var input = el('input', { type: 'text', id: 'opt' + i, dir: 'auto', maxlength: 300, placeholder: t('option_n', { n: LETTERS[i] }), 'aria-label': t('option_n', { n: LETTERS[i] }) });
       input.value = val;
       input.addEventListener('input', function () { ed.options[i] = input.value; });
@@ -281,6 +291,7 @@
     $('#typeMcq').setAttribute('aria-pressed', ed.type === 'mcq' ? 'true' : 'false');
     $('#typeTf').setAttribute('aria-pressed', ed.type === 'tf' ? 'true' : 'false');
     $('#typeSeg').setAttribute('aria-label', t('question_type'));
+    $('#edMsg').textContent = edMsgKey ? t(edMsgKey, edMsgVars) : '';
     $('#mcqBox').hidden = ed.type !== 'mcq';
     $('#tfBox').hidden = ed.type !== 'tf';
     renderOptRows();
@@ -301,24 +312,24 @@
   $('#saveQ').addEventListener('click', saveQuestion);
 
   function saveQuestion() {
-    var qz = cur(), msg = $('#edMsg');
+    var qz = cur();
     var text = str($('#qText').value, 1000);
-    if (!text) { msg.textContent = t('err_no_text'); $('#qText').focus(); return; }
+    if (!text) { setEdMsg('err_no_text'); $('#qText').focus(); return; }
     var raw = { id: ed.id || uid(), type: ed.type, text: text, explain: $('#qExplain').value };
     if (ed.type === 'tf') raw.answer = $('#tfFalse').checked ? 1 : 0;
     else {
       var filled = ed.options.filter(function (o) { return str(o); }).length;
-      if (filled < 2) { msg.textContent = t('err_options'); var f = $('#opt0'); if (f) f.focus(); return; }
-      if (ed.answer < 0 || !str(ed.options[ed.answer])) { msg.textContent = t('err_correct'); return; }
+      if (filled < 2) { setEdMsg('err_options'); var f = $('#opt0'); if (f) f.focus(); return; }
+      if (ed.answer < 0 || !str(ed.options[ed.answer])) { setEdMsg('err_correct'); return; }
       raw.options = ed.options.slice(); raw.answer = ed.answer;
     }
     var q = normQuestion(raw);
-    if (!q) { msg.textContent = t('err_options'); return; }
+    if (!q) { setEdMsg('err_options'); return; }
     if (ed.id) {
       qz.questions = qz.questions.map(function (x) { return x.id === ed.id ? q : x; });
       EDU.toast(t('updated'));
     } else {
-      if (qz.questions.length >= MAX_Q) { msg.textContent = t('too_many', { n: EDU.fmt(MAX_Q) }); return; }
+      if (qz.questions.length >= MAX_Q) { setEdMsg('too_many', { n: EDU.fmt(MAX_Q) }); return; }
       qz.questions.push(q);
       EDU.toast(t('added'));
     }
@@ -328,7 +339,7 @@
 
   function startEdit(q) {
     ed = { id: q.id, type: q.type, options: q.type === 'mcq' ? q.options.slice() : ['', '', '', ''], answer: q.type === 'mcq' ? q.answer : -1 };
-    $('#qText').value = q.text; $('#qExplain').value = q.explain || ''; $('#edMsg').textContent = '';
+    $('#qText').value = q.text; $('#qExplain').value = q.explain || ''; setEdMsg(null);
     $('#tfTrue').checked = q.type !== 'tf' || q.answer === 0; $('#tfFalse').checked = q.type === 'tf' && q.answer === 1;
     render();
     $('#editor').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -436,13 +447,18 @@
     var T = tfWords('true'), F = tfWords('false');
     var head = rows[0].map(function (c) { return String(c).trim().toLowerCase(); });
     var cCol = -1, eCol = -1;
+    /* the correct-answer column comes after the question and at least 2 options */
     head.forEach(function (h, i) {
-      if (cCol < 0 && i > 0 && /^(correct|answer|ans\b|key\b|सही|उत्तर)/.test(h)) cCol = i;
-      if (eCol < 0 && /^(expl|reason|व्याख्या)/.test(h)) eCol = i;
+      if (cCol < 0 && i >= 3 && /^(correct|answer|ans\b|key\b|सही|उत्तर)/.test(h)) cCol = i;
+      if (eCol < 0 && i >= 3 && /^(expl|reason|व्याख्या)/.test(h)) eCol = i;
     });
-    /* a header cell is a short label ("question", "Q", "प्रश्न"), not a question like "Q. Which …?" */
-    var hasHead = cCol > 0 || /^(questions?|q|प्रश्न|सवाल)(\s*(text|no\.?|#))?\s*:?$/.test(head[0] || '');
-    if (hasHead) rows = rows.slice(1);
+    /* A header row has short labels: "question" / "Q" / "प्रश्न" first, or "option1"/"A"/"विकल्प 1" columns before
+       the answer column. A data row is not a header just because an option or the answer is "सही" (True)
+       or "Key …": that used to throw away the whole file. */
+    var optHead = /^(options?|opt|choice|विकल्प|[a-f])\s*[-_.]?\s*([1-6]|[a-f])?\s*:?$/;
+    var hasHead = /^(questions?|q|प्रश्न|सवाल)(\s*(text|no\.?|#))?\s*:?$/.test(head[0] || '') ||
+      (cCol > 0 && head.slice(1, cCol).every(function (h) { return optHead.test(h); }));
+    if (hasHead) rows = rows.slice(1); else { cCol = -1; eCol = -1; }
     rows.forEach(function (r) {
       r = r.map(function (c) { return String(c == null ? '' : c); });
       var c = cCol, e = eCol;
@@ -549,11 +565,29 @@
     for (var i = 0; i < settings.teams; i++) (function (i) {
       var inp = el('input', { type: 'text', dir: 'auto', maxlength: 30, id: 'teamName' + i, placeholder: t('team_n', { n: TEAM_LETTERS[i] }), 'aria-label': t('team_n', { n: TEAM_LETTERS[i] }) });
       inp.value = settings.names[i] || '';
-      inp.addEventListener('input', function () { settings.names[i] = inp.value; saveSettings(); renderScoreboard(); });
+      inp.addEventListener('input', function () { settings.names[i] = inp.value; saveSettings(); renderScoreboard(); renderOldScores(); });
       ti.appendChild(inp);
     })(i);
     $('#startClass').disabled = !qz.questions.length;
     syncShuffleBoxes();
+    renderOldScores();
+  }
+  /* Team scores are kept on the device: show the old ones on the setup screen, so a new class does not
+     start with yesterday's points without the teacher noticing. */
+  function renderOldScores() {
+    var os = $('#oldScores'), anyOld = false;
+    os.innerHTML = '';
+    for (var k = 0; k < settings.teams; k++) if (scores[k]) anyOld = true;
+    $('#oldScoresRow').hidden = !anyOld;
+    if (anyOld) {
+      os.appendChild(document.createTextNode(t('score') + ': '));
+      for (var j = 0; j < settings.teams; j++) {
+        if (j) os.appendChild(document.createTextNode(' · '));
+        os.appendChild(el('bdi', { class: (settings.names[j] || '').trim() ? 'no-i18n' : '', text: teamName(j) }));
+        os.appendChild(document.createTextNode(' '));
+        os.appendChild(el('bdi', { dir: 'ltr', text: EDU.fmt(scores[j]) }));
+      }
+    }
   }
 
   function startClass() {
@@ -585,9 +619,9 @@
   $('#cqReveal').addEventListener('click', toggleReveal);
   $('#cqNext').addEventListener('click', function () { goCQ(1); });
   $('#cqPrev').addEventListener('click', function () { goCQ(-1); });
-  $('#resetScores').addEventListener('click', function () {
-    if (!confirm(t('confirm_reset_scores'))) return;
-    scores = [0, 0, 0, 0]; store.set('scores', scores); renderScoreboard(); if (cq && cq.finished) renderCQ();
+  function zeroScores() { scores = [0, 0, 0, 0]; store.set('scores', scores); renderScoreboard(); renderOldScores(); if (cq && cq.finished) renderCQ(); }
+  ['resetScores', 'resetScores2'].forEach(function (id) {
+    $('#' + id).addEventListener('click', function () { if (confirm(t('confirm_reset_scores'))) zeroScores(); });
   });
 
   function toggleReveal() {
@@ -667,6 +701,7 @@
   }
 
   function renderCQ() {
+    saveRun();
     $('#classSetup').hidden = !!cq;
     $('#classStage').hidden = !cq;
     if (!cq) { pauseTimer(); return; }
@@ -722,7 +757,7 @@
       })));
     }
     f.appendChild(el('div', { class: 'row', style: { justifyContent: 'center' } },
-      el('button', { type: 'button', class: 'btn btn-primary btn-lg', id: 'playAgain', text: t('play_again'), onclick: startClass }),
+      el('button', { type: 'button', class: 'btn btn-primary btn-lg', id: 'playAgain', text: t('play_again'), onclick: function () { zeroScores(); startClass(); } }),   /* a new game starts from 0 points */
       el('button', { type: 'button', class: 'btn btn-lg', text: t('previous'), onclick: function () { goCQ(-1); } })));
   }
 
@@ -781,6 +816,7 @@
   function okCount() { return pr ? pr.answers.filter(function (a) { return a && a.ok; }).length : 0; }
 
   function renderPractice() {
+    saveRun();
     var qz = cur();
     $('#prTitle').textContent = titleOf(qz);
     $('#prCount').textContent = t('q_count', { n: EDU.fmt(qz.questions.length) });
@@ -879,8 +915,9 @@
   }
   /* -> Promise: quiz, null (broken link) or false (no quiz in the URL) */
   function parseHash(h) {
-    var m = String(h || '').match(/^#(quiz|qz)=([A-Za-z0-9_-]+)/);
+    var m = String(h || '').match(/^#(quiz|qz)=([A-Za-z0-9_-]*)/);
     if (!m) return Promise.resolve(false);
+    if (!m[2]) return Promise.resolve(null);   /* "#quiz=" with the quiz cut off (or mangled) by a chat app */
     if (m[1] === 'quiz') return Promise.resolve(unpackQuiz(EDU.unpack(m[2])));
     if (!window.DecompressionStream) return Promise.resolve(null);
     try {
@@ -889,6 +926,15 @@
       }).catch(function () { return null; });
     } catch (e) { return Promise.resolve(null); }
   }
+  /* The page address for a share link, with ?lang= set to the teacher's language: the student's phone may be
+     set to another language, but the quiz (and its True / False words) are in the teacher's language.
+     Opened from a downloaded folder (file://), the link points to the same app on the website, so it opens
+     on the students' phones too ("Open as a student" still opens the copy on this computer). */
+  function pageUrl(publicSite) {
+    var base = location.href.split('#')[0];
+    if (publicSite && location.protocol === 'file:' && EDU.shareUrl) base = EDU.shareUrl('');
+    try { var u = new URL(base); u.searchParams.set('lang', EDU.lang); return u.toString(); } catch (e) { return base; }
+  }
   var shareSeq = 0;
   function renderShare() {
     var qz = cur(), has = qz.questions.length > 0, seq = ++shareSeq;
@@ -896,11 +942,11 @@
     if (!has) { $('#shareUrl').value = ''; $('#linkLen').textContent = t('empty_quiz'); $('#longNote').hidden = true; }
     else linkHash(qz).then(function (h) {
       if (seq !== shareSeq) return;
-      var url = location.href.split('#')[0] + '#' + h;
+      var url = pageUrl(true) + '#' + h;
       $('#shareUrl').value = url;
       $('#linkLen').textContent = t('link_len', { n: EDU.fmt(url.length) });
       $('#waLink').href = 'https://wa.me/?text=' + encodeURIComponent(t('wa_msg', { quiz: titleOf(qz) }) + '\n' + url);
-      $('#openLink').href = url;
+      $('#openLink').href = pageUrl(false) + '#' + h;
       var ln = $('#longNote');
       ln.hidden = url.length <= 6000; ln.textContent = t('link_long');
     });
@@ -1031,9 +1077,63 @@
     render();
   });
 
+  /* ---------------------------------------------------------------- keep the place across a reload */
+  /* A phone browser may reload the page after the student switches to WhatsApp and back, and a teacher may
+     refresh the smartboard: a running class quiz or practice comes back where it was (for 12 hours).
+     Stored as question numbers + option orders; a quiz opened from a link is recognised by its link. */
+  var runReady = false, RUN_MAX_AGE = 12 * 3600 * 1000;
+  function hashStr(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36) + '.' + s.length; }
+  function runKey() { return shared ? 'link:' + hashStr(String(location.hash || '')) : 'quiz:' + cur().id; }
+  function deckToSave(st) {
+    var qs = cur().questions;
+    var idx = st.deck.map(function (c) { return qs.indexOf(c.q); });
+    if (!idx.length || idx.some(function (k) { return k < 0; })) return null;
+    return { key: runKey(), at: Date.now(), idx: idx, perms: st.deck.map(function (c) { return c.perm; }), i: st.i };
+  }
+  function saveRun() {
+    if (!runReady) return;
+    if (!shared) {   /* a student-link tab never touches the teacher's class quiz */
+      var c = cq && deckToSave(cq);
+      if (c) { c.finished = !!cq.finished; c.revealed = !!cq.revealed; c.picked = cq.picked; store.set('run_class', c); } else store.remove('run_class');
+    }
+    var p = pr && deckToSave(pr), pk = shared ? 'run_link' : 'run_practice';
+    if (p) { p.answers = pr.answers.map(function (a) { return a ? a.chosen : null; }); p.done = !!pr.done; store.set(pk, p); } else store.remove(pk);
+  }
+  function deckFrom(s) {
+    var qs = cur().questions;
+    if (!s || typeof s !== 'object' || s.key !== runKey() || !(Date.now() - s.at < RUN_MAX_AGE)) return null;
+    if (!Array.isArray(s.idx) || !Array.isArray(s.perms) || !s.idx.length || s.idx.length !== s.perms.length) return null;
+    var deck = [];
+    for (var k = 0; k < s.idx.length; k++) {
+      var q = qs[s.idx[k]], perm = Array.isArray(s.perms[k]) ? s.perms[k].map(Number) : null, n = q ? optsOf(q).length : 0;
+      if (!q || !perm || perm.slice().sort().join() !== idxList(n).join()) return null;
+      deck.push({ q: q, perm: perm });
+    }
+    return deck;
+  }
+  function restoreRun() {
+    runReady = true;
+    try {
+      var c = shared ? null : store.get('run_class', null), d = c && deckFrom(c);
+      if (d) {
+        var ci = EDU.clamp(Math.floor(+c.i) || 0, 0, d.length - 1), np = d[ci].perm.length;
+        cq = { deck: d, i: ci, revealed: !!c.revealed && !c.finished, picked: (+c.picked >= 0 && +c.picked < np) ? +c.picked : -1, finished: !!c.finished, timerId: null, timeUp: false, left: 0 };
+      }
+      var p = store.get(shared ? 'run_link' : 'run_practice', null), pd = p && deckFrom(p);
+      if (pd) {
+        var answers = pd.map(function (card, k) {
+          var a = Array.isArray(p.answers) ? p.answers[k] : null;
+          return typeof a === 'number' && a >= 0 && a < card.perm.length ? { chosen: a, ok: a === card.q.answer } : undefined;
+        });
+        pr = { deck: pd, i: EDU.clamp(Math.floor(+p.i) || 0, 0, pd.length - 1), answers: answers, done: !!p.done };
+      }
+    } catch (e) { cq = null; pr = null; }
+  }
+
   /* A student opening a share link sees only the practice screen (no flash of the teacher view). */
   var app = $('#app'), linked = /^#(quiz|qz)=/.test(location.hash || '');
-  if (linked) app.style.visibility = 'hidden';
+  if (linked) app.style.visibility = 'hidden'; else restoreRun();
   render();
-  readHash().then(function (ok) { if (ok) render(); }, function () { }).then(function () { app.style.visibility = ''; });
+  readHash().then(function (ok) { if (!runReady) restoreRun(); if (ok || linked) render(); }, function () { })
+    .then(function () { if (!runReady) { restoreRun(); render(); } app.style.visibility = ''; });
 })();

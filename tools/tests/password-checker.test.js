@@ -34,11 +34,21 @@ module.exports = async function ({ page, expect, t, log }) {
   expect((await lvl()) >= 3, 'random 12 chars is strong');
   expect((await page.$$eval('#types .ctype.on', a => a.length)) === 4, '4 character types used');
 
-  // show / hide toggle, and the typed password is never stored
-  expect((await page.getAttribute('#pw', 'type')) === 'text', 'examples are shown openly');
+  // words typed in an Indian script count as dictionary words, never as random letters
+  await page.fill('#pw', 'राहुल2008');
+  await page.waitForTimeout(150);
+  expect((await kinds()).join(',') === 'script,year', 'राहुल2008 splits into script word + year, got ' + (await kinds()));
+  expect((await fbKeys()).includes('fb_script') && (await lvl()) === 0, 'Indian-script word is flagged and weak');
+
+  // show / hide: typing over the example hides it, examples are shown openly, the toggle works
+  expect((await page.getAttribute('#pw', 'type')) === 'password', 'typing your own password hides it automatically');
+  expect((await page.textContent('#pieces')).includes('•'), 'pieces are masked when hidden');
+  await page.click('#toggle');
+  expect((await page.getAttribute('#pw', 'type')) === 'text', 'Show reveals the password');
+  await page.click('#ex-8');
+  expect((await page.inputValue('#pw')) === 'Kh9#mQ2v!xL7' && (await page.getAttribute('#pw', 'type')) === 'text', 'examples are shown openly');
   await page.click('#toggle');
   expect((await page.getAttribute('#pw', 'type')) === 'password', 'hide toggles to type=password');
-  expect((await page.textContent('#pieces')).includes('•'), 'pieces are masked when hidden');
   await page.click('#clear');
   expect((await page.inputValue('#pw')) === '' && (await page.$('#empty-hint')) !== null, 'clear empties the box');
   const ls = await page.evaluate(() => JSON.stringify(Object.assign({}, localStorage)));

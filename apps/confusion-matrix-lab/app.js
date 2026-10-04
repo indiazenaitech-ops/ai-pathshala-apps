@@ -266,13 +266,14 @@
     var axisY = y2 + h2 + 6, H = axisY + 22;
     var thrX = X(S.thr);
     var m = countAt(list, S.thr);
-    var parts = [];
+    var parts = [], titles = [];
     function esc(s) { return EDU.esc(s); }
     function lane(y, h, real) {
       var leftK = real ? 'fn' : 'tn', rightK = real ? 'tp' : 'fp';
       parts.push('<rect class="region k-' + leftK + '" x="0" y="' + y + '" width="' + Math.max(0, thrX) + '" height="' + h + '"/>');
       parts.push('<rect class="region k-' + rightK + '" x="' + thrX + '" y="' + y + '" width="' + Math.max(0, W - thrX) + '" height="' + h + '"/>');
-      parts.push('<text class="lane-title" x="8" y="' + (y + 15) + '">' + esc(t('lane_title', { x: real ? c.pos : c.neg, n: n0(real ? yes.length : no.length) })) + '</text>');
+      /* lane titles are drawn after the threshold line (with a halo) so the line never hides their letters */
+      titles.push('<text class="lane-title" x="8" y="' + (y + 15) + '">' + esc(t('lane_title', { x: real ? c.pos : c.neg, n: n0(real ? yes.length : no.length) })) + '</text>');
       var ty = y + h - 6;
       if (thrX > 42) parts.push('<text class="tag k-' + leftK + '" x="' + (thrX - 7) + '" y="' + ty + '" text-anchor="end">' + ABBR[leftK] + ' ' + n0(m[leftK]) + '</text>');
       if (W - thrX > 42) parts.push('<text class="tag k-' + rightK + '" x="' + (thrX + 7) + '" y="' + ty + '" text-anchor="start">' + ABBR[rightK] + ' ' + n0(m[rightK]) + '</text>');
@@ -308,6 +309,7 @@
     drawDots(no, y2, h2);
     /* threshold line + knob */
     parts.push('<line class="thr-line" x1="' + thrX + '" x2="' + thrX + '" y1="' + (knobH - 2) + '" y2="' + (y2 + h2) + '"/>');
+    parts.push(titles.join(''));
     var kx = EDU.clamp(thrX, 27, W - 27);
     parts.push('<rect class="thr-knob" x="' + (kx - 26) + '" y="1" width="52" height="' + knobH + '" rx="8"/>');
     parts.push('<text class="thr-knob-txt" x="' + kx + '" y="19" text-anchor="middle">' + f2(S.thr) + '</text>');
@@ -483,7 +485,7 @@
   $('#fs-btn').addEventListener('click', function () { EDU.fullscreen(); });
   $('#reset-all').addEventListener('click', function () {
     if (!confirm(t('confirm_reset'))) return;
-    ['tab', 'scen', 'thr', 'ds', 'mode', 'score'].forEach(function (k) { store.remove(k); });
+    ['tab', 'scen', 'thr', 'ds', 'mode', 'score', 'q'].forEach(function (k) { store.remove(k); });
     S.scen = 'spam'; S.thr = 0.5; S.ds = {}; S.mode = 'mixed'; S.score = scoreOr(null); S.sel = null; Q = null;
     renderAll();
     setTab('explore');
@@ -526,10 +528,35 @@
     });
   }
   $('#go-lab').addEventListener('click', function () { setTab('explore'); window.scrollTo(0, 0); });
-  $('#print-learn').addEventListener('click', function () { window.print(); });
+  $('#print-learn').addEventListener('click', function () { wsOff(); window.print(); });
 
   /* ================= PRACTICE ================= */
-  var Q = null;
+  /* The current question (with the half-typed answer) is saved, so a reload or a language
+     change never swaps the question or wipes what the student typed. */
+  var Q = restoreQ();
+  function saveQ() { store.set('q', Q); }
+  function restoreQ() {
+    var q = store.get('q', null);
+    if (!q || typeof q !== 'object' || SCEN_IDS.indexOf(q.scen) < 0) return null;
+    var int = function (x, lo) { return typeof x === 'number' && isFinite(x) && Math.floor(x) === x && x >= lo && x <= 100000; };
+    if (q.type === 'calc') {
+      var m = q.m || {};
+      if (!(int(m.tp, 1) && int(m.fp, 0) && int(m.fn, 0) && int(m.tn, 0)) || METRICS.indexOf(q.metric) < 0) return null;
+      return {
+        type: 'calc', scen: q.scen, m: { tp: m.tp, fp: m.fp, fn: m.fn, tn: m.tn }, metric: q.metric,
+        state: oneOf(q.state, ['open', 'empty', 'wrong', 'right', 'shown'], 'open'),
+        input: typeof q.input === 'string' ? q.input.slice(0, 40) : '',
+        lastVal: (typeof q.lastVal === 'number' && isFinite(q.lastVal)) ? q.lastVal : null
+      };
+    }
+    if (q.type === 'cell' && CELLS.indexOf(q.cell) >= 0) {
+      var picked = CELLS.indexOf(q.picked) >= 0 ? q.picked : null;
+      var st = picked ? (picked === q.cell ? 'right' : 'wrong') : 'open';
+      return { type: 'cell', scen: q.scen, cell: q.cell, state: st, picked: picked };
+    }
+    return null;
+  }
+  if (Q && !(S.mode === 'mixed' || (S.mode === 'cell' && Q.type === 'cell') || (Q.type === 'calc' && Q.metric === S.mode))) Q = null;
   function randMatrix() {
     for (var i = 0; i < 100; i++) {
       var m = { tp: EDU.randInt(3, 40), fp: EDU.randInt(0, 15), fn: EDU.randInt(0, 15), tn: EDU.randInt(4, 60) };
@@ -542,12 +569,13 @@
     var sc = EDU.pick(SCEN_IDS);
     if (type === 'calc') {
       var metric = METRICS.indexOf(S.mode) >= 0 ? S.mode : EDU.pick(METRICS);
-      Q = { type: 'calc', scen: sc, m: randMatrix(), metric: metric, state: 'open', input: '' };
+      Q = { type: 'calc', scen: sc, m: randMatrix(), metric: metric, state: 'open', input: '', lastVal: null };
     } else {
       var cell = EDU.pick(CELLS);
       if (Q && Q.type === 'cell' && Q.cell === cell) cell = EDU.pick(CELLS);
       Q = { type: 'cell', scen: sc, cell: cell, state: 'open', picked: null };
     }
+    saveQ();
     renderQuestion();
   }
   function bump(ok) {
@@ -577,10 +605,11 @@
       for (var i = 0; i < zeros.length; i++) if (code >= zeros[i] && code <= zeros[i] + 9) return String(code - zeros[i]);
       return ch;
     });
-    s = s.replace(/٫/g, '.').replace(/٪/g, '%').replace(/\s+/g, '').replace(',', '.');
+    s = s.replace(/٫/g, '.').replace(/٪/g, '%').replace(/[−–]/g, '-').replace(/\s+/g, '').replace(',', '.');
     var isPct = /%$/.test(s);
     s = s.replace(/%$/, '');
-    if (!/^\+?(\d+\.?\d*|\.\d+)$/.test(s)) return null;
+    /* a negative number is still a number: it is judged (wrong), not reported as "type a number" */
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(s)) return null;
     var v = parseFloat(s);
     if (!isFinite(v)) return null;
     if (isPct || v > 1) v = v / 100;
@@ -591,9 +620,15 @@
     var inp = $('#q-input');
     Q.input = inp.value;
     var v = parseAns(inp.value);
-    if (v === null) { Q.state = 'empty'; renderFeedback(); inp.focus(); return; }
+    if (v === null) { Q.state = 'empty'; saveQ(); renderFeedback(); inp.focus(); return; }
+    /* the same wrong answer checked again (double tap, Enter + click) is not a new attempt */
+    if (Q.lastVal !== null && Q.lastVal !== undefined && Math.abs(v - Q.lastVal) < 1e-12) {
+      Q.state = 'wrong'; saveQ(); renderFeedback(); inp.focus(); inp.select(); return;
+    }
+    Q.lastVal = v;
     var ok = Math.abs(v - metricVal(Q.metric, Q.m)) <= 0.01 + 1e-9;
     Q.state = ok ? 'right' : 'wrong';
+    saveQ();
     bump(ok);
     renderQuestion();
     if (!ok) { var i2 = $('#q-input'); if (i2) { i2.focus(); i2.select(); } }
@@ -603,6 +638,7 @@
     if (!Q || Q.type !== 'cell' || Q.state !== 'open') return;
     Q.picked = k;
     Q.state = k === Q.cell ? 'right' : 'wrong';
+    saveQ();
     bump(Q.state === 'right');
     renderQuestion();
     $('#q-next').focus();
@@ -643,12 +679,14 @@
       inp.value = Q.input || '';
       inp.disabled = done;
       inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); checkCalc(); } });
+      /* keep the typed answer in the question, so a language change or reload does not wipe it */
+      inp.addEventListener('input', function () { if (Q && Q.type === 'calc') { Q.input = inp.value; saveQ(); } });
       ans.appendChild(el('div', { class: 'ans-row' },
         el('label', { class: 'field', for: 'q-input' }, el('span', { text: t('your_answer') }), inp),
         el('button', { type: 'button', class: 'btn btn-primary', id: 'q-check', text: t('check'), disabled: done, onclick: checkCalc }),
         el('button', { type: 'button', class: 'btn', id: 'q-show', text: t('show_answer'), disabled: done, onclick: function () {
           if (!Q || Q.state === 'right' || Q.state === 'shown') return;
-          Q.state = 'shown'; S.score.streak = 0; store.set('score', S.score); renderScore(); renderQuestion();
+          Q.state = 'shown'; saveQ(); S.score.streak = 0; store.set('score', S.score); renderScore(); renderQuestion();
         } })));
       ans.appendChild(el('p', { class: 'small muted mb0', style: { marginTop: '6px' }, text: t('answer_hint') }));
     } else {
@@ -707,15 +745,20 @@
     key.appendChild(tb);
     ws.appendChild(el('div', { class: 'ws-key' }, el('h2', { text: t('ws_answers') }), key));
   }
+  /* Worksheet mode stays on until the print dialog is closed (on Android, window.print() does not
+     block, so a timer could switch it off before the page is printed). Any other print (Ctrl+P,
+     "Print" in the Learn tab) prints the normal page. */
+  var wsPrinting = false;
+  function wsOff() { wsPrinting = false; document.body.classList.remove('ws-mode'); }
   $('#ws-print').addEventListener('click', function () {
     buildWorksheet();
+    wsPrinting = true;
     document.body.classList.add('ws-mode');
-    setTimeout(function () {
-      window.print();
-      setTimeout(function () { document.body.classList.remove('ws-mode'); }, 400);
-    }, 60);
+    setTimeout(function () { window.print(); }, 60);
   });
-  window.addEventListener('afterprint', function () { document.body.classList.remove('ws-mode'); });
+  window.addEventListener('beforeprint', function () { if (!wsPrinting) document.body.classList.remove('ws-mode'); });
+  window.addEventListener('afterprint', wsOff);
+  document.addEventListener('pointerdown', function (e) { if (wsPrinting && !e.target.closest('#ws-print')) wsOff(); }, true);
 
   /* ================= wiring ================= */
   function renderAll() {

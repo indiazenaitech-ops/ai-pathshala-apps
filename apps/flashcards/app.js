@@ -52,19 +52,72 @@
      accepts "a / b" alternatives and text in brackets, and small typos. */
   var PUNCT;
   try { PUNCT = new RegExp('[\\p{P}\\p{S}]', 'gu'); } catch (e) { PUNCT = /[!-\/:-@\[-`{-~‐-‧।॥،۔]/g; }
+  /* Digits typed in an Indian script (or Arabic-Indic for Urdu) count as 0-9. */
+  var DIGIT0 = [0x0660, 0x06F0, 0x0966, 0x09E6, 0x0A66, 0x0AE6, 0x0B66, 0x0BE6, 0x0C66, 0x0CE6, 0x0D66];
+  function latinDigits(s) {
+    return String(s == null ? '' : s).replace(/[٠-٩۰-۹०-९০-৯੦-੯૦-૯୦-୯௦-௯౦-౯೦-೯൦-൯]/g, function (ch) {
+      var c = ch.charCodeAt(0);
+      for (var i = 0; i < DIGIT0.length; i++) if (c >= DIGIT0[i] && c <= DIGIT0[i] + 9) return String(c - DIGIT0[i]);
+      return ch;
+    });
+  }
   function norm(s) {
-    s = String(s == null ? '' : s);
+    s = latinDigits(s);
     try { s = s.normalize('NFKD'); } catch (e) { }
     s = s.toLowerCase().replace(/[̀-ͯ]/g, '').replace(/[​-‍﻿]/g, '');
     s = s.replace(PUNCT, ' ').replace(/\s+/g, ' ').trim();
     return s.replace(/^(the|a|an|to) /, '');
   }
+  /* The numbers and maths signs of an answer, in order, so that the forgiving check
+     never accepts "5" for "-5", "3" for "3/4", "x - y" for "x + y" or 1847 for 1947. */
+  function numKey(s) {
+    s = latinDigits(s);
+    try { s = s.normalize('NFKD'); } catch (e) { }
+    s = s.replace(/[−‐-—]/g, '-').replace(/[×∗⋅·✕]/g, '*').replace(/[÷⁄∕]/g, '/')
+      .replace(/(\d)\s*[xX]\s*(?=\d)/g, '$1*')                       // 2 x 3 = 2 × 3
+      .replace(/(\d),(?=\d{3}(?!\d))/g, '$1').replace(/(\d),(?=\d)/g, '$1.');   // 1,000 = 1000 · 2,5 = 2.5
+    var out = [], re = /\d+(?:\.\d+)?|\.\d+|[-+*\/=<>]/g, m, tk, before;
+    while ((m = re.exec(s))) {
+      tk = m[0];
+      if (tk === '-') {                                             // a minus sign, not a hyphen or a range like 6-7
+        before = s.slice(0, m.index).replace(/\s+$/, '').slice(-1);
+        if (!/^\s*[\d.]/.test(s.slice(m.index + 1)) || (before && !/[(\[=+*\/<>:;,]/.test(before))) continue;
+      } else if (/\d/.test(tk)) {
+        if (tk.charAt(0) === '.') tk = '0' + tk;
+        tk = tk.replace(/^0+(?=\d)/, '');
+        if (tk.indexOf('.') >= 0) tk = tk.replace(/0+$/, '').replace(/\.$/, '');
+      }
+      out.push(tk);
+    }
+    return out.join(' ');
+  }
+  /* the words of an answer without its numbers: "1947 A.D." -> "ad", "H₂O" -> "ho" */
+  function wordKey(s) { return norm(latinDigits(s).replace(/(\d)\s*[xX]\s*(?=\d)/g, '$1 ')).replace(/\d+/g, '').replace(/ /g, ''); }
+  var LETTERS = /[A-Za-z\u00C0-\u024F\u0600-\u06FF\u0900-\u0DFF]/g;
   function variants(ans) {
-    var raw = [ans, ans.replace(/\([^)]*\)/g, ' ')];
-    String(ans).split(/\s*[\/;|\n]\s*|\s+or\s+/).forEach(function (p) { raw.push(p); raw.push(p.replace(/\([^)]*\)/g, ' ')); });
-    (String(ans).match(/\(([^)]*)\)/g) || []).forEach(function (m) { raw.push(m.slice(1, -1)); });
-    var out = [];
-    raw.forEach(function (r) { var v = norm(r); if (v && out.indexOf(v) < 0) out.push(v); });
+    ans = String(ans == null ? '' : ans);
+    var noBr = function (x) { return x.replace(/\([^)]*\)/g, ' '); };
+    var raw = [ans, noBr(ans)];
+    ans.split(/\s*[;|\n]\s*/).forEach(function (p) {
+      var parts = [p];
+      /* "Mumbai / Bombay" are alternatives, but "3/4" and "km/h" are one answer */
+      if (!/\d/.test(latinDigits(p))) {
+        var sl = p.split(/\s*\/\s*/);
+        if (sl.length > 1 && sl.every(function (x) { return (x.match(LETTERS) || []).length >= 2; })) parts = parts.concat(sl);
+      }
+      /* "Mumbai or Bombay" (short answers only, not sentences that contain "or") */
+      var ors = p.split(/\s+or\s+/i);
+      if (ors.length > 1 && ors.every(function (x) { x = x.trim(); return x && x.split(/\s+/).length <= 3; })) parts = parts.concat(ors);
+      parts.forEach(function (x) { raw.push(x); raw.push(noBr(x)); });
+    });
+    (ans.match(/\(([^)]*)\)/g) || []).forEach(function (m) { raw.push(m.slice(1, -1)); });
+    var out = [], seen = {};
+    raw.forEach(function (r) {
+      var n = norm(r);
+      if (!n || seen[n]) return;
+      seen[n] = 1;
+      out.push({ n: n, s: n.replace(/ /g, ''), k: numKey(r), w: wordKey(r), strict: /[\d+=<>*×÷]/.test(latinDigits(r)) });
+    });
     return out;
   }
   function lev(a, b) {
@@ -84,12 +137,17 @@
     var vs = variants(ans);
     if (!vs.length) return String(given).trim() === String(ans).trim() && String(given).trim() ? 2 : 0;
     if (!g) return 0;
-    var gs = g.replace(/ /g, ''), best = 0;
+    var gs = g.replace(/ /g, ''), gk = numKey(given), gw, best = 0;
     for (var i = 0; i < vs.length; i++) {
       var v = vs[i];
-      if (g === v || gs === v.replace(/ /g, '')) return 2;
-      var L = Array.from(v).length, tol = L <= 3 ? 0 : L <= 6 ? 1 : L <= 12 ? 2 : Math.floor(L * 0.2);
-      if (tol && lev(gs, v.replace(/ /g, '')) <= tol) best = 1;
+      var a = gs, b = v.s;
+      if (v.strict) {                                     // numbers and signs must be exactly right,
+        if (gk !== v.k) continue;                         // small slips are forgiven only in the words
+        a = gw === undefined ? (gw = wordKey(given)) : gw; b = v.w;
+      } else if (g === v.n) return 2;
+      if (a === b) return 2;
+      var L = Array.from(b).length, tol = L <= 3 ? 0 : L <= 6 ? 1 : L <= 12 ? 2 : Math.floor(L * 0.2);
+      if (tol && lev(a, b) <= tol) best = 1;
     }
     return best;
   }
@@ -117,7 +175,7 @@
     });
     var out = { id: typeof d.id === 'string' && d.id ? d.id.slice(0, 40) : uid(), name: str(d.name, MAX_NAME), cards: cards,
       side: d.side === 'f' || d.side === 'b' ? d.side : '', best: {} };
-    if (d.best && typeof d.best === 'object') PAIRS.forEach(function (p) { var v = parseInt(d.best[p], 10); if (v > 0) out.best[p] = v; });
+    if (d.best && typeof d.best === 'object') for (var p = 2; p <= 8; p++) { var v = parseInt(d.best[p], 10); if (v > 0) out.best[p] = v; }
     if (d.sample && typeof d.sample === 'object' && typeof d.sample.i === 'number') out.sample = { i: d.sample.i, lang: String(d.sample.lang || 'en') };
     return out;
   }
@@ -141,7 +199,19 @@
       d.sample.lang = EDU.lang;
       changed = true;
     });
-    if (changed) saveDecks();
+    if (!changed) return;
+    saveDecks();
+    /* a quiz or match game that is open shows the new language too */
+    var d = deck();
+    if (quiz && quiz.deckId === d.id) quiz.items.forEach(function (it, k) {
+      var c = cardById(d, it.id);
+      if (!c || k < quiz.i || (k === quiz.i && quiz.state !== 'ask')) return;
+      it.prompt = quiz.side === 'b' ? c.f : c.b; it.answer = quiz.side === 'b' ? c.b : c.f;
+    });
+    if (match && match.deckId === d.id) match.tiles.forEach(function (tl) {
+      var c = cardById(d, tl.id);
+      if (c) tl.text = tl.side === 'f' ? c.f : c.b;
+    });
   }
   function touch(d) { if (d && d.sample) delete d.sample; }
   function cardById(d, id) { for (var i = 0; i < d.cards.length; i++) if (d.cards[i].id === id) return d.cards[i]; return null; }
@@ -193,7 +263,13 @@
     curId = decks[0].id;
     return decks[0];
   }
-  function saveDecks() { store.set('decks', decks); store.set('current', curId); }
+  var fullWarned = 0;
+  function saveDecks() {
+    var ok = store.set('decks', decks);
+    store.set('current', curId);
+    if (!ok && Date.now() - fullWarned > 5000) { fullWarned = Date.now(); toast('storage_full'); }
+    return ok;
+  }
   function saveSettings() { store.set('settings', settings); }
   function saveImgs() {
     store.set('imgs', imgs);
@@ -316,12 +392,13 @@
     var rev = settings.reverse;
     return {
       front: { label: t(rev ? 'back' : 'front'), text: rev ? c.b : c.f, img: !rev && c.img ? imgs[c.id] : null },
-      back: { label: t(rev ? 'front' : 'back'), text: rev ? c.f : c.b, img: rev && c.img ? imgs[c.id] : null }
+      back: { label: t(rev ? 'front' : 'back'), text: rev ? c.f : c.b, img: rev && c.img ? imgs[c.id] : null, q: rev ? c.b : c.f }
     };
   }
   function fillFace(face, f) {
     face.innerHTML = '';
     face.appendChild(el('span', { class: 'fc-side', text: f.label }));
+    if (f.q) face.appendChild(el('span', { class: 'fc-q no-i18n', dir: 'auto', text: f.q }));
     if (f.img) face.appendChild(el('img', { class: 'fc-img', src: f.img, alt: '' }));
     if (f.text) face.appendChild(el('span', { class: 'fc-text no-i18n ' + sizeCls(f.text), dir: 'auto', text: f.text }));
   }
@@ -429,14 +506,18 @@
     var ids = Object.keys(study.first).filter(function (id) { return !study.first[id]; });
     startStudy('cram', ids);
   });
-  $('#studyDone').addEventListener('click', function () { study = null; renderStudy(); focus($('#startStudy').hidden ? $('#cramBtn') : $('#startStudy')); });
+  $('#studyDone').addEventListener('click', function () {
+    study = null;
+    if (document.fullscreenElement === $('#p-study')) EDU.fullscreen();     // the class is done: leave full screen
+    renderStudy(); focus($('#startStudy').hidden ? $('#cramBtn') : $('#startStudy'));
+  });
   $('#speakBtn').addEventListener('click', function () {
     var c = curStudyCard();
     if (!c) return;
     var fs = faces(c);
     say(study.flipped ? fs.back.text : fs.front.text);
   });
-  $('#fsStudy').addEventListener('click', function () { EDU.fullscreen($('#studySession')); });
+  $('#fsStudy').addEventListener('click', function () { EDU.fullscreen($('#p-study')); focus($('#card')); });
   $('#sizeSeg').addEventListener('click', function (e) {
     var b = e.target.closest('button[data-v]');
     if (!b) return;
@@ -460,8 +541,9 @@
   /* ================================================================ quiz */
   function quizSide(d) {
     if (d.side) return d.side;
-    var lf = 0, lb = 0;
-    d.cards.forEach(function (c) { lf += c.f.length; lb += c.b.length; });
+    var lf = 0, lb = 0, pics = 0;
+    d.cards.forEach(function (c) { if (!c.f) pics++; lf += c.f.length; lb += c.b.length; });
+    if (pics && pics * 2 >= d.cards.length) return 'b';     // picture cards: show the picture, type the answer
     return lb > lf * 2 ? 'f' : 'b';
   }
   function startQuiz(onlyIds) {
@@ -615,8 +697,8 @@
     if (pool.length < 2) { match = null; return; }
     var tiles = [];
     pool.forEach(function (c, i) {
-      tiles.push({ pair: i, side: 'f', text: c.f, img: c.img ? c.id : null });
-      tiles.push({ pair: i, side: 'b', text: c.b, img: null });
+      tiles.push({ id: c.id, pair: i, side: 'f', text: c.f, img: c.img ? c.id : null });
+      tiles.push({ id: c.id, pair: i, side: 'b', text: c.b, img: null });
     });
     match = { deckId: d.id, tiles: EDU.shuffle(tiles), pairs: pool.length, sel: -1, matched: 0, tries: 0, start: 0, end: 0, best: false };
   }
@@ -985,7 +1067,9 @@
     if (d.cards.some(function (c) { return c.img; })) notes.appendChild(el('li', { text: t('no_img_note') }));
   }
   $('#shareBtn').addEventListener('click', function () {
-    if (!deck().cards.length) { toast('need_cards', { n: num(1) }); return; }
+    var d = deck();
+    if (!d.cards.length) { toast('need_cards', { n: num(1) }); return; }
+    if (!d.cards.some(function (c) { return c.f; })) { toast('no_img_note'); return; }
     showShare();
     var u = $('#shareUrl');
     focus(u);
@@ -1005,13 +1089,33 @@
     return ['front', 'question', 'term', 'word', 'q', 'side 1', norm(t('front'))].indexOf(F) >= 0 &&
       ['back', 'answer', 'definition', 'meaning', 'a', 'side 2', norm(t('back'))].indexOf(B) >= 0;
   }
+  /* CSV / TSV / semicolon rows. A quote only starts a quoted field at the start of a
+     field, so 12" ruler or it's stay as they are. */
+  function splitRows(text, delim) {
+    var rows = [], row = [], cur = '', q = false, start = true, i, c;
+    for (i = 0; i < text.length; i++) {
+      c = text[i];
+      if (q) {
+        if (c === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; }
+        else cur += c;
+      } else if (c === '"' && start) { q = true; start = false; cur = ''; }
+      else if (c === delim) { row.push(cur); cur = ''; start = true; }
+      else if (c === '\n' || c === '\r') {
+        if (c === '\r' && text[i + 1] === '\n') i++;
+        row.push(cur); rows.push(row); row = []; cur = ''; start = true;
+      } else { cur += c; if (c !== ' ') start = false; }
+    }
+    if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
+    return rows;
+  }
   function parseTable(text) {
-    text = String(text || '').replace(/^﻿/, '');
-    var first = text.split(/\r?\n/)[0] || '', rows;
-    if (first.indexOf('\t') >= 0) rows = text.split(/\r?\n/).map(function (l) { return l.split('\t'); });
-    else if (first.indexOf(',') >= 0 || first.indexOf('"') >= 0) rows = EDU.csv.parse(text);
-    else if (first.indexOf(';') >= 0) rows = text.split(/\r?\n/).map(function (l) { return l.split(';'); });
-    else return parseLines(text).cards.slice(0, MAX_CARDS);
+    text = String(text || '').replace(/^\uFEFF/, '');
+    var first = (text.split(/\r?\n/)[0] || '').replace(/"[^"]*"/g, '');
+    var cnt = function (ch) { return first.split(ch).length - 1; };
+    var delim = cnt('\t') ? '\t' : cnt(';') > cnt(',') ? ';' : cnt(',') ? ',' : '';
+    var rows;
+    if (delim) rows = splitRows(text, delim);
+    else rows = parseLines(text).cards;              // plain lines like "front - back"
     var out = [];
     rows.forEach(function (r, i) {
       var f = str(r[0]), b = str(r[1]);
@@ -1155,11 +1259,13 @@
   window.addEventListener('hashchange', readHash);
 
   /* ================================================================ print */
-  $('#printBtn').addEventListener('click', function () {
+  /* Built when the button is pressed and also when the browser prints (Ctrl+P),
+     so the printout is never an empty page. */
+  function buildPrint() {
     var d = deck(), pa = $('#printArea');
-    if (!d.cards.length) { toast('need_cards', { n: num(1) }); return; }
     pa.innerHTML = '';
-    pa.appendChild(el('h1', { class: 'no-i18n', text: deckName(d) }));
+    pa.appendChild(el('h1', { class: 'no-i18n', dir: 'auto', text: deckName(d) }));
+    if (!d.cards.length) { pa.appendChild(el('p', { text: t('no_cards') })); return; }
     pa.appendChild(el('div', { class: 'pr-lines' },
       el('span', { text: t('print_name') + ': ______________________' }),
       el('span', { text: t('print_class') + ': ________' }),
@@ -1176,8 +1282,17 @@
     });
     tb.appendChild(body);
     pa.appendChild(tb);
+  }
+  $('#printBtn').addEventListener('click', function () {
+    if (!deck().cards.length) { toast('need_cards', { n: num(1) }); return; }
+    buildPrint();
     setTimeout(function () { window.print(); }, 60);
   });
+  window.addEventListener('beforeprint', buildPrint);
+  try {
+    var printMq = matchMedia('print'), onPrintMq = function (e) { if (e.matches) buildPrint(); };
+    if (printMq.addEventListener) printMq.addEventListener('change', onPrintMq); else printMq.addListener(onPrintMq);
+  } catch (e) { }
 
   /* ================================================================ all */
   function renderAll() {

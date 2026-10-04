@@ -33,8 +33,9 @@
     .tok.skip { text-decoration: line-through; opacity: .8; }
     .tok.unk { border: 2px dashed var(--danger); }
     .start-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
-    .start-row input { flex: 1 1 100px; min-width: 0; font-size: 1.1rem; }
+    .start-row input { flex: 1 1 200px; min-width: 0; font-size: 1.1rem; }
     .start-row .btn { white-space: nowrap; }
+    .start-btns { display: flex; gap: 8px; flex: none; }
     .start-row .icon-btn { width: 44px; padding: 0; font-size: 1.05rem; }
     .cands { display: flex; flex-direction: column; gap: 8px; }
     .cand { display: grid; grid-template-columns: minmax(6rem, 38%) minmax(0, 1fr) 3.6rem; align-items: center; gap: 10px; width: 100%;
@@ -54,6 +55,7 @@
       padding: 12px 14px; overflow-wrap: anywhere; }
     .w { padding: 1px 4px; border-radius: 6px; border-bottom: 3px solid transparent; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
     .w-start { color: var(--muted); }
+    .output .w-end:not(.w-nl) { padding-inline: 1px; }
     .p-high { background: color-mix(in srgb, var(--success) 20%, transparent); border-bottom-color: var(--success); }
     .p-mid { background: color-mix(in srgb, var(--c7) 20%, transparent); border-bottom-color: var(--c7); }
     .p-low { background: color-mix(in srgb, var(--warning) 22%, transparent); border-bottom-color: var(--warning); }
@@ -69,6 +71,11 @@
     details.card > summary { cursor: pointer; font-weight: 700; font-size: 1.1rem; min-height: 32px; }
     details.card ul { margin: 12px 0 0; padding-inline-start: 1.3em; }
     details.card li + li { margin-top: 8px; }
+    /* Urdu (Nastaliq) letters are tall: give lines more room so highlights and labels do not overlap */
+    :root[lang="ur"] .output { line-height: 3.1; }
+    :root[lang="ur"] .stat span, :root[lang="ur"] .cand-word, :root[lang="ur"] .cand-word small { line-height: 1.9; }
+    :root[lang="ur"] .legend .w { line-height: 2.4; }
+    :root[lang="ur"] .stat b { margin-bottom: 6px; }
     .edu-fullscreen-on .output { font-size: 1.7rem; }
     .edu-fullscreen-on .cand-w { font-size: 1.5rem; }
     .edu-fullscreen-on .start-row input { font-size: 1.5rem; }
@@ -81,6 +88,7 @@
       .main-grid { grid-template-columns: 1fr 1fr; }
       .output, .stat, .panel { background: none !important; border: 1px solid #bbb; }
       .cand { break-inside: avoid; }
+      .cand-bar, .cand-bar > span, .step-no, .tok, .w { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       #train-print { white-space: pre-wrap; font-size: .85rem; }
       details.card { display: none; }
     }
@@ -126,11 +134,13 @@
             <div class="stat"><b id="stat-ngrams">0</b><span data-i18n="stat_ngrams"></span><span class="tiny" id="stat-ngrams-sub"></span></div>
           </div>
           <p class="callout warning small mb0" id="need-text" hidden></p>
+          <p class="callout small mb0" id="lines-note" hidden></p>
         </div>
         <div class="stack">
           <label for="train-text" class="lbl" data-i18n="train_label"></label>
           <textarea id="train-text" class="no-i18n no-print" rows="9" spellcheck="false" data-i18n-placeholder="train_ph"></textarea>
           <div id="train-print" class="print-only no-i18n"></div>
+          <p class="callout warning small mb0 no-print" id="cut-note" hidden></p>
           <div class="row no-print">
             <button type="button" class="btn btn-primary" id="train-btn" data-i18n="train_btn"></button>
             <button type="button" class="btn" id="open-btn" data-i18n="open_txt"></button>
@@ -148,8 +158,10 @@
           <label for="start-input" class="lbl" data-i18n="start_label"></label>
           <div class="start-row">
             <input type="text" id="start-input" class="no-i18n" autocomplete="off" spellcheck="false" data-i18n-placeholder="start_ph">
-            <button type="button" class="btn no-print" id="undo-btn" data-i18n="undo"></button>
-            <button type="button" class="btn no-print icon-btn" id="clear-start" data-i18n-aria-label="clear" data-i18n-title="clear">✕</button>
+            <span class="start-btns no-print">
+              <button type="button" class="btn" id="undo-btn" data-i18n="undo"></button>
+              <button type="button" class="btn icon-btn" id="clear-start" data-i18n-aria-label="clear" data-i18n-title="clear">✕</button>
+            </span>
           </div>
         </div>
         <div class="row">

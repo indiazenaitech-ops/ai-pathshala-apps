@@ -61,15 +61,33 @@
   /* zeroes of g on the sampled grid (xs, ys); identical = g is 0 everywhere we looked */
   function zeros(g, xs, ys, limit) {
     var out = [], N = xs.length - 1, any = false, allZero = true, k, snap = snapper(xs);
-    for (k = 0; k <= N; k++) if (ys[k] === ys[k]) { any = true; if (Math.abs(ys[k]) > 1e-12) { allZero = false; break; } }
+    var defined = 0;
+    for (k = 0; k <= N; k++) if (ys[k] === ys[k]) { any = true; defined++; if (Math.abs(ys[k]) > 1e-12) allZero = false; }
     if (!any) return { list: out, identical: false };
-    if (allZero) return { list: out, identical: true };
-    var tol = Math.abs(xs[1] - xs[0]) * 0.25;
+    if (allZero && defined >= 3) return { list: out, identical: true };
+    var h = Math.abs(xs[1] - xs[0]), tol = h * 0.25;
     function add(x) { if (!out.length || Math.abs(out[out.length - 1] - x) > tol) out.push(x); }
+    /* the graph ends ON the axis where it stops being defined: sqrt(x − 2) at 2, sqrt(4 − x²) at ±2 */
+    function edgeZero(xIn, xOut, yNear) {
+      var e = gEdge(g, xIn, xOut);
+      if (Math.abs(e[1]) <= 1e-3 * Math.abs(yNear) || e[1] === 0) {
+        var s = snap(e[0]), gs = g(s);
+        add(gs === gs && Math.abs(gs) <= Math.abs(e[1]) * 10 + 1e-12 ? s : e[0]);
+      }
+    }
     for (k = 0; k < N && out.length < limit; k++) {
       var a = ys[k], b = ys[k + 1];
+      if (a === a && b !== b) { if (a !== 0 || k === 0 || ys[k - 1] !== 0) edgeZero(xs[k], xs[k + 1], a === 0 ? 1 : (ys[k - 1] === ys[k - 1] ? ys[k - 1] : a)); continue; }
+      if (a !== a && b === b) { edgeZero(xs[k + 1], xs[k], k + 2 <= N && ys[k + 2] === ys[k + 2] ? ys[k + 2] : b); continue; }
       if (a !== a || b !== b) continue;
-      if (a === 0) { if (k === 0 || ys[k - 1] !== 0) add(xs[k]); continue; }
+      if (a === 0) {
+        if (k > 0 && ys[k - 1] === 0) continue;
+        /* a run of exact zeros: x^1000 underflows to 0 near 0, floor(x) is 0 on [0, 1) */
+        var j = k; while (j < N && ys[j + 1] === 0) j++;
+        var before = k > 0 ? ys[k - 1] : NaN, after = j < N ? ys[j + 1] : NaN;
+        add(j > k && (before > 0 ? after > 0 : before < 0 && after < 0) ? snap((xs[k] + xs[j]) / 2) : xs[k]);   // flat touch: its middle
+        continue;
+      }
       if (a * b < 0) {
         var r = bisect(g, xs[k], xs[k + 1], a);
         if (r !== null) { var gr = g(r); if (gr === gr && Math.abs(gr) <= 1e-6 * (1 + Math.min(Math.abs(a), Math.abs(b)))) add(r); }
@@ -77,13 +95,30 @@
         var p = ys[k - 1];
         if (p === p && p * a > 0 && a * b > 0 && Math.abs(a) < Math.abs(p) && Math.abs(a) <= Math.abs(b)) {
           var m = goldenMin(finite(function (x) { return Math.abs(g(x)); }), xs[k - 1], xs[k + 1]);
-          if (Math.abs(g(snap(m))) <= Math.abs(g(m)) * 10 + 1e-14) m = snap(m);
+          var snapped = Math.abs(g(snap(m))) <= Math.abs(g(m)) * 10 + 1e-14;
+          if (snapped) m = snap(m);
           var gm = g(m);
-          if (gm === gm && Math.abs(gm) < 1e-9 * (1 + Math.abs(p))) add(m);   // touches the axis, e.g. (x - 1)^2
+          if (gm === gm && Math.abs(gm) < 1e-9 * (1 + Math.abs(p))) {
+            /* a real touch, e.g. (x − 1)^2, stays tiny on both sides. Next to a jump (floor, ceil) the graph may only
+               come close from one side without reaching 0, so there it must hit 0 exactly at a round x (ceil(x) = x at x = 2) */
+            var eps = Math.max(h * 1e-9, Math.abs(m) * 2e-15), lim = 1e-2 * Math.min(Math.abs(p), Math.abs(b)), gl = g(m - eps), gh = g(m + eps);
+            if ((snapped && gm === 0) || (gl === gl && gh === gh && Math.abs(gl) <= lim && Math.abs(gh) <= lim)) add(m);
+          }
         }
       }
     }
     return { list: out, identical: false };
+  }
+  /* like edge(), for a plain function g(x) */
+  function gEdge(g, xIn, xOut) {
+    var yIn = g(xIn);
+    for (var k = 0; k < 60; k++) {
+      var xm = (xIn + xOut) / 2;
+      if (xm === xIn || xm === xOut) break;
+      var ym = g(xm);
+      if (ym === ym) { xIn = xm; yIn = ym; } else xOut = xm;
+    }
+    return [xIn, yIn];
   }
 
   /* Golden-section search on a flat top or bottom is only accurate to about 1e-8 of the range,

@@ -195,9 +195,10 @@
     var lo = Math.min(o.tFrom, o.tTo), hi = Math.max(o.tFrom, o.tTo);
     var a = R.int(lo, hi), b = R.int(1, 10), p = a * b, r = R.f();
     var type = o.diff === 'easy' ? 0 : o.diff === 'medium' ? (r < 0.7 ? 0 : 1) : (r < 0.4 ? 0 : r < 0.7 ? 1 : 2);
-    if (type === 0) return { parts: [{ n: a }, '×', { n: b }, '=', { box: 1 }], a: num(p), w: String(p).length, sig: 'T' + a + 'x' + b };
-    if (type === 1) return { parts: [{ n: a }, '×', { box: 1 }, '=', { n: p }], a: num(b), w: 2, sig: 'M' + a + 'x' + b };
-    return { parts: [{ n: p }, '÷', { n: a }, '=', { box: 1 }], a: num(b), w: 2, sig: 'D' + p + '/' + a };
+    /* w = 3 for every box: the box width must not hint whether the answer has 1, 2 or 3 digits */
+    if (type === 0) return { parts: [{ n: a }, '×', { n: b }, '=', { box: 1 }], a: num(p), w: 3, sig: 'T' + a + 'x' + b };
+    if (type === 1) return { parts: [{ n: a }, '×', { box: 1 }, '=', { n: p }], a: num(b), w: 3, sig: 'M' + a + 'x' + b };
+    return { parts: [{ n: p }, '÷', { n: a }, '=', { box: 1 }], a: num(b), w: 3, sig: 'D' + p + '/' + a };
   }
 
   function genMul(R, o) {
@@ -219,7 +220,7 @@
     var q = R.int(qlo, Math.max(qlo, qhi)), dd = q * dv + r;
     return {
       parts: [{ n: dd }, '÷', { n: dv }, '=', { box: 1 }], ld: { dv: dv, dd: dd },
-      a: o.rem === 'no' ? num(q) : { k: 'dr', q: q, r: r }, w: String(q).length, sig: dd + '/' + dv
+      a: o.rem === 'no' ? num(q) : { k: 'dr', q: q, r: r }, w: String(dd).length, sig: dd + '/' + dv
     };
   }
 
@@ -233,7 +234,8 @@
         ds.forEach(function (d, k) { if (d && k > 0 && ds.indexOf(d) === ds.lastIndexOf(d)) cand.push(k); });
         if (!cand.length) continue;
         var k = R.pick(cand);
-        return { f: 'txt', key: 'pv_value', vars: { d: [{ n: ds[k] }], n: [{ n: N }] }, a: num(ds[k] * P10(k)), sig: 'pv' + N + ':' + k };
+        /* the box is as wide as the number in the question, so a 9-digit answer fits (also on paper) */
+        return { f: 'txt', key: 'pv_value', vars: { d: [{ n: ds[k] }], n: [{ n: N }] }, a: num(ds[k] * P10(k)), w: fmtInt(N).length, sig: 'pv' + N + ':' + k };
       }
       type = 1;
     }
@@ -244,7 +246,7 @@
     if (type === 1) return { f: 'txt', key: 'pv_expand', vars: { n: [{ n: N2 }] }, a: { k: 'exp', terms: terms }, sig: 'pe' + N2, wide: 1 };
     var parts = [];
     terms.forEach(function (x, m) { if (m) parts.push('+'); parts.push({ n: x }); });
-    return { f: 'txt', key: 'pv_standard', vars: { e: parts }, a: num(N2), sig: 'ps' + N2, wide: 1 };
+    return { f: 'txt', key: 'pv_standard', vars: { e: parts }, a: num(N2), w: fmtInt(terms[0]).length, sig: 'ps' + N2, wide: 1 };
   }
 
   function genCompare(R, o) {
@@ -271,7 +273,7 @@
       o.diff === 'medium' ? [[10, 3], [100, 3], [100, 4], [10, 4]] : [[100, 4], [1000, 4], [1000, 5], [10000, 5], [10000, 6]];
     var pr = R.pick(opts), p = pr[0], N = nd(R, pr[1]);
     if (N % p === 0) N += R.int(1, p - 1);
-    return { f: 'txt', key: 'round_q', vars: { n: [{ n: N }], place: [{ s: 'pl_' + p }] }, a: num(Math.round(N / p) * p), sig: 'r' + N + '/' + p };
+    return { f: 'txt', key: 'round_q', vars: { n: [{ n: N }], place: [{ s: 'pl_' + p }] }, a: num(Math.round(N / p) * p), w: fmtInt(N).length + 1, sig: 'r' + N + '/' + p };
   }
 
   /* ---------- fractions ---------- */
@@ -337,7 +339,7 @@
     return {
       parts: [{ dc: decStr(A.i, A.dp) }, op, { dc: decStr(B.i, B.dp) }, '=', { box: 1 }],
       rows: [{ op: '', s: decStr(a, S) }, { op: op, s: decStr(b, S) }],
-      a: num(res / P10(S), { s: ans }), w: decStr(res, S).length, sig: 'da' + A.i + op + B.i + ':' + A.dp + B.dp
+      a: num(res / P10(S), { s: ans }), w: decStr(a, S).length + 1, sig: 'da' + A.i + op + B.i + ':' + A.dp + B.dp
     };
   }
 
@@ -354,7 +356,7 @@
     var p = A.i * B.i, dp = A.dp + B.dp, ans = trimDec(decStr(p, dp));
     return {
       parts: [{ dc: decStr(A.i, A.dp) }, '×', { dc: decStr(B.i, B.dp) }, '=', { box: 1 }],
-      a: num(p / P10(dp), { s: ans }), w: ans.length, sig: 'dm' + A.i + '/' + A.dp + 'x' + B.i + '/' + B.dp
+      a: num(p / P10(dp), { s: ans }), w: decStr(A.i, A.dp).length + decStr(B.i, B.dp).length, sig: 'dm' + A.i + '/' + A.dp + 'x' + B.i + '/' + B.dp
     };
   }
 
@@ -365,6 +367,7 @@
     function rnd() { var x; do { x = R.int(-M, M); } while (x === 0); return x; }
     if (o.diff === 'hard' && R.chance(0.6)) {
       var a = rnd(), b = rnd();
+      if (a > 0 && b > 0) { if (R.chance(0.5)) a = -a; else b = -b; }   /* an integers sheet: every question has a negative number */
       if (R.chance(0.5)) { parts = [sgn(a, 1), '×', sgn(b)]; val = a * b; }
       else { parts = [sgn(a * b, 1), '÷', sgn(a)]; val = b; }
     } else {
@@ -407,17 +410,24 @@
       while (toks[i] === '+' || toks[i] === MINUS) {
         var op = toks[i++], w = term();
         v = op === '+' ? v + w : v - w;
-        if (v < 0) ok = false;
+        if (v < 0 || (v === 0 && op !== '+')) ok = false;     /* no negatives, and no "23 − 23" that makes a bracket 0 */
       }
       return v;
     }
     var r = expr();
     return ok ? r : NaN;
   }
-  function genBodmas(R, o) {
+  function genBodmas(R, o, qi) {
     var list = BOD[o.diff] || BOD.easy, addMax = o.diff === 'easy' ? 20 : o.diff === 'medium' ? 40 : 60, mulMax = o.diff === 'hard' ? 15 : 10;
+    /* go through the patterns in a shuffled order, so a sheet mixes them evenly (patterns that are easier
+       to fill with numbers would otherwise fill half the sheet) */
+    if (!o.bodOrder) {
+      o.bodOrder = list.map(function (x, k) { return k; });
+      for (var s = o.bodOrder.length - 1; s > 0; s--) { var m = R.int(0, s), z = o.bodOrder[s]; o.bodOrder[s] = o.bodOrder[m]; o.bodOrder[m] = z; }
+    }
+    var fixed = list[o.bodOrder[(qi || 0) % list.length]];
     for (var t = 0; t < 600; t++) {
-      var tpl = R.pick(list).split(' ').map(function (s) { return s === '−' ? MINUS : s; });
+      var tpl = (t < 400 ? fixed : R.pick(list)).split(' ').map(function (s) { return s === '−' ? MINUS : s; });
       var toks = tpl.map(function (s, i) {
         if (!/^[a-e]$/.test(s)) return s;
         var near = [tpl[i - 1], tpl[i + 1]].some(function (x) { return x === '×' || x === '÷'; });
@@ -539,7 +549,7 @@
     else if (tpl === 't_dur') { v = { name: { nm: nm }, t1: { tm: start }, t2: { tm: start + d } }; ans = { k: 'dur', v: d }; }
     else if (tpl === 't_h2m') { v = { d: { du: d } }; ans = num(d, { unit: 'min' }); }
     else if (tpl === 't_m2h') { v = { m: { n: d } }; ans = { k: 'dur', v: d }; }
-    else { var w = R.int(2, 5), dd = R.int(2, 6); v = { w: { n: w }, d: { n: dd } }; ans = num(7 * w + dd); }
+    else { var w = R.int(2, 3), dd = R.int(2, 6); v = { w: { n: w }, d: { n: dd } }; ans = num(7 * w + dd); }   /* festival holidays: 2–3 weeks is realistic */
     return { f: 'word', grp: 'time', tpl: tpl, v: v, a: ans, w: 5, sig: tpl + JSON.stringify(v) };
   }
 

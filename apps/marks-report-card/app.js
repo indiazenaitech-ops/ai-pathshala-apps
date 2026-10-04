@@ -56,14 +56,14 @@
   function normMark(v) {
     var s = latin(v).trim();
     if (AB_RE.test(s)) return 'AB';
-    return s.replace(/^(\d+),(\d+)$/, '$1.$2');
+    return s.replace(/^(\d*),(\d+)$/, '$1.$2').replace(/^(\d+)\.$/, '$1');
   }
   function parseMark(raw, max) {
     var s = latin(raw == null ? '' : raw).trim();
     if (!s) return { st: 'empty' };
     if (AB_RE.test(s)) return { st: 'ab', v: 0 };
     s = s.replace(/^(\d*),(\d+)$/, '$1.$2');
-    if (!/^(\d+(\.\d+)?|\.\d+)$/.test(s)) return { st: 'bad', why: 'nan' };
+    if (!/^(\d+(\.\d*)?|\.\d+)$/.test(s)) return { st: 'bad', why: 'nan' };
     var v = parseFloat(s);
     if (!isFinite(v)) return { st: 'bad', why: 'nan' };
     if (v > max + 1e-9) return { st: 'bad', why: 'max' };
@@ -106,8 +106,20 @@
     var s = d.school && typeof d.school === 'object' ? d.school : {};
     d.school = { name: String(s.name || ''), addr: String(s.addr || ''), logo: /^data:image\//.test(s.logo || '') ? s.logo : '' };
     if (TABS.indexOf(d.tab) < 0) d.tab = 'marks';
+    d.rc = Math.max(0, Math.floor(+d.rc || 0));
+    d.sample = typeof d.sample === 'string' ? d.sample : '';
     d.v = 1;
     return d;
+  }
+  /* A fingerprint of the sample class: while the teacher has not changed anything, the sample
+     follows the language picker (names, subjects, remarks); after the first edit it is their data. */
+  function sampleSig(c) {
+    return JSON.stringify([c.name, c.term, c.passPct, c.each, c.showRank, c.days,
+      c.subjects.map(function (s) { return [s.name, s.max]; }),
+      c.students.map(function (st) { return [st.roll, st.name, st.present, st.remark].concat(c.subjects.map(function (s) { return st.marks[s.id] || ''; })); })]);
+  }
+  function untouchedSample(d) {
+    return !!d.sample && d.classes.length === 1 && !d.school.name && !d.school.addr && !d.school.logo && sampleSig(d.classes[0]) === d.sample;
   }
   function sampleClass() {
     var C = content();
@@ -124,15 +136,22 @@
   }
   function freshData() {
     var c = sampleClass();
-    return { v: 1, classes: [c], cur: c.id, school: { name: '', addr: '', logo: '' }, tab: 'marks' };
+    return { v: 1, classes: [c], cur: c.id, school: { name: '', addr: '', logo: '' }, tab: 'marks', rc: 0, sample: sampleSig(c) };
   }
 
   var data = fixData(store.get('data', null)) || freshData();
-  var saveTimer = null;
+  var saveTimer = null, saveWarned = false;
+  /* EDU.store().set returns false when browser storage is full (or blocked): tell the teacher once,
+     instead of silently losing marks on the next reload. */
+  function write() {
+    var ok = store.set('data', data);
+    if (ok === false && !saveWarned) { saveWarned = true; EDU.toast(t('err_storage'), 8000); }
+    else if (ok) saveWarned = false;
+  }
   function save(now) {
     clearTimeout(saveTimer);
-    if (now) store.set('data', data);
-    else saveTimer = setTimeout(function () { store.set('data', data); }, 250);
+    if (now) write();
+    else saveTimer = setTimeout(write, 250);
   }
   window.addEventListener('pagehide', function () { store.set('data', data); });
   document.addEventListener('visibilitychange', function () { if (document.hidden) store.set('data', data); });
@@ -151,9 +170,11 @@
       var cells = c.subjects.map(function (s) {
         var m = maxOf(s), p = parseMark(st.marks[s.id], m);
         if (p.st === 'ok' || p.st === 'ab') {
+          /* grade and pass/fail are decided on the percentage as shown (2 decimals),
+             so a card never shows "33.00%" next to "Fail" or "91.00%" next to A2 */
           p.pct = p.v * 100 / m;
-          p.grade = gradeOf(p.pct);
-          p.pass = p.st === 'ok' && p.pct + 1e-9 >= pass;
+          p.grade = gradeOf(r2(p.pct));
+          p.pass = p.st === 'ok' && r2(p.pct) + 1e-9 >= pass;
         }
         return p;
       });
@@ -165,17 +186,20 @@
       if (complete) {
         r.total = r2(tot);
         r.pct = maxTotal > 0 ? tot * 100 / maxTotal : 0;
-        r.grade = gradeOf(r.pct);
-        var ok = c.each ? r.failed.length === 0 : r.pct + 1e-9 >= pass;
+        r.grade = gradeOf(r2(r.pct));
+        var ok = c.each ? r.failed.length === 0 : r2(r.pct) + 1e-9 >= pass;
         r.result = ok ? 'pass' : 'fail';
       }
       return r;
     });
     var done = rows.filter(function (r) { return r.complete; });
-    /* standard competition ranking: equal totals share a rank (1, 2, 2, 4) */
+    /* standard competition ranking: equal totals share a rank (1, 2, 2, 4).
+       Sorted once (n log n), so typing stays quick in a class of hundreds. */
+    var keys = done.map(function (r) { return Math.round(r.total * 100); }).sort(function (a, b) { return b - a; });
     done.forEach(function (r) {
-      var key = Math.round(r.total * 100);
-      r.rank = 1 + done.filter(function (o) { return Math.round(o.total * 100) > key; }).length;
+      var key = Math.round(r.total * 100), lo = 0, hi = keys.length;
+      while (lo < hi) { var mid = (lo + hi) >> 1; if (keys[mid] > key) lo = mid + 1; else hi = mid; }
+      r.rank = lo + 1;
     });
     return { rows: rows, done: done, maxTotal: maxTotal, pass: pass };
   }
@@ -215,7 +239,7 @@
 
   /* ---------------- start ---------------- */
   EDU.init({ slug: SLUG, title: 'app_title', wide: true });
-  var rcIndex = 0;
+  var rcIndex = +data.rc || 0;   /* the report card that was open stays open after a reload */
   var distKey = 'all';
 
   function renderAll() {
@@ -307,7 +331,7 @@
       EDU.toast(t('class_created'));
     }
     create.addEventListener('click', go);
-    name.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
+    [name, term].forEach(function (inp) { inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); }); });
     setTimeout(function () { name.focus(); }, 30);
   }
 
@@ -441,13 +465,34 @@
     if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
     return rows;
   }
+  /* separators outside "quoted" parts of one line */
+  function countSep(line, d) {
+    var n = 0, q = false;
+    for (var i = 0; i < line.length; i++) { var ch = line[i]; if (ch === '"') q = !q; else if (!q && ch === d) n++; }
+    return n;
+  }
+  /* Pick the separator that splits most lines into the same number of cells. Tab (Excel / Sheets paste) wins;
+     a semicolon file with "72,5" or "Eng, Lit" inside quotes is not mistaken for a comma file. */
+  function guessDelim(lines) {
+    var sample = lines.slice(0, 60), best = null, bestScore = 0;
+    ['\t', ';', ','].forEach(function (d) {
+      var freq = {}, modeN = 0;
+      sample.forEach(function (l) { var n = countSep(l, d); if (n > 0) { freq[n] = (freq[n] || 0) + 1; if (freq[n] > modeN) modeN = freq[n]; } });
+      if (!modeN) return;
+      var score = modeN / sample.length + (d === '\t' ? 0.5 : 0);
+      if (score > bestScore) { bestScore = score; best = d; }
+    });
+    return best;
+  }
   function splitTable(text) {
     text = String(text || '').replace(/^﻿/, '');
     var lines = text.split(/\r\n|\n|\r/).filter(function (l) { return l.trim(); });
     if (!lines.length) return [];
-    var d = text.indexOf('\t') >= 0 ? '\t' : lines.some(function (l) { return l.indexOf(',') >= 0; }) ? ',' : lines.some(function (l) { return l.indexOf(';') >= 0; }) ? ';' : null;
-    if (!d) return lines.map(function (l) { return [l]; });
-    return parseDelim(text, d);
+    var d = guessDelim(lines), rows;
+    if (!d) rows = lines.map(function (l) { return [l]; });
+    else rows = parseDelim(text, d);
+    rows.delim = d;
+    return rows;
   }
   function isMarkish(c) { var s = latin(c).trim(); return s === '' || AB_RE.test(s) || /^\d+([.,]\d+)?$/.test(s); }
   function mostlyText(rows, i) {
@@ -462,6 +507,19 @@
     return { name: s, max: null };
   }
   function normH(s) { return String(s || '').toLowerCase().replace(/[\s._:#*'’()[\]\/-]+/g, ' ').trim(); }
+  /* "Subject 1", "विषय 2", "مضمون 3" … : the default name given to a new blank subject, in any language */
+  var PH_RE = null;
+  function isPlaceholder(name) {
+    if (!PH_RE) {
+      var S = window.APP_STRINGS || {};
+      PH_RE = Object.keys(S).map(function (L) {
+        var p = String(S[L].subject_n || 'Subject {n}').replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace('\\{n\\}', '\\d+');
+        return new RegExp('^' + p + '$', 'i');
+      });
+    }
+    var s = latin(name).trim();
+    return PH_RE.some(function (re) { return re.test(s); });
+  }
   var HEADS = null;
   function headWords() {
     if (HEADS) return HEADS;
@@ -472,17 +530,23 @@
       return a.concat(extra.map(normH));
     }
     HEADS = {
-      name: words(['col_name', 'rc_name'], ['name', 'names', 'student', 'students', 'student name', 'name of student', 'name of the student', 'students name', 'full name', 'naam']),
-      roll: words(['col_roll', 'rc_roll'], ['roll', 'roll no', 'roll number', 'rollno', 'r no', 's no', 'sr no', 'sno', 'sl no', 'serial no', 'adm no', 'admission no']),
+      name: words(['col_name', 'rc_name'], ['name', 'names', 'student', 'students', 'student name', 'name of student', 'name of the student', 'students name', 'full name', 'naam',
+        'छात्र', 'छात्र का नाम', 'छात्र छात्रा का नाम', 'विद्यार्थी', 'विद्यार्थी का नाम', 'নাম', 'ছাত্রের নাম', 'طالب علم', 'طالب علم کا نام']),
+      /* "क्रमांक" / "अनुक्रमांक" / "क्र.सं." are how most Hindi registers head the roll / serial column.
+         Roll is matched before "skip", so Marathi's rank column "क्रमांक" after a real roll column is still skipped. */
+      roll: words(['col_roll', 'rc_roll'], ['roll', 'roll no', 'roll number', 'rollno', 'r no', 's no', 'sr no', 'sno', 'sl no', 'serial no', 'adm no', 'admission no',
+        'अनुक्रमांक', 'क्रमांक', 'क्र सं', 'क्रम सं', 'क्र', 'रोल नंबर', 'रोल न', 'রোল নম্বর', 'ক্রমিক নং', 'ক্রমিক', 'வ எண்', 'வரிசை எண்', 'رول نمبر', 'نمبر شمار']),
       present: words(['days_present'], ['attendance', 'present', 'days present']),
       remark: words(['remarks'], ['remark', 'remarks', 'comment', 'comments']),
-      skip: words(['col_total', 'col_pct', 'col_grade', 'col_rank', 'col_result', 'rc_percentage', 'rc_overall_grade'], ['total', '%', 'percentage', 'percent', 'grade', 'rank', 'result', 'max', 'pass fail'])
+      skip: words(['col_total', 'col_pct', 'col_grade', 'col_rank', 'col_result', 'rc_percentage', 'rc_overall_grade'], ['total', '%', 'percentage', 'percent', 'grade', 'rank', 'result', 'max', 'pass fail', 'தரம்'])
     };
     return HEADS;
   }
   function importText(text) {
     var c = cls();
-    var rows = splitTable(text).map(function (r) { return r.map(function (x) { return String(x == null ? '' : x).trim(); }); })
+    var table = splitTable(text);
+    var joinSep = table.delim === ',' ? ', ' : ' ';
+    var rows = table.map(function (r) { return r.map(function (x) { return String(x == null ? '' : x).trim(); }); })
       .filter(function (r) { return r.some(function (x) { return x; }); });
     if (!rows.length) { EDU.toast(t('nothing_found')); return false; }
     if (rows.length > 801) rows = rows.slice(0, 801);
@@ -522,15 +586,29 @@
     } else {
       for (i = 0; i < w; i++) if (mostlyText(rows, i)) { nameCol = i; break; }
       if (nameCol > 0) rollCol = 0;
+      /* more text right after the name is part of the name ("Sharma, Aarav"), never a mark */
+      var nameEnd = nameCol;
+      while (nameCol >= 0 && nameEnd + 1 < w && mostlyText(rows, nameEnd + 1)) nameEnd++;
       var si = 0;
       for (i = 0; i < w; i++) {
         if (i === nameCol) col[i] = { type: 'name' };
+        else if (i > nameCol && i <= nameEnd) col[i] = { type: 'name2' };
         else if (i === rollCol) col[i] = { type: 'roll' };
         else if (i > nameCol && si < c.subjects.length) col[i] = { type: 'subj', subj: c.subjects[si++] };
         else col[i] = { type: 'skip' };
       }
     }
     if (nameCol < 0 || !body.length) { EDU.toast(t('nothing_found')); return false; }
+    /* A new class starts with one blank "Subject 1". When the pasted header brings its own subjects,
+       drop such untouched placeholders (default name, no marks), or every student would stay
+       "Incomplete" because of an empty column nobody asked for. */
+    var brings = col.filter(function (m) { return m && m.type === 'subj' && !m.subj; }).map(function (m) { return normName(m.h.name); });
+    if (brings.some(function (k) { return !c.subjects.some(function (s) { return normName(s.name) === k; }); })) {
+      c.subjects = c.subjects.filter(function (s) {
+        if (brings.indexOf(normName(s.name)) >= 0 || !isPlaceholder(s.name)) return true;
+        return c.students.some(function (st) { return String(st.marks[s.id] || '').trim() !== ''; });
+      });
+    }
     /* match header subjects to existing subjects (by name), or create them */
     var newSubs = 0;
     col.forEach(function (m) {
@@ -544,19 +622,24 @@
       } else if (m.h.max > 0 && m.h.max <= 1000) found.max = m.h.max;
       m.subj = found;
     });
-    var added = 0, updated = 0, roll = nextRoll(c);
+    var added = 0, updated = 0, roll = nextRoll(c), seen = {};
     body.forEach(function (r) {
-      var name = (r[nameCol] || '').trim().slice(0, 80);
+      var parts = [];
+      col.forEach(function (m, i) { if (m && (m.type === 'name' || m.type === 'name2') && (r[i] || '').trim()) parts.push(r[i].trim()); });
+      var name = parts.join(joinSep).slice(0, 80);
       if (!name) return;
       var rl = rollCol >= 0 ? latin(r[rollCol] || '').trim().slice(0, 12) : '';
       var key = normName(name);
-      var st = c.students.filter(function (s) { return normName(s.name) === key && (!rl || !s.roll || s.roll === rl); })[0];
+      /* same name again: with a roll number it must match too; without one, a name already used
+         earlier in this same paste is a second student (two "Rahul Kumar" in one class), not an update */
+      var st = c.students.filter(function (s) { return normName(s.name) === key && (rl ? (!s.roll || s.roll === rl) : !seen[s.id]); })[0];
       if (st) updated++;
       else {
         if (c.students.length >= 800) return;
         st = { id: uid(), roll: '', name: name, marks: {}, present: '', remark: '' };
         c.students.push(st); added++;
       }
+      seen[st.id] = 1;
       if (rl) st.roll = rl; else if (!st.roll) st.roll = String(roll++);
       col.forEach(function (m, i) {
         var v = (r[i] || '').trim();
@@ -590,7 +673,7 @@
     var c = cls();
     var head = [t('col_roll'), t('col_name')].concat(c.subjects.map(function (s) { return s.name + ' (' + r2(maxOf(s)) + ')'; }));
     var rows = [head].concat(c.students.map(function (st) {
-      return [st.roll, st.name].concat(c.subjects.map(function (s) { return st.marks[s.id] || ''; }));
+      return [st.roll, st.name].concat(c.subjects.map(function (s) { return normMark(st.marks[s.id] || ''); }));
     }));
     if (!c.students.length) rows.push(['1', ''].concat(c.subjects.map(function () { return ''; })));
     EDU.download(fileBase(c) + '-template.csv', EDU.csv.stringify(rows), 'text/csv');
@@ -673,7 +756,7 @@
       el('th', { scope: 'col', class: 'c-name sticky', text: t('col_name') }));
     c.subjects.forEach(function (s) {
       tr.appendChild(el('th', { scope: 'col', class: 'c-sub' },
-        el('span', { class: 'sub-name no-i18n', text: s.name || '—' }),
+        el('span', { class: 'sub-name no-i18n', title: s.name || null, text: s.name || '—' }),
         el('span', { class: 'sub-max', text: '/ ' + fmtN(maxOf(s)) })));
     });
     tr.appendChild(el('th', { scope: 'col', class: 'c-calc' }, el('span', { class: 'sub-name', text: t('col_total') }), el('span', { class: 'sub-max', text: '/ ' + fmtN(R0.maxTotal) })));
@@ -706,6 +789,8 @@
   }
   function setCalc(tr, sel, node, val) {
     var td = tr.querySelector(sel);
+    /* unchanged cell: leave the DOM alone, so typing stays quick in a class of hundreds */
+    if (td.firstChild && td.getAttribute('data-val') === (val == null ? '' : String(val))) return;
     td.innerHTML = '';
     td.appendChild(typeof node === 'string' ? document.createTextNode(node) : node);
     td.setAttribute('data-val', val == null ? '' : String(val));
@@ -715,8 +800,9 @@
     R.rows.forEach(function (r, i) {
       var tr = trs[i];
       if (!tr) return;
+      var ins = tr.querySelectorAll('input.mk');
       r.cells.forEach(function (x, j) {
-        var inp = tr.querySelector('input.mk[data-s="' + j + '"]');
+        var inp = ins[j];
         if (!inp) return;
         inp.classList.toggle('bad', x.st === 'bad');
         inp.classList.toggle('ab', x.st === 'ab');
@@ -757,7 +843,11 @@
   });
   mb.addEventListener('focusin', function (e) {
     var inp = e.target;
-    if (inp.classList && inp.classList.contains('cellin')) setTimeout(function () { try { if (document.activeElement === inp) inp.select(); } catch (er) { } }, 0);
+    if (!inp.classList || !inp.classList.contains('cellin')) return;
+    /* select the cell after a mouse click too, but never after the teacher has already started typing
+       (a fast typist's first digit would otherwise be selected and replaced by the second one) */
+    var v0 = inp.value;
+    setTimeout(function () { try { if (document.activeElement === inp && inp.value === v0) inp.select(); } catch (er) { } }, 0);
   });
   mb.addEventListener('keydown', function (e) {
     var inp = e.target;
@@ -776,6 +866,10 @@
       dc = fwd ? 1 : -1;
     } else return;
     var nr = r + dr, nc = col + dc;
+    /* typing a list of names into the grid: Enter on the last filled name opens a new row */
+    if (e.key === 'Enter' && !e.shiftKey && r === lastR && col === 1 && inp.value.trim() && c.students.length < 800) {
+      e.preventDefault(); $('#add-row').click(); return;
+    }
     if (e.key === 'Enter') {
       if (nr > lastR) { nr = 0; nc = col + 1; }
       else if (nr < 0) { nr = lastR; nc = col - 1; }
@@ -888,8 +982,9 @@
     var counts = GRADES.map(function () { return 0; });
     var j = -1;
     c.subjects.forEach(function (s, k) { if (s.id === distKey) j = k; });
+    /* per subject, an absent (AB) student has no grade: left out, like the subject average */
     R.rows.forEach(function (r) {
-      var g = distKey === 'all' ? r.grade : (r.cells[j] && r.cells[j].grade);
+      var g = distKey === 'all' ? r.grade : (r.cells[j] && r.cells[j].st === 'ok' && r.cells[j].grade);
       if (g) counts[GRADES.indexOf(g)]++;
     });
     dist.appendChild(el('div', { class: 'row spread' }, el('h3', { class: 'mb0', text: '📊 ' + t('grade_dist') }),
@@ -961,17 +1056,19 @@
     var c = cls(), R = compute(c), sel = $('#rc-student'), n = c.students.length;
     sel.innerHTML = '';
     c.students.forEach(function (st, i) { sel.appendChild(el('option', { value: String(i), text: (st.roll ? st.roll + '. ' : '') + (st.name || '—') })); });
-    $('#rc-editor-body').hidden = !n;
-    $('#rc-none').hidden = !!n;
+    var ready = n > 0 && c.subjects.length > 0;
+    $('#rc-editor-body').hidden = !ready;
+    $('#rc-none').hidden = ready;
     $('#rc-none').textContent = !c.subjects.length ? t('no_subjects') : t('no_students');
     var prev = $('#rc-preview');
     prev.innerHTML = '';
-    if (!n || !c.subjects.length) return;
+    if (!ready) return;
     rcIndex = EDU.clamp(rcIndex, 0, n - 1);
+    if (data.rc !== rcIndex) { data.rc = rcIndex; save(); }
     sel.value = String(rcIndex);
     var st = c.students[rcIndex];
     setVal('#rc-present', st.present);
-    $('#rc-days').textContent = c.days ? t('out_of', { n: c.days }) : t('days_hint');
+    presentHint(c, st);
     setVal('#rc-remark', st.remark);
     $('#rc-prev').disabled = rcIndex === 0;
     $('#rc-next').disabled = rcIndex === n - 1;
@@ -981,7 +1078,7 @@
     content().remarks.forEach(function (txt) {
       chips.appendChild(el('button', { class: 'chip', type: 'button', text: txt, onclick: function () {
         var s = cls().students[rcIndex];
-        s.remark = s.remark.trim() ? s.remark.trim() + ' ' + txt : txt;
+        s.remark = (s.remark.trim() ? s.remark.trim() + ' ' + txt : txt).slice(0, 600);
         $('#rc-remark').value = s.remark; save(); updatePreview();
       } }));
     });
@@ -997,7 +1094,24 @@
   $('#rc-student').addEventListener('change', function (e) { rcIndex = +e.target.value || 0; renderCards(); });
   $('#rc-prev').addEventListener('click', function () { rcIndex--; renderCards(); });
   $('#rc-next').addEventListener('click', function () { rcIndex++; renderCards(); });
-  $('#rc-present').addEventListener('input', function (e) { var s = cls().students[rcIndex]; if (s) { s.present = latin(e.target.value).trim(); save(); updatePreview(); } });
+  /* days present: 0 … working days. A wrong value is flagged here and left off the printed card. */
+  function attendance(c, st) {
+    var d = num(c.days, 0), raw = String(st.present == null ? '' : st.present).trim(), p = raw === '' ? NaN : num(raw, NaN);
+    var bad = raw !== '' && (!isFinite(p) || p < 0 || (d > 0 && p > d));
+    return { d: d, p: bad ? NaN : p, bad: bad };
+  }
+  function presentHint(c, st) {
+    var a = attendance(c, st), inp = $('#rc-present'), hint = $('#rc-days');
+    inp.classList.toggle('bad', a.bad);
+    inp.setAttribute('aria-invalid', a.bad ? 'true' : 'false');
+    if (a.d > 0) inp.max = String(a.d); else inp.removeAttribute('max');
+    hint.classList.toggle('err', a.bad);
+    hint.textContent = a.bad ? t('err_present', { n: fmtN(a.d) }) : a.d > 0 ? t('out_of', { n: fmtN(a.d) }) : t('days_hint');
+  }
+  $('#rc-present').addEventListener('input', function (e) {
+    var c = cls(), s = c.students[rcIndex];
+    if (s) { s.present = latin(e.target.value).trim(); save(); presentHint(c, s); updatePreview(); }
+  });
   $('#rc-remark').addEventListener('input', function (e) { var s = cls().students[rcIndex]; if (s) { s.remark = e.target.value; save(); updatePreview(); } });
   $('#rc-auto').addEventListener('click', function () {
     var c = cls(), R = compute(c), n = 0;
@@ -1013,7 +1127,13 @@
   }
   function buildCard(c, R, i) {
     var r = R.rows[i], st = r.st, S = data.school;
-    var card = el('article', { class: 'rc', 'data-sid': st.id });
+    /* how full a printed page gets: subject rows + remark lines (+ a long "needs improvement" line),
+       for the fullest card of the class. Fuller classes print with tighter rows so every student
+       still gets exactly one A4 page, and all cards of a class look the same. */
+    var load = c.subjects.length + R.rows.reduce(function (m, x) {
+      return Math.max(m, String(x.st.remark || '').length / 75 + (x.failed.length > 6 ? 1 : 0));
+    }, 0);
+    var card = el('article', { class: 'rc' + (load > 17 ? ' rc-dense rc-xdense' : load > 9 ? ' rc-dense' : ''), 'data-sid': st.id });
     card.appendChild(el('header', { class: 'rc-head' + (S.logo || S.name || S.addr ? '' : ' rc-head-empty') },
       S.logo ? el('img', { class: 'rc-logo', src: S.logo, alt: '' }) : null,
       el('div', { class: 'rc-school' },
@@ -1022,12 +1142,12 @@
         S.addr ? el('div', { class: 'rc-addr no-i18n', text: S.addr }) : null),
       S.logo ? el('div', { class: 'rc-logo-pad', 'aria-hidden': 'true' }) : null));
     card.appendChild(el('div', { class: 'rc-title' }, el('span', { text: t('rc_title') }), c.term ? el('span', { class: 'no-i18n rc-term', dir: 'auto', text: c.term }) : null));
-    var days = num(c.days, 0), pres = st.present === '' ? NaN : num(st.present, NaN);
+    var att = attendance(c, st), days = att.d, pres = att.p;
     card.appendChild(el('div', { class: 'rc-info' },
       kv(t('rc_name'), st.name, true),
       kv(t('rc_roll'), st.roll, true),
       kv(t('rc_class'), c.name, true),
-      days > 0 ? kv(t('attendance'), t('rc_att_val', { p: isFinite(pres) ? fmtN(pres) : '—', d: fmtN(days), pct: isFinite(pres) ? fmtPct(Math.min(100, pres * 100 / days)) : '—' })) : null));
+      days > 0 ? kv(t('attendance'), t('rc_att_val', { p: isFinite(pres) ? fmtN(pres) : '—', d: fmtN(days), pct: isFinite(pres) ? fmtPct(pres * 100 / days) : '—' })) : null));
     var tb = el('tbody');
     c.subjects.forEach(function (s, j) {
       var x = r.cells[j], has = x.st === 'ok' || x.st === 'ab';
@@ -1061,7 +1181,7 @@
     card.appendChild(el('div', { class: 'rc-remarks' }, el('div', { class: 'rc-k', text: t('remarks') }), el('div', { class: 'rc-rtext no-i18n', dir: 'auto', text: st.remark })));
     card.appendChild(el('p', { class: 'rc-scale' },
       el('strong', { text: t('scale_title') + ': ' }),
-      GRADES.map(function (g) { return g.g + ' ' + g.range; }).join(' · '),
+      el('bdi', { dir: 'ltr', text: GRADES.map(function (g) { return g.g + ' ' + g.range; }).join(' · ') }),
       el('span', { text: ' (E = ' + t('needs_improvement') + '). ' + t('pass_rule_' + (c.each ? 'each' : 'overall'), { p: EDU.fmt(R.pass) }) })));
     card.appendChild(el('div', { class: 'rc-sigs' },
       el('div', { class: 'rc-sig' }, t('rc_sig_teacher')),
@@ -1114,7 +1234,7 @@
         el('p', null, el('strong', { text: t('an_students') + ': ' }), EDU.fmt(c.students.length)),
         el('p', null, el('strong', { text: t('an_average') + ': ' }), st.n ? fmtPct(st.avg) : '—'),
         el('p', null, el('strong', { text: t('an_pass') + ': ' }), st.n ? t('n_of_m', { n: EDU.fmt(st.passed), m: EDU.fmt(st.n) }) + ' (' + fmtPct(st.passed * 100 / st.n) + ')' : '—'),
-        el('p', null, el('strong', { text: t('grade_dist') + ': ' }), GRADES.map(function (g, i) { return g.g + ' ' + counts[i]; }).join(' · ')),
+        el('p', null, el('strong', { text: t('grade_dist') + ': ' }), el('bdi', { dir: 'ltr', text: GRADES.map(function (g, i) { return g.g + ' ' + counts[i]; }).join(' · ') })),
         el('p', { class: 'tiny' }, t('pass_rule_' + (c.each ? 'each' : 'overall'), { p: EDU.fmt(R.pass) })))));
     wrap.appendChild(el('div', { class: 'rc-sigs' }, el('div', { class: 'rc-sig' }, t('rc_sig_teacher')), el('div', { class: 'rc-sig' }, t('rc_sig_principal'))));
     return wrap;
@@ -1152,14 +1272,22 @@
       .concat([t('col_total') + ' (' + r2(R.maxTotal) + ')', t('col_pct'), t('col_grade'), t('col_rank'), t('col_result'), t('days_present'), t('remarks')]);
     var rows = [head].concat(R.rows.map(function (r) {
       return [r.st.roll, r.st.name]
-        .concat(r.cells.map(function (x, j) { return x.st === 'ab' ? 'AB' : (r.st.marks[c.subjects[j].id] || ''); }))
+        .concat(r.cells.map(function (x, j) { return x.st === 'ab' ? 'AB' : normMark(r.st.marks[c.subjects[j].id] || ''); }))
         .concat([r.complete ? r.total : '', r.complete ? r2(r.pct).toFixed(2) : '', r.grade ? r.grade.g : '', r.rank || '', resultText(r), r.st.present, r.st.remark]);
     }));
     EDU.download(fileBase(c) + '-results.csv', EDU.csv.stringify(rows), 'text/csv');
     EDU.toast(t('csv_done'));
   }
 
-  EDU.onLang(function () { renderAll(); });
+  EDU.onLang(function () {
+    if (untouchedSample(data)) {
+      /* the untouched sample class is re-made in the new language; tab and open card stay */
+      var tab = data.tab;
+      data = freshData(); data.tab = tab; data.rc = rcIndex; distKey = 'all';
+      save(true);
+    }
+    renderAll();
+  });
   renderAll();
   save(true);
 })();

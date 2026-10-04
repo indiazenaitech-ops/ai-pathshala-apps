@@ -1,5 +1,5 @@
 /* Spelling Bee: one-line meaning of every word, in each UI language.
-   APP_CONTENT[lang].m[word] — same 125 keys in all 12 languages. English gives a simple definition
+   APP_CONTENT[lang].m[word] — same keys in all 12 languages: the 125 level words plus the 8 words of the "Example" teacher list. English gives a simple definition
    (never containing the word itself); other languages give the everyday word(s) a child knows. */
 window.APP_CONTENT = {
   en: { m: {
@@ -47,7 +47,10 @@ window.APP_CONTENT = {
     restaurant: 'a place where you pay to eat meals', guarantee: 'a firm promise, often to repair or replace', committee: 'a group chosen to plan or decide something',
     parliament: 'the body that makes a country’s laws', achievement: 'something good done with effort', separate: 'apart; not together',
     beginning: 'the start of something', exaggerate: 'to make something sound bigger than it is', hygiene: 'keeping yourself and your surroundings clean',
-    occurrence: 'something that happens; an event'
+    occurrence: 'something that happens; an event',
+    /* words of the "Example" teacher list (science) */
+    planet: 'a big round world that moves around the Sun', oxygen: 'the gas in the air that we need to breathe', magnet: 'a piece of iron or steel that pulls iron things towards it', shadow: 'the dark shape made when something blocks the light',
+    energy: 'the power to work, move or make heat and light', seed: 'the small part of a plant from which a new plant grows', fossil: 'the remains of a very old plant or animal, kept in rock', volcano: 'a mountain that throws out hot lava, ash and gas'
   } },
   hi: { m: {
     cat: 'बिल्ली', dog: 'कुत्ता', sun: 'सूरज', bus: 'बस (सवारी गाड़ी)', cup: 'कप, प्याला', hen: 'मुर्गी', pen: 'पेन, कलम', red: 'लाल रंग',
@@ -71,7 +74,10 @@ window.APP_CONTENT = {
     environment: 'पर्यावरण', independence: 'स्वतंत्रता, आज़ादी', maintenance: 'रखरखाव, देखभाल', mischievous: 'शरारती', pronunciation: 'उच्चारण',
     recommend: 'सिफ़ारिश करना, सुझाव देना', rhythm: 'लय, ताल', privilege: 'विशेष अधिकार, सम्मान की बात', restaurant: 'रेस्टोरेंट, भोजनालय',
     guarantee: 'गारंटी, पक्का वादा', committee: 'समिति', parliament: 'संसद', achievement: 'उपलब्धि', separate: 'अलग', beginning: 'शुरुआत',
-    exaggerate: 'बढ़ा-चढ़ाकर बताना', hygiene: 'साफ़-सफ़ाई, स्वच्छता', occurrence: 'घटना'
+    exaggerate: 'बढ़ा-चढ़ाकर बताना', hygiene: 'साफ़-सफ़ाई, स्वच्छता', occurrence: 'घटना',
+    /* words of the "Example" teacher list (science) */
+    planet: 'ग्रह', oxygen: 'ऑक्सीजन, प्राणवायु', magnet: 'चुंबक', shadow: 'परछाई',
+    energy: 'ऊर्जा', seed: 'बीज', fossil: 'जीवाश्म', volcano: 'ज्वालामुखी'
   } },
   bn: { m: {
     cat: 'বিড়াল', dog: 'কুকুর', sun: 'সূর্য', bus: 'বাস (যাত্রী গাড়ি)', cup: 'কাপ, পেয়ালা', hen: 'মুরগি', pen: 'কলম', red: 'লাল রং',
@@ -95,7 +101,10 @@ window.APP_CONTENT = {
     environment: 'পরিবেশ', independence: 'স্বাধীনতা', maintenance: 'রক্ষণাবেক্ষণ', mischievous: 'দুষ্টু', pronunciation: 'উচ্চারণ',
     recommend: 'সুপারিশ করা', rhythm: 'ছন্দ, তাল', privilege: 'বিশেষ সুবিধা, সৌভাগ্য', restaurant: 'রেস্তোরাঁ',
     guarantee: 'গ্যারান্টি, পাকা কথা', committee: 'কমিটি, সমিতি', parliament: 'সংসদ', achievement: 'সাফল্য, কৃতিত্ব', separate: 'আলাদা', beginning: 'শুরু',
-    exaggerate: 'বাড়িয়ে বলা', hygiene: 'পরিচ্ছন্নতা', occurrence: 'ঘটনা'
+    exaggerate: 'বাড়িয়ে বলা', hygiene: 'পরিচ্ছন্নতা', occurrence: 'ঘটনা',
+    /* words of the "Example" teacher list (science) */
+    planet: 'গ্রহ', oxygen: 'অক্সিজেন', magnet: 'চুম্বক', shadow: 'ছায়া',
+    energy: 'শক্তি', seed: 'বীজ', fossil: 'জীবাশ্ম', volcano: 'আগ্নেয়গিরি'
   } },
   mr: { m: {
     cat: 'मांजर', dog: 'कुत्रा', sun: 'सूर्य', bus: 'बस (प्रवासी गाडी)', cup: 'कप, पेला', hen: 'कोंबडी', pen: 'पेन, लेखणी', red: 'लाल रंग',
@@ -119,7 +128,10 @@ window.APP_CONTENT = {
     environment: 'पर्यावरण', independence: 'स्वातंत्र्य', maintenance: 'देखभाल', mischievous: 'खोडकर', pronunciation: 'उच्चार',
     recommend: 'शिफारस करणे', rhythm: 'लय, ताल', privilege: 'विशेष हक्क, भाग्याची गोष्ट', restaurant: 'उपाहारगृह, हॉटेल',
     guarantee: 'हमी', committee: 'समिती', parliament: 'संसद', achievement: 'यश, कामगिरी', separate: 'वेगळे', beginning: 'सुरुवात',
-    exaggerate: 'अतिशयोक्ती करणे', hygiene: 'स्वच्छता', occurrence: 'घटना'
+    exaggerate: 'अतिशयोक्ती करणे', hygiene: 'स्वच्छता', occurrence: 'घटना',
+    /* words of the "Example" teacher list (science) */
+    planet: 'ग्रह', oxygen: 'ऑक्सिजन, प्राणवायू', magnet: 'लोहचुंबक', shadow: 'सावली',
+    energy: 'ऊर्जा', seed: 'बी, बियाणे', fossil: 'जीवाश्म', volcano: 'ज्वालामुखी'
   } },
   gu: { m: {
     cat: 'બિલાડી', dog: 'કૂતરો', sun: 'સૂરજ', bus: 'બસ (મુસાફરોની ગાડી)', cup: 'કપ, પ્યાલો', hen: 'મરઘી', pen: 'પેન, કલમ', red: 'લાલ રંગ',
@@ -143,7 +155,10 @@ window.APP_CONTENT = {
     environment: 'પર્યાવરણ', independence: 'સ્વતંત્રતા, આઝાદી', maintenance: 'જાળવણી', mischievous: 'તોફાની', pronunciation: 'ઉચ્ચાર',
     recommend: 'ભલામણ કરવી', rhythm: 'લય, તાલ', privilege: 'ખાસ હક, ગૌરવની વાત', restaurant: 'રેસ્ટોરન્ટ, ભોજનાલય',
     guarantee: 'ગૅરંટી, ખાતરી', committee: 'સમિતિ', parliament: 'સંસદ', achievement: 'સિદ્ધિ', separate: 'અલગ', beginning: 'શરૂઆત',
-    exaggerate: 'વધારીને કહેવું, અતિશયોક્તિ કરવી', hygiene: 'સ્વચ્છતા', occurrence: 'ઘટના'
+    exaggerate: 'વધારીને કહેવું, અતિશયોક્તિ કરવી', hygiene: 'સ્વચ્છતા', occurrence: 'ઘટના',
+    /* words of the "Example" teacher list (science) */
+    planet: 'ગ્રહ', oxygen: 'ઑક્સિજન, પ્રાણવાયુ', magnet: 'લોહચુંબક', shadow: 'પડછાયો',
+    energy: 'ઊર્જા', seed: 'બીજ', fossil: 'અશ્મિ, જીવાશ્મ', volcano: 'જ્વાળામુખી'
   } },
   pa: { m: {
     cat: 'ਬਿੱਲੀ', dog: 'ਕੁੱਤਾ', sun: 'ਸੂਰਜ', bus: 'ਬੱਸ (ਸਵਾਰੀ ਗੱਡੀ)', cup: 'ਕੱਪ, ਪਿਆਲਾ', hen: 'ਮੁਰਗੀ', pen: 'ਪੈੱਨ, ਕਲਮ', red: 'ਲਾਲ ਰੰਗ',
@@ -167,7 +182,10 @@ window.APP_CONTENT = {
     environment: 'ਵਾਤਾਵਰਨ', independence: 'ਆਜ਼ਾਦੀ', maintenance: 'ਸਾਂਭ-ਸੰਭਾਲ', mischievous: 'ਸ਼ਰਾਰਤੀ', pronunciation: 'ਉਚਾਰਨ',
     recommend: 'ਸਿਫ਼ਾਰਸ਼ ਕਰਨਾ', rhythm: 'ਤਾਲ, ਲੈਅ', privilege: 'ਖ਼ਾਸ ਹੱਕ, ਮਾਣ ਦੀ ਗੱਲ', restaurant: 'ਰੈਸਟੋਰੈਂਟ, ਢਾਬਾ',
     guarantee: 'ਗਰੰਟੀ, ਪੱਕਾ ਵਾਅਦਾ', committee: 'ਕਮੇਟੀ', parliament: 'ਸੰਸਦ', achievement: 'ਪ੍ਰਾਪਤੀ', separate: 'ਵੱਖਰਾ', beginning: 'ਸ਼ੁਰੂਆਤ',
-    exaggerate: 'ਵਧਾ-ਚੜ੍ਹਾ ਕੇ ਦੱਸਣਾ', hygiene: 'ਸਾਫ਼-ਸਫ਼ਾਈ', occurrence: 'ਘਟਨਾ'
+    exaggerate: 'ਵਧਾ-ਚੜ੍ਹਾ ਕੇ ਦੱਸਣਾ', hygiene: 'ਸਾਫ਼-ਸਫ਼ਾਈ', occurrence: 'ਘਟਨਾ',
+    /* words of the "Example" teacher list (science) */
+    planet: 'ਗ੍ਰਹਿ', oxygen: 'ਆਕਸੀਜਨ', magnet: 'ਚੁੰਬਕ', shadow: 'ਪਰਛਾਵਾਂ',
+    energy: 'ਊਰਜਾ', seed: 'ਬੀਜ', fossil: 'ਪਥਰਾਟ', volcano: 'ਜਵਾਲਾਮੁਖੀ'
   } },
   or: { m: {
     cat: 'ବିରାଡ଼ି', dog: 'କୁକୁର', sun: 'ସୂର୍ଯ୍ୟ', bus: 'ବସ୍ (ଯାତ୍ରୀ ଗାଡ଼ି)', cup: 'କପ୍, ପିଆଲା', hen: 'ମାଈ କୁକୁଡ଼ା', pen: 'କଲମ', red: 'ନାଲି ରଙ୍ଗ',
@@ -191,7 +209,10 @@ window.APP_CONTENT = {
     environment: 'ପରିବେଶ', independence: 'ସ୍ୱାଧୀନତା', maintenance: 'ରକ୍ଷଣାବେକ୍ଷଣ', mischievous: 'ଦୁଷ୍ଟ, ଚଗଲା', pronunciation: 'ଉଚ୍ଚାରଣ',
     recommend: 'ସୁପାରିଶ କରିବା', rhythm: 'ତାଳ, ଲୟ', privilege: 'ବିଶେଷ ଅଧିକାର, ସୌଭାଗ୍ୟ', restaurant: 'ରେଷ୍ଟୁରାଣ୍ଟ, ହୋଟେଲ୍',
     guarantee: 'ଗ୍ୟାରେଣ୍ଟି, ପକ୍କା ପ୍ରତିଶ୍ରୁତି', committee: 'କମିଟି', parliament: 'ସଂସଦ', achievement: 'ସଫଳତା, କୃତିତ୍ୱ', separate: 'ଅଲଗା', beginning: 'ଆରମ୍ଭ',
-    exaggerate: 'ବଢ଼ାଇ ଚଢ଼ାଇ କହିବା', hygiene: 'ପରିଷ୍କାର ପରିଚ୍ଛନ୍ନତା', occurrence: 'ଘଟଣା'
+    exaggerate: 'ବଢ଼ାଇ ଚଢ଼ାଇ କହିବା', hygiene: 'ପରିଷ୍କାର ପରିଚ୍ଛନ୍ନତା', occurrence: 'ଘଟଣା',
+    /* words of the "Example" teacher list (science) */
+    planet: 'ଗ୍ରହ', oxygen: 'ଅମ୍ଳଜାନ, ଅକ୍ସିଜେନ', magnet: 'ଚୁମ୍ବକ', shadow: 'ଛାଇ',
+    energy: 'ଶକ୍ତି', seed: 'ମଞ୍ଜି', fossil: 'ଜୀବାଶ୍ମ', volcano: 'ଆଗ୍ନେୟଗିରି'
   } },
   ta: { m: {
     cat: 'பூனை', dog: 'நாய்', sun: 'சூரியன்', bus: 'பேருந்து', cup: 'கோப்பை', hen: 'கோழி', pen: 'பேனா', red: 'சிவப்பு நிறம்',
@@ -212,10 +233,13 @@ window.APP_CONTENT = {
     government: 'அரசு', adventure: 'சாகசம்',
     accommodate: 'இடம் கொடுத்தல்', necessary: 'அவசியமான, தேவையான', occasion: 'நிகழ்ச்சி, சந்தர்ப்பம்', embarrass: 'சங்கடப்படுத்துதல்',
     conscience: 'மனசாட்சி', conscious: 'சுயநினைவுடன், விழிப்புடன்', definitely: 'நிச்சயமாக',
-    environment: 'சுற்றுச்சூழல்', independence: 'சுதந்திரம்', maintenance: 'பராமரிப்பு', mischievous: 'குறும்புக்கார', pronunciation: 'உச்சரிப்பு',
+    environment: 'சுற்றுச்சூழல்', independence: 'சுதந்திரம்', maintenance: 'பராமரிப்பு', mischievous: 'குறும்புத்தனமான', pronunciation: 'உச்சரிப்பு',
     recommend: 'பரிந்துரைத்தல்', rhythm: 'தாளம்', privilege: 'தனிச்சலுகை, பெருமை', restaurant: 'உணவகம்',
     guarantee: 'உத்தரவாதம்', committee: 'குழு', parliament: 'நாடாளுமன்றம்', achievement: 'சாதனை', separate: 'தனியான, பிரித்து', beginning: 'தொடக்கம்',
-    exaggerate: 'மிகைப்படுத்திச் சொல்லுதல்', hygiene: 'சுகாதாரம், தூய்மை', occurrence: 'நிகழ்வு'
+    exaggerate: 'மிகைப்படுத்திச் சொல்லுதல்', hygiene: 'சுகாதாரம், தூய்மை', occurrence: 'நிகழ்வு',
+    /* words of the "Example" teacher list (science) */
+    planet: 'கோள்', oxygen: 'ஆக்சிஜன், உயிர்வளி', magnet: 'காந்தம்', shadow: 'நிழல்',
+    energy: 'ஆற்றல்', seed: 'விதை', fossil: 'புதைபடிவம்', volcano: 'எரிமலை'
   } },
   te: { m: {
     cat: 'పిల్లి', dog: 'కుక్క', sun: 'సూర్యుడు', bus: 'బస్సు', cup: 'కప్పు', hen: 'పెట్ట కోడి', pen: 'పెన్ను, కలం', red: 'ఎరుపు రంగు',
@@ -239,7 +263,10 @@ window.APP_CONTENT = {
     environment: 'పర్యావరణం', independence: 'స్వాతంత్ర్యం', maintenance: 'నిర్వహణ, మరమ్మత్తు', mischievous: 'అల్లరి చేసే', pronunciation: 'ఉచ్చారణ',
     recommend: 'సిఫార్సు చేయడం', rhythm: 'లయ, తాళం', privilege: 'ప్రత్యేక హక్కు, గౌరవం', restaurant: 'రెస్టారెంట్, హోటల్',
     guarantee: 'హామీ', committee: 'కమిటీ, సంఘం', parliament: 'పార్లమెంటు', achievement: 'సాధన, విజయం', separate: 'వేరుగా', beginning: 'మొదలు, ప్రారంభం',
-    exaggerate: 'అతిశయోక్తిగా చెప్పడం', hygiene: 'పరిశుభ్రత', occurrence: 'సంఘటన'
+    exaggerate: 'అతిశయోక్తిగా చెప్పడం', hygiene: 'పరిశుభ్రత', occurrence: 'సంఘటన',
+    /* words of the "Example" teacher list (science) */
+    planet: 'గ్రహం', oxygen: 'ఆక్సిజన్, ప్రాణవాయువు', magnet: 'అయస్కాంతం', shadow: 'నీడ',
+    energy: 'శక్తి', seed: 'విత్తనం', fossil: 'శిలాజం', volcano: 'అగ్నిపర్వతం'
   } },
   kn: { m: {
     cat: 'ಬೆಕ್ಕು', dog: 'ನಾಯಿ', sun: 'ಸೂರ್ಯ', bus: 'ಬಸ್ಸು', cup: 'ಲೋಟ, ಕಪ್', hen: 'ಹೇಂಟೆ (ಹೆಣ್ಣು ಕೋಳಿ)', pen: 'ಪೆನ್ನು', red: 'ಕೆಂಪು ಬಣ್ಣ',
@@ -263,7 +290,10 @@ window.APP_CONTENT = {
     environment: 'ಪರಿಸರ', independence: 'ಸ್ವಾತಂತ್ರ್ಯ', maintenance: 'ನಿರ್ವಹಣೆ', mischievous: 'ತುಂಟ', pronunciation: 'ಉಚ್ಚಾರಣೆ',
     recommend: 'ಶಿಫಾರಸು ಮಾಡುವುದು', rhythm: 'ಲಯ, ತಾಳ', privilege: 'ವಿಶೇಷ ಹಕ್ಕು, ಗೌರವ', restaurant: 'ಹೋಟೆಲ್, ಉಪಾಹಾರ ಗೃಹ',
     guarantee: 'ಖಾತರಿ', committee: 'ಸಮಿತಿ', parliament: 'ಸಂಸತ್ತು', achievement: 'ಸಾಧನೆ', separate: 'ಬೇರೆ, ಪ್ರತ್ಯೇಕ', beginning: 'ಆರಂಭ',
-    exaggerate: 'ಉತ್ಪ್ರೇಕ್ಷೆ ಮಾಡುವುದು', hygiene: 'ಶುಚಿತ್ವ', occurrence: 'ಘಟನೆ'
+    exaggerate: 'ಉತ್ಪ್ರೇಕ್ಷೆ ಮಾಡುವುದು', hygiene: 'ಶುಚಿತ್ವ', occurrence: 'ಘಟನೆ',
+    /* words of the "Example" teacher list (science) */
+    planet: 'ಗ್ರಹ', oxygen: 'ಆಮ್ಲಜನಕ', magnet: 'ಆಯಸ್ಕಾಂತ', shadow: 'ನೆರಳು',
+    energy: 'ಶಕ್ತಿ', seed: 'ಬೀಜ', fossil: 'ಪಳೆಯುಳಿಕೆ', volcano: 'ಜ್ವಾಲಾಮುಖಿ'
   } },
   ml: { m: {
     cat: 'പൂച്ച', dog: 'നായ', sun: 'സൂര്യൻ', bus: 'ബസ്', cup: 'കപ്പ്', hen: 'പിടക്കോഴി', pen: 'പേന', red: 'ചുവപ്പ് നിറം',
@@ -287,7 +317,10 @@ window.APP_CONTENT = {
     environment: 'പരിസ്ഥിതി', independence: 'സ്വാതന്ത്ര്യം', maintenance: 'അറ്റകുറ്റപ്പണി, പരിപാലനം', mischievous: 'കുസൃതിയായ', pronunciation: 'ഉച്ചാരണം',
     recommend: 'ശുപാർശ ചെയ്യുക', rhythm: 'താളം', privilege: 'പ്രത്യേക അവകാശം, ബഹുമതി', restaurant: 'ഭക്ഷണശാല, ഹോട്ടൽ',
     guarantee: 'ഉറപ്പ്, ഗ്യാരന്റി', committee: 'സമിതി', parliament: 'പാർലമെന്റ്', achievement: 'നേട്ടം', separate: 'വേറിട്ട, വെവ്വേറെ', beginning: 'തുടക്കം',
-    exaggerate: 'പെരുപ്പിച്ചു പറയുക', hygiene: 'ശുചിത്വം', occurrence: 'സംഭവം'
+    exaggerate: 'പെരുപ്പിച്ചു പറയുക', hygiene: 'ശുചിത്വം', occurrence: 'സംഭവം',
+    /* words of the "Example" teacher list (science) */
+    planet: 'ഗ്രഹം', oxygen: 'ഓക്സിജൻ, പ്രാണവായു', magnet: 'കാന്തം', shadow: 'നിഴൽ',
+    energy: 'ഊർജം', seed: 'വിത്ത്', fossil: 'ഫോസിൽ, ജീവാശ്മം', volcano: 'അഗ്നിപർവതം'
   } },
   ur: { m: {
     cat: 'بلی', dog: 'کتا', sun: 'سورج', bus: 'بس (سواری گاڑی)', cup: 'کپ، پیالی', hen: 'مرغی', pen: 'قلم، پین', red: 'لال رنگ',
@@ -311,6 +344,9 @@ window.APP_CONTENT = {
     environment: 'ماحول', independence: 'آزادی', maintenance: 'دیکھ بھال، مرمت', mischievous: 'شرارتی', pronunciation: 'تلفظ',
     recommend: 'سفارش کرنا', rhythm: 'لے، تال', privilege: 'خاص حق، اعزاز', restaurant: 'ریستوراں',
     guarantee: 'گارنٹی، پکا وعدہ', committee: 'کمیٹی', parliament: 'پارلیمنٹ', achievement: 'کامیابی', separate: 'الگ', beginning: 'شروعات، آغاز',
-    exaggerate: 'بڑھا چڑھا کر بتانا', hygiene: 'صفائی ستھرائی', occurrence: 'واقعہ'
+    exaggerate: 'بڑھا چڑھا کر بتانا', hygiene: 'صفائی ستھرائی', occurrence: 'واقعہ',
+    /* words of the "Example" teacher list (science) */
+    planet: 'سیارہ', oxygen: 'آکسیجن', magnet: 'مقناطیس', shadow: 'سایہ',
+    energy: 'توانائی', seed: 'بیج', fossil: 'فوسل، رکاز', volcano: 'آتش فشاں'
   } }
 };

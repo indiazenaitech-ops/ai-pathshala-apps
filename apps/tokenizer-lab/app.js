@@ -26,13 +26,35 @@
 
   EDU.init({ slug: SLUG, title: 'app_title' });
 
-  var $ = EDU.$, t = EDU.t, fmt = EDU.fmt, el = EDU.el;
+  var $ = EDU.$, t = EDU.t, el = EDU.el;
   var inputEl = $('#input'), ownEl = $('#own-text'), mergesEl = $('#merges'), byteEl = $('#byte-in');
 
   function content(L) { return C[L] || C.en; }
   function native(L) { return EDU.langInfo(L).native; }
-  function dec(n, d) { return fmt(n, { minimumFractionDigits: d, maximumFractionDigits: d }); }
-  function inputText() { var s = state.input === null ? content(EDU.lang).sentence : state.input; return s.length > INPUT_CAP ? s.slice(0, INPUT_CAP) : s; }
+  /* Numbers with Latin digits in the reader's locale, like EDU.fmt. EDU.fmt builds a new Intl.NumberFormat
+     on every call; this page formats up to 1,500 chip titles and 600 merge counts per keystroke or slider
+     step, which made dragging slow on cheap phones. Same output, one cached formatter per language. */
+  var nfCache = {};
+  function nfFor(d) {
+    var k = EDU.lang + ':' + d;
+    if (!(k in nfCache)) {
+      var o = { numberingSystem: 'latn' };
+      if (d !== null) { o.minimumFractionDigits = d; o.maximumFractionDigits = d; }
+      try { nfCache[k] = new Intl.NumberFormat(EDU.langInfo(EDU.lang).tag, o); } catch (e) { nfCache[k] = null; }
+    }
+    return nfCache[k];
+  }
+  function fmt(n) { var f = nfFor(null); return f ? f.format(n) : EDU.fmt(n); }
+  function dec(n, d) { var f = nfFor(d); return f ? f.format(n) : EDU.fmt(n, { minimumFractionDigits: d, maximumFractionDigits: d }); }
+  function rawInput() { return state.input === null ? content(EDU.lang).sentence : state.input; }
+  /* Very long text is cut (keeps typing fast). Never cut an emoji or other 2-part character in half. */
+  function inputText() {
+    var s = rawInput();
+    if (s.length <= INPUT_CAP) return s;
+    var end = INPUT_CAP, c = s.charCodeAt(end - 1);
+    if (c >= 0xD800 && c <= 0xDBFF) end--;
+    return s.slice(0, end);
+  }
 
   /* ---------- training corpora and models (cached) ---------- */
   function effSrc() {
@@ -60,8 +82,10 @@
     return m;
   }
   function model() { return getModel(effSrc()); }
-  /* Number of merges in use: the slider value, or by default 300 (fewer if the training text allows fewer). */
-  function N() { return state.merges === null ? Math.min(DEFAULT_N, model().merges.length) : state.merges; }
+  /* Number of merges on the slider: the user's value, or 300 by default. The same number drives the
+     12-language chart, so the slider and the chart always agree. If the training text allows fewer
+     merges, the tokenizer uses all it can and a note says so. */
+  function N() { return state.merges === null ? DEFAULT_N : state.merges; }
 
   /* ---------- token display helpers ---------- */
   function tokenView(m, id) {
@@ -89,14 +113,18 @@
     if (T.isMark(s)) node.appendChild(el('span', { class: 'sp', text: '◌' }));
     var buf = '';
     function flush() { if (buf) { node.appendChild(document.createTextNode(buf)); buf = ''; } }
-    Array.from(s).forEach(function (ch) {
-      var vis = ch === ' ' ? '␣' : ch === '\n' ? '↵' : ch === '\t' ? '⇥' : ch === '\r' ? '' : null;
+    var chs = Array.from(s), allInvisible = chs.length > 0 && chs.every(function (ch) { return INVISIBLE[ch]; });
+    chs.forEach(function (ch) {
+      var vis = ch === ' ' ? '␣' : ch === '\n' ? '↵' : ch === '\t' ? '⇥' : ch === '\r' ? '␍' : null;
+      // a token made only of invisible joiners (ZWJ / ZWNJ ...) would look like an empty box
+      if (vis === null && allInvisible) vis = INVISIBLE[ch];
       if (vis === null) buf += ch;
-      else if (vis) { flush(); node.appendChild(el('span', { class: 'sp', text: vis })); }
+      else { flush(); node.appendChild(el('span', vis.length > 1 ? { class: 'sp zw', dir: 'ltr', text: vis } : { class: 'sp', text: vis })); }
     });
     flush();
     return node;
   }
+  var INVISIBLE = { '\u200b': 'ZWSP', '\u200c': 'ZWNJ', '\u200d': 'ZWJ', '\u200e': 'LRM', '\u200f': 'RLM', '\u2060': 'WJ', '\ufeff': 'BOM', '\u00ad': 'SHY' };
   var RTL = new RegExp('[' + String.fromCharCode(0x590) + '-' + String.fromCharCode(0x8FF) + ']');
   function hexCode(cp) { var h = cp.toString(16).toUpperCase(); while (h.length < 4) h = '0' + h; return 'U+' + h; }
 
@@ -137,6 +165,7 @@
     var m = model();
     $('#corpus-info').textContent = t('corpus_info', { chars: fmt(m.chars), bytes: fmt(m.bytes), chunks: fmt(m.chunks) });
   }
+  function ownEmpty() { return effSrc() === 'own' && !state.own.trim(); }
 
   function renderMerges() {
     var m = model(), max = m.merges.length, n = N(), eff = Math.min(n, max);
@@ -144,26 +173,35 @@
     $('#merges-val').textContent = fmt(n);
     $('#vocab-size').textContent = t('vocab_size', { v: fmt(256 + eff), n: fmt(eff) });
     var early = $('#merges-early');
-    early.hidden = !(n > max);
+    early.hidden = !(n > max) || ownEmpty();      // an empty text already has its own message
     if (n > max) early.textContent = t('merges_early', { n: fmt(max) });
     var list = $('#merge-list');
     list.textContent = '';
     $('#merge-empty').hidden = eff > 0;
     var frag = document.createDocumentFragment();
     for (var i = eff - 1; i >= 0; i--) {
-      var mm = m.merges[i], a = tokenView(m, mm.a), b = tokenView(m, mm.b), c = tokenView(m, mm.id);
-      var rtl = RTL.test(c.s);
-      frag.appendChild(el('li', { class: i === eff - 1 ? 'newest' : null },
-        el('span', { class: 'mn', text: '#' + (i + 1) }),
-        el('span', { class: 'mg', dir: rtl ? 'rtl' : 'ltr' },
-          fillParts(el('span', { class: 'mt' + (a.raw ? ' raw' : '') }), a.parts),
-          el('span', { class: 'op', text: '+' }),
-          fillParts(el('span', { class: 'mt' + (b.raw ? ' raw' : '') }), b.parts),
-          el('span', { class: 'op', text: rtl ? String.fromCharCode(8592) : String.fromCharCode(8594) }),
-          fillParts(el('span', { class: 'mt' + (c.raw ? ' raw' : '') }), c.parts)),
-        el('span', { class: 'mc', text: '×' + fmt(mm.count) })));
+      var li = mergeRow(m, i);
+      li.classList.toggle('newest', i === eff - 1);
+      frag.appendChild(li);
     }
     list.appendChild(frag);
+  }
+  /* One list row per merge, built once per model and language: dragging the slider only re-orders rows. */
+  function mergeRow(m, i) {
+    if (m.rowsLang !== EDU.lang) { m.rows = []; m.rowsLang = EDU.lang; }
+    if (m.rows[i]) return m.rows[i];
+    var mm = m.merges[i], a = tokenView(m, mm.a), b = tokenView(m, mm.b), c = tokenView(m, mm.id);
+    var rtl = RTL.test(c.s);
+    m.rows[i] = el('li', {},
+      el('span', { class: 'mn', text: '#' + (i + 1) }),
+      el('span', { class: 'mg', dir: rtl ? 'rtl' : 'ltr' },
+        fillParts(el('span', { class: 'mt' + (a.raw ? ' raw' : '') }), a.parts),
+        el('span', { class: 'op', text: '+' }),
+        fillParts(el('span', { class: 'mt' + (b.raw ? ' raw' : '') }), b.parts),
+        el('span', { class: 'op', text: rtl ? String.fromCharCode(8592) : String.fromCharCode(8594) }),
+        fillParts(el('span', { class: 'mt' + (c.raw ? ' raw' : '') }), c.parts)),
+      el('span', { class: 'mc', text: '×' + fmt(mm.count) }));
+    return m.rows[i];
   }
 
   var lastIds = [];
@@ -188,6 +226,9 @@
     var more = $('#chips-more');
     more.hidden = toks.length <= CHIP_CAP;
     if (toks.length > CHIP_CAP) more.textContent = t('chips_more', { n: fmt(toks.length - CHIP_CAP), m: fmt(CHIP_CAP) });
+    var cut = $('#input-cut');
+    cut.hidden = rawInput().length <= text.length;
+    if (!cut.hidden) cut.textContent = t('input_cut', { n: fmt(chars) });
     $('#chips-hint').textContent = t('hint_' + state.mode);
     $('#stat-tokens').textContent = fmt(toks.length);
     $('#stat-chars').textContent = fmt(chars);
@@ -201,10 +242,9 @@
     $('#ids-box').textContent = '[' + shown + (lastIds.length > IDS_CAP ? ', …' : '') + ']';
   }
 
-  /* The chart always uses the slider value (300 by default), so it looks the same in every language. */
-  function cmpN() { return state.merges === null ? DEFAULT_N : state.merges; }
+  /* The chart uses the slider value (300 by default), so it looks the same in every language. */
   function renderCompare() {
-    var n = cmpN(), en = getModel('en'), mu = getModel('all');
+    var n = N(), en = getModel('en'), mu = getModel('all');
     var rows = LCODES.map(function (L) {
       var s = content(L).sentence;
       return { L: L, s: s, chars: Array.from(s).length, a: T.encode(en, n, s).length, b: T.encode(mu, n, s).length };
@@ -236,7 +276,9 @@
       focus = worst.L;
     }
     var f = rows.filter(function (r) { return r.L === focus; })[0];
-    $('#cmp-summary').textContent = t('cmp_summary', { lang: EDU.lang === 'en' ? EDU.langInfo(focus).name : native(focus), x: dec(f.a / base.a, 1), y: dec(f.b / base.b, 1) });
+    if (focus !== EDU.lang) { var fr = wrap.querySelector('[data-lang="' + focus + '"]'); if (fr) fr.classList.add('focus'); }
+    // at 0 merges both tokenizers are just bytes, so "drops to" would be wrong
+    $('#cmp-summary').textContent = t(n > 0 ? 'cmp_summary' : 'cmp_summary_0', { lang: EDU.lang === 'en' ? EDU.langInfo(focus).name : native(focus), x: dec(f.a / base.a, 1), y: dec(f.b / base.b, 1) });
     var budget = $('#cmp-budget');
     budget.hidden = !(n > 0 && base.b > base.a);
     if (!budget.hidden) budget.textContent = t('cmp_budget', { a: fmt(base.a), b: fmt(base.b), n: fmt(n) });
@@ -250,7 +292,7 @@
     var text = inputText(), out = $('#ctx-out');
     var words = T.words(text, 'en').filter(function (w) { return w.word; }).length;
     var toks = T.encode(model(), N(), text).length;
-    if (!words || !toks) { out.textContent = t('ctx_need'); return; }
+    if (!words || !toks) { out.textContent = t('ctx_need'); out.removeAttribute('data-fit'); return; }
     var fit = Math.floor(state.ctx * words / toks);
     // put the two results in bold without using HTML from translations
     var tpl = t('ctx_result', { w: fmt(state.ctx), tpw: dec(toks / words, 1) });
@@ -281,12 +323,17 @@
 
   function grow() { inputEl.style.height = 'auto'; inputEl.style.height = Math.min(320, Math.max(110, inputEl.scrollHeight + 4)) + 'px'; }
   function renderInput() {
-    var s = inputText();
+    var s = rawInput();
     if (document.activeElement !== inputEl && inputEl.value !== s) inputEl.value = s;
+    $('#ex-en').hidden = EDU.lang === 'en';     // same as "Example in my language" there
     grow();
   }
 
-  function renderPlay() { $('#play').textContent = playTimer ? t('stop') : t('play'); }
+  function renderPlay() {
+    $('#play').textContent = playTimer ? t('stop') : t('play');
+    // don't make screen readers announce every frame of the animation
+    ['#stats', '#cmp-summary'].forEach(function (s) { $(s).setAttribute('aria-live', playTimer ? 'off' : 'polite'); });
+  }
 
   function renderAll() {
     renderInput(); renderMode(); renderSrc(); renderMerges(); renderTokens(); renderCompare(); renderCtx(); renderBytes(); renderPlay();
@@ -294,24 +341,27 @@
 
   /* ---------- play: watch the merge list grow ---------- */
   var playTimer = null;
-  function stopPlay() { if (playTimer) { clearInterval(playTimer); playTimer = null; } renderPlay(); }
+  /* The value is saved when the animation stops (not on every frame), so a reload in the middle
+     of the animation keeps the last setting the user chose. */
+  function stopPlay() {
+    if (playTimer) { clearInterval(playTimer); playTimer = null; store.set('merges', state.merges); }
+    renderPlay();
+  }
   function startPlay() {
     var target = Math.min(MAX, model().merges.length);
-    if (!target) { EDU.toast(t('own_empty')); return; }
+    if (!target) { EDU.toast(ownEmpty() ? t('own_empty') : t('merges_early', { n: fmt(0) })); return; }
     state.merges = 0;
-    onMerges();
     playTimer = setInterval(function () {
       var n = state.merges, step = n < 20 ? 1 : n < 100 ? 3 : 10;
       state.merges = Math.min(target, n + step);
-      onMerges();
+      drawMerges();
       if (state.merges >= target) stopPlay();
     }, 110);
     renderPlay();
+    drawMerges();
   }
-  function onMerges() {
-    store.set('merges', state.merges);
-    renderMerges(); renderTokens(); renderCompare(); renderCtx();
-  }
+  function drawMerges() { renderMerges(); renderTokens(); renderCompare(); renderCtx(); }
+  function onMerges() { store.set('merges', state.merges); drawMerges(); }
 
   /* ---------- events ---------- */
   function debounce(fn, ms) { var h; return function () { clearTimeout(h); h = setTimeout(fn, ms); }; }
@@ -319,7 +369,7 @@
   var retrainOwn = debounce(function () { store.set('own', state.own); renderSrc(); renderMerges(); renderTokens(); renderCtx(); }, 250);
 
   inputEl.addEventListener('input', function () { state.input = inputEl.value; grow(); saveInput(); renderTokens(); renderCtx(); });
-  function setInput(v) { state.input = v; store.set('input', v); inputEl.value = inputText(); grow(); renderTokens(); renderCtx(); }
+  function setInput(v) { state.input = v; store.set('input', v); inputEl.value = rawInput(); grow(); renderTokens(); renderCtx(); }
   $('#ex-lang').addEventListener('click', function () { setInput(null); });
   $('#ex-en').addEventListener('click', function () { setInput(C.en.sentence); });
   $('#ex-mix').addEventListener('click', function () { setInput(content(EDU.lang).mix); });

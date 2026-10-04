@@ -16,7 +16,11 @@
       tFrom: 2, tTo: 10, rem: 'no', school: '', title: '', key: true, big: false, seed: newSeed() };
   }
   function oneOf(v, list, d) { return list.indexOf(v) >= 0 ? v : d; }
-  function int(v, lo, hi, d) { v = Math.round(Number(v)); return isFinite(v) ? Math.max(lo, Math.min(hi, v)) : d; }
+  /* values can come from a shared link or old storage: never trust their type (String({}) style tricks must not crash the app) */
+  function prim(v) { return typeof v === 'number' || typeof v === 'string' || typeof v === 'boolean' ? v : ''; }
+  function int(v, lo, hi, d) { v = Math.round(Number(prim(v))); return isFinite(v) && prim(v) !== '' ? Math.max(lo, Math.min(hi, v)) : d; }
+  /* every chosen topic gets at least one question: 12 topics need at least 15 questions */
+  function minCount(c) { return Math.max(10, Math.ceil(c.topics.length / 5) * 5); }
   function sanitize(c) {
     var ids = G.TOPICS.map(function (x) { return x.id; });
     c.topics = (Array.isArray(c.topics) ? c.topics : []).filter(function (x, i, a) { return ids.indexOf(x) >= 0 && a.indexOf(x) === i; });
@@ -26,40 +30,57 @@
     c.diff = oneOf(c.diff, ['easy', 'medium', 'hard'], 'easy');
     c.count = int(c.count, 10, 50, 20);
     if (COUNTS.indexOf(c.count) < 0) c.count = Math.round(c.count / 5) * 5;
-    c.cols = oneOf(String(c.cols), ['auto', '1', '2', '3', '4'], 'auto');
+    if (c.count < minCount(c)) c.count = minCount(c);
+    c.cols = oneOf(String(prim(c.cols)), ['auto', '1', '2', '3', '4'], 'auto');
     c.layout = oneOf(c.layout, ['v', 'h'], 'v');
     c.digits = int(c.digits, 1, 6, 2);
     c.carry = oneOf(c.carry, ['any', 'yes', 'no'], 'any');
     c.tFrom = int(c.tFrom, 2, 20, 2); c.tTo = int(c.tTo, 2, 20, 10);
     c.rem = oneOf(c.rem, ['any', 'yes', 'no'], 'no');
-    c.school = String(c.school || '').slice(0, 120); c.title = String(c.title || '').slice(0, 120);
-    c.key = c.key !== false; c.big = !!c.big;
+    c.school = typeof c.school === 'string' ? c.school.slice(0, 120) : '';
+    c.title = typeof c.title === 'string' ? c.title.slice(0, 120) : '';
+    c.key = c.key !== false; c.big = c.big === true;
     c.seed = int(c.seed, 1, 99999999, newSeed());
     return c;
   }
+  /* copy only the known settings (no __proto__ or other surprises from a link) */
+  function merge(into, from) {
+    if (!from || typeof from !== 'object' || Array.isArray(from)) return;
+    Object.keys(defaults()).forEach(function (k) { if (Object.prototype.hasOwnProperty.call(from, k)) into[k] = from[k]; });
+  }
 
-  var cfg = defaults(), saved = store.get('cfg', null);
-  if (saved && typeof saved === 'object') for (var k in saved) cfg[k] = saved[k];
+  var cfg = defaults();
+  merge(cfg, store.get('cfg', null));
   var fromLink = (function () {
     var m = /[#&]w=([A-Za-z0-9_-]+)/.exec(location.hash || '');
     var o = m ? EDU.unpack(m[1]) : null;
     return o && typeof o === 'object' && !Array.isArray(o) ? o : null;
   })();
-  if (fromLink) for (var k2 in fromLink) cfg[k2] = fromLink[k2];
+  merge(cfg, fromLink);
   sanitize(cfg);
 
   function sig() { return [cfg.seed, cfg.topics.join(','), cfg.diff, cfg.count, cfg.digits, cfg.carry, cfg.tFrom, cfg.tTo, cfg.rem].join('|'); }
-  var ansSaved = store.get('ans', null);
-  var answers = ansSaved && ansSaved.sig === sig() && ansSaved.v ? ansSaved.v : {};
+  function loadAnswers() {
+    var a = store.get('ans', null);
+    return a && typeof a === 'object' && a.sig === sig() && a.v && typeof a.v === 'object' && !Array.isArray(a.v) ? a.v : {};
+  }
+  var answers = loadAnswers();
   var QS = [], sections = [], showKey = false, lastScore = null;
 
   function saveCfg() { store.set('cfg', cfg); }
-  var ansTimer = 0;
+  var ansTimer = 0, ansPending = null;
   function saveAnswers() {
-    var s = sig(), v = answers;
+    ansPending = { sig: sig(), v: answers };
     clearTimeout(ansTimer);
-    ansTimer = setTimeout(function () { store.set('ans', { sig: s, v: v }); }, 250);
+    ansTimer = setTimeout(flushAnswers, 250);
   }
+  function flushAnswers() {
+    clearTimeout(ansTimer);
+    if (ansPending) store.set('ans', ansPending);
+    ansPending = null;
+  }
+  function dropAnswers() { clearTimeout(ansTimer); ansPending = null; answers = {}; store.remove('ans'); }
+  window.addEventListener('pagehide', flushAnswers);
 
   /* ---------------- formatting ---------------- */
   function content() { var C = window.APP_CONTENT || {}; return C[EDU.lang] || C.en || { names: [], items: [] }; }
@@ -107,8 +128,9 @@
   }
 
   /* ---------------- answer boxes ---------------- */
+  function ansVal(qi, j) { var a = answers[qi], v = Array.isArray(a) ? a[j] : ''; return typeof v === 'string' ? v : ''; }
   function inp(qi, j, o) {
-    var v = (answers[qi] || [])[j] || '';
+    var v = ansVal(qi, j);
     return '<input class="ans' + (o.cls ? ' ' + o.cls : '') + '" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="' +
       (o.mode || 'decimal') + '" data-q="' + qi + '" data-j="' + j + '" style="--w:' + (o.w || 4) + 'ch" aria-label="' + esc(o.label) + '"' +
       (o.ph ? ' placeholder="' + esc(o.ph) + '"' : '') + ' value="' + esc(v) + '">';
@@ -118,7 +140,7 @@
     var a = q.a, label = t('ans_aria', { n: qi + 1 }), w = Math.max(3, (q.w || 3) + 1);
     switch (a.k) {
       case 'cmp':
-        var cur = (answers[qi] || [])[0] || '';
+        var cur = ansVal(qi, 0);
         return '<select class="ans cmpbox" data-q="' + qi + '" data-j="0" aria-label="' + esc(t('cmp_aria', { n: qi + 1 })) + '">' +
           ['', '<', '>', '='].map(function (s) { return '<option value="' + esc(s) + '"' + (s === cur ? ' selected' : '') + '>' + (s ? esc(s) : '&nbsp;') + '</option>'; }).join('') + '</select>';
       case 'frac': return inp(qi, 0, { w: 5, label: label, mode: 'text', ph: t('ph_frac') });
@@ -224,14 +246,38 @@
       h += '<section class="ws-sec">';
       if (multi) h += '<h3 class="sec-h">' + esc(t('tp_' + sec.topic)) + '</h3>';
       h += '<p class="sec-i">' + esc(t(instrKey(sec.topic))) + '</p>';
-      h += '<div class="ws-grid" style="--c:' + cols + ';--cm:' + colsM + '">';
+      /* sums, fractions, comparisons… do not wrap: fitColumns() measures them (text questions just wrap) */
+      var fit = sec.qs.every(function (q) { return q.f !== 'txt' && q.f !== 'word'; });
+      h += '<div class="ws-grid"' + (fit ? ' data-fit="1"' : '') + ' style="--c:' + cols + ';--cm:' + colsM + '">';
       sec.qs.forEach(function (q) { h += qHtml(q, qi++); });
       h += '</div></section>';
     });
     body.innerHTML = h || '<p class="muted">' + esc(t('no_topic')) + '</p>';
     paper.classList.toggle('big', cfg.big);
     renderHeader();
+    fitColumns();
   }
+  /* The widest question of a section (in em, without padding) becomes --qw. The CSS grid then uses
+     fewer columns when the chosen number does not fit: a 1024 px laptop, a phone, an A4 page, large print. */
+  function fitColumns() {
+    $$('.ws-grid[data-fit]', body).forEach(function (g) {
+      g.classList.add('measure');
+      var fs = parseFloat(getComputedStyle(g).fontSize) || 16, w = 0;
+      $$('.q', g).forEach(function (q) {
+        var r = q.getBoundingClientRect(), cs = getComputedStyle(q), lo = Infinity, hi = -Infinity;
+        $$('.qn, .qb *', q).forEach(function (el) {
+          var b = el.getBoundingClientRect();
+          if (b.width) { lo = Math.min(lo, b.left); hi = Math.max(hi, b.right); }
+        });
+        /* content from the number to the far edge of the widest part (works in RTL too) */
+        var inner = hi > lo ? hi - lo : r.width - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+        if (inner > w) w = inner;
+      });
+      g.classList.remove('measure');
+      g.style.setProperty('--qw', w > 0 ? (w / fs + 0.15).toFixed(2) + 'em' : '0em');
+    });
+  }
+  if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', fitColumns);
   function renderKey() {
     var h = '<h3 class="key-h">' + esc(t('key_title')) + ' · ' + esc(sheetTitle()) + ' <span class="muted small">(' + esc(t('opt_code')) + ' ' + cfg.seed + ')</span></h3><ol class="key-list">';
     QS.forEach(function (q, i) {
@@ -271,6 +317,8 @@
       var opt = seg.getAttribute('data-opt');
       $$('button', seg).forEach(function (b) { b.setAttribute('aria-pressed', String(String(cfg[opt]) === b.getAttribute('data-v'))); });
     });
+    var minC = minCount(cfg);
+    $$('#opt-count option').forEach(function (o) { o.disabled = Number(o.value) < minC; });
     $('#opt-count').value = String(cfg.count);
     $('#opt-digits').value = String(cfg.digits);
     $('#opt-tfrom').value = String(cfg.tFrom);
@@ -302,8 +350,8 @@
     saveCfg();
     if (regen) {
       lastScore = null;
-      var a = store.get('ans', null);
-      answers = a && a.sig === sig() && a.v ? a.v : {};
+      flushAnswers();                                       /* a box typed in just now still belongs to the old sheet */
+      answers = loadAnswers();
     }
     render();
   }
@@ -385,24 +433,26 @@
     });
   });
   $('#opt-key').addEventListener('change', function () { cfg.key = this.checked; saveCfg(); keyBox.classList.toggle('print-on', cfg.key); });
-  $('#opt-big').addEventListener('change', function () { cfg.big = this.checked; saveCfg(); paper.classList.toggle('big', cfg.big); });
+  $('#opt-big').addEventListener('change', function () { cfg.big = this.checked; saveCfg(); paper.classList.toggle('big', cfg.big); fitColumns(); });
   $('#opt-school').addEventListener('input', function () { cfg.school = this.value.slice(0, 120); saveCfg(); renderHeader(); });
   $('#opt-title').addEventListener('input', function () { cfg.title = this.value.slice(0, 120); saveCfg(); renderHeader(); renderKey(); });
   $('#opt-seed').addEventListener('change', function () {
-    var v = Math.round(Number(G.latin(this.value)));
-    if (!isFinite(v) || v < 1) { this.value = String(cfg.seed); return; }
-    if (Math.min(99999999, v) === cfg.seed) return;
-    cfg.seed = Math.min(99999999, v);
+    var raw = G.latin(this.value).replace(/[,\s]/g, ''), v = Math.round(Number(raw));
+    if (!raw || !isFinite(v) || v < 1) { this.value = String(cfg.seed); return; }
+    v = Math.min(99999999, v);
+    this.value = String(v);                                 /* show the code that is really used: १२३ → 123, 12.7 → 13 */
+    if (v === cfg.seed) return;
+    cfg.seed = v;
     changed(true);
   });
   $('#btn-new').addEventListener('click', function () {
     var s; do { s = newSeed(); } while (s === cfg.seed);
-    cfg.seed = s; answers = {}; store.remove('ans');
+    cfg.seed = s; dropAnswers();
     changed(true);
   });
   $('#btn-reset').addEventListener('click', function () {
     if (!confirm(t('confirm_reset'))) return;
-    cfg = defaults(); answers = {}; store.remove('ans'); showKey = false;
+    cfg = defaults(); dropAnswers(); showKey = false;
     changed(true);
     EDU.toast(t('reset_done'));
   });
@@ -413,7 +463,7 @@
     if (showKey) keyBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
   $('#btn-clear').addEventListener('click', function () {
-    answers = {}; store.remove('ans'); lastScore = null;
+    dropAnswers(); lastScore = null;
     $$('.ans', body).forEach(function (el) { el.value = ''; });
     $$('.q', body).forEach(clearMarks);
     showScore(null);
@@ -422,7 +472,10 @@
   $('#btn-share').addEventListener('click', function () {
     var data = {};
     ['topics', 'mix', 'diff', 'count', 'cols', 'layout', 'digits', 'carry', 'tFrom', 'tTo', 'rem', 'school', 'title', 'big', 'seed'].forEach(function (k) { data[k] = cfg[k]; });
-    var url = location.href.split('#')[0] + '#w=' + EDU.pack(data);
+    /* from a downloaded ZIP (file://) a local path is useless on a student's phone: link to the public site instead */
+    var base = location.href.split('#')[0];
+    if (location.protocol === 'file:' && typeof EDU.shareUrl === 'function') { try { var pub = EDU.shareUrl(EDU.lang); if (/^https?:\/\//.test(pub)) base = pub; } catch (e) { } }
+    var url = base + '#w=' + EDU.pack(data);
     EDU.share(url, t('app_title'));
   });
   $('#btn-jump').addEventListener('click', function () { $('#sheet-area').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
@@ -432,7 +485,8 @@
     var el = e.target;
     if (!el.classList || !el.classList.contains('ans')) return;
     var qi = el.getAttribute('data-q'), j = +el.getAttribute('data-j');
-    (answers[qi] = answers[qi] || [])[j] = el.value;
+    if (!Array.isArray(answers[qi])) answers[qi] = [];
+    answers[qi][j] = el.value;
     saveAnswers();
     var qel = $('#q' + qi);
     if (qel && (qel.classList.contains('ok') || qel.classList.contains('bad'))) clearMarks(qel);
@@ -448,6 +502,9 @@
 
   /* for the automated test */
   window.WSG = { count: function () { return QS.length; }, plain: function (i) { return G.plain(QS[i]); }, kind: function (i) { return QS[i].a.k; } };
+
+  /* a second shared link opened in the same tab only changes the #hash: load it properly */
+  window.addEventListener('hashchange', function () { if (/[#&]w=[A-Za-z0-9_-]+/.test(location.hash)) location.reload(); });
 
   EDU.onLang(render);
   render();

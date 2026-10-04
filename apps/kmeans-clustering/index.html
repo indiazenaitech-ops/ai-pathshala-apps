@@ -35,7 +35,7 @@
     #board { display: block; width: min(100%, calc(100vh - 290px)); min-width: min(100%, 280px); aspect-ratio: 1 / 1; height: auto;
       border-radius: 12px; border: 1px solid var(--border); touch-action: none; cursor: crosshair; background: var(--surface); }
     #board.erase { cursor: cell; }
-    .km:fullscreen #board { width: min(100%, calc(100vh - 210px)); }
+    .km:fullscreen #board { width: min(100%, calc(100vh - 330px)); }   /* leaves room for the buttons and the step message */
 
     /* controls */
     .km-ctrl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -82,7 +82,9 @@
     #groups td { vertical-align: middle; }
     #groups td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
     #groups .gname { white-space: nowrap; font-weight: 700; }
-    #groups input { min-width: 9rem; }
+    #groups .g-short { display: none; }
+    #groups th, #groups td { padding-inline: 8px; }
+    #groups input { min-width: 7rem; }
     .chart { display: block; width: 100%; border-radius: 10px; background: var(--surface); }
     #history { height: 150px; }
     #elbow { height: 240px; cursor: pointer; touch-action: manipulation; }
@@ -116,7 +118,18 @@
       #run, #new-start { flex: 1 1 0; }
       .phase-box { margin-inline-start: 0; flex-basis: 100%; }
       .stat .num { font-size: 1.35rem; }
-      #groups input { min-width: 7rem; }
+      /* phone: the name box gets its own line under each cluster, so nothing hides off-screen */
+      #groups { display: grid; grid-template-columns: repeat(3, auto); align-items: center; }
+      #groups.cust { grid-template-columns: repeat(4, auto); }
+      #groups thead, #groups tbody, #groups tr { display: contents; }
+      #groups th, #groups td { padding-inline: 5px; }
+      #groups th { align-self: stretch; font-size: .8rem; }
+      #groups th:last-child { display: none; }
+      #groups tbody td { border-bottom: 0; }
+      #groups tbody td:last-child { grid-column: 1 / -1; padding-top: 0; border-bottom: 1px solid var(--border); }
+      #groups .g-long { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }   /* still read aloud */
+      #groups .g-short { display: inline; }
+      #groups input { min-width: 0; }
     }
 
     @media print {
@@ -130,13 +143,16 @@
       .learn-box { break-inside: avoid; border: 1px solid #bbb; }
       #groups input { border: 0; padding: 0; }
       .print-head { margin-bottom: 10px; }
+      .phase-box, .print-empty, #elbow-tip, details.nums:not([open]) { display: none !important; }
+      #groups input::placeholder { color: transparent; }
+      .km-results { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
     <div class="print-only print-head"><h2 class="mb0" data-i18n="app_title"></h2><p class="mb0" id="print-sum"></p></div>
+    <p class="edu-intro" data-i18n="intro"></p>
 
     <div class="km" id="km">
       <!-- ============ the board ============ -->
@@ -240,11 +256,13 @@
         <p class="small muted mb0" id="groups-empty" data-i18n="groups_empty"></p>
         <div class="scroll-x"><table class="table" id="groups"></table></div>
         <p class="small muted mb0" data-i18n="names_hint"></p>
-        <h3 data-i18n="history_title"></h3>
-        <canvas id="history" class="chart" role="img" data-i18n-aria-label="history_title"></canvas>
+        <div id="history-box" class="stack">
+          <h3 data-i18n="history_title"></h3>
+          <canvas id="history" class="chart" role="img" data-i18n-aria-label="history_title"></canvas>
+        </div>
       </section>
 
-      <section class="card stack" aria-labelledby="elbow-h">
+      <section class="card stack" id="elbow-card" aria-labelledby="elbow-h">
         <h2 id="elbow-h" data-i18n="elbow_title"></h2>
         <p class="small mb0" data-i18n="elbow_desc"></p>
         <div class="row">

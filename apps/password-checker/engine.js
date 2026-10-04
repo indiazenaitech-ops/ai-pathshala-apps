@@ -276,6 +276,31 @@
     }
   }
 
+  /* Words typed in Indian scripts (or any non-Latin letters). We have no word lists for them, but attackers do,
+     so a run of such letters counts as dictionary words (about 1 lakh words, ~5 letters per word),
+     never as random characters. */
+  var LETTERISH = (function () { try { return new RegExp('[\\p{L}\\p{M}\\u200c\\u200d]', 'u'); } catch (e) { return null; } })();
+  var SCRIPT_DICT = 1e5, SCRIPT_WORD = 5;
+  function isScriptLetter(c) {
+    if (classOf(c) !== 'other') return false;
+    if (LETTERISH) return LETTERISH.test(c);
+    var code = c.codePointAt(0);
+    return (code >= 0x0600 && code <= 0x0DFF) || code === 0x200c || code === 0x200d;   /* Arabic … Malayalam */
+  }
+  function scriptMatches(s, out) {
+    var n = s.length, i = 0;
+    while (i < n) {
+      if (!isScriptLetter(s[i])) { i++; continue; }
+      var j = i; while (j < n && isScriptLetter(s[j])) j++;
+      var len = j - i;
+      if (len >= 2) {
+        var words = Math.max(1, Math.round(len / SCRIPT_WORD));
+        out.push({ i: i, j: j, kind: 'script', g: Math.min(Math.pow(POOL.other, len), Math.pow(SCRIPT_DICT, words)) });
+      }
+      i = j;
+    }
+  }
+
   /* the same symbol used again and again between words: "tiger-mango-river" */
   function sepMatches(s, out) {
     var n = s.length, between = Object.create(null), total = Object.create(null);
@@ -316,6 +341,7 @@
     keyboardMatches(s, matches);
     dateMatches(s, matches);
     numberMatches(s, matches);
+    scriptMatches(s, matches);
     var sep = depth === 0 ? sepMatches(s, matches) : null;
     if (depth === 0) repeatMatches(s, matches, depth);
     else repeatMatches(s, matches, depth);
@@ -373,13 +399,15 @@
     var s = secondsFor(bits);
     if (s < 1) return { key: 'time_instant' };
     var units = [['time_s', 1, 60], ['time_min', 60, 3600], ['time_h', 3600, 86400], ['time_d', 86400, 30.4375 * 86400], ['time_mo', 30.4375 * 86400, Y]];
+    /* a value that rounds up to the next unit moves to that unit ("about 60 seconds" -> "about 1 minute") */
     for (var u = 0; u < units.length; u++) {
-      if (s < units[u][2]) { var v = Math.round(s / units[u][1]); return { key: units[u][0] + (v === 1 ? '_one' : ''), n: Math.max(1, v) }; }
+      var v = Math.round(s / units[u][1]);
+      if (v < units[u][2] / units[u][1]) return { key: units[u][0] + (v <= 1 ? '_one' : ''), n: Math.max(1, v) };
     }
-    var y = s / Y;
-    if (y < 1000) { var yv = Math.round(y); return { key: 'time_y' + (yv === 1 ? '_one' : ''), n: Math.max(1, yv) }; }
-    if (y < 1e5) return { key: 'time_ky', n: Math.round(y / 1e3) };
-    if (y < 1e7) return { key: 'time_lakh', n: Math.round(y / 1e5) };
+    var y = s / Y, yv = Math.round(y);
+    if (yv < 1000) return { key: 'time_y' + (yv <= 1 ? '_one' : ''), n: Math.max(1, yv) };
+    if (Math.round(y / 1e3) < 100) return { key: 'time_ky', n: Math.round(y / 1e3) };
+    if (Math.round(y / 1e5) < 100) return { key: 'time_lakh', n: Math.round(y / 1e5) };
     if (y < 1.38e10) return { key: 'time_crore', n: Math.round(y / 1e7) };
     return { key: 'time_universe' };
   }

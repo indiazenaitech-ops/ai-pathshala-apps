@@ -78,6 +78,31 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(await attr('#reader', 'data-lang') === 'en', 'English text detected as en');
   expect(await txt('#counts') === t('counts', { w: '13', s: '3' }), 'counts line is translated: ' + await txt('#counts'));
 
+  /* 2b) Sentence rules: units end a sentence before a capital, "Rs." does not, "..." joins its sentence */
+  await fillText('The road is 10 km. We paid Rs. 50 for it... ... Really?', 3);
+  const sents = await page.$$eval('#reader .s', (e) => e.map((x) => x.textContent));
+  expect(JSON.stringify(sents) === JSON.stringify(['The road is 10 km.', 'We paid Rs. 50 for it... ...', 'Really?']),
+    'sentence split: ' + JSON.stringify(sents));
+  expect(await attr('#counts', 'data-w') === '12', 'punctuation is not counted as words, got ' + await attr('#counts', 'data-w'));
+
+  /* 2c) Empty text: Play / Space explain instead of pretending to finish */
+  await page.click('#clear-btn');
+  await page.waitForFunction(() => document.querySelector('#counts').dataset.s === '0');
+  expect(await page.$eval('#play-btn', (b) => b.disabled), 'Play is disabled with no text');
+  expect(await page.isVisible('#reader .reader-empty'), 'empty reading view shows a hint');
+  await page.evaluate(() => { window.__spoken = []; document.activeElement && document.activeElement.blur(); });
+  await page.keyboard.press('Space');
+  await page.waitForTimeout(100);
+  expect(await state() === 'idle' && (await spoken()).length === 0, 'Space on empty text stays idle, got ' + await state());
+
+  /* 2d) Typed text is kept even when the page is reloaded straight away */
+  await page.fill('#text', 'Typed just now.');
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForFunction(() => window.EDU_READY && document.querySelectorAll('#reader .s').length > 0);
+  expect(await page.inputValue('#text') === 'Typed just now.', 'text typed right before a reload survives: ' + await page.inputValue('#text'));
+  await page.waitForFunction(() => document.querySelectorAll('#voice-sel option').length > 1, null, { timeout: 5000 });
+  await fillText('Ravi has a red kite. The kite flies high! Can you see it?', 3);
+
   /* 3) Play reads every sentence in order, lighting up each word */
   await page.evaluate(() => {
     window.__spoken = []; window.__lit = [];
@@ -98,6 +123,26 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(await txt('#status') === '🎉 ' + t('st_done'), 'status says finished');
   expect(await page.$$eval('#reader .w.on, #reader .s.cur', (e) => e.length) === 0, 'highlights cleared at the end');
 
+  /* 3b) A long passage in big letters: every word being read stays on screen (the view follows it) */
+  await page.click('#sample-btns .chip[data-idx="0"]');
+  await setRange('#font', 44);
+  await page.evaluate(() => {
+    window.scrollTo(0, 0);
+    window.__ttsStep = 8; window.__vis = { ok: 0, off: [] };
+    new MutationObserver(() => {
+      const w = document.querySelector('#reader .w.on'); if (!w) return;
+      const r = w.getBoundingClientRect(), head = document.querySelector('.edu-top').getBoundingClientRect().bottom;
+      if (r.top >= head - 1 && r.bottom <= innerHeight + 1) window.__vis.ok++; else window.__vis.off.push(w.textContent + '@' + Math.round(r.top));
+    }).observe(document.getElementById('reader'), { subtree: true, attributes: true, attributeFilter: ['class'] });
+  });
+  await page.click('#play-btn');
+  await waitState('done', 15000);
+  const vis = await page.evaluate(() => window.__vis);
+  expect(vis.ok > 30 && vis.off.length === 0, 'words read off-screen: ' + vis.off.slice(0, 5).join(' ') + ' (on screen: ' + vis.ok + ')');
+  await page.evaluate(() => { window.__ttsStep = 40; });
+  await setRange('#font', 30);
+  await fillText('Ravi has a red kite. The kite flies high! Can you see it?', 3);
+
   /* 4) Speed setting + tap a word to hear only that word (punctuation removed) */
   await setRange('#rate', 0.7);
   expect(await txt('#rate-out') === '0.70×', 'speed label shows 0.70×, got ' + await txt('#rate-out'));
@@ -112,7 +157,8 @@ module.exports = async function ({ page, lang, expect, t, log }) {
 
   /* 5) Pause keeps the place; resume continues from the paused word */
   await setRange('#rate', 1);
-  await page.click('#stop-btn');
+  if (!(await page.$eval('#stop-btn', (b) => b.disabled))) await page.click('#stop-btn');
+  expect(await state() === 'idle', 'stopped before the pause test');
   await page.evaluate(() => { window.__ttsStep = 250; window.__spoken = []; });
   await page.click('#play-btn');
   await page.waitForFunction(() => { const w = document.querySelector('#reader .w.on'); return w && +w.dataset.w >= 2; }, null, { timeout: 5000 });
@@ -140,6 +186,8 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.click('#play-btn');
   await waitState('echo');
   expect(await page.isVisible('#echo-box'), 'the "your turn" box is shown');
+  const box = await page.$eval('#echo-box', (e) => { const r = e.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, h: innerHeight }; });
+  expect(box.top >= 0 && box.bottom <= box.h, 'the "your turn" box is on screen, not below the fold: ' + JSON.stringify(box));
   expect(await txt('#status') === t('st_echo', { i: '1', n: '3' }), 'status: your turn for sentence 1 of 3');
   await page.waitForTimeout(700);
   expect((await spoken()).length === 1, 'voice waits for the child before the next sentence');
@@ -185,10 +233,38 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(sp.length >= 1 && sp[0].lang === 'bn-IN' && sp[0].voice === null, '"Try anyway" speaks with the bn-IN language tag: ' + JSON.stringify(sp[0]));
   await page.click('#stop-btn');
 
-  /* 9) "Read as" override */
+  /* 9) "Read as" override: kept while editing text in the same script, back to Auto for another script */
   await page.selectOption('#read-as', 'hi');
   expect(await attr('#reader', 'data-lang') === 'hi' && await page.isHidden('#voice-note'), 'Read as Hindi uses the Hindi voice, note hidden');
-  await page.selectOption('#read-as', 'auto');
+  await fillText('আমি স্কুলে যাই। আজ বৃষ্টি হচ্ছে। খুব মজা।', 3);
+  expect(await page.inputValue('#read-as') === 'hi', 'Read as stays while the same text is edited');
+  await fillText('Ravi has a red kite. The kite flies high! Can you see it?', 3);
+  expect(await page.inputValue('#read-as') === 'auto' && await attr('#reader', 'data-lang') === 'en', 'text in another script goes back to Auto: ' + await page.inputValue('#read-as'));
+
+  /* 9b) A voice of another language picked from the full list stays selected in the short list */
+  await page.check('#all-voices');
+  await page.selectOption('#voice-sel', 'test-hi');
+  await page.uncheck('#all-voices');
+  expect(await page.inputValue('#voice-sel') === 'test-hi', 'chosen Hindi voice still shown for English text, got "' + await page.inputValue('#voice-sel') + '"');
+  await page.evaluate(() => { window.__spoken = []; });
+  await page.click('#reader .w[data-s="0"][data-w="0"]');
+  await page.waitForTimeout(150);
+  sp = await spoken();
+  expect(sp.length === 1 && sp[0].voice === 'Test Hindi', 'the chosen voice is used: ' + JSON.stringify(sp[0]));
+  await page.selectOption('#voice-sel', '');
+  expect(await page.inputValue('#voice-sel') === '' && await page.$$eval('#voice-sel option', (o) => o.length) === 3, 'back to the best voice: only English voices listed');
+
+  /* 9c) Full screen button says how to leave full screen */
+  await page.click('#fs-btn');
+  await page.waitForFunction(() => !!document.fullscreenElement, null, { timeout: 3000 }).catch(() => { });
+  if (await page.evaluate(() => !!document.fullscreenElement)) {
+    await page.waitForFunction((x) => document.querySelector('#fs-lbl').textContent === x, t('exit_fs'), { timeout: 3000 }).catch(() => { });
+    expect(await txt('#fs-lbl') === t('exit_fs'), 'full screen button now says ' + t('exit_fs') + ', got ' + await txt('#fs-lbl'));
+    await page.click('#fs-btn');
+    await page.waitForFunction(() => !document.fullscreenElement, null, { timeout: 3000 });
+  }
+  await page.waitForFunction((x) => document.querySelector('#fs-lbl').textContent === x, t('fullscreen'), { timeout: 3000 }).catch(() => { });
+  expect(await txt('#fs-lbl') === t('fullscreen'), 'full screen button label restored');
 
   /* 10) Look settings, samples in another language, and persistence */
   await setRange('#font', 40);
@@ -215,6 +291,19 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(await page.inputValue('#text') === first, 'reset loads the first sample again');
   expect(await page.inputValue('#rate') === '1', 'reset restores speed 1');
   expect(await attr('#hl-seg button[data-hl="word"]', 'aria-pressed') === 'true', 'reset restores word highlight');
+
+  /* 12) Urdu page: the untouched sample follows the language, reads right-to-left, Back/Next icons are mirrored */
+  await page.evaluate(() => EDU.setLang('ur'));
+  await page.waitForFunction(() => document.querySelector('#reader').dataset.lang === 'ur');
+  const urText = await page.evaluate(() => window.APP_CONTENT.ur.samples[0].text);
+  expect(await page.inputValue('#text') === urText && await attr('#reader', 'dir') === 'rtl', 'Urdu sample shown right-to-left');
+  expect(await page.$eval('#next-btn .ic', (e) => getComputedStyle(e).transform) !== 'none', 'Next icon points left in Urdu');
+  const urReady = await page.evaluate(() => window.APP_STRINGS.ur.st_ready);
+  expect(await txt('#status') === urReady, 'status re-rendered in Urdu: ' + await txt('#status'));
+  await page.evaluate((l) => EDU.setLang(l), lang);
+  await page.waitForFunction((l) => document.querySelector('#reader').dataset.lang === l, lang);
+  expect(await page.inputValue('#text') === first, 'sample switches back with the page language');
+  expect(await page.$eval('#next-btn .ic', (e) => getComputedStyle(e).transform) === 'none', 'Next icon normal again');
 
   /* leave a paused reading on screen for the screenshot */
   await page.evaluate(() => { window.__ttsStep = 300; });

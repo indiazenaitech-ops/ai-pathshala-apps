@@ -66,17 +66,34 @@
     mode: store.get('mode', 'mine') === 'auto' ? 'auto' : 'mine',
     view: store.get('view', 'table') === 'cards' ? 'cards' : 'table',
     hints: store.get('hints', false) === true,
-    depth: [0, 1, 2, 3, 4].indexOf(store.get('depth', 0)) >= 0 ? store.get('depth', 0) : 0,
+    depths: { animals: 0, cricket: 0 },   /* the computer's max depth, one per dataset */
+    depth: 0,                             /* = depths[ds] */
     trees: {},
     sel: { mine: 'r', auto: 'r' },
     steps: null,
     undo: { animals: [], cricket: [] },
-    results: { mine: null, auto: null },
+    results: {},   /* 'ds|mode' → { key, correct, rows }; a result only counts while its key matches the tree on screen */
     basket: [3, 1]
   };
   (function () {
     var b = store.get('basket', [3, 1]);
     if (Array.isArray(b) && b.length === 2) state.basket = [EDU.clamp(parseInt(b[0], 10) || 0, 0, 12), EDU.clamp(parseInt(b[1], 10) || 0, 0, 12)];
+    var dd = store.get('depth', 0), okD = function (d) { return [0, 1, 2, 3, 4].indexOf(d) >= 0; };
+    DS_KEYS.forEach(function (ds) {
+      var d = dd && typeof dd === 'object' ? dd[ds] : dd;   /* old saves kept one number for both */
+      state.depths[ds] = okD(d) ? d : 0;
+    });
+    state.depth = state.depths[state.ds];
+    var r = store.get('results', {});
+    if (r && typeof r === 'object') DS_KEYS.forEach(function (ds) {
+      ['mine', 'auto'].forEach(function (m) {
+        var x = r[ds + '|' + m];
+        if (x && typeof x.key === 'string' && Array.isArray(x.rows) && x.rows.length === DATA[ds].test.length &&
+            x.rows.every(function (w) { return w && typeof w.pred === 'number' && w.pred >= 0 && w.pred < DATA[ds].colors.length; })) {
+          state.results[ds + '|' + m] = { key: x.key, correct: x.rows.filter(function (w) { return !!w.ok; }).length, rows: x.rows.map(function (w) { return { pred: w.pred, ok: !!w.ok }; }) };
+        }
+      });
+    });
   })();
 
   /* ------------------------------------------------------------------ helpers */
@@ -254,7 +271,11 @@
     if (state.steps === null) return full;
     return truncate(full, bfsSplits(full).slice(0, state.steps));
   }
-  function treeKey(mode) { return state.ds + '|' + state.depth + '|' + JSON.stringify(shownStruct(mode)); }
+  /* My tree does not depend on the computer's max depth, so its key leaves the depth out:
+     changing the depth must not throw away my test result. */
+  function treeKey(mode) { mode = mode || state.mode; return state.ds + '|' + (mode === 'auto' ? state.depth : '-') + '|' + JSON.stringify(shownStruct(mode)); }
+  function resOf(mode) { return state.results[state.ds + '|' + mode] || null; }
+  function freshRes(mode, key) { var r = resOf(mode); return r && r.key === key ? r : null; }
   function selId() { return state.sel[state.mode] || 'r'; }
   function saveTrees() { var o = {}; DS_KEYS.forEach(function (k) { if (state.trees[k]) o[k] = state.trees[k]; else if (savedTrees[k]) o[k] = savedTrees[k]; }); store.set('trees', o); }
 
@@ -329,7 +350,7 @@
     newIds = {};
     var tok = el('div', { class: 'token', id: 'token', 'aria-hidden': 'true', hidden: true });
     canvas.appendChild(tok);
-    layout();
+    layout(true);
   }
   var newIds = {};
 
@@ -372,7 +393,7 @@
     return EDU.clamp(fit, minW, maxW);
   }
 
-  function layout() {
+  function layout(focusSel) {
     if (!root || $('#pane-build').hidden) return;
     var canvas = $('#tree'), sc = $('#tree-scroll');
     var slots = slotLayout();
@@ -385,7 +406,7 @@
     var W = Math.max(treeW, cw), off = (W - treeW) / 2;
     var levelH = [];
     nodes.forEach(function (n) { n.ph = n.elm.offsetHeight; levelH[n.depth] = Math.max(levelH[n.depth] || 0, n.ph); });
-    var levelY = [], y = 14;
+    var levelY = [], y = 26;   /* room above the root for the walking emoji */
     for (var d = 0; d < levelH.length; d++) { levelY[d] = y; y += (levelH[d] || 0) + GAP_Y; }
     var H = y - GAP_Y + 18;
     var rtl = isRtl();
@@ -414,6 +435,7 @@
       lab.style.transform = 'translate(' + (x2 - lab.offsetWidth / 2) + 'px,' + (y2 - 22 - lab.offsetHeight / 2) + 'px)';
     });
     markPath(curPath);
+    if (focusSel) hScrollTo(findNode(root, selId()) || root, false);
   }
 
   /* highlight a walk path (array of node ids) */
@@ -439,7 +461,31 @@
     if (!tok || !n) return;
     tok.textContent = emoji;
     tok.hidden = false;
-    tok.style.transform = 'translate(' + (n.px + NODE_W / 2 - 16) + 'px,' + (n.py - 22) + 'px)';
+    /* sit just above the box's top corner (start side): the branch label and the box text stay readable */
+    var x = isRtl() ? n.px + NODE_W - 40 : n.px - 4;
+    tok.style.transform = 'translate(' + Math.max(0, x) + 'px,' + Math.max(0, n.py - 30) + 'px)';
+    followNode(n);
+  }
+  /* Phones: the tree is wider (and often taller) than the screen. Bring a box into view when it is
+     drawn as the selected box, or when a test example travels to it. */
+  function hScrollTo(n, smooth) {
+    var sc = $('#tree-scroll');
+    if (!sc || !n || !n.elm || sc.scrollWidth <= sc.clientWidth + 1) return;
+    var sr = sc.getBoundingClientRect(), r = n.elm.getBoundingClientRect();
+    if (!sr.width || (r.left >= sr.left + 4 && r.right <= sr.right - 4)) return;
+    var delta = (r.left + r.width / 2) - (sr.left + sr.width / 2);
+    if (sc.scrollBy) sc.scrollBy({ left: delta, behavior: smooth && !reduced() ? 'smooth' : 'auto' });
+    else sc.scrollLeft += delta;
+  }
+  function followNode(n) {
+    if (!n || !n.elm) return;
+    hScrollTo(n, true);
+    var r = n.elm.getBoundingClientRect(), fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    if (fs) return;   /* fullscreen pane scrolls by itself; the page does not */
+    var hdr = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hdr')) || 0;
+    var top = hdr + $('#walk').offsetHeight + 8;
+    var dy = r.top - 30 < top ? r.top - 30 - top : (r.bottom > window.innerHeight - 8 ? Math.min(r.bottom - window.innerHeight + 24, r.top - 30 - top) : 0);
+    if (Math.abs(dy) > 2) window.scrollBy({ top: dy, behavior: reduced() ? 'auto' : 'smooth' });
   }
 
   /* ------------------------------------------------------------------ selection + editing */
@@ -641,7 +687,7 @@
 
   function renderTestCard() {
     $('#test-h').textContent = t('test_h', { n: EDU.fmt(IT().test.length) });
-    var res = state.results[state.mode], fresh = res && res.key === treeKey();
+    var res = freshRes(state.mode, treeKey()), fresh = !!res;
     var tb = $('#test-table');
     tb.innerHTML = '';
     tb.appendChild(el('thead', {}, el('tr', {}, el('th', { i18n: 'th_name' }), el('th', { i18n: 'th_says' }), el('th', { i18n: 'th_real' }), el('th', { 'aria-label': t('result'), text: '' }), el('th', { 'aria-label': t('replay'), text: '' }))));
@@ -678,10 +724,10 @@
     var mineRoot = annotate(myTree(), IT().train, 'r', 0, null);
     var autoS = autoFull(), autoRoot = annotate(autoS, IT().train, 'r', 0, null);
     var sm = treeStats(mineRoot), sa = treeStats(autoRoot);
-    var keyMine = state.ds + '|' + state.depth + '|' + JSON.stringify(myTree());
-    var keyAuto = state.ds + '|' + state.depth + '|' + JSON.stringify(autoS);
-    var rm = state.results.mine, ra = state.results.auto;
-    var tm = rm && rm.key === keyMine ? rm.correct : null, ta = ra && ra.key === keyAuto ? ra.correct : null;
+    var keyMine = treeKey('mine');
+    var keyAuto = state.ds + '|' + state.depth + '|' + JSON.stringify(autoS);   /* the whole computer tree, not a step-by-step part */
+    var rm = freshRes('mine', keyMine), ra = freshRes('auto', keyAuto);
+    var tm = rm ? rm.correct : null, ta = ra ? ra.correct : null;
     var nT = IT().test.length;
     var tb = $('#cmp-table');
     tb.innerHTML = '';
@@ -718,7 +764,9 @@
     if (w.missing !== null) txt = t('no_branch', { v: valName(w.node.f, w.missing) }) + ' ' + txt;
     return { text: txt, cls: w.ok ? 'ok' : 'bad' };
   }
-  function setWalk(text, cls) { var p = $('#walk'); p.textContent = text; p.className = 'walk' + (cls ? ' ' + cls : ''); }
+  /* The caption only sticks under the header while an example is walking down the tree; a long tip
+     must not cover the tree on a phone the rest of the time. */
+  function setWalk(text, cls) { var p = $('#walk'); p.textContent = text; p.className = 'walk' + (cls ? ' ' + cls : '') + (anim ? ' live' : ''); }
 
   function animateWalk(it, w, done) {
     var k = 0;
@@ -741,10 +789,10 @@
     if (anim || !root) return;
     var tests = IT().test, rows = tests.map(function (it) { return walk(root, it); });
     var key = treeKey(), mode = state.mode;
-    anim = { timers: [], rows: rows, key: key, mode: mode, i: 0 };
+    anim = { timers: [], rows: rows, key: key, rk: state.ds + '|' + mode, i: 0 };
     $('#run-test').disabled = true;
     $('#skip-test').hidden = false;
-    state.results[mode] = null;
+    delete state.results[anim.rk];
     renderTestCard();
     var sc = $('#tree-scroll'), r = sc.getBoundingClientRect();
     if (r.top < 0 || r.top > window.innerHeight * 0.6) sc.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'center' });
@@ -771,7 +819,8 @@
     a.timers.forEach(clearTimeout);
     anim = null;
     var correct = a.rows.filter(function (r) { return r.ok; }).length;
-    state.results[a.mode] = { key: a.key, correct: correct, rows: a.rows.map(function (r) { return { pred: r.pred, ok: r.ok }; }) };
+    state.results[a.rk] = { key: a.key, correct: correct, rows: a.rows.map(function (r) { return { pred: r.pred, ok: r.ok }; }) };
+    store.set('results', state.results);
     $('#run-test').disabled = false;
     $('#skip-test').hidden = true;
     var tok = $('#token'); if (tok) tok.hidden = true;
@@ -786,14 +835,17 @@
     anim = null;
     $('#run-test').disabled = false;
     $('#skip-test').hidden = true;
+    $('#walk').classList.remove('live');
+    var tok = $('#token'); if (tok) tok.hidden = true;
   }
   function replay(i) {
     if (anim || !root) return;
     var it = IT().test[i], w = walk(root, it);
     anim = { timers: [], single: true };
+    $('#run-test').disabled = true;
     var sc = $('#tree-scroll'), r = sc.getBoundingClientRect();
     if (r.top < 0 || r.bottom > window.innerHeight + 200) sc.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'center' });
-    animateWalk(it, w, function () { if (anim) { anim.timers.forEach(clearTimeout); anim = null; } var tok = $('#token'); if (tok) tok.hidden = true; });
+    animateWalk(it, w, function () { stopAnim(); });
   }
 
   /* ------------------------------------------------------------------ build tab */
@@ -810,7 +862,7 @@
     [1, 2, 3, 4, 0].forEach(function (d) {
       seg.appendChild(el('button', {
         type: 'button', id: 'depth-' + d, 'aria-pressed': state.depth === d ? 'true' : 'false',
-        text: d ? EDU.fmt(d) : t('no_limit'), onclick: function () { state.depth = d; store.set('depth', d); state.steps = null; state.sel.auto = 'r'; stopAnim(); renderBuild(); renderLearn(); }
+        text: d ? EDU.fmt(d) : t('no_limit'), onclick: function () { state.depth = state.depths[state.ds] = d; store.set('depth', state.depths); state.steps = null; state.sel.auto = 'r'; stopAnim(); renderBuild(); renderLearn(); }
       }));
     });
     var total = bfsSplits(autoFull()).length;
@@ -879,9 +931,10 @@
     list.forEach(function (it, i) {
       var ul = el('ul');
       for (var f = 0; f < nf; f++) ul.appendChild(el('li', {}, el('span', { text: featS(f) }), el('b', { text: valText(f, it.x[f]) })));
-      var card = el('div', { class: 'dcard' },
+      var noisy = !isTest && (D().noise || []).indexOf(i) >= 0;   /* flag the odd day in card view too */
+      var card = el('div', { class: 'dcard' + (noisy ? ' noisy' : '') },
         el('div', { class: 'row spread' }, el('span', { class: 'big', 'aria-hidden': 'true', text: it.emoji }), el('span', { class: 'badge', text: isTest ? LETTERS[i] : '#' + EDU.fmt(i + 1) })),
-        el('b', { text: itemName(it) }), ul, ansBadge(it.y));
+        el('b', {}, itemName(it), noisy ? el('span', { 'aria-hidden': 'true', text: ' ⚠' }) : null), ul, ansBadge(it.y));
       card.style.setProperty('--k', colorVar(it.y));
       grid.appendChild(card);
     });
@@ -894,8 +947,13 @@
     /* worked Gini example for the start group */
     var parts = cnt.map(function (x) { return '(' + x + '/' + n + ')²'; });
     var g = gini(cnt);
-    var names = cnt.map(function (x, k) { return EDU.fmt(x) + ' ' + className(k); }).join(', ');
-    $('#gini-ex').textContent = names + '\nGini = 1 − ' + parts.join(' − ') + ' = ' + f3(g);
+    var names = cnt.map(function (x, k) { return EDU.fmt(x) + ' ' + className(k); }).join(EDU.lang === 'ur' ? '، ' : ', ');
+    /* the class names are a line of normal text in the page's own direction (Urdu would be scrambled
+       inside the left-to-right formula box); only the formula itself is forced left-to-right */
+    var ex = $('#gini-ex');
+    ex.innerHTML = '';
+    ex.appendChild(el('span', { class: 'gx-names', dir: isRtl() ? 'rtl' : 'ltr', text: names }));
+    ex.appendChild(el('span', { class: 'gx-f', dir: 'ltr', text: 'Gini = 1 − ' + parts.join(' − ') + ' = ' + f3(g) }));
     /* depth chart */
     var full = autoFull(state.ds, 0), fullDepth = treeStats(annotate(full, its.train, 'r', 0, null)).depth;
     var rows = [];
@@ -907,13 +965,16 @@
     }
     var bestTe = Math.max.apply(null, rows.map(function (r) { return r.te; }));
     var bestD = rows.filter(function (r) { return r.te === bestTe; })[0].d;
+    var last = rows[rows.length - 1];
+    /* only mark a "best depth" when deeper trees really do worse on the test (overfitting) */
+    var overfit = bestD < fullDepth && last.te < bestTe;
     $('#chart-h').textContent = t('chart_h');
     var chart = $('#chart');
     chart.innerHTML = '';
     var bars = el('div', { class: 'chart', id: 'depth-chart', role: 'img', 'aria-label': t('chart_h') });
     var xl = el('div', { class: 'xlabels', 'aria-hidden': 'true' });
     rows.forEach(function (r) {
-      var grp = el('div', { class: 'cg' + (r.d === bestD && bestD < fullDepth ? ' best' : ''), 'data-d': String(r.d), 'data-train': String(r.tr), 'data-test': String(r.te) },
+      var grp = el('div', { class: 'cg' + (overfit && r.d === bestD ? ' best' : ''), 'data-d': String(r.d), 'data-train': String(r.tr), 'data-test': String(r.te) },
         el('div', { class: 'bars' },
           el('div', { class: 'bar tr', style: { height: (r.tr * 1.8) + 'px' } }, el('span', { text: EDU.fmt(r.tr) + '%' })),
           el('div', { class: 'bar te', style: { height: (r.te * 1.8) + 'px' } }, el('span', { text: EDU.fmt(r.te) + '%' }))));
@@ -923,8 +984,7 @@
     chart.appendChild(bars);
     chart.appendChild(xl);
     chart.appendChild(el('p', { class: 'center small muted mb0', i18n: 'chart_x' }));
-    var last = rows[rows.length - 1];
-    $('#chart-note').textContent = bestD < fullDepth && last.te < bestTe
+    $('#chart-note').textContent = overfit
       ? t('chart_overfit', { d: EDU.fmt(bestD), p: EDU.fmt(bestTe), q: EDU.fmt(last.te) })
       : t('chart_nooverfit');
     renderBasket();
@@ -987,6 +1047,7 @@
     if (state.ds === k) return;
     stopAnim();
     state.ds = k; store.set('ds', k);
+    state.depth = state.depths[k];
     state.sel = { mine: 'r', auto: 'r' };
     state.steps = null;
     renderAll();
@@ -1067,7 +1128,7 @@
   function relayoutSoon() { clearTimeout(rz); rz = setTimeout(function () { setHdr(); if (state.tab === 'build' && root) layout(); }, 120); }
   window.addEventListener('resize', relayoutSoon);
   document.addEventListener('fullscreenchange', relayoutSoon);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (root) layout(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (root) layout(true); });
   if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', function () { if (root) layout(); });
 
   EDU.onLang(function () { stopAnim(); renderAll(); setHdr(); });

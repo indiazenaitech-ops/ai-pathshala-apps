@@ -8,6 +8,8 @@ module.exports = async function ({ page, expect, t, log }) {
   /* ---------------- lesson list ---------------- */
   const count = (await page.$$('#lesson-list [data-lesson]')).length;
   expect(count === 18, '18 lessons are listed, got ' + count);
+  const groups = (await page.$$('#lesson-list .tt-stage')).length;
+  expect(groups === 5, 'lessons are grouped under 5 headings, got ' + groups);
   expect(await page.getAttribute('#continue', 'data-lesson') === 'l1', 'Continue button points at lesson 1');
 
   /* ---------------- lesson 1 with one mistake ---------------- */
@@ -98,5 +100,17 @@ module.exports = async function ({ page, expect, t, log }) {
   await page.click('#reset-progress');
   await page.waitForFunction(() => document.querySelector('#prog-table tr[data-lesson="l1"] .tt-stars').dataset.stars === '0');
   expect((await page.$$('#hist-table tbody tr')).length === 0, 'reset clears recent practice');
+
+  /* ---------------- leave lesson 7 open half-way (keyboard + hands show in the screenshot) ---------------- */
+  await page.click('#tab-lessons');
+  expect(await page.getAttribute('#continue', 'data-lesson') === 'l1', 'after reset, Continue points at lesson 1 again');
+  await page.click('#lesson-list [data-lesson="l7"]');
+  await page.waitForSelector('#trainer', { state: 'visible' });
+  expect((await page.getAttribute('#target', 'data-text')).startsWith('e i r u'), 'lesson 7 starts with its first text after reset');
+  await page.focus('#typein');
+  await page.keyboard.type('e i r ');
+  expect(await nextKeys() === 'u', 'U is highlighted next, got ' + await nextKeys());
+  expect(await page.$eval('#hands .finger.on', (e) => e.dataset.f) === 'R2', 'right index finger is highlighted for U');
+  expect(await txt('#st-err') === '0', 'no mistakes so far in lesson 7');
   log('lesson1 chars', L, 'acc', expAcc, 'tamil graphemes', info.n);
 };

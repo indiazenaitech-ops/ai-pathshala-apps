@@ -1,5 +1,5 @@
 /* Interaction test for Graph Plotter (run by tools/verify.js in en and hi). */
-module.exports = async function ({ page, expect, t, log }) {
+module.exports = async function ({ page, lang, expect, t, log }) {
   const rows = (kind, fi) => page.$$eval('#points-body tr[data-kind="' + kind + '"]', (trs) => trs.map((r) => ({
     fi: +r.dataset.fi, fj: r.dataset.fj === '' ? null : +r.dataset.fj, x: +r.dataset.x, y: +r.dataset.y
   }))).then((l) => (fi === undefined ? l : l.filter((p) => p.fi === fi)));
@@ -53,6 +53,25 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(zeroRow && zeroRow[1] === '' && zeroRow[2] === t('undefined'), '1/x is "not defined" at x = 0 in this language: ' + JSON.stringify(zeroRow));
   expect(tv.some((r) => r[0] === '0.5' && r[1] === '2'), '1/0.5 = 2 in the table');
 
+  // 4b) deleting a function above keeps the table on the same function (1/x is now g)
+  await page.click('#fn-del-0');
+  await page.waitForFunction(() => document.querySelectorAll('.gp-fn').length === 2);
+  expect(await page.inputValue('#tv-fn') === '1' && await page.inputValue('#fn-in-1') === '1/x', 'table still shows 1/x after deleting f');
+  expect(await page.$$eval('#tv-body tr', (trs) => trs.some((r) => r.dataset.x === '0.5' && r.dataset.y === '2')), 'table rows are still those of 1/x');
+
+  // 4c) a graph that ends on the x-axis: sqrt(4 − x²) has zeroes at −2 and 2 (where it stops being defined)
+  await page.fill('#fn-in-0', 'sqrt(4 - x^2)');
+  await waitPoint('root', -2, 0);   // −2 is new; the old f also had a zero at 2
+  expect(has(await rows('root', 0), -2, 0) && has(await rows('root', 0), 2, 0), 'sqrt(4 − x²) has zeroes −2 and 2: ' + JSON.stringify(await rows('root', 0)));
+
+  // 4d) a jump is not a meeting point: floor(x) never meets 1/(x² − 1) (at 0 the floor jumps from −1 to 0)
+  await page.fill('#fn-in-0', 'floor(x)');
+  await page.fill('#fn-in-1', '1/(x^2 - 1)');
+  await waitPoint('inter', Math.SQRT2);
+  expect(!has(await rows('inter'), 0), 'no false meeting point at x = 0: ' + JSON.stringify(await rows('inter')));
+  await page.fill('#fn-in-1', 'g(x) = x');
+  expect(await page.getAttribute('#fn-in-1', 'aria-invalid') === 'false', '"g(x) =" in front of a formula is accepted');
+
   // 5) trig preset in degrees: cos x has zeroes at ±90°, 270°
   await page.click('#preset-trig');
   expect(await page.inputValue('#fn-in-0') === 'a sin(bx)' && await page.inputValue('#fn-in-1') === 'cos x', 'trig preset loads two functions');
@@ -63,6 +82,15 @@ module.exports = async function ({ page, expect, t, log }) {
   roots = await rows('root', 1);
   expect(has(roots, 90, 0) && has(roots, -90, 0) && has(roots, 270, 0), 'cos x = 0 at −90°, 90°, 270°, got ' + JSON.stringify(roots.map((p) => p.x)));
   expect(has(await rows('max', 0), 90, 1), 'sin x is highest (1) at 90°');
+
+  // 5b) sin^-1 x is the inverse function (NCERT notation): sin^-1(0.5) = 30° in degree mode
+  await page.click('#add-fn');
+  await page.fill('#fn-in-2', 'sin^-1(x)');
+  await page.selectOption('#tv-fn', '2');
+  await page.fill('#tv-from', '0.5'); await page.fill('#tv-to', '1'); await page.fill('#tv-step', '0.5');
+  const inv = await page.$$eval('#tv-body tr', (trs) => trs.map((r) => [r.dataset.x, r.dataset.y]));
+  expect(inv.length === 2 && inv[0][1] === '30' && inv[1][1] === '90', 'sin⁻¹(0.5) = 30°, sin⁻¹(1) = 90°, got ' + JSON.stringify(inv));
+  await page.click('#fn-del-2');
 
   // 6) tracing: point at cos 60° = 0.5 on the canvas
   await page.$eval('#plot', (c) => c.scrollIntoView({ block: 'center' }));
@@ -94,4 +122,36 @@ module.exports = async function ({ page, expect, t, log }) {
   await page.waitForSelector('#fn-in-1');
   expect(await page.inputValue('#fn-in-1') === 'cos x', 'functions remembered after reload');
   expect(await page.getAttribute('#mode-deg', 'aria-pressed') === 'true', 'degrees mode remembered after reload');
+
+  // 8) a wider window shows more of the x-axis: the special points follow (none outside, new ones inside)
+  const vp = page.viewportSize();
+  await page.setViewportSize({ width: vp.width + 400, height: vp.height });
+  await page.waitForFunction(() => {
+    const r = window.GraphPlotter.plot.range(), xs = [...document.querySelectorAll('#points-body tr')].map((t) => +t.dataset.x);
+    return xs.every((x) => x >= r.x0 - 1e-6 && x <= r.x1 + 1e-6) && (r.x1 < 455 || xs.some((x) => Math.abs(x - 450) < 1e-6));
+  }, null, { timeout: 6000 }).catch(() => { });
+  const R = await page.evaluate(() => window.GraphPlotter.plot.range());
+  const xsAll = await page.$$eval('#points-body tr', (trs) => trs.map((t) => +t.dataset.x));
+  expect(xsAll.every((x) => x >= R.x0 - 1e-6 && x <= R.x1 + 1e-6) && (R.x1 < 455 || has(await rows('root', 1), 450)), 'points match the wider view ' + JSON.stringify([R.x0, R.x1]));
+  await page.setViewportSize(vp);
+
+  // 9) an example without sin or cos goes back to radians with its own view: the vertex (1, −4) is found
+  await page.click('#preset-quadratic');
+  expect(await page.getAttribute('#mode-rad', 'aria-pressed') === 'true', 'parabola example switches to radians');
+  await waitPoint('min', 1, 0);
+  expect(has(await rows('root', 0), -1, 0) && has(await rows('root', 0), 3, 0), 'parabola example zeroes −1 and 3');
+
+  // 10) a change made just before a reload is not lost
+  await page.fill('#fn-in-0', 'x^2 - 9');
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForSelector('#fn-in-0');
+  expect(await page.inputValue('#fn-in-0') === 'x^2 - 9', 'last edit survives an immediate reload');
+
+  // 11) Urdu (right to left): maths inside sentences is kept left to right, so "6 − 2x" is not shown as "2x − 6"
+  await page.selectOption('#edu-lang', 'ur');
+  await page.fill('#fn-in-0', '2x + 3y = 6');
+  const urMsg = await page.textContent('#fn-msg-0');
+  expect(await page.evaluate(() => document.documentElement.dir) === 'rtl' && urMsg.includes('⁦6 − 2x⁩'), 'Urdu hint keeps 6 − 2x in maths order: ' + JSON.stringify(urMsg));
+  await page.fill('#fn-in-0', 'x^2 - 9');
+  await page.selectOption('#edu-lang', lang);
 };

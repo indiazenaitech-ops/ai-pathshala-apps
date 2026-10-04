@@ -72,20 +72,48 @@
     return s.trim();
   }
 
+  /* Characters removed from a nickname: control characters, and invisible or text-reordering ones (soft
+     hyphen, zero-width space, LRM/RLM, bidi embeddings/overrides/isolates, word joiner, fillers, BOM…) that
+     could make a nickname look exactly like another student's. firestore.rules (validName) refuses the same
+     characters; every kind of space (no-break, ideographic…) becomes a plain space before that. */
+  var NAME_DROP = /[\u0000-\u001f\u007f-\u009f­͏؜ᅟᅠ឴឵᠋-᠏​‎‏‪-‮⁠-⁯ㅤ﻿ﾠ￹-￻]/g;
+  /* ZWNJ/ZWJ (Indian scripts need them) and emoji variation selectors stay in the nickname, but are
+     ignored when nicknames are compared: "Asha" and "Asha"+ZWJ look the same, so they are the same nickname. */
+  var NAME_SKIP = /[‌‍︎️]/g;
+
   /* Student nickname → clean string, or null when it is not allowed.
-     Same limits as firestore.rules: 1-20 characters (JS length), no '/', not only dots, not __x__.
-     ZWJ/ZWNJ are kept because Indian scripts need them; invisible bidi/zero-width marks are removed. */
+     Same limits as firestore.rules: 1-20 characters (JS length), single spaces, no '/', and its nameKey must
+     be a usable id (not empty, not only dots, not __x__). */
   function normalizeName(raw) {
     var s = String(raw === null || raw === undefined ? '' : raw)
-      .replace(/[\u0000-\u001f\u007f​‎‏‪-‮⁦-⁩﻿]/g, '')
+      .replace(NAME_DROP, '')
       .replace(/\s+/g, ' ').trim();
     if (!s || s.length > LIMITS.name) return null;
     if (s.indexOf('/') >= 0) return null;
     if (/^[.\s]+$/.test(s)) return null;
-    if (/^__.*__$/.test(s.toLowerCase())) return null;
+    var key = nameKey(s);
+    if (!key || /^[.]+$/.test(key) || /^__.*__$/.test(key)) return null;
     return s;
   }
-  function nameKey(name) { return String(name).toLowerCase(); }
+  /* The id of a nickname in names/ (unique per session); equal to nameKey() in firestore.rules. */
+  function nameKey(name) { return String(name).toLowerCase().replace(NAME_SKIP, ''); }
+
+  /* A session is "live" while it has not ended and is less than 1 day old (firestore.rules isLive). Only a
+     live session can be read by anyone who knows the code and joined; after that only its owner and its own
+     players see it. For anyone else it looks ended: hiddenSession() is what they get. */
+  function isLive(s, nowMs) {
+    if (!s || s.state === 'ended') return false;
+    var t = typeof nowMs === 'number' ? nowMs : Date.now();
+    return !(typeof s.createdAt === 'number' && s.createdAt < t - DAY);
+  }
+  function hiddenSession(seen) {
+    var s = {}, k;
+    if (seen) for (k in seen) s[k] = seen[k];
+    else s = { title: '', lang: '', current: -1, questionStartedAt: null, starts: {}, timePerQ: LIMITS.defaultTime, locked: true,
+      createdAt: null, expireAt: null, questions: [], reveal: null, playerCount: 0, kicked: [] };
+    s.state = 'ended';
+    return s;
+  }
 
   /* "123 456" / "123-456" → "123456"; anything that is not 6 digits → null. */
   function normalizeCode(code) {
@@ -254,6 +282,7 @@
     ERROR_CODES: ERROR_CODES, LIMITS: LIMITS, DAY: DAY, STATES: STATES,
     cloudError: cloudError, isCloudError: isCloudError, isInt: isInt, clampInt: clampInt, rid: rid,
     randomCode: randomCode, cleanText: cleanText, normalizeName: normalizeName, nameKey: nameKey,
+    isLive: isLive, hiddenSession: hiddenSession,
     normalizeCode: normalizeCode, validateQuiz: validateQuiz, buildSession: buildSession, points: points,
     scoreFields: scoreFields, computeScores: computeScores, rankPlayers: rankPlayers,
     publicSession: publicSession, answersFrom: answersFrom, cleanPlayer: cleanPlayer, sortPlayers: sortPlayers,
@@ -746,8 +775,9 @@
         var me = anonId();
         var mine = sGet(K.player(c, me));
         if (mine) return { playerId: me, name: mine.name, rejoined: true };        /* reconnect: same player */
+        /* not a player: an ended or day-old session is not even visible (firestore.rules isLive) */
+        if (!isLive(s)) throw cloudError('session-ended', 'This quiz has ended.');
         if ((s.kicked || []).indexOf(me) >= 0) throw cloudError('permission-denied', 'The teacher removed you from this quiz.');
-        if (s.state === 'ended') throw cloudError('session-ended', 'This quiz has ended.');
         if (s.locked) throw cloudError('session-locked', 'The teacher has locked this quiz.');
         var nk = K.name(c, nameKey(name));
         var taken = sGet(nk);
@@ -780,10 +810,15 @@
 
     playerWatch: function (code, cb, onError) {
       var c = normalizeCode(code);
+      var seen = null;      /* the session as this watcher last saw it */
       return addWatcher(makeWatcher(function () {
         var me = anonId();
         var s = c && sGet(K.session(c));
         var p = s ? sGet(K.player(c, me)) : null;
+        /* like firestore.rules: an ended or day-old session is visible only to its own players (and the
+           owner); anyone else sees "ended", with what they saw before (Firebase mode does the same) */
+        if (s && !p && !isLive(s)) s = hiddenSession(seen);
+        else if (s) seen = s;
         var myAnswers = {};
         if (s) answerDocsOf(c, me).forEach(function (a) { myAnswers[a.i] = a.choice; });
         return {

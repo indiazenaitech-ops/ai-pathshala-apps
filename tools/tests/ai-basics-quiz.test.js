@@ -122,6 +122,8 @@ module.exports = async function ({ page, lang, expect, t, log, shotsDir }) {
   expect((await txt('#rScore')) === '8/10' && (await txt('#rPct')) === '80%', 'test result 8/10 = 80%, got ' + (await txt('#rScore')));
   expect((await txt('#rSkipped')).includes('1') && (await txt('#rWrong')).includes('1'), '1 wrong and 1 not answered');
   expect(await page.locator('#rTopics .tbar').count() === 7, 'score by topic for 7 topics');
+  expect(await page.locator('#rTopics .tval bdi[dir="ltr"]').count() === 7, 'topic fractions are kept left-to-right (Urdu showed "2 / 1" for 1 of 2)');
+  expect(!(await txt('#rRevise')).includes('?,') && !(await txt('#rRevise')).includes('?' + (lang === 'hi' ? ' और' : ' and')), 'revise tip lists topic names without a stray "?"');
   await page.check('#onlyWrong');
   expect(await page.locator('#rReview .rv').count() === 2, 'only mistakes: 2 items');
   await page.uncheck('#onlyWrong');
@@ -138,14 +140,31 @@ module.exports = async function ({ page, lang, expect, t, log, shotsDir }) {
   hist = await stored('history');
   expect(hist.length === 3 && hist[0].score === 8 && hist[0].pct === 80 && hist[0].mode === 'test', 'test saved to history');
 
-  /* 4. reload keeps history and settings */
+  /* 4. reload keeps history and settings; a corrupted history row (bad date) used to crash the setup screen */
+  await page.evaluate(() => {
+    const k = 'edu.ai-basics-quiz.history', h = JSON.parse(localStorage.getItem(k) || '[]');
+    h.push({ d: 'not-a-date', mode: 'test', score: 1, total: 2, pct: 50 }, null, 7);
+    localStorage.setItem(k, JSON.stringify(h));
+  });
   await page.reload();
   await page.waitForSelector('#topicChips .chip');
-  expect(await page.locator('#historyList li').count() === 3, '3 results listed after reload');
+  expect(await page.locator('#historyList li').count() === 3, '3 results listed after reload (corrupted rows skipped)');
+  expect(await page.isVisible('#lastBtn') && await page.locator('#historyList bdi[dir="ltr"]').count() === 3, 'setup screen fully rendered despite a corrupted row');
   expect((await txt('#bestBadge')) === t('best_score', { pct: 83 }), 'best score 83%');
   expect(await page.isVisible('#mode-test[aria-pressed="true"]'), 'chosen mode remembered');
 
-  /* 5. projector quiz with teams */
+  /* 5. projector quiz with teams (count beeps: the time-up beep must only sound for a visible, running timer) */
+  await page.evaluate(() => {
+    window.__beeps = 0;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    window.AudioContext = function () { const ac = new AC(); const co = ac.createOscillator.bind(ac); ac.createOscillator = function () { window.__beeps++; return co(); }; return ac; };
+  });
+  const fastForward = async (ms) => {
+    await page.evaluate((ms) => { window.__realNow2 = Date.now; const r = Date.now; Date.now = () => r() + ms; }, ms);
+    await page.waitForTimeout(700);
+    await page.evaluate(() => { Date.now = window.__realNow2; });
+  };
   await page.click('#mode-class');
   await page.selectOption('#numSel', '5');
   await page.selectOption('#teamCount', '3');
@@ -169,9 +188,17 @@ module.exports = async function ({ page, lang, expect, t, log, shotsDir }) {
   expect(await page.locator('#cOpts .is-right').count() === 1 && (await page.getAttribute('#cOpts .is-right', 'data-opt')) === String(ans[cid]), 'R reveals exactly the right option');
   expect(await page.locator('#cOpts .is-wrong').count() === 1 && await page.isVisible('#cExplain'), 'class answer marked wrong, explanation shown');
   expect(await page.isHidden('#cTimerBox'), 'timer hidden after reveal');
+  expect(await page.locator('#teamPlus0 bdi[dir="ltr"]').count() === 1, '+1 button text is kept left-to-right');
+  await page.keyboard.press('t');
+  await fastForward(60000);
+  expect(await page.isHidden('#cTimerBox') && await page.evaluate(() => window.__beeps) === 0, 'T after reveal does not start a hidden countdown that beeps');
   await shot('en-projector.png');
   await page.click('#cNext');
   expect((await txt('#cProgress')) === t('q_of', { n: 2, total: 5 }), 'next goes to question 2');
+  expect(/^(30|29|28)$/.test(await txt('#cTimer')), 'fresh 30 s timer on question 2');
+  await fastForward(60000);
+  const beeped = await page.evaluate(() => window.__beeps);
+  expect((await txt('#cTimer')) === t('times_up') && (beeped === 1 || !(await page.evaluate(() => !!(window.AudioContext)))), 'visible timer runs out: "time is up" and one beep, got ' + beeped);
   for (let i = 2; i <= 5; i++) await page.click('#cNext');
   await page.waitForSelector('#cEnd:not([hidden])');
   expect((await txt('#cWinner')).includes(t('winner', { team: 'Ganga' })), 'Ganga wins');
@@ -187,6 +214,19 @@ module.exports = async function ({ page, lang, expect, t, log, shotsDir }) {
   await page.selectOption('#numSel', 'all');
   await page.click('#paperBtn');
   expect(await page.locator('#printArea .paper .p-qs > li').count() === 6 && await page.locator('#printArea .paper .p-ans > li').count() === 6, 'question paper with 6 questions and answer key');
+  /* topic list on the paper: "What is AI?" must not leave a "?" inside the list */
+  await page.click('#topic-basics');
+  await page.click('#paperBtn');
+  const sub = await txt('#printArea .p-sub');
+  expect(sub.includes(t('topic_ethics')) && !sub.includes('?'), 'paper subtitle lists the 3 topics cleanly: ' + sub);
+  expect(await page.locator('#printArea .p-qs > li').count() === 10, 'paper with What is AI + ethics + generative AI = 10 questions');
+  await page.click('#topic-basics');
+  /* after printing, Ctrl+P must print the screen, not the old paper */
+  await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+  await page.emulateMedia({ media: 'print' });
+  const pr = await page.evaluate(() => [getComputedStyle(document.getElementById('printArea')).display, getComputedStyle(document.getElementById('setup')).display]);
+  await page.emulateMedia({ media: null });
+  expect(pr[0] === 'none' && pr[1] !== 'none', 'plain Ctrl+P prints the screen without the stale paper: ' + pr.join(','));
 
   /* 7. unfinished quiz can be resumed after a reload */
   await page.click('#mode-practice');
@@ -200,9 +240,33 @@ module.exports = async function ({ page, lang, expect, t, log, shotsDir }) {
   await page.click('#resumeBtn');
   expect((await qid()) === id2 && (await txt('#qProgress')) === t('q_of', { n: 2, total: 6 }), 'resume continues at question 2 of 6');
 
-  /* leave the 8/10 test result (with certificate) on screen for the screenshot */
+  /* 8. phone: after tapping Next far down the page, the new question is shown below the sticky header */
+  const vp0 = page.viewportSize();
+  await page.setViewportSize({ width: 390, height: 640 });
+  await page.click('#qOpt' + (await posOf('#qOpts', ans[id2])));
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.click('#qNext');
+  await page.waitForTimeout(100);
+  const pos3 = await page.evaluate(() => {
+    const hb = document.querySelector('.edu-top').getBoundingClientRect().bottom, r = document.getElementById('qText').getBoundingClientRect();
+    return { hb: Math.round(hb), top: Math.round(r.top), bottom: Math.round(r.bottom), h: innerHeight };
+  });
+  expect((await txt('#qProgress')) === t('q_of', { n: 3, total: 6 }) && pos3.top >= pos3.hb && pos3.bottom <= pos3.h, 'next question visible on a phone: ' + JSON.stringify(pos3));
+  if (vp0) await page.setViewportSize(vp0);
+
+  /* 9. "New quiz" after every topic was switched off goes back to the topic choice (it used to do nothing) */
   await page.click('#qQuit');
   await page.waitForSelector('#setup:not([hidden])');
+  for (let i = 0; i < 2 && (await txt('#availMsg')) !== t('n_available', { n: 0 }); i++) await page.click('#topic-all');
+  expect((await txt('#availMsg')) === t('n_available', { n: 0 }), 'all topics switched off');
+  await page.click('#lastBtn');
+  await page.waitForSelector('#results:not([hidden])');
+  await page.click('#rAgain');
+  expect(await page.isVisible('#setup') && await page.isHidden('#results') && await page.isVisible('#topicErr'), 'New quiz with no topic → back to setup with the "pick a topic" message');
+  expect((await stored('session')) === null, 'no empty session was started');
+  await page.click('#topic-all');
+
+  /* leave the 8/10 test result (with certificate) on screen for the screenshot */
   await page.click('#lastBtn');
   await page.waitForSelector('#results:not([hidden])');
   expect((await txt('#rScore')) === '8/10' && (await txt('#certNameOut')) === 'Asha Verma', 'last result and name restored');

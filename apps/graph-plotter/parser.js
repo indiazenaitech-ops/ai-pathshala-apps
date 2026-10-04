@@ -7,7 +7,8 @@
      term  := unary (('*'|'/') unary | <implicit ×> power)*      2x, 3(x+1), x sin x
      unary := ('-'|'+') unary | power                             -x^2 = -(x^2)
      power := primary ('^' unary)?                                right-assoc: 2^3^2 = 2^9
-     primary := number | x | a | b | c | pi | e | (expr) | |expr| | fn(expr) | fn^n(expr) | fn x  */
+     primary := number | x | a | b | c | pi | e | (expr) | |expr| | fn(expr) | fn^n(expr) | fn x
+     sin^-1(x) and sin⁻¹x mean the inverse function (arcsin), as in NCERT; sin^2(x) means (sin x)^2  */
 (function () {
   'use strict';
   var D2R = Math.PI / 180;
@@ -33,6 +34,13 @@
     ceil: function (v) { return Math.ceil(v); }
   };
   var ALIAS = { csc: 'cosec', arcsin: 'asin', arccos: 'acos', arctan: 'atan', lg: 'log' };
+  /* sin⁻¹x, sin^-1(x): NCERT writes the inverse function this way (principal values as in Class 12) */
+  var INV = {
+    sin: 'asin', cos: 'acos', tan: 'atan',
+    sec: function (v, P) { return ang(Math.acos(1 / v), P); },
+    cosec: function (v, P) { return ang(Math.asin(1 / v), P); },
+    cot: function (v, P) { return ang(Math.PI / 2 - Math.atan(v), P); }
+  };
   var TRIG = { sin: 1, cos: 1, tan: 1, sec: 1, cosec: 1, cot: 1, asin: 1, acos: 1, atan: 1 };
   var CONSTS = { pi: Math.PI, e: Math.E };
   var VARS = { x: 1, a: 1, b: 1, c: 1 };
@@ -44,6 +52,10 @@
   /* ---------------------------------------------------------------- tokens */
   function tokenize(src) {
     var s = src.toLowerCase()
+      .replace(/[०-९০-৯੦-੯૦-૯୦-୯௦-௯౦-౯೦-೯൦-൯]/g,
+        function (d) { return String((d.charCodeAt(0) & 15) - 6); })              // २x, ২x, ௨x … typed on an Indian keyboard
+      .replace(/[٠-٩۰-۹]/g, function (d) { return String(d.charCodeAt(0) & 15); })   // Urdu digits
+      .replace(/٫/g, '.').replace(/⁻¹/g, '^-1')
       .replace(/[−–—]/g, '-').replace(/[×·∙⋅]/g, '*').replace(/÷/g, '/')
       .replace(/\*\*/g, '^').replace(/π/g, ' pi ').replace(/²/g, '^2').replace(/³/g, '^3')
       .replace(/√/g, ' sqrt ').replace(/[\[{]/g, '(').replace(/[\]}]/g, ')');
@@ -87,6 +99,7 @@
       return tk.t === 'num' || tk.t === 'name' || tk.t === '(' || (tk.t === '|' && absDepth === 0);
     }
     function isSimple(tk) { return tk.t === 'num' || (tk.t === 'name' && !FN[tk.v]); }
+    function isMinusOne(n) { return n.k === 'neg' && n.a.k === 'num' && n.a.v === 1; }
 
     function expr() {
       var n = term();
@@ -131,6 +144,7 @@
           arg = power();
           while (isSimple(peek())) arg = { k: '*', a: arg, b: power() };
         } else throw new Err('fn_arg', tk.s);
+        if (expo && INV[tk.v] && isMinusOne(expo)) return { k: 'call', v: tk.v, inv: true, a: arg };
         var call = { k: 'call', v: tk.v, a: arg };
         return expo ? { k: '^', a: call, b: expo } : call;
       }
@@ -185,15 +199,16 @@
       case '/': A = build(n.a, info); B = build(n.b, info); return function (x, P) { return A(x, P) / B(x, P); };
       case '^': A = build(n.a, info); B = build(n.b, info); return function (x, P) { return pow(A(x, P), B(x, P)); };
       case 'call':
-        var fn = FN[n.v]; A = build(n.a, info);
+        var fn = n.inv ? (typeof INV[n.v] === 'string' ? FN[INV[n.v]] : INV[n.v]) : FN[n.v]; A = build(n.a, info);
         if (TRIG[n.v]) info.trig = true;
         return function (x, P) { return fn(A(x, P), P); };
     }
     throw new Err('unexpected', '');
   }
 
+  /* an optional "y =", "f(x) =" or "g(x) =" in front is fine */
   function clean(src) {
-    return String(src == null ? '' : src).replace(/^\s*(y|f\s*\(\s*x\s*\))\s*=/i, '').trim();
+    return String(src == null ? '' : src).replace(/^\s*(y|[a-z]\s*\(\s*x\s*\))\s*=/i, '').trim();
   }
 
   function compile(src) {
@@ -211,5 +226,5 @@
     }
   }
 
-  window.GPARSE = { compile: compile, pow: pow };
+  window.GPARSE = { compile: compile, pow: pow, clean: clean };
 })();

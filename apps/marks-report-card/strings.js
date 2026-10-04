@@ -139,6 +139,7 @@ window.APP_STRINGS = {
     days_present: 'Days present',
     out_of: 'out of {n} working days',
     days_hint: 'Set working days in Setup to show attendance.',
+    err_present: 'Days present cannot be more than the working days ({n}).',
     remarks: 'Remarks',
     remarks_ph: 'Write a remark or tap a suggestion below',
     suggestions: 'Suggestions (tap to add)',
@@ -165,7 +166,8 @@ window.APP_STRINGS = {
     rc_sig_parent: 'Parent / guardian',
     rc_date: 'Date',
     sheet_title: 'Result sheet',
-    csv_done: 'CSV file downloaded.'
+    csv_done: 'CSV file downloaded.',
+    err_storage: 'Could not save: the storage in this browser is full. Download a backup, then delete old classes or the logo.'
   },
 
   hi: {
@@ -307,6 +309,7 @@ window.APP_STRINGS = {
     days_present: 'उपस्थित दिन',
     out_of: '{n} कार्य दिवसों में से',
     days_hint: 'उपस्थिति दिखाने के लिए सेटअप में कार्य दिवस भरें।',
+    err_present: 'उपस्थित दिन कार्य दिवसों ({n}) से ज़्यादा नहीं हो सकते।',
     remarks: 'टिप्पणी',
     remarks_ph: 'टिप्पणी लिखें या नीचे से कोई सुझाव चुनें',
     suggestions: 'सुझाव (जोड़ने के लिए दबाएँ)',
@@ -333,7 +336,8 @@ window.APP_STRINGS = {
     rc_sig_parent: 'अभिभावक',
     rc_date: 'दिनांक',
     sheet_title: 'रिज़ल्ट शीट',
-    csv_done: 'CSV फ़ाइल डाउनलोड हो गई।'
+    csv_done: 'CSV फ़ाइल डाउनलोड हो गई।',
+    err_storage: 'सेव नहीं हो सका: इस ब्राउज़र की स्टोरेज भर गई है। बैकअप डाउनलोड करें, फिर पुरानी कक्षाएँ या लोगो हटाएँ।'
   },
 
   bn: {
@@ -475,6 +479,7 @@ window.APP_STRINGS = {
     days_present: 'উপস্থিত দিন',
     out_of: '{n} কাজের দিনের মধ্যে',
     days_hint: 'উপস্থিতি দেখাতে সেটআপে কাজের দিন লিখুন।',
+    err_present: 'উপস্থিত দিন কাজের দিনের ({n}) চেয়ে বেশি হতে পারে না।',
     remarks: 'মন্তব্য',
     remarks_ph: 'মন্তব্য লিখুন বা নিচের কোনো পরামর্শ বেছে নিন',
     suggestions: 'পরামর্শ (যোগ করতে টিপুন)',
@@ -501,7 +506,8 @@ window.APP_STRINGS = {
     rc_sig_parent: 'অভিভাবক',
     rc_date: 'তারিখ',
     sheet_title: 'রেজাল্ট শিট',
-    csv_done: 'CSV ফাইল ডাউনলোড হয়েছে।'
+    csv_done: 'CSV ফাইল ডাউনলোড হয়েছে।',
+    err_storage: 'সেভ করা গেল না: এই ব্রাউজারের স্টোরেজ ভরে গেছে। ব্যাকআপ ডাউনলোড করে পুরোনো ক্লাস বা লোগো মুছে দিন।'
   },
 
   mr: {
@@ -643,6 +649,7 @@ window.APP_STRINGS = {
     days_present: 'हजर दिवस',
     out_of: '{n} कामाच्या दिवसांपैकी',
     days_hint: 'उपस्थिती दाखवण्यासाठी सेटअपमध्ये कामाचे दिवस भरा.',
+    err_present: 'हजर दिवस कामाच्या दिवसांपेक्षा ({n}) जास्त असू शकत नाहीत.',
     remarks: 'शेरा',
     remarks_ph: 'शेरा लिहा किंवा खालील सूचना निवडा',
     suggestions: 'सूचना (जोडण्यासाठी दाबा)',
@@ -669,7 +676,8 @@ window.APP_STRINGS = {
     rc_sig_parent: 'पालक',
     rc_date: 'दिनांक',
     sheet_title: 'निकाल पत्रक',
-    csv_done: 'CSV फाइल डाउनलोड झाली.'
+    csv_done: 'CSV फाइल डाउनलोड झाली.',
+    err_storage: 'सेव्ह झाले नाही: या ब्राउझरची साठवण जागा भरली आहे. बॅकअप डाउनलोड करा, मग जुने वर्ग किंवा लोगो काढा.'
   },
 
   gu: {
@@ -811,6 +819,7 @@ window.APP_STRINGS = {
     days_present: 'હાજર દિવસો',
     out_of: '{n} કામના દિવસોમાંથી',
     days_hint: 'હાજરી બતાવવા સેટઅપમાં કામના દિવસો ભરો.',
+    err_present: 'હાજર દિવસો કામના દિવસો ({n}) કરતાં વધારે ન હોઈ શકે.',
     remarks: 'નોંધ',
     remarks_ph: 'નોંધ લખો અથવા નીચેથી સૂચન પસંદ કરો',
     suggestions: 'સૂચનો (ઉમેરવા દબાવો)',
@@ -837,7 +846,8 @@ window.APP_STRINGS = {
     rc_sig_parent: 'વાલી',
     rc_date: 'તારીખ',
     sheet_title: 'પરિણામ પત્રક',
-    csv_done: 'CSV ફાઇલ ડાઉનલોડ થઈ.'
+    csv_done: 'CSV ફાઇલ ડાઉનલોડ થઈ.',
+    err_storage: 'સેવ ન થયું: આ બ્રાઉઝરની સ્ટોરેજ ભરાઈ ગઈ છે. બેકઅપ ડાઉનલોડ કરો, પછી જૂના વર્ગો કે લોગો કાઢી નાખો.'
   },
 
   pa: {
@@ -979,6 +989,7 @@ window.APP_STRINGS = {
     days_present: 'ਹਾਜ਼ਰ ਦਿਨ',
     out_of: '{n} ਕੰਮਕਾਜੀ ਦਿਨਾਂ ਵਿੱਚੋਂ',
     days_hint: 'ਹਾਜ਼ਰੀ ਦਿਖਾਉਣ ਲਈ ਸੈੱਟਅੱਪ ਵਿੱਚ ਕੰਮਕਾਜੀ ਦਿਨ ਭਰੋ।',
+    err_present: 'ਹਾਜ਼ਰ ਦਿਨ ਕੰਮਕਾਜੀ ਦਿਨਾਂ ({n}) ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੇ।',
     remarks: 'ਟਿੱਪਣੀ',
     remarks_ph: 'ਟਿੱਪਣੀ ਲਿਖੋ ਜਾਂ ਹੇਠਾਂ ਤੋਂ ਸੁਝਾਅ ਚੁਣੋ',
     suggestions: 'ਸੁਝਾਅ (ਜੋੜਨ ਲਈ ਦਬਾਓ)',
@@ -1005,7 +1016,8 @@ window.APP_STRINGS = {
     rc_sig_parent: 'ਮਾਪੇ / ਸਰਪ੍ਰਸਤ',
     rc_date: 'ਮਿਤੀ',
     sheet_title: 'ਨਤੀਜਾ ਸ਼ੀਟ',
-    csv_done: 'CSV ਫ਼ਾਈਲ ਡਾਊਨਲੋਡ ਹੋ ਗਈ।'
+    csv_done: 'CSV ਫ਼ਾਈਲ ਡਾਊਨਲੋਡ ਹੋ ਗਈ।',
+    err_storage: 'ਸੇਵ ਨਹੀਂ ਹੋ ਸਕਿਆ: ਇਸ ਬ੍ਰਾਊਜ਼ਰ ਦੀ ਸਟੋਰੇਜ ਭਰ ਗਈ ਹੈ। ਬੈਕਅੱਪ ਡਾਊਨਲੋਡ ਕਰੋ, ਫਿਰ ਪੁਰਾਣੀਆਂ ਜਮਾਤਾਂ ਜਾਂ ਲੋਗੋ ਹਟਾਓ।'
   },
 
   or: {
@@ -1147,6 +1159,7 @@ window.APP_STRINGS = {
     days_present: 'ଉପସ୍ଥିତ ଦିନ',
     out_of: '{n} କାର୍ଯ୍ୟ ଦିବସ ମଧ୍ୟରୁ',
     days_hint: 'ଉପସ୍ଥିତି ଦେଖାଇବାକୁ ସେଟଅପ୍‌ରେ କାର୍ଯ୍ୟ ଦିବସ ଲେଖନ୍ତୁ।',
+    err_present: 'ଉପସ୍ଥିତ ଦିନ କାର୍ଯ୍ୟ ଦିବସ ({n})ଠାରୁ ଅଧିକ ହୋଇପାରିବ ନାହିଁ।',
     remarks: 'ମନ୍ତବ୍ୟ',
     remarks_ph: 'ମନ୍ତବ୍ୟ ଲେଖନ୍ତୁ କିମ୍ବା ତଳୁ ପରାମର୍ଶ ବାଛନ୍ତୁ',
     suggestions: 'ପରାମର୍ଶ (ଯୋଡ଼ିବାକୁ ଦବାନ୍ତୁ)',
@@ -1173,7 +1186,8 @@ window.APP_STRINGS = {
     rc_sig_parent: 'ଅଭିଭାବକ',
     rc_date: 'ତାରିଖ',
     sheet_title: 'ଫଳାଫଳ ସିଟ୍',
-    csv_done: 'CSV ଫାଇଲ୍ ଡାଉନଲୋଡ୍ ହେଲା।'
+    csv_done: 'CSV ଫାଇଲ୍ ଡାଉନଲୋଡ୍ ହେଲା।',
+    err_storage: 'ସେଭ୍ ହେଲା ନାହିଁ: ଏହି ବ୍ରାଉଜରର ଷ୍ଟୋରେଜ୍ ଭରିଯାଇଛି। ବ୍ୟାକଅପ୍ ଡାଉନଲୋଡ୍ କରନ୍ତୁ, ତାପରେ ପୁରୁଣା ଶ୍ରେଣୀ ବା ଲୋଗୋ ହଟାନ୍ତୁ।'
   },
 
   ta: {
@@ -1273,7 +1287,7 @@ window.APP_STRINGS = {
     col_total: 'மொத்தம்',
     col_pct: '%',
     col_grade: 'கிரேடு',
-    col_rank: 'தரம்',
+    col_rank: 'தரவரிசை',
     col_result: 'முடிவு',
     res_pass: 'தேர்ச்சி',
     res_fail: 'தோல்வி',
@@ -1315,6 +1329,7 @@ window.APP_STRINGS = {
     days_present: 'வருகை நாட்கள்',
     out_of: '{n} வேலை நாட்களில்',
     days_hint: 'வருகையைக் காட்ட அமைப்பில் வேலை நாட்களை நிரப்புங்கள்.',
+    err_present: 'வருகை நாட்கள் வேலை நாட்களை ({n}) விட அதிகமாக இருக்க முடியாது.',
     remarks: 'குறிப்பு',
     remarks_ph: 'குறிப்பு எழுதுங்கள் அல்லது கீழே உள்ள பரிந்துரையைத் தொடுங்கள்',
     suggestions: 'பரிந்துரைகள் (சேர்க்கத் தொடுங்கள்)',
@@ -1341,7 +1356,8 @@ window.APP_STRINGS = {
     rc_sig_parent: 'பெற்றோர் / பாதுகாவலர்',
     rc_date: 'தேதி',
     sheet_title: 'முடிவுத் தாள்',
-    csv_done: 'CSV கோப்பு பதிவிறக்கப்பட்டது.'
+    csv_done: 'CSV கோப்பு பதிவிறக்கப்பட்டது.',
+    err_storage: 'சேமிக்க முடியவில்லை: இந்த உலாவியின் சேமிப்பிடம் நிரம்பிவிட்டது. காப்புப் பிரதியைப் பதிவிறக்கி, பழைய வகுப்புகளையோ இலச்சினையையோ நீக்குங்கள்.'
   },
 
   te: {
@@ -1483,6 +1499,7 @@ window.APP_STRINGS = {
     days_present: 'హాజరైన రోజులు',
     out_of: '{n} పని దినాలలో',
     days_hint: 'హాజరు చూపడానికి సెటప్‌లో పని దినాలు నింపండి.',
+    err_present: 'హాజరైన రోజులు పని దినాల ({n}) కంటే ఎక్కువ ఉండకూడదు.',
     remarks: 'వ్యాఖ్య',
     remarks_ph: 'వ్యాఖ్య రాయండి లేదా కింది సూచనను నొక్కండి',
     suggestions: 'సూచనలు (చేర్చడానికి నొక్కండి)',
@@ -1509,7 +1526,8 @@ window.APP_STRINGS = {
     rc_sig_parent: 'తల్లిదండ్రులు / సంరక్షకులు',
     rc_date: 'తేదీ',
     sheet_title: 'ఫలితాల షీట్',
-    csv_done: 'CSV ఫైల్ డౌన్‌లోడ్ అయింది.'
+    csv_done: 'CSV ఫైల్ డౌన్‌లోడ్ అయింది.',
+    err_storage: 'సేవ్ కాలేదు: ఈ బ్రౌజర్ స్టోరేజ్ నిండిపోయింది. బ్యాకప్ డౌన్‌లోడ్ చేసి, పాత తరగతులను లేదా లోగోను తొలగించండి.'
   },
 
   kn: {
@@ -1651,6 +1669,7 @@ window.APP_STRINGS = {
     days_present: 'ಹಾಜರಾದ ದಿನಗಳು',
     out_of: '{n} ಕೆಲಸದ ದಿನಗಳಲ್ಲಿ',
     days_hint: 'ಹಾಜರಾತಿ ತೋರಿಸಲು ಸೆಟಪ್‌ನಲ್ಲಿ ಕೆಲಸದ ದಿನಗಳನ್ನು ತುಂಬಿ.',
+    err_present: 'ಹಾಜರಾದ ದಿನಗಳು ಕೆಲಸದ ದಿನಗಳಿಗಿಂತ ({n}) ಹೆಚ್ಚು ಇರಬಾರದು.',
     remarks: 'ಅಭಿಪ್ರಾಯ',
     remarks_ph: 'ಅಭಿಪ್ರಾಯ ಬರೆಯಿರಿ ಅಥವಾ ಕೆಳಗಿನ ಸಲಹೆ ಒತ್ತಿ',
     suggestions: 'ಸಲಹೆಗಳು (ಸೇರಿಸಲು ಒತ್ತಿ)',
@@ -1677,7 +1696,8 @@ window.APP_STRINGS = {
     rc_sig_parent: 'ಪೋಷಕರು',
     rc_date: 'ದಿನಾಂಕ',
     sheet_title: 'ಫಲಿತಾಂಶ ಹಾಳೆ',
-    csv_done: 'CSV ಫೈಲ್ ಡೌನ್‌ಲೋಡ್ ಆಗಿದೆ.'
+    csv_done: 'CSV ಫೈಲ್ ಡೌನ್‌ಲೋಡ್ ಆಗಿದೆ.',
+    err_storage: 'ಉಳಿಸಲಾಗಲಿಲ್ಲ: ಈ ಬ್ರೌಸರ್‌ನ ಸಂಗ್ರಹ ತುಂಬಿದೆ. ಬ್ಯಾಕಪ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ, ನಂತರ ಹಳೆಯ ತರಗತಿಗಳು ಅಥವಾ ಲೋಗೋ ತೆಗೆದುಹಾಕಿ.'
   },
 
   ml: {
@@ -1819,6 +1839,7 @@ window.APP_STRINGS = {
     days_present: 'ഹാജരായ ദിവസങ്ങൾ',
     out_of: '{n} പ്രവൃത്തി ദിനങ്ങളിൽ',
     days_hint: 'ഹാജർ കാണിക്കാൻ സജ്ജീകരണത്തിൽ പ്രവൃത്തി ദിനങ്ങൾ നൽകുക.',
+    err_present: 'ഹാജരായ ദിവസങ്ങൾ പ്രവൃത്തി ദിനങ്ങളെക്കാൾ ({n}) കൂടരുത്.',
     remarks: 'അഭിപ്രായം',
     remarks_ph: 'അഭിപ്രായം എഴുതുക അല്ലെങ്കിൽ താഴെയുള്ള നിർദ്ദേശം തൊടുക',
     suggestions: 'നിർദ്ദേശങ്ങൾ (ചേർക്കാൻ തൊടുക)',
@@ -1845,7 +1866,8 @@ window.APP_STRINGS = {
     rc_sig_parent: 'രക്ഷിതാവ്',
     rc_date: 'തീയതി',
     sheet_title: 'ഫല ഷീറ്റ്',
-    csv_done: 'CSV ഫയൽ ഡൗൺലോഡ് ചെയ്തു.'
+    csv_done: 'CSV ഫയൽ ഡൗൺലോഡ് ചെയ്തു.',
+    err_storage: 'സേവ് ചെയ്യാനായില്ല: ഈ ബ്രൗസറിലെ സ്റ്റോറേജ് നിറഞ്ഞു. ബാക്കപ്പ് ഡൗൺലോഡ് ചെയ്ത ശേഷം പഴയ ക്ലാസുകളോ ലോഗോയോ നീക്കുക.'
   },
 
   ur: {
@@ -1882,7 +1904,7 @@ window.APP_STRINGS = {
     tab_cards: 'رپورٹ کارڈ',
     class_details: 'جماعت کی تفصیل',
     class_name: 'جماعت اور سیکشن',
-    class_name_ph: 'مثلاً جماعت 7-A',
+    class_name_ph: 'مثلاً جماعت ‎7-A',
     term: 'امتحان / سیشن',
     term_ph: 'مثلاً ششماہی امتحان 2026-27',
     pass_pct: 'پاس نمبر (%)',
@@ -1987,6 +2009,7 @@ window.APP_STRINGS = {
     days_present: 'حاضر دن',
     out_of: '{n} کام کے دنوں میں سے',
     days_hint: 'حاضری دکھانے کے لیے سیٹ اپ میں کام کے دن بھریں۔',
+    err_present: 'حاضر دن کام کے دنوں ({n}) سے زیادہ نہیں ہو سکتے۔',
     remarks: 'ریمارکس',
     remarks_ph: 'ریمارکس لکھیں یا نیچے سے کوئی مشورہ چنیں',
     suggestions: 'مشورے (شامل کرنے کے لیے دبائیں)',
@@ -2013,6 +2036,7 @@ window.APP_STRINGS = {
     rc_sig_parent: 'والدین / سرپرست',
     rc_date: 'تاریخ',
     sheet_title: 'رزلٹ شیٹ',
-    csv_done: 'CSV فائل ڈاؤن لوڈ ہو گئی۔'
+    csv_done: 'CSV فائل ڈاؤن لوڈ ہو گئی۔',
+    err_storage: 'محفوظ نہیں ہو سکا: اس براؤزر کی اسٹوریج بھر گئی ہے۔ بیک اپ ڈاؤن لوڈ کریں، پھر پرانی جماعتیں یا لوگو ہٹائیں۔'
   }
 };

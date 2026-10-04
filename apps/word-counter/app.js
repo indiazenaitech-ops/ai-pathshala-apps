@@ -61,10 +61,11 @@
   var RE_WORDCHAR = rx('[\\p{L}\\p{N}]', 'u', new RegExp('[A-Za-z0-9\\u00C0-\\u024F' + IND + ']'));
   var RE_LM = rx('[\\p{L}\\p{M}]', 'u', new RegExp('[A-Za-z\\u00C0-\\u024F' + IND + ']'));
   var RE_NONLETTER = rx('[^\\p{L}]', 'gu', new RegExp('[^A-Za-z\\u00C0-\\u024F' + IND + ']', 'g'));
-  var RE_WORDS_FB = rx("[\\p{L}\\p{M}\\p{N}\\u200C\\u200D]+(?:['’\\-‐‑.][\\p{L}\\p{M}\\p{N}\\u200C\\u200D]+)*", 'gu', /\S+/g);
+  var RE_WORDS_FB = rx("[\\p{L}\\p{M}\\p{N}\\u200C\\u200D]+(?:['’\\-‐‑./:@_]+[\\p{L}\\p{M}\\p{N}\\u200C\\u200D]+)*", 'gu', /\S+/g);
   var RE_NUM = rx('^[\\p{N}.,:/\\-]+$', 'u', /^[0-9.,:/\-]+$/);
+  var RE_LISTNO = rx('^\\s*(?:\\p{Nd}{1,3}|[ivxIVX]{1,4})$', 'u', /^\s*(?:[0-9०-९]{1,3}|[ivxIVX]{1,4})$/);
   var TERM_LAT = '.!?…', TERM_IND = '।॥۔؟', CLOSE = '"\'”’)]}»›';
-  var JOIN = { '-': 1, '‐': 1, '‑': 1, "'": 1, '’': 1 };
+  var JOIN = { '-': 1, '‐': 1, '‑': 1, "'": 1, '’': 1, '.': 1, '/': 1, ':': 1, '@': 1, '_': 1 };
 
   var segCache = {};
   function segmenter(gran) {
@@ -75,8 +76,13 @@
   }
 
   /* ---------------- text analysis ---------------- */
-  /* Words with their offsets. Word-like pieces joined by a hyphen or apostrophe (well-known, don't)
-     or touching each other with no gap (10वीं) count as ONE word, the way students count. */
+  /* Words with their offsets. Word-like pieces joined by a hyphen, apostrophe, dot, slash, colon, @ or _
+     with no space (well-known, don't, U.S.A, e.g, and/or, 10:30, www.cbse.gov.in) or touching each other
+     with no gap (10वीं) count as ONE word, the way students and word processors count. */
+  function isJoin(seg) {
+    for (var k = 0; k < seg.length; k++) if (!JOIN[seg[k]]) return false;
+    return seg.length > 0;
+  }
   function getWords(text) {
     var out = [], sg = segmenter('word');
     if (sg) {
@@ -87,7 +93,7 @@
           if (last && (g.index === last.e || g.index === joinAt)) last.e = end;
           else { last = { s: g.index, e: end }; out.push(last); }
           joinAt = -1;
-        } else if (last && g.index === last.e && g.segment.length === 1 && JOIN[g.segment]) joinAt = end;
+        } else if (last && (g.index === last.e || g.index === joinAt) && isJoin(g.segment)) joinAt = end;
         else joinAt = -1;
       }
       return out;
@@ -121,7 +127,8 @@
 
   /* Sentences: end at . ! ? … । ॥ ۔ ؟ (and | typed as a danda). Every line is split separately, so a
      heading without a full stop is one sentence. Abbreviations (Dr., Mr., Rs., डॉ.), initials (A. P. J.),
-     decimals (5.30) and a full stop followed by a small letter do not end a sentence. */
+     list numbers at the start of a line (1. ii.), decimals (5.30) and a full stop followed by a small
+     letter do not end a sentence. */
   function splitSentences(text) {
     var out = [], lineRe = /[^\r\n]+/g, m;
     function push(s, e) {
@@ -155,6 +162,7 @@
           if (boundary && ch === '.' && j === i + 1 && !atEnd) {
             var w = prevWord(line, i);
             if (w && (ABBR[w.toLowerCase()] || /^[A-Za-z]$/.test(w))) boundary = false;
+            else if (RE_LISTNO.test(line.slice(0, i))) boundary = false;            // "1. Introduction", "ii. Body"
           }
         }
         if (boundary) { push(base + start, base + j); start = j; }
@@ -668,7 +676,7 @@
         EDU.el('p', { class: 'callout accent mb0' }, EDU.el('strong', { text: t('g_tip') + ': ' }), g.tip)),
       EDU.el('div', {},
         EDU.el('h4', { text: t('g_layout') }),
-        EDU.el('pre', { class: 'wc-outline', id: 'guide-outline', dir: 'auto', text: g.outline }),
+        EDU.el('pre', { class: 'wc-outline', id: 'guide-outline', text: g.outline }),
         EDU.el('div', { class: 'wc-guide-actions' },
           EDU.el('button', { type: 'button', class: 'btn btn-primary', id: 'use-layout', onclick: useLayout }, EDU.el('span', { 'aria-hidden': 'true', text: '📋' }), ' ', t('g_use')),
           EDU.el('button', { type: 'button', class: 'btn', id: 'set-limit', 'data-preset': pr.id, onclick: function () { setLimitFromGuide(pr); } },

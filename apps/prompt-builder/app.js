@@ -96,10 +96,12 @@
     return r0 || r;
   }
   function fill(frame, x) { return frame.replace('{x}', function () { return x; }); }
+  /* A list marker at the start of a rule line: "- ", "• ", "1. ", "2) ". A number such as "3.5 marks"
+     is part of the rule, not a marker, so a digit right after the dot keeps it. */
+  var BULLET = /^\s*(?:[-*•●▪◦–]|\d{1,2}[.)](?!\d))\s*/;
+  function cleanLine(l) { return l.replace(BULLET, '').trim(); }
   function lines(text) {
-    return String(text || '').split(/\r?\n/).map(function (l) {
-      return l.replace(/^\s*(?:[-*•●▪◦–]|\d{1,2}[.)])\s*/, '').trim();
-    }).filter(Boolean);
+    return String(text || '').split(/\r?\n/).map(cleanLine).filter(Boolean);
   }
   function assemble(s) {
     var A = C(s.alang).asm, paras = [], p;
@@ -154,11 +156,13 @@
   }
 
   /* ---------------- state ---------------- */
+  /* A damaged timestamp (e.g. 1e20) would make Intl/Date throw while drawing the list. */
+  function validTime(x) { x = +x; return x > 0 && x < 8.64e15 ? x : Date.now(); }
   var S = blank();
   var favs = (function (a) {
-    return (Array.isArray(a) ? a : []).filter(function (f) { return f && typeof f === 'object' && f.s; }).slice(0, MAX_FAVS).map(function (f) {
-      return { id: String(f.id || Math.random()), name: String(f.name || '').slice(0, 80), at: +f.at || Date.now(), s: normalize(f.s) };
-    });
+    return (Array.isArray(a) ? a : []).filter(function (f) { return f && typeof f === 'object' && f.s; }).map(function (f) {
+      return { id: String(f.id || Math.random()), name: String(f.name || '').slice(0, 80), at: validTime(f.at), s: normalize(f.s) };
+    }).filter(function (f) { return assemble(f.s) !== ''; }).slice(0, MAX_FAVS);   /* skip damaged/empty entries */
   })(store.get('favs', []));
 
   function save() { store.set('draft', S); }
@@ -277,7 +281,7 @@
 
   function dateStr(ms) {
     try { return new Intl.DateTimeFormat(EDU.langInfo(EDU.lang).tag + '-u-nu-latn', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(ms)); }
-    catch (e) { return new Date(ms).toISOString().slice(0, 10); }
+    catch (e) { try { return new Date(ms).toISOString().slice(0, 10); } catch (e2) { return ''; } }
   }
   function renderFavs() {
     var box = $('#favs');
@@ -344,8 +348,7 @@
     var present = have.filter(function (l) { return texts.indexOf(l) >= 0; });
     if (present.length) {
       S.cons = S.cons.split(/\r?\n/).filter(function (l) {
-        var clean = l.replace(/^\s*(?:[-*•●▪◦–]|\d{1,2}[.)])\s*/, '').trim();
-        return texts.indexOf(clean) < 0;
+        return texts.indexOf(cleanLine(l)) < 0;
       }).join('\n').replace(/^\n+|\n+$/g, '');
     } else {
       S.cons = S.cons.replace(/\s+$/, '') + (S.cons.trim() ? '\n' : '') + texts[0];
@@ -370,9 +373,17 @@
   function saveFav() {
     readForm();
     if (!currentText()) { EDU.toast(t('nothing_to_copy')); return; }
-    var name = $('#fav-name').value.trim() || autoName();
+    var typed = $('#fav-name').value.trim().slice(0, 80), name = typed || autoName().slice(0, 80);
+    /* A double tap (or pressing Save twice) must not fill the list with copies of the same prompt.
+       (The first tap empties the name box, so the second one has no name of its own.) */
+    var last = favs[0];
+    if (last && (!typed || typed === last.name) && JSON.stringify(normalize(last.s)) === JSON.stringify(normalize(S))) {
+      $('#fav-name').value = '';
+      EDU.toast(t('fav_saved'));
+      return;
+    }
     var before = favs.slice();
-    favs.unshift({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name: name.slice(0, 80), at: Date.now(), s: copyState(S) });
+    favs.unshift({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name: name, at: Date.now(), s: copyState(S) });
     if (favs.length > MAX_FAVS) favs.length = MAX_FAVS;
     /* store.set() returns false when the browser storage is full or blocked: don't pretend it worked */
     if (store.set('favs', favs) === false) { favs = before; EDU.toast(t('fav_failed'), 5000); return; }
@@ -461,12 +472,19 @@
     io.observe($('#preview-card'));
   })();
 
+  /* Until the answer language is picked by hand it follows the page language, but only while the form
+     is empty or holds an untouched template (which is then re-localised). Once the user has typed,
+     their words are in the old language, so switching the scaffold would give a mixed-language prompt
+     ("आप a maths teacher हैं।"); the answer language then stays until they change it themselves. */
+  function followPageLang(code) {
+    if (S.manual || S.alang === code || CODES.indexOf(code) < 0) return;
+    var pristine = isPristine();
+    if (!pristine && hasText()) return;
+    S.alang = code;
+    if (pristine) loadTemplate(S.tpl.id, code, true);
+  }
   EDU.onLang(function (code) {
-    if (!S.manual && S.alang !== code) {
-      var pristine = isPristine();
-      S.alang = code;
-      if (pristine) loadTemplate(S.tpl.id, code, true);
-    }
+    followPageLang(code);
     renderAll();
   });
 
@@ -495,24 +513,23 @@
 
   /* ---------------- start ---------------- */
   (function start() {
-    var fromLink = sharedFromHash();
-    if (fromLink) {
-      S = normalize(fromLink);
-      S.manual = true;
-      dropHash();
-      setTimeout(function () { EDU.toast(t('shared_loaded')); }, 300);
+    var fromLink = sharedFromHash(), d = store.get('draft', null);
+    if (d && typeof d === 'object' && !Array.isArray(d)) {
+      S = normalize(d);
+      followPageLang(EDU.lang);
     } else {
-      var d = store.get('draft', null);
-      if (d && typeof d === 'object') {
-        S = normalize(d);
-        if (!S.manual && S.alang !== EDU.lang) {
-          var pristine = isPristine();
-          S.alang = EDU.lang;
-          if (pristine) loadTemplate(S.tpl.id, EDU.lang, true);
-        }
-      } else {
-        S = blank(EDU.lang, false);
-        loadTemplate('explain', EDU.lang, false);
+      S = blank(EDU.lang, false);
+      loadTemplate('explain', EDU.lang, false);
+    }
+    if (fromLink) {
+      dropHash();
+      /* Opening a shared link must not silently wipe a prompt the user was still writing
+         (the draft is saved automatically, and people rely on that). */
+      var incoming = normalize(fromLink);
+      if (!hasText() || isPristine() || assemble(incoming) === assemble(S) || confirm(t('confirm_load'))) {
+        S = incoming;
+        S.manual = true;
+        setTimeout(function () { EDU.toast(t('shared_loaded')); }, 300);
       }
     }
     renderAll();

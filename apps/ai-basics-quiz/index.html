@@ -21,7 +21,7 @@
       text-align: start; font: inherit; color: var(--text); background: var(--surface);
       border: 2px solid var(--border); border-radius: 14px; padding: 12px 14px; cursor: pointer; min-height: 64px;
     }
-    .mode:hover { background: var(--surface-2); }
+    @media (hover: hover) { .mode:hover { background: var(--surface-2); } }
     .mode .mode-ic { grid-row: 1 / span 2; font-size: 1.9rem; line-height: 1; }
     .mode .mode-name { font-weight: 800; font-size: 1.05rem; line-height: 1.25; }
     .mode .mode-desc { color: var(--muted); font-size: .86rem; line-height: 1.35; }
@@ -61,7 +61,8 @@
       font: inherit; font-weight: 600; font-size: 1.02rem; line-height: 1.35; color: var(--text); background: var(--surface);
       border: 2px solid var(--border); border-radius: 14px; padding: 10px 14px; min-height: 58px; cursor: pointer; overflow-wrap: anywhere;
     }
-    .opt:hover:not(:disabled):not(.picked):not(.is-right):not(.is-wrong) { background: var(--surface-2); border-color: color-mix(in srgb, var(--primary) 45%, var(--border)); }
+    /* hover only where a real mouse exists: on phones a tap left the next question's option looking chosen */
+    @media (hover: hover) { .opt:hover:not(:disabled):not(.picked):not(.is-right):not(.is-wrong) { background: var(--surface-2); border-color: color-mix(in srgb, var(--primary) 45%, var(--border)); } }
     .opt:disabled { cursor: default; color: var(--text); }
     .opt .ot { flex: 1 1 auto; min-width: 0; }
     .opt .mk { flex: none; font-size: 1.25em; font-weight: 800; margin-inline-start: auto; }
@@ -81,6 +82,7 @@
     .qnav button { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 700; font-size: .95rem; cursor: pointer; }
     .qnav button.done { background: var(--primary-soft); border-color: var(--primary); }
     .qnav button[aria-current="true"] { box-shadow: 0 0 0 3px var(--accent); border-color: var(--accent); }
+    @media (hover: none) and (pointer: coarse) { #kbdHint { display: none; } }
     .navrow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
     .navrow .grow { flex: 1 1 0; }
     @media (max-width: 560px) { .navrow .btn:not(.btn-ghost) { flex: 1 1 40%; } .navrow .grow { display: none; } }
@@ -139,12 +141,10 @@
 
     /* ---------- projector quiz ---------- */
     .stage-q { padding: clamp(14px, 2.4vw, 28px); }
-    .stage-q:fullscreen { overflow: auto; border-radius: 0; border: 0; padding: 3vh 4vw; font-size: clamp(1.1rem, 1.9vw, 1.7rem); }
+    .stage-q:fullscreen { overflow: auto; border-radius: 0; border: 0; }
     .stage-q:-webkit-full-screen { overflow: auto; border-radius: 0; border: 0; padding: 3vh 4vw; }
     .ctext { font-size: clamp(1.35rem, 3.1vw, 2.5rem); line-height: 1.32; margin: 14px 0 16px; overflow-wrap: anywhere; }
-    .stage-q:fullscreen .ctext { font-size: clamp(1.6rem, 3.6vw, 3.2rem); }
     .opts.big .opt { font-size: clamp(1.08rem, 2.1vw, 1.8rem); min-height: 72px; padding: 12px 16px; }
-    .stage-q:fullscreen .opts.big .opt { font-size: clamp(1.2rem, 2.4vw, 2.2rem); }
     .ctimer-box { display: inline-flex; align-items: center; gap: 6px; }
     .ctimer { font-size: 1.9rem; font-weight: 800; min-width: 2.4ch; text-align: center; color: var(--primary); line-height: 1; }
     .ctimer.low { color: var(--danger); }
@@ -162,6 +162,19 @@
     .team .row { justify-content: center; gap: 6px; }
     .team .btn { min-width: 58px; min-height: 44px; font-size: 1.1rem; font-weight: 800; }
     .stage-foot { margin-top: 14px; }
+    /* Full screen on a smartboard: size text by the screen height too and keep the team scores in one
+       compact row, so the question, the revealed answer and the +1 buttons fit without scrolling. */
+    .stage-q:fullscreen { font-size: clamp(1rem, min(1.6vw, 2.7vh), 1.6rem); padding: 2.4vh 3vw; }
+    .stage-q:fullscreen .ctext { font-size: clamp(1.35rem, min(3.1vw, 5.2vh), 3.2rem); margin: 1.2vh 0 1.6vh; }
+    .stage-q:fullscreen .opts.big { gap: 1.2vh 1vw; }
+    .stage-q:fullscreen .opts.big .opt { font-size: clamp(1.05rem, min(2.1vw, 3.6vh), 2.2rem); min-height: 0; padding: 0.9vh 14px; }
+    .stage-q:fullscreen .cexplain { font-size: clamp(1rem, min(1.6vw, 2.7vh), 1.4rem); margin-top: 1.4vh; padding-block: 1vh; }
+    .stage-q:fullscreen .cnav { margin-top: 1.4vh; }
+    .stage-q:fullscreen .cnav .btn-lg { min-height: 0; padding-block: 0.8vh; }
+    .stage-q:fullscreen .scoreboard { margin-top: 1.4vh; gap: 1vw; }
+    .stage-q:fullscreen .team { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; column-gap: 10px; text-align: start; padding: 4px 10px; }
+    .stage-q:fullscreen .team-score { font-size: 1.7em; }
+    .stage-q:fullscreen .stage-foot { margin-top: 1vh; }
     .finish { text-align: center; padding: 8px 0; }
     .trophy { font-size: 4rem; line-height: 1; }
     .rank { list-style: none; padding: 0; margin: 14px auto; max-width: 460px; display: grid; gap: 8px; }
@@ -184,6 +197,8 @@
     .paper .p-ans li { margin-bottom: 6pt; break-inside: avoid; }
     .paper .p-foot { margin-top: 14pt; font-size: 9pt; color: #555; }
     @media print {
+      /* Ctrl+P without the print buttons prints the screen as it is, never an old paper/certificate */
+      body:not(.printing) #printArea { display: none !important; }
       body.printing #app > *:not(#printArea) { display: none !important; }
       body.printing #printArea { display: block !important; }
       #printArea .cert { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: linear-gradient(135deg, #fde6da, #dcefef 55%, #fef0c7); max-width: none; margin-top: 10mm; }

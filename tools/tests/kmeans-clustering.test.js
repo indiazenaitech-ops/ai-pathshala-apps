@@ -1,6 +1,12 @@
 /* Interaction test for Clustering Lab (k-means). Run by tools/verify.js in en and hi. */
-module.exports = async function ({ page, expect, log }) {
+module.exports = async function ({ page, lang, expect, log }) {
   const dbg = () => page.evaluate(() => window.KM_DEBUG());
+  // screen position of a board point (data units 0–100)
+  const boardPx = async (p) => {
+    const s = await dbg();
+    const r = await page.$eval('#board', e => { const b = e.getBoundingClientRect(); return { x: b.x, y: b.y }; });
+    return { x: r.x + s.geom.x0 + p.x / 100 * s.geom.s, y: r.y + s.geom.y0 + (1 - p.y / 100) * s.geom.s };
+  };
 
   // 1) default: 3 blobs, k = 3, centres placed, nothing assigned yet
   let s = await dbg();
@@ -73,4 +79,89 @@ module.exports = async function ({ page, expect, log }) {
   expect(!(await page.isHidden('#cust-note')), 'customer note visible');
   const cols = await page.$$eval('#groups thead th', t => t.length);
   expect(cols === 5, 'customer table has age + spending columns, got ' + cols);
+
+  // 9) inertia shown = sum of squared distances from every point to its own centre
+  await page.click('#step');
+  s = await dbg();
+  let sse = 0;
+  s.points.forEach((p, i) => { const c = s.cents[s.labels[i]]; sse += (p.x - c.x) ** 2 + (p.y - c.y) ** 2; });
+  const shown = parseFloat(await page.getAttribute('#inertia', 'data-value'));
+  expect(Math.abs(shown - sse) < 1e-6 * Math.max(1, sse), 'inertia = sum of squared distances (' + shown + ' vs ' + sse + ')');
+  // every point sits with its nearest centre after Assign
+  const nearestOk = s.points.every((p, i) => s.cents.every(c => (p.x - c.x) ** 2 + (p.y - c.y) ** 2 >= (p.x - s.cents[s.labels[i]].x) ** 2 + (p.y - s.cents[s.labels[i]].y) ** 2 - 1e-9));
+  expect(nearestOk, 'Assign puts every point with its nearest centre');
+
+  // 10) a plain tap on a big cross must not count as dragging the centre (it adds a point there)
+  await page.$eval('#board', e => e.scrollIntoView({ block: 'center' }));
+  s = await dbg();
+  const centre0 = s.cents[0];
+  let at = await boardPx(centre0);
+  await page.mouse.click(at.x, at.y);
+  s = await dbg();
+  expect(s.points.length === 171 && s.msg === 'data', 'tap on a cross adds a point, not a centre drag (points ' + s.points.length + ', msg ' + s.msg + ')');
+  expect(Math.abs(s.cents[0].x - centre0.x) < 1e-9 && Math.abs(s.cents[0].y - centre0.y) < 1e-9, 'tap on a cross leaves the centre where it was');
+  expect((await page.$eval('#cust-note', e => e.textContent)).includes('171'), 'customer note counts the points on the board');
+  //     …but dragging it really moves the centre and starts over
+  await page.click('#step');
+  s = await dbg();
+  at = await boardPx(s.cents[1]);
+  const to = await boardPx({ x: 12, y: 88 });
+  await page.mouse.move(at.x, at.y); await page.mouse.down();
+  await page.mouse.move((at.x + to.x) / 2, (at.y + to.y) / 2, { steps: 4 });
+  await page.mouse.move(to.x, to.y, { steps: 4 });
+  await page.mouse.up();
+  s = await dbg();
+  expect(Math.abs(s.cents[1].x - 12) < 0.5 && Math.abs(s.cents[1].y - 88) < 0.5, 'dragged centre ends where it was dropped, got ' + JSON.stringify(s.cents[1]));
+  expect(s.msg === 'drag' && s.round === 0 && s.labels.every(l => l === -1), 'moving a centre by hand starts again from round 0');
+
+  // 11) switching language mid-task re-renders the dynamic text
+  const msgBefore = await page.$eval('#msg', e => e.textContent);
+  const headBefore = await page.$eval('#groups thead', e => e.textContent);
+  await page.selectOption('#edu-lang', 'ur');
+  await page.waitForTimeout(200);
+  expect(await page.evaluate(() => document.documentElement.dir === 'rtl'), 'Urdu page is right-to-left');
+  expect((await page.$eval('#msg', e => e.textContent)) !== msgBefore, 'step message is translated after a language change');
+  expect((await page.$eval('#groups thead', e => e.textContent)) !== headBefore, 'clusters table header is translated after a language change');
+  expect(/[؀-ۿ]/.test(await page.$eval('#step', e => e.textContent)), 'Step button is in Urdu');
+  await page.selectOption('#edu-lang', lang);
+  await page.waitForTimeout(200);
+
+  // 12) remove all points: nothing to step, a clear message, no stale customer note
+  await page.click('#clear-pts');
+  s = await dbg();
+  expect(s.points.length === 0 && s.cents.length === 0, 'Remove all points empties the board');
+  expect(await page.$eval('#step', b => b.disabled) && await page.$eval('#run', b => b.disabled), 'Step and Run are disabled with no points');
+  expect((await page.getAttribute('#msg', 'data-code')) === 'need', 'message asks for more points');
+  expect(await page.isHidden('#cust-note'), 'customer note hidden when there are no customers');
+
+  // 13) a change made just before a reload is not lost
+  await page.click('#ds-blobs3');
+  await page.click('#k-plus');
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForTimeout(400);
+  s = await dbg();
+  expect(s.k === 4 && s.ds === 'blobs3' && s.points.length === 150, 'k = 4 and the dataset survive an immediate reload (k ' + s.k + ')');
+
+  // 14) a broken saved message code does not break the page
+  await page.evaluate(() => {
+    const k = 'edu.kmeans-clustering.state', st = JSON.parse(localStorage.getItem(k));
+    st.msg = { code: 'toString', vars: { empty: 'x' } }; localStorage.setItem(k, JSON.stringify(st));
+  });
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForTimeout(400);
+  const m = await page.$eval('#msg', e => e.textContent);
+  expect(m.length > 10 && !/object|undefined|NaN/.test(m), 'odd saved message falls back to a normal one, got: ' + m.slice(0, 60));
+
+  // 15) phone: the clusters table (with the name boxes) fits without sideways scrolling
+  const vp = page.viewportSize();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.click('#k-minus');
+  await page.click('#ds-customers');
+  await page.click('#step');
+  await page.waitForTimeout(150);
+  const fit = await page.$eval('#groups', t => ({ over: t.parentNode.scrollWidth - t.parentNode.clientWidth, inp: t.querySelector('input').getBoundingClientRect().right, page: document.documentElement.scrollWidth }));
+  expect(fit.over <= 1 && fit.inp <= 390 && fit.page <= 390, 'phone: clusters table fits (overflow ' + fit.over + ', input right ' + Math.round(fit.inp) + ')');
+  await page.setViewportSize(vp);
+  await page.click('#ds-blobs3');
+  await page.click('#step');
 };

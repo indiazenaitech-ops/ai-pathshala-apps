@@ -11,18 +11,20 @@
 
   /* ------------------------------------------------------------ presets */
   var PRESETS = {
-    linear: { fns: ['ax + b'], P: { a: 2, b: 1, c: 0 } },
+    linear: { fns: ['ax + b'], P: { a: -2, b: 6, c: 0 }, view: { x0: -4, x1: 8, y0: -4, y1: 9 } },   // y = 6 − 2x, as in the Class 9 card
     pair: { fns: ['6 - 2x', 'x'], view: { x0: -6, x1: 8, y0: -4, y1: 8 } },
     quadratic: { fns: ['ax^2 + bx + c'], P: { a: 1, b: -2, c: -3 }, view: { x0: -6, x1: 8, y0: -6, y1: 8 } },
     cubic: { fns: ['x^3 - 4x'], view: { x0: -4, x1: 4, y0: -7, y1: 7 } },
     trig: { fns: ['a sin(bx)', 'cos x'], P: { a: 1, b: 1, c: 0 }, pi: true, view: { x0: -7, x1: 7, y0: -2.4, y1: 2.4 }, viewDeg: { x0: -400, x1: 400, y0: -2.4, y1: 2.4 } },
     exp: { fns: ['2^x', '(1/2)^x'], view: { x0: -5, x1: 5, y0: -1.5, y1: 9 } },
-    recip: { fns: ['1/x'], view: { x0: -6, x1: 6, y0: -5, y1: 5 } }
+    recip: { fns: ['1/x'], view: { x0: -6, x1: 6, y0: -5, y1: 5 } },
+    /* not a chip: the Class 11 card loads the standard graphs it talks about */
+    std: { fns: ['|x|', 'x^2', 'x^3', '1/x', 'e^x'], view: { x0: -4, x1: 4, y0: -3, y1: 5 }, label: 'learn_11b_t' }
   };
   var PRESET_ORDER = ['linear', 'pair', 'quadratic', 'cubic', 'trig', 'exp', 'recip'];
   var LEARN = [
     { k: '9', preset: 'linear' }, { k: '10a', preset: 'cubic' }, { k: '10b', preset: 'pair' },
-    { k: '11a', preset: 'trig' }, { k: '11b', preset: 'recip' }
+    { k: '11a', preset: 'trig' }, { k: '11b', preset: 'std' }
   ];
   var KEYS = [['x', 'x'], ['x²', '^2'], ['^', '^'], ['√', 'sqrt()'], ['π', 'pi'], ['( )', '()'], ['|x|', '||'],
     ['sin', 'sin()'], ['cos', 'cos()'], ['tan', 'tan()'], ['log', 'log()'], ['a', 'a'], ['b', 'b'], ['c', 'c']];
@@ -57,7 +59,7 @@
     return o;
   }
 
-  var S = sanitize(store.get('state', null));
+  var S = sanitize(store.get('state', null)), fromShareLink = false;
   (function fromLink() {
     var m = /[#&]g=([A-Za-z0-9_-]+)/.exec(location.hash || '');
     if (!m) return;
@@ -69,6 +71,7 @@
         show: S.show, tv: S.tv,
         view: Array.isArray(d.v) ? { cx: d.v[0], cy: d.v[1], sx: d.v[2], sy: d.v[3] } : null
       });
+      fromShareLink = true;
     }
     try { history.replaceState(history.state, '', location.href.split('#')[0]); } catch (e) { }
   })();
@@ -87,7 +90,7 @@
   function visibleFns() {
     var out = [];
     S.fns.forEach(function (f, i) {
-      if (f.on && comp[i] && comp[i].ok) out.push({ i: i, f: comp[i].f, color: colors.c[f.ci] || colors.text, name: NAMES[i], src: f.src.trim().replace(/^\s*(y|f\s*\(\s*x\s*\))\s*=\s*/i, '') });
+      if (f.on && comp[i] && comp[i].ok) out.push({ i: i, f: comp[i].f, color: colors.c[f.ci] || colors.text, name: NAMES[i], src: G.clean(f.src) });
     });
     return out;
   }
@@ -116,13 +119,15 @@
       h = Math.max(240, h);
     } else h = w < 600 ? Math.round(w * 0.86) : Math.round(EDU.clamp(w * 0.62, 320, 640));
     plot.resize(w, h);
+    if (started) queueAnalysis(120);   // a wider or narrower graph shows a different part of the x-axis
   }
+  var started = false;
   function resetView() {
     if (S.deg) plot.fit(-400, 400, -2.5, 2.5); else plot.square(10);
     queueAnalysis(0); saveSoon();
   }
   function setPresetView(p) {
-    var v = S.deg && p.viewDeg ? p.viewDeg : (!S.deg ? p.view : null);
+    var v = S.deg && p.viewDeg ? p.viewDeg : p.view;
     if (v) plot.fit(v.x0, v.x1, v.y0, v.y1); else resetView();
   }
 
@@ -163,7 +168,7 @@
     var r = $('#readout');
     if (!info) { r.textContent = t('readout_idle'); r.removeAttribute('data-x'); r.removeAttribute('data-y'); return; }
     if (info.kind === 'undef') { r.textContent = t('readout_undef', { name: NAMES[info.fi] + '(x)', x: xs(info.x) }); r.dataset.x = M.raw(info.x); r.removeAttribute('data-y'); return; }
-    if (info.kind === 'point') r.textContent = describe(info.p) + ':  x = ' + xs(info.x) + ',  y = ' + M.fmt(info.y);
+    if (info.kind === 'point') r.textContent = describe(info.p) + ':  ⁦x = ' + xs(info.x) + ',  y = ' + M.fmt(info.y) + '⁩';
     else r.textContent = t('readout_point', { name: NAMES[info.fi] + '(x)', x: xs(info.x), y: M.fmt(info.y) });
     r.dataset.x = M.raw(info.x); r.dataset.y = M.raw(info.y); r.dataset.fi = info.fi;
   }
@@ -175,7 +180,7 @@
     S.fns.forEach(function (f, i) {
       var input = el('input', { type: 'text', id: 'fn-in-' + i, class: 'gp-in', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', enterkeyhint: 'done', dir: 'ltr' });
       input.value = f.src;
-      input.addEventListener('input', function () { S.fns[i].src = input.value; comp[i] = G.compile(input.value); refreshFn(i); afterChange(); });
+      input.addEventListener('input', function () { S.fns[i].src = input.value; comp[i] = G.compile(input.value); refreshFn(i); checkNote(); afterChange(); });
       input.addEventListener('focus', function () { lastFocus = i; });
       var row = el('div', { class: 'gp-fn' + (f.on ? '' : ' is-off'), id: 'fn-row-' + i },
         el('button', { type: 'button', class: 'gp-swatch', id: 'fn-on-' + i, 'aria-pressed': f.on ? 'true' : 'false',
@@ -232,8 +237,9 @@
   }
   function removeFn(i) {
     S.fns.splice(i, 1);
+    if (S.tv.fi > i) S.tv.fi--;                     // the table keeps showing the same function
     if (S.tv.fi >= S.fns.length) S.tv.fi = Math.max(0, S.fns.length - 1);
-    compileAll(); buildFnList(); traceInfo = null; plot.clearTrace(); afterChange();
+    compileAll(); buildFnList(); traceInfo = null; plot.clearTrace(); checkNote(); afterChange();
   }
   function insertKey(text) {
     if (!S.fns.length) addFn('');
@@ -241,7 +247,8 @@
     var a = inp.selectionStart == null ? inp.value.length : inp.selectionStart, b = inp.selectionEnd == null ? a : inp.selectionEnd;
     var caret = /\(\)$|\|\|$/.test(text) ? text.length - 1 : text.length;
     inp.value = inp.value.slice(0, a) + text + inp.value.slice(b);
-    inp.focus();
+    /* on a phone the on-screen keypad is used instead of the keyboard: focusing would pop the keyboard up */
+    if (document.activeElement === inp || !(window.matchMedia && matchMedia('(pointer: coarse)').matches)) inp.focus();
     try { inp.setSelectionRange(a + caret, a + caret); } catch (e) { }
     inp.dispatchEvent(new Event('input'));
   }
@@ -259,6 +266,7 @@
         if (box2.value.trim() === '' || !isFinite(v)) return;
         S.P[p] = EDU.clamp(v, -1e6, 1e6); range.value = EDU.clamp(v, -10, 10); paramChanged();
       });
+      box2.addEventListener('change', function () { box2.value = S.P[p]; });   // e.g. 99999999 → 1000000, empty → last value
       box.appendChild(el('div', { class: 'gp-param', id: 'param-row-' + p }, el('label', { class: 'pname', for: 'param-' + p, text: p }), range, box2));
     });
   }
@@ -290,11 +298,23 @@
     var p = PRESETS[k];
     S.fns = p.fns.map(function (src, j) { return { src: src, ci: j, on: true }; });
     if (p.P) S.P = clone(p.P);
-    S.pi = !!p.pi; S.note = k; S.tv.fi = 0;
+    if (!p.viewDeg) S.deg = false;                  // degrees only matter for sin and cos; a parabola in degrees would be squashed
+    S.pi = !!p.pi; S.note = p.label ? null : k; S.tv.fi = 0;
     compileAll(); buildFnList(); syncParams(); syncSettings(); renderPresets();
     setPresetView(p);
     plot.clearTrace(); afterChange();
-    EDU.toast(t('loaded', { name: t('pr_' + k) }));
+    /* clicking through the examples must not pile up a tower of "Loaded" messages over the page */
+    if (lastToast && lastToast.parentNode) lastToast.parentNode.removeChild(lastToast);
+    EDU.toast(t('loaded', { name: t(p.label || 'pr_' + k) }));
+    var all = document.querySelectorAll('.edu-toast'); lastToast = all[all.length - 1] || null;
+  }
+  var lastToast = null;
+  /* the example's explanation only stays while its functions are still on the graph (sliders may move) */
+  function checkNote() {
+    if (!S.note) return;
+    var have = S.fns.map(function (f) { return G.clean(f.src).replace(/\s+/g, ''); });
+    var all = PRESETS[S.note].fns.every(function (src) { return have.indexOf(src.replace(/\s+/g, '')) >= 0; });
+    if (!all) { S.note = null; renderPresets(); }
   }
   function renderLearn() {
     var box = $('#learn'); box.textContent = '';
@@ -302,7 +322,7 @@
       box.appendChild(el('div', { class: 'gp-learn-item' },
         el('h3', { text: t('learn_' + L.k + '_t') }),
         el('p', { text: t('learn_' + L.k) }),
-        el('button', { type: 'button', class: 'btn btn-sm', id: 'try-' + L.k, text: t('try_it') + ' →', onclick: function () {
+        el('button', { type: 'button', class: 'btn btn-sm', id: 'try-' + L.k, text: t('try_it') + (EDU.langInfo(EDU.lang).dir === 'rtl' ? ' ←' : ' →'), onclick: function () {
           loadPreset(L.preset);
           var g = $('#graph-card'); if (g.scrollIntoView) g.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } })));
@@ -393,10 +413,11 @@
 
   /* ------------------------------------------------------------ saving */
   var sTimer = 0;
-  function saveSoon() {
-    clearTimeout(sTimer);
-    sTimer = setTimeout(function () { S.view = plot.getView(); store.set('state', S); }, 250);
-  }
+  function saveNow() { clearTimeout(sTimer); sTimer = 0; S.view = plot.getView(); store.set('state', S); }
+  function saveSoon() { clearTimeout(sTimer); sTimer = setTimeout(saveNow, 250); }
+  /* typing and then at once reloading or closing the tab must not lose the change */
+  window.addEventListener('pagehide', function () { if (sTimer) saveNow(); });
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden' && sTimer) saveNow(); });
   function afterChange() {
     syncParams(); plot.draw(); queueAnalysis(30); renderTable(); saveSoon();
     if (traceInfo && traceInfo.kind !== 'undef') syncTrace();
@@ -460,6 +481,8 @@
   runAnalysis();
   renderTable();
   showTrace(null);
+  started = true;
+  if (fromShareLink) saveSoon();   // a graph opened from a share link is still there after a reload
 
   if (window.ResizeObserver) new ResizeObserver(function () { layout(false); }).observe($('#stage'));
   window.addEventListener('resize', function () { layout(false); });

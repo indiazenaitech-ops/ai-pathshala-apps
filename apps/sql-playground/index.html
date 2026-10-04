@@ -58,16 +58,18 @@
     .sqlp-block:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
     .sqlp-block-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-bottom: 8px; }
     .sqlp-stmt { font-family: var(--mono); font-size: .85rem; color: var(--muted); direction: ltr; unicode-bidi: isolate; overflow-wrap: anywhere; flex: 1 1 14rem; min-width: 0; }
-    .sqlp-scroll { max-height: 60vh; overflow: auto; border: 1px solid var(--border); border-radius: 10px; }
-    .sqlp-table { font-size: var(--code-size); font-variant-numeric: tabular-nums; }
+    .sqlp-scroll { max-height: 60vh; overflow: auto; border: 1px solid var(--border); border-radius: 10px; width: fit-content; max-width: 100%; }
+    .sqlp-table { font-size: var(--code-size); font-variant-numeric: tabular-nums; width: auto; min-width: 100%; }
     .sqlp-table th, .sqlp-table td { white-space: nowrap; padding: 6px 12px; }
     .sqlp-table th { z-index: 1; }
-    .sqlp-table td.num { text-align: end; }
+    .sqlp-table td.num, .sqlp-table th.num { text-align: end; }
     .sqlp-table .rn { color: var(--muted); text-align: end; width: 1%; background: var(--surface-2); }
     .sqlp-null { color: var(--muted); font-style: italic; }
     .sqlp-ok { color: var(--success); font-weight: 700; }
     .sqlp-err-msg { display: block; font-family: var(--mono); font-size: .9rem; margin: 6px 0; overflow-wrap: anywhere; direction: ltr; text-align: left; }
     .sqlp-empty { text-align: center; padding: 22px 8px; }
+    /* a long misspelt name in an error/hint must wrap instead of widening the page on phones */
+    .sqlp-block .callout, .sqlp-block > p, #checkMsg, #taskText { overflow-wrap: anywhere; }
 
     .sqlp-side .tabs { margin-bottom: 10px; }
     .sqlp-tbl { padding: 10px 0; border-bottom: 1px solid var(--border); }

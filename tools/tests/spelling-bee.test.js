@@ -224,6 +224,32 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(await attr('#b-winner', 'data-winner') === '0' && await txt('#b-winner-title') === t('winner_is', { name: 'Riya' }), 'Riya wins: ' + await txt('#b-winner-title'));
   expect(await page.$$eval('#b-final .final-score', (c) => c.map((x) => x.textContent).join(',')) === '2,0', 'final scores 2 and 0');
 
+  /* 10b) Knock-out: no word limit; Aman misses three times and is out, so Riya wins */
+  await page.click('#b-settings');
+  await page.click('#b-type [data-type="ko"]');
+  expect(await page.isHidden('#b-per-field'), 'knock-out hides "words for each player"');
+  for (let r = 0; r < 3; r++) {
+    n0 = await spokenN();
+    await page.click(r === 0 ? '#b-start' : '#b-next');
+    await waitState('b', 'ask');
+    expect(await txt('#b-turn') === t('turn_of', { name: 'Riya' }), 'knock-out round ' + (r + 1) + ': Riya');
+    const kw = await heardAfter(n0);
+    await page.fill('#b-input', kw); await page.press('#b-input', 'Enter');
+    await waitState('b', 'done');
+    await page.click('#b-next');
+    await waitState('b', 'ask');
+    expect(await txt('#b-turn') === t('turn_of', { name: 'Aman' }), 'then Aman');
+    expect((await txt('#b-turn-sub')).startsWith(t('lives_n', { n: String(3 - r) })), 'Aman has ' + (3 - r) + ' lives: ' + await txt('#b-turn-sub'));
+    await page.click('#b-bad');
+    await waitState('b', 'done');
+  }
+  expect(await page.$eval('#b-board .sc[data-player="1"]', (e) => e.classList.contains('out')), 'Aman is out after 3 misses');
+  expect(await txt('#b-next-lbl') === t('see_winner'), 'only Riya is left, so the game ends (3 words each, beyond any word limit)');
+  await page.click('#b-next');
+  await page.waitForSelector('#b-endcard', { state: 'visible' });
+  expect(await attr('#b-winner', 'data-winner') === '0', 'Riya wins the knock-out');
+  expect(await page.$$eval('#b-final .final-score', (c) => c.map((x) => x.textContent).join(',')) === '3,0', 'knock-out scores 3 and 0');
+
   /* 11) No English voice: meaning + sentence + jumbled letters appear by themselves */
   await page.evaluate(() => sessionStorage.setItem('__sb_novoice', '1'));
   await page.reload({ waitUntil: 'load' });

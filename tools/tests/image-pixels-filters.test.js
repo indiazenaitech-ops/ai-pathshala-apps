@@ -45,6 +45,12 @@ module.exports = async function ({ page, expect, log }) {
   await page.check('#opt-nums');
   await page.click('#ch-seg button[data-ch="rgb"]');
 
+  // CSV in Colour view = three labelled tables (red, green, blue) of 8 × 8 numbers
+  const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#dl-csv')]);
+  const csv = require('fs').readFileSync(await dl.path(), 'utf8').replace(/^﻿/, '').split(/\r?\n/);
+  expect(dl.suggestedFilename() === 'pixels-rgb-8x8.csv' && csv.length === 29, 'colour CSV has 3 tables, got ' + csv.length + ' lines');
+  expect(csv[2].split(',')[6] === String(r2) && csv[12].split(',')[6] === String(g2) && csv[22].split(',')[6] === String(b2), 'CSV numbers match the inspected pixel');
+
   // 3) filters: maths matches the definition and the output picture
   await page.click('#tab-filters');
   expect(await page.isVisible('#panel-filters'), 'filters panel visible');
@@ -72,12 +78,42 @@ module.exports = async function ({ page, expect, log }) {
   await page.fill('#k0', '1');
   expect(await attr('#f-custom', 'aria-pressed') === 'true', 'editing a preset switches to My filter');
   pix = await cells('#m-pix .mcell');
-  expect(await num('#math-result') === Math.max(0, Math.min(255, Math.round(sum(pix, [1, -1, 0, -1, 5, -1, 0, -1, 0])))), 'edited sharpen kernel computed correctly');
+  const sharpAns = Math.max(0, Math.min(255, Math.round(sum(pix, [1, -1, 0, -1, 5, -1, 0, -1, 0]))));
+  expect(await num('#math-result') === sharpAns, 'edited sharpen kernel computed correctly');
+  // out-of-range numbers: the box shows the number really used after leaving it
+  await page.fill('#k8', '5000');
+  await page.press('#k8', 'Tab');
+  expect(await page.inputValue('#k8') === '999', 'kernel number 5000 is shown as the 999 really used, got ' + (await page.inputValue('#k8')));
+  await page.fill('#k8', '0');
+  await page.press('#k8', 'Tab');
+  await page.fill('#k-div', '0');
+  expect(await page.isVisible('#k-warn') && await num('#math-result') === sharpAns, 'divide by 0: warning shown and 1 is used');
+  await page.fill('#k-div', '1');
+
+  // sliding window: it must not move (or save) the pixel the student chose
+  const selX = await num('#math-pos', 'data-x'), selY = await num('#math-pos', 'data-y');
+  expect(selX === 6 && selY === 1, 'maths is for the chosen pixel (6,1)');
   await page.click('#slide-btn');
   expect(await attr('#slide-btn', 'aria-pressed') === 'true', 'slide animation running');
   await page.waitForTimeout(400);
+  expect(await num('#math-pos', 'data-x') !== selX || await num('#math-pos', 'data-y') !== selY, 'the 3 × 3 window moves while sliding');
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('edu.image-pixels-filters.state') || 'null'));
+  expect(saved && Array.isArray(saved.sel) && Math.floor(saved.sel[0] * 8) === 6 && Math.floor(saved.sel[1] * 8) === 1, 'the saved pixel is still the chosen one while sliding: ' + JSON.stringify(saved && saved.sel));
   await page.click('#slide-btn');
   expect(await attr('#slide-btn', 'aria-pressed') === 'false', 'slide animation stopped');
+  expect(await num('#math-pos', 'data-x') === selX && await num('#math-pos', 'data-y') === selY, 'stopping the slide brings back the chosen pixel');
+
+  // "Be the computer" worksheet, also when printed with Ctrl+P (beforeprint)
+  await page.check('#ws-answers');
+  await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+  const ws = await page.evaluate(() => {
+    const nums = (sel) => [...document.querySelectorAll(sel)].map((td) => Number(td.textContent.replace('−', '-')));
+    return { inp: nums('#worksheet .t-in td'), k: nums('#worksheet .t-k td'), out: document.querySelectorAll('#worksheet .t-out td').length, key: nums('#worksheet .t-key td') };
+  });
+  expect(ws.inp.length === 49 && ws.k.length === 9 && ws.out === 25 && ws.key.length === 25, 'worksheet: 7 × 7 numbers, 3 × 3 filter, 5 × 5 output and answer key');
+  let wsSum = 0;
+  for (let j = 0; j < 3; j++) for (let i = 0; i < 3; i++) wsSum += ws.inp[j * 7 + i] * ws.k[j * 3 + i];
+  expect(ws.key[0] === Math.max(0, Math.min(255, Math.round(wsSum))), `worksheet answer key is right (${ws.key[0]} vs ${wsSum})`);
 
   // 5) CNN feature maps + max pooling
   await page.click('#tab-cnn');
@@ -90,6 +126,8 @@ module.exports = async function ({ page, expect, log }) {
 
   // 6) guess-the-filter game
   await page.click('#tab-game');
+  const opts = await page.$$eval('#g-options button', (els) => els.map((e) => e.getAttribute('data-f')));
+  expect(opts.length === 4 && new Set(opts).size === 4 && opts.includes(await attr('#g-card', 'data-answer')), '4 different options including the answer');
   const ans = await attr('#g-card', 'data-answer');
   await page.click(`#g-options button[data-f="${ans}"]`);
   expect(await num('#g-score', 'data-score') === 1 && await num('#g-score', 'data-total') === 1, 'right answer scores 1 / 1');
@@ -112,7 +150,13 @@ module.exports = async function ({ page, expect, log }) {
   await clickPixel('#px-canvas', 6, 3, 8);
   expect(await num('#val-r') === 0 && await num('#val-b') === 255, 'right of the uploaded photo is pure blue');
 
-  // 8) camera snapshot (fake camera in the test browser) or a friendly error
+  // 8) closing the camera before it has started must switch it off (no hidden camera left running)
+  await page.click('#cam-btn');
+  await page.click('#cam-close');
+  await page.waitForTimeout(1500);
+  expect(await page.evaluate(() => document.querySelector('#cam-video').srcObject === null) && await page.isHidden('#cam-box'), 'camera closed before it started stays off');
+
+  // camera snapshot (fake camera in the test browser) or a friendly error
   await page.click('#cam-btn');
   try {
     await page.waitForSelector('#cam-snap:not([disabled])', { timeout: 15000 });

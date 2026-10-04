@@ -145,7 +145,7 @@ window.PW_DATA = {
     { id: 'p7', a: 'Krishna@2024', b: 'krishna-kite-ladder-moon', win: 'b' },
     { id: 'p8', a: 'rainy tulip oven bridge', b: '9450718263', win: 'a' },
     { id: 'p9', a: 'drowssap', b: 'q7Lm2xRt', win: 'b' },
-    { id: 'p10', a: 'jar-pencil-otter-sky-91', b: 'SachinTendulkar10', win: 'a' },
+    { id: 'p10', a: 'jar-pencil-otter-sky-lamp-91', b: 'SachinTendulkar10', win: 'a' },
     { id: 'p11', a: 'Ab1@Ab1@Ab1@', b: 'glass-hippo-ribbon-tea', win: 'b' },
     { id: 'p12', a: 'Mumbai@1234', b: 'Kh9#mQ2v!xL7', win: 'b' }
   ]

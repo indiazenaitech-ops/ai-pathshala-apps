@@ -31,7 +31,7 @@
   var modelState = 'loading', modelErr = '';
   var stream = null, camState = 'off', camMsgKey = '', multiCam = false;
   var facing = store.get('facing', 'user') === 'environment' ? 'environment' : 'user';
-  var recId = null, recKey = null;
+  var recId = null, recBy = null;   // recBy: which pointer / key started the recording (only that one stops it)
   var busy = false, frozen = false, loopTimer = null;
   var lastPred = null, smooth = {};
   var K = EDU.clamp(parseInt(store.get('k', 10), 10) || 10, 1, 20);
@@ -86,6 +86,15 @@
     return m === Infinity ? K : Math.max(1, Math.min(K, m));
   }
   function exLabel(n) { return t(n === 1 ? 'n_example_one' : 'n_examples', { n: EDU.fmt(n) }); }
+  /* EDU.toast() puts its messages in <body>, which is not drawn while the lab is in full screen
+     (smartboard). Move the toast box into the full-screen element so messages stay visible. */
+  function placeToasts() {
+    var w = $('.edu-toast-wrap'); if (!w) return;
+    var fs = document.fullscreenElement || document.webkitFullscreenElement;
+    var host = fs && fs.id === 'lab' ? fs : document.body;
+    if (w.parentNode !== host) host.appendChild(w);
+  }
+  function toast(msg) { EDU.toast(msg); placeToasts(); }
   /* write text only when it changed (no DOM churn 10×/s, no repeated screen-reader announcements) */
   function setText(el, s) { if (el && el.textContent !== s) el.textContent = s; }
   function errKey() { return modelErr === 'offline' ? 'ms_offline' : 'ms_error'; }
@@ -203,7 +212,7 @@
     }, function (e) { emb.dispose(); throw e; });
   }
 
-  function notReady() { EDU.toast(t(modelState === 'error' ? errKey() : 'model_wait')); }
+  function notReady() { toast(t(modelState === 'error' ? errKey() : 'model_wait')); }
 
   /* examples changed (upload, clear, remove, open, …): rebuild the bars, and if a test photo is
      shown, ask the AI again about that photo instead of leaving the old (or an empty) answer */
@@ -226,7 +235,7 @@
   function startRec(id) {
     if (recId) return;
     if (!net) { notReady(); return; }
-    if (!videoReady()) { EDU.toast(t('need_camera_rec')); return; }
+    if (!videoReady()) { toast(t('need_camera_rec')); return; }
     if (indexOf(id) < 0) return;
     recId = id; frozen = false;
     $('#testPrev').hidden = true;
@@ -239,7 +248,7 @@
   }
   function stopRec() {
     if (!recId) return;
-    recId = null; recKey = null;
+    recId = null; recBy = null;
     renderRecState();
     lastPred = null; smooth = {};
     renderPrediction();
@@ -289,15 +298,20 @@
       if (!files.length) return;
       var added = 0, failed = 0, i = 0;
       (function next() {
-        if (i >= files.length || indexOf(id) < 0) {
-          if (added) EDU.toast(added === 1 ? t('added_one', { name: nameOf(byId(id)) }) : t('added_n', { n: EDU.fmt(added), name: nameOf(byId(id)) }));
-          if (failed) EDU.toast(t('img_failed', { n: EDU.fmt(failed) }));
+        var gone = indexOf(id) < 0;   // class removed (or Reset / ready-made set / opened model) during the upload
+        if (i >= files.length || gone) {
+          if (added && !gone) toast(added === 1 ? t('added_one', { name: nameOf(byId(id)) }) : t('added_n', { n: EDU.fmt(added), name: nameOf(byId(id)) }));
+          if (failed && !gone) toast(t('img_failed', { n: EDU.fmt(failed) }));
           examplesChanged();
           return;
         }
         var f = files[i++];
         loadImage(f).then(function (o) {
-          try { drawImageFile(o); updateClassCard(id, addFromCap(id, false)); added++; } catch (e) { failed++; }
+          /* check again: the picture loads asynchronously, and an example saved for a class that no
+             longer exists would stay in the KNN as a hidden "ghost" class that steals votes */
+          if (indexOf(id) >= 0) {
+            try { drawImageFile(o); updateClassCard(id, addFromCap(id, false)); added++; } catch (e) { failed++; }
+          }
           URL.revokeObjectURL(o.url);
         }, function () { failed++; }).then(function () { setTimeout(next, 0); });
       })();
@@ -305,11 +319,11 @@
   }
   function testWithPhoto() {
     if (!net) { notReady(); return; }
-    if (trainedCount() < 2) { EDU.toast(t('need_two')); return; }
+    if (trainedCount() < 2) { toast(t('need_two')); return; }
     pickImages(false).then(function (files) {
       if (!files[0]) return;
       loadImage(files[0]).then(function (o) {
-        try { drawImageFile(o); } catch (e) { URL.revokeObjectURL(o.url); EDU.toast(t('img_failed', { n: EDU.fmt(1) })); return; }
+        try { drawImageFile(o); } catch (e) { URL.revokeObjectURL(o.url); toast(t('img_failed', { n: EDU.fmt(1) })); return; }
         frozen = true; smooth = {}; spoken = ''; stableId = '';
         var img = $('#testImg');
         if (img.src && img.src.indexOf('blob:') === 0) URL.revokeObjectURL(img.src);
@@ -317,7 +331,7 @@
         $('#testPrev').hidden = false;
         busy = true;
         predictCap().then(function () { busy = false; }, function () { busy = false; });
-      }, function () { EDU.toast(t('img_failed', { n: EDU.fmt(1) })); });
+      }, function () { toast(t('img_failed', { n: EDU.fmt(1) })); });
     });
   }
   function backToLive() {
@@ -357,7 +371,7 @@
     stopRec();
     stopStream();
     camState = 'off'; store.set('cam', false);
-    lastPred = null;
+    if (!frozen) lastPred = null;   // a test photo on screen keeps its answer
     renderCam(); renderPrediction();
   }
   function checkCameras() {
@@ -425,7 +439,7 @@
           EDU.el('button', { type: 'button', class: 'btn upl-btn', onclick: function () { uploadTo(c.id); } },
             EDU.el('span', { 'aria-hidden': 'true', text: '🖼️' }), EDU.el('span', { text: t('upload_imgs') }))),
         EDU.el('div', { class: 'cls-more' },
-          EDU.el('button', { type: 'button', class: 'btn btn-sm btn-ghost clr-btn', text: '🧹 ' + t('clear_class'), onclick: function () { clearClass(c.id); } }),
+          EDU.el('button', { type: 'button', class: 'btn btn-sm btn-ghost clr-btn', text: '🧹 ' + t('clear_class'), disabled: !n, onclick: function () { clearClass(c.id); } }),
           EDU.el('button', { type: 'button', class: 'btn btn-sm btn-ghost btn-danger del-btn', text: '✕ ' + t('remove_class'), disabled: classes.length <= MIN, onclick: function () { removeClass(c.id); } })));
       card.style.setProperty('--cc', colorOf(c));
       wrap.appendChild(card);
@@ -449,6 +463,7 @@
     badge.textContent = exLabel(n);
     badge.setAttribute('data-n', String(n));
     badge.classList.toggle('has', n > 0);
+    $('.clr-btn', card).disabled = !n;   // nothing to clear yet
     var strip = $('.thumbs', card);
     if (!n) { card.replaceChild(thumbStrip(id), strip); return; }
     var empty = $('.empty', strip); if (empty) empty.remove();
@@ -463,24 +478,29 @@
     updatePrediction();
   }
 
+  /* one recording at a time; on a multi-touch smartboard a second child pressing another class
+     must not stop (or steal) the first child's recording when they let go */
+  function startRecBy(id, by) { if (recId) return; startRec(id); if (recId) recBy = by; }
+  function stopRecBy(by) { if (recId && recBy === by) stopRec(); }
   function bindHold(btn, id) {
     btn.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       e.preventDefault();
+      if (recId) return;
       try { btn.setPointerCapture(e.pointerId); } catch (x) { }
-      startRec(id);
+      startRecBy(id, 'p' + e.pointerId);
     });
-    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function (ev) { btn.addEventListener(ev, stopRec); });
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function (ev) { btn.addEventListener(ev, function (e) { stopRecBy('p' + e.pointerId); }); });
     btn.addEventListener('contextmenu', function (e) { e.preventDefault(); });
     btn.addEventListener('keydown', function (e) {
-      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if (!e.repeat) startRec(id); }
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if (!e.repeat) startRecBy(id, 'b' + e.key); }
     });
-    btn.addEventListener('keyup', function (e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); stopRec(); } });
-    btn.addEventListener('blur', stopRec);
+    btn.addEventListener('keyup', function (e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); stopRecBy('b' + e.key); } });
+    btn.addEventListener('blur', function () { if (recBy && recBy.charAt(0) === 'b') stopRec(); });
   }
 
   function addClass() {
-    if (classes.length >= MAX) { EDU.toast(t('max_classes', { n: EDU.fmt(MAX) })); return; }
+    if (classes.length >= MAX) { toast(t('max_classes', { n: EDU.fmt(MAX) })); return; }
     classes.push(newClass(null, freeColor()));
     saveClasses(); renderClasses(); renderPrediction();
   }
@@ -490,7 +510,7 @@
   }
   function removeClass(id) {
     var c = byId(id); if (!c) return;
-    if (classes.length <= MIN) { EDU.toast(t('min_classes', { n: EDU.fmt(MIN) })); return; }
+    if (classes.length <= MIN) { toast(t('min_classes', { n: EDU.fmt(MIN) })); return; }
     if ((counts[id] || 0) > 0 && !confirm(t('confirm_remove_class', { name: nameOf(c) }))) return;
     if (recId === id) stopRec();
     forgetExamples(id);
@@ -602,7 +622,8 @@
     if (camState === 'on' && !frozen && best) {
       camLabel.hidden = false;
       camLabel.style.setProperty('--cc', unsure ? 'var(--border)' : colorOf(best));
-      setText($('#camLabelTxt'), (unsure ? t('not_sure') : nameOf(best)) + ' · ' + pct + '%');
+      /* isolate "80%" so Urdu shows it like the bars (not "%80" after Urdu letters) */
+      setText($('#camLabelTxt'), (unsure ? t('not_sure') : nameOf(best)) + ' · \u2066' + pct + '%\u2069');
     } else camLabel.hidden = true;
     maybeSpeak(!unsure && bestP >= 0.7 ? best : null);
   }
@@ -615,7 +636,7 @@
     if (!id || id === spoken || (!frozen && now - stableSince < 900)) return;
     spoken = id;
     EDU.speak(nameOf(c)).then(function (ok) {
-      if (!ok) { EDU.toast(t('no_voice')); speakOn = false; store.set('speak', false); $('#speakChk').checked = false; }
+      if (!ok) { toast(t('no_voice')); speakOn = false; store.set('speak', false); $('#speakChk').checked = false; }
     });
   }
 
@@ -653,7 +674,7 @@
     return new Float32Array(u8.buffer);
   }
   function saveModel() {
-    if (!knn || !totalExamples()) { EDU.toast(t('nothing_to_save')); return; }
+    if (!knn || !totalExamples()) { toast(t('nothing_to_save')); return; }
     var ds = knn.getClassifierDataset();
     var out = {
       app: SLUG, v: 1, model: MODEL_ID, dim: embDim, k: K, saved: new Date().toISOString(),
@@ -695,9 +716,9 @@
         classes = list; counts = newCounts; thumbs = newThumbs;
         if (m.k) { K = EDU.clamp(parseInt(m.k, 10) || 10, 1, 20); store.set('k', K); }
         saveClasses(); renderAll(); refreshFrozen();
-        EDU.toast(t('model_opened', { n: EDU.fmt(totalExamples()) }));
+        toast(t('model_opened', { n: EDU.fmt(totalExamples()) }));
       });
-    }).catch(function (e) { console.warn(e); EDU.toast(t('bad_file')); });
+    }).catch(function (e) { console.warn(e); toast(t('bad_file')); });
   }
 
   /* ---------------- misc UI ---------------- */
@@ -767,12 +788,32 @@
   document.addEventListener('keydown', function (e) {
     if (e.repeat || e.ctrlKey || e.metaKey || e.altKey || typingTarget(e.target)) return;
     var d = parseInt(e.key, 10);
-    if (d >= 1 && d <= classes.length) { recKey = e.key; startRec(classes[d - 1].id); }
+    if (d >= 1 && d <= classes.length) startRecBy(classes[d - 1].id, 'd' + e.key);
   });
-  document.addEventListener('keyup', function (e) { if (recKey && e.key === recKey) stopRec(); });
+  document.addEventListener('keyup', function (e) { stopRecBy('d' + e.key); });
+  /* safety net if pointer capture was not possible and the finger is lifted outside the button */
+  ['pointerup', 'pointercancel'].forEach(function (ev) { document.addEventListener(ev, function (e) { stopRecBy('p' + e.pointerId); }); });
   document.addEventListener('visibilitychange', function () { if (document.hidden) stopRec(); });
+  window.addEventListener('blur', function () { if (recBy && recBy.charAt(0) !== 'p') stopRec(); });   // key-up is lost when the window loses focus
   window.addEventListener('resize', setHeaderVar);
-  window.addEventListener('pagehide', function () { stopStream(); });
+  /* the header height changes when the Indian-script web fonts arrive: re-measure for the pinned cards */
+  if (document.fonts) {
+    if (document.fonts.ready) document.fonts.ready.then(setHeaderVar);
+    if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', setHeaderVar);
+  }
+  function onFullscreen() {
+    var fs = document.fullscreenElement || document.webkitFullscreenElement;
+    $('#fsBtn').setAttribute('aria-pressed', fs && fs.id === 'lab' ? 'true' : 'false');
+    placeToasts();
+  }
+  document.addEventListener('fullscreenchange', onFullscreen);
+  document.addEventListener('webkitfullscreenchange', onFullscreen);
+  /* leaving the page releases the camera; coming back with the Back button (page cache) opens it again */
+  window.addEventListener('pagehide', function () {
+    stopRec(); stopStream();
+    if (camState !== 'off') { camState = 'off'; renderCam(); renderPrediction(); }
+  });
+  window.addEventListener('pageshow', function (e) { if (e.persisted && store.get('cam', false) && camState === 'off') startCamera(); });
   EDU.onTheme(function () { drawFp(null); });
   EDU.onLang(function () { renderAll(); refreshFrozen(); setHeaderVar(); });
 

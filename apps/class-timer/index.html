@@ -11,13 +11,14 @@
     /* ---------- tabs (segmented, wraps to 2×2 on phones) ---------- */
     .ct-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; padding: 5px; margin: 0 0 16px;
       background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px; }
-    .ct-tabs button { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 8px 10px;
+    .ct-tabs button { display: flex; align-items: center; justify-content: center; gap: 2px 8px; flex-wrap: wrap; min-height: 48px; padding: 8px 10px;
       border: 0; border-radius: 10px; background: transparent; color: var(--muted); font: inherit; font-weight: 700; font-size: 1rem;
       line-height: 1.2; text-align: center; cursor: pointer; min-width: 0; }
     .ct-tabs button:hover { color: var(--text); background: color-mix(in srgb, var(--surface) 55%, transparent); }
     .ct-tabs button[aria-selected="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
     .ct-tab-ico { font-size: 1.3rem; line-height: 1; flex: none; }
-    @media (max-width: 640px) { .ct-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ct-tabs button { font-size: .95rem; } }
+    /* phones: 2×2; the icon moves above the word only when both do not fit on one line */
+    @media (max-width: 640px) { .ct-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ct-tabs button { font-size: .95rem; padding-inline: 6px; } }
 
     /* ---------- panel layout ---------- */
     .ct-layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
@@ -69,13 +70,14 @@
     .ct-main { min-width: 9.5rem; }
     .btn .ico { width: 1.15em; height: 1.15em; flex: none; }
     @media (max-width: 600px) {
-      .ct-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .ct-controls .btn { white-space: normal; min-width: 0; padding-inline: 10px; }
+      /* a column is never narrower than its longest word, so labels like "இடைநிறுத்து" never break mid-word */
+      .ct-controls { display: grid; grid-template-columns: repeat(2, minmax(min-content, 1fr)); }
+      .ct-controls .btn { white-space: normal; min-width: 0; padding-inline: 8px; }
       .ct-stage .ct-activity { font-size: 1.02rem; }
+      .ct-stage .ct-activity::placeholder { font-size: .84rem; }
       .ct-stage { padding: 14px; }
       .ct-controls .btn-lg { font-size: 1rem; padding-inline: 8px; gap: 6px; }
       .ct-controls .btn span { min-width: 0; overflow-wrap: break-word; }
-      .sg-btn { flex-direction: column; justify-content: center; text-align: center; gap: 4px; min-height: 76px; padding: 8px 6px; }
     }
 
     /* ---------- countdown side ---------- */
@@ -131,7 +133,7 @@
     .sg-timer { font-weight: 800; font-size: 1.35rem; padding: 4px 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-variant-numeric: tabular-nums; }
     .sg-timer.warn { color: var(--c2); border-color: var(--c2); }
     .sg-timer.done { color: var(--danger); border-color: var(--danger); }
-    .sg-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .sg-grid { display: grid; grid-template-columns: repeat(2, minmax(min-content, 1fr)); gap: 8px; }   /* never break a word mid-way */
     .sg-btn { --sign: var(--c3); display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 8px 12px; text-align: start;
       border: 2px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; line-height: 1.25; min-width: 0; }
     .sg-btn:hover { border-color: var(--sign); }
@@ -162,6 +164,18 @@
     .ct-stage.is-fs .sg-bars i { width: 2vh; }
     .ct-stage.is-fs .sg-timer { font-size: 5vh; }
 
+    /* phones: sign buttons stack the icon above the text (placed after the base .sg-btn rule so it wins) */
+    @media (max-width: 600px) {
+      .sg-btn { flex-direction: column; justify-content: center; text-align: center; gap: 4px; min-height: 76px; padding: 8px 6px; }
+    }
+    /* very narrow phones (320–380 px): slightly smaller labels so long Malayalam / Tamil / Kannada words fit */
+    @media (max-width: 380px) {
+      .ct-tabs button { font-size: .88rem; column-gap: 6px; padding-inline: 4px; }
+      .sg-btn { font-size: .88rem; padding-inline: 4px; }
+      .ct-custom { gap: 6px; }
+      .ct-custom .field > span { font-size: .8rem; }
+    }
+
     .ct-help ul { margin: 10px 0 0; padding-inline-start: 1.2em; }
     .ct-help li + li { margin-top: 8px; }
     .ct-help summary { cursor: pointer; font-weight: 700; }
@@ -170,6 +184,10 @@
     /* ---------- printing the work-mode signs ---------- */
     #ct-print { display: none; }
     @media print {
+      /* a normal Ctrl+P prints the timer / lap table without the buttons */
+      .ct-controls, .ct-stage .ct-activity:placeholder-shown { display: none !important; }
+      .ct-stage .ct-activity { border: 0; }
+      .ct-ring.done .ct-digits { animation: none; }
       body.ct-printing #app > *:not(#ct-print) { display: none !important; }
       body.ct-printing #ct-print { display: block !important; }
       .ps-page { --sign: #5f3dc4; height: 94vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4vh;

@@ -52,9 +52,11 @@
     hidden: prefs.hidden === true
   };
   var saved = store.get('board', null);
-  /* a brand-new board on a phone held upright starts with a tall page */
+  /* a brand-new board on a phone held upright starts with a tall page, and in the dark theme it
+     starts as a blackboard (no glaring white rectangle at night) */
   var portraitPhone = (window.innerWidth || 1000) < 700 && (window.innerHeight || 0) > (window.innerWidth || 0);
-  var pages = (saved && D.cleanPages(saved.pages)) || [D.newPage({ shape: portraitPhone ? 'tall' : 'wide' })];
+  var pages = (saved && D.cleanPages(saved.pages, MAX_PAGES)) ||
+    [D.newPage({ shape: portraitPhone ? 'tall' : 'wide', board: EDU.theme() === 'dark' ? 'black' : 'white' })];
   var cur = saved ? EDU.clamp(saved.cur | 0, 0, pages.length - 1) : 0;
   var hist = {};                       /* page id → { u: [snapshots], r: [snapshots] } (memory only) */
   var view = { cssW: 0, cssH: 0, dpr: 1, scale: 1 };
@@ -107,6 +109,11 @@
       if (/^#[0-9a-f]{6}$/i.test(e.target.value)) { prefs.custom = e.target.value; setColor('custom'); }
     });
     $('#wb-custom-in').addEventListener('click', function () { if (prefs[colorKey()] !== 'custom') setColor('custom'); });
+    /* while the text box is open, a colour or size click restyles the text being typed: keep the
+       focus (and the typing) in the box instead of finishing it in the old colour */
+    ['#wb-colors', '#wb-sizes'].forEach(function (sel) {
+      $(sel).addEventListener('mousedown', function (e) { if (textAt && e.target.closest('button')) e.preventDefault(); });
+    });
 
     var sizes = $('#wb-sizes');
     SIZE_KEYS.forEach(function (k, i) {
@@ -202,7 +209,11 @@
     else {
       /* keep the toolbar and the whole board on one screen (below the sticky header) */
       var top = document.querySelector('.edu-top'), bar = $('#wb-bar');
-      var used = (top ? top.offsetHeight : 0) + (prefs.hidden || !bar ? 0 : bar.offsetHeight) + 40;
+      var barH = prefs.hidden || !bar ? 0 : bar.offsetHeight;
+      /* a phone's toolbar wraps into 5 rows: counting all of it would shrink the board to a stamp on a
+         small (360 x 640) phone, so reserve room for about two rows and let the rest scroll */
+      if ((window.innerWidth || 1000) < 761) barH = Math.min(barH, 100);
+      var used = (top ? top.offsetHeight : 0) + barH + 40;
       availH = Math.max(240, (window.innerHeight || 700) - used);
     }
     var w = Math.max(120, Math.floor(Math.min(availW, availH * S.w / S.h)));
@@ -251,8 +262,9 @@
     if (reshape) fit(true); else redraw();
     changed();
   }
-  function undo() { commitText(); var h = H(); if (!h.u.length) return; h.r.push(snapshot()); restore(h.u.pop()); }
-  function redo() { commitText(); var h = H(); if (!h.r.length) return; h.u.push(snapshot()); restore(h.r.pop()); }
+  /* (ignored while a pen or the eraser is still on the board, so history never mixes two states) */
+  function undo() { if (drag) return; commitText(); var h = H(); if (!h.u.length) return; h.r.push(snapshot()); restore(h.u.pop()); }
+  function redo() { if (drag) return; commitText(); var h = H(); if (!h.r.length) return; h.u.push(snapshot()); restore(h.r.pop()); }
   function updateUndo() {
     var h = H();
     btn.undo.disabled = !h.u.length; btn.redo.disabled = !h.r.length;
@@ -417,6 +429,8 @@
   }
   ta.addEventListener('input', positionText);
   ta.addEventListener('keydown', function (e) {
+    /* Hindi, Tamil, Urdu … typing tools (IME) use Enter to pick a word: never finish the text then */
+    if (e.isComposing || e.keyCode === 229) return;
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commitText(); }
     else if (e.key === 'Escape') { e.preventDefault(); textAt = null; ta.hidden = true; ta.value = ''; }
   });
@@ -465,7 +479,10 @@
   function goPage(i) {
     commitText();
     if (i < 0 || i >= pages.length) return;
-    if (drag) { drag = null; }
+    if (drag) {                          /* page changed mid-stroke (PageDown): keep an eraser's work undoable */
+      var d = drag; drag = null;
+      if (d.tool === 'eraser' && d.changed) { pushHistory(d.before); scheduleThumb(page().id); }
+    }
     cur = i;
     fit(true); syncControls(); updateUndo(); renderPages(); scheduleSave();
   }
@@ -490,7 +507,7 @@
   }
 
   /* ---------------- saving (vector strokes, not images) ---------------- */
-  var saveT = 0, warnedBig = false;
+  var saveT = 0, warnedBig = false, warnedFail = false;
   function scheduleSave() { clearTimeout(saveT); saveT = setTimeout(saveNow, 300); }
   function saveNow() {
     clearTimeout(saveT); saveT = 0;
@@ -502,13 +519,17 @@
       if (!warnedBig) { warnedBig = true; EDU.toast(t('too_big'), 7000); }
       return;
     }
-    store.set('board', data);
-    if (size > 4e5) {                         /* EDU.store never reports a full storage: read it back to be sure it saved */
+    warnedBig = false;
+    /* EDU.store.set returns false when the browser storage is full (other apps can fill it too);
+       big boards are also read back, in case an older runtime gives no answer */
+    var ok = store.set('board', data) !== false;
+    if (ok && size > 4e5) {
       var back = store.get('board', null), n = function (ps) { return ps.reduce(function (a, p) { return a + (p.s ? p.s.length : 0); }, 0); };
-      var ok = back && Array.isArray(back.pages) && back.pages.length === pages.length && n(back.pages) === n(pages);
-      if (!ok && !warnedBig) { warnedBig = true; EDU.toast(t('too_big'), 7000); }
-      if (ok) warnedBig = false;
+      ok = !!(back && Array.isArray(back.pages) && back.pages.length === pages.length && n(back.pages) === n(pages));
     }
+    if (!ok && !warnedFail) EDU.toast(t('save_failed'), 8000);
+    warnedFail = !ok;
+    wb.dataset.saved = ok ? '1' : '0';
   }
   window.addEventListener('pagehide', function () { commitText(); if (saveT) saveNow(); });
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden' && saveT) saveNow(); });
@@ -519,18 +540,28 @@
     commitText();
     EDU.downloadCanvas(D.paint(document.createElement('canvas'), page(), 1.5), 'whiteboard-' + stamp() + '-page-' + (cur + 1) + '.png');
   }
-  function printAll() {
-    commitText();
+  /* One figure per page. The Print button uses pictures (and waits for them); the browser's own
+     Print (Ctrl+P, menu) gets canvases, which are ready at once, so it never prints a blank sheet. */
+  function fillPrint(asCanvas) {
     var box = $('#wb-print'), imgs = [];
     box.textContent = '';
     pages.forEach(function (pg, i) {
-      var img = EDU.el('img', { alt: t('page_n', { n: EDU.fmt(i + 1) }), src: D.paint(document.createElement('canvas'), pg, 1).toDataURL('image/png') });
-      imgs.push(img);
-      box.appendChild(EDU.el('figure', {}, img, EDU.el('figcaption', { text: t('app_title') + ' · ' + t('page_n', { n: EDU.fmt(i + 1) }) })));
+      /* a chalkboard page prints on white paper with dark ink (palette colours switch back), saving toner */
+      var paper = D.isDark(pg) ? { bg: pg.bg, board: 'white', shape: pg.shape, s: pg.s } : pg;
+      var label = t('page_n', { n: EDU.fmt(i + 1) }), c = D.paint(document.createElement('canvas'), paper, 1), pic;
+      if (asCanvas) { pic = c; c.setAttribute('role', 'img'); c.setAttribute('aria-label', label); }
+      else { pic = EDU.el('img', { alt: label, src: c.toDataURL('image/png') }); imgs.push(pic); }
+      box.appendChild(EDU.el('figure', {}, pic, EDU.el('figcaption', { text: t('app_title') + ' · ' + label })));
     });
+    return imgs;
+  }
+  function printAll() {
+    commitText();
+    var imgs = fillPrint(false);
     Promise.all(imgs.map(function (im) { return im.decode ? im.decode().catch(function () { }) : null; }))
       .then(function () { setTimeout(function () { window.print(); }, 50); });
   }
+  window.addEventListener('beforeprint', function () { commitText(); if (!$('#wb-print').children.length) fillPrint(true); });
   window.addEventListener('afterprint', function () { $('#wb-print').textContent = ''; });
 
   function exportBoard() {
@@ -551,7 +582,7 @@
       return EDU.readText(f).then(function (txt) {
         var data = null;
         try { data = JSON.parse(txt); } catch (e) { data = null; }
-        var list = data && D.cleanPages(Array.isArray(data) ? data : data.pages);
+        var list = data && D.cleanPages(Array.isArray(data) ? data : data.pages, MAX_PAGES);
         if (!list) { EDU.toast(t('bad_file')); return; }
         var hasInk = pages.some(function (p) { return p.s.length; });
         if (hasInk && !confirm(t('confirm_open'))) return;
@@ -595,6 +626,8 @@
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (tg && tg.isContentEditable)) return;
     if (document.querySelector('.edu-modal-back')) return;
     var k = String(e.key || '').toLowerCase(), mod = e.ctrlKey || e.metaKey;
+    /* Hindi (InScript), Bengali, Urdu … keyboards give a non-Latin key: use the key's position instead */
+    if (!/^[a-z]$/.test(k) && /^Key[A-Z]$/.test(e.code || '')) k = e.code.slice(3).toLowerCase();
     if (mod && k === 'z') { e.preventDefault(); if (e.shiftKey) redo(); else undo(); return; }
     if (mod && k === 'y') { e.preventDefault(); redo(); return; }
     if (mod || e.altKey) return;

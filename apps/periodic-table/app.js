@@ -115,18 +115,42 @@
     });
   }
 
+  /* Search forgives the spelling variants people really type: ताँबा = तांबा (chandrabindu/anusvara),
+     ज़िंक = जिंक (nukta), फॉस्फोरस = फास्फोरस, Malayalam chillu forms, Arabic vs Urdu letter shapes,
+     zero-width joiners and accents. Query and names go through the same function. */
+  var NORM_MAP = {
+    'ँ': 'ं', 'ঁ': 'ং', 'ਁ': 'ਂ', 'ੰ': 'ਂ', 'ઁ': 'ં', 'ଁ': 'ଂ',
+    'ॉ': 'ा', 'ॅ': 'े', 'ऑ': 'आ', 'ऍ': 'ए', 'ॲ': 'आ',
+    'ૉ': 'ા', 'ૅ': 'ે', 'ઑ': 'આ', 'ઍ': 'એ',
+    'ൺ': 'ണ്', 'ൻ': 'ന്', 'ർ': 'ര്', 'ൽ': 'ല്', 'ൾ': 'ള്',
+    'ي': 'ی', 'ى': 'ی', 'ك': 'ک', 'ه': 'ہ', 'ة': 'ہ'
+  };
+  function norm(s) {
+    s = String(s == null ? '' : s).trim().toLowerCase();
+    try { s = s.normalize('NFD'); } catch (e) { /* very old browser: compare as typed */ }
+    return s.replace(/[​-‍⁠﻿̀-ًͯ-़়਼઼଼಼ٰٟ]/g, '')
+      .replace(/[ँঁਁੰઁଁॉॅऑऍॲૉૅઑઍൺ-ൾيىكهة]/g, function (c) { return NORM_MAP[c]; });
+  }
+  var ALIASES = window.PT_ALIASES || {};
+  var searchIndex = null;
+  function getIndex() {
+    if (searchIndex) return searchIndex;
+    searchIndex = ELS.map(function (e) {
+      var names = [e.name, e.latin, e.alias].concat(ALIASES[e.z] || []);
+      Object.keys(NAMES).forEach(function (L) { names.push(NAMES[L][e.z - 1]); });
+      return { e: e, sym: e.sym.toLowerCase(), names: names.filter(Boolean).map(norm) };
+    });
+    return searchIndex;
+  }
   function searchMatches(q) {
-    q = String(q || '').trim().toLowerCase();
+    q = norm(q).replace(/\s+/g, ' ');
     if (!q) return null;
     if (/^\d+$/.test(q)) { var e0 = BYZ[+q]; return e0 ? [{ e: e0, score: 100 }] : []; }
     var res = [];
-    ELS.forEach(function (e) {
-      var score = e.sym.toLowerCase() === q ? 100 : 0;
-      var names = [e.name, e.latin, e.alias];
-      Object.keys(NAMES).forEach(function (L) { names.push(NAMES[L][e.z - 1]); });
-      names.forEach(function (n) {
-        if (!n) return;
-        n = String(n).toLowerCase();
+    getIndex().forEach(function (it) {
+      var e = it.e;
+      var score = it.sym === q ? 100 : 0;
+      it.names.forEach(function (n) {
         if (n === q) score = Math.max(score, 90);
         else if (n.indexOf(q) === 0) score = Math.max(score, 60);
         else if (q.length >= 2 && n.indexOf(q) > 0) score = Math.max(score, 30);
@@ -167,7 +191,8 @@
     feat.innerHTML = '';
     if (!e) { feat.appendChild(el('p', { class: 'muted', text: t('featured_hint') })); return; }
     feat.appendChild(featTile(e, 'pt-feat-tile'));
-    feat.appendChild(el('div', { class: 'pt-feat-info' },
+    /* the table itself is always left-to-right, but the sentences in this box follow the language (Urdu = RTL) */
+    feat.appendChild(el('div', { class: 'pt-feat-info', dir: document.documentElement.dir === 'rtl' ? 'rtl' : 'ltr' },
       el('div', { class: 'pt-feat-name', text: lname(e) }),
       EDU.lang !== 'en' ? el('div', { class: 'pt-feat-en no-i18n', lang: 'en', text: e.name }) : null,
       el('div', { class: 'pt-feat-cat', text: t('cat_' + e.cat) + ' · ' + t('block_name', { b: e.block }) }),
@@ -345,7 +370,8 @@
     row(t('d_shells'), sh);
     var ve = valenceE(e);
     if (ve !== null) row(t('d_valence'), EDU.fmt(ve));
-    if (e.valency) row(t('d_valency'), e.valency.map(function (v) { return EDU.fmt(v); }).join(', '), 'd-valency');
+    /* lists of numbers stay left-to-right (as the shells do), also in Urdu */
+    if (e.valency) row(t('d_valency'), el('span', { class: 'ltr', text: e.valency.map(function (v) { return EDU.fmt(v); }).join(', ') }), 'd-valency');
     if (e.massNumber) row(t('d_particles'), t('particles_val', { p: e.z, n: e.massNumber - e.z, e: e.z, a: e.massNumber }));
 
     var left = el('div', { class: 'stack' }, dl);
@@ -412,7 +438,8 @@
     var v = e.shells[e.shells.length - 1], sh = shellsText(e), nm = lname(e);
     if (e.z === 1) return t('ex_h');
     if (e.z === 2 || v === 8) return t('ex_full', { name: nm, shells: sh });
-    if (v === 4) return t('ex_share', { name: nm, shells: sh });
+    /* carbon and silicon share their 4 electrons; boron (a metalloid) also shares its 3 rather than losing them */
+    if (v === 4 || e.z === 5) return t('ex_share', { name: nm, shells: sh, v: v });
     if (v < 4) return t('ex_lose', { name: nm, shells: sh, v: v });
     return t('ex_gain', { name: nm, shells: sh, v: v, val: 8 - v });
   }
@@ -465,8 +492,10 @@
     var fb = $('#q-feedback'); fb.innerHTML = '';
     if (picked !== null) {
       var ok = picked === right;
-      fb.appendChild(el('strong', { class: ok ? 'ok' : 'bad', text: ok ? t('correct') : t('wrong') }));
-      fb.appendChild(document.createTextNode(' '));
+      var verdict = ok ? t('correct') : t('wrong');
+      fb.appendChild(el('strong', { class: ok ? 'ok' : 'bad', text: verdict }));
+      /* "Not quite" has no full stop of its own: keep it from running into the next sentence */
+      fb.appendChild(document.createTextNode(/[!?.।۔:]\s*$/.test(verdict) ? ' ' : ': '));
       fb.appendChild(el('span', { text: S.qmode === 'valency' ? explainValency(e) : t('ans_fact', { s: e.sym, name: lname(e), n: e.z }) }));
     }
     $('#q-next').disabled = picked === null;
@@ -483,15 +512,18 @@
     if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
     var n = parseInt(ev.key, 10);
     if (n >= 1 && n <= Q.cur.opts.length && Q.cur.picked === null) { answer(Q.cur.opts[n - 1]); ev.preventDefault(); }
-    else if (ev.key === 'Enter' && Q.cur.picked !== null && ev.target.id !== 'q-next') { nextQuestion(); ev.preventDefault(); }
+    /* Enter = next question, unless a control has focus (then Enter must activate that control) */
+    else if (ev.key === 'Enter' && Q.cur.picked !== null && !(ev.target && ev.target.closest && ev.target.closest('button, a, summary, [role="tab"]'))) { nextQuestion(); ev.preventDefault(); }
   });
   $('#reset').addEventListener('click', function () {
     if (!confirm(t('confirm_reset'))) return;
     ['tab', 'sel', 'colour', 'hl', 'qmode', 'qrange', 'best'].forEach(function (k) { store.remove(k); });
     var keepTab = S.tab;
     S = defaults(); S.tab = keepTab; store.set('tab', keepTab);
-    legendKey = ''; query = ''; search.value = '';
-    renderAll(); newRound();
+    legendKey = ''; query = ''; search.value = ''; hoverZ = 0;
+    /* start the new round BEFORE re-rendering: the old question may belong to another mode
+       (a valency question has options 0–4, which are not element numbers) */
+    newRound(); renderAll();
   });
 
   /* ---------------- Class 9–10 corner ---------------- */
@@ -509,7 +541,7 @@
       var tr = el('tr', {}, el('td', { text: String(e.z) }), el('td', { class: 'no-i18n' }, el('strong', { text: e.sym })), el('td', { class: 'nm' }, nameBtn), el('td', { text: String(e.massNumber) }));
       for (var k = 0; k < 4; k++) tr.appendChild(el('td', { text: e.shells[k] != null ? String(e.shells[k]) : '' }));
       tr.appendChild(el('td', { text: String(valenceE(e)) }));
-      tr.appendChild(el('td', { text: e.valency.join(', ') }));
+      tr.appendChild(el('td', {}, el('span', { class: 'ltr', text: e.valency.join(', ') })));
       body.appendChild(tr);
     });
     tb.appendChild(body);
@@ -525,8 +557,8 @@
       var avg = (a.massValue + b.massValue) / 2;
       tbody.appendChild(el('tr', {},
         el('td', { class: 'no-i18n', title: [lname(a), lname(m), lname(b)].join(', ') }, el('strong', { text: a.sym + ', ' + m.sym + ', ' + b.sym })),
-        el('td', { text: '(' + a.mass + ' + ' + b.mass + ') ÷ 2 = ' + EDU.fmt(avg, { maximumFractionDigits: 2 }) }),
-        el('td', { text: m.sym + ' = ' + m.mass })));
+        el('td', {}, el('span', { class: 'ltr', text: '(' + a.mass + ' + ' + b.mass + ') ÷ 2 = ' + EDU.fmt(avg, { maximumFractionDigits: 2 }) })),
+        el('td', {}, el('span', { class: 'ltr', text: m.sym + ' = ' + m.mass }))));
     });
     tr3.appendChild(tbody);
     // Mendeleev vs modern
@@ -557,8 +589,8 @@
           el('td', { text: String(e.z) }),
           el('td', { text: withAnswers || giveSym ? e.sym : '' }),
           el('td', { text: withAnswers || !giveSym ? lname(e) : '' }),
-          el('td', { text: withAnswers ? e.shells.join(', ') : '' }),
-          el('td', { text: withAnswers ? e.valency.join(', ') : '' })));
+          el('td', {}, withAnswers ? el('span', { class: 'ltr', text: e.shells.join(', ') }) : null),
+          el('td', {}, withAnswers ? el('span', { class: 'ltr', text: e.valency.join(', ') }) : null)));
       });
       tbl.appendChild(b);
       return tbl;

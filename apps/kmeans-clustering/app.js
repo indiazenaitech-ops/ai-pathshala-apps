@@ -33,16 +33,20 @@
   var saveTimer = null;
   function save() {
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(function () {
-      store.set('state', {
+    saveTimer = setTimeout(writeState, 200);
+  }
+  /* closing or reloading the tab right after a change must not lose it */
+  function flushSave() { if (saveTimer) { clearTimeout(saveTimer); writeState(); } }
+  function writeState() {
+    saveTimer = null;
+    store.set('state', {
         v: 1, k: S.k, init: S.init, ds: S.ds, axis: S.axis, speed: S.speed, tool: S.tool, opts: S.opts, names: S.names,
         points: S.points.map(function (p) { return [Math.round(p.x * 100) / 100, Math.round(p.y * 100) / 100]; }),
         labels: S.labels, cents: S.cents.map(function (c) { return [c.x, c.y]; }),
         trails: S.trails.map(function (tr) { return tr.map(function (c) { return [c.x, c.y]; }); }),
         history: S.history, round: S.round, next: S.next, done: S.done, msg: S.msg,
         elbow: S.elbow, elbowK: S.elbowK, elbowStale: S.elbowStale
-      });
-    }, 200);
+    });
   }
   function load() {
     var s = store.get('state', null);
@@ -73,7 +77,7 @@
         d.next = s.next === 'update' && d.labels.some(function (l) { return l >= 0; }) ? 'update' : 'assign';
         d.done = !!s.done && d.labels.every(function (l) { return l >= 0; });
         if (d.done) d.next = 'done';
-        d.msg = s.msg && typeof s.msg.code === 'string' && MSG[s.msg.code] ? { code: s.msg.code, vars: s.msg.vars || {} } : { code: 'ready', vars: {} };
+        d.msg = s.msg && typeof s.msg.code === 'string' && hasMsg(s.msg.code) ? { code: s.msg.code, vars: s.msg.vars && typeof s.msg.vars === 'object' ? s.msg.vars : {} } : { code: 'ready', vars: {} };
       } else {
         d.labels = d.points.map(function () { return -1; });
       }
@@ -87,19 +91,22 @@
   }
 
   /* ---------------- messages (stored as code + numbers, translated when shown) ---------------- */
+  function n0(v) { return num(v) ? v : 0; }
   var MSG = {
     ready: function (v) { return EDU.t('msg_ready', { k: EDU.fmt(S.k) }); },
-    assign: function (v) { return EDU.t('msg_assign', { n: EDU.fmt(v.n || 0), c: EDU.fmt(v.c || 0) }); },
+    assign: function (v) { return EDU.t('msg_assign', { n: EDU.fmt(n0(v.n)), c: EDU.fmt(n0(v.c)) }); },
     update: function (v) {
-      var s = EDU.t('msg_update', { n: EDU.fmt(v.n || 0) });
-      if (v.empty && v.empty.length) s += ' ' + EDU.t('msg_empty', { list: v.empty.map(function (x) { return EDU.fmt(x); }).join(', ') });
+      var s = EDU.t('msg_update', { n: EDU.fmt(n0(v.n)) });
+      var empty = Array.isArray(v.empty) ? v.empty.filter(num) : [];
+      if (empty.length) s += ' ' + EDU.t('msg_empty', { list: empty.map(function (x) { return EDU.fmt(x); }).join(', ') });
       return s;
     },
-    done: function (v) { return EDU.t('msg_done', { n: EDU.fmt(v.n || 0), v: fmtInertia(v.v || 0) }); },
+    done: function (v) { return EDU.t('msg_done', { n: EDU.fmt(n0(v.n)), v: fmtInertia(n0(v.v)) }); },
     need: function () { return EDU.t('msg_need', { k: EDU.fmt(S.k) }); },
     data: function () { return EDU.t('msg_data'); },
     drag: function () { return EDU.t('msg_drag'); }
   };
+  function hasMsg(code) { return Object.prototype.hasOwnProperty.call(MSG, code); }
   function setMsg(code, vars) { S.msg = { code: code, vars: vars || {} }; }
   function fmtInertia(v) { return EDU.fmt(v, { maximumFractionDigits: v < 100 ? 1 : 0 }); }
 
@@ -429,18 +436,15 @@
     var cv = EDU.$('#board');
     try { cv.setPointerCapture(e.pointerId); } catch (x) { }
     e.preventDefault();
-    // grab a centre?
+    // grab a centre? It only starts moving once the finger really moves, so a plain tap
+    // on a cross does not throw away the rounds done so far.
     var hit = -1, hd = Math.max(20, geom.r * 4.5);
     S.cents.forEach(function (c, j) { var p = toPx(geom, c), d = Math.hypot(p.x - px.x, p.y - px.y); if (d < hd) { hd = d; hit = j; } });
-    if (hit >= 0) {
-      drag = { mode: 'centre', j: hit };
-      S.labels = S.points.map(function () { return -1; });
-      S.history = []; S.round = 0; S.done = false; S.next = 'assign';
-      drawBoard();
-      return;
-    }
-    var d = clampData(toData(geom, px.x, px.y));
     maxWarned = false;
+    if (hit >= 0) { drag = { mode: 'grab', j: hit, start: px }; return; }
+    toolDown(clampData(toData(geom, px.x, px.y)));
+  }
+  function toolDown(d) {
     if (S.tool === 'erase') {
       drag = { mode: 'erase' };
       if (eraseAt(d)) { dataChanged(); renderAll(); }
@@ -452,6 +456,12 @@
   function onMove(e) {
     if (!drag || !geom) return;
     var px = evPos(e), d = clampData(toData(geom, px.x, px.y));
+    if (drag.mode === 'grab') {
+      if (Math.hypot(px.x - drag.start.x, px.y - drag.start.y) < 6) return;
+      drag = { mode: 'centre', j: drag.j, moved: true };
+      S.labels = S.points.map(function () { return -1; });
+      S.history = []; S.round = 0; S.done = false; S.next = 'assign';
+    }
     if (drag.mode === 'centre') {
       S.cents[drag.j] = d;
       drawBoard();
@@ -465,8 +475,13 @@
       }
     }
   }
-  function onUp() {
+  function onUp(e) {
     if (!drag) return;
+    if (drag.mode === 'grab') {   // a tap on a cross without moving: just use the tool there
+      var g = drag; drag = null;
+      if (e && e.type === 'pointerup' && geom) { toolDown(clampData(toData(geom, g.start.x, g.start.y))); drag = null; save(); }
+      return;
+    }
     if (drag.mode === 'centre') {
       S.trails = S.cents.map(function (c) { return [{ x: c.x, y: c.y }]; });
       setMsg('drag');
@@ -501,16 +516,16 @@
     pa.className = 'phase' + (S.done ? ' done' : S.next === 'assign' && S.cents.length ? ' on' : '');
     pu.className = 'phase' + (S.done ? ' done' : S.next === 'update' ? ' on' : '');
     var m = EDU.$('#msg');
-    var code = S.msg.code === 'need' || (!S.cents.length) ? 'need' : S.msg.code;
+    var code = S.msg.code === 'need' || !S.cents.length ? 'need' : hasMsg(S.msg.code) ? S.msg.code : 'ready';
     m.dataset.code = code;
-    m.textContent = (MSG[code] || MSG.ready)(S.msg.vars || {});
+    m.textContent = MSG[code](S.msg.vars || {});
     EDU.$('#print-sum').textContent = EDU.t('print_sum', { k: EDU.fmt(S.k), v: I === null ? '–' : fmtInertia(I), n: EDU.fmt(S.round), p: EDU.fmt(S.points.length) });
   }
   function renderSide() {
     EDU.$$('.ds-btn').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.ds === S.ds ? 'true' : 'false'); });
     var note = EDU.$('#cust-note');
-    note.hidden = S.axis !== 'customers';
-    if (!note.hidden) note.textContent = EDU.t('customers_note', { n: EDU.fmt(preset('customers').length) });
+    note.hidden = S.axis !== 'customers' || !S.points.length;
+    if (!note.hidden) note.textContent = EDU.t('customers_note', { n: EDU.fmt(S.points.length) });
     EDU.$$('#tools button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.tool === S.tool ? 'true' : 'false'); });
     EDU.$('#board').classList.toggle('erase', S.tool === 'erase');
     EDU.$('#count-line').textContent = EDU.t('points_count', { n: EDU.fmt(S.points.length) });
@@ -556,6 +571,7 @@
     if (sig !== groupsSig) {
       groupsSig = sig;
       tbl.innerHTML = '';
+      tbl.classList.toggle('cust', cust);
       var head = EDU.el('tr', null,
         EDU.el('th', { text: EDU.t('col_group') }),
         EDU.el('th', { text: EDU.t('col_points') }),
@@ -569,7 +585,8 @@
           inp.value = S.names[j] || '';
           inp.addEventListener('input', function () { S.names[j] = inp.value.slice(0, 40); drawBoard(); save(); });
           body.appendChild(EDU.el('tr', null,
-            EDU.el('td', { class: 'gname' }, EDU.el('span', { class: 'sw', style: { background: 'var(--c' + (j + 1) + ')' } }), EDU.t('group_n', { n: EDU.fmt(j + 1) })),
+            EDU.el('td', { class: 'gname' }, EDU.el('span', { class: 'sw', style: { background: 'var(--c' + (j + 1) + ')' } }),
+              EDU.el('span', { class: 'g-long', text: EDU.t('group_n', { n: EDU.fmt(j + 1) }) }), EDU.el('span', { class: 'g-short', 'aria-hidden': 'true', text: EDU.fmt(j + 1) })),
             EDU.el('td', { class: 'num g-count' }),
             cust ? [EDU.el('td', { class: 'num g-a' }), EDU.el('td', { class: 'num g-b' })] : EDU.el('td', { class: 'num g-a' }),
             EDU.el('td', null, inp)));
@@ -656,12 +673,18 @@
 
   function drawHistory() {
     var vals = S.history.map(function (v, i) { return { x: i + 1, y: v }; });
+    EDU.$('#history-box').classList.toggle('print-empty', !vals.length);   // nothing to print yet
     lineChart(EDU.$('#history'), {
       vals: vals, xMin: 1, xMax: Math.max(2, vals.length), xLabel: EDU.t('axis_round'), empty: EDU.t('history_empty'),
-      after: function (ctx, pts) {
-        var last = pts[pts.length - 1];
-        ctx.font = font(12.5, 700); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-        haloText(ctx, fmtInertia(last.v.y), Math.min(last.x, ctx.canvas.clientWidth - 30), last.y - 7, pal.primary);
+      after: function (ctx, pts, g) {
+        // label the latest value, kept inside the plot so it never covers the axis numbers
+        var last = pts[pts.length - 1], label = fmtInertia(last.v.y);
+        ctx.font = font(12.5, 700); ctx.textAlign = 'center';
+        var half = ctx.measureText(label).width / 2 + 3;
+        var x = Math.max(g.padL + half + 4, Math.min(last.x, g.padL + g.pw - half));
+        var above = last.y - 7 - 14 >= 0;
+        ctx.textBaseline = above ? 'bottom' : 'top';
+        haloText(ctx, label, x, above ? last.y - 7 : last.y + 8, pal.primary);
       }
     });
   }
@@ -687,6 +710,7 @@
   }
   function renderElbow() {
     var out = EDU.$('#elbow-out'), use = EDU.$('#use-k'), has = !!(S.elbow && S.elbow.length);
+    EDU.$('#elbow-card').classList.toggle('print-empty', !has);
     out.dataset.stale = S.elbowStale ? 'true' : 'false';
     out.dataset.k = has ? String(S.elbowK) : '';
     if (!has) out.textContent = '';
@@ -792,6 +816,9 @@
   });
   EDU.$('#quiz-again').addEventListener('click', function () { quizPicks = []; renderQuiz(); });
 
+  window.addEventListener('pagehide', flushSave);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushSave(); });
+
   var cv = EDU.$('#board');
   cv.addEventListener('pointerdown', onDown);
   cv.addEventListener('pointermove', onMove);
@@ -824,7 +851,8 @@
 
   // read-only peek for the automated test
   window.KM_DEBUG = function () {
-    return JSON.parse(JSON.stringify({ points: S.points, labels: S.labels, cents: S.cents, history: S.history, k: S.k, round: S.round, done: S.done, next: S.next, ds: S.ds, elbow: S.elbow, elbowK: S.elbowK }));
+    return JSON.parse(JSON.stringify({ points: S.points, labels: S.labels, cents: S.cents, history: S.history, k: S.k, round: S.round, done: S.done, next: S.next, ds: S.ds, elbow: S.elbow, elbowK: S.elbowK, msg: S.msg.code, names: S.names,
+      geom: geom ? { x0: geom.x0, y0: geom.y0, s: geom.s } : null }));
   };
 
   /* ---------------- start ---------------- */

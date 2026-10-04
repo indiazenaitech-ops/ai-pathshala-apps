@@ -150,3 +150,25 @@ window.PT_NAMES = (function () {
       رونٹجینیم کوپرنیشیم نیہونیم فلیرویم ماسکوویم لیورموریم ٹینیسین اوگانیسن`)
   };
 })();
+
+/* Extra words people type when searching (atomic number → words). Search only, never shown.
+   Traditional names (gandhak = sulphur, as used in the "Where we meet it" notes), common Hindi
+   spellings that differ from the textbook one, English words written in Devanagari, and
+   romanised Hindi. Spelling variants such as ताँबा/तांबा or ज़िंक/जिंक are handled by the
+   search itself, so they are not listed here. */
+window.PT_ALIASES = {
+  9: ['फ्लोरीन', 'फ्लोरिन'],
+  13: ['एल्युमिनियम', 'एल्यूमिनियम', 'एल्यूमीनियम', 'अल्युमिनियम', 'aluminum'],
+  16: ['गंधक', 'গন্ধক', 'ગંધક', 'ਗੰਧਕ', 'ଗନ୍ଧକ', 'கந்தகம்', 'గంధకం', 'ಗಂಧಕ', 'ഗന്ധകം', 'گندھک', 'gandhak'],
+  17: ['क्लोरिन'],
+  19: ['पोटेशियम', 'पोटाशियम'],
+  20: ['कैल्शियम', 'कैलशियम'],
+  26: ['आयरन', 'loha'],
+  29: ['कॉपर', 'tamba', 'taamba'],
+  30: ['जिंक', 'जस्त', 'jasta'],
+  47: ['सिल्वर', 'chandi', 'chaandi'],
+  50: ['रांगा', 'कलई'],
+  79: ['गोल्ड', 'sona'],
+  80: ['मरकरी', 'para', 'paara'],
+  82: ['लेड', 'seesa', 'sisa']
+};

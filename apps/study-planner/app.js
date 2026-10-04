@@ -491,7 +491,7 @@
   function ltr(s) { return document.documentElement.dir === 'rtl' ? '⁦' + s + '⁩' : s; }
   function runParts(g, parts) {
     var x = g[0], m = x.m || 25, p0 = parts[x.id], p1 = parts[g[g.length - 1].id], lab = kindLabel(x.k);
-    if (p0 && p0[1] > 1) lab += ' ' + ltr(t('part', { i: g.length > 1 ? EDU.fmt(p0[0]) + '–' + EDU.fmt(p1[0]) : EDU.fmt(p0[0]), n: EDU.fmt(p0[1]) }));
+    if (p0 && p0[1] > 1) lab += ' (' + ltr(t('part', { i: g.length > 1 ? EDU.fmt(p0[0]) + '–' + EDU.fmt(p1[0]) : EDU.fmt(p0[0]), n: EDU.fmt(p0[1]) })) + ')';
     return [lab, g.length > 1 ? t('n_sessions', { n: EDU.fmt(g.length), m: EDU.fmt(m) }) : t('dur_m', { m: EDU.fmt(m) })];
   }
   function runLabel(g, parts) { return runParts(g, parts).join(' · '); }
@@ -513,7 +513,7 @@
     g.forEach(function (y) {
       var p = parts[y.id];
       var cb = el('input', { type: 'checkbox', id: prefix + 'cb-' + y.id, class: 'sess-cb', 'data-id': y.id,
-        'aria-label': sName(s) + ' · ' + sessWhat(y) + ' · ' + kindLabel(y.k) + (p && p[1] > 1 ? ' ' + t('part', { i: EDU.fmt(p[0]), n: EDU.fmt(p[1]) }) : '') });
+        'aria-label': sName(s) + ' · ' + sessWhat(y) + ' · ' + kindLabel(y.k) + (p && p[1] > 1 ? ' (' + t('part', { i: EDU.fmt(p[0]), n: EDU.fmt(p[1]) }) + ')' : '') });
       cb.checked = !!y.done;
       pips.appendChild(el('label', { class: 'pip', title: t('dur_m', { m: EDU.fmt(y.m || 25) }) }, cb));
     });
@@ -578,10 +578,13 @@
       var month = el('section', { class: 'card cal-month' }, el('h3', { text: dfmt(iso(cur), { month: 'long', year: 'numeric' }) }));
       var grid = el('div', { class: 'cal-grid' });
       wd.forEach(function (w) { grid.appendChild(el('div', { class: 'cal-wd', 'aria-hidden': 'true', text: w })); });
-      var firstIso = iso(cur), offset = dow(firstIso);
+      /* skip whole weeks before the first day and after the last day of the plan */
+      var dim = new Date(cur.getFullYear(), cur.getMonth() + 1, 0).getDate(), n0 = 1, n1 = dim, ym = iso(cur).slice(0, 7);
+      if (R[0].slice(0, 7) === ym) n0 = Math.max(1, parse(R[0]).getDate() - dow(R[0]));
+      if (R[1].slice(0, 7) === ym) n1 = Math.min(dim, parse(R[1]).getDate() + 6 - dow(R[1]));
+      var offset = dow(iso(new Date(cur.getFullYear(), cur.getMonth(), n0)));
       for (var b = 0; b < offset; b++) grid.appendChild(el('div', { 'aria-hidden': 'true' }));
-      var dim = new Date(cur.getFullYear(), cur.getMonth() + 1, 0).getDate();
-      for (var n = 1; n <= dim; n++) {
+      for (var n = n0; n <= n1; n++) {
         var d = iso(new Date(cur.getFullYear(), cur.getMonth(), n));
         var inR = d >= R[0] && d <= R[1], sl = by[d] || [], ex = examsOn(d), lf = lightFor(d);
         var dn = sl.filter(function (x) { return x.done; }).length;
@@ -777,7 +780,7 @@
       examsOn(d).forEach(function (s) { rows.push([d, days[dow(d)], sName(s), '', t('csv_exam'), '', '']); });
       (by[d] || []).forEach(function (x) {
         var s = subjById(x.s), p = parts[x.id];
-        rows.push([d, days[dow(d)], sName(s), sessWhat(x), kindLabel(x.k) + (p && p[1] > 1 ? ' ' + p[0] + '/' + p[1] : ''), x.m || 25, x.done ? t('yes') : t('no')]);
+        rows.push([d, days[dow(d)], sName(s), sessWhat(x), kindLabel(x.k) + (p && p[1] > 1 ? ' (' + p[0] + '/' + p[1] + ')' : ''), x.m || 25, x.done ? t('yes') : t('no')]);
       });
     }
     return rows;
@@ -812,7 +815,7 @@
     Object.keys(by).sort().forEach(function (d) {
       var sl = by[d], subs = [];
       sl.forEach(function (x) { if (subs.indexOf(x.s) < 0) subs.push(x.s); });
-      var desc = groupRuns(sl).map(function (g, i) { return (i + 1) + '. ' + sName(subjById(g[0].s)) + ' – ' + sessWhat(g[0]) + ' (' + runLabel(g, parts) + ')'; }).join('\n');
+      var desc = groupRuns(sl).map(function (g, i) { return (i + 1) + '. ' + sName(subjById(g[0].s)) + ' – ' + sessWhat(g[0]) + ' · ' + runLabel(g, parts); }).join('\n');
       ev('study', d, '📚 ' + t('ics_study', { list: subs.map(function (id) { return sName(subjById(id)); }).join(', '), n: EDU.fmt(sl.length) }), desc);
     });
     st.subjects.forEach(function (s) { if (validDate(s.exam)) ev('exam-' + s.id, s.exam, '📝 ' + t('exam_of', { subject: sName(s) }), t('best_wishes')); });
@@ -847,7 +850,7 @@
           var ul = el('ul');
           groupRuns(sl).forEach(function (g) {
             var boxes = g.map(function (x) { return x.done ? '☑' : '☐'; }).join('');
-            ul.appendChild(el('li', {}, el('span', { class: 'pbox', text: boxes + ' ' }), sName(subjById(g[0].s)) + ' – ' + sessWhat(g[0]) + ' (' + runLabel(g, parts) + ')'));
+            ul.appendChild(el('li', {}, el('span', { class: 'pbox', text: boxes + ' ' }), sName(subjById(g[0].s)) + ' – ' + sessWhat(g[0]) + ' · ' + runLabel(g, parts)));
           });
           cell.appendChild(ul);
         } else if (!ex.length) cell.appendChild(el('span', { text: t('free_day') }));
@@ -1105,7 +1108,10 @@
     setTab(st.tab, true);
   }
 
-  if (firstRun || (!st.plan && st.sample)) generate();
+  /* an untouched sample whose exams are all over is moved forward again, so the demo always shows a live plan */
+  var staleSample = st.sample && !st.subjects.some(function (s) { return validDate(s.exam) && s.exam >= today(); });
+  if (staleSample) { var keep = { view: st.view, hideNote: st.hideNote, tab: st.tab }; st = fresh(); st.view = keep.view; st.hideNote = keep.hideNote; st.tab = keep.tab; }
+  if (firstRun || staleSample || (!st.plan && st.sample)) generate();
   EDU.onLang(renderAll);
   renderAll();
 })();

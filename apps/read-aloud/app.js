@@ -112,24 +112,31 @@
   }
 
   /* ---------------- text → sentences → words ---------------- */
-  var ABBR = /^(mr|mrs|ms|dr|prof|sr|jr|st|smt|shri|sh|kum|rs|vs|govt|dept|approx|fig|vol|ch|pg|pp|ltd|co|mt|km|cm|mm|kg|ft|sq|e\.g|i\.e|डॉ|श्री|श्रीमती|कु|सौ|प्रो|ڈاکٹر)$/;
+  /* Titles are never the end of a sentence ("Dr. Kalam", "Pvt. Ltd."); units and other short forms
+     end a sentence when the next word starts with a capital letter ("It is 10 km. We walked."). */
+  var TITLES = /^(mr|mrs|ms|dr|prof|sr|jr|st|mt|smt|shri|sh|kum|pvt|vs|e\.g|i\.e|डॉ|श्री|श्रीमती|कु|सौ|प्रो|ڈاکٹر)$/;
+  var SHORTS = /^(rs|govt|dept|approx|fig|vol|ch|pg|pp|ltd|co|no|km|cm|mm|kg|gm|ft|sq|hrs|min|sec|a\.m|p\.m|etc)$/;
   var WORDISH = (function () { try { return new RegExp('[^\\s\\p{P}\\p{S}]', 'u'); } catch (e) { return /[A-Za-z0-9À-￿]/; } })();
   var EDGE_PUNCT = (function () { try { return new RegExp('^[\\p{P}\\p{S}]+|[\\p{P}\\p{S}]+$', 'gu'); } catch (e) { return /^[.,!?;:'"()\[\]{}\-–—।॥؟۔،“”‘’]+|[.,!?;:'"()\[\]{}\-–—।॥؟۔،“”‘’]+$/g; } })();
 
-  function isAbbrev(line, i) {
+  function isAbbrev(line, i, end) {
     var w = (line.slice(0, i).match(/[^\s(“"'‘]+$/) || [''])[0];
     if (/^[A-Z]$/.test(w)) return true;                  // initials: A. P. J.
-    return ABBR.test(w.toLowerCase());
+    w = w.toLowerCase();
+    if (TITLES.test(w)) return true;
+    if (!SHORTS.test(w)) return false;
+    var next = line.slice(end).replace(/^\s+/, '').charAt(0);
+    return /[a-z0-9,;:(₹$]/.test(next);                    // "Rs. 50", "approx. ten" go on; "km. We" ends
   }
   function splitSentences(line) {
-    var out = [], start = 0, re = /[.!?।॥|؟۔]+["'”’»)\]]*(?=\s|$)/g, m;
+    var out = [], start = 0, re = /[.!?…।॥|؟۔]+["'”’»)\]]*(?=\s|$)/g, m;
     function push(a, b) {
       while (a < b && /\s/.test(line.charAt(a))) a++;
       while (b > a && /\s/.test(line.charAt(b - 1))) b--;
       if (b > a) out.push([a, b]);
     }
     while ((m = re.exec(line))) {
-      if (m[0] === '.' && isAbbrev(line, m.index)) continue;
+      if (m[0] === '.' && isAbbrev(line, m.index, m.index + 1)) continue;
       var end = m.index + m[0].length;
       push(start, end); start = end;
     }
@@ -154,18 +161,27 @@
     while ((m = lineRe.exec(text))) {
       var line = m[0], base = m.index;
       if (!line.trim()) continue;
-      var para = [];
+      var para = [], lead = null;
       splitSentences(line).forEach(function (r) {
         chunk(line, r[0], r[1]).forEach(function (c) {
-          var s = { start: base + c[0], end: base + c[1], words: [] };
+          var s = { start: base + c[0], end: base + c[1], words: [] }, real = 0;
           var seg = text.slice(s.start, s.end), wr = /\S+/g, w;
           while ((w = wr.exec(seg))) {
             s.words.push({ start: s.start + w.index, end: s.start + w.index + w[0].length, text: w[0] });
-            if (WORDISH.test(w[0])) words++;
+            if (WORDISH.test(w[0])) real++;
           }
-          if (s.words.length) { para.push(sentences.length); sentences.push(s); }
+          if (!s.words.length) return;
+          words += real;
+          var prev = para.length ? sentences[para[para.length - 1]] : null;
+          if (!real && prev) {                       // "..." or "!!!" on its own joins the sentence before it
+            prev.end = s.end; prev.words = prev.words.concat(s.words); return;
+          }
+          if (!real) { lead = lead ? { start: lead.start, words: lead.words.concat(s.words) } : s; return; }
+          if (lead) { s.start = lead.start; s.words = lead.words.concat(s.words); lead = null; }
+          para.push(sentences.length); sentences.push(s);
         });
       });
+      if (lead) { para.push(sentences.length); sentences.push({ start: lead.start, end: lead.words[lead.words.length - 1].end, words: lead.words }); }
       if (para.length) paras.push(para);
     }
     return { sentences: sentences, paras: paras, words: words };
@@ -221,11 +237,24 @@
     });
     r.appendChild(frag);
   }
-  function keepVisible(node) {
-    var r = $('#reader');
-    if (!node || r.scrollHeight <= r.clientHeight + 2) return;
-    var rr = r.getBoundingClientRect(), er = node.getBoundingClientRect();
-    if (er.top < rr.top + 6 || er.bottom > rr.bottom - 6) r.scrollTop += (er.top - rr.top) - rr.height * 0.3;
+  /* Keep the word/sentence being read in the part of the reading view that is really on screen:
+     not under the sticky page header, below the window edge or behind the "Your turn!" box. */
+  function keepVisible(node, movePage) {
+    if (!node) return;
+    var r = $('#reader'), rr = r.getBoundingClientRect(), er = node.getBoundingClientRect();
+    var fs = document.fullscreenElement || document.webkitFullscreenElement;
+    var hdr = $('.edu-top'), head = hdr && !fs ? Math.max(0, hdr.getBoundingClientRect().bottom) : 0;
+    var eb = $('#echo-box'), foot = window.innerHeight || rr.bottom;
+    if (!eb.hidden && !fs) foot = Math.min(foot, eb.getBoundingClientRect().top);
+    var top = Math.max(rr.top, head), bot = Math.min(rr.bottom, foot), onScreen = bot - top >= 80;
+    if (!onScreen) { top = rr.top; bot = rr.bottom; }           // reading view is off-screen: keep the word inside it
+    if (er.top >= top + 4 && er.bottom <= bot - 4) return;
+    if (r.scrollHeight > r.clientHeight + 2) {
+      r.scrollTop += (er.top - top) - Math.min((bot - top) * 0.25, 120);
+      er = node.getBoundingClientRect();
+    }
+    // the end of the text can't scroll higher inside the view: move the page a little instead
+    if (movePage && onScreen && er.bottom > bot - 4 && er.top > head + 8) window.scrollBy(0, Math.min(er.bottom - bot + 12, er.top - head - 8));
   }
   function clearWordHL() { if (P.hlW) P.hlW.classList.remove('on', 'tap'); P.hlW = null; }
   function clearHL() { clearWordHL(); if (P.hlS) P.hlS.classList.remove('cur'); P.hlS = null; }
@@ -242,7 +271,7 @@
     P.hlW = w.el;
     w.el.classList.add('on');
     if (tap) w.el.classList.add('tap');
-    keepVisible(w.el);
+    keepVisible(w.el, true);
   }
   function wordAt(s, idx) {
     for (var i = 0; i < s.words.length; i++) if (idx < s.words[i].end) return i;
@@ -275,6 +304,8 @@
     var list;
     if (cfg.allVoices) list = S.voices.slice().sort(function (a, b) { return normLang(a).localeCompare(normLang(b)) || String(a.name).localeCompare(String(b.name)); });
     else list = voicesFor(lang).concat(rv.kind === 'fallback' ? voicesFor(rv.other) : []);
+    // a voice of another language picked from the full list stays visible (and selected) in the short list
+    if (rv.kind === 'pref' && list.indexOf(rv.voice) < 0) list.unshift(rv.voice);
     var hasAny = list.length > 0 || !!rv.voice;
     sel.appendChild(el('option', { value: '', text: hasAny ? t('voice_auto') : t('voice_none') }));
     var group = null, groupLang = null;
@@ -387,16 +418,22 @@
     P.utt = u;                                  // keep a reference: Chrome can drop events of garbage-collected utterances
     var busy = synth.speaking || synth.pending;
     synth.cancel();
+    // desktop Chrome's online "Google …" voices go silent after ~15 s and never send "end";
+    // a quick pause + resume every 10 s keeps them talking (not on Android, where pause stops speech)
+    var keepAlive = !!(rv.voice && rv.voice.localService === false && /^Google/i.test(rv.voice.name) && platform() !== 'android');
     function go() {
       if (gen !== P.gen) return;
       P.started = Date.now();
       synth.speak(u);
       // safety net: some Android voices never fire "end"
-      var quiet = 0;
+      var quiet = 0, kick = Date.now();
       P.watch = setInterval(function () {
         if (gen !== P.gen || ended) { clearInterval(P.watch); return; }
         if (!synth.speaking && !synth.pending) { if (++quiet >= 3 && Date.now() - P.started > 1500) finish(true); }
-        else quiet = 0;
+        else {
+          quiet = 0;
+          if (keepAlive && Date.now() - kick > 10000) { kick = Date.now(); try { synth.pause(); synth.resume(); } catch (e) { } }
+        }
       }, 400);
     }
     if (busy) P.goT = setTimeout(go, 80); else go();
@@ -420,6 +457,7 @@
 
   function speakSentence(si, fromWord) {
     var n = S.doc.sentences.length;
+    if (!n) { canSpeak(); return; }                 // nothing to read: explain, don't jump to "finished"
     if (si >= n) { finishAll(); return; }
     if (si < 0) si = 0;
     if (!canSpeak()) return;
@@ -484,6 +522,8 @@
       wrap.hidden = true;
       try { $('#echo-next').focus({ preventScroll: true }); } catch (e) { }
     }
+    var s = S.doc.sentences[si];
+    if (s) keepVisible(s.el, true);              // the sentence to repeat must not hide behind the prompt
     renderPlayer();
   }
   function hideEcho() { clearTimeout(P.echoT); $('#echo-box').hidden = true; }
@@ -550,8 +590,15 @@
   }
 
   /* ---------------- text editing & samples ---------------- */
+  function scriptGroup() { return S.text.trim() ? (S.detected === 'mr' ? 'hi' : S.detected) : null; }
   function analyse() {
     S.detected = detectLang(S.text);
+    // a "Read as" choice belongs to the text it was made for: text in another script goes back to Auto
+    var g = scriptGroup();
+    if (g) {
+      if (S.readAs !== 'auto' && S.group && g !== S.group) { S.readAs = 'auto'; store.set('readAs', 'auto'); }
+      S.group = g;
+    }
     S.doc = parse(S.text);
     P.state = 'idle'; P.si = -1; P.wi = -1;
     $('#boundary-note').hidden = true;
@@ -682,10 +729,12 @@
   /* ---------------- events ---------------- */
   var inputT = 0;
   $('#text').addEventListener('input', function () {
+    // save at once (a reload right after typing must not lose the text); re-analyse after a short pause
+    if (this.value !== S.text) { store.set('text', this.value); store.set('sample', null); }
     clearTimeout(inputT);
     inputT = setTimeout(function () {
       var v = $('#text').value;
-      if (v === S.text) return;
+      if (v === S.text) { store.set('text', v); store.set('sample', S.sample); return; }
       stop();
       S.text = v; S.sample = null;
       store.set('text', v); store.set('sample', null);
@@ -714,6 +763,15 @@
   var fsOK = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
   $('#fs-btn').hidden = !fsOK;
   $('#fs-btn').addEventListener('click', function () { EDU.fullscreen($('#reader-card')); });
+  function syncFs() {                          // the same button leaves full screen, so say so
+    var on = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    var key = on ? 'exit_fs' : 'fullscreen';
+    $('#fs-lbl').setAttribute('data-i18n', key);
+    $('#fs-lbl').textContent = t(key);
+    $('#fs-btn').setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  document.addEventListener('fullscreenchange', syncFs);
+  document.addEventListener('webkitfullscreenchange', syncFs);
 
   $('#reader').addEventListener('click', function (e) {
     var w = e.target.closest && e.target.closest('.w');
@@ -774,6 +832,9 @@
     if (S.sample && S.sample.follow && S.sample.lang === old && sampleOf(code, S.sample.idx) && S.text === sampleOf(old, S.sample.idx).text) {
       loadSample(code, S.sample.idx);          // an untouched sample follows the page language
     }
+    // text without letters ("123") or ambiguous Devanagari falls back to the page language
+    var d = detectLang(S.text);
+    if (d !== S.detected && (P.state === 'idle' || P.state === 'done')) { S.detected = d; renderReader(); }
     renderStatic();
   });
 
@@ -781,6 +842,7 @@
   $('#text').value = S.text;
   applyCfg();
   S.detected = detectLang(S.text);
+  S.group = scriptGroup();
   S.doc = parse(S.text);
   renderReader();
   renderStatic();

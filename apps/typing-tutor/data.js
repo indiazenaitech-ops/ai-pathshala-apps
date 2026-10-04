@@ -4,6 +4,8 @@
    Each lesson only uses keys taught so far. goal = target speed in words per minute for 3 stars. */
 window.TT_DATA = {
   stages: ['home', 'top', 'bottom', 'numbers', 'caps', 'punct', 'words', 'sentences'],
+  /* how the stages are grouped on the lesson list (small stages share one heading) */
+  groups: [['home'], ['top'], ['bottom'], ['numbers', 'caps', 'punct'], ['words', 'sentences']],
   lessons: [
     { id: 'l1', stage: 'home', keys: 'f j', goal: 8, texts: [
       'f j f j ff jj fj jf fff jjj fjf jfj ff jj fj jf',

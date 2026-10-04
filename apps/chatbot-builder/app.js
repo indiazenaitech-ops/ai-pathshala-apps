@@ -22,6 +22,12 @@
     var a = Array.isArray(v) ? v : (typeof v === 'string' ? v.split(/\r?\n/) : []);
     return a.map(function (x) { return str(x, maxLen).trim(); }).filter(Boolean).slice(0, maxN);
   }
+  /* The first visible character (an emoji like 🧑‍🏫 is several code points). */
+  function firstGrapheme(v) {
+    v = String(v || '');
+    try { var it = new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(v)[Symbol.iterator]().next(); if (!it.done) return it.value.segment; } catch (e) { }
+    return Array.from(v)[0] || '';
+  }
   function sampleBot(lang) {
     var L = CONTENT[lang] ? lang : 'en', s = content(L).sample;
     return {
@@ -41,7 +47,7 @@
     var thr = Math.round((+o.threshold || 50) / 5) * 5;
     var b = {
       name: str(o.name, 60).trim() || t('new_bot_name'),
-      avatar: str(o.avatar, 16).trim() || '🤖',
+      avatar: firstGrapheme(str(o.avatar, 16).trim()) || '🤖',
       lang: LANG_CODES.indexOf(o.lang) >= 0 ? o.lang : EDU.lang,
       greeting: str(o.greeting, 600),
       fallback: lines(o.fallback, 10, 400),
@@ -72,15 +78,22 @@
   }
 
   /* ---------------- state ---------------- */
-  var bot = sanitize(store.get('bot', null)) || sampleBot(EDU.lang);
-  if (bot.sample && bot.sample !== EDU.lang && CONTENT[EDU.lang]) bot = sampleBot(EDU.lang);
-  var prefs = Object.assign({ think: true, voice: false, playThink: false }, store.get('prefs', {}) || {});
-  var missed = (store.get('missed', []) || []).filter(function (s) { return typeof s === 'string'; }).slice(0, MAX_MISSED);
+  var storedBot = sanitize(store.get('bot', null));
+  var bot = storedBot || sampleBot(EDU.lang);
+  var swapped = !!(bot.sample && bot.sample !== EDU.lang && CONTENT[EDU.lang]);
+  if (swapped) bot = sampleBot(EDU.lang);
+  /* Remember which sample is shown, so its unanswered questions are not shown for another language's sample. */
+  if (!storedBot || swapped) store.set('bot', bot);
+  if (swapped) store.set('missed', []);
+  var savedPrefs = store.get('prefs', null), savedMissed = store.get('missed', null);
+  var prefs = Object.assign({ think: true, voice: false, playThink: false }, savedPrefs && typeof savedPrefs === 'object' ? savedPrefs : {});
+  /* Questions collected for the other language's sample bot do not belong to this one. */
+  var missed = swapped || !Array.isArray(savedMissed) ? [] : savedMissed.filter(function (s) { return typeof s === 'string'; }).map(function (s) { return s.slice(0, 300); }).slice(0, MAX_MISSED);
   var play = null;                 // the shared bot while in play mode
   var chat = [], queue = [], busy = false, chatToken = 0, lastReply = {};
   var openSet = { 0: true };
   var compiled = null, compiledFor = null;
-  var saveT = 0, healthT = 0;
+  var saveT = 0, healthT = 0, healthMs = 0, dirty = false;
 
   function active() { return play || bot; }
   function stopText(b) { return b.stopwords != null ? b.stopwords : content(b.lang).stopwords; }
@@ -94,12 +107,17 @@
   function opts(b) { return { threshold: b.threshold, useStop: b.useStop, fuzzy: b.fuzzy }; }
   function thinkOn() { return play ? !!prefs.playThink : !!prefs.think; }
   function savePrefs() { store.set('prefs', prefs); }
-  function saveNow() { clearTimeout(saveT); store.set('bot', bot); }
+  function saveNow() { clearTimeout(saveT); dirty = false; store.set('bot', bot); }
   function touch() {
-    bot.sample = null; compiled = null;
-    clearTimeout(saveT); saveT = setTimeout(function () { store.set('bot', bot); }, 250);
-    clearTimeout(healthT); healthT = setTimeout(renderHealth, 300);
+    bot.sample = null; compiled = null; dirty = true;
+    clearTimeout(saveT); saveT = setTimeout(saveNow, 250);
+    /* The check-up tests every example; for a very big bot wait until typing pauses longer. */
+    clearTimeout(healthT); healthT = setTimeout(renderHealth, healthMs > 120 ? Math.min(4000, 300 + healthMs * 3) : 300);
   }
+  /* Reload / close / switch app right after typing: save what is not saved yet. */
+  function flush() { if (dirty) saveNow(); }
+  window.addEventListener('pagehide', flush);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flush(); });
 
   /* ---------------- chat ---------------- */
   function startChat() {
@@ -133,12 +151,13 @@
     var kind = res.intent >= 0 ? 'reply' : 'fallback';
     var name = res.intent >= 0 ? b.intents[res.intent].name : '';
     var reply = kind === 'reply' ? pickReply(b.intents[res.intent].replies, res.intent) : pickReply(b.fallback, 'f');
-    if (reply == null) reply = kind === 'reply' ? t('no_reply') : '…';
+    var sys = reply == null && kind === 'reply' ? 'no_reply' : '';
+    if (reply == null) reply = sys ? t(sys) : '…';
     showTyping(true);
     setTimeout(function () {
       if (tok !== chatToken) return;
       showTyping(false);
-      chat.push({ who: 'bot', kind: kind, text: reply, res: res, q: text, intentName: name });
+      chat.push({ who: 'bot', kind: kind, text: reply, sys: sys, res: res, q: text, intentName: name });
       if (kind === 'fallback' && !play) addMissed(text);
       renderChat(); refreshSuggest();
       if (prefs.voice) speakReply(reply, b.lang);
@@ -155,7 +174,12 @@
   }
   function whyLabel(m) {
     var r = m.res;
-    if (m.kind === 'reply') return '🧠 ' + m.intentName + ' · ' + EDU.fmt(r.score) + '%';
+    if (m.kind === 'reply') {
+      var ws = r.best ? r.best.matched.map(function (x) { return x.user; }) : [];
+      var sep = EDU.lang === 'ur' ? '، ' : ', ';
+      var wtxt = ws.slice(0, 3).join(sep) + (ws.length > 3 ? sep + '…' : '');
+      return '🧠 ' + m.intentName + (wtxt ? ' · ' + wtxt : '') + ' · ' + EDU.fmt(r.score) + '%';
+    }
     var s = '🧠 ' + t('why_nomatch');
     if (r.best) s += ' · ' + r.best.name + ' ' + EDU.fmt(r.best.score) + '% < ' + EDU.fmt(r.threshold) + '%';
     return s;
@@ -192,6 +216,7 @@
     });
     if (r.scores.length) p.appendChild(el('div', {}, el('b', { text: t('why_scores') }), ' ', el('span', { class: 'muted', text: '(' + t('why_needed', { t: EDU.fmt(r.threshold) }) + ')' }), bars));
     p.appendChild(el('div', { class: 'small' }, r.intent >= 0 ? t('why_picked', { intent: m.intentName }) : t('why_fallback', { t: EDU.fmt(r.threshold) })));
+    if (r.intent >= 0 && r.tie) p.appendChild(el('div', { class: 'small why-tie' }, '⚖ ' + t('why_tie_' + r.tie, { intent: m.intentName, other: r.tieWith })));
     return p;
   }
   function renderChat(keepScroll) {
@@ -202,7 +227,7 @@
         log.appendChild(el('div', { class: 'msg user' }, el('div', { class: 'msg-body' }, el('div', { class: 'bubble', text: m.text }))));
         return;
       }
-      var body = el('div', { class: 'msg-body' }, el('div', { class: 'bubble', text: m.text }));
+      var body = el('div', { class: 'msg-body' }, el('div', { class: 'bubble' + (m.sys ? ' sys' : ''), text: m.sys ? t(m.sys) : m.text }));
       if (think && m.res) {
         var chip = el('button', { type: 'button', class: 'why' + (m.kind === 'fallback' ? ' miss' : ''), 'aria-expanded': m.open ? 'true' : 'false', text: whyLabel(m) });
         chip.addEventListener('click', function () {
@@ -281,10 +306,6 @@
   }
 
   /* ---------------- editor ---------------- */
-  function firstGrapheme(v) {
-    try { var it = new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(v)[Symbol.iterator]().next(); if (!it.done) return it.value.segment; } catch (e) { }
-    return Array.from(v)[0] || '';
-  }
   function renderAvatars(keepCustom) {
     var box = $('#avPick');
     box.innerHTML = '';
@@ -306,6 +327,10 @@
     var list = $('#intentList');
     list.innerHTML = '';
     $('#intentCount').textContent = EDU.fmt(bot.intents.length);
+    var full = bot.intents.length >= MAX_INTENTS;
+    $('#addIntent').disabled = full;
+    $('#maxNote').hidden = !full;
+    $('#maxNote').textContent = t('max_intents', { n: EDU.fmt(MAX_INTENTS) });
     bot.intents.forEach(function (it, i) {
       var d = el('details', { class: 'intent', dataset: { i: String(i) } });
       d.style.setProperty('--ic', 'var(--c' + (i % 8 + 1) + ')');
@@ -329,7 +354,10 @@
           el('div', { class: 'field' }, el('b', { text: t('replies') }), el('span', { text: t('replies_hint') }), repTa, warn)),
         el('div', { class: 'row' }, del)));
       d.addEventListener('toggle', function () { if (d.open) openSet[i] = true; else delete openSet[i]; });
-      nameIn.addEventListener('input', function () { it.name = str(nameIn.value, 60); title.textContent = it.name; touch(); });
+      nameIn.addEventListener('input', function () {
+        it.name = str(nameIn.value, 60); title.textContent = it.name; touch();
+        EDU.$$('#missedList option[value="' + i + '"]').forEach(function (o) { o.textContent = it.name; });
+      });
       nameIn.addEventListener('change', function () { it.name = it.name.trim() || '?'; title.textContent = it.name; renderMissed(); });
       exTa.addEventListener('input', function () { it.examples = lines(exTa.value, MAX_LINES, 200); count.textContent = countText(it); touch(); });
       exTa.addEventListener('change', refreshSuggest);
@@ -353,17 +381,20 @@
     sel.value = bot.lang;
   }
   function renderHealth() {
+    var t0 = Date.now();
     var h = E.health({ lang: bot.lang, stopwords: stopText(bot), intents: bot.intents }, opts(bot));
+    healthMs = Date.now() - t0;
     var pct = h.n ? Math.round(100 * h.ok / h.n) : 0;
     var big = $('#healthScore');
     big.textContent = h.n ? EDU.fmt(pct) + '%' : '–';
-    big.className = 'health-big ' + (h.n && pct === 100 ? 'ok' : 'bad');
+    big.className = 'health-big ' + (h.n && pct === 100 ? (h.issues.length ? 'warn' : 'ok') : 'bad');
     $('#healthCounts').textContent = t('h_counts', { i: EDU.fmt(h.intents), e: EDU.fmt(h.examples), r: EDU.fmt(h.replies) }) +
       (h.n ? ' · ' + t('h_selftest', { ok: EDU.fmt(h.ok), n: EDU.fmt(h.n) }) : '');
     var ul = $('#healthList');
     ul.innerHTML = '';
     if (!h.issues.length) ul.appendChild(el('li', { class: 'ok', text: '✓ ' + t('h_ok') }));
     h.issues.slice(0, 8).forEach(function (x) { ul.appendChild(el('li', { text: '⚠ ' + t(x.k, x.v) })); });
+    if (h.issues.length > 8) ul.appendChild(el('li', { class: 'muted', text: '⚠ … +' + EDU.fmt(h.issues.length - 8) }));
   }
   function renderTricks() {
     var box = $('#tricks'), tr = content(bot.lang).tricky;
@@ -380,7 +411,7 @@
     });
   }
   function renderPrint() {
-    var b = bot, ps = $('#printSheet');
+    var b = active(), ps = $('#printSheet');
     ps.innerHTML = '';
     ps.appendChild(el('h1', { text: t('print_title') }));
     ps.appendChild(el('p', { text: t('print_name') }));
@@ -401,7 +432,8 @@
   }
 
   /* ---------------- share / play mode ---------------- */
-  function shareUrl(b) { return location.href.split('#')[0].split('?')[0] + '#bot=' + EDU.pack(toCompact(b)); }
+  /* The link opens in the sharer's language (?lang=), with the whole bot packed after #bot=. */
+  function shareUrl(b) { return location.href.split('#')[0].split('?')[0] + '?lang=' + EDU.lang + '#bot=' + EDU.pack(toCompact(b)); }
   function openShare() {
     saveNow();
     var url = shareUrl(bot);
@@ -481,6 +513,9 @@
   });
   $('#restartBtn').addEventListener('click', startChat);
   $('#fsBtn').addEventListener('click', function () { EDU.fullscreen($('#chatCard')); });
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) {
+    document.addEventListener(ev, function () { setTimeout(function () { var log = $('#chatLog'); log.scrollTop = log.scrollHeight; }, 60); });
+  });
   $('#thinkToggle').addEventListener('change', function () {
     if (play) prefs.playThink = this.checked; else prefs.think = this.checked;
     savePrefs(); renderChat(true);

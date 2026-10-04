@@ -44,6 +44,7 @@
     .card h2 { font-size: 1.12rem; margin-bottom: 10px; }
     .pic { width: 100%; max-width: 560px; aspect-ratio: 1 / 1; height: auto; display: block; margin: 0 auto; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); touch-action: none; cursor: crosshair; image-rendering: pixelated; }
     .pic:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    #g-in, #g-out { touch-action: auto; cursor: default; }   /* game pictures are not tappable: let phones scroll over them */
     .opts { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin-top: 12px; }
     .opts .check { min-height: 40px; }
     .seg button { min-height: 40px; }
@@ -101,7 +102,7 @@
     .mop { font-size: 1.4rem; font-weight: 800; color: var(--muted); }
     .steps { margin-top: 12px; display: grid; gap: 6px; }
     .step { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
-    .step .lbl { font-weight: 600; font-size: .9rem; }
+    .step .lbl { font-weight: 600; font-size: .9rem; unicode-bidi: plaintext; }   /* "Gx =" stays "Gx =" in Urdu */
     .step .val { font-family: var(--mono); direction: ltr; unicode-bidi: isolate; overflow-wrap: anywhere; font-size: .9rem; }
     .step.final .val { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
     .step.final .lbl { font-size: 1rem; }
@@ -179,6 +180,9 @@
     .ws .t-out td { width: 1.6cm; height: 1.3cm; }
     .ws .t-key td { width: 1.05cm; height: .75cm; font-size: 10pt; }
     .ws-row { display: flex; flex-wrap: wrap; gap: 18pt 28pt; align-items: flex-start; margin: 10pt 0; }
+    .ws-row > div { min-width: 0; break-inside: avoid; }
+    .ws-row > div + div { flex: 1 1 5cm; }          /* filter + rule sit beside the 7 × 7 numbers on A4, the rule text wraps */
+    .ws table, .ws-key { break-inside: avoid; }
     .ws h2 { font-size: 13pt; margin: 0 0 4pt; }
     .ws .ws-key { margin-top: 16pt; border-top: 1.5pt dashed #000; padding-top: 8pt; }
     .ws .small { font-size: 10pt; }

@@ -55,7 +55,7 @@
     .piece .gx { font-size: .74rem; color: var(--muted); font-variant-numeric: tabular-nums; direction: ltr; }
     .piece[data-kind="common"] { --pc: var(--danger); }
     .piece[data-kind="name"], .piece[data-kind="place"] { --pc: var(--c5); }
-    .piece[data-kind="word"], .piece[data-kind="hindi"] { --pc: var(--c7); }
+    .piece[data-kind="word"], .piece[data-kind="hindi"], .piece[data-kind="script"] { --pc: var(--c7); }
     .piece[data-kind="date"], .piece[data-kind="year"], .piece[data-kind="phone"], .piece[data-kind="number"] { --pc: var(--c2); }
     .piece[data-kind="seq"], .piece[data-kind="keyboard"], .piece[data-kind="repeat"] { --pc: var(--c3); }
     .piece[data-kind="sep"] { --pc: var(--border); min-width: 34px; }
@@ -160,10 +160,26 @@
       body.printing-ws #app > :not(#worksheet) { display: none !important; }
       body.printing-ws #worksheet { display: block !important; }
       body.printing-poster #app > :not(#panel-tips) { display: none !important; }
-      .poster { border: 3px solid #000; padding: 12px 14px; }
-      .rules { grid-template-columns: 1fr 1fr !important; gap: 8px; }
-      .rule { break-inside: avoid; padding: 9px 11px; }
-      .rule p { font-size: 10.5pt; }
+      .poster { border: 3px solid #000; padding: 14px 16px; break-inside: avoid; }
+      .poster-head h2 { font-size: 24pt; }
+      .poster-head .shield { font-size: 30pt; }
+      .rules { grid-template-columns: 1fr 1fr !important; gap: 10px; }
+      .rule { break-inside: avoid; padding: 12px 13px; }
+      .rule .ri { font-size: 24pt; }
+      .rule h3 { font-size: 14pt; }
+      .rule p { font-size: 12pt; line-height: 1.45; }
+      :root[lang="ur"] .rule p { line-height: 1.9; }
+      /* longer scripts: a little smaller so the poster stays on one A4 page */
+      :root:is([lang="ta"], [lang="ml"], [lang="kn"]) .rule p { font-size: 10.5pt; line-height: 1.4; }
+      :root:is([lang="ta"], [lang="ml"], [lang="kn"]) .rule h3 { font-size: 12.5pt; }
+      :root:is([lang="ta"], [lang="ml"], [lang="kn"]) .rule { padding: 9px 11px; }
+      :root:is([lang="ta"], [lang="ml"], [lang="kn"]) .poster-head h2 { font-size: 20pt; }
+      :root:is([lang="ta"], [lang="ml"], [lang="kn"]) .rule .ri { font-size: 18pt; }
+      :root:is([lang="ta"], [lang="ml"], [lang="kn"]) .rules { gap: 8px; }
+      :root[lang="ta"] .rule p { font-size: 10pt; line-height: 1.35; }
+      .helpline .hl-big { font-size: 32pt; }
+      .helpline h3 { font-size: 15pt; }
+      .helpline p { font-size: 12pt; }
       .ws-key { break-before: page; }
       .ws-table tr { break-inside: avoid; }
     }

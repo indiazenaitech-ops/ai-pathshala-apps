@@ -85,9 +85,13 @@
       for (i = 0; i < dist.length; i++) total += dist[i];
       var pick = -1;
       if (total > 0) {
-        var r = rand() * total;
-        for (i = 0; i < dist.length; i++) { r -= dist[i]; if (r <= 0) { pick = i; break; } }
-        if (pick < 0) pick = dist.length - 1;
+        var r = rand() * total, lastPos = -1;
+        for (i = 0; i < dist.length; i++) {        // only points that are not already a centre can be picked
+          if (!(dist[i] > 0)) continue;
+          lastPos = i; r -= dist[i];
+          if (r < 0) { pick = i; break; }
+        }
+        if (pick < 0) pick = lastPos;                // rounding left a tiny bit of r over
       } else pick = Math.floor(rand() * points.length);   // all points sit on centres already
       var c = { x: points[pick].x, y: points[pick].y };
       cents.push(c);

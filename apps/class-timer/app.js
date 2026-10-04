@@ -40,8 +40,10 @@
 
   /* ------------------------------------------------------------ helpers */
   function now() { return Date.now(); }
-  function num(v, d) { v = Number(v); return isFinite(v) ? v : d; }
+  function num(v, d) { if (v === '' || v === null || v === undefined) return d; v = Number(v); return isFinite(v) ? v : d; }
   function clampInt(v, lo, hi, d) { return Math.min(hi, Math.max(lo, Math.round(num(v, d)))); }
+  /* keep a Latin time like "5:58 AM" in one piece inside right-to-left (Urdu) text */
+  function ltr(s) { return document.documentElement.dir === 'rtl' ? '⁦' + s + '⁩' : s; }
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function hms(s) {
     var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60;
@@ -189,7 +191,7 @@
   var s0 = store.get('sw', null) || {};
   var sw = {
     acc: Math.max(0, num(s0.acc, 0)), startAt: num(s0.startAt, 0), running: !!s0.running,
-    laps: Array.isArray(s0.laps) ? s0.laps.map(function (v) { return Math.max(0, num(v, 0)); }).slice(0, 999) : []
+    laps: Array.isArray(s0.laps) ? s0.laps.filter(function (v) { return typeof v === 'number' && isFinite(v) && v >= 0; }).slice(0, 999) : []
   };
   if (sw.running && !(sw.startAt > 0)) sw.running = false;
 
@@ -198,13 +200,15 @@
     work: clampInt(p0.work, 1, 180, 25), short: clampInt(p0.short, 1, 60, 5), long: clampInt(p0.long, 1, 120, 15), every: clampInt(p0.every, 1, 12, 4),
     auto: p0.auto !== false,
     phase: ['work', 'short', 'long'].indexOf(p0.phase) >= 0 ? p0.phase : 'work',
-    round: 0, running: !!p0.running, started: !!p0.started, endAt: num(p0.endAt, 0), remaining: 0,
+    round: 0, running: !!p0.running, started: !!p0.started, endAt: num(p0.endAt, 0), remaining: 0, len: 0,
     done: Math.max(0, Math.round(num(p0.done, 0))), focusMs: Math.max(0, num(p0.focusMs, 0))
   };
   po.round = clampInt(p0.round, 0, po.every, 0);
-  po.remaining = Math.max(0, Math.min(phaseMs(po.phase), num(p0.remaining, phaseMs(po.phase))));
+  /* len = length of the part that is on screen now (settings changed mid-part only apply from the next part) */
+  po.len = Math.max(MIN, Math.min(180 * MIN, num(p0.len, phaseMs(po.phase))));
+  po.remaining = Math.max(0, Math.min(po.len, num(p0.remaining, po.len)));
   if (po.running && !(po.endAt > 0)) po.running = false;
-  if (!po.started && !po.running) po.remaining = phaseMs(po.phase);
+  if (!po.started && !po.running) poFull();
 
   var sign = SIGN_BY[store.get('sign', 'silent')] ? store.get('sign', 'silent') : 'silent';
   var tab = TABS.indexOf(store.get('tab', 'countdown')) >= 0 ? store.get('tab', 'countdown') : 'countdown';
@@ -213,6 +217,7 @@
   function saveSw() { store.set('sw', sw); }
   function savePo() { store.set('po', po); }
   function phaseMs(p) { return (p === 'work' ? po.work : p === 'short' ? po.short : po.long) * MIN; }
+  function poFull() { po.len = po.remaining = phaseMs(po.phase); }
 
   /* ------------------------------------------------------------ element cache */
   var E = {
@@ -301,7 +306,8 @@
   }
   function swLap() {
     if (!sw.running || sw.laps.length >= 999) return;
-    sw.laps.push(swElapsed(now()));
+    /* store whole hundredths, so the lap times shown (and in the CSV) add up exactly to the total */
+    sw.laps.push(Math.floor(swElapsed(now()) / 10) * 10);
     saveSw(); renderLaps(); tick();
   }
   function swReset() {
@@ -345,7 +351,7 @@
   function poAdvance(natural, elapsedWork) {
     if (po.phase === 'work') {
       po.round = Math.min(po.every, po.round + 1);
-      po.focusMs += natural ? phaseMs('work') : Math.max(0, elapsedWork || 0);
+      po.focusMs += natural ? po.len : Math.max(0, elapsedWork || 0);
       if (natural) po.done++;
       po.phase = po.round >= po.every ? 'long' : 'short';
     } else {
@@ -358,7 +364,7 @@
     silence();
     if (po.running) { po.remaining = poLeft(n); po.running = false; }
     else {
-      if (po.remaining <= 0) po.remaining = phaseMs(po.phase);
+      if (po.remaining <= 0) poFull();
       po.endAt = n + po.remaining; po.running = true; po.started = true; unlockAudio();
     }
     savePo(); reschedule(); wake(); tick();
@@ -366,8 +372,8 @@
   function poSkip() {
     var n = now(), wasRunning = po.running;
     silence();
-    poAdvance(false, po.phase === 'work' ? phaseMs('work') - poLeft(n) : 0);
-    po.remaining = phaseMs(po.phase);
+    poAdvance(false, po.phase === 'work' ? po.len - poLeft(n) : 0);
+    poFull();
     if (wasRunning) po.endAt = n + po.remaining;
     po.started = wasRunning;
     savePo(); reschedule(); tick();
@@ -375,7 +381,7 @@
   function poReset() {
     silence();
     po.phase = 'work'; po.round = 0; po.running = false; po.started = false;
-    po.remaining = phaseMs('work'); po.done = 0; po.focusMs = 0;
+    poFull(); po.done = 0; po.focusMs = 0;
     savePo(); reschedule(); wake(); tick();
   }
   function poSyncInputs() {
@@ -391,16 +397,17 @@
     if (!p) return;
     silence();
     po.work = p.work; po.short = p.short; po.long = p.long; po.every = p.every;
-    po.phase = 'work'; po.round = 0; po.running = false; po.started = false; po.remaining = phaseMs('work');
+    po.phase = 'work'; po.round = 0; po.running = false; po.started = false; poFull();
     savePo(); poSyncInputs(); reschedule(); wake(); tick();
   }
   function poReadInputs() {
+    /* an emptied or invalid box keeps the old value (poSyncInputs writes it back) */
     po.work = clampInt($('#po-work').value, 1, 180, po.work);
     po.short = clampInt($('#po-short').value, 1, 60, po.short);
     po.long = clampInt($('#po-long').value, 1, 120, po.long);
     po.every = clampInt($('#po-every').value, 1, 12, po.every);
     po.round = Math.min(po.round, po.every);
-    if (!po.started && !po.running) po.remaining = phaseMs(po.phase);
+    if (!po.started && !po.running) poFull();
     else EDU.toast(t('po_next_note'));
     savePo(); poSyncInputs(); tick();
   }
@@ -447,7 +454,8 @@
     if (cd.running) {
       schedule('cd', cd.endAt, sound);
       var w = cd.endAt - MIN;
-      schedule('cdwarn', warn1 && cd.total > MIN + 1000 && w > now() + 500 ? w : 0, 'warn');
+      /* "No sound" means silence (e.g. during a test): no one-minute beep either */
+      schedule('cdwarn', warn1 && sound !== 'off' && cd.total > MIN + 1000 && w > now() + 500 ? w : 0, 'warn');
     } else { cancel('cd'); cancel('cdwarn'); }
     if (po.running) schedule('po', po.endAt, sound); else cancel('po');
   }
@@ -489,8 +497,9 @@
         var end = po.endAt;
         endedWork = po.phase === 'work';
         poAdvance(true);
-        if (po.auto) po.endAt = end + phaseMs(po.phase);
-        else { po.running = false; po.started = false; po.remaining = phaseMs(po.phase); }
+        poFull();
+        if (po.auto) po.endAt = end + po.len;
+        else { po.running = false; po.started = false; }
       }
       savePo();
       if (booting) cancel('po');
@@ -508,7 +517,7 @@
     E.cdRing.classList.toggle('done', st === 'done');
     E.cdStage.classList.toggle('is-done', st === 'done');
     setRing(E.cdBar, st === 'done' ? 0 : left / Math.max(1, cd.total));
-    setText(E.cdStatus, st === 'ready' ? t('st_ready') : st === 'paused' ? t('st_paused') : st === 'done' ? t('times_up') : t('ends_at', { time: clockTime(cd.endAt) }));
+    setText(E.cdStatus, st === 'ready' ? t('st_ready') : st === 'paused' ? t('st_paused') : st === 'done' ? t('times_up') : t('ends_at', { time: ltr(clockTime(cd.endAt)) }));
     var over = st === 'done' && cd.doneAt ? n - cd.doneAt : -1;
     setText(E.cdOver, over >= 1000 && over < 3600000 ? t('over_by', { t: fmtUp(over) }) : '');
     setToggle(E.cdToggle, st === 'running' ? 'pause' : st === 'paused' ? 'resume' : st === 'done' ? 'again' : 'start');
@@ -529,11 +538,11 @@
     var left = poLeft(n), d = fmtDown(left);
     setText(E.poDigits, d);
     E.poDigits.classList.toggle('long', d.length > 5);
-    setRing(E.poBar, left / Math.max(1, phaseMs(po.phase)));
+    setRing(E.poBar, left / Math.max(1, po.len));
     E.poStage.classList.toggle('brk', po.phase !== 'work');
     setText(E.poPhase, t('phase_' + po.phase));
     var st = po.running ? 'running' : po.started ? 'paused' : 'ready';
-    setText(E.poStatus, st === 'running' ? t('ends_at', { time: clockTime(po.endAt) }) : st === 'paused' ? t('st_paused') : t('st_ready'));
+    setText(E.poStatus, st === 'running' ? t('ends_at', { time: ltr(clockTime(po.endAt)) }) : st === 'paused' ? t('st_paused') : t('st_ready'));
     setToggle(E.poToggle, st === 'running' ? 'pause' : st === 'paused' ? 'resume' : 'start');
     var sn = po.phase === 'work' ? po.round + 1 : po.phase === 'long' ? po.every : Math.max(1, po.round);
     setText(E.poSession, t('session_of', { n: EDU.fmt(Math.min(sn, po.every)), m: EDU.fmt(po.every) }));
@@ -551,7 +560,7 @@
     el.hidden = !show;
     if (!show) return;
     var left = cdLeft(n), secs = Math.ceil(left / 1000);
-    setText(el, st === 'done' ? t('times_up') : t('time_left', { t: fmtDown(left) }));
+    setText(el, st === 'done' ? t('times_up') : t('time_left', { t: fmtDown(left) }) + (st === 'paused' ? ' · ' + t('st_paused') : ''));
     el.classList.toggle('warn', st !== 'done' && secs < 60);
     el.classList.toggle('done', st === 'done');
   }
@@ -672,10 +681,11 @@
   $('#cd-reset').addEventListener('click', cdReset);
   $('#cd-custom').addEventListener('submit', function (e) {
     e.preventDefault();
-    var h = Math.max(0, Math.floor(num($('#cd-h').value, 0)));
-    var m = Math.max(0, Math.floor(num($('#cd-m').value, 0)));
-    var s = Math.max(0, Math.floor(num($('#cd-s').value, 0)));
-    var ms = (h * 3600 + m * 60 + s) * 1000;
+    /* decimals are allowed: 1.5 minutes = 1:30 */
+    var h = Math.max(0, num($('#cd-h').value, 0));
+    var m = Math.max(0, num($('#cd-m').value, 0));
+    var s = Math.max(0, num($('#cd-s').value, 0));
+    var ms = Math.round(h * 3600 + m * 60 + s) * 1000;
     if (!(ms > 0)) { EDU.toast(t('enter_time')); return; }
     cdSet(ms);
   });
@@ -683,6 +693,7 @@
   E.cdActivity.addEventListener('input', function () { cd.activity = E.cdActivity.value.slice(0, 80); saveCd(); });
   E.cdActivity.addEventListener('keydown', function (e) { if (e.key === 'Enter') E.cdActivity.blur(); });
   E.cdWarn.checked = warn1;
+  E.cdWarn.disabled = sound === 'off';
   E.cdWarn.addEventListener('change', function () { warn1 = E.cdWarn.checked; store.set('warn1', warn1); unlockAudio(); reschedule(); });
   $$('.ct-sound').forEach(function (sel) {
     sel.value = sound;
@@ -690,6 +701,7 @@
       sound = SOUNDS.indexOf(sel.value) >= 0 ? sel.value : 'bell';
       store.set('sound', sound);
       $$('.ct-sound').forEach(function (o) { o.value = sound; });
+      E.cdWarn.disabled = sound === 'off';
       unlockAudio(); reschedule();
     });
   });
@@ -715,8 +727,9 @@
   $('#sg-print').addEventListener('click', function () { printSigns(false); });
   $('#sg-print-all').addEventListener('click', function () { printSigns(true); });
 
-  /* after a mouse / touch click, drop focus so Space works as the global start / pause key */
-  E.app.addEventListener('click', function (e) {
+  /* after a mouse / touch click (also on the header's theme button), drop focus so Space works as the
+     global start / pause key */
+  document.addEventListener('click', function (e) {
     var b = e.target && e.target.closest ? e.target.closest('button') : null;
     if (b && e.detail > 0) b.blur();
   });
@@ -724,10 +737,12 @@
   /* keyboard: Space start/pause · R reset · F full screen · L lap · 1–8 signs */
   document.addEventListener('keydown', function (e) {
     if (e.ctrlKey || e.metaKey || e.altKey || e.defaultPrevented) return;
+    var k = e.key;
+    if (k === 'Escape' && pseudo) { setPseudo(null); return; }   // works even while typing the activity name
     var tg = e.target, tn = tg && tg.tagName;
     if (tn === 'INPUT' || tn === 'TEXTAREA' || tn === 'SELECT' || (tg && tg.isContentEditable)) return;
     if (document.querySelector('.edu-modal-back')) return;
-    var k = e.key;
+    if (e.repeat) { if (k === ' ' || k === 'Spacebar') e.preventDefault(); return; }   // holding a key must not flip start / pause again and again
     if (k === ' ' || k === 'Spacebar') {
       if (tn === 'BUTTON' || tn === 'SUMMARY' || tn === 'A') return;   // let the focused control work normally
       e.preventDefault();
@@ -740,8 +755,6 @@
       swLap();
     } else if (tab === 'signs' && /^[1-8]$/.test(k)) {
       setSign(SIGNS[+k - 1].id);
-    } else if (k === 'Escape' && pseudo) {
-      setPseudo(null);
     }
   });
 
@@ -763,7 +776,7 @@
   renderSigns();
   renderFs();
   if (po.running && now() - po.endAt > 3 * 3600000) {   // left running for hours (closed laptop): start fresh
-    po.running = false; po.started = false; po.phase = 'work'; po.round = 0; po.remaining = phaseMs('work'); savePo();
+    po.running = false; po.started = false; po.phase = 'work'; po.round = 0; poFull(); savePo();
   }
   tick();                                      // catches up timers that ended while the page was closed (silently)
   if (cdState() === 'done' && (!cd.doneAt || now() - cd.doneAt > 3600000)) cdReset();   // tidy a finish from long ago

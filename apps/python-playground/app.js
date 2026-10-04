@@ -106,14 +106,14 @@
     outLen += s.length;
     var last = segs[segs.length - 1];
     if (last && last.kind === kind) last.text += s; else segs.push({ kind: kind, text: s });
-    if (truncated) sysNote('out_trunc', '\n', '\n');
+    if (truncated) sysNote('out_trunc');
   }
   function flushOut() {
     if (!segs.length) return;
     var frag = document.createDocumentFragment();
     segs.forEach(function (sg) {
       if (sg.kind === 'img') { frag.appendChild(figureEl(sg.b64)); return; }
-      if (sg.kind === 'sys') { frag.appendChild(EDU.el('span', { class: 's', text: sg.text, dataset: { k: sg.key, pre: sg.pre, post: sg.post } })); return; }
+      if (sg.kind === 'sys') { frag.appendChild(EDU.el('span', { class: 's', dir: 'auto', text: t(sg.key), dataset: { k: sg.key } })); return; }
       var cls = sg.kind === 'err' ? 'e' : sg.kind === 'in' ? 'i' : '';
       frag.appendChild(cls ? EDU.el('span', { class: cls, text: sg.text }) : document.createTextNode(sg.text));
     });
@@ -123,10 +123,11 @@
     $('#outEmpty').hidden = true;
     outEl.scrollTop = outEl.scrollHeight;
   }
-  /* App notes inside the output (not printed by the program); they follow the language picker. */
-  function sysNote(key, pre, post) { segs.push({ kind: 'sys', key: key, pre: pre || '', post: post || '', text: (pre || '') + t(key) + (post || '') }); }
+  /* App notes inside the output (not printed by the program). Each is its own line in the UI font with
+     dir="auto", so an Urdu note reads right-to-left; they follow the language picker. */
+  function sysNote(key) { segs.push({ kind: 'sys', key: key }); }
   function renderSysNotes() {
-    EDU.$$('.s[data-k]', outEl).forEach(function (n) { n.textContent = n.dataset.pre + t(n.dataset.k) + n.dataset.post; });
+    EDU.$$('.s[data-k]', outEl).forEach(function (n) { n.textContent = t(n.dataset.k); });
   }
   function figureEl(b64) {
     figN++;
@@ -145,12 +146,18 @@
   }
   function outText() {
     var s = '';
-    outEl.childNodes.forEach(function (n) { if (!(n.classList && n.classList.contains('pp-fig'))) s += n.textContent; });
+    outEl.childNodes.forEach(function (n) {
+      if (n.classList && n.classList.contains('pp-fig')) return;
+      if (n.classList && n.classList.contains('s')) { s += (s && !/\n$/.test(s) ? '\n' : '') + n.textContent + '\n'; return; }
+      s += n.textContent;
+    });
     return s;
   }
 
   /* bridge used by the Python side (module "_pp") */
-  var dialogMs = 0;
+  var dialogMs = 0, dialogBlocked = false;
+  // No person answers a dialog this fast: the browser blocked it (some in-app browsers and embeds do).
+  var BLOCKED_MS = 25;
   var bridge = {
     write: function (kind, s) { addOut(String(kind), String(s)); },
     image: function (b64) { segs.push({ kind: 'img', b64: String(b64) }); tail = ''; },
@@ -159,13 +166,16 @@
       var before = tail.replace(/\n$/, '').split('\n').slice(-6).join('\n').trim();
       tail = '';
       var msg = t('ask_title') + (before ? '\n\n' + before : '') + (p ? '\n\n' + p : '');
-      var w0 = performance.now(), r = window.prompt(msg, '');
-      dialogMs += performance.now() - w0;          // typing time is not program time
+      var w0 = performance.now(), r = window.prompt(msg, ''), dt = performance.now() - w0;
+      dialogMs += dt;          // typing time is not program time
+      if ((r === null || r === undefined) && dt < BLOCKED_MS) dialogBlocked = true;
       return r === null || r === undefined ? null : String(r);
     },
     stop_ask: function (n) {
-      var w0 = performance.now(), ok = !!window.confirm(t('guard_q', { n: EDU.fmt(n) }));
-      dialogMs += performance.now() - w0;
+      var w0 = performance.now(), ok = !!window.confirm(t('guard_q', { n: EDU.fmt(n) })), dt = performance.now() - w0;
+      dialogMs += dt;
+      // A blocked confirm box answers "no" at once; the loop would then freeze the tab for good.
+      if (!ok && dt < BLOCKED_MS) { dialogBlocked = true; ok = true; }
       return ok;
     }
   };
@@ -193,9 +203,30 @@
   function boot() {
     if (bootPromise) return bootPromise;
     state.ready = false; state.busyKey = '';
-    loadT0 = Date.now(); setPhase('loading'); startTick(); updateRunBtn();
+    loadT0 = Date.now(); setPhase('loading'); startTick();
+    // When the big pyodide.asm.wasm download breaks, Pyodide 0.27.2 only logs
+    // console.warn("wasm instantiation failed!") and loadPyodide() never settles. Watch for that
+    // (and for unhandled network rejections), so the student gets "Try again" instead of
+    // "Loading…" for ever.
+    var onRejection = null, origWarn = console.warn;
+    var failed = new Promise(function (_, reject) {
+      onRejection = function (ev) {
+        var r = ev && ev.reason, m = String((r && (r.message || r)) || '');
+        if (/fetch|network|wasm|instantiat|load failed/i.test(m)) reject(new Error(m));
+      };
+      window.addEventListener('unhandledrejection', onRejection);
+      console.warn = function (m) {
+        if (/wasm instantiation failed/i.test(String(m))) reject(new Error(String(m)));
+        return origWarn.apply(console, arguments);
+      };
+    });
+    failed.catch(function () { });
+    var netFail = function () {
+      window.removeEventListener('unhandledrejection', onRejection);
+      if (console.warn !== origWarn) console.warn = origWarn;
+    };
     bootPromise = loadScriptOnce().then(function () {
-      return window.loadPyodide({ indexURL: PYODIDE_URL, stdout: function () { }, stderr: function () { } });
+      return Promise.race([window.loadPyodide({ indexURL: PYODIDE_URL, stdout: function () { }, stderr: function () { } }), failed]);
     }).then(function (inst) {
       inst.registerJsModule('_pp', bridge);
       inst.runPython(BOOT);
@@ -210,9 +241,11 @@
       setPhase('failed');
       if (window.console && console.warn) console.warn('[python-playground] Pyodide failed to load:', e && e.message);
     }).then(function () {
+      netFail();
       stopTick(); bootPromise = null; updateRunBtn(); renderStatus();
       if (state.ready && state.queued) { state.queued = false; run(); }
     });
+    updateRunBtn();          // after bootPromise is set, so Restart is greyed out while loading
     return bootPromise;
   }
 
@@ -248,11 +281,21 @@
       if (!ok) { setInfo({ key: 'st_pkg_fail', vars: { pkgs: names || 'Python' }, cls: 'bad' }); return false; }
       if (py.loadedPackages && py.loadedPackages.matplotlib && !mplReady) {
         setBusy('st_mpl');
-        return wait(40).then(function () { py.runPython('_pp_setup_mpl()'); mplReady = true; return true; });
+        return wait(40).then(function () {
+          try { py.runPython('_pp_setup_mpl()'); } finally { busyUntil = performance.now(); }
+          mplReady = true; return true;
+        });
       }
       return true;
     });
   }
+
+  /* While Python runs, the page cannot handle clicks or keys; the browser keeps them and delivers
+     them after the program ends. A Run click (or Ctrl+Enter) made while the program was running must
+     not start the same program again, so events created before the run ended are ignored. */
+  var busyUntil = 0;
+  function freshEvent(e) { return !(e && e.timeStamp && e.timeStamp <= busyUntil); }
+  function runFromEvent(e) { if (freshEvent(e)) run(); }
 
   function run() {
     if (state.running) return;
@@ -274,9 +317,11 @@
       setBusy('st_running');
       return wait(40).then(function () {
         var t0 = performance.now();
-        dialogMs = 0;
-        var raw = runner(code, state.guard ? GUARD_SECS : 0);
-        ms = Math.max(0, performance.now() - t0 - dialogMs);
+        dialogMs = 0; dialogBlocked = false;
+        var raw;
+        try { raw = runner(code, state.guard ? GUARD_SECS : 0); }
+        finally { busyUntil = performance.now(); }
+        ms = Math.max(0, busyUntil - t0 - dialogMs);
         return JSON.parse(String(raw));
       });
     }).then(function (res) {
@@ -298,9 +343,15 @@
     });
   }
 
+  var NOTE_KEYS = { mpl_glyph: 1 };
   function finish(res, ms) {
+    (res.notes || []).forEach(function (k) {
+      if (NOTE_KEYS[k]) sysNote(k);
+    });
+    flushOut();
+    if (dialogBlocked) res.blocked = true;
     if (res.ok) {
-      if (!outHasContent) { sysNote('no_output', '', '\n'); flushOut(); }
+      if (!outHasContent) { sysNote('no_output'); flushOut(); }
       var sec = Math.max(ms, 1) / 1000;
       setInfo({ key: 'done_ok', vars: { s: EDU.fmt(sec, { maximumFractionDigits: sec < 0.1 ? 3 : 2 }) }, cls: 'ok' });
       return;
@@ -324,9 +375,11 @@
   var HINT_ALIAS = { TabError: 'IndentationError', UnboundLocalError: 'NameError', ImportError: 'ModuleNotFoundError' };
   var HINT_NOLINE = { ModuleNotFoundError: 1, RecursionError: 1 };
   function hintText(err) {
+    if (err.blocked && err.why) return t('hint_noprompt');
     if (err.why === 'guard') return t('hint_stopped');
     if (err.why === 'cancel') return t('hint_cancelled');
     var ty = HINT_ALIAS[err.type] || err.type;
+    if (ty === 'ValueError' && err.line && /integer string conversion/.test(err.msg || '')) return t('hint_bigint', { n: err.line });
     if (HINT_NOLINE[ty]) return t('hint_' + ty);
     if (err.line && EDU.has('hint_' + ty)) return t('hint_' + ty, { n: err.line });
     return t('hint_generic');
@@ -430,7 +483,7 @@
   var escFree = false;
   ed.addEventListener('keydown', function (e) {
     if (e.isComposing) return;
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); run(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); runFromEvent(e); return; }
     if (e.key === 'Escape') { escFree = true; return; }
     if (e.key === 'Tab' && !e.ctrlKey && !e.altKey && !e.metaKey) {
       if (escFree) { escFree = false; return; }        // let Tab move focus after Esc
@@ -575,8 +628,17 @@
   });
 
   /* ------------------------------------------------------------ buttons */
-  $('#runBtn').addEventListener('click', run);
-  $('#restartBtn').addEventListener('click', restart);
+  $('#runBtn').addEventListener('click', runFromEvent);
+  $('#restartBtn').addEventListener('click', function (e) { if (freshEvent(e)) restart(); });
+  // Ctrl/Cmd + Enter also runs when the focus is not in the editor (e.g. right after pressing Run).
+  document.addEventListener('keydown', function (e) {
+    if (!(e.ctrlKey || e.metaKey) || e.key !== 'Enter' || e.isComposing || e.defaultPrevented) return;
+    if (document.querySelector('.edu-modal-back')) return;
+    var tg = e.target, tag = tg && tg.tagName;
+    if (tg !== ed && (tag === 'TEXTAREA' || tag === 'SELECT' || (tag === 'INPUT' && tg.type !== 'checkbox'))) return;
+    e.preventDefault();
+    runFromEvent(e);
+  });
   $('#fsBtn').addEventListener('click', function () { EDU.fullscreen(); });
   $('#clearOutBtn').addEventListener('click', function () { clearOut(); hideHint(); setInfo(null); });
   $('#copyOutBtn').addEventListener('click', function () { EDU.copy(outText()); });

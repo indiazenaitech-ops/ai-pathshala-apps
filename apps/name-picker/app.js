@@ -86,6 +86,15 @@
     return o;
   })();
 
+  /* EDU.toast() puts its messages on <body>, which is not drawn while the picker or the groups are
+     full screen; keep the toast box inside the full-screen element so "new round" etc. stay visible. */
+  function placeToasts() {
+    var w = $('.edu-toast-wrap'), host = document.fullscreenElement || document.body;
+    if (w && w.parentNode !== host) host.appendChild(w);
+  }
+  function toast(msg) { EDU.toast(msg); placeToasts(); }
+  document.addEventListener('fullscreenchange', placeToasts);
+
   function save() { store.set('data', data); }
   function saveSettings() { store.set('settings', settings); }
 
@@ -114,6 +123,9 @@
     c.picked.forEach(function (i) { done[i] = 1; });
     return p.filter(function (i) { return !done[i]; });
   }
+  /* What the idle wheel shows: the names that can come up next. Once everyone has had a turn the
+     next spin starts a new round, so the wheel shows everybody who is present (not an empty wheel). */
+  function wheelPool(c) { var p = pool(c); return p.length ? p : presentIdx(c); }
 
   /* ---------------- sound (WebAudio, no files) ---------------- */
   var actx = null;
@@ -155,14 +167,32 @@
     }
     return pal;
   }
-  function family() { if (!fontFam) fontFam = getComputedStyle(document.body).fontFamily || 'sans-serif'; return fontFam; }
-  function inkFor(color) {
+  /* Nastaliq (the Urdu UI font) is a tall, slanting script: on the wheel the words spill across
+     neighbouring slices. A flat Naskh face reads well at any angle, so Urdu labels use one. */
+  var NASKH = '"Noto Naskh Arabic", "Segoe UI", Tahoma, Arial, sans-serif';
+  function family() {
+    if (!fontFam) fontFam = EDU.lang === 'ur' ? NASKH : (getComputedStyle(document.body).fontFamily || 'sans-serif');
+    return fontFam;
+  }
+  function rgbOf(color) {
     var m = /^#?([0-9a-f]{6})$/i.exec(String(color).trim());
-    if (!m) return '#ffffff';
+    if (!m) return null;
     var v = parseInt(m[1], 16);
-    var lin = function (c) { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
-    var L = 0.2126 * lin((v >> 16) & 255) + 0.7152 * lin((v >> 8) & 255) + 0.0722 * lin(v & 255);
+    return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
+  }
+  function inkFor(color) {
+    var c = rgbOf(color);
+    if (!c) return '#ffffff';
+    var lin = function (x) { x /= 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); };
+    var L = 0.2126 * lin(c[0]) + 0.7152 * lin(c[1]) + 0.0722 * lin(c[2]);
     return L > 0.2 ? '#111111' : '#ffffff';
+  }
+  /* a slice colour faded towards the wheel background (used for the slices that were not picked) */
+  function fade(color, bg, k) {
+    var a = rgbOf(color), b = rgbOf(bg);
+    if (!a || !b) return color;
+    var h = function (x) { return ('0' + Math.round(x).toString(16)).slice(-2); };
+    return '#' + h(a[0] * k + b[0] * (1 - k)) + h(a[1] * k + b[1] * (1 - k)) + h(a[2] * k + b[2] * (1 - k));
   }
   function colorIndex(i, n) { var k = i % 8; if (n > 1 && i === n - 1 && k === 0) k = 3; return k; }
   var segmenter = (window.Intl && Intl.Segmenter) ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null;
@@ -194,7 +224,7 @@
       ctx.beginPath(); ctx.arc(cx, cy, r, 0, TAU); ctx.fillStyle = P['surface-2']; ctx.fill();
       ctx.fillStyle = P.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.font = '600 ' + Math.round(Math.max(14 * k, r * 0.07)) + 'px ' + family();
-      ctx.fillText(t('wheel_empty'), cx, cy + r * 0.45);
+      ctx.fillText(names.length ? t('wheel_all_absent') : t('wheel_empty'), cx, cy + r * 0.45);
     } else {
       var seg = TAU / n, hl = wheel.highlight, hlSet = {};
       hl.forEach(function (i) { hlSet[i] = 1; });
@@ -203,14 +233,16 @@
       ctx.font = '700 ' + fs + 'px ' + family();
       var key = fs + '|' + Math.round(maxW) + '|' + EDU.lang;
       for (var i = 0; i < n; i++) {
-        var a0 = wheel.rot + i * seg, col = P.c[colorIndex(i, n)], dim = hl.length && !hlSet[items[i]];
+        var a0 = wheel.rot + i * seg, dim = hl.length && !hlSet[items[i]];
+        var col = dim ? fade(P.c[colorIndex(i, n)], P.border, 0.32) : P.c[colorIndex(i, n)];
         ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, a0, a0 + seg); ctx.closePath();
-        ctx.globalAlpha = dim ? 0.3 : 1; ctx.fillStyle = col; ctx.fill(); ctx.globalAlpha = 1;
+        ctx.fillStyle = col; ctx.fill();
         if (n > 1) { ctx.lineWidth = Math.max(1, (n > 80 ? 0.6 : 1.8) * k); ctx.strokeStyle = P.surface; ctx.stroke(); }
         if (showText) {
           ctx.save();
           ctx.translate(cx, cy); ctx.rotate(a0 + seg / 2);
-          ctx.fillStyle = inkFor(col); ctx.globalAlpha = dim ? 0.55 : 1;
+          // ink is chosen for the colour actually drawn, so faded slices stay readable in both themes
+          ctx.fillStyle = inkFor(col); ctx.globalAlpha = dim ? 0.8 : 1;
           ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
           ctx.fillText(fit(String(names[items[i]] || ''), maxW, key), textEnd, 0);
           ctx.restore();
@@ -233,6 +265,16 @@
     canvas.setAttribute('aria-label', t('wheel_aria', { n: fmt(n) }));
   }
 
+  /* The centre "Spin!" label stays on one line: long words (e.g. Malayalam) get a smaller font. */
+  function fitHub() {
+    var hub = $('#hubBtn');
+    hub.style.fontSize = '';
+    var room = hub.clientWidth * 0.84;
+    if (!room) return;
+    var fs = parseFloat(getComputedStyle(hub).fontSize) || 16, rg = document.createRange();
+    rg.selectNodeContents(hub);
+    while (fs > 9 && rg.getBoundingClientRect().width > room) { fs -= 1; hub.style.fontSize = fs + 'px'; }
+  }
   function sizeCanvas() {
     var wrap = $('#wheelWrap');
     if (wrap.hidden) return;
@@ -241,10 +283,11 @@
     var px = Math.round(w * Math.min(window.devicePixelRatio || 1, 2));
     if (canvas.width !== px) { canvas.width = px; canvas.height = px; labelCache = {}; }
     drawWheel();
+    fitHub();
   }
   function refreshWheel() {                     // show the current pool on the wheel (not during a spin)
     if (busy) return;
-    wheel.items = pool(cls());
+    wheel.items = wheelPool(cls());
     wheel.highlight = [];
     drawWheel();
   }
@@ -290,14 +333,14 @@
     buildCards(Math.max(1, Math.min(settings.pickN, avail || 1)), null);
   }
   function flipCards(chosen, done) {
-    var names = namesOf(cls()), wrap = $('#cardsWrap'), red = reducedMotion();
+    var wrap = $('#cardsWrap'), red = reducedMotion();
     buildCards(chosen.length, null);
     wrap.classList.add('shuffling');
     var iv = setInterval(tick, 110);
     setTimeout(function () {
       clearInterval(iv);
       wrap.classList.remove('shuffling');
-      var cards = $$('.flip', wrap), gap = red ? 0 : 140;
+      var cards = $$('.flip', wrap), gap = red ? 0 : 140, names = namesOf(cls());   // names in the current language
       cards.forEach(function (cd, i) {
         $('.front', cd).textContent = names[chosen[i]] || '';
         setTimeout(function () { cd.classList.add('flipped'); tick(); }, gap * i);
@@ -327,13 +370,13 @@
   function doPick() {
     if (busy) return;
     var c = cls();
-    if (!namesOf(c).length) { EDU.toast(t('empty_list')); return; }
-    if (!presentIdx(c).length) { EDU.toast(t('no_present')); return; }
+    if (!namesOf(c).length) { toast(t('empty_list')); return; }
+    if (!presentIdx(c).length) { toast(t('no_present')); return; }
     var p = pool(c);
     if (!p.length) {                            // everyone had a turn → new round
       c.picked = []; save();
       p = pool(c);
-      EDU.toast(t('new_round'));
+      toast(t('new_round'));
       renderHistory();
     }
     var k = Math.min(settings.pickN, p.length);
@@ -367,6 +410,7 @@
     if (c.picked.length > MAX_HISTORY) c.picked = c.picked.slice(-MAX_HISTORY);
     lastPick = chosen;
     save();
+    if (settings.mode === 'cards') renderCardsIdle();
     renderWinner(); renderRemaining(); renderHistory();
     fanfare();
   }
@@ -439,6 +483,7 @@
     $('#wheelTip').hidden = !wheelMode;
     var lbl = $('#spinLbl'), key = wheelMode ? 'spin' : 'pick_btn';
     lbl.setAttribute('data-i18n', key); lbl.textContent = t(key);
+    $('#spinIc').textContent = wheelMode ? '🎡' : '🃏';
     $('#pickN').value = settings.pickN;
     $('#noRepeat').checked = settings.noRepeat;
     var sb = $('#soundBtn');
@@ -496,7 +541,7 @@
 
   function makeGroups() {
     var c = cls(), present = presentIdx(c), n = present.length;
-    if (n < 2) { EDU.toast(t('too_few')); return; }
+    if (n < 2) { toast(t('too_few')); return; }
     var g = settings.groupBy === 'count'
       ? Math.min(settings.groupCount, n)
       : Math.ceil(n / Math.min(settings.groupSize, n));
@@ -506,7 +551,7 @@
     c.groups = res.groups; c.groupsOk = res.ok;
     save();
     renderGroups();
-    if (!res.ok) EDU.toast(t('apart_failed'));
+    if (!res.ok) toast(t('apart_failed'));
   }
 
   function renderGroupSettings() {
@@ -631,38 +676,56 @@
     if ((c.sample && sameList(names, sampleNames())) || (!c.sample && sameList(names, c.names))) { renderList(); return; }
     setNames(c, names);
     afterListChange();
-    if (!quiet || cut) EDU.toast(cut ? t('too_many', { n: fmt(MAX_NAMES) }) : t('list_saved', { n: fmt(names.length) }));
+    if (!quiet || cut) toast(cut ? t('too_many', { n: fmt(MAX_NAMES) }) : t('list_saved', { n: fmt(names.length) }));
   }
   function maybeAutosave() { if (listDirty) saveList(true); }
 
+  /* Header cells that hold the student's name: "Name", "Student Name", "Name of the Student", "नाम",
+     "छात्र का नाम", "மாணவர் பெயர்" … but not a parent's / teacher's / school's name. */
+  var NAME_WORD = '(?:names?|naam|नाम|নাম|नाव|નામ|ਨਾਂ|ਨਾਮ|ନାମ|பெயர்|పేరు|ಹೆಸರು|പേര്|نام)';
+  var NAME_END = new RegExp('(?:^|[\\s_\'’.:-])' + NAME_WORD + '\\s*[:.]?\\s*$', 'i');
+  var NAME_START = new RegExp('^' + NAME_WORD + '(?:$|[\\s_:(.-])', 'i');
+  var NOT_STUDENT = /father|mother|parent|guardian|teacher|school|village|city|town|pita|mata|पिता|माता|अभिभावक|पालक|वडील|आई|शिक्षक|गाँव|गांव|বাবা|মায়ের|পিতা|মাতা|অভিভাবক|પિતા|માતા|વાલી|ਪਿਤਾ|ਮਾਤਾ|ਮਾਪੇ|ପିତା|ମାତା|ଅଭିଭାବକ|தந்தை|தாய்|பெற்றோர்|తండ్రి|తల్లి|ತಂದೆ|ತಾಯಿ|ಪೋಷಕ|അച്ഛ|അമ്മ|രക്ഷിതാവ്|والد|سرپرست/i;
+  var FIRST_HDR = /first|given|पहला/i, LAST_HDR = /last|sur\s*name|family|उपनाम|सरनेम/i;
+  function isNameHeader(v) { v = String(v || '').trim(); return v.length <= 40 && (NAME_END.test(v) || NAME_START.test(v)) && !NOT_STUDENT.test(v); }
+
   function namesFromFile(text) {
-    text = String(text || '').replace(/^﻿/, '');
+    text = String(text || '').replace(/^\uFEFF/, '');
     var first = text.split(/\r\n|\r|\n/).filter(function (l) { return HAS_WORD.test(l); })[0] || '';
     var counts = { ',': (first.match(/,/g) || []).length, ';': (first.match(/;/g) || []).length, '\t': (first.match(/\t/g) || []).length };
     var delim = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; })[0];
-    var rows;
-    if (!counts[delim]) rows = text.split(/\r\n|\r|\n/).map(function (l) { return [l]; });
-    else if (delim === ',') rows = EDU.csv.parse(text);
-    else rows = text.split(/\r\n|\r|\n/).map(function (l) { return l.split(delim); });
+    var rows = counts[delim] ? EDU.csv.parse(text, delim)          // quoted cells may contain the delimiter
+      : text.split(/\r\n|\r|\n/).map(function (l) { return [l]; });
     rows = rows.filter(function (r) { return r.some(function (x) { return HAS_WORD.test(String(x)); }); });
     if (!rows.length) return [];
     var width = Math.max.apply(null, rows.map(function (r) { return r.length; }));
-    // a header cell that ends with "name" (Name, Student Name, नाम, छात्र का नाम …) but is not a parent's name
-    var NAME_HDR = /(^|[\s_'’-])(names?|naam|नाम|নাম|नाव|નામ|ਨਾਂ|ਨਾਮ|ନାମ|பெயர்|పేరు|ಹೆಸರು|പേര്|نام)\s*$/i;
-    var PARENT_HDR = /father|mother|parent|guardian|पिता|माता|अभिभावक|वडील|आई/i;
-    var col = -1, header = false;
-    rows[0].forEach(function (cell, i) {
-      var v = String(cell).trim();
-      if (col < 0 && NAME_HDR.test(v) && !PARENT_HDR.test(v)) { col = i; header = true; }
-    });
-    if (col < 0) {                               // pick the column with the most "name-like" cells
+    // the header may sit below a title line ("Class 7 B register"), so look at the first few rows
+    var col = -1, col2 = -1, start = 0;
+    for (var h = 0; h < Math.min(5, rows.length) && col < 0; h++) {
+      var hdr = rows[h].map(function (x) { return String(x || '').trim(); });
+      var named = [];
+      hdr.forEach(function (v, i) { if (isNameHeader(v)) named.push(i); });
+      if (!named.length) continue;
+      start = h + 1;
+      var fi = named.filter(function (i) { return FIRST_HDR.test(hdr[i]); })[0];
+      var la = -1;
+      hdr.forEach(function (v, i) { if (la < 0 && i !== fi && v.length <= 30 && LAST_HDR.test(v) && !NOT_STUDENT.test(v)) la = i; });
+      if (fi !== undefined && la >= 0) { col = fi; col2 = la; }                        // First name + Last name / Surname
+      else {
+        var plain = named.filter(function (i) { return !LAST_HDR.test(hdr[i]); });
+        col = plain.length ? plain[0] : named[0];
+      }
+    }
+    if (col < 0) {                               // no header: take the column with the most "name-like" cells
       var bestScore = -1;
       for (var i = 0; i < width; i++) {
         var score = rows.filter(function (r) { var v = String(r[i] || '').trim(); return v && !/^[\d\s.\/:-]+$/.test(v); }).length;
         if (score > bestScore) { bestScore = score; col = i; }
       }
     }
-    return rows.slice(header ? 1 : 0).map(function (r) { return cleanName(r[col]); }).filter(Boolean);
+    return rows.slice(start).map(function (r) {
+      return cleanName(col2 >= 0 ? String(r[col] || '').trim() + ' ' + String(r[col2] || '').trim() : r[col]);
+    }).filter(Boolean);
   }
 
   function importCsv() {
@@ -670,7 +733,7 @@
       if (!file) return null;
       return EDU.readText(file).then(function (text) {
         var names = namesFromFile(text);
-        if (!names.length) { EDU.toast(t('import_failed')); return; }
+        if (!names.length) { toast(t('import_failed')); return; }
         var c = cls();
         if (!c.sample && c.names.length && !confirm(t('confirm_replace'))) return;
         var cut = names.length > MAX_NAMES;
@@ -679,9 +742,9 @@
         setNames(c, names);
         if (!hadName) c.name = String(file.name || '').replace(/\.[^.]+$/, '').replace(/[_]+/g, ' ').trim().slice(0, 40);
         afterListChange();
-        EDU.toast(cut ? t('too_many', { n: fmt(MAX_NAMES) }) : t('imported_n', { n: fmt(names.length) }));
+        toast(cut ? t('too_many', { n: fmt(MAX_NAMES) }) : t('imported_n', { n: fmt(names.length) }));
       });
-    }).catch(function () { EDU.toast(t('import_failed')); });
+    }).catch(function () { toast(t('import_failed')); });
   }
 
   function renderAttendance() {
@@ -748,8 +811,9 @@
   });
   $$('#modeSeg button').forEach(function (b) {
     b.addEventListener('click', function () {
-      if (busy) return;
+      if (busy || settings.mode === b.dataset.mode) return;
       settings.mode = b.dataset.mode; saveSettings();
+      refreshWheel();            // the wheel shows who can come up next, not a pick made in the other mode
       renderPick();
     });
   });
@@ -800,7 +864,7 @@
   $('#groupTheme').addEventListener('change', function () { settings.theme = this.value; saveSettings(); renderGroups(); });
   $('#makeGroups').addEventListener('click', makeGroups);
   $('#reshuffleBtn').addEventListener('click', makeGroups);
-  $('#copyGroups').addEventListener('click', function () { if (cls().groups) EDU.copy(groupsText()); });
+  $('#copyGroups').addEventListener('click', function () { if (cls().groups) EDU.copy(groupsText()).then(placeToasts); });
   $('#printGroups').addEventListener('click', function () { window.print(); });
   $('#csvGroups').addEventListener('click', function () {
     var c = cls(); if (!c.groups) return;
@@ -812,16 +876,18 @@
   $('#addPair').addEventListener('click', function () {
     var c = cls(), a = parseInt($('#apartA').value, 10), b = parseInt($('#apartB').value, 10);
     if (isNaN(a) || isNaN(b)) return;
-    if (a === b) { EDU.toast(t('same_pair')); return; }
+    if (a === b) { toast(t('same_pair')); return; }
     var p = [Math.min(a, b), Math.max(a, b)];
-    if (c.apart.some(function (q) { return q[0] === p[0] && q[1] === p[1]; })) { EDU.toast(t('pair_exists')); return; }
+    if (c.apart.some(function (q) { return q[0] === p[0] && q[1] === p[1]; })) { toast(t('pair_exists')); return; }
     c.apart.push(p); save(); renderPairs();
   });
 
   // class list
   $('#newClass').addEventListener('click', function () {
     maybeAutosave();
-    var c = blankClass(false, t('new_class_name', { n: fmt(data.classes.length + 1) }), []);
+    // no stored name: the list shows "New class N" in the current language until the teacher types a name,
+    // and a CSV import can still name the class after its file
+    var c = blankClass(false, '', []);
     data.classes.push(c); data.current = c.id;
     afterListChange();
     showTab('list');
@@ -857,7 +923,7 @@
     if (!c.sample && c.names.length && !confirm(t('confirm_replace'))) return;
     setNames(c, range(n).map(function (i) { return String(i + 1); }));
     afterListChange();
-    EDU.toast(t('list_saved', { n: fmt(n) }));
+    toast(t('list_saved', { n: fmt(n) }));
   });
   $('#attendance').addEventListener('click', function (e) {
     var b = e.target.closest('.att'); if (!b) return;
@@ -877,14 +943,14 @@
   if (window.ResizeObserver) new ResizeObserver(function () { requestAnimationFrame(sizeCanvas); }).observe($('#wheelWrap'));
   else window.addEventListener('resize', sizeCanvas);
   if (document.fonts && document.fonts.addEventListener) {
-    document.fonts.addEventListener('loadingdone', function () { fontFam = null; labelCache = {}; drawWheel(); });
+    document.fonts.addEventListener('loadingdone', function () { fontFam = null; labelCache = {}; drawWheel(); fitHub(); });
   }
   EDU.onTheme(function () { pal = null; drawWheel(); });
   EDU.onLang(function () { fontFam = null; labelCache = {}; renderAll(); });
   window.addEventListener('beforeunload', maybeAutosave);
 
   /* ---------------- start ---------------- */
-  wheel.items = pool(cls());
+  wheel.items = wheelPool(cls());
   renderAll();
   showTab(settings.tab);
 })();

@@ -7,6 +7,11 @@
   var MIN_WORDS = 5;
   var SEP = '\u0001';
   var END_CHARS = '.!?।॥۔؟';
+  /* Poems: in a text made of short lines, every line break is learned as its own "end of line" token,
+     so the model writes line by line and invented lines can be found. Shown as ↵. */
+  var NL = '\n', NL_SHOW = '↵';
+  var LINE_CHARS = '\n\r\u2028\u2029↵';
+  var LINE_RE = new RegExp('[' + LINE_CHARS + ']');
   var store = EDU.store(SLUG);
   var $ = EDU.$, el = EDU.el, t = EDU.t;
 
@@ -41,28 +46,49 @@
     return segs[L];
   }
   var FALLBACK_RE = (function () {
-    try { return new RegExp('[\\p{L}\\p{M}\\p{N}]+(?:[\'’][\\p{L}\\p{M}\\p{N}]+)*|[' + END_CHARS + ']+', 'gu'); }
-    catch (e) { return new RegExp('[^\\s.,!?;:"“”‘’()\\[\\]{}<>/|।॥۔؟،]+|[' + END_CHARS + ']+', 'g'); }
+    var tail = '|[' + END_CHARS + ']+|[' + LINE_CHARS + ']+';
+    try { return new RegExp('[\\p{L}\\p{M}\\p{N}\\u200c\\u200d]+(?:[\'’][\\p{L}\\p{M}\\p{N}\\u200c\\u200d]+)*' + tail, 'gu'); }
+    catch (e) { return new RegExp('[^\\s.,!?;:"“”‘’()\\[\\]{}<>/|।॥۔؟،\\u21b5]+' + tail, 'g'); }
   })();
-  function endMark(s) {
+  var END_ONLY_RE = new RegExp('^[' + END_CHARS + ']+$');
+  var LINE_ONLY_RE = new RegExp('^[' + LINE_CHARS + ']+$');
+  /* The end mark inside a piece of punctuation/space; a line break counts only in poem mode. */
+  function endMark(s, lines) {
     for (var i = 0; i < s.length; i++) if (END_CHARS.indexOf(s[i]) >= 0) return s[i] === '॥' ? '।' : s[i];
-    return null;
+    return lines && LINE_RE.test(s) ? NL : null;
   }
-  function isEnd(tok) { return !!tok && tok.length === 1 && END_CHARS.indexOf(tok) >= 0; }
-  function tokenize(text) {
+  function isEnd(tok) { return tok === NL || (!!tok && tok.length === 1 && END_CHARS.indexOf(tok) >= 0); }
+  /* Poem mode when most lines are short and full stops are rarely in the middle of a line
+     (a pasted textbook page with long lines, or prose wrapped mid-sentence, stays in normal mode). */
+  function looksLikeLines(text) {
+    var lines = String(text || '').split(/\r\n|[\n\r\u2028\u2029]/).map(function (s) { return s.trim(); }).filter(Boolean);
+    if (lines.length < 3) return false;
+    var lens = lines.map(function (s) { return s.length; }).sort(function (a, b) { return a - b; });
+    if (lens[Math.floor(lens.length / 2)] > 60) return false;
+    var mid = 0, re = new RegExp('[' + END_CHARS + '](?=[\\s"“”\'’)\\]]*[^\\s"“”\'’)\\]' + END_CHARS + '])', 'g');
+    lines.forEach(function (s) { mid += (s.match(re) || []).length; });
+    return mid <= lines.length / 3;
+  }
+  function tokenize(text, lines) {
     text = String(text || '');
     var out = [], seg = getSeg();
-    function pushEnd(m) { if (m && out.length && !isEnd(out[out.length - 1])) out.push(m); }
+    /* No two end marks in a row, except that in poem mode a line break after "." / "!" / "।" is kept too,
+       so a line that ends with a full stop still ends the line. */
+    function pushEnd(m) {
+      var last = out[out.length - 1];
+      if (m && out.length && (!isEnd(last) || (m === NL && last !== NL))) out.push(m);
+    }
     if (seg) {
       var it = seg.segment(text)[Symbol.iterator](), r;
       while (!(r = it.next()).done) {
         if (r.value.isWordLike) out.push(r.value.segment);
-        else pushEnd(endMark(r.value.segment));
+        else pushEnd(endMark(r.value.segment, lines));
       }
     } else {
       (text.match(FALLBACK_RE) || []).forEach(function (w) {
-        var m = endMark(w);
-        if (m && w.replace(new RegExp('[' + END_CHARS + ']', 'g'), '') === '') pushEnd(m); else out.push(w);
+        if (LINE_ONLY_RE.test(w)) { if (lines) pushEnd(NL); }
+        else if (END_ONLY_RE.test(w)) pushEnd(endMark(w, false));
+        else out.push(w);
       });
     }
     return out;
@@ -71,7 +97,9 @@
 
   /* ---------------- the model ---------------- */
   function train(text) {
-    var raw = tokenize(String(text || '').slice(0, MAX_CHARS));
+    text = String(text || '').slice(0, MAX_CHARS);
+    var lines = looksLikeLines(text);
+    var raw = tokenize(text, lines);
     var toks = [], surf = new Map(), first = new Map(), endCount = new Map();
     raw.forEach(function (w, i) {
       var k = norm(w);
@@ -98,8 +126,9 @@
     var words = 0, vocab = new Set(), endTok = null, ec = 0;
     toks.forEach(function (k) { if (!isEnd(k)) { words++; vocab.add(k); } });
     endCount.forEach(function (c, k) { if (c > ec) { ec = c; endTok = k; } });
+    if (lines && endCount.has(NL)) endTok = NL;   // poem: an empty start means "start of a line"
     return { toks: toks, disp: disp, first: first, tables: tables, words: words, vocab: vocab.size, endTok: endTok,
-      joined: SEP + toks.join(SEP) + SEP };
+      lines: lines, joined: SEP + toks.join(SEP) + SEP };
   }
 
   /* Look at the last n words; if that exact sequence was never seen, use fewer words (back-off). */
@@ -155,26 +184,35 @@
   function seqInText(seq) { return model.joined.indexOf(SEP + seq.join(SEP) + SEP) >= 0; }
 
   /* ---------------- display helpers ---------------- */
-  function dispTok(k) { return (model && model.disp.get(k)) || k; }
+  function dispTok(k) { return k === NL ? NL_SHOW : (model && model.disp.get(k)) || k; }
   function cap(s) { return s ? s.charAt(0).toLocaleUpperCase() + s.slice(1) : s; }
   function joinToks(toks) {
     var s = '';
-    toks.forEach(function (k, i) { s += (i && !isEnd(k) ? ' ' : '') + dispTok(k); });
+    toks.forEach(function (k, i) { s += (i && (!isEnd(k) || k === NL) ? ' ' : '') + dispTok(k); });
     return s;
   }
+  function endLabel(k) { return t(k === NL ? 'end_line' : 'end_mark'); }
+  function startLabel() { return t(model && model.lines ? 'line_start' : 'sent_start'); }
   function pct(p) { return EDU.fmt(p, { style: 'percent', maximumFractionDigits: p < 0.1 && p > 0 ? 1 : 0 }); }
   function bucket(p) { return p >= 0.5 ? 'p-high' : p >= 0.2 ? 'p-mid' : p >= 0.05 ? 'p-low' : 'p-rare'; }
-  function startTokens() { return tokenize($('#start-input').value).map(norm); }
+  function startTokens() { return tokenize($('#start-input').value, !!(model && model.lines)).map(norm); }
 
   /* ---------------- training ---------------- */
   function retrain() {
     clearTimeout(trainTimer); trainTimer = null;
     model = train(trainingText());
     lastOut = null;
-    $('#train-print').textContent = trainingText();
+    setPrintText();
     renderStats(); renderPredict(); renderOutput(); renderPeek();
   }
   function retrainSoon() { clearTimeout(trainTimer); trainTimer = setTimeout(retrain, 400); }
+  function flushTrain() { if (trainTimer) retrain(); }   // text was just edited: learn it before using the model
+  /* The printout shows the training text, but only its beginning when it is very long. */
+  var PRINT_CHARS = 3000;
+  function setPrintText() {
+    var txt = trainingText();
+    $('#train-print').textContent = txt.length > PRINT_CHARS ? txt.slice(0, PRINT_CHARS).replace(/\s+\S*$/, '') + ' …' : txt;
+  }
 
   function saveStart() { store.set('start', { lang: EDU.lang, text: $('#start-input').value }); }
   function loadStart() {
@@ -207,6 +245,10 @@
     var need = $('#need-text');
     need.hidden = model.words >= MIN_WORDS;
     need.textContent = t('need_text', { n: MIN_WORDS });
+    $('#lines-note').hidden = !model.lines;
+    $('#lines-note').textContent = t('lines_note');
+    $('#cut-note').hidden = !(S.src === 'custom' && $('#train-text').value.length > MAX_CHARS);
+    $('#cut-note').textContent = t('text_cut', { n: EDU.fmt(MAX_CHARS) });
   }
 
   function renderPredict() {
@@ -216,7 +258,7 @@
     chips.innerHTML = '';
     var used = pr ? pr.k : 0, want = pr ? pr.want : 0;
     if (!toks.length) {
-      chips.appendChild(el('span', { class: 'tok' + (used ? ' on' : ''), text: t('sent_start') }));
+      chips.appendChild(el('span', { class: 'tok' + (used ? ' on' : ''), text: startLabel() }));
     } else {
       var shown = toks.slice(-8);
       if (toks.length > 8) chips.appendChild(el('span', { class: 'muted', text: '…' }));
@@ -243,16 +285,19 @@
       $('#explain').textContent = '';
       return;
     }
-    pr.list.slice(0, 5).forEach(function (x) {
+    var atStart = !toks.length || isEnd(toks[toks.length - 1]);   // the guess would begin a sentence
+    // a sentence cannot start with a full stop (only possible with memory 0): show words there
+    var shownList = atStart ? pr.list.filter(function (x) { return !isEnd(x.w); }) : pr.list;
+    (shownList.length ? shownList : pr.list).slice(0, 5).forEach(function (x) {
       var seen = t('seen', { c: EDU.fmt(x.c), t: EDU.fmt(pr.total) });
       list.appendChild(el('button', { type: 'button', class: 'cand', 'data-w': x.w, onclick: function () { appendWord(x.w); } },
         el('span', { class: 'cand-word' },
-          el('span', { class: 'cand-w', text: dispTok(x.w) }),
-          el('small', { text: isEnd(x.w) ? t('end_mark') + ' · ' + seen : seen })),
+          el('span', { class: 'cand-w', text: atStart && !isEnd(x.w) ? cap(dispTok(x.w)) : dispTok(x.w) }),
+          el('small', { text: isEnd(x.w) ? endLabel(x.w) + ' · ' + seen : seen })),
         el('span', { class: 'cand-bar', 'aria-hidden': 'true' }, el('span', { style: { width: (x.p * 100).toFixed(1) + '%' } })),
         el('span', { class: 'cand-pct', text: pct(x.p) })));
     });
-    var ctxTxt = pr.virt ? t('sent_start') : joinToks(pr.ctx);
+    var ctxTxt = pr.virt ? startLabel() : joinToks(pr.ctx);
     $('#explain').textContent = pr.k === 0 ? t('explain_none', { t: EDU.fmt(pr.total) }) : t('explain_ctx', { ctx: ctxTxt, t: EDU.fmt(pr.total) });
   }
 
@@ -262,7 +307,7 @@
     var toks = startTokens(), last = toks[toks.length - 1];
     var shown = dispTok(w);
     if (!isEnd(w) && (!toks.length || isEnd(last))) shown = cap(shown);
-    inp.value = isEnd(w) ? v + shown : (v ? v + ' ' : '') + shown;
+    inp.value = isEnd(w) && w !== NL ? v + shown : (v ? v + ' ' : '') + shown;
     saveStart(); renderPredict();
   }
 
@@ -284,17 +329,18 @@
       if (nWords >= 3 && hasGen) { judged++; isNew = !seqInText(s.map(function (it) { return it.w; })); if (isNew) fresh++; }
       var span = el('span', { class: 'sent' + (isNew ? ' sent-new' : '') });
       s.forEach(function (it, i) {
-        var end = isEnd(it.w);
-        if (!first && !end) (i ? span : box).appendChild(document.createTextNode(' '));
+        var end = isEnd(it.w), nl = it.w === NL;
+        if (!first && (!end || nl)) (i ? span : box).appendChild(document.createTextNode(' '));
         var txt = dispTok(it.w);
         if (prevEnd && !end) txt = cap(txt);
-        var cls = 'w ' + (it.start ? 'w-start' : 'w-gen ' + bucket(it.p)) + (end ? ' w-end' : '');
+        var cls = 'w ' + (it.start ? 'w-start' : 'w-gen ' + bucket(it.p)) + (end ? ' w-end' : '') + (nl ? ' w-nl' : '');
         var w = el('span', { class: cls, text: txt });
-        if (!it.start) { w.dataset.p = it.p.toFixed(4); w.title = t('word_tip', { p: pct(it.p) }); }
+        if (!it.start) { w.dataset.p = it.p.toFixed(4); w.title = t('word_tip', { p: pct(it.p) }) + (end ? ' · ' + endLabel(it.w) : ''); }
         span.appendChild(w);
         first = false; prevEnd = end;
       });
       box.appendChild(span);
+      if (s[s.length - 1].w === NL) box.appendChild(el('br'));   // poem mode: the model ended the line
     });
     if (judged) {
       sum.hidden = false;
@@ -307,9 +353,10 @@
     if (gw.length) rate.textContent = t('top_rate', { a: EDU.fmt(tops), b: EDU.fmt(gw.length) });
   }
 
+  /* Plain text of the output for Copy / Read aloud; poem lines keep their line breaks. */
   function outputText() {
     if (!lastOut || !lastOut.gen.length) return '';
-    return $('#output').textContent.replace(/\s+/g, ' ').trim();
+    return $('#output').textContent.split(NL_SHOW).map(function (s) { return s.replace(/\s+/g, ' ').trim(); }).join('\n').trim();
   }
 
   function renderPeek() {
@@ -326,7 +373,7 @@
       body.appendChild(el('tr', {},
         el('td', { text: ctx }),
         el('td', { class: 'arrow', 'aria-hidden': 'true', text: document.documentElement.dir === 'rtl' ? '←' : '→' }),
-        el('td', {}, el('b', { text: dispTok(r.w) }), isEnd(r.w) ? el('span', { class: 'muted small', text: ' (' + t('end_mark') + ')' }) : null),
+        el('td', {}, el('b', { text: dispTok(r.w) }), isEnd(r.w) ? el('span', { class: 'muted small', text: ' (' + endLabel(r.w) + ')' }) : null),
         el('td', { class: 'n', text: EDU.fmt(r.c) })));
     });
   }
@@ -363,6 +410,8 @@
     ta.focus();
   });
   $('#clear-text').addEventListener('click', function () {
+    // the class's own text is saved on this device: never wipe it without asking
+    if (S.custom.trim() && !confirm(t('confirm_clear'))) return;
     S.src = 'custom'; S.custom = ''; ta.value = '';
     store.set('src', 'custom'); store.set('custom', '');
     renderControls(); retrain(); ta.focus();
@@ -389,7 +438,7 @@
   var inp = $('#start-input');
   inp.addEventListener('input', function () { saveStart(); renderPredict(); });
   inp.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') { e.preventDefault(); var b = $('#cands .cand'); if (b) b.click(); }
+    if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); var b = $('#cands .cand'); if (b) b.click(); }
   });
   $('#undo-btn').addEventListener('click', function () {
     var v = inp.value.replace(/\s+$/, '');
@@ -400,6 +449,7 @@
   });
   $('#clear-start').addEventListener('click', function () { inp.value = ''; saveStart(); renderPredict(); inp.focus(); });
   $('#pick-btn').addEventListener('click', function () {
+    flushTrain();
     var toks = startTokens(), pr = predict(toks);
     if (!pr) return;
     var last = toks[toks.length - 1];
@@ -409,6 +459,7 @@
   $('#len').addEventListener('input', function () { S.len = clampInt(this.value, 5, 80, 25); store.set('len', S.len); renderControls(); });
   $('#temp').addEventListener('input', function () { S.temp = clampNum(this.value, 0, 2, 0.8); store.set('temp', S.temp); renderControls(); });
   $('#write-btn').addEventListener('click', function () {
+    flushTrain();
     if (!model || !model.toks.length) { EDU.toast(t('no_guess')); return; }
     var st = startTokens();
     lastOut = { start: st, gen: generate(st, S.len, S.temp) };
@@ -448,6 +499,6 @@
   ta.value = trainingText();
   loadStart();
   model = train(trainingText());
-  $('#train-print').textContent = trainingText();
+  setPrintText();
   renderAll();
 })();

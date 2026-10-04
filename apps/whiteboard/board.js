@@ -159,6 +159,18 @@
       p[2] - L * Math.cos(ang + a), p[3] - L * Math.sin(ang + a)] };
   }
   function textLines(s) { return String(s.tx || '').split('\n'); }
+  /* Base direction of typed text from its first strong letter (Urdu → rtl), the same rule as the
+     text box's dir="auto", so the words keep their order and place when the box turns into ink. */
+  var RTL_CH = /[֐-ࣿיִ-﷿ﹰ-﻿]/, LTR_CH = /[A-Za-zÀ-ʸͰ-ϿЀ-ԯऀ-෿Ḁ-῿]/;
+  function textDir(tx) {
+    var str = String(tx || '');
+    for (var i = 0; i < str.length; i++) {
+      var ch = str.charAt(i);
+      if (RTL_CH.test(ch)) return 'rtl';
+      if (LTR_CH.test(ch)) return 'ltr';
+    }
+    return 'ltr';
+  }
   function fontFor(size) { return '500 ' + size + 'px ' + FONT; }
   function measure(ctx, s) {
     ctx.save(); ctx.font = fontFor(s.s);
@@ -199,7 +211,8 @@
         ctx.ellipse((p[0] + p[2]) / 2, (p[1] + p[3]) / 2, Math.max(0.5, Math.abs(p[2] - p[0]) / 2), Math.max(0.5, Math.abs(p[3] - p[1]) / 2), 0, 0, Math.PI * 2);
         ctx.stroke(); break;
       case 'text':
-        ctx.font = fontFor(s.s); ctx.textBaseline = 'top'; ctx.textAlign = 'left'; ctx.direction = 'ltr';
+        /* the text box is always left-aligned at the tap point; only the reading order follows the text */
+        ctx.font = fontFor(s.s); ctx.textBaseline = 'top'; ctx.textAlign = 'left'; ctx.direction = textDir(s.tx);
         textLines(s).forEach(function (l, i) { ctx.fillText(l, p[0], p[1] + i * s.s * LINE_H + s.s * 0.08); });
         break;
     }
@@ -280,14 +293,16 @@
     if (s.t === 'text') {
       if (typeof s.tx !== 'string' || !s.tx.trim()) return null;
       o.tx = s.tx.slice(0, 2000); o.s = num(s.s) ? Math.min(Math.max(s.s, 8), 400) : 40;
-      o.bw = num(s.bw) ? s.bw : o.s * o.tx.length * 0.6; o.bh = num(s.bh) ? s.bh : o.s * LINE_H;
+      var lines = o.tx.split('\n'), longest = Math.max.apply(null, lines.map(function (l) { return l.length; }));
+      o.bw = num(s.bw) && s.bw > 0 ? Math.min(s.bw, 20000) : o.s * longest * 0.6;
+      o.bh = num(s.bh) && s.bh > 0 ? Math.min(s.bh, 20000) : o.s * LINE_H * lines.length;
     }
     return o;
   }
-  function cleanPages(arr) {
+  function cleanPages(arr, max) {
     if (!Array.isArray(arr) || !arr.length) return null;
     var out = [];
-    arr.slice(0, 60).forEach(function (pg) {
+    arr.slice(0, max || 50).forEach(function (pg) {
       if (!pg || typeof pg !== 'object') return;
       var page = newPage(pg);
       if (typeof pg.id === 'string' && pg.id.length < 40) page.id = pg.id;
@@ -303,6 +318,6 @@
     SHAPES: SHAPES, BGS: BGS, BOARDS: BOARDS, PAL: PAL, FONT: FONT, LINE_H: LINE_H,
     dims: dims, isDark: isDark, color: color, newPage: newPage,
     drawBg: drawBg, drawStroke: drawStroke, render: render, paint: paint, smoothPath: smoothPath,
-    fontFor: fontFor, measure: measure, hit: hit, cleanPages: cleanPages, cleanStroke: cleanStroke
+    fontFor: fontFor, measure: measure, textDir: textDir, hit: hit, cleanPages: cleanPages, cleanStroke: cleanStroke
   };
 })();

@@ -16,6 +16,12 @@ module.exports = async function ({ page, lang, expect, t }) {
   expect((await ps()) === t('ps_sentence', { who: s0.ps_who, what: s0.ps_what, where: s0.ps_where, why: s0.ps_why }), 'sample problem statement assembled');
   expect(await page.isVisible('#sample-note'), 'sample note is shown');
   expect((await page.$$('#stepper .step-btn.done')).length === 7, 'all 7 stages ticked for the sample');
+  // Clicking the chip of the sample that is already open (untouched) reopens it instead of piling up copies.
+  await page.click('#step-3');
+  await page.click('#sample-0');
+  await page.click('#sample-0');
+  expect((await count()) === 1, 'no duplicate sample copies on repeated clicks, got ' + (await count()));
+  expect((await page.textContent('#stage-title')).trim() === t('st1'), 'reopened sample starts at step 1');
 
   // 2) New blank project; fill the 4Ws and use "Fill blanks from the 4Ws".
   await page.click('#btn-new');
@@ -41,6 +47,7 @@ module.exports = async function ({ page, lang, expect, t }) {
   await page.click('#opt-sources-survey');
   await page.click('#opt-sources-sensor');
   expect((await page.getAttribute('#opt-sources-survey', 'aria-pressed')) === 'true', 'survey chip pressed');
+  expect((await page.getAttribute('#f-features', 'maxlength')) === '8000', 'answer boxes are capped at the same length the loader keeps');
   await page.fill('#f-features', 'Date\nKg of plastic\n\nLocation');
   expect((await page.textContent('#feat-count')).trim() === t('feat_count', { n: 3 }), 'blank lines are not counted as features');
   expect((await overall()) === t('overall', { p: 32 }), '10/31 filled = 32%, got ' + (await overall()));
@@ -72,6 +79,16 @@ module.exports = async function ({ page, lang, expect, t }) {
   const file = await dl.path();
   const txt = fs.readFileSync(file, 'utf8');
   expect(txt.includes('Plastic waste floats in the river') && txt.includes(t('st5')) && txt.includes('[x] ' + t('ec1')), 'downloaded text contains answers, stages and ticks');
+  expect(txt.includes(t('q_model_how_rule')) && txt.includes(t('ps_sentence', { who: 'Boatmen and visitors at the ghat', what: 'Plastic waste floats in the river', where: 'At the ghat after festivals', why: 'Know when and where to send cleaning teams' })), 'text has the problem statement and the rule question');
+
+  // Blank worksheet: ruled lines, nothing typed, and the neutral modelling question (not this project's rule question).
+  await page.evaluate(() => { window.print = () => {}; });
+  await page.click('#btn-print-blank');
+  const blank = await page.textContent('#canvas');
+  expect((await page.$$('#canvas .a-lines')).length >= 20 && !blank.includes('Clean Yamuna Ghat'), 'blank worksheet has ruled lines and no student text');
+  expect(blank.includes(t('q_model_how_none')) && !blank.includes(t('q_model_how_rule')), 'blank worksheet asks the neutral modelling question');
+  await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+  expect((await page.textContent('#canvas')).includes('Clean Yamuna Ghat'), 'filled canvas comes back after printing');
 
   // 7) Everything survives a reload (autosave), including the current step.
   await page.waitForTimeout(500);
@@ -87,6 +104,20 @@ module.exports = async function ({ page, lang, expect, t }) {
   expect((await count()) === 3, 'sample opened as a third project');
   expect((await page.inputValue('#f-title')) === C.samples[2].title, 'water sample title');
   expect((await page.getAttribute('#ap-rule', 'aria-pressed')) === 'true', 'water sample is rule-based');
+  await page.click('#step-5');
+  await page.click('#sample-2');
+  expect((await count()) === 3, 'clicking the same untouched sample again does not add a copy');
   await page.click('#btn-del');
   expect((await count()) === 2, 'project deleted (confirm accepted)');
+
+  // 9) If the browser refuses to store (quota full / blocked), the app says so instead of claiming it saved.
+  await page.click('#step-1');
+  await page.evaluate(() => { window.__setItem = Storage.prototype.setItem; Storage.prototype.setItem = function () { throw new Error('QuotaExceededError'); }; });
+  await page.fill('#f-team', 'Asha, Ravi');
+  await page.waitForTimeout(500);
+  expect((await page.getAttribute('#save-status', 'class')).includes('save-bad') && (await page.textContent('#save-status')).trim() === t('save_failed'), 'save failure is shown');
+  await page.evaluate(() => { Storage.prototype.setItem = window.__setItem; });
+  await page.fill('#f-team', 'Asha, Ravi, Neha');
+  await page.waitForTimeout(500);
+  expect(!(await page.getAttribute('#save-status', 'class')).includes('save-bad') && (await page.textContent('#save-status')).trim() === t('saved_local'), 'status recovers once saving works again');
 };

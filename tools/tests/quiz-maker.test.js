@@ -31,6 +31,14 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   /* 2. validation */
   await page.click('#saveQ');
   expect((await page.textContent('#edMsg')).trim() === t('err_no_text'), 'empty question shows an error');
+  {
+    const L2 = lang === 'en' ? 'ml' : 'ur';
+    await page.selectOption('#edu-lang', L2);
+    const want2 = await page.evaluate((L) => window.APP_STRINGS[L].err_no_text, L2);
+    expect((await page.textContent('#edMsg')).trim() === want2, 'editor error message follows a language change (it stayed in the old language)');
+    await page.selectOption('#edu-lang', lang);
+    await page.waitForSelector('#qList .qitem');
+  }
   expect(await count('#qList .qitem') === 5, 'nothing added for an empty question');
   await page.fill('#qText', 'What is 7 × 8?');
   await page.fill('#opt0', '54');
@@ -85,10 +93,18 @@ module.exports = async function ({ page, lang, expect, t, log }) {
     await page.click(`#prOpts .opt-tile:nth-child(${pos + 1})`);
     const fb = await page.textContent('#prFeedback');
     expect(fb.includes(i === 0 ? t('wrong') : t('correct')), `instant feedback for question ${i + 1}`);
+    if (i === 1) {
+      /* a phone may reload the page when the student comes back from another app */
+      await page.reload();
+      await page.waitForSelector('#prQ:not([hidden])');
+      expect((await page.textContent('#prProgress')).trim() === t('q_of', { n: 2, total: N }) && (await page.textContent('#prFeedback')).includes(t('correct')) && (await page.textContent('#prRunning')).includes('1'),
+        'practice keeps its place, answers and score after a reload');
+    }
     await page.click('#prNext');
   }
   const score = (await page.textContent('#prScore')).replace(/\s+/g, ' ').trim();
   expect(score === `${N - 1} / ${N}`, `practice score should be ${N - 1} / ${N}, got "${score}"`);
+  expect(await page.evaluate(() => getComputedStyle(document.getElementById('prScore')).direction) === 'ltr', 'big score is laid out LTR (Urdu showed "2 / 5" as "5 / 2")');
   expect(await count('#prReview .review-item') === 1, 'one mistake listed for review');
   await page.click('#prMistakes');
   const q0 = quiz.questions[0];
@@ -117,6 +133,9 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.keyboard.press('PageDown');
   await page.keyboard.press('1');
   expect((await page.textContent('#cqProgress')).trim() === t('q_of', { n: 3, total: N }) && (await page.textContent('#teamScore0')).trim() === '3', 'PageDown = next question, key 1 = +1 for team A');
+  await page.reload();
+  await page.waitForSelector('#classStage:not([hidden])');
+  expect((await page.textContent('#cqProgress')).trim() === t('q_of', { n: 3, total: N }) && (await page.textContent('#teamScore0')).trim() === '3', 'a refresh of the smartboard keeps the class quiz at question 3');
   /* switching the language mid-quiz keeps the class quiz where it was (it used to stop it) */
   const other = lang === 'en' ? 'ta' : 'bn';
   await page.selectOption('#edu-lang', other);
@@ -133,13 +152,18 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.click('#saveQ');
   await page.click('#tab-class');
   expect((await page.textContent('#cqText')).trim() === 'Edited during class', 'running class quiz shows the edited question');
+  /* after a mouse click on the "Class quiz" tab, the clicker's -> must go to the next question, not to the next tab */
+  await page.keyboard.press('ArrowRight');
+  expect(await page.getAttribute('#tab-class', 'aria-selected') === 'true' && (await page.textContent('#cqProgress')).trim() === t('q_of', { n: 4, total: N }), 'ArrowRight after clicking the Class quiz tab = next question (it used to switch to the Practice tab)');
   await page.click('#cqExit');
+  expect(await page.isVisible('#oldScoresRow') && (await page.textContent('#oldScores')).includes('3'), 'setup shows the team scores kept from before, with a reset button');
 
   /* 8. share link: the whole quiz is in the URL hash, opens in practice mode */
   await page.click('#tab-share');
   await page.waitForFunction(() => /#(quiz|qz)=/.test(document.getElementById('shareUrl').value));
   const url = await page.inputValue('#shareUrl');
   log('share link', url.match(/#(quiz|qz)=/)[1], url.length, 'chars');
+  expect(new URL(url).searchParams.get('lang') === lang, 'share link opens in the teacher language (?lang=' + lang + ')');
   const wa = await page.getAttribute('#waLink', 'href');
   expect(wa.startsWith('https://wa.me/?text=') && decodeURIComponent(wa).includes(url), 'WhatsApp link contains the quiz link');
   await page.goto('about:blank');
@@ -160,6 +184,10 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.goto(url.split('#')[0] + '#quiz=bm90LWEtcXVpeg');
   await page.waitForSelector('#badLink:not([hidden])');
   expect(await page.isVisible('#quizBar') && await page.isHidden('#sharedBanner'), 'a broken link shows a message and the normal app');
+  await page.goto('about:blank');
+  await page.goto(url.split('#')[0] + '#quiz=');
+  await page.waitForSelector('#badLink:not([hidden])', { timeout: 5000 }).catch(() => { });
+  expect(await page.isVisible('#badLink'), 'a link with the quiz cut off ("#quiz=") shows the broken-link message');
 
   /* 9. CSV export + import (incl. T/F detection and a bad row) */
   const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#tab-edit').then(() => page.click('#exportCsv'))]);
@@ -195,10 +223,38 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   const toastTxt = await page.evaluate(() => [...document.querySelectorAll('.edu-toast')].map(e => e.textContent).join(' | '));
   expect(toastTxt.includes(t('skipped_rows', { n: 2 })), 'import message counts the 2 skipped rows: ' + toastTxt);
   expect(quiz.title === 'Class 6 GK', 'quiz named after the file');
+  const gkId = quiz.id;
 
-  /* leave the projector view open for the screenshot */
+  const longWord = 'x'.repeat(400);
+  const csv2 = '\u092a\u0943\u0925\u094d\u0935\u0940 \u0917\u094b\u0932 \u0939\u0948,\u0938\u0939\u0940,\u0917\u0932\u0924,\u0938\u0939\u0940\n' +   /* Hindi: the Earth is round, True, False, True */
+    'Which one opens a lock?,Key,Pen,Book,1,' + longWord + '\n';
+  const [fc2] = await Promise.all([page.waitForEvent('filechooser'), page.click('#importBtn')]);
+  await fc2.setFiles({ name: 'no header.csv', mimeType: 'text/csv', buffer: Buffer.from(csv2, 'utf8') });
+  await page.waitForFunction((b) => document.querySelectorAll('#quizSel option').length === b + 2, before);
+  quiz = await stored();
+  expect(quiz.questions.length === 2 && quiz.questions[0].type === 'tf' && quiz.questions[0].answer === 0 && quiz.questions[1].answer === 0 && quiz.questions[1].options.length === 3,
+    'CSV without a header whose first row has a True word or "Key" in it is not taken for a header (the whole file used to fail): ' + JSON.stringify(quiz.questions.map(q => [q.type, q.answer])));
+  /* a very long word in an explanation must not widen the page */
+  await page.click('#tab-practice');
+  await page.click('#prStartBtn');
+  await page.click('#prOpts .opt-tile:nth-child(1)');
+  await page.click('#prNext');
+  await page.click('#prOpts .opt-tile:nth-child(2)');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1), 'a 400-letter word in the explanation wraps (no sideways scroll)');
+  await page.selectOption('#quizSel', gkId);
+
+  /* finish screen, then Play again starts a new game from 0 points */
   await page.click('#tab-class');
+  await page.click('#resetScores2');
+  expect(await page.isHidden('#oldScoresRow'), 'Reset scores on the setup screen sets the kept scores to 0');
   await page.click('#startClass');
+  await page.click('#teamPlus1');
+  for (let i = 0; i < 5; i++) await page.keyboard.press('PageDown');
+  const winB = t('winner', { team: t('team_n', { n: 'B' }) });
+  expect(await page.isVisible('#cqFinish') && (await page.textContent('#cqFinish')).includes(winB), 'finish screen names the winning team: ' + winB);
+  await page.click('#playAgain');
+  expect((await page.locator('.team-score').allTextContents()).every(v => v.trim() === '0') && (await page.textContent('#cqProgress')).trim() === t('q_of', { n: 1, total: 5 }), 'Play again starts again at question 1 with all teams at 0');
+  /* leave the projector view open for the screenshot */
   await page.click('#cqReveal');
   log('ok', lang);
 };

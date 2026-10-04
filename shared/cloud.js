@@ -79,6 +79,8 @@
     function noop() { }
     function validId(id) { return typeof id === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(id); }
     function validPid(id) { return typeof id === 'string' && /^[^/]{1,128}$/.test(id) && id !== '.' && id !== '..'; }
+    /* a stored nickname gives a usable names/ id (firestore.rules only accepts nicknames whose nameKey is one) */
+    function nameIdOk(name) { var k = typeof name === 'string' ? U.nameKey(name) : ''; return !!k && k.indexOf('/') < 0 && !/^[.]+$/.test(k) && !/^__.*__$/.test(k); }
 
     /* ------------------------------------------------------------ errors */
     var FB_MAP = {
@@ -398,14 +400,22 @@
     }
 
     /* ------------------------------------------------------------ deleting */
-    function commitOps(db, ops) {
+    /* Writes in batches of up to 450. Security rules may allow only 20 document look-ups per batch; the
+       rules look up the same session document for every write (normally counted once), but if a big batch
+       is ever refused, the same writes are retried in small batches before giving up. Order matters: ops that
+       the rules check together (a player and its nickname, deleted by "Remove me") come first, in one chunk. */
+    function commitOps(db, ops, size) {
+      size = size || 450;
       var chunks = [];
-      for (var i = 0; i < ops.length; i += 450) chunks.push(ops.slice(i, i + 450));
+      for (var i = 0; i < ops.length; i += size) chunks.push(ops.slice(i, i + size));
       return chunks.reduce(function (p, ch) {
         return p.then(function () {
           var b = db.batch();
           ch.forEach(function (op) { op(b); });
-          return timeout(b.commit(), 30000);
+          return timeout(b.commit(), 30000).catch(function (e) {
+            if (ch.length <= 10 || mapError(e).code !== 'permission-denied') throw e;
+            return commitOps(db, ch, 10);
+          });
         });
       }, Promise.resolve());
     }
@@ -749,7 +759,7 @@
         return nameP.then(function (name) {
           var b = S.db.batch();
           b.delete(ref.collection('players').doc(playerId));
-          if (typeof name === 'string' && U.normalizeName(name) === name) b.delete(ref.collection('names').doc(U.nameKey(name)));
+          if (nameIdOk(name)) b.delete(ref.collection('names').doc(U.nameKey(name)));
           var upd = { kicked: S.fb.firestore.FieldValue.arrayUnion(playerId) };
           if (H && H.players) upd.playerCount = H.players.filter(function (p) { return p.id !== playerId; }).length;
           b.update(ref, upd);
@@ -769,7 +779,15 @@
     }
 
     /* Retention on the free plan (LIVE_SPEC amendment): sessions older than 30 days are deleted by the app.
-       Only judged with a known server clock, so a PC with a wrong date never deletes fresh sessions. */
+       Only judged with a known server clock, so a PC with a wrong date never deletes fresh sessions.
+       The automatic clean-up reads ALL of the teacher's sessions (one read each), so a device does it at most
+       once per PURGE_EVERY (listSessions() does the same job for free when the dashboard opens). */
+    var PURGE_EVERY = 12 * 3600000;
+    function purgeKey(uid) { return 'edu.cloud.purgedAt.' + uid; }
+    function purgedRecently(uid) {
+      try { var t = Number(window.localStorage.getItem(purgeKey(uid))); return isFinite(t) && t > 0 && Math.abs(now() - t) < PURGE_EVERY; } catch (e) { return false; }
+    }
+    function notePurged(uid) { try { window.localStorage.setItem(purgeKey(uid), String(Math.round(now()))); } catch (e) { } }
     function isOld(s) {
       if (clock.best === null) return false;
       var t = now(), keep = U.LIMITS.keepDays * DAY;
@@ -783,11 +801,15 @@
         S.purged[u.uid] = true;
         return timeout(S.db.collection('sessions').where('owner', '==', u.uid).get()).then(function (qs) {
           var old = qs.docs.filter(function (d) { return isOld(sessionData(d)); }).map(function (d) { return d.id; });
-          return deleteOld(old).then(function () { return old.length; });
+          return deleteOld(old).then(function () {
+            if (clock.best !== null) notePurged(u.uid);
+            return old.length;
+          });
         });
       });
     }
-    /* once per page, a few seconds after a teacher is known (listSessions() does the same job when called) */
+    /* once per page, a few seconds after a teacher is known, unless this device did it in the last 12 hours
+       (listSessions() does the same job when called) */
     function autoPurge(uid) {
       if (S.purged[uid] || S.purgeTimer) return;
       S.purgeTimer = setTimeout(function () {
@@ -795,6 +817,7 @@
         if (S.purged[uid] || !S.teacher || S.teacher.uid !== uid) return;
         if (clock.best === null) { autoPurge(uid); return; }      /* wait for the server clock */
         S.purged[uid] = true;
+        if (purgedRecently(uid)) return;
         purgeExpired().catch(function () { S.purged[uid] = false; });
       }, 4000);
     }
@@ -809,7 +832,8 @@
             out.push({ code: d.id, title: s.title, createdAt: s.createdAt, players: s.playerCount || 0, state: s.state });
           });
           if (old.length || clock.best !== null) S.purged[u.uid] = true;
-          if (old.length) deleteOld(old).catch(function () { S.purged[u.uid] = false; });
+          if (old.length) deleteOld(old).then(function () { notePurged(u.uid); }, function () { S.purged[u.uid] = false; });
+          else if (clock.best !== null) notePurged(u.uid);
           return out.sort(function (a, b) { return (b.createdAt || 0) - (a.createdAt || 0); });
         });
       });
@@ -879,8 +903,24 @@
         return timeout(S.sAuth.signInAnonymously()).then(function (cred) { return cred.user; });
       }).catch(rethrow);
     }
-    function stuInfo(c) { return S.stu[c] || (S.stu[c] = { session: null, my: {}, changed: null }); }
+    /* what the student page knows about session c: session (null = missing), me (my player doc or null),
+       fresh = a playerWatch() listener is delivering both right now, hidden = the session is ended or a day
+       old and I am not one of its players, so firestore.rules does not let me read it (it looks ended) */
+    function stuInfo(c) { return S.stu[c] || (S.stu[c] = { session: null, me: undefined, fresh: false, hidden: false, my: {}, changed: null }); }
+    var HIDDEN = { hidden: true };
+    /* one read of the session for a student → snapshot, null (missing) or HIDDEN */
+    function readSession(ref) {
+      return timeout(ref.get()).then(function (snap) { return snap.exists ? snap : null; }, function (e) {
+        if (mapError(e).code === 'permission-denied') return HIDDEN;
+        throw e;
+      });
+    }
+    function hiddenFrom(prev) { return copy(U.hiddenSession(prev || null)); }
 
+    /* Join = player doc + nickname reservation in ONE batch (firestore.rules makes the nickname unique).
+       Cost: the app checks the code with playerWatch() first, so the session and my player doc are already
+       known here (0 reads; else 2). The nickname is not read before writing: when the batch is refused,
+       diagnose() reads what is needed for a clear message (a refused read of names/ = taken by someone). */
     function joinSession(code, nickname) {
       var name = U.normalizeName(nickname);
       if (!name) return Promise.reject(bad('Nickname must be 1 to 20 characters.'));
@@ -890,38 +930,60 @@
         var uid = user.uid, db = S.sDb, ref = sref(db, c);
         var pref = ref.collection('players').doc(uid), nref = ref.collection('names').doc(U.nameKey(name));
         var X = stuInfo(c);
+        function rejoined(p) { return { playerId: uid, name: p.name, rejoined: true }; }
         /* the same checks as firestore.rules, in the same order as the demo mode */
-        function check() {
-          return Promise.all([timeout(ref.get()), timeout(pref.get()), timeout(nref.get())]).then(function (r) {
-            if (!r[0].exists) throw notFound('No quiz with this code.');
-            var s = sessionData(r[0]);
-            X.session = s;
-            if (r[1].exists) return { done: { playerId: uid, name: r[1].data().name, rejoined: true } };
-            if ((s.kicked || []).indexOf(uid) >= 0) throw denied('The teacher removed you from this quiz.');
-            if (s.state === 'ended') throw cloudError('session-ended', 'This quiz has ended.');
-            if (s.locked) throw cloudError('session-locked', 'The teacher has locked this quiz.');
-            if (r[2].exists && r[2].data().uid !== uid) throw cloudError('name-taken', 'Someone already uses this nickname.');
-            return { mine: r[2].exists };
+        function gate(sess, hidden, me) {
+          if (sess === null) throw notFound('No quiz with this code.');
+          if (me) return rejoined(me);
+          if (hidden || sess.state === 'ended') throw cloudError('session-ended', 'This quiz has ended.');
+          if ((sess.kicked || []).indexOf(uid) >= 0) throw denied('The teacher removed you from this quiz.');
+          if (sess.locked) throw cloudError('session-locked', 'The teacher has locked this quiz.');
+          return null;
+        }
+        function known() {
+          if (X.fresh && X.me !== undefined) return Promise.resolve({ s: X.hidden ? {} : X.session, hidden: X.hidden, me: X.me });
+          return Promise.all([readSession(ref), timeout(pref.get())]).then(function (r) {
+            var hidden = r[0] === HIDDEN;
+            var s = hidden ? {} : r[0] ? sessionData(r[0]) : null;
+            if (s && !hidden) X.session = s;
+            return { s: s, hidden: hidden, me: r[1].exists ? { name: r[1].data().name } : null };
           });
         }
-        return check().then(function (r) {
-          if (r.done) return r.done;
+        function write(withName, retried) {
           var exp = expireTS();
           var b = db.batch();
-          if (!r.mine) b.set(nref, { uid: uid, expireAt: exp });
+          if (withName) b.set(nref, { uid: uid, expireAt: exp });
           b.set(pref, { name: name, score: 0, joinedAt: ST(), expireAt: exp });
           pendStart('j:' + c);
           return timeout(b.commit()).then(function () {
             pendAck('j:' + c);
             return { playerId: uid, name: name };
           }, function (e) {
-            if (mapError(e).code !== 'permission-denied') throw e;
-            /* something changed in between (locked, name grabbed…): find out what, for a clear message */
-            return check().then(function (r2) {
-              if (r2.done) return r2.done;
-              throw denied('Could not join this quiz.');
-            });
+            delete pend['j:' + c];
+            if (mapError(e).code !== 'permission-denied' || retried) throw e;
+            return diagnose();
           });
+        }
+        /* the join was refused: something changed (locked, ended, name grabbed…) or the nickname is already
+           reserved for me (left over from an earlier visit): find out which */
+        function diagnose() {
+          return Promise.all([
+            readSession(ref), timeout(pref.get()),
+            timeout(nref.get()).then(function (n) { return n.exists ? { uid: n.data().uid } : null; }, function (e) {
+              if (mapError(e).code === 'permission-denied') return { uid: null };     /* someone else's */
+              throw e;
+            })
+          ]).then(function (r) {
+            var hidden = r[0] === HIDDEN;
+            var done = gate(hidden ? {} : r[0] ? sessionData(r[0]) : null, hidden, r[1].exists ? r[1].data() : null);
+            if (done) return done;
+            if (r[2] && r[2].uid === uid) return write(false, true);
+            if (r[2]) throw cloudError('name-taken', 'Someone already uses this nickname.');
+            throw denied('Could not join this quiz.');
+          });
+        }
+        return known().then(function (k) {
+          return gate(k.s, k.hidden, k.me) || write(true, false);
         });
       }).catch(rethrow);
     }
@@ -962,11 +1024,15 @@
         setTimeout(function () { if (!stopped) cb({ code: String(code), session: null, me: null, myAnswers: {}, kicked: false }); }, 0);
         return function () { stopped = true; };
       }
+      var mine = { stopped: false };       /* this watcher's token in stuInfo (X.fresh belongs to the newest watcher) */
       student().then(function (user) {
         if (stopped) return;
         uid = user.uid;
         var ref = sref(S.sDb, c), X = stuInfo(c);
         X.changed = emit;
+        X.owner = mine;
+        X.fresh = false;
+        function freshen() { if (X.owner === mine) X.fresh = st.s !== undefined && st.me !== undefined; }
         /* my earlier answers: read once (not a listener), then kept up to date by submitAnswer() */
         timeout(ref.collection('answers').where('uid', '==', uid).get()).then(function (qs) {
           qs.docs.forEach(function (d) { var a = d.data(); if (U.isInt(a.i)) X.my[a.i] = a.choice; });
@@ -974,19 +1040,29 @@
           emit();
         }, function () { st.answersLoaded = true; emit(); });
         unsubs.push(ref.onSnapshot(function (snap) {
-          if (!snap.exists) { st.s = null; X.session = null; emit(); return; }
+          if (!snap.exists) { st.s = null; X.session = null; X.hidden = false; freshen(); emit(); return; }
           var s = sessionData(snap);
           if (!snap.metadata.fromCache && prev && s.state === 'question' && (prev.state !== 'question' || prev.current !== s.current)) arrival(s.questionStartedAt);
-          prev = s; st.s = s; X.session = s;
+          prev = s; st.s = s; X.session = s; X.hidden = false;
+          freshen();
           emit();
-        }, fail));
+        }, function (e) {
+          /* firestore.rules: an ended or day-old session is readable only by its players and owner. For
+             anyone else (never joined, or removed) it simply looks ended, with what this page saw before.
+             The listener has stopped; nothing changes in such a session any more. */
+          if (mapError(e).code !== 'permission-denied') { if (X.owner === mine) X.fresh = false; fail(e); return; }
+          st.s = hiddenFrom(prev); X.session = st.s; X.hidden = true;
+          freshen();
+          emit();
+        }));
         unsubs.push(ref.collection('players').doc(uid).onSnapshot(function (snap) {
-          if (!snap.exists) { st.me = null; emit(); return; }
+          if (!snap.exists) { st.me = null; X.me = null; freshen(); emit(); return; }
           var p = playerData(snap);
           if (!snap.metadata.hasPendingWrites) pendServer('j:' + c, p.joinedAt);
-          st.me = p;
+          st.me = p; X.me = p;
+          freshen();
           emit();
-        }, fail));
+        }, function (e) { if (X.owner === mine) X.fresh = false; fail(e); }));
       }).catch(fail);
       return function () {
         stopped = true;
@@ -994,6 +1070,7 @@
         unsubs = [];
         var X = S.stu[c];
         if (X && X.changed === emit) X.changed = null;
+        if (X && X.owner === mine) { X.fresh = false; X.owner = null; }
       };
     }
 
@@ -1013,14 +1090,15 @@
         var s = X.session;
         if (s && s.questions && s.questions[i] && choice >= s.questions[i].options.length) throw bad('no such option');
         function diagnose() {
-          return Promise.all([timeout(ref.get()), timeout(aref.get()), timeout(pref.get())]).then(function (r) {
-            if (!r[0].exists) throw notFound('No quiz with this code.');
+          return Promise.all([readSession(ref), timeout(aref.get()), timeout(pref.get())]).then(function (r) {
+            if (!r[0]) throw notFound('No quiz with this code.');
             if (r[1].exists) {
               var a = r[1].data();
               remember(a.choice);
               if (a.choice === choice) return true;         /* the first try did arrive: fine */
               throw denied('You already answered this question.');
             }
+            if (r[0] === HIDDEN) throw cloudError('session-ended', 'This quiz has ended.');    /* not a player of an ended quiz */
             var s2 = r[0].data();
             if (s2.state === 'ended') throw cloudError('session-ended', 'This quiz has ended.');
             if (!r[2].exists) throw denied('Join the quiz first.');
@@ -1040,26 +1118,33 @@
       }).catch(rethrow);
     }
 
-    /* Leave = delete my player doc + my nickname. Once the session has ended (or is gone) it is also
-       "Remove me": my answers are deleted too. During a quiz answers stay (rules: no taking an answer back). */
+    /* Leave = delete my player doc + my nickname (firestore.rules: only together). Once the session has ended
+       (or is gone) it is also "Remove me": my answers are deleted too. During a quiz answers stay (rules: no
+       taking an answer back). */
     function leaveSession(code) {
       var c = U.normalizeCode(code);
       if (!c) return Promise.resolve();
       return student().then(function (user) {
         var uid = user.uid, ref = sref(S.sDb, c), pref = ref.collection('players').doc(uid);
-        return Promise.all([timeout(ref.get()), timeout(pref.get())]).then(function (r) {
-          var over = !r[0].exists || r[0].data().state === 'ended';
+        return Promise.all([readSession(ref), timeout(pref.get())]).then(function (r) {
+          /* HIDDEN = ended or a day old, and I am no longer a player of it */
+          var hidden = r[0] === HIDDEN;
+          var over = !r[0] || hidden || r[0].data().state === 'ended';
           var name = r[1].exists ? r[1].data().name : null;
-          var nref = typeof name === 'string' && U.normalizeName(name) === name ? ref.collection('names').doc(U.nameKey(name)) : null;
+          var nref = nameIdOk(name) ? ref.collection('names').doc(U.nameKey(name)) : null;
           return Promise.all([
             nref ? timeout(nref.get()) : null,
             over ? timeout(ref.collection('answers').where('uid', '==', uid).get()) : null
           ]).then(function (r2) {
-            var ops = [];
+            var ops = [], later = [];
             if (r[1].exists) ops.push(function (b) { b.delete(pref); });
             if (r2[0] && r2[0].exists && r2[0].data().uid === uid) ops.push(function (b) { b.delete(nref); });
-            if (r2[1]) r2[1].docs.forEach(function (d) { ops.push(function (b) { b.delete(d.ref); }); });
-            return commitOps(S.sDb, ops);
+            /* answers: in the same batch when the session is known to be over; for a hidden session (ended,
+               or a forgotten one that never ended) the rules may refuse them, so they go last, best effort */
+            if (r2[1]) r2[1].docs.forEach(function (d) { (hidden ? later : ops).push(function (b) { b.delete(d.ref); }); });
+            return commitOps(S.sDb, ops).then(function () {
+              if (later.length) return commitOps(S.sDb, later).catch(function (e) { if (mapError(e).code !== 'permission-denied') throw e; });
+            });
           });
         }).then(function () { delete S.stu[c]; });
       }).catch(rethrow);

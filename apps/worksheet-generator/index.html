@@ -52,10 +52,15 @@
     .line.short { flex: 0 0 46px; }
     .sec-h { font-size: 1.12em; margin: 20px 0 0; color: var(--primary); }
     .sec-i { font-weight: 600; margin: 8px 0 10px; }
-    .ws-grid { display: grid; grid-template-columns: repeat(var(--c), minmax(0, 1fr)); gap: 14px 20px; }
+    /* up to --c columns, but never narrower than the widest question (--qw, measured by app.js) + its padding */
+    .ws-grid { --gx: 20px; --pad: 30px; display: grid; gap: 14px var(--gx); grid-template-columns: repeat(var(--c), minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, max(calc(var(--qw, 0em) + var(--pad)), calc((100% - (var(--c) - 1) * var(--gx)) / var(--c) - 1px))), 1fr)); }
+    .ws-grid.measure { grid-template-columns: repeat(var(--c), max-content); }
     @media (max-width: 620px) {
       .paper { padding: 14px 12px; }
-      .ws-grid { grid-template-columns: repeat(var(--cm), minmax(0, 1fr)); gap: 10px 12px; }
+      .ws-grid { --gx: 12px; gap: 10px var(--gx); grid-template-columns: repeat(var(--cm), minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, max(calc(var(--qw, 0em) + var(--pad)), calc((100% - (var(--cm) - 1) * var(--gx)) / var(--cm) - 1px))), 1fr)); }
+      .ws-grid.measure { grid-template-columns: repeat(var(--cm), max-content); }
     }
     .q { display: flex; gap: 6px; align-items: flex-start; padding: 8px 8px 8px 4px; padding-inline-end: 26px; border-radius: 10px; position: relative; min-width: 0; }
     .qn { font-weight: 700; color: var(--muted); min-width: 1.9em; padding-top: .35em; font-variant-numeric: tabular-nums; }
@@ -130,6 +135,10 @@
       .ws-head, .line, .ld-dd, .vline { border-color: #000; }
       .sec-h, .lbl, .qn, .ws-meta, .ws-foot { color: #000; }
       .q { padding: 3px 2px; break-inside: avoid; background: none !important; }
+      .ws-grid { --pad: 4px; }
+      .q, .q.ok, .q.bad { color: #000 !important; }        /* on-screen ✓/✗ colours never reach the paper */
+      .sec-h, .sec-i { break-after: avoid; page-break-after: avoid; }
+      .ws-foot { break-before: avoid; page-break-before: avoid; margin-top: 10px; }   /* never a page with only the footer */
       .mark { display: none; }
       input.ans, select.ans { border: 0; border-bottom: 1.5px solid #000; border-radius: 0; background: transparent !important;
         color: transparent !important; -webkit-text-fill-color: transparent; }
@@ -142,7 +151,7 @@
       .vline2 { display: block; }
       .ld-work { display: block; height: 4.2em; }
       .ws-key { display: none !important; }
-      .ws-key.print-on { display: block !important; break-before: page; border: 0; box-shadow: none; padding: 0; background: #fff; color: #000; }
+      .ws-key.print-on { display: block !important; break-before: page; border: 0; box-shadow: none; padding: 1em 0 0; background: #fff; color: #000; }
       .key-list li { border-color: #999; }
     }
   </style>

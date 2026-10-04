@@ -4,6 +4,7 @@
   var SLUG = 'sql-playground';
   var SQLJS_BASE = 'https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/';
   var MAX_SHOW = 500;                 // rows rendered per result table
+  var MAX_KEEP = 20000;               // rows kept per result (CSV download)
   var MAX_SAVE_BYTES = 1500000;       // biggest database we keep in EDU.store
   var SIZES = [1, 1.2, 1.45];         // editor / table text sizes (rem)
   var DATA = window.SQLP_DATA;
@@ -17,19 +18,22 @@
   var db = null;         // main database
   var refCache = {};     // practice index -> reference result
   var lastBlocks = [];   // model of the results area (re-rendered on language change)
-  var inTxn = false;     // user opened BEGIN without COMMIT: don't export (export would roll back)
   var currentTask = store.get('task', null);
+  if (typeof currentTask !== 'number' || currentTask % 1 || currentTask < 0 || currentTask >= DATA.practice.length) currentTask = null;
   var showAnswer = false;
   var checkState = null; // {ok, key, vars}
   var solved = store.get('solved', []);
   if (!Array.isArray(solved)) solved = [];
+  solved = solved.filter(function (x, i, a) { return typeof x === 'number' && x >= 0 && x < DATA.practice.length && a.indexOf(x) === i; });
   var history = store.get('history', []);
   if (!Array.isArray(history)) history = [];
+  history = history.filter(function (h) { return typeof h === 'string'; });
   var sizeIdx = EDU.clamp(store.get('size', 0) | 0, 0, SIZES.length - 1);
 
   var editor = $('#editor');
   var DEFAULT_SQL = 'SELECT * FROM STUDENT;';
-  editor.value = store.get('draft', DEFAULT_SQL);
+  var draft0 = store.get('draft', DEFAULT_SQL);
+  editor.value = typeof draft0 === 'string' ? draft0 : DEFAULT_SQL;
 
   /* ------------------------------------------------------------ helpers */
   function content() { var C = window.APP_CONTENT || {}; return C[EDU.lang] || C.en; }
@@ -50,6 +54,8 @@
     if (v === null || v === undefined) return null;
     if (typeof v === 'number') {
       if (Number.isInteger(v) || !isFinite(v)) return String(v);
+      /* 4 decimals like MySQL's AVG, but never turn a tiny non-zero value such as 0.00001 into 0 */
+      if (Math.abs(v) < 0.001) return String(Number(v.toPrecision(4)));
       return String(Number(v.toFixed(4)));
     }
     if (v instanceof Uint8Array) return '[BLOB ' + v.length + ' bytes]';
@@ -122,10 +128,37 @@
     DAYOFWEEK: function (v) { var d = parseDate(v); return d ? d.getUTCDay() + 1 : null; },
     DAYNAME: function (v) { var d = parseDate(v); return d ? DAYS[d.getUTCDay()] : null; },
     MONTHNAME: function (v) { var d = parseDate(v); return d ? MONTHS[d.getUTCMonth()] : null; },
-    DATEDIFF: function (a, b) { var x = parseDate(a), y = parseDate(b); return x && y ? Math.round((x - y) / 86400000) : null; }
+    DATEDIFF: function (a, b) { var x = parseDate(a), y = parseDate(b); return x && y ? Math.round((x - y) / 86400000) : null; },
+    /* MySQL's INSTR ignores capital/small letters: INSTR('Aarav', 'a') = 1 (SQLite's own gives 2) */
+    INSTR: function (s, sub) { if (s === null || sub === null) return null; return String(s).toLowerCase().indexOf(String(sub).toLowerCase()) + 1; }
   };
+  /* MySQL's CONCAT gives NULL if any part is NULL (SQLite's own skips NULLs). sql.js registers a JS
+     function for exactly func.length arguments and keys it by its exact name, so every argument count
+     gets its own spelling of the name (SQLite treats them all as the same function). */
+  var CONCAT_NAMES = ['CONCAT', 'concat', 'Concat', 'cOncat', 'coNcat', 'conCat', 'concAt', 'concaT', 'COncat', 'CoNcat'];
+  function concatAll(args) {
+    var out = '';
+    for (var i = 0; i < args.length; i++) { if (args[i] === null || args[i] === undefined) return null; out += String(args[i]); }
+    return out;
+  }
+  /* func.length (the number of declared parameters) is the argument count sql.js registers */
+  /* eslint-disable no-unused-vars */
+  var CONCAT_FNS = [
+    function (a) { return concatAll(arguments); },
+    function (a, b) { return concatAll(arguments); },
+    function (a, b, c) { return concatAll(arguments); },
+    function (a, b, c, d) { return concatAll(arguments); },
+    function (a, b, c, d, e) { return concatAll(arguments); },
+    function (a, b, c, d, e, f) { return concatAll(arguments); },
+    function (a, b, c, d, e, f, g) { return concatAll(arguments); },
+    function (a, b, c, d, e, f, g, h) { return concatAll(arguments); },
+    function (a, b, c, d, e, f, g, h, i) { return concatAll(arguments); },
+    function (a, b, c, d, e, f, g, h, i, j) { return concatAll(arguments); }
+  ];
+  /* eslint-enable no-unused-vars */
   function registerFns(d) {
     Object.keys(FNS).forEach(function (name) { try { d.create_function(name, FNS[name]); } catch (e) { /* ignore */ } });
+    CONCAT_NAMES.forEach(function (name, i) { try { d.create_function(name, CONCAT_FNS[i]); } catch (e) { /* ignore */ } });
   }
 
   /* ------------------------------------------------------------ database lifecycle */
@@ -155,8 +188,17 @@
       return d;
     } catch (e) { return null; }
   }
+  /* Is a transaction still open (BEGIN or SAVEPOINT without COMMIT/RELEASE)? export() would roll it back.
+     Asking SQLite itself also covers RELEASE, ROLLBACK TO and automatic rollbacks after an error. */
+  function inTransaction(d) {
+    try { d.exec('BEGIN'); } catch (e) { return true; }
+    try { d.exec('COMMIT'); } catch (e) { }
+    return false;
+  }
   function saveDb() {
-    if (!db || inTxn) return;
+    if (!db || inTransaction(db)) return;
+    /* export() closes and reopens the database, which would delete TEMPORARY tables in the middle of the lesson */
+    try { var tmp = db.exec('SELECT count(*) FROM sqlite_temp_master'); if (tmp.length && tmp[0].values[0][0] > 0) return; } catch (e) { }
     try {
       var bytes = db.export();
       registerFns(db);                       // export() removes custom functions
@@ -200,12 +242,14 @@
   function firstWord(clean) { var m = clean.match(/^[A-Za-z]+/); return m ? m[0].toUpperCase() : ''; }
   function isReadOnly(clean) {
     var w = firstWord(clean);
-    return w === 'SELECT' || w === 'VALUES' || w === 'EXPLAIN' || w === 'DESC' || w === 'DESCRIBE' || w === 'SHOW' || w === 'WITH';
+    if (w === 'WITH') return !/\b(INSERT|UPDATE|DELETE|REPLACE)\b/i.test(clean.replace(/'(?:[^']|'')*'/g, "''"));   // WITH … INSERT/UPDATE/DELETE changes data
+    return w === 'SELECT' || w === 'VALUES' || w === 'EXPLAIN' || w === 'DESC' || w === 'DESCRIBE' || w === 'SHOW';
   }
 
   /* ------------------------------------------------------------ execution */
   function tableExists(d, name) {
-    var st = d.prepare("SELECT name FROM sqlite_master WHERE type IN ('table','view') AND lower(name) = lower(?)");
+    var st = d.prepare("SELECT name FROM sqlite_master WHERE type IN ('table','view') AND lower(name) = lower(?1)" +
+      " UNION ALL SELECT name FROM sqlite_temp_master WHERE type IN ('table','view') AND lower(name) = lower(?1)");
     try { st.bind([name]); return st.step() ? st.get()[0] : null; } finally { st.free(); }
   }
   function describe(d, name) {
@@ -220,7 +264,8 @@
     };
   }
   function listTables(d) {
-    var res = d.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY rowid");
+    var res = d.exec("SELECT name FROM (SELECT name, 0 AS t, rowid AS r FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'" +
+      " UNION ALL SELECT name, 1, rowid FROM sqlite_temp_master WHERE type='table') ORDER BY t, r");
     return res.length ? res[0].values.map(function (r) { return r[0]; }) : [];
   }
   var IDENT = '[`"\\[]?([\\w$]+)[`"\\]]?';
@@ -243,7 +288,8 @@
     if ((m = c.match(RX.showCreate))) {
       var real = tableExists(d, m[1]);
       if (!real) throw new Error('no such table: ' + m[1]);
-      var r = d.exec("SELECT sql FROM sqlite_master WHERE name = '" + real.replace(/'/g, "''") + "'");
+      var lit = "'" + real.replace(/'/g, "''") + "'";
+      var r = d.exec('SELECT sql FROM sqlite_master WHERE name = ' + lit + ' UNION ALL SELECT sql FROM sqlite_temp_master WHERE name = ' + lit);
       return { type: 'rows', columns: ['Table', 'Create Table'], rows: [[real, r[0].values[0][0]]], total: 1 };
     }
     if (RX.use.test(c)) return { type: 'msg', key: 'msg_use' };
@@ -254,11 +300,11 @@
     try {
       var cols = st.getColumnNames();
       var rows = [], total = 0;
-      while (st.step()) { total++; if (rows.length < MAX_SHOW) rows.push(st.get()); }
-      if (w === 'BEGIN' || w === 'SAVEPOINT') inTxn = d === db ? true : inTxn;
-      if ((w === 'COMMIT' || w === 'END' || (w === 'ROLLBACK' && !/^ROLLBACK\s+(TRANSACTION\s+)?TO\b/i.test(c))) && d === db) inTxn = false;
+      /* keep up to MAX_KEEP rows (for the CSV download and practice checking); only MAX_SHOW are drawn */
+      while (st.step()) { total++; if (rows.length < MAX_KEEP) rows.push(st.get()); }
       if (cols.length) return { type: 'rows', columns: cols, rows: rows, total: total };
       var changes = d.getRowsModified();
+      if (w === 'WITH') w = ((c.replace(/'(?:[^']|'')*'/g, "''").match(/\b(INSERT|REPLACE|UPDATE|DELETE)\b/i) || [])[1] || w).toUpperCase();
       if (w === 'INSERT' || w === 'REPLACE') return { type: 'msg', key: 'ins_n', vars: { n: changes }, ok: true };
       if (w === 'UPDATE') return { type: 'msg', key: 'upd_n', vars: { n: changes }, ok: true };
       if (w === 'DELETE') return { type: 'msg', key: 'del_n', vars: { n: changes }, ok: true };
@@ -273,13 +319,19 @@
     var m;
     if ((m = msg.match(/no such table: (?:main\.)?(\S+)/i))) return { key: 'h_no_table', vars: { x: m[1] } };
     if ((m = msg.match(/no such column: (\S+)/i))) return { key: 'h_no_column', vars: { x: m[1] } };
-    if (/no such function/i.test(msg) || /wrong number of arguments to function/i.test(msg)) return { key: 'h_function' };
+    if (/wrong number of arguments to function/i.test(msg)) return { key: 'h_args' };
+    if (/no such function/i.test(msg)) return { key: 'h_function' };
     if ((m = msg.match(/near "([^"]*)": syntax error/i))) {
       if (/^(modify|change)$/i.test(m[1])) return { key: 'h_modify' };
       return { key: 'h_syntax', vars: { x: m[1] } };
     }
     if (/incomplete input/i.test(msg)) return { key: 'h_incomplete' };
-    if (/unrecognized token/i.test(msg)) return { key: 'h_token' };
+    if ((m = msg.match(/unrecognized token: "([\s\S]*)"$/i)) || /unrecognized token/i.test(msg)) {
+      /* only an opening quote that is never closed is a quote problem; "3abc" or "@" is a typing mistake */
+      var tok = m ? m[1] : '';
+      if (!m || /^['"`\[]/.test(tok)) return { key: 'h_token' };
+      return { key: 'h_syntax', vars: { x: tok.length > 40 ? tok.slice(0, 40) + '…' : tok } };
+    }
     if (/UNIQUE constraint failed|PRIMARY KEY must be unique/i.test(msg)) return { key: 'h_unique' };
     if (/NOT NULL constraint failed/i.test(msg)) return { key: 'h_notnull' };
     if (/CHECK constraint failed/i.test(msg)) return { key: 'h_check' };
@@ -318,9 +370,15 @@
     return EDU.csv.stringify(rows);
   }
   function tableEl(b) {
-    var thead = el('thead', {}, el('tr', {}, el('th', { class: 'rn', text: '#' }), b.columns.map(function (c) { return el('th', { text: c }); })));
+    var shown = b.rows.slice(0, MAX_SHOW);
+    /* a column whose first value is a number gets a right-aligned header too, so it lines up with its values */
+    var numCol = b.columns.map(function (c, ci) {
+      for (var i = 0; i < shown.length; i++) { var v = shown[i][ci]; if (v !== null && v !== undefined) return typeof v === 'number'; }
+      return false;
+    });
+    var thead = el('thead', {}, el('tr', {}, el('th', { class: 'rn', text: '#' }), b.columns.map(function (c, ci) { return el('th', { class: numCol[ci] ? 'num' : null, text: c }); })));
     var tbody = el('tbody');
-    b.rows.forEach(function (r, ri) {
+    shown.forEach(function (r, ri) {
       var tr = el('tr', {}, el('td', { class: 'rn', text: String(ri + 1) }));
       r.forEach(function (v) {
         var f = fmtCell(v);
@@ -343,7 +401,8 @@
       head.appendChild(el('button', { class: 'btn btn-sm sqlp-csv', type: 'button', 'aria-label': t('download_csv'), title: t('download_csv'), text: '⬇ CSV', onclick: function () { EDU.download('sql_result.csv', csvFor(b), 'text/csv'); } }));
       if (!b.rows.length && b.total === 0) box.appendChild(el('p', { class: 'muted mb0', text: t('no_rows') }));
       box.appendChild(tableEl(b));
-      if (b.total > b.rows.length) box.appendChild(el('p', { class: 'muted small mb0', text: t('rows_shown', { shown: EDU.fmt(b.rows.length), n: EDU.fmt(b.total) }) }));
+      var shownN = Math.min(b.rows.length, MAX_SHOW);
+      if (b.total > shownN) box.appendChild(el('p', { class: 'muted small mb0 sqlp-more-rows', text: t('rows_shown', { shown: EDU.fmt(shownN), n: EDU.fmt(b.total) }) }));
     } else if (b.type === 'msg') {
       box.appendChild(el('p', { class: 'mb0' + (b.ok ? ' sqlp-ok' : ''), text: (b.ok ? '✓ ' : 'ℹ ') + t(b.key, b.vars) }));
     } else if (b.type === 'error') {
@@ -376,6 +435,13 @@
     }
     return { text: editor.value, selection: false };
   }
+  /* Scroll a card into view below the sticky page header (it is two lines tall on phones) */
+  function scrollToCard(node, block) {
+    if (!node || !node.scrollIntoView) return;
+    var top = document.querySelector('.edu-top');
+    node.style.scrollMarginTop = (((top && top.offsetHeight) || 0) + 8) + 'px';
+    node.scrollIntoView({ behavior: 'smooth', block: block || 'start' });
+  }
   function pushHistory(text) {
     text = text.trim();
     if (!text || text.length > 4000) return;
@@ -402,11 +468,15 @@
     if (!opts.noHistory) pushHistory(src.text);
     if (opts.scroll !== false && window.innerWidth < 980) {
       var card = $('#results').parentNode;
-      if (card.scrollIntoView) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToCard(card, 'start');
     }
   }
 
   /* ------------------------------------------------------------ schema sidebar */
+  /* Table/column name as SQL: quoted only when needed ("my marks"), so the usual names stay plain */
+  function qi(name) {
+    return /^[\p{L}_][\p{L}\p{M}\p{N}_]*$/u.test(name) ? name : '"' + String(name).replace(/"/g, '""') + '"';
+  }
   function insertAtCursor(text) {
     var v = editor.value, s = editor.selectionStart, e = editor.selectionEnd;
     if (typeof s !== 'number') { s = e = v.length; }
@@ -417,6 +487,9 @@
     try { editor.setSelectionRange(pos, pos); } catch (er) { }
     if (window.matchMedia && matchMedia('(pointer: fine)').matches) editor.focus();
     store.set('draft', editor.value);
+    /* On phones the editor is far above the Tables list: show what was added */
+    var r = editor.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > window.innerHeight) EDU.toast('✎ ' + editor.value.slice(Math.max(0, pos - 60), pos).replace(/\s+/g, ' ').trim());
   }
   function renderSchema() {
     var box = $('#schema');
@@ -435,16 +508,16 @@
       var descKey = DATA.tables[name] || 'tb_user';
       var item = el('div', { class: 'sqlp-tbl' },
         el('div', { class: 'sqlp-tbl-head' },
-          el('button', { class: 'sqlp-tname no-i18n', type: 'button', dir: 'ltr', text: name, onclick: function () { insertAtCursor(name); } }),
+          el('button', { class: 'sqlp-tname no-i18n', type: 'button', dir: 'ltr', text: name, onclick: function () { insertAtCursor(qi(name)); } }),
           el('span', { class: 'badge', text: t('rows_count', { n: EDU.fmt(count) }) }),
           el('span', { class: 'grow' }),
           el('button', { class: 'btn btn-sm', type: 'button', 'aria-label': t('show_rows', { t: name }), title: t('show_rows', { t: name }), text: '▶', onclick: function () {
-            var q = 'SELECT * FROM ' + name + ';';
+            var q = 'SELECT * FROM ' + qi(name) + ';';
             editor.value = q; store.set('draft', q); run({ text: q });
           } })),
-        el('p', { class: 'tiny muted sqlp-tdesc', text: t(descKey) }),
+        el('p', { class: 'tiny muted sqlp-tdesc', text: t(descKey, { n: EDU.fmt(count) }) }),
         el('div', { class: 'sqlp-cols no-i18n' }, cols.map(function (c) {
-          return el('button', { class: 'sqlp-col' + (c[5] ? ' pk' : ''), type: 'button', onclick: function () { insertAtCursor(c[1]); } },
+          return el('button', { class: 'sqlp-col' + (c[5] ? ' pk' : ''), type: 'button', onclick: function () { insertAtCursor(qi(c[1])); } },
             c[1], c[2] ? el('small', { text: c[2] }) : null);
         })));
       box.appendChild(item);
@@ -519,8 +592,11 @@
       if (ordered && a.join('\u0002') !== b.join('\u0002')) return { key: 'check_order' };
       return { ok: true, key: 'check_ok' };
     }
-    var ca = rowKeys(user, true).sort(), cb = rowKeys(exp, true).sort();   // same values, columns in another order
-    if (ca.join('\u0002') === cb.join('\u0002')) return { ok: true, key: 'check_ok' };
+    var ua = rowKeys(user, true), ub = rowKeys(exp, true);                 // same values, columns in another order
+    if (ua.slice().sort().join('\u0002') === ub.slice().sort().join('\u0002')) {
+      if (ordered && ua.join('\u0002') !== ub.join('\u0002')) return { key: 'check_order' };
+      return { ok: true, key: 'check_ok' };
+    }
     return { key: 'check_values' };
   }
   function checkAnswer() {
@@ -581,7 +657,7 @@
     store.set('task', i);
     renderTask(); renderPractice();
     var box = $('#taskBox');
-    if (box.scrollIntoView && window.innerWidth < 980) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (window.innerWidth < 980) scrollToCard(box, 'center');
   }
   $('#checkBtn').addEventListener('click', checkAnswer);
   $('#answerBtn').addEventListener('click', function () { showAnswer = !showAnswer; renderTask(); });
@@ -626,12 +702,18 @@
     objs.forEach(function (o) { if (o[0] !== 'table') out.push(o[2] + ';'); });
     return out.join('\n');
   }
-  $('#dumpBtn').addEventListener('click', function () { if (db) EDU.download('school_database.sql', dumpSQL(), 'application/sql'); });
+  /* Buttons that need the SQL engine say why nothing happens while it is still loading or failed to load */
+  function engineReady() {
+    if (db) return true;
+    EDU.toast(t($('#retryBtn').hidden ? 'loading_engine' : 'load_failed'), 4000);
+    return false;
+  }
+  $('#dumpBtn').addEventListener('click', function () { if (engineReady()) EDU.download('school_database.sql', dumpSQL(), 'application/sql'); });
 
   $('#resetBtn').addEventListener('click', function () {
-    if (!SQL || !confirm(t('confirm_reset_db'))) return;
+    if (!engineReady() || !confirm(t('confirm_reset_db'))) return;
     try { if (db) db.close(); } catch (e) { }
-    db = freshDb(); inTxn = false;
+    db = freshDb();
     store.remove('db');
     renderSchema();
     lastBlocks = [{ type: 'note', key: 'db_reset_done' }]; lastCount = 0;
@@ -640,13 +722,15 @@
   });
 
   function safeIdent(s, fallback) {
-    var x = String(s || '').trim().replace(/[^\p{L}\p{N}_]+/gu, '_').replace(/^_+|_+$/g, '');
+    /* \p{M} keeps vowel signs, so a Hindi heading such as अंक stays अंक (not अ_क) */
+    var x = String(s || '').trim().replace(/[^\p{L}\p{M}\p{N}_]+/gu, '_').replace(/^_+|_+$/g, '');
+    if (/^\p{M}/u.test(x)) x = '_' + x;
     if (!x) x = fallback;
     if (/^\d/.test(x)) x = 'c_' + x;
     return x.slice(0, 40);
   }
   $('#csvImportBtn').addEventListener('click', function () {
-    if (!db) return;
+    if (!engineReady()) return;
     EDU.pickFile('.csv,text/csv,text/plain').then(function (file) {
       if (!file) return null;
       return EDU.readText(file).then(function (text) {
@@ -662,6 +746,7 @@
           var allInt = true, allNum = true, any = false;
           data.forEach(function (r) {
             var v = (r[ci] || '').trim(); if (!v) return; any = true;
+            if (/^-?0\d/.test(v)) { allInt = allNum = false; return; }   // 007, 0612…: keep the leading zero, so text
             if (!/^-?\d+$/.test(v)) allInt = false;
             if (!/^-?\d+(\.\d+)?$/.test(v)) allNum = false;
           });
@@ -670,10 +755,12 @@
         var base = safeIdent(file.name.replace(/\.[^.]+$/, ''), 'IMPORTED').toUpperCase(), name = base, k = 2;
         while (tableExists(db, name)) name = base + '_' + k++;
         var q = function (s) { return '"' + s.replace(/"/g, '""') + '"'; };
-        db.exec('CREATE TABLE ' + q(name) + ' (' + cols.map(function (c, i) { return q(c) + ' ' + types[i]; }).join(', ') + ')');
-        var st = db.prepare('INSERT INTO ' + q(name) + ' VALUES (' + cols.map(function () { return '?'; }).join(',') + ')');
-        db.exec('BEGIN');
+        /* A SAVEPOINT works both on its own and inside a transaction the student left open with BEGIN */
+        db.exec('SAVEPOINT csv_import');
+        var st = null;
         try {
+          db.exec('CREATE TABLE ' + q(name) + ' (' + cols.map(function (c, i) { return q(c) + ' ' + types[i]; }).join(', ') + ')');
+          st = db.prepare('INSERT INTO ' + q(name) + ' VALUES (' + cols.map(function () { return '?'; }).join(',') + ')');
           data.forEach(function (r) {
             st.run(cols.map(function (c, ci) {
               var v = (r[ci] === undefined ? '' : String(r[ci])).trim();
@@ -681,10 +768,15 @@
               return types[ci] === 'TEXT' ? v : Number(v);
             }));
           });
-          db.exec('COMMIT');
-        } catch (e) { try { db.exec('ROLLBACK'); } catch (e2) { } throw e; } finally { st.free(); }
+          st.free(); st = null;
+          db.exec('RELEASE csv_import');
+        } catch (e) {
+          if (st) { try { st.free(); } catch (e3) { } }
+          try { db.exec('ROLLBACK TO csv_import'); db.exec('RELEASE csv_import'); } catch (e2) { }
+          throw e;
+        }
         saveDb(); renderSchema();
-        var sql = 'SELECT * FROM ' + (/^[A-Za-z_]\w*$/.test(name) ? name : q(name)) + ';';
+        var sql = 'SELECT * FROM ' + qi(name) + ';';
         editor.value = sql; store.set('draft', sql);
         run({ text: sql });
         EDU.toast(t('csv_imported', { t: name, n: EDU.fmt(data.length) }));
@@ -714,7 +806,7 @@
     sheet.appendChild(wrap);
   }
   $('#printBtn').addEventListener('click', function () {
-    if (!SQL) return;
+    if (!engineReady()) return;
     buildSheet();
     document.body.classList.add('sqlp-printing');
     /* The class only matters in @media print, so it is safe to keep it until the print dialog is closed. */
@@ -736,6 +828,10 @@
   });
   var draftTimer;
   editor.addEventListener('input', function () { clearTimeout(draftTimer); draftTimer = setTimeout(function () { store.set('draft', editor.value); }, 400); });
+  /* keep the last keystrokes too when the page is closed or reloaded within the 400 ms pause */
+  function flushDraft() { clearTimeout(draftTimer); store.set('draft', editor.value); }
+  window.addEventListener('pagehide', flushDraft);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flushDraft(); });
   $('#runBtn').addEventListener('click', function () { run(); });
   /* Keep the editor focused when Run/Check is pressed, so "run only the selected text" works with the buttons too. */
   ['#runBtn', '#checkBtn'].forEach(function (sel) {

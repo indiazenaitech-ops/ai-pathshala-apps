@@ -7,7 +7,7 @@ window.APP_STRINGS = {
     tab_practise: 'Practise', tab_bee: 'Class bee', tab_lists: 'Word lists',
     choose_level: 'Choose a level', level_n: 'Level {n}', class_n: 'Class {n}', n_words: '{n} words', best_n: 'best {s}/{n}',
     my_list: 'My list', review_lvl: 'My mistakes', review_none: 'No mistakes yet', custom_none: 'Add words in “Word lists”',
-    opt_second: 'Give a second try', opt_auto: 'Say each word by itself', start_round: 'Start', round_info: '{n} words in this round',
+    opt_second: 'Give a second try', opt_auto: 'Say each new word automatically', start_round: 'Start', round_info: '{n} words in this round',
     help_h: 'How to use · Ideas for the classroom',
     tip1: 'Choose a level and press <b>Start</b>. Listen to the word 🔊, hear it in a sentence 💬 or slowly 🐢. Type the spelling and press <b>Check</b> (or Enter).',
     tip2: 'Stuck? Take a hint: the first letter, the number of letters, or the jumbled letters. On a phone or smartboard, tap the jumbled letters instead of typing.',

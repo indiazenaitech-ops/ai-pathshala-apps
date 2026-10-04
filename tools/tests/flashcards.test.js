@@ -210,6 +210,79 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   d = await curDeck();
   expect((await decks()).length === n0 + 1 && d.name === 'Class 7 revision' && d.cards[1].f === 'H2O, water', 'CSV deck saved with quoted comma');
 
+  /* 9. CSV with semicolons and quoted fields; a TSV with a stray quote mark */
+  await page.click('#tab-edit');
+  const [fc2] = await Promise.all([page.waitForEvent('filechooser'), page.click('#importBtn')]);
+  await fc2.setFiles({ name: 'semi.csv', mimeType: 'text/csv', buffer: Buffer.from('front;back\n"a;b";c\nKerala;Thiruvananthapuram\n', 'utf8') });
+  await page.waitForSelector('#importPreview:not([hidden])');
+  let rows = await page.$$eval('#impTable tbody tr', t => t.map(r => [r.cells[1].textContent, r.cells[2].textContent]));
+  expect(rows.length === 2 && rows[0][0] === 'a;b' && rows[0][1] === 'c' && rows[1][1] === 'Thiruvananthapuram', 'semicolon CSV keeps quoted fields: ' + JSON.stringify(rows));
+  await page.click('#importCancel');
+  const [fc3] = await Promise.all([page.waitForEvent('filechooser'), page.click('#importBtn')]);
+  await fc3.setFiles({ name: 'tabs.txt', mimeType: 'text/plain', buffer: Buffer.from('Ruler\t12" long\n"Quoted"\t"x, y"\nPen\tblue\n', 'utf8') });
+  await page.waitForSelector('#importPreview:not([hidden])');
+  rows = await page.$$eval('#impTable tbody tr', t => t.map(r => [r.cells[1].textContent, r.cells[2].textContent]));
+  expect(rows.length === 3 && rows[0][1] === '12" long' && rows[1][0] === 'Quoted' && rows[1][1] === 'x, y' && rows[2][0] === 'Pen', 'TSV: a stray quote does not swallow the next rows: ' + JSON.stringify(rows));
+  await page.click('#importCancel');
+
+  /* 10. the forgiving quiz check is never forgiving about numbers and signs */
+  await page.click('#newDeck');
+  await page.fill('#deckName', 'Maths check');
+  await page.fill('#bulkText', "Additive inverse of 5 - -5\nThree quarters as a fraction = 3/4\nYear of India's independence = 1947\nCapital of Goa = Panaji (Panjim)\nTwo times three = 2 × 3");
+  await page.click('#bulkAdd');
+  await page.click('#tab-quiz');
+  await page.click('#sideSeg button[data-side="b"]');
+  await page.click('#qcountSeg button[data-v="0"]');
+  await page.click('#startQuiz');
+  const typed = { 'Additive inverse of 5': ['5', false], 'Three quarters as a fraction': ['3', false], "Year of India's independence": ['1847', false], 'Capital of Goa': ['panjim', true], 'Two times three': ['2x3', true] };
+  for (let i = 0; i < 5; i++) {
+    const pr = await txt('#quizPrompt');
+    const [ans, ok] = typed[pr] || ['?', false];
+    await page.fill('#quizInput', ans);
+    await page.click('#quizCheck');
+    const cls = await page.getAttribute('#quizFeedback', 'class');
+    expect(cls === (ok ? 'callout success' : 'callout danger'), `“${ans}” for “${pr}” is ${ok ? 'right' : 'wrong'} (got ${cls})`);
+    await page.click('#quizNext');
+  }
+  await page.waitForSelector('#quizResult:not([hidden])');
+  expect(await txt('#quizFinal') === '2 / 5', 'maths quiz score 2 / 5, got ' + await txt('#quizFinal'));
+  await page.click('#quizNew');
+
+  /* 11. a deck of picture-only cards: the quiz shows the picture and asks for the back; no empty share link */
+  await page.click('#newDeck');
+  for (const name of ['Red', 'Square']) {
+    const [fcp] = await Promise.all([page.waitForEvent('filechooser'), page.click('#cardImgBtn')]);
+    await fcp.setFiles({ name: 'red.png', mimeType: 'image/png', buffer: png });
+    await page.waitForSelector('#cardImgPrev:not([hidden])');
+    await page.fill('#cardBack', name);
+    await page.click('#addCard');
+  }
+  await page.click('#shareBtn');
+  expect(await page.isHidden('#shareBox'), 'no share link for a deck with only pictures (it would be empty)');
+  await page.click('#tab-quiz');
+  expect(await page.getAttribute('#sideSeg button[data-side="b"]', 'aria-pressed') === 'true' && !(await page.isDisabled('#startQuiz')), 'picture deck: the quiz asks for the back');
+  await page.click('#startQuiz');
+  expect(await page.isVisible('#quizImg'), 'picture shown as the quiz question');
+  await page.click('#quizEnd');
+
+  /* 12. Ctrl+P (no button) still prints the open deck */
+  await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+  expect(await count('#printArea tbody tr') === 2, 'print sheet is built when the browser prints');
+
+  /* 13. switching language mid-quiz re-renders the sample deck question */
+  const firstDeck = (await decks())[0];
+  await page.selectOption('#deckSel', firstDeck.id);
+  await page.click('#tab-quiz');
+  await page.click('#sideSeg button[data-side="b"]');
+  await page.click('#startQuiz');
+  const other = lang === 'en' ? 'ta' : 'en';
+  const q0 = await txt('#quizPrompt');
+  const want = await page.evaluate(([a, b, q]) => { const A = window.APP_CONTENT[a].decks[0].cards, B = window.APP_CONTENT[b].decks[0].cards; const i = A.findIndex(c => c[0] === q); return i < 0 ? null : B[i][0]; }, [lang, other, q0]);
+  await page.evaluate((L) => EDU.setLang(L), other);
+  expect(want && await txt('#quizPrompt') === want, `quiz question follows the language: "${q0}" -> "${await txt('#quizPrompt')}" (want "${want}")`);
+  await page.evaluate((L) => EDU.setLang(L), lang);
+  await page.click('#quizEnd');
+
   /* leave a flipped sample card on screen for the screenshot */
   const firstId = (await decks())[0].id;
   await page.selectOption('#deckSel', firstId);

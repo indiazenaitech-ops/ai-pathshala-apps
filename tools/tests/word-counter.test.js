@@ -24,6 +24,11 @@ module.exports = async function ({ page, lang, expect }) {
   expect(await val('chars') === en.replace(/\n/g, '').length, 'characters with spaces, got ' + await val('chars'));
   expect(await val('charsns') === en.replace(/\s/g, '').length, 'characters without spaces, got ' + await val('charsns'));
 
+  // 1b) list numbers do not end a sentence; U.S.A, e.g, a web address and 10:30 are one word each
+  await fill('1. Introduction\n2. Main body\nVisit www.cbse.gov.in at 10:30, e.g. with U.S.A. friends.');
+  expect(await val('words') === 13, 'joined words counted once (13), got ' + await val('words'));
+  expect(await val('sents') === 3, 'numbered lines are not split at "1." (3 sentences), got ' + await val('sents'));
+
   // 2) Hindi danda + double danda, Urdu full stop + question mark
   await fill('मेरा नाम राम है। मैं दसवीं कक्षा में पढ़ता हूँ॥ क्या तुम आओगे?\nیہ کتاب ہے۔ کیا آپ آئیں گے؟');
   expect(await val('words') === 20, 'Hindi + Urdu words = 20, got ' + await val('words'));

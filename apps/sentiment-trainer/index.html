@@ -36,6 +36,9 @@
     .sent-list li.fresh { animation: st-flash 1.2s ease-out; }
     @keyframes st-flash { from { background: color-mix(in srgb, var(--lc) 30%, transparent); } to { background: transparent; } }
     .sent-text { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+    /* User sentences keep their own direction (an English sentence inside the Urdu page, or the reverse),
+       so punctuation and word order are not shuffled; alignment still follows the page. */
+    .sent-text, .add-input, .lab-name, #test-input, #exp1-word, #peek-filter, .ba q, .mist-list li > span:first-child, .wd-word, .v-name { unicode-bidi: plaintext; }
     .sent-del { flex: none; border: 0; background: transparent; color: var(--muted); width: 36px; height: 36px; border-radius: 8px; cursor: pointer; font-size: 1rem; }
     .sent-del:hover, .sent-del:focus-visible { background: var(--danger-soft); color: var(--danger); }
     .sent-empty { padding: 14px 10px; color: var(--muted); font-size: .9rem; }
@@ -66,7 +69,7 @@
     .peek-tools .seg button { min-height: 40px; }
     .peek td.n, .peek th.n { text-align: end; font-variant-numeric: tabular-nums; }
     .peek td.w { font-weight: 600; white-space: nowrap; }
-    .peek th { white-space: nowrap; }
+    .peek th { white-space: normal; vertical-align: bottom; }
     .peek td.w.pair { font-style: italic; }
     .peek .zero { color: var(--muted); opacity: .6; }
     .lean { white-space: nowrap; }
@@ -104,7 +107,10 @@
     .wd .table { margin-top: 6px; }
     .wd .table td:first-child { white-space: nowrap; }
     .wd-word { font-size: 1.15rem; font-weight: 800; }
-    .maths td, .maths th { white-space: nowrap; }
+    .maths td { white-space: nowrap; }
+    .maths th { vertical-align: bottom; }
+    /* Row names ("Starting chance (share of all sentences)") wrap, so the numbers stay on screen on a phone. */
+    .maths td:first-child { white-space: normal; min-width: 7.5em; }
     .maths td.n { text-align: end; font-variant-numeric: tabular-nums; }
     .maths .frac { color: var(--muted); font-size: .8rem; display: block; }
     .maths tr.sum td { font-weight: 800; border-top: 2px solid var(--text); }
@@ -148,8 +154,17 @@
       .v-name { font-size: 1.3rem; }
       .stat b { font-size: 1.35rem; }
       .words { font-size: 1.1rem; }
+      .peek th, .peek td, .maths th, .maths td { padding: 6px 7px; }
+      .maths, .peek { font-size: .84rem; }
     }
     [dir="rtl"] .flip { display: inline-block; transform: scaleX(-1); }
+    /* Nastaliq headings that wrap to two lines overlap at the shared line-height of 1.25 */
+    :root[lang="ur"] #app h2, :root[lang="ur"] #app h3, :root[lang="ur"] details > summary { line-height: 2.05; }
+    :root[lang="ur"] .v-name { line-height: 1.7; }
+    @media (prefers-reduced-motion: reduce) {
+      #train-btn.pulse, .sent-list li.fresh { animation: none; }
+      .bar > span { transition: none; }
+    }
 
     @media print {
       .print-title { display: block; font-size: 1.5rem; margin-bottom: 6px; }
@@ -243,7 +258,7 @@
         <div>
           <label for="test-input" class="lbl" data-i18n="test_label"></label>
           <div class="test-row">
-            <input type="text" id="test-input" class="no-i18n" autocomplete="off" spellcheck="false" data-i18n-placeholder="test_ph">
+            <input type="text" id="test-input" class="no-i18n" maxlength="300" autocomplete="off" spellcheck="false" data-i18n-placeholder="test_ph">
             <button type="button" class="btn no-print" id="test-clear" data-i18n-aria-label="clear" data-i18n-title="clear">✕</button>
           </div>
         </div>
@@ -279,7 +294,7 @@
           <div>
             <label for="exp1-word" class="lbl" data-i18n="exp1_word"></label>
             <div class="exp-word-row">
-              <input type="text" id="exp1-word" class="no-i18n" autocomplete="off" spellcheck="false">
+              <input type="text" id="exp1-word" class="no-i18n" maxlength="60" autocomplete="off" spellcheck="false">
             </div>
           </div>
           <p class="small muted" id="exp1-info" aria-live="polite"></p>

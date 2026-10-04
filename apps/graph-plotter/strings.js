@@ -665,7 +665,7 @@ window.APP_STRINGS = {
     tv_cap: 'ആദ്യ {n} വരികൾ കാണിക്കുന്നു. മുഴുവൻ പരിധിക്കായി വലിയ ഇടവേള എടുക്കുക.', tv_csv: 'CSV ഡൗൺലോഡ്',
     tv_empty: 'മുകളിൽ ശരിയായ ഏകദം എഴുതി "മുതൽ", "വരെ" പൂരിപ്പിക്കുക.', tv_bad_step: 'ഇടവേള 0-നേക്കാൾ വലിയ സംഖ്യയായിരിക്കണം.',
     presets_h: 'തയ്യാർ ഉദാഹരണങ്ങൾ', pr_linear: 'നേർരേഖ', pr_pair: 'രണ്ട് രേഖകൾ', pr_quadratic: 'പരാബോള', pr_cubic: 'ത്രിഘാതം',
-    pr_trig: 'sin ഉം cos ഉം', pr_exp: 'വളർച്ചയും തളർച്ചയും', pr_recip: 'y = 1/x',
+    pr_trig: 'sin ഉം cos ഉം', pr_exp: 'വളർച്ചയും ക്ഷയവും', pr_recip: 'y = 1/x',
     note_linear: 'y = ax + b ഒരു നേർരേഖയാണ്. a ആണ് ചരിവ്: x 1 കൂടുമ്പോൾ y, a അത്രയും കൂടുന്നു. രേഖ y-അക്ഷത്തെ ഛേദിക്കുന്ന സ്ഥാനമാണ് b. a, b നീക്കി നോക്കൂ.',
     note_pair: '2x + y = 6, x − y = 0 എന്നീ സമവാക്യങ്ങൾ y = 6 − 2x, y = x എന്നിങ്ങനെ വരച്ചിരിക്കുന്നു. രേഖകൾ (2, 2)-ൽ കൂട്ടിമുട്ടുന്നു, അതിനാൽ x = 2, y = 2 രണ്ടു സമവാക്യങ്ങളുടെയും പരിഹാരമാണ്.',
     note_quadratic: 'y = ax² + bx + c ഒരു പരാബോളയാണ്. a = 1, b = −2, c = −3 ആകുമ്പോൾ പൂജ്യങ്ങൾ −1, 3; ഏറ്റവും താഴ്ന്ന ബിന്ദു (ശീർഷം) x = −b/2a = 1-ൽ. a ന്യൂനസംഖ്യയാക്കിയാൽ പരാബോള തലകീഴാകും.',
@@ -758,3 +758,29 @@ window.APP_STRINGS = {
     tip6: 'اسمارٹ بورڈ پر پوری اسکرین استعمال کریں۔ "تصویر محفوظ کریں" سے گراف ورک شیٹ میں لگائیں، اور "لنک شیئر کریں" سے وہی گراف WhatsApp پر طلبہ کو بھیجیں۔'
   }
 };
+
+/* Urdu is written right to left. Inside an Urdu sentence the browser would turn maths around:
+   "6 − 2x" would show as "2x − 6", "(1, 4)" as "(4 ,1)" and "−1" as "1−". So every maths chunk is wrapped
+   in Unicode left-to-right isolates (U+2066 … U+2069) and reads exactly as in the textbook.
+   A bracket that holds Urdu words, as in "(اساس 10)", stays part of the Urdu sentence. */
+(function (ur) {
+  var LRI = '⁦', PDI = '⁩';
+  var RUN = /[A-Za-z0-9π√²³ˣ°{}|()\[\]+\-−×÷=^\/.,:;<>_ ]+/g;
+  function wrap(piece) {
+    var m = /^([\s,.:;]*)([\s\S]*?)([\s,.:;\-]*)$/.exec(piece), lead = m[1], core = m[2], tail = m[3];
+    if (!core) return piece;
+    if (core.length === 1 && '()[]|'.indexOf(core) >= 0) return lead + (lead && tail ? LRI + core + PDI : core) + tail;   // "every ( needs a )"
+    var open = [], cut = [], i;
+    for (i = 0; i < core.length; i++) {
+      var ch = core.charAt(i);
+      if (ch === '(' || ch === '[') open.push(i);
+      else if (ch === ')' || ch === ']') { if (open.length) open.pop(); else cut.push(i); }
+    }
+    cut = cut.concat(open).sort(function (p, q) { return p - q; });
+    if (!cut.length) return lead + (/[A-Za-z0-9π√]/.test(core) ? LRI + (core.length <= 24 ? core.replace(/ /g, ' ') : core) + PDI : core) + tail;   // short maths never breaks over two lines
+    var out = '', from = 0;
+    cut.forEach(function (j) { out += wrap(core.slice(from, j)) + core.charAt(j); from = j + 1; });
+    return lead + out + wrap(core.slice(from)) + tail;
+  }
+  Object.keys(ur).forEach(function (k) { if (typeof ur[k] === 'string') ur[k] = ur[k].replace(RUN, wrap); });
+})(window.APP_STRINGS.ur);

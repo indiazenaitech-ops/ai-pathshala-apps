@@ -12,12 +12,11 @@
 
   var EXAMPLES = ['india@123', 'Password@123', 'Rahul@2008', 'P@ssw0rd', 'qwerty123', '15081947', 'aaaaaa111',
     'tiger-mango-river-42', 'Kh9#mQ2v!xL7', 'otter-kettle-violin-meadow-sock-73'];
-  var KINDS = ['common', 'word', 'hindi', 'name', 'place', 'date', 'year', 'seq', 'keyboard', 'repeat', 'number', 'phone', 'sep', 'random'];
   var TYPES = [['lower', 'type_lower', 26], ['upper', 'type_upper', 26], ['digit', 'type_digit', 10], ['symbol', 'type_symbol', 33], ['other', 'type_other', 100]];
 
   var state = {
     tab: store.get('tab', 'check'),
-    show: true,                       /* the first example is shown openly; clearing the box hides typing again */
+    show: true,                       /* examples are shown openly; typing your own (or Clear) hides it again */
     gen: Object.assign({ count: 6, list: 'en', sep: '-', number: true, caps: false }, store.get('gen', {})),
     phrase: null,
     quiz: null,
@@ -67,10 +66,19 @@
     $('#toggle').setAttribute('aria-pressed', on ? 'true' : 'false');
     $('#toggle-txt').textContent = t(on ? 'hide' : 'show');
   }
+  /* Examples and generated passphrases are shown openly. As soon as someone types over one (their own
+     password, maybe on a projector), the box switches back to hidden dots. Show is always one tap away. */
+  var demo = null;
   function setPassword(v, show) {
     pw.value = v;
+    demo = show ? v : null;
     if (show !== undefined) setShow(show);
     renderResult();
+  }
+  function guardDemo() {
+    if (demo === null || !state.show) return;
+    var v = pw.value;
+    if (v.indexOf(demo) !== 0 && demo.indexOf(v) !== 0) { demo = null; setShow(false); }
   }
 
   function renderExamples() {
@@ -100,6 +108,7 @@
       (by.word || []).slice(0, 2).forEach(function (s) { add(probs, 'fb_word', { x: tok(s) }); });
       (by.hindi || []).slice(0, 2).forEach(function (s) { add(probs, 'fb_hindi', { x: tok(s) }); });
     }
+    (by.script || []).slice(0, 1).forEach(function (s) { add(probs, 'fb_script', { x: tok(s) }); });
     if (res.flags && res.flags.phone) { add(probs, 'fb_phone'); personal = true; }
     (by.date || []).slice(0, 1).forEach(function (s) { add(probs, s.famous ? 'fb_famous_date' : 'fb_date', { x: tok(s) }); personal = true; });
     if (!by.name) (by.year || []).slice(0, 1).forEach(function (s) { add(probs, 'fb_year', { x: tok(s) }); personal = true; });
@@ -197,8 +206,8 @@
   }
   var renderSoon = debounce(renderResult, 70);
 
-  pw.addEventListener('input', function () { if (pw.value.length > 40) renderSoon(); else renderResult(); });
-  $('#toggle').addEventListener('click', function () { setShow(!state.show); renderResult(); pw.focus(); });
+  pw.addEventListener('input', function () { guardDemo(); if (pw.value.length > 40) renderSoon(); else renderResult(); });
+  $('#toggle').addEventListener('click', function () { demo = null; setShow(!state.show); renderResult(); pw.focus(); });
   $('#clear').addEventListener('click', function () { setPassword('', false); pw.focus(); });
   $('#fs').addEventListener('click', function () { EDU.fullscreen($('#panel-check')); });
 
@@ -401,8 +410,8 @@
   EDU.onLang(renderAll);
 
   renderExamples();
+  pw.value = demo = 'Rahul@2008';
   setShow(true);
-  pw.value = 'Rahul@2008';
   showTab(state.tab);
   renderAll();
 })();

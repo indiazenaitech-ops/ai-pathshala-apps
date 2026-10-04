@@ -2,6 +2,8 @@
    Pyodide (~10 MB) comes from the CDN, so the first wait is long. */
 module.exports = async function ({ page, lang, expect, t, log }) {
   // Our own dialog handler: answer input() prompts (null = press Cancel), accept confirms.
+  // Cancel is pressed after a short pause like a person would: a box that closes in under 25 ms
+  // was blocked by the browser, and the app then shows a different hint.
   page.removeAllListeners('dialog');
   const answers = [];
   let prompts = 0, confirms = 0;
@@ -9,7 +11,8 @@ module.exports = async function ({ page, lang, expect, t, log }) {
     if (d.type() === 'prompt') {
       prompts++;
       const a = answers.length ? answers.shift() : '';
-      (a === null ? d.dismiss() : d.accept(a)).catch(() => { });
+      if (a === null) setTimeout(() => d.dismiss().catch(() => { }), 80);
+      else d.accept(a).catch(() => { });
     } else { confirms++; d.accept().catch(() => { }); }
   });
 
@@ -31,6 +34,36 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   await page.fill('#code', 'print(2+3)');
   let out = await runAndWait();
   expect(out.trim() === '5', 'print(2+3) should print 5, got ' + JSON.stringify(out));
+
+  // 2b) Code fonts must not join >= != -> into one symbol (Cascadia Code on Windows does that)
+  const lig = await page.evaluate(() => ['code', 'out'].map((id) => getComputedStyle(document.getElementById(id)).fontVariantLigatures));
+  expect(lig.every((v) => v === 'none'), 'programming ligatures are off in editor and output, got ' + lig.join(','));
+
+  // 2c) Clicks on Run made while a program is running reach the page only after it ends; they
+  //     must not start the program a second time.
+  await page.fill('#code', 'import time\nt = time.time()\nwhile time.time() - t < 1.5:\n    pass\nprint("once")');
+  const rb = await page.$eval('#runBtn', (b) => { const r = b.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; });
+  const runs0 = await page.evaluate(() => window.PP_STATE.runs);
+  await page.click('#runBtn');
+  await page.waitForTimeout(500);
+  const cdp = await page.context().newCDPSession(page);
+  for (let i = 0; i < 2; i++) {
+    cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: rb[0], y: rb[1], button: 'left', clickCount: 1 }).catch(() => { });
+    cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: rb[0], y: rb[1], button: 'left', clickCount: 1 }).catch(() => { });
+  }
+  await page.waitForFunction((b) => window.PP_STATE.runs > b && !window.PP_STATE.running, runs0, { timeout: 30000 });
+  await page.waitForTimeout(1200);
+  const runs1 = await page.evaluate(() => window.PP_STATE.runs);
+  expect(runs1 - runs0 === 1 && !(await page.evaluate(() => window.PP_STATE.running)), 'impatient clicks during a run start no extra run, runs: ' + (runs1 - runs0));
+  await cdp.detach().catch(() => { });
+
+  // 2d) Ctrl+Enter also runs when the focus is on a button (e.g. right after pressing Run)
+  await page.fill('#code', 'print("from the button")');
+  await page.focus('#runBtn');
+  const runs2 = await page.evaluate(() => window.PP_STATE.runs);
+  await page.keyboard.press('Control+Enter');
+  await page.waitForFunction((b) => window.PP_STATE.runs > b && !window.PP_STATE.running, runs2, { timeout: 30000 });
+  expect((await page.textContent('#out')).trim() === 'from the button', 'Ctrl+Enter outside the editor runs the code');
 
   // 3) input() goes through a prompt dialog
   answers.push('Asha');
@@ -80,6 +113,16 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   const savedCode = await page.evaluate(() => JSON.parse(localStorage.getItem('edu.python-playground.code') || 'null'));
   expect(savedCode && savedCode.includes('range(1, 11)'), 'code saved with EDU.store');
 
+  // 8a) CBSE grade example uses the full 9-point scale (E1 for 21-32, E2 for 0-20)
+  await page.selectOption('#exSel', 'ifelse');
+  const gradeCode = await page.inputValue('#code');
+  await page.fill('#code', gradeCode.replace('marks = 78', 'marks = 20'));
+  out = await runAndWait();
+  expect(out.includes('Grade: E2'), 'marks 20 give grade E2, got ' + JSON.stringify(out));
+  await page.fill('#code', gradeCode.replace('marks = 78', 'marks = 81'));
+  out = await runAndWait();
+  expect(out.includes('Grade: A2') && out.includes('Result: Pass'), 'marks 81 give grade A2, got ' + JSON.stringify(out));
+
   // 8b) Code typed just before Ctrl+Enter is saved before Python runs (a frozen tab must not lose it)
   await page.fill('#code', 'print("saved first")');
   await page.focus('#code');
@@ -107,6 +150,18 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(!out.includes('got 5'), 'program did not go on after Cancel');
   expect((await page.textContent('#hintText')).trim() === t('hint_cancelled'), 'cancel hint shown');
   answers.length = 0;
+
+  // 8d2) A browser that blocks the input box (some in-app browsers / embeds) gets its own hint
+  await page.evaluate(() => { window.__realPrompt = window.prompt; window.prompt = () => null; });
+  await page.fill('#code', 'n = input("Number: ")\nprint("got", n)');
+  out = await runAndWait();
+  await page.evaluate(() => { window.prompt = window.__realPrompt; });
+  expect(!out.includes('got') && (await page.textContent('#hintText')).trim() === t('hint_noprompt'), 'blocked input box explained, got ' + (await page.textContent('#hintText')));
+
+  // 8d3) A number too long to print gets a specific hint (not the int("abc") one)
+  await page.fill('#code', 'x = 2 ** 20000\nprint(x)');
+  out = await runAndWait();
+  expect(out.includes('ValueError') && (await page.textContent('#hintText')).trim() === t('hint_bigint', { n: 2 }), 'big-number hint for line 2');
 
   // 8e) Loop guard: a never-ending loop is stopped after the confirm box (about 6 s)
   const c0 = confirms;
@@ -156,6 +211,41 @@ module.exports = async function ({ page, lang, expect, t, log }) {
   expect(imgs.length === 1 && imgs[0] > 200, 'bar chart example draws one chart image, got ' + JSON.stringify(imgs));
   const info = (await page.textContent('#runInfo')).trim();
   expect(info.startsWith('✓'), 'run finished without error, got ' + info);
+
+  // 9b) Hindi chart labels: one friendly note instead of a red "Glyph missing" warning per letter
+  await page.fill('#code', 'import matplotlib.pyplot as plt\nplt.bar(["क", "ख"], [1, 2])\nplt.title("अंक")\nplt.show()');
+  out = await runAndWait();
+  expect(!/UserWarning|Glyph/.test(out) && out.includes(t('mpl_glyph')) && (await page.$$('#out img')).length === 1, 'chart drawn with one localized font note, got ' + JSON.stringify(out.slice(0, 300)));
+
+  // 10) Restart Python: a fresh interpreter (files from the last run are gone); Restart is greyed out while it loads
+  await page.fill('#code', 'open("notes.txt", "w").write("hi")\nimport os\nprint(os.path.exists("notes.txt"))');
+  out = await runAndWait();
+  expect(out.trim() === 'True', 'file written in memory');
+  await page.click('#restartBtn');
+  expect(await page.$eval('#restartBtn', (b) => b.disabled), 'Restart button disabled while Python reloads');
+  await page.waitForFunction(() => window.PP_STATE && window.PP_STATE.ready, null, { timeout: 90000 });
+  await page.fill('#code', 'import os\nprint(os.path.exists("notes.txt"))');
+  out = await runAndWait();
+  expect(out.trim() === 'False' && !(await page.$eval('#restartBtn', (b) => b.disabled)), 'fresh Python after restart, got ' + JSON.stringify(out));
+
+  // 11) A broken download of pyodide.asm.wasm must end in "Try again", not "Loading…" for ever
+  const p3 = await page.context().newPage();
+  p3.on('dialog', (d) => d.accept().catch(() => { }));
+  await p3.route(/pyodide\.asm\.wasm/, (r) => r.abort());
+  await p3.goto(page.url().split('#')[0], { waitUntil: 'load' });
+  await p3.waitForFunction(() => window.PP_STATE && window.PP_STATE.phase === 'failed', null, { timeout: 45000 });
+  expect((await p3.textContent('#ppStatusText')).trim() === t('st_failed') && await p3.isVisible('#ppStatusBtn'), 'offline message with Try again');
+  await p3.unroute(/pyodide\.asm\.wasm/);
+  await p3.click('#ppStatusBtn');
+  await p3.waitForFunction(() => window.PP_STATE && window.PP_STATE.ready, null, { timeout: 90000 });
+  await p3.close();
+
+  // 12) Back to the bar chart example in the restarted Python (also a nice final screenshot)
+  await page.selectOption('#exSel', 'bar');
+  expect((await page.inputValue('#code')).includes('plt.bar('), 'bar example loaded again');
+  out = await runAndWait(100000);
+  expect((await page.$$('#out img')).length === 1 && (await page.textContent('#runInfo')).trim().startsWith('✓'), 'bar chart drawn again after restart');
+
   await page.evaluate(() => window.scrollTo(0, 0));   // clean full-page screenshot (sticky header)
   log('all steps done in ' + Math.round((Date.now() - t0) / 1000) + ' s');
 };

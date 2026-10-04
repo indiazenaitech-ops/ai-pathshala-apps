@@ -34,9 +34,23 @@ module.exports = async function ({ page, expect, t, log }) {
   await sleep(1200);
   expect(await txt('#cd-digits') === p1, 'paused timer does not move');
   expect(await txt('#cd-toggle') === t('btn_resume'), 'button offers Resume while paused');
+  expect(t('btn_resume') !== t('start_again'), '"Resume" and "Start again" are different words');
   await page.keyboard.press('r');                        // R = reset to the chosen time
   expect(await txt('#cd-digits') === '01:00', 'R resets to the set time (01:00), got ' + await txt('#cd-digits'));
   expect(await txt('#cd-status') === t('st_ready'), 'status says Ready after reset');
+
+  // decimals in the custom time: 1.5 minutes = 1:30 (not 1:00)
+  await page.fill('#cd-h', '0');
+  await page.fill('#cd-m', '1.5');
+  await page.fill('#cd-s', '0');
+  await page.click('#cd-set');
+  expect(await txt('#cd-digits') === '01:30', '1.5 minutes gives 01:30, got ' + await txt('#cd-digits'));
+  expect(await page.inputValue('#cd-m') === '1' && await page.inputValue('#cd-s') === '30', 'custom boxes are tidied to 1 min 30 s');
+  // empty boxes: friendly message, time unchanged
+  await page.fill('#cd-h', ''); await page.fill('#cd-m', ''); await page.fill('#cd-s', '');
+  await page.click('#cd-set');
+  expect(await txt('#cd-digits') === '01:30', 'empty custom time keeps the old time');
+  expect((await page.textContent('.edu-toast-wrap').catch(() => '') || '').includes(t('enter_time')), 'empty custom time shows a message');
 
   // custom 2-second countdown → time's up
   await page.fill('#cd-h', '0');
@@ -65,8 +79,14 @@ module.exports = async function ({ page, expect, t, log }) {
   const totals = await page.$$eval('#sw-table tbody td.tot', (tds) => tds.map((x) => x.textContent.trim()));
   expect(secsOf(totals[0]) > secsOf(totals[1]) && secsOf(totals[1]) >= 1, 'newest lap total is larger: ' + totals.join(' / '));
   const splits = await page.$$eval('#sw-table tbody td.lap-t', (tds) => tds.map((x) => x.textContent.trim()));
-  expect(Math.abs(secsOf(splits[0]) + secsOf(splits[1]) - secsOf(totals[0])) < 0.02, 'lap times add up to the total');
+  expect(Math.abs(secsOf(splits[0]) + secsOf(splits[1]) - secsOf(totals[0])) < 0.001, 'lap times add up exactly to the total: ' + splits.join(' + ') + ' = ' + totals[0]);
   expect(await page.isDisabled('#sw-lap'), 'Lap is disabled while paused');
+  // CSV: header + 2 laps, the seconds column matches the lap times in the table
+  const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 5000 }), page.click('#sw-csv')]);
+  const csv = require('fs').readFileSync(await dl.path(), 'utf8').replace(/^﻿/, '').trim().split(/\r?\n/).map((r) => r.split(','));
+  expect(csv.length === 3 && csv[0][0] === t('lap'), 'CSV has a header and 2 laps, got ' + csv.length + ' rows');
+  expect(csv[1][1] === splits[1] && Math.abs(parseFloat(csv[1][2]) - secsOf(splits[1])) < 0.001 && csv[2][3] === totals[0],
+    'CSV seconds match the table: ' + csv.slice(1).map((r) => r.join(' ')).join(' / '));
   await page.click('#sw-reset');
   expect(await txt('#sw-digits') === '00:00.00', 'reset clears the stopwatch, got ' + await txt('#sw-digits'));
   expect(await page.$$eval('#sw-table tbody tr', (r) => r.length) === 0, 'reset clears laps');
@@ -77,10 +97,21 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(await txt('#po-digits') === '25:00', 'default focus is 25:00, got ' + await txt('#po-digits'));
   await page.click('#po-plans button[data-plan="young"]');
   expect(await txt('#po-digits') === '10:00', 'young-learners plan gives 10:00');
+  await page.fill('#po-work', '');                       // emptied box must not turn into a 1-minute focus
+  await page.press('#po-work', 'Tab');
+  expect(await page.inputValue('#po-work') === '10' && await txt('#po-digits') === '10:00', 'empty focus box keeps 10 minutes, got ' + await page.inputValue('#po-work'));
   await page.click('#po-toggle');
   await sleep(1200);
   d = await txt('#po-digits');
   expect(d === '09:59' || d === '09:58', 'pomodoro runs, got ' + d);
+  await page.fill('#po-work', '5');                      // changing settings mid-part applies from the next part
+  await page.press('#po-work', 'Tab');
+  d = await txt('#po-digits');
+  expect(d.startsWith('09:5'), 'running focus part keeps its time after a settings change, got ' + d);
+  const off = parseFloat(await page.getAttribute('#po-ring .bar', 'stroke-dashoffset'));
+  expect(off < 10, 'ring still nearly full (measured against the running part), offset ' + off);
+  await page.fill('#po-work', '10');
+  await page.press('#po-work', 'Tab');
   await page.click('#po-skip');
   expect(await txt('#po-phase') === t('phase_short'), 'skip moves to the short break');
   d = await txt('#po-digits');
@@ -110,6 +141,15 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(await txt('#sg-title') === t('sign_silent'), 'key 1 switches to the silent sign');
   expect(await txt('#sg-voice-txt') === t('voice_level', { n: '0' }), 'silent sign shows voice level 0');
   expect(await txt('#sg-timer') === t('times_up'), 'sign board shows the countdown status');
+  // Space on the sign page starts / pauses the countdown; a paused countdown says so on the sign
+  await page.click('#tab-countdown');
+  await page.click('#cd-presets button[data-min="2"]');
+  await page.click('#tab-signs');
+  await page.keyboard.press('Space');
+  await sleep(400);
+  expect((await txt('#sg-timer')).startsWith(t('time_left', { t: '0' }).replace(/0.*$/, '')) && !(await txt('#sg-timer')).includes(t('st_paused')), 'sign shows the running countdown: ' + await txt('#sg-timer'));
+  await page.keyboard.press('Space');
+  expect((await txt('#sg-timer')).includes(t('st_paused')), 'sign shows that the countdown is paused: ' + await txt('#sg-timer'));
   await page.reload();
   await sleep(900);
   expect(await page.getAttribute('#tab-signs', 'aria-selected') === 'true', 'last tab remembered after reload');

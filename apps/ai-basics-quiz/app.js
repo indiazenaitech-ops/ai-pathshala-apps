@@ -79,7 +79,10 @@
   var last = loadLast();
   var history = (function () {
     var h = store.get('history', []);
-    return isArr(h) ? h.filter(function (x) { return x && MODES.indexOf(x.mode) >= 0 && isFinite(+x.score) && +x.total > 0; }).slice(0, 12) : [];
+    /* d must be a usable date: a corrupted entry would otherwise break the whole setup screen. */
+    return isArr(h) ? h.filter(function (x) {
+      return x && typeof x === 'object' && MODES.indexOf(x.mode) >= 0 && isFinite(+x.score) && +x.total > 0 && isFinite(+x.d) && !isNaN(new Date(+x.d).getTime());
+    }).slice(0, 12) : [];
   })();
   var view = 'setup';
   var onlyWrong = false;
@@ -131,11 +134,16 @@
     return EDU.fmt(m) + ':' + (s < 10 ? EDU.fmt(0) : '') + EDU.fmt(s);
   }
   function fmtDate(ms, short) {
-    var d = new Date(ms);
+    var d = new Date(+ms);
+    if (isNaN(d.getTime())) d = new Date();
     var o = short ? { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false } : { day: 'numeric', month: 'long', year: 'numeric' };
     try { return new Intl.DateTimeFormat(EDU.langInfo(EDU.lang).tag, Object.assign({ numberingSystem: 'latn' }, o)).format(d); }
     catch (e) { return d.toISOString().slice(0, 10); }
   }
+  /* Topic names for a running list: "What is AI?" would read "What is AI?, AI ethics" in a list. */
+  function topicList(tps) { return joinList(tps.map(function (tp) { return String(t('topic_' + tp)).replace(/\s*[?？؟]\s*$/, ''); })); }
+  /* Score fractions like "3 / 5" stay left-to-right (as in the score ring), also inside Urdu text. */
+  function frac(a, b) { return el('bdi', { dir: 'ltr', text: EDU.fmt(a) + ' / ' + EDU.fmt(b) }); }
   function joinList(arr) {
     try { if (Intl.ListFormat) return new Intl.ListFormat(EDU.langInfo(EDU.lang).tag, { type: 'conjunction' }).format(arr); } catch (e) { /* old browser */ }
     return arr.join(EDU.lang === 'ur' ? '، ' : ', ');
@@ -186,7 +194,11 @@
     render();
     startTicker();
     var target = v === 'setup' ? null : $(v === 'class' ? '#classView' : '#' + v);
-    if (target && target.scrollIntoView) target.scrollIntoView({ block: 'start' }); else window.scrollTo(0, 0);
+    if (target && target.getBoundingClientRect) {
+      /* Line the section up just under the sticky header (its height differs per language and width). */
+      var hdr = $('.edu-top'), hb = hdr ? Math.max(0, hdr.getBoundingClientRect().bottom) : 0;
+      window.scrollBy(0, target.getBoundingClientRect().top - hb - 8);
+    } else window.scrollTo(0, 0);
   }
   function render() {
     if (view === 'setup') renderSetup();
@@ -256,7 +268,7 @@
       ol.appendChild(el('li', null,
         el('span', { class: 'hist-date', text: fmtDate(h.d, true) }),
         el('span', { class: 'badge', text: t('mode_' + h.mode) }),
-        el('span', { class: 'hist-score num', text: EDU.fmt(+h.score) + ' / ' + EDU.fmt(+h.total) }),
+        el('span', { class: 'hist-score num' }, frac(+h.score, +h.total)),
         el('span', { class: 'badge num ' + (pct >= 75 ? 'success' : pct >= 50 ? 'primary' : 'danger'), text: EDU.fmt(pct) + '%' })));
     });
     $('#historyEmpty').hidden = history.length > 0;
@@ -286,7 +298,16 @@
   }
   function startFromSetup() {
     var ids = poolIds(S.topics);
-    if (!ids.length) { $('#topicErr').hidden = false; return; }
+    /* "New quiz" / "Play again" can be pressed after all topics were switched off: go back to the
+       topic choice instead of doing nothing on the results screen. */
+    if (!ids.length) {
+      session = null;
+      store.remove('session');
+      if (document.fullscreenElement) EDU.fullscreen();
+      if (view !== 'setup') show('setup');
+      $('#topicErr').hidden = false;
+      return;
+    }
     startSession(S.mode, pickBalanced(ids, countFor(ids.length), S.shufQ));
   }
   function finish(timeUp) {
@@ -314,6 +335,15 @@
   }
 
   /* ---------- practice / test ---------- */
+  /* On a phone the student taps "Next" far down the page (below the explanation); the new question
+     must not stay hidden above the screen under the sticky header. */
+  function keepTopInView(sel) {
+    var box = $(sel);
+    if (!box || box.hidden || !box.getBoundingClientRect || document.fullscreenElement) return;
+    var hdr = $('.edu-top'), top = box.getBoundingClientRect().top;
+    var hb = hdr ? Math.max(0, hdr.getBoundingClientRect().bottom) : 0;
+    if (top < hb || top > window.innerHeight * 0.6) window.scrollBy(0, top - hb - 8);
+  }
   function focusQuestion() { var h = $(view === 'class' ? '#cText' : '#qText'); if (h && h.focus) try { h.focus({ preventScroll: true }); } catch (e) { h.focus(); } }
 
   function renderQuiz() {
@@ -410,6 +440,7 @@
     EDU.stopSpeaking();
     saveSession();
     renderQuiz();
+    keepTopInView('#quiz');
     focusQuestion();
   }
   function next() {
@@ -465,14 +496,14 @@
       var b = T.bt[tp];
       if (!b) return;
       var p = Math.round(100 * b.c / b.n);
-      if (p < 60) weak.push(t('topic_' + tp));
+      if (p < 60) weak.push(tp);
       tb.appendChild(el('div', { class: 'tbar', 'data-topic': tp },
         el('span', { text: topicName(tp) }),
-        el('span', { class: 'tval num', text: EDU.fmt(b.c) + ' / ' + EDU.fmt(b.n) }),
+        el('span', { class: 'tval num' }, frac(b.c, b.n)),
         el('div', { class: 'progress', 'aria-hidden': 'true' }, el('span', { style: { width: Math.max(p, 2) + '%', background: p >= 75 ? 'var(--success)' : p >= 50 ? 'var(--primary)' : 'var(--danger)' } }))));
     });
     $('#rRevise').hidden = !weak.length;
-    $('#rRevise').textContent = weak.length ? '📚 ' + t('revise_tip', { list: joinList(weak) }) : '';
+    $('#rRevise').textContent = weak.length ? '📚 ' + t('revise_tip', { list: topicList(weak) }) : '';
     $('#rMistakes').disabled = T.w + T.sk === 0;
     $('#certCard').hidden = !!r.retry;
     renderCert(T);
@@ -510,7 +541,7 @@
     var r = last, name = $('#certName').value.trim(), school = $('#certSchool').value.trim();
     var lvl = T.pct >= 90 ? ['🏆', 'badge_star'] : T.pct >= 75 ? ['🌟', 'badge_explorer'] : T.pct >= 50 ? ['📘', 'badge_learner'] : ['🌱', 'badge_starter'];
     var tps = TOPICS.filter(function (tp) { return T.bt[tp]; });
-    var list = tps.length === TOPICS.length ? t('all_topics') : joinList(tps.map(function (tp) { return t('topic_' + tp); }));
+    var list = tps.length === TOPICS.length ? t('all_topics') : topicList(tps);
     return el('div', { class: 'cert', id: 'certificate' }, el('div', { class: 'cert-in' },
       el('div', { class: 'cert-brand' }, el('img', { src: EDU.ROOT + 'shared/img/icon-96.png', alt: '' }), el('span', { text: t('brand') })),
       el('div', { class: 'cert-badge', 'aria-hidden': 'true', text: lvl[0] }),
@@ -546,7 +577,7 @@
     if (!ids.length) return null;
     var items = makeItems(pickBalanced(ids, countFor(ids.length), S.shufQ));
     var n = items.length;
-    var tps = S.topics.length === TOPICS.length ? t('all_topics') : joinList(TOPICS.filter(function (tp) { return S.topics.indexOf(tp) >= 0; }).map(function (tp) { return t('topic_' + tp); }));
+    var tps = S.topics.length === TOPICS.length ? t('all_topics') : topicList(TOPICS.filter(function (tp) { return S.topics.indexOf(tp) >= 0; }));
     var qs = el('ol', { class: 'p-qs' });
     var key = el('ol', { class: 'p-ans' });
     items.forEach(function (it) {
@@ -590,6 +621,10 @@
     b.title = lbl;
   }
   function toggleClassTimer() {
+    /* No timer, or the answer is already shown: there is nothing to pause or restart (pressing T
+       here used to start a hidden countdown that beeped later). */
+    var s = session;
+    if (!s || s.done || !s.secs || s.rev[s.idx]) return;
     if (cT.up) { resetClassTimer(); }
     else if (cT.running) { cT.left = Math.max(0, cT.ends - Date.now()); cT.running = false; }
     else { cT.running = true; cT.ends = Date.now() + cT.left; }
@@ -648,8 +683,9 @@
         el('div', { class: 'team-name' + (tm.name ? ' no-i18n' : ''), text: teamName(i) }),
         el('div', { class: 'team-score', id: 'teamScore' + i, text: EDU.fmt(tm.s) }),
         s.done ? null : el('div', { class: 'row' },
-          el('button', { type: 'button', class: 'btn', id: 'teamMinus' + i, 'aria-label': t('minus_point', { team: teamName(i) }), text: '−1', onclick: function () { addPoint(i, -1); } }),
-          el('button', { type: 'button', class: 'btn btn-primary', id: 'teamPlus' + i, 'aria-label': t('plus_point', { team: teamName(i) }), text: '+1', onclick: function () { addPoint(i, 1); } }))));
+          /* dir=ltr: in Urdu "+1" would otherwise show as "1+" */
+          el('button', { type: 'button', class: 'btn', id: 'teamMinus' + i, 'aria-label': t('minus_point', { team: teamName(i) }), onclick: function () { addPoint(i, -1); } }, el('bdi', { dir: 'ltr', text: '−1' })),
+          el('button', { type: 'button', class: 'btn btn-primary', id: 'teamPlus' + i, 'aria-label': t('plus_point', { team: teamName(i) }), onclick: function () { addPoint(i, 1); } }, el('bdi', { dir: 'ltr', text: '+1' })))));
     });
   }
   function addPoint(i, d) {
@@ -699,6 +735,7 @@
     resetClassTimer();
     saveSession();
     renderClass();
+    keepTopInView('#classView');
   }
   function classNext() {
     var s = session;

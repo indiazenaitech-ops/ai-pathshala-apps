@@ -162,7 +162,8 @@ module.exports = async ({ page, lang, expect, log, base }) => {
   r = await results(code);
   const left = Object.keys(r.answers).reduce((n, i) => n + Object.keys(r.answers[i] || {}).length, 0);
   expect(r.players.length === 0 && left === 0, `after "Remove me" the host should see no player and no answers (players ${r.players.length}, answers ${left})`);
-  const saved = await page.evaluate(() => localStorage.getItem('edu.quiz-join.current'));
+  /* Demo mode keeps it per tab (sessionStorage); online it would be localStorage */
+  const saved = await page.evaluate(() => sessionStorage.getItem('edu.quiz-join.current') || localStorage.getItem('edu.quiz-join.current'));
   expect(saved === null, 'the remembered quiz should be forgotten on this device');
 
   await H((c) => EDUCloud.deleteSession(c), code);

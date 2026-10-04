@@ -218,6 +218,7 @@
   /* Output arrays for a filter in the chosen mode: [grey] or [R, G, B]. */
   function filtered(id, mode) {
     var key = id + '|' + mode + '|' + N + '|' + srcVersion + (id === 'custom' ? '|' + JSON.stringify(S.custom) : '');
+    if (!cache[key] && Object.keys(cache).length > 40) cache = {};   // typing many custom kernels must not grow memory forever
     if (!cache[key]) cache[key] = mode === 'rgb' ? [applyFilter(id, Rv), applyFilter(id, Gv), applyFilter(id, Bv)] : [applyFilter(id, Yv)];
     return cache[key];
   }
@@ -231,7 +232,9 @@
     return img;
   }
   function paint(cv, img, n, target) {
-    var k = Math.max(1, Math.ceil((target || 512) / n)), size = n * k;
+    // enough backing pixels for the screen (phones have 2-3 device pixels per CSS pixel) so numbers stay sharp
+    var want = Math.min(1600, Math.max(target || 512, (cv.clientWidth || 0) * (window.devicePixelRatio || 1)));
+    var k = Math.max(1, Math.ceil(want / n)), size = n * k;
     if (cv.width !== size) { cv.width = size; cv.height = size; }
     off.width = n; off.height = n; off.getContext('2d').putImageData(img, 0, 0);
     var c = cv.getContext('2d');
@@ -259,7 +262,9 @@
   function ink(v) { return v > 140 ? '#000000' : '#ffffff'; }
 
   /* ------------------------------------------------------------ selection */
+  var slidePos = null;                 // where the "slide the filter" window is; the saved selection stays untouched
   function sel() {
+    if (slidePos) return { x: Math.min(N - 1, slidePos[0]), y: Math.min(N - 1, slidePos[1]) };
     var f = S.sel || SAMPLE_SEL[S.sample] || [0.5, 0.5];
     if (srcKind !== 'sample' && !S.sel) f = [0.5, 0.5];
     return { x: Math.min(N - 1, Math.floor(f[0] * N)), y: Math.min(N - 1, Math.floor(f[1] * N)) };
@@ -272,7 +277,10 @@
 
   /* number formatting for the maths (minus sign, at most 2 decimals) */
   function fn(v) {
-    var s = Number.isInteger(v) ? String(Math.abs(v)) : Math.abs(v).toFixed(2).replace(/\.?0+$/, '');
+    var a = Math.abs(v), s;
+    if (Number.isInteger(v)) s = String(a);
+    else if (a < 0.01) s = String(Number(a.toPrecision(2)));        // e.g. a divisor of 0.0001 must not show as 0
+    else s = a.toFixed(2).replace(/\.?0+$/, '');
     return (v < 0 && s !== '0' ? '−' : '') + s;
   }
 
@@ -285,6 +293,7 @@
     get srcKind() { return srcKind; }, set srcKind(v) { srcKind = v; },
     newSource: function () { srcData = sctx.getImageData(0, 0, SRC, SRC).data; srcVersion++; buildWork(); },
     SAMPLES: SAMPLES, F_ORDER: F_ORDER, G_POOL: G_POOL, FMAPS: FMAPS, TABS: TABS, SRC: SRC,
-    setState: function (s) { S = s; }
+    setState: function (s) { S = s; },
+    setSlidePos: function (p) { slidePos = p; }
   };
 })();

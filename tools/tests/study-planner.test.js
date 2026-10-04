@@ -96,6 +96,9 @@ module.exports = async function ({ page, expect, t, log }) {
   await page.click('.cal-day[data-date="2026-01-22"]');
   const det = await page.$$eval('#cal-detail .sess-cb', els => els.map(cb => cb.closest('.sess').dataset.k));
   expect(det.length > 0 && det.every(k => k === 'rev2'), 'calendar detail of the light day shows final revision only');
+  const lastEx = await page.$$eval('.cal-day.is-exam', els => els.map(e => e.dataset.date).sort().pop());
+  expect(lastEx === '2026-02-04', 'new subject exam is 2 days after the last sample exam: ' + lastEx);
+  expect(await count('.cal-day[data-date="2026-02-08"]') === 1 && await count('.cal-day[data-date="2026-02-09"]') === 0, 'calendar stops at the end of the last exam week');
 
   /* 7) exports */
   const [csvDl] = await Promise.all([page.waitForEvent('download', { timeout: 10000 }), page.click('#csv-btn')]);
@@ -113,4 +116,12 @@ module.exports = async function ({ page, expect, t, log }) {
   expect(await count('#subj-list .subj') === 5, 'five subjects after reload');
   expect(await page.getAttribute('#view-cal', 'aria-pressed') === 'true', 'calendar view remembered');
   expect(await page.getAttribute('#pomo-50', 'aria-pressed') === 'true', '50-minute setting remembered');
+
+  /* 9) an untouched sample whose exams are over moves forward to the new date */
+  await page.evaluate(() => localStorage.removeItem('edu.study-planner.state'));
+  await reloadAt(new Date(2026, 0, 5, 9, 0, 0));
+  await page.waitForTimeout(200);
+  await reloadAt(new Date(2026, 2, 10, 9, 0, 0));
+  expect(await txt('#cd-days') === '18', 'old sample refreshed: countdown 18 days again, got ' + await txt('#cd-days'));
+  expect(await count('#today-body .sess-cb') > 0, 'refreshed sample has sessions today');
 };

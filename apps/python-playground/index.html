@@ -38,7 +38,10 @@
     .pp-gutter { flex: 0 0 auto; position: relative; overflow: hidden; background: var(--surface-2); color: var(--muted); border-inline-end: 1px solid var(--border); user-select: none; width: calc(var(--pp-gw, 2) * 1ch + 20px); }
     .pp-gutter-in { position: absolute; top: 0; inset-inline: 0; padding: 10px 8px 10px 6px; text-align: right; will-change: transform; }
     .pp-gutter-in div { padding: 0 2px; border-radius: 4px; }
-    .pp-gutter-in .pp-eline { background: var(--danger); color: #fff; font-weight: 700; }
+    .pp-gutter-in .pp-eline { background: var(--danger); color: var(--surface); font-weight: 700; }
+    /* Code fonts such as Cascadia Code (Windows) draw >= != -> as one symbol (≥ ≠ →). Students must see
+       the characters they have to type, so programming ligatures are switched off. */
+    .pp-editor, .pp-editor textarea, .pp-out, .pp-print-code, .pp-keys button { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
     .pp-editor textarea {
       flex: 1 1 auto; min-width: 0; display: block; border: 0; border-radius: 0; margin: 0;
       height: clamp(300px, 56vh, 680px); min-height: 160px; padding: 10px 12px;
@@ -62,7 +65,7 @@
     }
     .pp-out .e { color: #ff9a8f; }
     .pp-out .i { color: #8fd8ff; font-weight: 700; }
-    .pp-out .s { color: #a8bcc3; font-style: italic; white-space: pre-wrap; }
+    .pp-out .s { display: block; color: #a8bcc3; font-style: italic; white-space: pre-wrap; font-family: var(--font); text-align: start; margin: 2px 0; }
     .pp-fig { display: block; margin: 8px 0; white-space: normal; }
     .pp-fig img { display: block; max-width: 100%; height: auto; background: #fff; border-radius: 8px; }
     .pp-fig .btn { margin-top: 6px; font-family: var(--font); }
@@ -83,8 +86,14 @@
     .pp-share-url { width: 100%; font-family: var(--mono); font-size: .85rem; direction: ltr; }
 
     .edu-fullscreen-on #app { --pp-fs: 20px; max-width: none; }
-    .edu-fullscreen-on .pp-editor textarea { height: 68vh; }
-    .edu-fullscreen-on .pp-out { max-height: 78vh; min-height: 68vh; }
+    /* projector: the intro line is not needed, so code and output fit on one screen */
+    .edu-fullscreen-on .edu-intro { display: none; }
+    .edu-fullscreen-on .pp-editor textarea { height: max(300px, calc(100vh - 375px)); }
+    .edu-fullscreen-on .pp-out { max-height: 78vh; min-height: max(240px, calc(100vh - 360px)); }
+    /* fingers and smartboard pens need bigger targets than the small toolbar buttons */
+    @media (pointer: coarse) {
+      .pp-tools .btn, #ppStatusBtn, #gotoBtn, #restoreBtn, .pp-fig .btn { min-height: 40px; }
+    }
 
     @media (max-width: 560px) {
       #app { --pp-fs: 14px; }
@@ -225,9 +234,21 @@
 
   <!-- Python bootstrap: run once after Pyodide loads (output, input(), loop guard, charts). -->
   <script type="text/x-python" id="pp-boot">
-import sys, builtins, time, json, traceback, linecache, os, io
+import sys, builtins, time, json, traceback, linecache, os, io, warnings
 os.environ["MPLBACKEND"] = "Agg"
 import _pp
+
+# matplotlib's font has no Indian-script letters. Instead of one red "Glyph ... missing" warning per
+# letter, the app shows one friendly note in the student's language (key "mpl_glyph").
+_PP_NOTES = set()
+_pp_showwarning_orig = warnings.showwarning
+def _pp_showwarning(message, category, filename, lineno, file=None, line=None):
+    m = str(message)
+    if ("Glyph" in m and "missing from" in m) or ("does not support" in m and "natively" in m):
+        _PP_NOTES.add("mpl_glyph")
+        return
+    _pp_showwarning_orig(message, category, filename, lineno, file, line)
+warnings.showwarning = _pp_showwarning
 
 class _PPStream:
     encoding = "utf-8"
@@ -391,7 +412,11 @@ def _pp_show(*args, **kwargs):
     for num in plt.get_fignums():
         fig = plt.figure(num)
         buf = io.BytesIO()
-        fig.savefig(buf, format="png", dpi=110, bbox_inches="tight", facecolor="white")
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            fig.savefig(buf, format="png", dpi=110, bbox_inches="tight", facecolor="white")
+        for w in caught:
+            _pp_showwarning(w.message, w.category, "chart", 0)
         _pp.image(base64.b64encode(buf.getvalue()).decode("ascii"))
     plt.close("all")
 
@@ -413,6 +438,7 @@ def _pp_run(src, guard_secs):
     sys.stdin = _PP_IN
     builtins.input = _pp_input
     _PP["why"] = ""
+    _PP_NOTES.clear()
     res = {"ok": True, "type": "", "line": 0, "msg": "", "why": ""}
     linecache.cache["main.py"] = (len(src), None, src.splitlines(True), "main.py")
     try:
@@ -441,6 +467,7 @@ def _pp_run(src, guard_secs):
         _pp_show()
     except Exception as e:
         _PP_ERR.write("Chart error: " + str(e) + "\n")
+    res["notes"] = sorted(_PP_NOTES)
     return json.dumps(res)
 </script>
 
@@ -499,15 +526,17 @@ else:
         grade = "C2"
     elif marks >= 33:
         grade = "D"
+    elif marks >= 21:
+        grade = "E1"
     else:
-        grade = "E (needs improvement)"
+        grade = "E2"
 
     print("Marks:", marks)
     print("Grade:", grade)
     if marks >= 33:
         print("Result: Pass")
     else:
-        print("Result: Needs to work harder")
+        print("Result: Needs improvement (below 33)")
 </script>
   <script type="text/x-python" data-ex="loops" data-group="g11">
 # for loop: multiplication table of 7
