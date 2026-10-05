@@ -426,7 +426,7 @@ service cloud.firestore {
         && !exists(/databases/$(database)/documents/interest/$(request.auth.uid));
     }
     match /stats/{docId} {
-      allow get: if docId == 'signups';
+      allow get: if docId == 'signups' || docId == 'visits';
       allow create: if docId == 'signups'
         && incoming().keys().hasOnly(['count'])
         && incoming().count is int
@@ -437,6 +437,16 @@ service cloud.firestore {
         && incoming().count is number
         && incoming().count == existing().count + 1
         && newSignup();
+      // stats/visits = {count}: the public visitor counter (shared/visits.js). No sign-in needed and nothing about
+      // the visitor is stored; the number can only start at 1 and only ever go UP BY EXACTLY 1 per write.
+      allow create: if docId == 'visits'
+        && incoming().keys().hasOnly(['count'])
+        && incoming().count is int
+        && incoming().count == 1;
+      allow update: if docId == 'visits'
+        && incoming().keys().hasOnly(['count'])
+        && incoming().count is int
+        && incoming().count == existing().count + 1;
       // No list / delete rule = denied. The owner can correct the number in the Firebase console if ever needed.
     }
 

@@ -833,7 +833,7 @@ describe('stats/signups (public sign-up counter)', () => {
     await assertFails(signup('v1', { count: '11' }, { merge: false }));
     await assertFails(signup('v1', { count: 11, total: 99 }, { merge: false }));
     await assertFails(signup('v1', { count: increment(1) }, { path: 'stats/other' }));
-    await assertFails(signup('v1', { count: 1 }, { path: 'stats/visits' }));
+    await assertFails(signup('v1', { count: 1 }, { path: 'stats/likes' }   /* stats/visits is the public visitor counter (own tests below) */));
     assert.deepStrictEqual(await stored(), { count: 10 });
   });
   test('ATTACK: nobody can delete the counter, list stats/ or read other stats documents', async () => {
@@ -871,5 +871,48 @@ describe('stats/signups (public sign-up counter)', () => {
     for (let i = 1; i <= 6; i++) await assertSucceeds(signup('n' + i));
     await assertFails(signup('n3'));
     assert.deepStrictEqual(await stored(), { count: 6 });
+  });
+});
+
+/* ================================================================== stats/visits: the public visitor counter
+   What shared/visits.js does: ONE REST commit with a field transform count += 1, no sign-in. */
+describe('stats/visits (public visitor counter)', () => {
+  const V = 'stats/visits';
+  const stored = async () => {
+    let d = null;
+    await env.withSecurityRulesDisabled(async (ctx) => { const s = await getDoc(doc(ctx.firestore(), V)); d = s.exists() ? s.data() : null; });
+    return d;
+  };
+  test('anyone (no sign-in) can read it and add exactly 1, first visit creates it at 1', async () => {
+    const db = nobody();
+    await assertSucceeds(setDoc(doc(db, V), { count: increment(1) }, { merge: true }));
+    assert.deepStrictEqual(await stored(), { count: 1 });
+    await assertSucceeds(setDoc(doc(db, V), { count: increment(1) }, { merge: true }));
+    await assertSucceeds(updateDoc(doc(student('s9'), V), { count: increment(1) }));
+    assert.deepStrictEqual(await stored(), { count: 3 });
+    await assertSucceeds(getDoc(doc(db, V)));
+  });
+  test('ATTACK: no jumps, no going down, no extra fields, no delete, no list', async () => {
+    const db = nobody();
+    await env.withSecurityRulesDisabled(async (ctx) => { await setDoc(doc(ctx.firestore(), V), { count: 50 }); });
+    await assertFails(setDoc(doc(db, V), { count: 1000 }));
+    await assertFails(updateDoc(doc(db, V), { count: increment(2) }));
+    await assertFails(updateDoc(doc(db, V), { count: 49 }));
+    await assertFails(updateDoc(doc(db, V), { count: increment(1), x: 1 }));
+    await assertFails(updateDoc(doc(db, V), { count: 50.5 }));
+    await assertFails(deleteDoc(doc(db, V)));
+    await assertFails(getDocs(collection(db, 'stats')));
+    const b = writeBatch(db);                                              /* two +1 in one batch = +2 */
+    b.update(doc(db, V), { count: increment(1) }); b.update(doc(db, V), { count: increment(1) });
+    await assertFails(b.commit());
+    assert.deepStrictEqual(await stored(), { count: 50 });
+  });
+  test('ATTACK: a first write that is not 1 is refused, and other stats documents stay closed', async () => {
+    const db = nobody();
+    await env.withSecurityRulesDisabled(async (ctx) => { await deleteDoc(doc(ctx.firestore(), V)); });
+    await assertFails(setDoc(doc(db, V), { count: 500 }));
+    await assertFails(setDoc(doc(db, 'stats/other'), { count: 1 }));
+    await assertFails(setDoc(doc(db, 'stats/signups'), { count: 1 }));
+    assert.strictEqual(await stored(), null);
   });
 });
