@@ -57,7 +57,7 @@ module.exports = async function ({ page, lang, expect }) {
   await page.click('#tab-corr');
   const cells = await page.$$eval('#corr-body .dx-corr td button', b => b.length);
   expect(cells === 25, 'correlation grid should be 5 × 5, got ' + cells);
-  await page.click('#corr-body .dx-corr tbody tr:nth-child(2) td:nth-child(3) button');
+  await page.click('#corr-body .dx-corr tbody tr:nth-child(2) td:nth-child(4) button');
   const reading = await page.textContent('.dx-reading');
   expect(/r = 0\.\d\d/.test(reading), 'reading in words with r: ' + reading);
 

@@ -44,10 +44,11 @@
     .dx-badge-bool { background: var(--success-soft); color: var(--success); border-color: transparent; }
     .dx-stats { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; margin: 0; font-size: .9rem; }
     .dx-stats dt { color: var(--muted); }
-    .dx-stats dd { margin: 0; font-weight: 700; text-align: end; font-variant-numeric: tabular-nums; }
+    .dx-stats dd { direction: ltr; unicode-bidi: isolate; margin: 0; font-weight: 700; text-align: end; font-variant-numeric: tabular-nums; }
+    :root[dir="rtl"] .dx-stats dd { text-align: left; }
     .dx-hist { width: 100%; height: 64px; display: block; }
     .dx-hist rect { fill: var(--c1); }
-    .dx-hist-ax { display: flex; justify-content: space-between; font-size: .75rem; color: var(--muted); gap: 6px; }
+    .dx-hist-ax { direction: ltr; display: flex; justify-content: space-between; font-size: .75rem; color: var(--muted); gap: 6px; }
     .dx-top { display: flex; flex-direction: column; gap: 4px; }
     .dx-top-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; font-size: .86rem; align-items: center; position: relative; padding: 2px 6px; border-radius: 6px; overflow: hidden; }
     .dx-top-row .bar { position: absolute; inset-block: 0; inset-inline-start: 0; background: var(--primary-soft); z-index: 0; }
@@ -84,9 +85,8 @@
     .dx-corr td button { all: unset; box-sizing: border-box; display: grid; place-items: center; width: 52px; height: 44px; border-radius: 8px; cursor: pointer; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text); }
     .dx-corr td button:focus-visible { outline: 3px solid var(--text); }
     .dx-corr td button[aria-pressed="true"] { outline: 3px solid var(--text); }
-    .dx-legend { display: flex; align-items: center; gap: 8px; font-size: .82rem; color: var(--muted); flex-wrap: wrap; }
+    .dx-legend { direction: ltr; justify-content: flex-start; display: flex; align-items: center; gap: 8px; font-size: .82rem; color: var(--muted); flex-wrap: wrap; }
     .dx-legend .grad { width: 160px; height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--c2), var(--surface-2), var(--c7)); }
-    :root[dir="rtl"] .dx-legend .grad { background: linear-gradient(270deg, var(--c2), var(--surface-2), var(--c7)); }
     .dx-pairs { margin: 0; padding-inline-start: 1.2em; }
     .dx-pairs li + li { margin-top: 6px; }
     .dx-reading { min-height: 1.5em; }

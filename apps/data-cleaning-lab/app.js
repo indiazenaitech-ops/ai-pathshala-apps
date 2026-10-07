@@ -174,11 +174,15 @@
     var box = el('div', { class: 'dc-chips no-i18n', id: id, role: 'group' });
     colNames().forEach(function (n) {
       box.appendChild(el('button', { type: 'button', class: 'chip', 'aria-pressed': preset && preset.indexOf(n) >= 0 ? 'true' : 'false', text: n, dataset: { col: n },
-        onclick: function (e) { var b = e.currentTarget; b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); } }));
+        onclick: function (e) { var b = e.currentTarget, on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.dataset.order = on ? ++pickSeq : ''; } }));
     });
     return el('div', { class: 'field dc-wide' }, el('span', { text: t(labelKey) }), box);
   }
-  function picked(id) { return EDU.$$('#' + id + ' .chip[aria-pressed="true"]').map(function (b) { return b.dataset.col; }); }
+  var pickSeq = 0;
+  /* chosen columns in the order they were clicked (merge uses this order) */
+  function picked(id) {
+    return EDU.$$('#' + id + ' .chip[aria-pressed="true"]').sort(function (a, b) { return (+a.dataset.order || 0) - (+b.dataset.order || 0); }).map(function (b) { return b.dataset.col; });
+  }
   function textField(id, labelKey, value, ph) {
     return el('label', { class: 'field' }, el('span', { text: t(labelKey) }), el('input', { id: id, type: 'text', value: value || '', placeholder: ph || '', class: 'no-i18n', autocomplete: 'off' }));
   }

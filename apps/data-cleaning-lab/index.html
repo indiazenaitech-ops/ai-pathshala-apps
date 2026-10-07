@@ -33,6 +33,9 @@
     .dc-stat .lbl { display: block; font-size: .8rem; color: var(--muted); font-weight: 600; line-height: 1.3; }
     .dc-stat .val { font-size: 1.15rem; font-variant-numeric: tabular-nums; }
     .dc-stat .b { color: var(--muted); }
+    .dc-stat .val, .dc-qt td.num { direction: ltr; unicode-bidi: isolate; }
+    :root[dir="rtl"] .dc-stat .val { display: block; text-align: right; }
+    :root[dir="rtl"] .dc-qt td.num { text-align: right; }
     .up { color: var(--success); }
     .down { color: var(--danger); }
     .dc-qt td.num { white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -41,7 +44,7 @@
 
     /* steps */
     .dc-add { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); align-items: end; }
-    #step-form { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); align-items: end; }
+    #step-form { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); align-items: end; }
     #step-form .dc-wide { grid-column: 1 / -1; }
     #step-form select, #step-form input[type="text"], .dc-add > .field select { width: 100%; }
     .dc-chips { display: flex; flex-wrap: wrap; gap: 6px; }

@@ -127,18 +127,20 @@
   function haveSet() { var o = {}; S.have.forEach(function (id) { o[id] = 1; }); return o; }
   function assumed(id) { return hasFlag(id, 'free') || (S.assume && hasFlag(id, 'basic')); }
   function match(r, hs) {
-    var need = 0, got = 0, missing = [], subs = {};
+    /* the first main ingredient (the "hero", e.g. paneer in palak paneer) counts double */
+    var need = 0, got = 0, w = 0, wgot = 0, missing = [], subs = {};
     r.i.forEach(function (row) {
       var id = row[0];
       if (row[3] || assumed(id)) return;
-      need++;
-      if (hs[id]) { got++; return; }
+      var wt = need ? 1 : 2;
+      need++; w += wt;
+      if (hs[id]) { got++; wgot += wt; return; }
       var alt = (ING[id].s || []).filter(function (s) { return hs[s] || assumed(s); });
-      if (alt.length) { got += 0.5; subs[id] = alt; }
+      if (alt.length) { wgot += wt / 2; subs[id] = alt; }
       missing.push(id);
     });
-    var score = need ? got / need : 1;
-    return { score: score, pct: Math.round(score * 100), missing: missing, subs: subs, need: need, got: got };
+    var score = w ? wgot / w : 1;
+    return { score: score, pct: Math.floor(score * 100 + 1e-9), missing: missing, subs: subs, need: need, got: got };
   }
 
   function passFilters(r) {
@@ -343,9 +345,9 @@
 
     var seg = $('#servSeg'); seg.innerHTML = '';
     [1, 2, 4, 6].forEach(function (n) {
-      seg.appendChild(el('button', { type: 'button', 'aria-pressed': S.serv === n ? 'true' : 'false', dataset: { n: String(n) }, onclick: function () { S.serv = n; renderRecipe(); } }, t('people_n', { n: n })));
+      seg.appendChild(el('button', { type: 'button', 'aria-pressed': S.serv === n ? 'true' : 'false', dataset: { n: String(n) }, onclick: function () { S.serv = n; renderRecipe(); } }, String(n)));
     });
-    $('#servPrint').textContent = t('servings') + ': ' + t('people_n', { n: S.serv });
+    $('#servPrint').textContent = t('servings') + ': ' + S.serv;
     $('#rvSum').textContent = S.have.length ? t('rv_sum', { got: m.need - m.missing.length, need: m.need, pct: m.pct }) : t('rv_sum_none');
 
     var ul = $('#rvIngs'); ul.innerHTML = '';
