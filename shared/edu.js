@@ -468,14 +468,13 @@
       title.classList.add('edu-sr');
     }
 
-    /* "</>" opens this page's source code on GitHub: the app's folder, or the site page's file. */
-    var srcPath = opts.home ? '' : (state.slug && !opts.nav && !state.sharePath ? 'tree/main/apps/' + state.slug
-      : 'blob/main/' + (state.sharePath || (location.pathname.split('/').pop() || 'index.html')));
-    var srcBtn = el('a', { class: 'edu-iconbtn edu-src no-print', id: 'edu-src', href: SITE.repo + (srcPath ? '/' + srcPath : ''),
-      target: '_blank', rel: 'noopener', text: '</>' });
+    /* Apps only: "</> Source code (GitHub)" in the footer opens this app's folder on GitHub. */
+    var isApp = !!state.slug && !opts.nav && !opts.home && !state.sharePath;
+    var srcBtn = isApp ? el('a', { class: 'edu-src no-print', id: 'edu-src', href: SITE.repo + '/tree/main/apps/' + state.slug, target: '_blank', rel: 'noopener' },
+      el('span', { class: 'edu-src-ic', 'aria-hidden': 'true', text: '</> ' }), el('span', { 'data-i18n': 'foot_source', text: t('foot_source') })) : null;
     var top = el('header', { class: 'edu-top' },
       el('div', { class: 'edu-top-in' }, brand, back, title, nav,
-        el('div', { class: 'edu-tools' }, langSel, srcBtn, waBtn, themeBtn)));
+        el('div', { class: 'edu-tools' }, langSel, waBtn, themeBtn)));
     document.body.insertBefore(top, document.body.firstChild);
 
     var schoolsLink = el('a', { href: ROOT + 'schools.html', id: 'edu-foot-schools' }, '🏫 ', el('span', { 'data-i18n': 'shell_schools', text: t('shell_schools') }));
@@ -503,7 +502,7 @@
         el('div', { class: 'edu-foot-in' },
           el('span', { 'data-i18n': 'footer_free', text: t('footer_free') }),
           el('span', { class: 'edu-foot-links' }, schoolsLink, businessLink, privacyLink,
-            pageLink('about.html', 'nav_about', { id: 'edu-foot-about' }), pageLink('contact.html', 'nav_contact', { id: 'edu-foot-contact' }), ytLink)));
+            pageLink('about.html', 'nav_about', { id: 'edu-foot-about' }), pageLink('contact.html', 'nav_contact', { id: 'edu-foot-contact' }), ytLink, srcBtn)));
     }
     document.body.appendChild(foot);
 
@@ -536,7 +535,6 @@
     shell.langSel.setAttribute('aria-label', t('language'));
     shell.themeBtn.setAttribute('aria-label', t('theme'));
     shell.themeBtn.title = t('theme');
-    if (shell.srcBtn) { shell.srcBtn.setAttribute('aria-label', t('foot_source')); shell.srcBtn.title = t('foot_source'); }
     var titleText = state.titleKey ? t(state.titleKey) : '';
     shell.title.textContent = titleText;
     shell.brand.href = ROOT + 'index.html?lang=' + state.lang;
