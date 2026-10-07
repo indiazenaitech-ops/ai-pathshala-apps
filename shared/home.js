@@ -1,15 +1,18 @@
-/* Library home: renders the catalog (window.EDU_CATALOG from catalog.js) with an audience switcher
-   (Everyone · Schools & colleges · Work & business · Marketing & creators).
-   Link parameters: ?for=schools|business|marketing picks the audience, ?cat=<category id> a category.
+/* Library home (library-first layout, 2026-10-07): a search box with a category picker at the top, then the whole
+   catalog (window.EDU_CATALOG from catalog.js) as one grid of colour-coded cards. Audience tabs
+   (Everyone · Schools & colleges · Work & business · Marketing & creators) narrow the categories.
+   Link parameters: ?for=schools|business|marketing picks the audience, ?cat=<category id> a category, ?q= a search.
    The chosen audience is remembered on this device with EDU.store('home'). */
 (function () {
   'use strict';
   var SITE = Object.assign({ zip: '' }, window.EDU_SITE || {});
   /* Category ids: keep in sync with tools/verify.js, tools/build_catalog.js and cat_<id> in home-strings.js.
-     This order is the display order of the "Everyone" view. */
+     This order is the order of the category picker and of the "by category" sort. */
   var CATS = ['learn-ai', 'everyday', 'business', 'marketing', 'teacher-tools', 'math', 'science', 'coding', 'languages', 'study-skills', 'digital-safety'];
   var SCHOOL_CATS = ['learn-ai', 'teacher-tools', 'math', 'science', 'coding', 'languages', 'study-skills', 'digital-safety'];
-  /* Audiences: which categories each one shows (in this order). An audience with no published apps is hidden. */
+  var CAT_ICON = { 'learn-ai': '🤖', everyday: '🧰', business: '💼', marketing: '📣', 'teacher-tools': '🧑‍🏫', math: '➗', science: '🔬', coding: '💻', languages: '🔤', 'study-skills': '📚', 'digital-safety': '🛡️' };
+  var CAT_COLOR = { 'learn-ai': '--c3', everyday: '--c4', business: '--c1', marketing: '--c5', 'teacher-tools': '--c2', math: '--c7', science: '--c4', coding: '--c3', languages: '--c6', 'study-skills': '--c1', 'digital-safety': '--c5' };
+  /* Audiences: which categories each one shows. An audience with no published apps is hidden. */
   var AUDS = [
     { id: 'all', icon: '🌐', cats: CATS },
     { id: 'schools', icon: '🏫', cats: SCHOOL_CATS },
@@ -19,7 +22,7 @@
   var APPS = (window.EDU_CATALOG || []).filter(function (a) { return CATS.indexOf(a.category) >= 0; });
   var COUNTS = {}; APPS.forEach(function (a) { COUNTS[a.category] = (COUNTS[a.category] || 0) + 1; });
 
-  EDU.init({ slug: 'home', title: null, home: true, strings: window.HOME_STRINGS, waKey: 'wa_home' });
+  EDU.init({ slug: 'home', title: null, home: true, nav: 'apps', strings: window.HOME_STRINGS, waKey: 'wa_home' });
   var $ = EDU.$, el = EDU.el, t = EDU.t;
   var CONF = EDU.SITE || {};
   var store = EDU.store('home');
@@ -35,19 +38,21 @@
   (function initialState() {
     var p = null;
     try { p = new URLSearchParams(location.search); } catch (e) { }
-    var pFor = p && p.get('for'), pCat = p && p.get('cat');
+    var pFor = p && p.get('for'), pCat = p && p.get('cat'), pQ = p && p.get('q');
     if (usable(pFor)) { aud = pFor; store.set('aud', aud); }
     else { var saved = store.get('aud', 'all'); if (usable(saved)) aud = saved; }
     if (pCat && COUNTS[pCat]) { cat = pCat; if (audById(aud).cats.indexOf(cat) < 0) aud = 'all'; }
+    if (pQ) { query = pQ.trim(); $('#q').value = query; }
   })();
   function audCats() { return audById(aud).cats; }
 
-  /* Keep ?for= and ?cat= in the address bar (bookmarks, links); edu.js keeps ?lang= the same way. */
+  /* Keep ?for=, ?cat= and ?q= in the address bar (bookmarks, links); edu.js keeps ?lang= the same way. */
   function syncUrl() {
     try {
       var u = new URL(location.href);
       if (aud === 'all') u.searchParams.delete('for'); else u.searchParams.set('for', aud);
       if (cat === 'all') u.searchParams.delete('cat'); else u.searchParams.set('cat', cat);
+      if (!query) u.searchParams.delete('q'); else u.searchParams.set('q', query);
       if (u.toString() !== location.href) history.replaceState(history.state, '', u.toString());
     } catch (e) { }
   }
@@ -61,28 +66,35 @@
     return t('grades', { g: g });
   }
   function norm(s) { return String(s || '').toLowerCase(); }
-  function matchesQuery(a) {
-    if (!query) return true;
-    var hay = [loc(a.title), loc(a.desc), a.title.en, a.desc.en, (a.tags || []).join(' '), a.slug].join(' ');
-    return norm(hay).indexOf(norm(query)) >= 0;
+  /* Search score: 0 = no match; title hits rank above description and tag hits. */
+  function score(a) {
+    if (!query) return 1;
+    var q = norm(query), title = norm(loc(a.title) + ' ' + a.title.en);
+    if (title.indexOf(q) === 0) return 4;
+    if (title.indexOf(q) >= 0) return 3;
+    if (norm((a.tags || []).join(' ') + ' ' + a.slug).indexOf(q) >= 0) return 2;
+    return norm(loc(a.desc) + ' ' + a.desc.en + ' ' + t('cat_' + a.category)).indexOf(q) >= 0 ? 1 : 0;
   }
-  function matches(a) {
+  function inView(a) {
     if (audCats().indexOf(a.category) < 0) return false;
-    if (cat !== 'all' && a.category !== cat) return false;
-    return matchesQuery(a);
+    return cat === 'all' || a.category === cat;
   }
 
   function card(a) {
-    var meta = el('div', { class: 'meta' }, el('span', { class: 'badge primary', text: gradesLabel(a) }));
-    (a.needs || []).forEach(function (n) { meta.appendChild(el('span', { class: 'badge', text: t('badge_' + n) })); });
-    return el('a', { class: 'card app-card', href: 'apps/' + a.slug + '/index.html?lang=' + EDU.lang },
-      el('div', { class: 'ic', 'aria-hidden': 'true', text: a.icon }),
-      el('h3', { text: loc(a.title) }),
+    var foot = el('div', { class: 'app-foot' },
+      el('span', { class: 'cat-tag', text: t('cat_' + a.category) }),
+      el('span', { class: 'badge', text: gradesLabel(a) }));
+    (a.needs || []).forEach(function (n) { foot.appendChild(el('span', { class: 'badge', text: t('badge_' + n) })); });
+    foot.appendChild(el('span', { class: 'app-open' }, t('open'), ' ', el('span', { class: 'arrow', 'aria-hidden': 'true', text: '→' })));
+    return el('a', { class: 'card app-card', href: 'apps/' + a.slug + '/index.html?lang=' + EDU.lang, style: { '--cat': 'var(' + (CAT_COLOR[a.category] || '--c1') + ')' } },
+      el('div', { class: 'app-top' },
+        el('div', { class: 'ic', 'aria-hidden': 'true', text: a.icon }),
+        el('h3', { text: loc(a.title) })),
       el('p', { text: loc(a.desc) }),
-      meta);
+      foot);
   }
 
-  function rerender() { syncUrl(); renderAud(); renderCta(); renderCats(); renderList(); }
+  function rerender() { syncUrl(); renderAud(); renderCats(); renderList(); }
 
   function renderAud() {
     var box = $('#aud'); if (!box) return;
@@ -104,92 +116,63 @@
     });
   }
 
-  /* "For schools" and "For businesses & teams" cards: both for Everyone, otherwise the one that fits. */
-  function renderCta() {
-    var s = $('#schools-cta'), b = $('#biz-cta'), wrap = $('#ctas');
-    var showS = aud === 'all' || aud === 'schools', showB = aud !== 'schools';
-    if (s) s.hidden = !showS;
-    if (b) b.hidden = !showB;
-    if (wrap) wrap.classList.toggle('two', showS && showB);
-  }
-
+  /* Category chips under the tabs and the category picker inside the search box show the same choice. */
   function renderCats() {
-    var box = $('#cats'); box.innerHTML = '';
+    var box = $('#cats'), sel = $('#cat-sel');
+    box.innerHTML = ''; sel.innerHTML = '';
     var cats = audCats().filter(function (c) { return COUNTS[c]; });
     var total = cats.reduce(function (s, c) { return s + COUNTS[c]; }, 0);
-    function mk(id, label, n) {
-      var b = el('button', { class: 'chip', type: 'button', 'aria-pressed': String(cat === id) }, label, el('span', { class: 'tiny', text: ' ' + EDU.fmt(n) }));
-      b.addEventListener('click', function () { cat = id; syncUrl(); renderCats(); renderList(); });
-      return b;
+    function mk(id, icon, label, n) {
+      var b = el('button', { class: 'chip', type: 'button', 'aria-pressed': String(cat === id) },
+        el('span', { 'aria-hidden': 'true', text: icon }), label, el('span', { class: 'tiny', text: EDU.fmt(n) }));
+      b.addEventListener('click', function () { setCat(id); });
+      box.appendChild(b);
+      sel.appendChild(el('option', { value: id, text: (id === 'all' ? t('cat_all_opt') : label) + ' (' + EDU.fmt(n) + ')' }));
     }
-    box.appendChild(mk('all', t('all'), total));
-    cats.forEach(function (c) { box.appendChild(mk(c, t('cat_' + c), COUNTS[c])); });
+    mk('all', '✨', t('all'), total);
+    cats.forEach(function (c) { mk(c, CAT_ICON[c] || '•', t('cat_' + c), COUNTS[c]); });
+    sel.value = cat;
   }
+  function setCat(id) { cat = id; syncUrl(); renderCats(); renderList(); }
 
-  var homeStore = EDU.store('home');
-  var closedCats = homeStore.get('closedCats', []);
-  if (!Array.isArray(closedCats)) closedCats = [];
-  function setAllCats(open) {
-    EDU.$$('#list details.cat-group').forEach(function (d) { d.open = open; });
-    closedCats = open ? [] : EDU.$$('#list details.cat-group').map(function (d) { return d.getAttribute('data-cat'); });
-    homeStore.set('closedCats', closedCats);
+  /* "Everyone" with no filter mixes the categories (one app from each in turn), so the first screen
+     shows the whole range: AI, everyday tools, work, teaching, maths... A category or search lists in order. */
+  function mixed(list) {
+    var by = {}, order = [];
+    list.forEach(function (a) { if (!by[a.category]) { by[a.category] = []; order.push(a.category); } by[a.category].push(a); });
+    var out = [], i = 0, left = list.length;
+    while (left) { order.forEach(function (c) { if (by[c][i]) { out.push(by[c][i]); left--; } }); i++; }
+    return out;
   }
   function renderList() {
     var list = $('#list'); list.innerHTML = '';
-    var tools = $('#cat-tools');
-    if (tools) tools.hidden = !(cat === 'all' && !query);
-    var shown = APPS.filter(matches);
-    /* A search that finds nothing for this audience looks in the whole library instead. */
-    if (query && !shown.length) shown = APPS.filter(matchesQuery);
-    var grouped = cat === 'all' && !query;
-    (grouped ? audCats() : [null]).forEach(function (g) {
-      var items = shown.filter(function (a) { return !g || a.category === g; });
-      if (!items.length) return;
-      var grid = el('div', { class: 'apps', style: grouped ? null : { marginTop: '14px' } });
-      items.forEach(function (a) { grid.appendChild(card(a)); });
-      if (!grouped) { list.appendChild(grid); return; }
-      /* collapsible category; closed state remembered per device */
-      var det = el('details', { class: 'cat-group', 'data-cat': g });
-      if (closedCats.indexOf(g) < 0) det.open = true;
-      det.appendChild(el('summary', { class: 'cat-head' },
-        el('span', { class: 'cat-chev', 'aria-hidden': 'true', text: '▸' }),
-        el('h2', { text: t('cat_' + g) }),
-        el('span', { class: 'badge', text: t('count_apps', { n: EDU.fmt(items.length) }) })));
-      det.appendChild(grid);
-      det.dataset.init = det.open ? '1' : '0';
-      det.addEventListener('toggle', function () {
-        /* the browser fires one toggle for the initial open state; ignore it */
-        if (det.dataset.init !== undefined) {
-          var init = det.dataset.init === '1'; delete det.dataset.init;
-          if (init === det.open) return;
-        }
-        var i = closedCats.indexOf(g);
-        if (det.open && i >= 0) closedCats.splice(i, 1);
-        if (!det.open && i < 0) closedCats.push(g);
-        homeStore.set('closedCats', closedCats);
-      });
-      list.appendChild(det);
-    });
+    var shown = APPS.filter(inView);
+    var global = false;
+    if (query) {
+      var scored = function (arr) { return arr.map(function (a) { return [score(a), a]; }).filter(function (p) { return p[0] > 0; }); };
+      var hits = scored(shown);
+      /* A search that finds nothing for this audience or category looks in the whole library instead. */
+      if (!hits.length) { hits = scored(APPS); global = hits.length > 0; }
+      hits.sort(function (x, y) { return y[0] - x[0]; });
+      shown = hits.map(function (p) { return p[1]; });
+    } else if (cat === 'all') shown = mixed(shown);
+    shown.forEach(function (a) { list.appendChild(card(a)); });
     $('#empty').hidden = shown.length > 0;
+    $('#count').textContent = shown.length ? t(global ? 'count_all' : 'count_shown', { n: EDU.fmt(shown.length) }) : '';
   }
 
-  function setMeta(name, value) { var m = document.querySelector('meta[name="' + name + '"]'); if (m) m.setAttribute('content', value); }
   function setHref(sel, href) { var e = $(sel); if (e) e.href = href; }
-
-  (function () {
-    var ex = $('#cat-expand'), co = $('#cat-collapse');
-    if (ex) ex.addEventListener('click', function () { setAllCats(true); });
-    if (co) co.addEventListener('click', function () { setAllCats(false); });
-  })();
+  function setMeta(name, value) { var m = document.querySelector('meta[name="' + name + '"]'); if (m) m.setAttribute('content', value); }
 
   function renderStatic() {
-    $('#home-sub').textContent = t('home_sub', { n: EDU.fmt(APPS.length) });
-    setHref('#wa-home', EDU.waLink(t('wa_home', { url: EDU.shareUrl() })));
+    var h1 = $('#home-title'), parts = t('lib_title', { n: '\u0000' }).split('\u0000');
+    h1.textContent = '';
+    h1.appendChild(document.createTextNode(parts[0]));
+    if (parts.length > 1) { h1.appendChild(el('b', { text: EDU.fmt(APPS.length) })); h1.appendChild(document.createTextNode(parts[1])); }
     setHref('#subscribe', CONF.subscribe || EDU.YOUTUBE);
-    setHref('#subscribe-2', CONF.subscribe || EDU.YOUTUBE);
-    setHref('#watch', CONF.youtube || EDU.YOUTUBE);
     setHref('#schools-link', 'schools.html?lang=' + EDU.lang);
     setHref('#biz-link', 'business.html?lang=' + EDU.lang);
+    setHref('#contact-link', 'contact.html?lang=' + EDU.lang);
     var zip = $('#zip'), zipUrl = SITE.zip || CONF.zip;
     if (zip && zipUrl) { zip.hidden = false; zip.href = zipUrl; }
     document.title = t('doc_title');
@@ -197,10 +180,19 @@
   }
 
   APPS.sort(function (a, b) { return CATS.indexOf(a.category) - CATS.indexOf(b.category) || (a.order || 999) - (b.order || 999) || a.title.en.localeCompare(b.title.en); });
-  $('#q').addEventListener('input', function (e) { query = e.target.value.trim(); renderList(); });
-  $('#share-lib').addEventListener('click', function () { EDU.share(EDU.shareUrl(), t('home_title')); });
+  var typing = null;
+  $('#q').addEventListener('input', function (e) {
+    query = e.target.value.trim(); renderList();
+    clearTimeout(typing); typing = setTimeout(syncUrl, 400);
+  });
+  $('#lib-search').addEventListener('submit', function (e) {
+    e.preventDefault(); $('#q').blur();
+    var first = $('#list .app-card'); if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  $('#cat-sel').addEventListener('change', function (e) { setCat(e.target.value); });
+  $('#share-lib').addEventListener('click', function () { EDU.share(EDU.shareUrl(), t('doc_title')); });
 
-  function renderAll() { renderStatic(); renderAud(); renderCta(); renderCats(); renderList(); }
+  function renderAll() { renderStatic(); renderAud(); renderCats(); renderList(); }
   EDU.onLang(renderAll);
   renderAll();
   syncUrl();

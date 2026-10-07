@@ -64,12 +64,12 @@
   var badge = null, total = null;
   function render() {
     if (total === null) return;
-    var foot = document.querySelector('.edu-foot-in');
+    var foot = document.querySelector('.edu-foot-about') || document.querySelector('.edu-foot-in');
     if (!foot) return;
     if (!badge) {
       badge = document.createElement('span');
       badge.className = 'edu-visits';
-      badge.style.cssText = 'white-space:nowrap;opacity:.85';
+      badge.style.cssText = 'white-space:nowrap;opacity:.85;display:block';
       foot.appendChild(badge);
     }
     var L = EDU.lang || 'en', fmt;

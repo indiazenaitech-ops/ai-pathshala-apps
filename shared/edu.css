@@ -136,6 +136,36 @@ code, kbd, pre, .mono { font-family: var(--mono); }
 .edu-foot a { color: var(--primary); text-decoration: none; font-weight: 600; }
 .edu-foot-links { display: inline-flex; flex-wrap: wrap; gap: 6px 18px; }
 
+/* ---------- site menu + site footer (pages that call EDU.init({ nav: ... }): home, schools, business, about, contact) ---------- */
+.edu-sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.edu-nav { display: flex; align-items: center; gap: 2px; flex: 1 1 auto; min-width: 0; margin-inline-start: 10px; }
+.edu-nav-a { color: var(--muted); text-decoration: none; font-weight: 600; font-size: .92rem; padding: 7px 11px; border-radius: 9px; white-space: nowrap; }
+.edu-nav-a:hover { color: var(--text); background: var(--surface-2); }
+.edu-nav-a[aria-current="page"] { color: var(--primary); background: var(--primary-soft); }
+.edu-nav-ext { font-size: .8em; opacity: .7; }
+.edu-site .edu-tools { margin-inline-start: 0; }
+@media (max-width: 1060px) {
+  .edu-site .edu-top-in { row-gap: 4px; }
+  .edu-site .edu-tools { margin-inline-start: auto; }
+  .edu-nav { order: 5; flex-basis: 100%; margin: 0 -16px; padding: 0 12px 2px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .edu-nav::-webkit-scrollbar { display: none; }
+  .edu-nav-a { padding: 6px 10px; font-size: .9rem; }
+}
+@media (max-width: 560px) { .edu-site .edu-brand .edu-brand-txt { display: inline; font-size: .9rem; } }
+@media (max-width: 380px) { .edu-site .edu-brand .edu-brand-txt { display: none; } }
+.edu-foot-site { margin-top: 24px; }
+.edu-foot-site .edu-foot-in { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: 24px 32px; align-items: start; padding: 32px 16px 28px; }
+.edu-foot-col h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text); margin: 0 0 10px; }
+:root:not([lang="en"]) .edu-foot-col h2 { text-transform: none; letter-spacing: 0; font-size: .9rem; }
+.edu-foot-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.edu-foot-site a { font-weight: 500; color: var(--muted); }
+.edu-foot-site a:hover { color: var(--primary); text-decoration: underline; }
+.edu-foot-about .edu-brand { color: var(--text); font-weight: 700; margin-bottom: 8px; }
+.edu-foot-about p { margin: 0 0 8px; max-width: 40ch; }
+.edu-foot-free { font-size: .82rem; }
+@media (max-width: 760px) { .edu-foot-site .edu-foot-in { grid-template-columns: 1fr 1fr; } .edu-foot-about { grid-column: 1 / -1; } }
+:root[lang="ur"] .edu-foot-col h2, :root[lang="ur"] .edu-nav-a { line-height: 2; }
+
 /* ---------- "get updates" reminder (EDU shell, app pages only; see ctaInit in edu.js) ----------
    Never on first paint, never in full screen / projector mode, never over content: on wide screens a small pill in
    the header (it takes room from the title only), on phones and tablets a bar in the page flow above the footer. */

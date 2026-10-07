@@ -10,7 +10,7 @@ const fs = require('fs'), path = require('path'), http = require('http'), vm = r
 const { chromium } = require('playwright-core');
 const ROOT = path.resolve(__dirname, '..');
 const LANGS = ['en', 'hi', 'bn', 'mr', 'gu', 'pa', 'or', 'ta', 'te', 'kn', 'ml', 'ur'];
-const PAGES = { schools: ['schools.html', 'SCHOOLS_STRINGS', 'shared/schools-strings.js'] };
+const PAGES = { schools: ['schools.html', 'SCHOOLS_STRINGS', 'shared/schools-strings.js'], business: ['business.html', 'BUSINESS_STRINGS', 'shared/business-strings.js'], about: ['about.html', 'ABOUT_STRINGS', 'shared/about-strings.js'], contact: ['contact.html', 'CONTACT_STRINGS', 'shared/contact-strings.js'] };
 const SCRIPTS = { deva: /[\u0900-\u0963\u0966-\u097F]/, beng: /[\u0980-\u09FF]/, guru: /[\u0A00-\u0A7F]/, gujr: /[\u0A80-\u0AFF]/, orya: /[\u0B00-\u0B7F]/, taml: /[\u0B80-\u0BFF]/, telu: /[\u0C00-\u0C7F]/, knda: /[\u0C80-\u0CFF]/, mlym: /[\u0D00-\u0D7F]/, arab: /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/ };
 const LANG_SCRIPT = { hi: 'deva', mr: 'deva', bn: 'beng', pa: 'guru', gu: 'gujr', or: 'orya', ta: 'taml', te: 'telu', kn: 'knda', ml: 'mlym', ur: 'arab' };
 const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => fs.existsSync(p));

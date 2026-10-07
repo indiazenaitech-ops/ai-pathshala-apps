@@ -6,7 +6,7 @@
   var APPS = window.EDU_CATALOG || [];
   var BY = {}; APPS.forEach(function (a) { BY[a.slug] = a; });
 
-  EDU.init({ slug: 'business', title: 'page_title', strings: window.BUSINESS_STRINGS, waKey: 'wa_business', sharePath: 'business.html' });
+  EDU.init({ slug: 'business', title: 'page_title', nav: 'business', strings: window.BUSINESS_STRINGS, waKey: 'wa_business', sharePath: 'business.html' });
   var $ = EDU.$, el = EDU.el, t = EDU.t;
   var CONF = EDU.SITE || {};
 

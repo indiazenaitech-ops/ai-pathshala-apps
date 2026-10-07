@@ -8,7 +8,7 @@
   var BY = {}; APPS.forEach(function (a) { BY[a.slug] = a; });
   var SITE = Object.assign({}, window.EDU_SITE || {});
 
-  EDU.init({ slug: 'schools', title: 'page_title', strings: window.SCHOOLS_STRINGS, waKey: 'wa_schools', sharePath: 'schools.html' });
+  EDU.init({ slug: 'schools', title: 'page_title', nav: 'schools', strings: window.SCHOOLS_STRINGS, waKey: 'wa_schools', sharePath: 'schools.html' });
   var $ = EDU.$, el = EDU.el, t = EDU.t;
   var CONF = EDU.SITE || {};
 
