@@ -2926,584 +2926,584 @@ window.APP_CONTENT = {
   ml: {
     scenarios: {
       ceo_gift: {
-        title: "Boss on a new number wants gift cards",
-        ctx: "WhatsApp message to an accounts executive at 9 am. The profile photo is the MD's photo from the company website.",
-        who: "Rajesh Sir (new number)",
+        title: "പുതിയ നമ്പറിൽ നിന്ന് ബോസ് ഗിഫ്റ്റ് കാർഡുകൾ ചോദിക്കുന്നു",
+        ctx: "രാവിലെ 9 മണിക്ക് അക്കൗണ്ട്‌സ് എക്സിക്യൂട്ടീവിന് WhatsApp മെസേജ്. പ്രൊഫൈൽ ചിത്രം കമ്പനി വെബ്സൈറ്റിലെ MD-യുടെ ചിത്രം.",
+        who: "രാജേഷ് സർ (പുതിയ നമ്പർ)",
         subject: "",
-        text: "Hi, this is Rajesh. [[sender|My old phone is damaged, I am using this number for now.]] I am in a meeting with a big client. [[money|Buy 10 gift cards of ₹5,000 each]] and send me the codes [[urgent|within 30 minutes]]. [[secret|Please don't discuss this with anyone, it is a surprise for the client.]]",
-        why: "Scammers copy the MD's photo from the website and write from a new number. A real boss never asks for gift-card codes or for secrecy. New number + urgency + secrecy is the classic \"CEO fraud\".",
-        todo: "Don't buy anything. Call your boss on the number saved in your phone, or walk to their cabin. Tell IT or your manager so the whole office is warned."
+        text: "ഹായ്, ഞാൻ രാജേഷ്. [[sender|എന്റെ പഴയ ഫോൺ കേടായി, ഇപ്പോൾ ഈ നമ്പറാണ് ഉപയോഗിക്കുന്നത്.]] ഒരു വലിയ ക്ലയന്റുമായി മീറ്റിംഗിലാണ്. [[money|₹5,000 വീതമുള്ള 10 ഗിഫ്റ്റ് കാർഡുകൾ വാങ്ങൂ]], കോഡുകൾ എനിക്ക് [[urgent|30 മിനിറ്റിനുള്ളിൽ]] അയയ്ക്കൂ. [[secret|ഇതിനെക്കുറിച്ച് ആരോടും പറയരുത്, ക്ലയന്റിനുള്ള സർപ്രൈസാണ്.]]",
+        why: "തട്ടിപ്പുകാർ വെബ്സൈറ്റിൽ നിന്ന് MD-യുടെ ചിത്രം എടുത്ത് പുതിയ നമ്പറിൽ നിന്ന് എഴുതുന്നു. യഥാർത്ഥ ബോസ് ഒരിക്കലും ഗിഫ്റ്റ്-കാർഡ് കോഡുകളോ രഹസ്യമോ ചോദിക്കില്ല. പുതിയ നമ്പർ + തിടുക്കം + രഹസ്യം = പഴയ \"CEO തട്ടിപ്പ്\".",
+        todo: "ഒന്നും വാങ്ങരുത്. ഫോണിൽ സേവ് ചെയ്ത നമ്പറിൽ ബോസിനെ വിളിക്കുക അല്ലെങ്കിൽ ക്യാബിനിലേക്ക് നേരിട്ട് പോകുക. ഓഫീസ് മുഴുവൻ ജാഗ്രത പാലിക്കാൻ IT-യോടോ മാനേജരോടോ പറയുക."
       },
       it_real: {
-        title: "Password policy notice from IT",
-        ctx: "An email to all staff from the company's own IT helpdesk.",
-        who: "IT Helpdesk",
-        subject: "Password policy change from 15 October",
-        text: "Dear colleagues, from 15 October passwords must be at least 12 characters long. [[ok|You do not need to do anything today.]] When your password expires, change it [[ok|on the office portal you normally use]]. [[ok|IT will never ask for your password by email, phone or WhatsApp.]] For doubts, visit the helpdesk on the 2nd floor.",
-        why: "The sender is the company's own IT address. There is no link to click, no attachment, no deadline and no request for a password. Genuine notices tell you what will happen and let you use the normal portal yourself.",
-        todo: "Nothing urgent. If you are unsure whether a notice is real, walk to the helpdesk or call the extension number you already know."
+        title: "IT-യിൽ നിന്ന് പാസ്‌വേഡ് നയ അറിയിപ്പ്",
+        ctx: "കമ്പനിയുടെ സ്വന്തം IT ഹെൽപ്‌ഡെസ്കിൽ നിന്ന് എല്ലാ ജീവനക്കാർക്കും ഇമെയിൽ.",
+        who: "IT ഹെൽപ്‌ഡെസ്ക്",
+        subject: "ഒക്ടോബർ 15 മുതൽ പാസ്‌വേഡ് നയത്തിൽ മാറ്റം",
+        text: "പ്രിയ സഹപ്രവർത്തകരേ, ഒക്ടോബർ 15 മുതൽ പാസ്‌വേഡിന് കുറഞ്ഞത് 12 അക്ഷരങ്ങൾ വേണം. [[ok|ഇന്ന് നിങ്ങൾ ഒന്നും ചെയ്യേണ്ടതില്ല.]] പാസ്‌വേഡ് കാലാവധി തീരുമ്പോൾ അത് [[ok|നിങ്ങൾ സാധാരണ ഉപയോഗിക്കുന്ന അതേ ഓഫീസ് പോർട്ടലിൽ മാറ്റുക]]. [[ok|IT ഒരിക്കലും ഇമെയിൽ, ഫോൺ അല്ലെങ്കിൽ WhatsApp വഴി നിങ്ങളുടെ പാസ്‌വേഡ് ചോദിക്കില്ല.]] സംശയങ്ങൾക്ക് രണ്ടാം നിലയിലെ ഹെൽപ്‌ഡെസ്കിൽ വരൂ.",
+        why: "അയച്ചത് കമ്പനിയുടെ സ്വന്തം IT വിലാസം. ക്ലിക്ക് ചെയ്യാൻ ലിങ്കില്ല, അറ്റാച്ച്‌മെന്റില്ല, സമയപരിധിയില്ല, പാസ്‌വേഡ് ചോദിക്കുന്നില്ല. യഥാർത്ഥ അറിയിപ്പുകൾ എന്തു സംഭവിക്കുമെന്ന് പറയുകയും സാധാരണ പോർട്ടൽ സ്വയം ഉപയോഗിക്കാൻ അനുവദിക്കുകയും ചെയ്യുന്നു.",
+        todo: "അടിയന്തരമായി ഒന്നുമില്ല. ഒരു അറിയിപ്പ് യഥാർത്ഥമാണോ എന്ന് സംശയമുണ്ടെങ്കിൽ ഹെൽപ്‌ഡെസ്കിൽ പോകുക അല്ലെങ്കിൽ നേരത്തേ അറിയാവുന്ന എക്സ്റ്റൻഷൻ നമ്പറിൽ വിളിക്കുക."
       },
       bec_vendor: {
-        title: "Vendor says its bank account has changed",
-        ctx: "An email to the accounts team about a pending invoice of ₹4,80,000.",
-        who: "Kaveri Logistics Accounts",
-        subject: "URGENT: Updated bank details for Invoice KL/2026/0912",
-        text: "Dear Sir/Madam, [[newacct|our company bank account has changed after an audit. Please pay the pending invoice of ₹4,80,000 to the new account given below.]] [[urgent|Payment must be released today]] to avoid delay of your shipment. [[sender|Kindly reply only to this email ID]], our office phones are under maintenance.",
-        why: "This is Business Email Compromise (BEC). Criminals hack or copy a vendor's email and send \"new bank details\". The address is slightly different from the real vendor, the phones \"are not working\" so you cannot verify, and everything is urgent.",
-        todo: "Never change a vendor's bank details because of an email. Call the vendor on the number from your old records or purchase order, never the number in the email. Use two-person approval for every bank-detail change."
+        title: "ബാങ്ക് അക്കൗണ്ട് മാറിയെന്ന് വെണ്ടർ പറയുന്നു",
+        ctx: "₹4,80,000 കുടിശ്ശിക ഇൻവോയ്‌സിനെക്കുറിച്ച് അക്കൗണ്ട്‌സ് ടീമിന് ഇമെയിൽ.",
+        who: "കാവേരി ലോജിസ്റ്റിക്സ് അക്കൗണ്ട്‌സ്",
+        subject: "അടിയന്തരം: ഇൻവോയ്‌സ് KL/2026/0912-ന് പുതിയ ബാങ്ക് വിവരങ്ങൾ",
+        text: "പ്രിയ സർ/മാഡം, [[newacct|ഓഡിറ്റിനു ശേഷം ഞങ്ങളുടെ കമ്പനിയുടെ ബാങ്ക് അക്കൗണ്ട് മാറി. ₹4,80,000 കുടിശ്ശിക ഇൻവോയ്‌സ് താഴെ നൽകിയ പുതിയ അക്കൗണ്ടിലേക്ക് അടയ്ക്കുക.]] ഷിപ്‌മെന്റ് വൈകാതിരിക്കാൻ [[urgent|പേയ്‌മെന്റ് ഇന്നുതന്നെ റിലീസ് ചെയ്യുക]]. [[sender|ദയവായി ഈ ഇമെയിൽ ID-യിലേക്ക് മാത്രം മറുപടി നൽകുക]], ഞങ്ങളുടെ ഓഫീസ് ഫോണുകൾ അറ്റകുറ്റപ്പണിയിലാണ്.",
+        why: "ഇത് ബിസിനസ് ഇമെയിൽ കോംപ്രമൈസ് (BEC) ആണ്. കുറ്റവാളികൾ വെണ്ടറുടെ ഇമെയിൽ ഹാക്ക് ചെയ്തോ പകർത്തിയോ \"പുതിയ ബാങ്ക് വിവരങ്ങൾ\" അയയ്ക്കുന്നു. വിലാസം യഥാർത്ഥ വെണ്ടറിൽ നിന്ന് അൽപം വ്യത്യസ്തം, നിങ്ങൾ ഉറപ്പാക്കാതിരിക്കാൻ ഫോണുകൾ \"പ്രവർത്തിക്കുന്നില്ല\", എല്ലാം അടിയന്തരം.",
+        todo: "ഒരു ഇമെയിലിന്റെ പേരിൽ വെണ്ടറുടെ ബാങ്ക് വിവരങ്ങൾ ഒരിക്കലും മാറ്റരുത്. പഴയ രേഖകളിലോ പർച്ചേസ് ഓർഡറിലോ ഉള്ള നമ്പറിൽ വെണ്ടറെ വിളിക്കുക, ഇമെയിലിലെ നമ്പറിൽ ഒരിക്കലും അല്ല. ഓരോ ബാങ്ക് വിവര മാറ്റത്തിനും രണ്ടുപേരുടെ അംഗീകാരം വയ്ക്കുക."
       },
       gst_notice: {
-        title: "GST penalty notice with an attachment",
-        ctx: "An email to the accounts mailbox early in the morning.",
-        who: "GST Department",
-        subject: "Show Cause Notice - Penalty ₹1,24,500 - Action required",
-        text: "[[odd|Dear Taxpayer,]] a mismatch is found in your GST returns. A penalty of ₹1,24,500 is due. [[threat|Your GSTIN will be suspended in 48 hours]] if it is not paid. [[link|Open the attached notice and pay through the secure link]] to avoid legal action. [[attach|Attachment: GST_Notice_2026.html]]",
-        why: "Real GST notices appear in your account on the official GST portal and carry a DIN (Document Identification Number). An HTML attachment with a \"secure link\" is a fake login page that steals your GST login or payment details. The sender is not the official gov.in domain.",
-        todo: "Don't open the attachment. Log in to the official GST portal yourself by typing the address, or ask your CA to check. Report the email to IT and at cybercrime.gov.in."
+        title: "അറ്റാച്ച്‌മെന്റോടുകൂടിയ GST പിഴ നോട്ടീസ്",
+        ctx: "അതിരാവിലെ അക്കൗണ്ട്‌സ് മെയിൽബോക്സിൽ വന്ന ഇമെയിൽ.",
+        who: "GST വകുപ്പ്",
+        subject: "കാരണം കാണിക്കൽ നോട്ടീസ് - പിഴ ₹1,24,500 - നടപടി ആവശ്യം",
+        text: "[[odd|പ്രിയ നികുതിദായകാ,]] നിങ്ങളുടെ GST റിട്ടേണുകളിൽ പൊരുത്തക്കേട് കണ്ടെത്തി. ₹1,24,500 പിഴ അടയ്ക്കണം. അടച്ചില്ലെങ്കിൽ [[threat|നിങ്ങളുടെ GSTIN 48 മണിക്കൂറിനുള്ളിൽ സസ്‌പെൻഡ് ചെയ്യും]]. നിയമനടപടി ഒഴിവാക്കാൻ [[link|അറ്റാച്ച് ചെയ്ത നോട്ടീസ് തുറന്ന് സുരക്ഷിത ലിങ്ക് വഴി അടയ്ക്കുക]]. [[attach|അറ്റാച്ച്‌മെന്റ്: GST_Notice_2026.html]]",
+        why: "യഥാർത്ഥ GST നോട്ടീസുകൾ ഔദ്യോഗിക GST പോർട്ടലിൽ നിങ്ങളുടെ അക്കൗണ്ടിൽ കാണാം, അവയിൽ DIN (ഡോക്യുമെന്റ് ഐഡന്റിഫിക്കേഷൻ നമ്പർ) ഉണ്ടാകും. \"സുരക്ഷിത ലിങ്ക്\" ഉള്ള HTML അറ്റാച്ച്‌മെന്റ് നിങ്ങളുടെ GST ലോഗിനോ പേയ്‌മെന്റ് വിവരങ്ങളോ മോഷ്ടിക്കുന്ന വ്യാജ ലോഗിൻ പേജാണ്. അയച്ചത് ഔദ്യോഗിക gov.in ഡൊമെയ്‌നല്ല.",
+        todo: "അറ്റാച്ച്‌മെന്റ് തുറക്കരുത്. വിലാസം സ്വയം ടൈപ്പ് ചെയ്ത് ഔദ്യോഗിക GST പോർട്ടലിൽ ലോഗിൻ ചെയ്യുക, അല്ലെങ്കിൽ CA-യോട് പരിശോധിക്കാൻ പറയുക. ഇമെയിൽ IT-ക്കും cybercrime.gov.in-ലും റിപ്പോർട്ട് ചെയ്യുക."
       },
       otp_real: {
-        title: "OTP for a payment you just started",
-        ctx: "You have just started a UPI payment of ₹2,500 to your packaging vendor. This SMS arrives.",
+        title: "നിങ്ങൾ ഇപ്പോൾ തുടങ്ങിയ പേയ്‌മെന്റിനുള്ള OTP",
+        ctx: "പാക്കേജിംഗ് വെണ്ടർക്ക് ₹2,500 UPI പേയ്‌മെന്റ് നിങ്ങൾ ഇപ്പോൾ തുടങ്ങി. ഈ SMS വരുന്നു.",
         who: "",
         subject: "",
-        text: "[[ok|Your OTP for the UPI payment of ₹2,500 to Sunrise Packaging that you just started is 482913.]] Valid for 10 minutes. [[ok|Do not share this OTP with anyone, not even the bank.]] - NovaBank",
-        why: "You started this payment yourself a moment ago, the amount and the payee match, and the message tells you not to share the code. A genuine OTP is only for the action you yourself requested, and the bank never asks you to tell it to anyone.",
-        todo: "Type the OTP only in the app you are using. If an OTP arrives when you did not start anything, somebody is trying to use your account: do not share it, and call the bank on the number printed on your card."
+        text: "[[ok|നിങ്ങൾ ഇപ്പോൾ തുടങ്ങിയ Sunrise Packaging-ലേക്കുള്ള ₹2,500 UPI പേയ്‌മെന്റിന് നിങ്ങളുടെ OTP 482913.]] 10 മിനിറ്റ് സാധുത. [[ok|ഈ OTP ആരോടും പങ്കിടരുത്, ബാങ്കിനോട് പോലും.]] - NovaBank",
+        why: "ഈ പേയ്‌മെന്റ് നിങ്ങൾ തന്നെ ഒരു നിമിഷം മുമ്പ് തുടങ്ങി, തുകയും സ്വീകർത്താവും ഒത്തുപോകുന്നു, കോഡ് പങ്കിടരുതെന്ന് മെസേജ് പറയുന്നു. യഥാർത്ഥ OTP നിങ്ങൾ സ്വയം ആവശ്യപ്പെട്ട പ്രവൃത്തിക്ക് മാത്രമാണ്, അത് ആരോടെങ്കിലും പറയാൻ ബാങ്ക് ഒരിക്കലും ആവശ്യപ്പെടില്ല.",
+        todo: "നിങ്ങൾ ഉപയോഗിക്കുന്ന ആപ്പിൽ മാത്രം OTP ടൈപ്പ് ചെയ്യുക. നിങ്ങൾ ഒന്നും തുടങ്ങാതെ OTP വന്നാൽ, ആരോ നിങ്ങളുടെ അക്കൗണ്ട് ഉപയോഗിക്കാൻ ശ്രമിക്കുന്നു: അത് പങ്കിടരുത്, കാർഡിൽ അച്ചടിച്ച നമ്പറിൽ ബാങ്കിനെ വിളിക്കുക."
       },
       digital_arrest: {
-        title: "Video call from a \"CBI officer\"",
-        ctx: "A video call from an unknown number. The caller wears a uniform and sits in an office with a flag behind him.",
-        who: "\"CBI Officer Verma\"",
+        title: "\"CBI ഉദ്യോഗസ്ഥനിൽ\" നിന്ന് വീഡിയോ കോൾ",
+        ctx: "അജ്ഞാത നമ്പറിൽ നിന്ന് വീഡിയോ കോൾ. വിളിക്കുന്നയാൾ യൂണിഫോം ധരിച്ച്, പിന്നിൽ പതാകയുള്ള ഓഫീസിൽ ഇരിക്കുന്നു.",
+        who: "\"CBI ഉദ്യോഗസ്ഥൻ വർമ\"",
         subject: "",
-        text: "\"[[threat|A parcel with drugs and 6 passports was booked in your name. A case is registered against you.]] [[urgent|Stay on this video call, do not disconnect]], and [[secret|do not tell anyone, not even your family, they are also under watch]]. [[money|Transfer ₹3,50,000 to this RBI verification account for checking]]; it will be returned after the investigation.\"",
-        why: "This is a \"digital arrest\". No police, CBI or court arrests anyone on a video call, and no agency asks you to transfer money to a \"verification account\". The uniform, office background and ID card are all fake. Secrecy and keeping you on the call stop you from thinking.",
-        todo: "Hang up at once. Real officers do not call on WhatsApp. Call 1930 or report at cybercrime.gov.in, and tell a colleague or family member immediately."
+        text: "\"[[threat|മയക്കുമരുന്നും 6 പാസ്‌പോർട്ടുകളുമുള്ള ഒരു പാഴ്സൽ നിങ്ങളുടെ പേരിൽ ബുക്ക് ചെയ്തിട്ടുണ്ട്. നിങ്ങൾക്കെതിരെ കേസ് രജിസ്റ്റർ ചെയ്തു.]] [[urgent|ഈ വീഡിയോ കോളിൽ തന്നെ തുടരുക, കട്ട് ചെയ്യരുത്]], [[secret|ആരോടും പറയരുത്, കുടുംബത്തോട് പോലും, അവരും നിരീക്ഷണത്തിലാണ്]]. [[money|പരിശോധനയ്ക്കായി ₹3,50,000 ഈ RBI വെരിഫിക്കേഷൻ അക്കൗണ്ടിലേക്ക് ട്രാൻസ്ഫർ ചെയ്യുക]]; അന്വേഷണത്തിനു ശേഷം തിരികെ നൽകും.\"",
+        why: "ഇതാണ് \"ഡിജിറ്റൽ അറസ്റ്റ്\". ഒരു പോലീസും CBI-യും കോടതിയും വീഡിയോ കോളിൽ ആരെയും അറസ്റ്റ് ചെയ്യില്ല, ഒരു ഏജൻസിയും \"വെരിഫിക്കേഷൻ അക്കൗണ്ടിലേക്ക്\" പണം അയയ്ക്കാൻ പറയില്ല. യൂണിഫോം, ഓഫീസ് പശ്ചാത്തലം, ID കാർഡ് എല്ലാം വ്യാജം. രഹസ്യവും കോളിൽ പിടിച്ചുനിർത്തലും നിങ്ങളെ ചിന്തിക്കാൻ അനുവദിക്കില്ല.",
+        todo: "ഉടൻ ഫോൺ കട്ട് ചെയ്യുക. യഥാർത്ഥ ഉദ്യോഗസ്ഥർ WhatsApp-ൽ വിളിക്കില്ല. 1930 വിളിക്കുക അല്ലെങ്കിൽ cybercrime.gov.in-ൽ പരാതിപ്പെടുക, ഉടൻ ഒരു സഹപ്രവർത്തകനോടോ കുടുംബാംഗത്തോടോ പറയുക."
       },
       courier: {
-        title: "Call: your parcel is held at customs",
-        ctx: "A recorded voice, then a person. You have not ordered anything from abroad.",
-        who: "\"SpeedParcel Customer Service\"",
+        title: "കോൾ: നിങ്ങളുടെ പാഴ്സൽ കസ്റ്റംസിൽ തടഞ്ഞുവച്ചിരിക്കുന്നു",
+        ctx: "ആദ്യം റെക്കോർഡ് ചെയ്ത ശബ്ദം, പിന്നെ ഒരാൾ. നിങ്ങൾ വിദേശത്തു നിന്ന് ഒന്നും ഓർഡർ ചെയ്തിട്ടില്ല.",
+        who: "\"SpeedParcel കസ്റ്റമർ സർവീസ്\"",
         subject: "",
-        text: "\"Hello, this is the customs department of SpeedParcel. [[threat|A parcel in your name is held at customs because it contains illegal items.]] To avoid a police case, [[urgent|press 1 now]] to speak to an officer, or [[money|pay the ₹2,999 clearance fee]] on the link we will send.\"",
-        why: "Courier companies do not call about illegal items, and customs does not collect fees by phone. Pressing 1 connects you to a fake \"officer\" who then tries a digital-arrest scam or asks for payments.",
-        todo: "Cut the call. If you really ordered something, check the tracking number on the courier's official website. Report the number on the Sanchar Saathi (Chakshu) portal."
+        text: "\"നമസ്കാരം, ഞാൻ SpeedParcel കസ്റ്റംസ് വിഭാഗത്തിൽ നിന്നാണ്. [[threat|നിങ്ങളുടെ പേരിലുള്ള പാഴ്സലിൽ നിയമവിരുദ്ധ വസ്തുക്കൾ ഉള്ളതിനാൽ കസ്റ്റംസിൽ തടഞ്ഞുവച്ചിരിക്കുന്നു.]] പോലീസ് കേസ് ഒഴിവാക്കാൻ ഉദ്യോഗസ്ഥനോട് സംസാരിക്കാൻ [[urgent|ഇപ്പോൾ തന്നെ 1 അമർത്തുക]], അല്ലെങ്കിൽ ഞങ്ങൾ അയയ്ക്കുന്ന ലിങ്കിൽ [[money|₹2,999 ക്ലിയറൻസ് ഫീസ് അടയ്ക്കുക]].\"",
+        why: "കൊറിയർ കമ്പനികൾ നിയമവിരുദ്ധ വസ്തുക്കളെക്കുറിച്ച് വിളിക്കില്ല, കസ്റ്റംസ് ഫോണിൽ ഫീസ് പിരിക്കില്ല. 1 അമർത്തിയാൽ വ്യാജ \"ഉദ്യോഗസ്ഥനുമായി\" ബന്ധിപ്പിക്കും, അയാൾ പിന്നീട് ഡിജിറ്റൽ അറസ്റ്റ് തട്ടിപ്പോ പേയ്‌മെന്റോ ആവശ്യപ്പെടും.",
+        todo: "കോൾ കട്ട് ചെയ്യുക. ശരിക്കും എന്തെങ്കിലും ഓർഡർ ചെയ്തിട്ടുണ്ടെങ്കിൽ കൊറിയറിന്റെ ഔദ്യോഗിക വെബ്സൈറ്റിൽ ട്രാക്കിംഗ് നമ്പർ പരിശോധിക്കുക. ആ നമ്പർ സഞ്ചാർ സാഥി (ചക്ഷു) പോർട്ടലിൽ റിപ്പോർട്ട് ചെയ്യുക."
       },
       task_job: {
-        title: "Telegram job: earn ₹8,000 a day rating hotels",
-        ctx: "A Telegram message after you applied for jobs online last week.",
-        who: "HR Priya - Online Jobs",
+        title: "Telegram ജോലി: ഹോട്ടലുകൾക്ക് റേറ്റിംഗ് നൽകി ദിവസം ₹8,000",
+        ctx: "കഴിഞ്ഞ ആഴ്ച ഓൺലൈനിൽ ജോലിക്ക് അപേക്ഷിച്ച ശേഷം വന്ന Telegram മെസേജ്.",
+        who: "HR പ്രിയ - ഓൺലൈൻ ജോബ്‌സ്",
         subject: "",
-        text: "Congratulations, you are selected! [[prize|Earn ₹3,000 to ₹8,000 daily by rating hotels online]], only 20 minutes of work. The first 3 tasks are free. For premium tasks you [[money|deposit ₹5,000 and get back ₹7,500 within one hour]]. [[urgent|Only 4 seats left today!]]",
-        why: "This is a task scam. The first small payments are real, to build trust. Then you \"deposit\" for premium tasks and the money never comes back. No real job pays you to click, and no employer asks you to deposit money.",
-        todo: "Don't deposit anything. Block and report the account. If you have already paid, call 1930 immediately; the first hour matters most."
+        text: "അഭിനന്ദനങ്ങൾ, നിങ്ങളെ തിരഞ്ഞെടുത്തു! [[prize|ഓൺലൈനിൽ ഹോട്ടലുകൾക്ക് റേറ്റിംഗ് നൽകി ദിവസം ₹3,000 മുതൽ ₹8,000 വരെ സമ്പാദിക്കൂ]], വെറും 20 മിനിറ്റ് ജോലി. ആദ്യ 3 ടാസ്കുകൾ സൗജന്യം. പ്രീമിയം ടാസ്കുകൾക്ക് [[money|₹5,000 ഡെപ്പോസിറ്റ് ചെയ്ത് ഒരു മണിക്കൂറിനുള്ളിൽ ₹7,500 തിരികെ നേടൂ]]. [[urgent|ഇന്ന് 4 സീറ്റുകൾ മാത്രം ബാക്കി!]]",
+        why: "ഇതൊരു ടാസ്ക് തട്ടിപ്പാണ്. വിശ്വാസം നേടാൻ ആദ്യത്തെ ചെറിയ പേയ്‌മെന്റുകൾ യഥാർത്ഥത്തിൽ വരും. പിന്നെ പ്രീമിയം ടാസ്കുകൾക്കായി നിങ്ങൾ \"ഡെപ്പോസിറ്റ്\" ചെയ്യും, പണം ഒരിക്കലും തിരികെ വരില്ല. ഒരു യഥാർത്ഥ ജോലിയും ക്ലിക്ക് ചെയ്യുന്നതിന് പണം നൽകില്ല, ഒരു തൊഴിലുടമയും ഡെപ്പോസിറ്റ് ചോദിക്കില്ല.",
+        todo: "ഒന്നും ഡെപ്പോസിറ്റ് ചെയ്യരുത്. അക്കൗണ്ട് ബ്ലോക്ക് ചെയ്ത് റിപ്പോർട്ട് ചെയ്യുക. നേരത്തേ പണം അടച്ചെങ്കിൽ ഉടൻ 1930 വിളിക്കുക; ആദ്യ മണിക്കൂറാണ് ഏറ്റവും പ്രധാനം."
       },
       vendor_real: {
-        title: "Payment reminder from a known vendor",
-        ctx: "An email from the packaging vendor you pay every month, from their usual address.",
-        who: "Sunrise Packaging Billing",
-        subject: "Payment reminder - Invoice SP/26-27/0431 due 10 Oct",
-        text: "Dear Meridian Textiles team, this is a gentle reminder that invoice SP/26-27/0431 for ₹86,000 is due on 10 October. [[ok|Our bank details are unchanged and are printed on the invoice you already have.]] [[ok|If you receive any email asking to change our bank account, please call our office on the number in your records before paying.]] Thank you.",
-        why: "A regular reminder from the known vendor address, no new bank details, no threat, and the vendor itself asks you to verify by phone if anything looks different. That is exactly how a genuine partner behaves.",
-        todo: "Pay through your normal process to the account already in your records. Any change request should be confirmed on a known phone number."
+        title: "അറിയാവുന്ന വെണ്ടറിൽ നിന്ന് പേയ്‌മെന്റ് ഓർമ്മപ്പെടുത്തൽ",
+        ctx: "നിങ്ങൾ എല്ലാ മാസവും പണം നൽകുന്ന പാക്കേജിംഗ് വെണ്ടറുടെ സാധാരണ വിലാസത്തിൽ നിന്ന് ഇമെയിൽ.",
+        who: "Sunrise Packaging ബില്ലിംഗ്",
+        subject: "പേയ്‌മെന്റ് ഓർമ്മപ്പെടുത്തൽ - ഇൻവോയ്‌സ് SP/26-27/0431, ഒക്ടോബർ 10 അവസാന തീയതി",
+        text: "പ്രിയ മെറിഡിയൻ ടെക്സ്റ്റൈൽസ് ടീം, ₹86,000-ന്റെ ഇൻവോയ്‌സ് SP/26-27/0431 ഒക്ടോബർ 10-ന് അടയ്ക്കേണ്ടതാണെന്ന് സൗമ്യമായി ഓർമ്മിപ്പിക്കുന്നു. [[ok|ഞങ്ങളുടെ ബാങ്ക് വിവരങ്ങൾ മാറിയിട്ടില്ല, നിങ്ങളുടെ കൈയിലുള്ള ഇൻവോയ്‌സിൽ അച്ചടിച്ചിട്ടുണ്ട്.]] [[ok|ഞങ്ങളുടെ ബാങ്ക് അക്കൗണ്ട് മാറ്റാൻ ആവശ്യപ്പെടുന്ന ഏതെങ്കിലും ഇമെയിൽ വന്നാൽ, പണം നൽകും മുമ്പ് നിങ്ങളുടെ രേഖകളിലെ നമ്പറിൽ ഞങ്ങളുടെ ഓഫീസിനെ വിളിക്കുക.]] നന്ദി.",
+        why: "അറിയാവുന്ന വെണ്ടർ വിലാസത്തിൽ നിന്ന് പതിവ് ഓർമ്മപ്പെടുത്തൽ, പുതിയ ബാങ്ക് വിവരങ്ങളില്ല, ഭീഷണിയില്ല, എന്തെങ്കിലും വ്യത്യസ്തമായി തോന്നിയാൽ ഫോണിൽ ഉറപ്പാക്കാൻ വെണ്ടർ തന്നെ പറയുന്നു. യഥാർത്ഥ പങ്കാളി കൃത്യമായി ഇങ്ങനെയാണ് പെരുമാറുക.",
+        todo: "നിങ്ങളുടെ രേഖകളിലുള്ള അക്കൗണ്ടിലേക്ക് സാധാരണ രീതിയിൽ പണം നൽകുക. ഏത് മാറ്റ അഭ്യർത്ഥനയും അറിയാവുന്ന ഫോൺ നമ്പറിൽ ഉറപ്പാക്കുക."
       },
       deepfake: {
-        title: "The MD's voice asks for an urgent transfer",
-        ctx: "A phone call from an unknown number. The voice sounds exactly like your MD, with airport noise behind.",
-        who: "\"Rajesh Sir\" (the MD's voice)",
+        title: "MD-യുടെ ശബ്ദം അടിയന്തര ട്രാൻസ്ഫർ ആവശ്യപ്പെടുന്നു",
+        ctx: "അജ്ഞാത നമ്പറിൽ നിന്ന് ഫോൺ. ശബ്ദം കൃത്യമായി നിങ്ങളുടെ MD-യുടേത് പോലെ, പിന്നിൽ വിമാനത്താവളത്തിലെ ബഹളം.",
+        who: "\"രാജേഷ് സർ\" (MD-യുടെ ശബ്ദം)",
         subject: "",
-        text: "\"Hello, it's me, I am at the airport, you can hear it is noisy. [[urgent|I need you to transfer ₹2,00,000 right now]] to a new supplier for the Dubai order. [[newacct|I will WhatsApp you the account number.]] [[secret|Don't call me back, my phone is going on flight mode, just do it before I land.]]\"",
-        why: "AI can copy anyone's voice from a 30-second clip of a speech or video. A cloned voice plus a new account number plus \"don't call me back\" is a deepfake scam. The background noise is added on purpose.",
-        todo: "Say you will call back, then call the MD on the saved number or check with a second senior person. Agree on a code word in your team for urgent phone requests. No transfer without the normal approval."
+        text: "\"ഹലോ, ഞാനാണ്, എയർപോർട്ടിലാണ്, ബഹളം കേൾക്കുന്നില്ലേ. [[urgent|ഇപ്പോൾ തന്നെ ₹2,00,000 ട്രാൻസ്ഫർ ചെയ്യണം]] ദുബായ് ഓർഡറിനായി ഒരു പുതിയ സപ്ലയർക്ക്. [[newacct|അക്കൗണ്ട് നമ്പർ WhatsApp ചെയ്യാം.]] [[secret|എന്നെ തിരിച്ചു വിളിക്കരുത്, ഫോൺ ഫ്ലൈറ്റ് മോഡിലാകും, ഞാൻ ഇറങ്ങും മുമ്പ് ചെയ്തേക്കൂ.]]\"",
+        why: "ഒരു പ്രസംഗത്തിന്റെയോ വീഡിയോയുടെയോ 30 സെക്കൻഡ് ക്ലിപ്പിൽ നിന്ന് AI-ക്ക് ആരുടെ ശബ്ദവും പകർത്താനാകും. പകർത്തിയ ശബ്ദം + പുതിയ അക്കൗണ്ട് നമ്പർ + \"തിരിച്ചു വിളിക്കരുത്\" = ഡീപ്ഫേക്ക് തട്ടിപ്പ്. പശ്ചാത്തല ബഹളം മനഃപൂർവം ചേർക്കുന്നതാണ്.",
+        todo: "തിരിച്ചു വിളിക്കാമെന്ന് പറയുക, പിന്നെ സേവ് ചെയ്ത നമ്പറിൽ MD-യെ വിളിക്കുക അല്ലെങ്കിൽ മറ്റൊരു മുതിർന്നയാളോട് ഉറപ്പാക്കുക. ഫോണിലെ അടിയന്തര അഭ്യർത്ഥനകൾക്ക് ടീമിൽ ഒരു രഹസ്യവാക്ക് വയ്ക്കുക. സാധാരണ അംഗീകാരമില്ലാതെ ട്രാൻസ്ഫർ ഇല്ല."
       },
       qr_receive: {
-        title: "Buyer sends a QR code to \"receive\" money",
-        ctx: "You advertised 12 used office chairs on a classified-ads site. A buyer writes on WhatsApp.",
-        who: "Buyer for office chairs",
+        title: "പണം \"സ്വീകരിക്കാൻ\" വാങ്ങുന്നയാൾ QR കോഡ് അയയ്ക്കുന്നു",
+        ctx: "ഒരു ക്ലാസിഫൈഡ് സൈറ്റിൽ 12 പഴയ ഓഫീസ് കസേരകൾക്ക് പരസ്യം നൽകി. ഒരു വാങ്ങുന്നയാൾ WhatsApp-ൽ എഴുതുന്നു.",
+        who: "ഓഫീസ് കസേരകൾ വാങ്ങുന്നയാൾ",
         subject: "",
-        text: "Hi, I saw your ad for 12 used office chairs at ₹18,000. I will pay the full amount now. [[upi|I have sent a QR code: scan it and enter your UPI PIN to receive the money.]] [[odd|I am an army officer posted outside, so my friend will pick up the chairs.]] [[urgent|Please do it in the next 5 minutes, my network is weak.]]",
-        why: "You never scan a QR or enter a PIN to RECEIVE money. Scanning and entering the PIN PAYS the other person. The \"army officer\" story and the hurry are standard tricks on classified-ad sites.",
-        todo: "Refuse. Ask the buyer to send money to your UPI ID; you need to do nothing to receive it. Report the number in the app."
+        text: "ഹായ്, ₹18,000-ന് 12 പഴയ ഓഫീസ് കസേരകളുടെ നിങ്ങളുടെ പരസ്യം കണ്ടു. മുഴുവൻ തുകയും ഇപ്പോൾ തന്നെ നൽകാം. [[upi|ഞാൻ ഒരു QR കോഡ് അയച്ചിട്ടുണ്ട്: പണം സ്വീകരിക്കാൻ അത് സ്കാൻ ചെയ്ത് നിങ്ങളുടെ UPI PIN നൽകുക.]] [[odd|ഞാൻ പുറത്ത് പോസ്റ്റിംഗിലുള്ള സൈനിക ഓഫീസറാണ്, അതിനാൽ എന്റെ സുഹൃത്ത് കസേരകൾ എടുക്കും.]] [[urgent|ദയവായി അടുത്ത 5 മിനിറ്റിനുള്ളിൽ ചെയ്യൂ, എന്റെ നെറ്റ്‌വർക്ക് ദുർബലമാണ്.]]",
+        why: "പണം സ്വീകരിക്കാൻ നിങ്ങൾ ഒരിക്കലും QR സ്കാൻ ചെയ്യുകയോ PIN നൽകുകയോ ചെയ്യേണ്ടതില്ല. സ്കാൻ ചെയ്ത് PIN നൽകിയാൽ നിങ്ങൾ മറ്റേയാൾക്ക് പണം നൽകുകയാണ്. \"സൈനിക ഓഫീസർ\" കഥയും തിടുക്കവും ക്ലാസിഫൈഡ് സൈറ്റുകളിലെ സാധാരണ തന്ത്രങ്ങൾ.",
+        todo: "നിരസിക്കുക. നിങ്ങളുടെ UPI ID-യിലേക്ക് പണം അയയ്ക്കാൻ വാങ്ങുന്നയാളോട് പറയുക; പണം സ്വീകരിക്കാൻ നിങ്ങൾ ഒന്നും ചെയ്യേണ്ടതില്ല. ആപ്പിൽ ആ നമ്പർ റിപ്പോർട്ട് ചെയ്യുക."
       },
       fake_care: {
-        title: "Customer-care number found on search",
-        ctx: "A refund did not arrive. You searched online for the bank's customer care and called the first number shown.",
-        who: "\"NovaBank Customer Care\"",
+        title: "സെർച്ചിൽ കിട്ടിയ കസ്റ്റമർ കെയർ നമ്പർ",
+        ctx: "റീഫണ്ട് വന്നില്ല. ഓൺലൈനിൽ ബാങ്കിന്റെ കസ്റ്റമർ കെയർ തിരഞ്ഞ് ആദ്യം കണ്ട നമ്പറിൽ വിളിച്ചു.",
+        who: "\"NovaBank കസ്റ്റമർ കെയർ\"",
         subject: "",
-        text: "\"Thank you for calling NovaBank customer care. For your refund of ₹3,200 we need to verify you. [[otp|Please tell me your 16-digit card number, expiry date and the OTP you receive now.]] [[remote|Also install the Quick Support app I am sending so I can process it faster.]]\"",
-        why: "You called a fake number placed in search results or on a fake website. No bank asks for the full card number, expiry, CVV or OTP, and never asks you to install a remote-control app.",
-        todo: "Cut the call. Use only the number printed on the back of your card or inside the official app. Never install an app a caller asks for. If you shared anything, block the card in the app at once and call 1930."
+        text: "\"NovaBank കസ്റ്റമർ കെയറിനെ വിളിച്ചതിന് നന്ദി. ₹3,200 റീഫണ്ടിന് നിങ്ങളെ സ്ഥിരീകരിക്കണം. [[otp|ദയവായി നിങ്ങളുടെ 16 അക്ക കാർഡ് നമ്പർ, കാലാവധി തീയതി, ഇപ്പോൾ വരുന്ന OTP എന്നിവ പറയൂ.]] [[remote|ഞാൻ അയയ്ക്കുന്ന Quick Support ആപ്പും ഇൻസ്റ്റാൾ ചെയ്യൂ, അപ്പോൾ വേഗം ചെയ്യാം.]]\"",
+        why: "സെർച്ച് ഫലങ്ങളിലോ വ്യാജ വെബ്സൈറ്റിലോ ഇട്ട വ്യാജ നമ്പറിലാണ് നിങ്ങൾ വിളിച്ചത്. ഒരു ബാങ്കും മുഴുവൻ കാർഡ് നമ്പർ, കാലാവധി, CVV അല്ലെങ്കിൽ OTP ചോദിക്കില്ല, റിമോട്ട്-കൺട്രോൾ ആപ്പ് ഇൻസ്റ്റാൾ ചെയ്യാൻ ഒരിക്കലും പറയില്ല.",
+        todo: "കോൾ കട്ട് ചെയ്യുക. കാർഡിന്റെ പിന്നിൽ അച്ചടിച്ചതോ ഔദ്യോഗിക ആപ്പിലുള്ളതോ ആയ നമ്പർ മാത്രം ഉപയോഗിക്കുക. വിളിക്കുന്നയാൾ ചോദിക്കുന്ന ആപ്പ് ഒരിക്കലും ഇൻസ്റ്റാൾ ചെയ്യരുത്. എന്തെങ്കിലും പങ്കിട്ടെങ്കിൽ ഉടൻ ആപ്പിൽ കാർഡ് ബ്ലോക്ക് ചെയ്ത് 1930 വിളിക്കുക."
       },
       hr_real: {
-        title: "Diwali holiday list from HR",
-        ctx: "An email to all staff from the company's HR address.",
-        who: "HR Department",
-        subject: "Holiday list for Diwali week",
-        text: "Dear all, the office will be closed from 7 to 9 November for Diwali. [[ok|The full holiday list is on the HR page of the intranet]], the same page you use for leave. [[ok|No action is needed from you.]] Wishing everyone a happy and safe Diwali. - HR Team",
-        why: "Sent from the company's own HR address, information only, no link to an outside site, no attachment to open and nothing to fill in. Genuine notices do not need urgency.",
-        todo: "Nothing to do. If an email about holidays or a bonus asks you to log in or fill in bank details, treat that as a red flag and ask HR in person."
+        title: "HR-ൽ നിന്ന് ദീപാവലി അവധി പട്ടിക",
+        ctx: "കമ്പനിയുടെ HR വിലാസത്തിൽ നിന്ന് എല്ലാ ജീവനക്കാർക്കും ഇമെയിൽ.",
+        who: "HR വകുപ്പ്",
+        subject: "ദീപാവലി ആഴ്ചയിലെ അവധി പട്ടിക",
+        text: "എല്ലാവർക്കും നമസ്കാരം, ദീപാവലിക്കായി നവംബർ 7 മുതൽ 9 വരെ ഓഫീസ് അടച്ചിരിക്കും. [[ok|മുഴുവൻ അവധി പട്ടികയും ഇൻട്രാനെറ്റിലെ HR പേജിലുണ്ട്]], അവധിക്ക് നിങ്ങൾ ഉപയോഗിക്കുന്ന അതേ പേജ്. [[ok|നിങ്ങൾ ഒന്നും ചെയ്യേണ്ടതില്ല.]] എല്ലാവർക്കും സന്തോഷകരവും സുരക്ഷിതവുമായ ദീപാവലി ആശംസകൾ. - HR ടീം",
+        why: "കമ്പനിയുടെ സ്വന്തം HR വിലാസത്തിൽ നിന്ന്, വിവരം മാത്രം, പുറത്തെ സൈറ്റിലേക്ക് ലിങ്കില്ല, തുറക്കാൻ അറ്റാച്ച്‌മെന്റില്ല, പൂരിപ്പിക്കാൻ ഒന്നുമില്ല. യഥാർത്ഥ അറിയിപ്പുകൾക്ക് തിടുക്കം വേണ്ട.",
+        todo: "ഒന്നും ചെയ്യാനില്ല. അവധിയെക്കുറിച്ചോ ബോണസിനെക്കുറിച്ചോ ഉള്ള ഇമെയിൽ ലോഗിൻ ചെയ്യാനോ ബാങ്ക് വിവരങ്ങൾ പൂരിപ്പിക്കാനോ ആവശ്യപ്പെട്ടാൽ, അത് അപകട സൂചനയായി കണ്ട് HR-നോട് നേരിട്ട് ചോദിക്കുക."
       },
       screen_share: {
-        title: "\"UPI helpline\" wants to see your screen",
-        ctx: "A call minutes after a UPI payment failed and you complained on social media.",
-        who: "\"UPI Helpline\"",
+        title: "\"UPI ഹെൽപ്‌ലൈൻ\" നിങ്ങളുടെ സ്‌ക്രീൻ കാണാൻ ആഗ്രഹിക്കുന്നു",
+        ctx: "UPI പേയ്‌മെന്റ് പരാജയപ്പെട്ട് നിങ്ങൾ സോഷ്യൽ മീഡിയയിൽ പരാതിപ്പെട്ട് മിനിറ്റുകൾക്കകം വന്ന കോൾ.",
+        who: "\"UPI ഹെൽപ്‌ലൈൻ\"",
         subject: "",
-        text: "\"Sir, your UPI payment of ₹1,500 is stuck. I can fix it in 2 minutes. [[remote|Please install the screen-sharing app from the link I sent and read me the 9-digit code on the screen.]] Keep your banking app open, I only need to see it. [[otp|When the OTP comes, don't cut the call, I will guide you.]]\"",
-        why: "Remote-access and screen-sharing apps let the caller see and control your phone; the 9-digit code gives them full access. Together with an OTP they can empty the account within minutes. Genuine helplines never ask to see your screen.",
-        todo: "Cut the call and uninstall any app you installed. Complain only inside the official UPI or bank app. If money has moved, call 1930 and your bank immediately."
+        text: "\"സർ, നിങ്ങളുടെ ₹1,500 UPI പേയ്‌മെന്റ് കുടുങ്ങിയിരിക്കുന്നു. 2 മിനിറ്റിൽ ശരിയാക്കാം. [[remote|ഞാൻ അയച്ച ലിങ്കിൽ നിന്ന് സ്‌ക്രീൻ-ഷെയറിംഗ് ആപ്പ് ഇൻസ്റ്റാൾ ചെയ്ത് സ്‌ക്രീനിലെ 9 അക്ക കോഡ് എനിക്ക് വായിച്ചു തരൂ.]] ബാങ്കിംഗ് ആപ്പ് തുറന്നു വയ്ക്കൂ, എനിക്ക് കാണാൻ മാത്രം. [[otp|OTP വരുമ്പോൾ കോൾ കട്ട് ചെയ്യരുത്, ഞാൻ വഴികാട്ടാം.]]\"",
+        why: "റിമോട്ട്-ആക്‌സസ്, സ്‌ക്രീൻ-ഷെയറിംഗ് ആപ്പുകൾ വിളിക്കുന്നയാൾക്ക് നിങ്ങളുടെ ഫോൺ കാണാനും നിയന്ത്രിക്കാനും അവസരം നൽകുന്നു; 9 അക്ക കോഡ് പൂർണ ആക്‌സസ് നൽകും. OTP-യുമായി ചേർന്ന് മിനിറ്റുകൾക്കകം അക്കൗണ്ട് കാലിയാക്കാം. യഥാർത്ഥ ഹെൽപ്‌ലൈനുകൾ നിങ്ങളുടെ സ്‌ക്രീൻ കാണാൻ ഒരിക്കലും ചോദിക്കില്ല.",
+        todo: "കോൾ കട്ട് ചെയ്ത്, ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പ് നീക്കം ചെയ്യുക. ഔദ്യോഗിക UPI അല്ലെങ്കിൽ ബാങ്ക് ആപ്പിനുള്ളിൽ മാത്രം പരാതിപ്പെടുക. പണം പോയെങ്കിൽ ഉടൻ 1930-ലും ബാങ്കിലും വിളിക്കുക."
       },
       invoice_exe: {
-        title: "Invoice attachment ending in .exe",
-        ctx: "An email to the accounts mailbox from a company you do not remember buying from.",
+        title: ".exe-ൽ അവസാനിക്കുന്ന ഇൻവോയ്‌സ് അറ്റാച്ച്‌മെന്റ്",
+        ctx: "വാങ്ങിയതായി ഓർമ്മയില്ലാത്ത ഒരു കമ്പനിയിൽ നിന്ന് അക്കൗണ്ട്‌സ് മെയിൽബോക്സിലേക്ക് ഇമെയിൽ.",
         who: "Global Trade Supplies",
-        subject: "Invoice attached - please process",
-        text: "[[odd|Dear Sir,]] please find attached the invoice for the goods delivered last week. [[attach|Attachment: Invoice_Oct2026.pdf.exe (412 KB)]] [[urgent|Kindly process payment today]] and confirm. [[odd|Regards, Accounts Dept.]]",
-        why: "A file ending in .exe is a program, not a PDF; the \".pdf\" in the name is a disguise. Opening it installs malware or ransomware that can lock every computer in the office. A vague greeting and no company signature are extra warnings.",
-        todo: "Don't open the attachment. Report the email to IT. Check your records: did you actually buy from this company? Turn on \"show file extensions\" on office computers so such tricks are visible."
+        subject: "ഇൻവോയ്‌സ് അറ്റാച്ച് ചെയ്തിട്ടുണ്ട് - ദയവായി പ്രോസസ് ചെയ്യുക",
+        text: "[[odd|പ്രിയ സർ,]] കഴിഞ്ഞ ആഴ്ച എത്തിച്ച സാധനങ്ങളുടെ ഇൻവോയ്‌സ് അറ്റാച്ച് ചെയ്തിട്ടുണ്ട്. [[attach|അറ്റാച്ച്‌മെന്റ്: Invoice_Oct2026.pdf.exe (412 KB)]] [[urgent|ദയവായി ഇന്നുതന്നെ പേയ്‌മെന്റ് നടത്തൂ]], സ്ഥിരീകരിക്കൂ. [[odd|ആശംസകളോടെ, അക്കൗണ്ട്‌സ് വിഭാഗം.]]",
+        why: ".exe-ൽ അവസാനിക്കുന്ന ഫയൽ PDF അല്ല, ഒരു പ്രോഗ്രാമാണ്; പേരിലെ \".pdf\" ഒരു വേഷം മാത്രം. അത് തുറന്നാൽ ഓഫീസിലെ എല്ലാ കമ്പ്യൂട്ടറുകളും ലോക്ക് ചെയ്യാവുന്ന മാൽവെയറോ റാൻസംവെയറോ ഇൻസ്റ്റാൾ ആകും. അവ്യക്തമായ അഭിസംബോധനയും കമ്പനി ഒപ്പില്ലാത്തതും അധിക മുന്നറിയിപ്പുകൾ.",
+        todo: "അറ്റാച്ച്‌മെന്റ് തുറക്കരുത്. ഇമെയിൽ IT-ക്ക് റിപ്പോർട്ട് ചെയ്യുക. രേഖകൾ പരിശോധിക്കുക: ഈ കമ്പനിയിൽ നിന്ന് ശരിക്കും വാങ്ങിയോ? ഇത്തരം തന്ത്രങ്ങൾ കാണാൻ ഓഫീസ് കമ്പ്യൂട്ടറുകളിൽ \"ഫയൽ എക്സ്റ്റൻഷനുകൾ കാണിക്കുക\" ഓണാക്കുക."
       },
       echallan: {
-        title: "Traffic e-challan SMS with an app link",
-        ctx: "An SMS to the office driver's phone in the evening.",
+        title: "ആപ്പ് ലിങ്കോടുകൂടിയ ട്രാഫിക് ഇ-ചലാൻ SMS",
+        ctx: "വൈകുന്നേരം ഓഫീസ് ഡ്രൈവറുടെ ഫോണിൽ വന്ന SMS.",
         who: "",
         subject: "",
-        text: "Traffic e-Challan: your vehicle KA-05-XX-1234 was recorded jumping a signal on 1 October. [[money|Fine ₹1,000.]] [[urgent|Pay within 24 hours]] to avoid double fine and court summons. [[link|Download the official challan app: echallan-pay.example.net/app.apk]]",
-        why: "Real e-challan messages come from a government sender ID, not a personal mobile number, and never ask you to download an .apk file. The APK is a malicious app that reads your SMS and OTPs.",
-        todo: "Delete the message. Check challans only on the official government e-challan website or the state police app. Report the number on Sanchar Saathi (Chakshu)."
+        text: "ട്രാഫിക് ഇ-ചലാൻ: നിങ്ങളുടെ വാഹനം KA-05-XX-1234 ഒക്ടോബർ 1-ന് സിഗ്നൽ ലംഘിച്ചതായി രേഖപ്പെടുത്തി. [[money|പിഴ ₹1,000.]] ഇരട്ടി പിഴയും കോടതി സമൻസും ഒഴിവാക്കാൻ [[urgent|24 മണിക്കൂറിനുള്ളിൽ അടയ്ക്കുക]]. [[link|ഔദ്യോഗിക ചലാൻ ആപ്പ് ഡൗൺലോഡ് ചെയ്യുക: echallan-pay.example.net/app.apk]]",
+        why: "യഥാർത്ഥ ഇ-ചലാൻ മെസേജുകൾ സ്വകാര്യ മൊബൈൽ നമ്പറിൽ നിന്നല്ല, സർക്കാർ സെൻഡർ ID-യിൽ നിന്നാണ് വരിക, .apk ഫയൽ ഡൗൺലോഡ് ചെയ്യാൻ ഒരിക്കലും പറയില്ല. ആ APK നിങ്ങളുടെ SMS-ഉം OTP-യും വായിക്കുന്ന ദോഷകരമായ ആപ്പാണ്.",
+        todo: "മെസേജ് ഡിലീറ്റ് ചെയ്യുക. ചലാനുകൾ ഔദ്യോഗിക സർക്കാർ ഇ-ചലാൻ വെബ്സൈറ്റിലോ സംസ്ഥാന പോലീസ് ആപ്പിലോ മാത്രം പരിശോധിക്കുക. ആ നമ്പർ സഞ്ചാർ സാഥി (ചക്ഷു)-ൽ റിപ്പോർട്ട് ചെയ്യുക."
       },
       parcel_real: {
-        title: "Delivery update for a parcel you expect",
-        ctx: "You ordered packaging material last week. This SMS arrives.",
+        title: "നിങ്ങൾ പ്രതീക്ഷിക്കുന്ന പാഴ്സലിന്റെ ഡെലിവറി വിവരം",
+        ctx: "കഴിഞ്ഞ ആഴ്ച പാക്കേജിംഗ് സാധനങ്ങൾ ഓർഡർ ചെയ്തു. ഈ SMS വരുന്നു.",
         who: "",
         subject: "",
-        text: "SpeedParcel: your shipment SP48213 from Sunrise Packaging [[ok|will be delivered today between 2 pm and 5 pm.]] [[ok|No payment is due.]] [[ok|To track, use your shipment number on our website or app.]]",
-        why: "Sent from a registered sender ID (not a personal number), matches a parcel you expect, asks for no money and gives no link to tap. A genuine delivery message just informs you.",
-        todo: "Nothing to do. If a parcel message asks for a fee, a link or an app, stop and check on the official website using the shipment number."
+        text: "SpeedParcel: Sunrise Packaging-ൽ നിന്നുള്ള നിങ്ങളുടെ ഷിപ്‌മെന്റ് SP48213 [[ok|ഇന്ന് ഉച്ചയ്ക്ക് 2-നും 5-നും ഇടയിൽ ഡെലിവർ ചെയ്യും.]] [[ok|പേയ്‌മെന്റ് ഒന്നും ബാക്കിയില്ല.]] [[ok|ട്രാക്ക് ചെയ്യാൻ ഞങ്ങളുടെ വെബ്സൈറ്റിലോ ആപ്പിലോ ഷിപ്‌മെന്റ് നമ്പർ ഉപയോഗിക്കുക.]]",
+        why: "രജിസ്റ്റർ ചെയ്ത സെൻഡർ ID-യിൽ നിന്ന് (സ്വകാര്യ നമ്പറല്ല), പ്രതീക്ഷിക്കുന്ന പാഴ്സലുമായി ഒത്തുപോകുന്നു, പണം ചോദിക്കുന്നില്ല, ടാപ്പ് ചെയ്യാൻ ലിങ്ക് നൽകുന്നില്ല. യഥാർത്ഥ ഡെലിവറി മെസേജ് വിവരം മാത്രം നൽകും.",
+        todo: "ഒന്നും ചെയ്യാനില്ല. പാഴ്സൽ മെസേജ് ഫീസോ ലിങ്കോ ആപ്പോ ചോദിച്ചാൽ, നിർത്തി, ഷിപ്‌മെന്റ് നമ്പർ ഉപയോഗിച്ച് ഔദ്യോഗിക വെബ്സൈറ്റിൽ പരിശോധിക്കുക."
       },
       kyc: {
-        title: "KYC expired, account blocked today",
-        ctx: "An SMS to the owner's phone at night.",
+        title: "KYC കാലഹരണപ്പെട്ടു, അക്കൗണ്ട് ഇന്ന് ബ്ലോക്ക്",
+        ctx: "രാത്രി ഉടമയുടെ ഫോണിൽ വന്ന SMS.",
         who: "",
         subject: "",
-        text: "Dear customer, [[threat|your NovaBank account will be blocked today]] because your KYC has expired. [[urgent|Update immediately]] at [[link|novabank-kyc-update.example.net]] or [[sender|call our officer on 94XXX XXX51]].",
-        why: "Banks never send KYC links from a personal mobile number and never block an account within hours. The link opens a fake bank page that steals your login and OTP; the \"officer\" asks you to install an app.",
-        todo: "Don't tap the link or call. If KYC is really due, the bank's own app or branch will tell you. Report the SMS on Sanchar Saathi (Chakshu)."
+        text: "പ്രിയ ഉപഭോക്താവേ, നിങ്ങളുടെ KYC കാലഹരണപ്പെട്ടതിനാൽ [[threat|നിങ്ങളുടെ NovaBank അക്കൗണ്ട് ഇന്ന് ബ്ലോക്ക് ചെയ്യും]]. [[link|novabank-kyc-update.example.net]]-ൽ [[urgent|ഉടൻ അപ്ഡേറ്റ് ചെയ്യുക]] അല്ലെങ്കിൽ [[sender|ഞങ്ങളുടെ ഉദ്യോഗസ്ഥനെ 94XXX XXX51-ൽ വിളിക്കുക]].",
+        why: "ബാങ്കുകൾ സ്വകാര്യ മൊബൈൽ നമ്പറിൽ നിന്ന് KYC ലിങ്കുകൾ അയയ്ക്കില്ല, മണിക്കൂറുകൾക്കകം അക്കൗണ്ട് ബ്ലോക്ക് ചെയ്യില്ല. ലിങ്ക് നിങ്ങളുടെ ലോഗിനും OTP-യും മോഷ്ടിക്കുന്ന വ്യാജ ബാങ്ക് പേജ് തുറക്കും; \"ഉദ്യോഗസ്ഥൻ\" ആപ്പ് ഇൻസ്റ്റാൾ ചെയ്യാൻ പറയും.",
+        todo: "ലിങ്ക് ടാപ്പ് ചെയ്യരുത്, വിളിക്കരുത്. KYC ശരിക്കും ബാക്കിയുണ്ടെങ്കിൽ ബാങ്കിന്റെ സ്വന്തം ആപ്പോ ബ്രാഞ്ചോ പറയും. SMS സഞ്ചാർ സാഥി (ചക്ഷു)-ൽ റിപ്പോർട്ട് ചെയ്യുക."
       },
       sim_swap: {
-        title: "Call: your SIM will be deactivated",
-        ctx: "A call to the office manager, who uses this number for bank OTPs.",
-        who: "\"Telecom company executive\"",
+        title: "കോൾ: നിങ്ങളുടെ SIM നിർജ്ജീവമാക്കും",
+        ctx: "ബാങ്ക് OTP-കൾക്ക് ഈ നമ്പർ ഉപയോഗിക്കുന്ന ഓഫീസ് മാനേജർക്ക് കോൾ.",
+        who: "\"ടെലികോം കമ്പനി ഉദ്യോഗസ്ഥൻ\"",
         subject: "",
-        text: "\"Madam, this is from your mobile network. [[threat|Your SIM will be deactivated in 24 hours]] because the 5G upgrade is pending. [[otp|To upgrade, read out the 20-digit number printed on your SIM card and press 1 after the SMS you receive.]] [[urgent|This offer closes today.]]\"",
-        why: "This is a SIM-swap attempt. With the 20-digit SIM number and your \"1\", the fraudster activates your number on their own SIM. Your phone goes dead and every OTP for banking and UPI then goes to them.",
-        todo: "Cut the call. Telecom companies never call for 5G upgrades. If your phone suddenly loses network for a long time, call your bank first, then your operator. Check SIMs issued in your name on Sanchar Saathi."
+        text: "\"മാഡം, ഞാൻ നിങ്ങളുടെ മൊബൈൽ നെറ്റ്‌വർക്കിൽ നിന്നാണ്. 5G അപ്‌ഗ്രേഡ് ബാക്കിയുള്ളതിനാൽ [[threat|നിങ്ങളുടെ SIM 24 മണിക്കൂറിനുള്ളിൽ നിർജ്ജീവമാകും]]. [[otp|അപ്‌ഗ്രേഡിനായി നിങ്ങളുടെ SIM കാർഡിൽ അച്ചടിച്ച 20 അക്ക നമ്പർ വായിച്ചു തരൂ, വരുന്ന SMS-നു ശേഷം 1 അമർത്തൂ.]] [[urgent|ഈ ഓഫർ ഇന്ന് അവസാനിക്കും.]]\"",
+        why: "ഇതൊരു SIM-സ്വാപ്പ് ശ്രമമാണ്. 20 അക്ക SIM നമ്പറും നിങ്ങളുടെ \"1\"-ഉം കിട്ടിയാൽ തട്ടിപ്പുകാരൻ നിങ്ങളുടെ നമ്പർ സ്വന്തം SIM-ൽ സജീവമാക്കും. നിങ്ങളുടെ ഫോൺ നിലയ്ക്കും, ബാങ്കിംഗിനും UPI-ക്കുമുള്ള എല്ലാ OTP-യും അയാൾക്ക് പോകും.",
+        todo: "കോൾ കട്ട് ചെയ്യുക. ടെലികോം കമ്പനികൾ 5G അപ്‌ഗ്രേഡിനായി വിളിക്കില്ല. ഫോണിൽ പെട്ടെന്ന് ദീർഘനേരം നെറ്റ്‌വർക്ക് പോയാൽ ആദ്യം ബാങ്കിനെയും പിന്നെ ഓപ്പറേറ്ററെയും വിളിക്കുക. നിങ്ങളുടെ പേരിലുള്ള SIM-കൾ സഞ്ചാർ സാഥിയിൽ പരിശോധിക്കുക."
       },
       mfa: {
-        title: "Seventh login approval request since midnight",
-        ctx: "Your phone keeps buzzing at night with sign-in approval requests from the office login app. Then a call comes.",
-        who: "SecureLogin app",
+        title: "അർദ്ധരാത്രി മുതൽ ഏഴാമത്തെ ലോഗിൻ അംഗീകാര അഭ്യർത്ഥന",
+        ctx: "രാത്രി ഓഫീസ് ലോഗിൻ ആപ്പിൽ നിന്നുള്ള സൈൻ-ഇൻ അംഗീകാര അഭ്യർത്ഥനകൾ കൊണ്ട് ഫോൺ നിർത്താതെ വൈബ്രേറ്റ് ചെയ്യുന്നു. പിന്നെ ഒരു കോൾ.",
+        who: "SecureLogin ആപ്പ്",
         subject: "",
-        text: "[[otp|Approve sign-in? Someone is trying to sign in to your office account from a new device. Tap APPROVE to continue.]] [[odd|(This is the 7th request since midnight.)]] A moment later a caller says: \"[[urgent|This is IT, we are fixing a server. Please just approve the request so the alerts stop.]]\"",
-        why: "This is \"MFA fatigue\". The attacker already has your password and is spamming approval requests, hoping you tap Approve to make them stop. The \"IT\" call is part of the attack. Real IT never asks you to approve a login you did not start.",
-        todo: "Tap Deny every time. Change your password from a trusted device right away and tell IT. The repeated requests mean your password has already leaked."
+        text: "[[otp|സൈൻ-ഇൻ അംഗീകരിക്കണോ? ആരോ പുതിയ ഉപകരണത്തിൽ നിന്ന് നിങ്ങളുടെ ഓഫീസ് അക്കൗണ്ടിൽ സൈൻ-ഇൻ ചെയ്യുന്നു. തുടരാൻ APPROVE ടാപ്പ് ചെയ്യുക.]] [[odd|(അർദ്ധരാത്രി മുതൽ ഇത് 7-ാമത്തെ അഭ്യർത്ഥനയാണ്.)]] അൽപസമയത്തിനകം ഒരാൾ വിളിച്ചു പറയുന്നു: \"[[urgent|ഞാൻ IT-യിൽ നിന്നാണ്, സെർവർ ശരിയാക്കുകയാണ്. അലർട്ടുകൾ നിൽക്കാൻ അഭ്യർത്ഥന അംഗീകരിച്ചേക്കൂ.]]\"",
+        why: "ഇതിനെ \"MFA ക്ഷീണം\" എന്ന് പറയുന്നു. ആക്രമണകാരിയുടെ കൈയിൽ നിങ്ങളുടെ പാസ്‌വേഡ് ഇതിനകമുണ്ട്, മടുത്ത് നിങ്ങൾ Approve അമർത്തുമെന്ന പ്രതീക്ഷയിൽ അഭ്യർത്ഥനകൾ ചൊരിയുന്നു. \"IT\" കോൾ ആക്രമണത്തിന്റെ ഭാഗം. നിങ്ങൾ തുടങ്ങാത്ത ലോഗിൻ അംഗീകരിക്കാൻ യഥാർത്ഥ IT ഒരിക്കലും പറയില്ല.",
+        todo: "ഓരോ തവണയും Deny അമർത്തുക. വിശ്വസനീയ ഉപകരണത്തിൽ നിന്ന് ഉടൻ പാസ്‌വേഡ് മാറ്റി IT-യോട് പറയുക. ആവർത്തിക്കുന്ന അഭ്യർത്ഥനകൾ നിങ്ങളുടെ പാസ്‌വേഡ് ഇതിനകം ചോർന്നുവെന്ന് കാണിക്കുന്നു."
       },
       gst_real: {
-        title: "Monthly GST reminder from your CA",
-        ctx: "A WhatsApp message from your chartered accountant's saved number.",
-        who: "Mehta & Co. (our CA)",
+        title: "നിങ്ങളുടെ CA-യിൽ നിന്ന് മാസ GST ഓർമ്മപ്പെടുത്തൽ",
+        ctx: "നിങ്ങളുടെ ചാർട്ടേഡ് അക്കൗണ്ടന്റിന്റെ സേവ് ചെയ്ത നമ്പറിൽ നിന്ന് WhatsApp മെസേജ്.",
+        who: "മേത്ത & കോ. (ഞങ്ങളുടെ CA)",
         subject: "",
-        text: "Good morning. Reminder: GSTR-3B for September is due on 20 October. [[ok|Please upload the sales and purchase sheets to the same shared folder as every month.]] [[ok|No payment is needed from your side right now]]; I will send the challan details after filing, and we can confirm on our usual call.",
-        why: "Known CA, saved number, the usual monthly process, no new account number, no link and no urgency beyond the real due date. Verification happens on your regular call.",
-        todo: "Follow your normal process. If one day the \"CA\" sends a new bank account or asks you to pay through a link, call the CA office on the known number first."
+        text: "സുപ്രഭാതം. ഓർമ്മപ്പെടുത്തൽ: സെപ്റ്റംബറിലെ GSTR-3B ഒക്ടോബർ 20-ന് ഫയൽ ചെയ്യണം. [[ok|വിൽപ്പനയുടെയും വാങ്ങലിന്റെയും ഷീറ്റുകൾ എല്ലാ മാസത്തെയും പോലെ അതേ ഷെയർഡ് ഫോൾഡറിൽ അപ്‌ലോഡ് ചെയ്യുക.]] [[ok|ഇപ്പോൾ നിങ്ങളുടെ ഭാഗത്തു നിന്ന് പേയ്‌മെന്റ് ഒന്നും വേണ്ട]]; ഫയലിംഗിനു ശേഷം ചലാൻ വിവരങ്ങൾ അയയ്ക്കാം, നമ്മുടെ പതിവ് കോളിൽ ഉറപ്പാക്കാം.",
+        why: "അറിയാവുന്ന CA, സേവ് ചെയ്ത നമ്പർ, പതിവ് മാസ പ്രക്രിയ, പുതിയ അക്കൗണ്ട് നമ്പറില്ല, ലിങ്കില്ല, യഥാർത്ഥ അവസാന തീയതിക്കപ്പുറം തിടുക്കമില്ല. ഉറപ്പാക്കൽ നിങ്ങളുടെ പതിവ് കോളിൽ നടക്കുന്നു.",
+        todo: "നിങ്ങളുടെ സാധാരണ പ്രക്രിയ പിന്തുടരുക. ഒരുദിവസം \"CA\" പുതിയ ബാങ്ക് അക്കൗണ്ട് അയയ്ക്കുകയോ ലിങ്ക് വഴി പണം അടയ്ക്കാൻ പറയുകയോ ചെയ്താൽ, ആദ്യം അറിയാവുന്ന നമ്പറിൽ CA ഓഫീസിനെ വിളിക്കുക."
       },
       lookalike: {
-        title: "Salary slip on a look-alike domain",
-        ctx: "An email about a revised salary slip. Your company's real domain is meridiantextiles.example.com.",
-        who: "Payroll Team",
-        subject: "Your revised salary slip is ready",
-        text: "Dear employee, your salary structure has been revised from October. [[link|Log in at meridian-textiles-portal.example.com with your office password to view the new slip.]] [[urgent|The link expires in 12 hours.]] [[sender|Sent from payroll@meridian-textiles.example.com]]",
-        why: "The real company domain is meridiantextiles.example.com; the email uses meridian-textiles (with a hyphen), a look-alike domain. The link leads to a copied login page that steals your office password. A salary slip would be on the HR portal you always use.",
-        todo: "Don't click. Open the HR portal yourself by typing the address or from your bookmark. Report the email to IT; forwarding it helps them block the fake domain for everyone."
+        title: "ഒരുപോലെ തോന്നുന്ന ഡൊമെയ്‌നിൽ ശമ്പള സ്ലിപ്പ്",
+        ctx: "പരിഷ്കരിച്ച ശമ്പള സ്ലിപ്പിനെക്കുറിച്ചുള്ള ഇമെയിൽ. നിങ്ങളുടെ കമ്പനിയുടെ യഥാർത്ഥ ഡൊമെയ്‌ൻ meridiantextiles.example.com.",
+        who: "പേറോൾ ടീം",
+        subject: "നിങ്ങളുടെ പരിഷ്കരിച്ച ശമ്പള സ്ലിപ്പ് തയ്യാർ",
+        text: "പ്രിയ ജീവനക്കാരാ, ഒക്ടോബർ മുതൽ നിങ്ങളുടെ ശമ്പള ഘടന പരിഷ്കരിച്ചു. [[link|പുതിയ സ്ലിപ്പ് കാണാൻ meridian-textiles-portal.example.com-ൽ ഓഫീസ് പാസ്‌വേഡ് ഉപയോഗിച്ച് ലോഗിൻ ചെയ്യുക.]] [[urgent|ലിങ്ക് 12 മണിക്കൂറിനുള്ളിൽ കാലഹരണപ്പെടും.]] [[sender|payroll@meridian-textiles.example.com-ൽ നിന്ന് അയച്ചത്]]",
+        why: "കമ്പനിയുടെ യഥാർത്ഥ ഡൊമെയ്‌ൻ meridiantextiles.example.com; ഇമെയിൽ meridian-textiles (ഹൈഫനോടെ) എന്ന ഒരുപോലെ തോന്നുന്ന ഡൊമെയ്‌ൻ ഉപയോഗിക്കുന്നു. ലിങ്ക് നിങ്ങളുടെ ഓഫീസ് പാസ്‌വേഡ് മോഷ്ടിക്കുന്ന പകർപ്പ് ലോഗിൻ പേജിലേക്ക് കൊണ്ടുപോകും. ശമ്പള സ്ലിപ്പ് നിങ്ങൾ എപ്പോഴും ഉപയോഗിക്കുന്ന HR പോർട്ടലിൽ തന്നെയായിരിക്കും.",
+        todo: "ക്ലിക്ക് ചെയ്യരുത്. വിലാസം ടൈപ്പ് ചെയ്തോ ബുക്ക്‌മാർക്കിൽ നിന്നോ HR പോർട്ടൽ സ്വയം തുറക്കുക. ഇമെയിൽ IT-ക്ക് റിപ്പോർട്ട് ചെയ്യുക; ഫോർവേഡ് ചെയ്താൽ വ്യാജ ഡൊമെയ്‌ൻ എല്ലാവർക്കും ബ്ലോക്ക് ചെയ്യാനാകും."
       },
       usb: {
-        title: "Pen drive found in the parking lot",
-        ctx: "Monday morning, near the office entrance.",
-        who: "A pen drive found in the office parking",
+        title: "പാർക്കിംഗിൽ കിട്ടിയ പെൻ ഡ്രൈവ്",
+        ctx: "തിങ്കളാഴ്ച രാവിലെ, ഓഫീസ് പ്രവേശന കവാടത്തിനടുത്ത്.",
+        who: "ഓഫീസ് പാർക്കിംഗിൽ കിട്ടിയ പെൻ ഡ്രൈവ്",
         subject: "",
-        text: "A pen drive lies near the entrance with a label: [[prize|\"Salary Revision 2026 - CONFIDENTIAL - Management only\"]]. A colleague says: \"[[remote|Let's plug it into the reception PC and see whose it is.]]\"",
-        why: "This is a \"USB drop\". Attackers leave pen drives with tempting labels; the moment one is plugged in, hidden software can install itself and spread across the office network. Curiosity is the attack.",
-        todo: "Don't plug it in anywhere. Hand it to IT or security in an envelope. Companies should disable auto-run and block unknown USB devices."
+        text: "പ്രവേശന കവാടത്തിനടുത്ത് ഒരു പെൻ ഡ്രൈവ് കിടക്കുന്നു, അതിൽ ലേബൽ: [[prize|\"ശമ്പള വർധന 2026 - രഹസ്യം - മാനേജ്മെന്റിന് മാത്രം\"]]. ഒരു സഹപ്രവർത്തകൻ പറയുന്നു: \"[[remote|റിസപ്ഷൻ PC-യിൽ കുത്തി ആരുടേതാണെന്ന് നോക്കാം.]]\"",
+        why: "ഇതിനെ \"USB ഡ്രോപ്പ്\" എന്ന് പറയുന്നു. ആക്രമണകാരികൾ ആകർഷകമായ ലേബലുള്ള പെൻ ഡ്രൈവുകൾ ഇട്ടിട്ടു പോകും; ഒന്ന് കുത്തിയാൽ ഒളിഞ്ഞിരിക്കുന്ന സോഫ്റ്റ്‌വെയർ സ്വയം ഇൻസ്റ്റാൾ ചെയ്ത് ഓഫീസ് നെറ്റ്‌വർക്കിലാകെ പടരാം. ജിജ്ഞാസയാണ് ആക്രമണം.",
+        todo: "എവിടെയും കുത്തരുത്. ഒരു കവറിലിട്ട് IT-ക്കോ സുരക്ഷാ വിഭാഗത്തിനോ നൽകുക. കമ്പനികൾ ഓട്ടോ-റൺ ഓഫാക്കി അജ്ഞാത USB ഉപകരണങ്ങൾ ബ്ലോക്ക് ചെയ്യണം."
       },
       wifi: {
-        title: "Free airport Wi-Fi asks for your email password",
-        ctx: "Waiting for a flight, you connect to a free network to approve two vendor payments.",
-        who: "Free Wi-Fi login screen at the airport",
+        title: "വിമാനത്താവളത്തിലെ സൗജന്യ Wi-Fi ഇമെയിൽ പാസ്‌വേഡ് ചോദിക്കുന്നു",
+        ctx: "ഫ്ലൈറ്റിനായി കാത്തിരിക്കുമ്പോൾ, രണ്ട് വെണ്ടർ പേയ്‌മെന്റുകൾ അംഗീകരിക്കാൻ നിങ്ങൾ സൗജന്യ നെറ്റ്‌വർക്കിൽ കണക്ട് ചെയ്യുന്നു.",
+        who: "വിമാനത്താവളത്തിലെ സൗജന്യ Wi-Fi ലോഗിൻ സ്‌ക്രീൻ",
         subject: "",
-        text: "Network: Airport_Free_WiFi_5G (no password). [[otp|To continue, sign in with your email address and email password.]] Then you plan to [[data|approve two vendor payments on the company banking portal]] while waiting for your flight.",
-        why: "Anyone can create a hotspot with an official-sounding name. On a fake network the attacker can see what you type, and a login page that asks for your email password is harvesting credentials. Banking on public Wi-Fi is a risk.",
-        todo: "Use your own mobile data or the company VPN for work and banking. Never type your office or email password on a Wi-Fi login page. Turn off auto-connect to open networks."
+        text: "നെറ്റ്‌വർക്ക്: Airport_Free_WiFi_5G (പാസ്‌വേഡ് ഇല്ല). [[otp|തുടരാൻ നിങ്ങളുടെ ഇമെയിൽ വിലാസവും ഇമെയിൽ പാസ്‌വേഡും നൽകി സൈൻ-ഇൻ ചെയ്യുക.]] പിന്നെ ഫ്ലൈറ്റിനായി കാത്തിരിക്കുമ്പോൾ [[data|കമ്പനി ബാങ്കിംഗ് പോർട്ടലിൽ രണ്ട് വെണ്ടർ പേയ്‌മെന്റുകൾ അംഗീകരിക്കാൻ]] നിങ്ങൾ ആലോചിക്കുന്നു.",
+        why: "ഔദ്യോഗികമെന്ന് തോന്നുന്ന പേരിൽ ആർക്കും ഹോട്ട്‌സ്പോട്ട് ഉണ്ടാക്കാം. വ്യാജ നെറ്റ്‌വർക്കിൽ നിങ്ങൾ ടൈപ്പ് ചെയ്യുന്നത് ആക്രമണകാരിക്ക് കാണാം, ഇമെയിൽ പാസ്‌വേഡ് ചോദിക്കുന്ന ലോഗിൻ പേജ് വിവരങ്ങൾ മോഷ്ടിക്കുകയാണ്. പൊതു Wi-Fi-ൽ ബാങ്കിംഗ് അപകടകരമാണ്.",
+        todo: "ജോലിക്കും ബാങ്കിംഗിനും സ്വന്തം മൊബൈൽ ഡാറ്റയോ കമ്പനി VPN-ഓ ഉപയോഗിക്കുക. Wi-Fi ലോഗിൻ പേജിൽ ഓഫീസ് അല്ലെങ്കിൽ ഇമെയിൽ പാസ്‌വേഡ് ഒരിക്കലും ടൈപ്പ് ചെയ്യരുത്. തുറന്ന നെറ്റ്‌വർക്കുകളിലേക്ക് ഓട്ടോ-കണക്ട് ഓഫാക്കുക."
       },
       upi_real: {
-        title: "Payment received notification",
-        ctx: "A notification from your own UPI app while you are at the counter.",
-        who: "UPI app",
+        title: "പേയ്‌മെന്റ് ലഭിച്ചെന്ന അറിയിപ്പ്",
+        ctx: "നിങ്ങൾ കൗണ്ടറിലുള്ളപ്പോൾ സ്വന്തം UPI ആപ്പിൽ നിന്നുള്ള അറിയിപ്പ്.",
+        who: "UPI ആപ്പ്",
         subject: "",
-        text: "[[ok|₹2,500 received from Anita Traders]] into your current account ending 4471. [[ok|No action needed.]] Transaction ID 628104...",
-        why: "Money coming IN never needs your PIN, OTP or a scan. The notification is from your own app, names the payer and asks nothing of you. Compare this with a \"collect request\" or a QR you are asked to scan: those take money OUT.",
-        todo: "Nothing to do. Check the amount against your invoice. If a \"payment received\" message ever asks you to approve, enter a PIN or scan, it is taking money, not giving it."
+        text: "[[ok|Anita Traders-ൽ നിന്ന് ₹2,500 ലഭിച്ചു]] 4471-ൽ അവസാനിക്കുന്ന നിങ്ങളുടെ കറന്റ് അക്കൗണ്ടിലേക്ക്. [[ok|നടപടി ഒന്നും ആവശ്യമില്ല.]] ഇടപാട് ID 628104...",
+        why: "അകത്തേക്ക് വരുന്ന പണത്തിന് PIN, OTP അല്ലെങ്കിൽ സ്കാൻ ഒരിക്കലും വേണ്ട. അറിയിപ്പ് നിങ്ങളുടെ സ്വന്തം ആപ്പിൽ നിന്ന്, പണം നൽകിയയാളുടെ പേര് പറയുന്നു, നിങ്ങളോട് ഒന്നും ചോദിക്കുന്നില്ല. ഇതിനെ \"കളക്ട് അഭ്യർത്ഥന\" അല്ലെങ്കിൽ സ്കാൻ ചെയ്യാൻ പറയുന്ന QR-മായി താരതമ്യം ചെയ്യുക: അവ പണം പുറത്തേക്ക് കൊണ്ടുപോകുന്നു.",
+        todo: "ഒന്നും ചെയ്യാനില്ല. തുക ഇൻവോയ്‌സുമായി ഒത്തുനോക്കുക. \"പേയ്‌മെന്റ് ലഭിച്ചു\" മെസേജ് എപ്പോഴെങ്കിലും അംഗീകാരമോ PIN-ഓ സ്കാനോ ചോദിച്ചാൽ, അത് പണം നൽകുകയല്ല, എടുക്കുകയാണ്."
       },
       dpdp: {
-        title: "Colleague wants the customer list on WhatsApp",
-        ctx: "A WhatsApp message from a sales colleague's number in the evening.",
-        who: "Sameer (sales colleague)",
+        title: "സഹപ്രവർത്തകന് ഉപഭോക്തൃ പട്ടിക WhatsApp-ൽ വേണം",
+        ctx: "വൈകുന്നേരം സെയിൽസ് സഹപ്രവർത്തകന്റെ നമ്പറിൽ നിന്ന് WhatsApp മെസേജ്.",
+        who: "സമീർ (സെയിൽസ് സഹപ്രവർത്തകൻ)",
         subject: "",
-        text: "Bro, I am working from home today. [[data|Please export the full customer list with phone numbers and Aadhaar copies and send it to me on this WhatsApp]], I will delete it later. [[urgent|Need it in 10 minutes for the campaign.]] [[secret|No need to tell the manager, it's a small thing.]]",
-        why: "Customer phone numbers and Aadhaar copies are personal data protected by India's DPDP Act. Sending them on personal WhatsApp takes them outside company control, and this could also be a hacked account or an impersonation. \"Don't tell the manager\" is never acceptable.",
-        todo: "Say no politely. Share customer data only through the company's approved system, with the manager's approval and only the fields needed. If a colleague's account seems odd, call them."
+        text: "ബ്രോ, ഇന്ന് ഞാൻ വീട്ടിൽ നിന്നാണ് ജോലി ചെയ്യുന്നത്. [[data|ഫോൺ നമ്പറുകളും ആധാർ പകർപ്പുകളും അടങ്ങിയ മുഴുവൻ ഉപഭോക്തൃ പട്ടിക എക്സ്പോർട്ട് ചെയ്ത് ഈ WhatsApp-ൽ തന്നെ അയയ്ക്ക്]], പിന്നെ ഡിലീറ്റ് ചെയ്യാം. [[urgent|ക്യാമ്പെയ്‌നിനായി 10 മിനിറ്റിനുള്ളിൽ വേണം.]] [[secret|മാനേജരോട് പറയേണ്ട, ചെറിയ കാര്യമാണ്.]]",
+        why: "ഉപഭോക്താക്കളുടെ ഫോൺ നമ്പറുകളും ആധാർ പകർപ്പുകളും ഇന്ത്യയുടെ DPDP നിയമം സംരക്ഷിക്കുന്ന വ്യക്തിഗത ഡാറ്റയാണ്. സ്വകാര്യ WhatsApp-ൽ അയച്ചാൽ അവ കമ്പനിയുടെ നിയന്ത്രണം വിടും, ഇത് ഹാക്ക് ചെയ്ത അക്കൗണ്ടോ ആൾമാറാട്ടമോ ആകാം. \"മാനേജരോട് പറയേണ്ട\" ഒരിക്കലും സ്വീകാര്യമല്ല.",
+        todo: "മാന്യമായി നിരസിക്കുക. ഉപഭോക്തൃ ഡാറ്റ കമ്പനിയുടെ അംഗീകൃത സംവിധാനം വഴി, മാനേജരുടെ അനുമതിയോടെ, ആവശ്യമുള്ള വിവരങ്ങൾ മാത്രം പങ്കിടുക. സഹപ്രവർത്തകന്റെ അക്കൗണ്ട് വിചിത്രമായി തോന്നിയാൽ അവരെ വിളിക്കുക."
       },
       otp_call: {
-        title: "\"Fraud department\" needs the OTP to cancel a payment",
-        ctx: "A call while an OTP SMS arrives on your phone.",
-        who: "\"NovaBank Fraud Department\"",
+        title: "പേയ്‌മെന്റ് റദ്ദാക്കാൻ \"ഫ്രോഡ് വിഭാഗത്തിന്\" OTP വേണം",
+        ctx: "നിങ്ങളുടെ ഫോണിൽ OTP SMS വരുന്ന അതേ സമയത്ത് വന്ന കോൾ.",
+        who: "\"NovaBank ഫ്രോഡ് വിഭാഗം\"",
         subject: "",
-        text: "\"Sir, [[threat|a transaction of ₹49,999 is happening on your card right now.]] To cancel it [[urgent|we must act within 60 seconds]]. [[otp|Tell me the OTP that has just arrived on your phone and I will reverse it.]] [[secret|Please do not disconnect or call anyone.]]\"",
-        why: "The OTP that \"just arrived\" is for the scammer's own attempt to pay with your card. Reading it out completes the payment. Banks never ask for an OTP to cancel anything, and the 60-second panic is created so you don't think.",
-        todo: "Cut the call. Open your bank app and block the card yourself, or call the number on the back of your card. Never read an OTP to anyone. If money has left, call 1930 right away."
+        text: "\"സർ, [[threat|നിങ്ങളുടെ കാർഡിൽ ഇപ്പോൾ ₹49,999-ന്റെ ഇടപാട് നടക്കുന്നു.]] അത് റദ്ദാക്കാൻ [[urgent|60 സെക്കൻഡിനുള്ളിൽ നടപടി എടുക്കണം]]. [[otp|നിങ്ങളുടെ ഫോണിൽ ഇപ്പോൾ വന്ന OTP പറയൂ, ഞാൻ അത് തിരിച്ചാക്കാം.]] [[secret|ദയവായി കോൾ കട്ട് ചെയ്യുകയോ ആരെയെങ്കിലും വിളിക്കുകയോ ചെയ്യരുത്.]]\"",
+        why: "\"ഇപ്പോൾ വന്ന\" OTP തട്ടിപ്പുകാരൻ നിങ്ങളുടെ കാർഡ് ഉപയോഗിച്ച് പണം നൽകാനുള്ള ശ്രമത്തിനുള്ളതാണ്. അത് വായിച്ചു കൊടുത്താൽ പേയ്‌മെന്റ് പൂർത്തിയാകും. എന്തെങ്കിലും റദ്ദാക്കാൻ ബാങ്കുകൾ ഒരിക്കലും OTP ചോദിക്കില്ല, നിങ്ങൾ ചിന്തിക്കാതിരിക്കാനാണ് 60 സെക്കൻഡ് പരിഭ്രാന്തി.",
+        todo: "കോൾ കട്ട് ചെയ്യുക. ബാങ്ക് ആപ്പ് തുറന്ന് കാർഡ് സ്വയം ബ്ലോക്ക് ചെയ്യുക, അല്ലെങ്കിൽ കാർഡിന്റെ പിന്നിലെ നമ്പറിൽ വിളിക്കുക. OTP ആർക്കും വായിച്ചു കൊടുക്കരുത്. പണം പോയെങ്കിൽ ഉടൻ 1930 വിളിക്കുക."
       },
       hr_bonus: {
-        title: "Diwali bonus form asks for net-banking login",
-        ctx: "An email to all staff just before Diwali, from an address that looks like HR.",
-        who: "HR Rewards Team",
-        subject: "Diwali bonus ₹25,000 - confirm your bank account",
-        text: "Dear team member, we are pleased to announce a Diwali bonus of ₹25,000. [[attach|Open the attached form (Bonus_Form.html)]] and [[otp|enter your net-banking user ID and password]] so that the bonus is credited directly. [[urgent|Forms received after 6 pm today will not be processed.]] [[sender|HR Rewards - meridiantextiles-bonus.example.net]]",
-        why: "HR already has your salary account; no company asks for your net-banking login for a bonus. The sender is a look-alike domain, the HTML attachment is a fake bank login page, and a same-day deadline adds pressure.",
-        todo: "Don't open the attachment or enter anything. Ask HR in person or on the intranet. Report the email to IT so colleagues are warned."
+        title: "ദീപാവലി ബോണസ് ഫോം നെറ്റ്-ബാങ്കിംഗ് ലോഗിൻ ചോദിക്കുന്നു",
+        ctx: "ദീപാവലിക്ക് തൊട്ടുമുമ്പ്, HR പോലെ തോന്നുന്ന വിലാസത്തിൽ നിന്ന് എല്ലാ ജീവനക്കാർക്കും ഇമെയിൽ.",
+        who: "HR റിവാർഡ്‌സ് ടീം",
+        subject: "ദീപാവലി ബോണസ് ₹25,000 - നിങ്ങളുടെ ബാങ്ക് അക്കൗണ്ട് ഉറപ്പാക്കുക",
+        text: "പ്രിയ ടീം അംഗമേ, ₹25,000 ദീപാവലി ബോണസ് പ്രഖ്യാപിക്കുന്നതിൽ സന്തോഷമുണ്ട്. [[attach|അറ്റാച്ച് ചെയ്ത ഫോം (Bonus_Form.html) തുറക്കുക]], ബോണസ് നേരിട്ട് ക്രെഡിറ്റ് ആകാൻ [[otp|നിങ്ങളുടെ നെറ്റ്-ബാങ്കിംഗ് യൂസർ ID-യും പാസ്‌വേഡും നൽകുക]]. [[urgent|ഇന്ന് വൈകുന്നേരം 6-നു ശേഷം ലഭിക്കുന്ന ഫോമുകൾ പ്രോസസ് ചെയ്യില്ല.]] [[sender|HR Rewards - meridiantextiles-bonus.example.net]]",
+        why: "നിങ്ങളുടെ ശമ്പള അക്കൗണ്ട് HR-ന്റെ കൈയിൽ ഇതിനകമുണ്ട്; ഒരു കമ്പനിയും ബോണസിനായി നെറ്റ്-ബാങ്കിംഗ് ലോഗിൻ ചോദിക്കില്ല. അയച്ചത് ഒരുപോലെ തോന്നുന്ന ഡൊമെയ്‌ൻ, HTML അറ്റാച്ച്‌മെന്റ് വ്യാജ ബാങ്ക് ലോഗിൻ പേജ്, അന്നുതന്നെയുള്ള സമയപരിധി സമ്മർദം കൂട്ടുന്നു.",
+        todo: "അറ്റാച്ച്‌മെന്റ് തുറക്കുകയോ ഒന്നും നൽകുകയോ ചെയ്യരുത്. HR-നോട് നേരിട്ടോ ഇൻട്രാനെറ്റിലോ ചോദിക്കുക. സഹപ്രവർത്തകർക്ക് മുന്നറിയിപ്പാകാൻ ഇമെയിൽ IT-ക്ക് റിപ്പോർട്ട് ചെയ്യുക."
       },
       electricity: {
-        title: "Office power will be cut tonight",
-        ctx: "An SMS to the shop owner's phone at 8:35 pm.",
+        title: "ഇന്ന് രാത്രി ഓഫീസിലെ വൈദ്യുതി വിച്ഛേദിക്കും",
+        ctx: "രാത്രി 8:35-ന് കടയുടമയുടെ ഫോണിൽ വന്ന SMS.",
         who: "",
         subject: "",
-        text: "Dear consumer, [[threat|your office electricity connection will be disconnected tonight at 9:30 pm]] because [[odd|last month bill is not update in our system]]. Please contact our officer [[sender|93XXX XXX40]] [[urgent|immediately]].",
-        why: "Electricity boards don't disconnect at night after one SMS from a personal mobile. When you call, the \"officer\" asks you to install an app or pay ₹10 through a link, and the real target is your bank account.",
-        todo: "Don't call. Check the bill in the electricity board's official app or office. Report the number on Sanchar Saathi (Chakshu)."
+        text: "പ്രിയ ഉപഭോക്താവേ, [[odd|കഴിഞ്ഞ മാസത്തെ ബിൽ ഞങ്ങളുടെ സിസ്റ്റത്തിൽ അപ്ഡേറ്റ് ആയിട്ടില്ല]] അതിനാൽ [[threat|നിങ്ങളുടെ ഓഫീസ് വൈദ്യുതി കണക്ഷൻ ഇന്ന് രാത്രി 9:30-ന് വിച്ഛേദിക്കും]]. ദയവായി ഞങ്ങളുടെ ഉദ്യോഗസ്ഥനെ [[sender|93XXX XXX40]]-ൽ [[urgent|ഉടൻ]] ബന്ധപ്പെടുക.",
+        why: "വൈദ്യുതി ബോർഡുകൾ സ്വകാര്യ മൊബൈലിൽ നിന്നുള്ള ഒരു SMS-നു ശേഷം രാത്രി വൈദ്യുതി വിച്ഛേദിക്കില്ല. വിളിച്ചാൽ \"ഉദ്യോഗസ്ഥൻ\" ആപ്പ് ഇൻസ്റ്റാൾ ചെയ്യാനോ ലിങ്ക് വഴി ₹10 അടയ്ക്കാനോ പറയും, യഥാർത്ഥ ലക്ഷ്യം നിങ്ങളുടെ ബാങ്ക് അക്കൗണ്ട്.",
+        todo: "വിളിക്കരുത്. ബിൽ വൈദ്യുതി ബോർഡിന്റെ ഔദ്യോഗിക ആപ്പിലോ ഓഫീസിലോ പരിശോധിക്കുക. ആ നമ്പർ സഞ്ചാർ സാഥി (ചക്ഷു)-ൽ റിപ്പോർട്ട് ചെയ്യുക."
       },
       wa_hijack: {
-        title: "Colleague asks you to forward a 6-digit code",
-        ctx: "A late-night WhatsApp message from a colleague's saved number, right after a code SMS arrived on your phone.",
-        who: "Rohan (colleague)",
+        title: "6 അക്ക കോഡ് ഫോർവേഡ് ചെയ്യാൻ സഹപ്രവർത്തകൻ പറയുന്നു",
+        ctx: "നിങ്ങളുടെ ഫോണിൽ കോഡ് SMS വന്നതിനു തൊട്ടുപിന്നാലെ, രാത്രി വൈകി സഹപ്രവർത്തകന്റെ സേവ് ചെയ്ത നമ്പറിൽ നിന്ന് WhatsApp മെസേജ്.",
+        who: "രോഹൻ (സഹപ്രവർത്തകൻ)",
         subject: "",
-        text: "Hey, sorry to disturb you so late. [[odd|I entered your number by mistake while logging into WhatsApp and a 6-digit code went to your phone.]] [[otp|Please forward me that code]], [[urgent|quickly, otherwise my account will be locked.]]",
-        why: "The code that arrived is the verification code for YOUR WhatsApp. Whoever gets it takes over your account and then messages all your contacts and office groups asking for money. The message itself may come from a colleague's already-hijacked account.",
-        todo: "Never forward a verification code. Phone the colleague to warn them that their account is hacked. Turn on two-step verification in WhatsApp settings."
+        text: "ഹേയ്, ഇത്ര വൈകി ശല്യപ്പെടുത്തുന്നതിന് ക്ഷമിക്കണം. [[odd|WhatsApp-ൽ ലോഗിൻ ചെയ്യുമ്പോൾ അബദ്ധത്തിൽ നിന്റെ നമ്പർ ടൈപ്പ് ചെയ്തു, 6 അക്ക കോഡ് നിന്റെ ഫോണിലേക്ക് പോയി.]] [[otp|ആ കോഡ് എനിക്ക് ഫോർവേഡ് ചെയ്യ്]], [[urgent|വേഗം, അല്ലെങ്കിൽ എന്റെ അക്കൗണ്ട് ലോക്ക് ആകും.]]",
+        why: "വന്ന കോഡ് നിങ്ങളുടെ സ്വന്തം WhatsApp-ന്റെ വെരിഫിക്കേഷൻ കോഡാണ്. അത് കിട്ടുന്നയാൾ നിങ്ങളുടെ അക്കൗണ്ട് കൈക്കലാക്കി, നിങ്ങളുടെ എല്ലാ കോൺടാക്ടുകൾക്കും ഓഫീസ് ഗ്രൂപ്പുകൾക്കും പണം ചോദിച്ച് മെസേജ് അയയ്ക്കും. ഈ മെസേജ് തന്നെ സഹപ്രവർത്തകന്റെ ഇതിനകം ഹാക്ക് ചെയ്ത അക്കൗണ്ടിൽ നിന്നാകാം.",
+        todo: "വെരിഫിക്കേഷൻ കോഡ് ഒരിക്കലും ഫോർവേഡ് ചെയ്യരുത്. സഹപ്രവർത്തകനെ വിളിച്ച് അവരുടെ അക്കൗണ്ട് ഹാക്ക് ചെയ്യപ്പെട്ടെന്ന് മുന്നറിയിപ്പ് നൽകുക. WhatsApp സെറ്റിംഗ്‌സിൽ ടു-സ്റ്റെപ്പ് വെരിഫിക്കേഷൻ ഓണാക്കുക."
       },
       invest_group: {
-        title: "Stock-tips group with guaranteed returns",
-        ctx: "You were added to a WhatsApp group without asking.",
-        who: "VIP Stock Tips - Group admin",
+        title: "ഉറപ്പായ ലാഭമുള്ള സ്റ്റോക്ക്-ടിപ്സ് ഗ്രൂപ്പ്",
+        ctx: "ചോദിക്കാതെ നിങ്ങളെ ഒരു WhatsApp ഗ്രൂപ്പിൽ ചേർത്തു.",
+        who: "VIP Stock Tips - ഗ്രൂപ്പ് അഡ്മിൻ",
         subject: "",
-        text: "Welcome to our premium group! [[prize|Our members earned 32% returns last month with guaranteed insider tips.]] Download our trading app from [[link|this link, not from the app store]], and [[money|start with a deposit of ₹50,000]]. [[prize|See the screenshots of profits posted by members!]] [[urgent|Entry closes at midnight.]]",
-        why: "Nobody can guarantee returns, and \"insider tips\" are illegal. The app is fake: it shows imaginary profits so you deposit more, and withdrawal is never allowed. The \"members\" posting screenshots are the scammers.",
-        todo: "Leave and report the group. Invest only through SEBI-registered brokers and apps from the official app store. If you have deposited, call 1930 and report at cybercrime.gov.in."
+        text: "ഞങ്ങളുടെ പ്രീമിയം ഗ്രൂപ്പിലേക്ക് സ്വാഗതം! [[prize|ഉറപ്പായ ഇൻസൈഡർ ടിപ്സ് വഴി ഞങ്ങളുടെ അംഗങ്ങൾ കഴിഞ്ഞ മാസം 32% ലാഭം നേടി.]] ഞങ്ങളുടെ ട്രേഡിംഗ് ആപ്പ് [[link|ആപ്പ് സ്റ്റോറിൽ നിന്നല്ല, ഈ ലിങ്കിൽ നിന്ന്]] ഡൗൺലോഡ് ചെയ്യൂ, [[money|₹50,000 ഡെപ്പോസിറ്റോടെ തുടങ്ങൂ]]. [[prize|അംഗങ്ങൾ പോസ്റ്റ് ചെയ്ത ലാഭത്തിന്റെ സ്‌ക്രീൻഷോട്ടുകൾ കാണൂ!]] [[urgent|പ്രവേശനം അർദ്ധരാത്രി അവസാനിക്കും.]]",
+        why: "ആർക്കും ലാഭം ഉറപ്പ് നൽകാനാവില്ല, \"ഇൻസൈഡർ ടിപ്സ്\" നിയമവിരുദ്ധമാണ്. ആപ്പ് വ്യാജമാണ്: നിങ്ങൾ കൂടുതൽ ഡെപ്പോസിറ്റ് ചെയ്യാൻ സാങ്കൽപ്പിക ലാഭം കാണിക്കും, പിൻവലിക്കാൻ ഒരിക്കലും അനുവദിക്കില്ല. സ്‌ക്രീൻഷോട്ട് പോസ്റ്റ് ചെയ്യുന്ന \"അംഗങ്ങൾ\" തട്ടിപ്പുകാർ തന്നെ.",
+        todo: "ഗ്രൂപ്പ് വിട്ട് റിപ്പോർട്ട് ചെയ്യുക. SEBI-യിൽ രജിസ്റ്റർ ചെയ്ത ബ്രോക്കർമാർ വഴിയും ഔദ്യോഗിക ആപ്പ് സ്റ്റോറിലെ ആപ്പുകൾ വഴിയും മാത്രം നിക്ഷേപിക്കുക. ഡെപ്പോസിറ്റ് ചെയ്തെങ്കിൽ 1930 വിളിച്ച് cybercrime.gov.in-ൽ പരാതിപ്പെടുക."
       },
       bank_real: {
-        title: "Debit alert for a payment you made",
-        ctx: "Your accounts team paid the packaging vendor today. This SMS arrives.",
+        title: "നിങ്ങൾ നടത്തിയ പേയ്‌മെന്റിന്റെ ഡെബിറ്റ് അലർട്ട്",
+        ctx: "നിങ്ങളുടെ അക്കൗണ്ട്‌സ് ടീം ഇന്ന് പാക്കേജിംഗ് വെണ്ടർക്ക് പണം നൽകി. ഈ SMS വരുന്നു.",
         who: "",
         subject: "",
-        text: "NovaBank: [[ok|₹86,000 debited from account ending 4471 on 10 Oct for NEFT to Sunrise Packaging]], ref N26101034. Balance ₹3,42,118. [[ok|If not done by you, call the number on the back of your debit card.]]",
-        why: "This matches the payment your accounts team made today, comes from the bank's sender ID, has no link or number inside the SMS and points you to the number on your own card.",
-        todo: "Match it with your payment records. If any debit alert does not match a payment you made, call the bank immediately using the number on the card, not a number from a message."
+        text: "NovaBank: [[ok|Sunrise Packaging-ലേക്ക് NEFT-നായി ഒക്ടോബർ 10-ന് 4471-ൽ അവസാനിക്കുന്ന അക്കൗണ്ടിൽ നിന്ന് ₹86,000 ഡെബിറ്റ് ചെയ്തു]], റഫറൻസ് N26101034. ബാലൻസ് ₹3,42,118. [[ok|നിങ്ങൾ ചെയ്തതല്ലെങ്കിൽ ഡെബിറ്റ് കാർഡിന്റെ പിന്നിലെ നമ്പറിൽ വിളിക്കുക.]]",
+        why: "ഇത് ഇന്ന് നിങ്ങളുടെ അക്കൗണ്ട്‌സ് ടീം നടത്തിയ പേയ്‌മെന്റുമായി ഒത്തുപോകുന്നു, ബാങ്കിന്റെ സെൻഡർ ID-യിൽ നിന്ന് വന്നതാണ്, SMS-ൽ ലിങ്കോ നമ്പറോ ഇല്ല, നിങ്ങളുടെ സ്വന്തം കാർഡിലെ നമ്പർ സൂചിപ്പിക്കുന്നു.",
+        todo: "നിങ്ങളുടെ പേയ്‌മെന്റ് രേഖകളുമായി ഒത്തുനോക്കുക. ഏതെങ്കിലും ഡെബിറ്റ് അലർട്ട് നിങ്ങൾ നടത്തിയ പേയ്‌മെന്റുമായി ഒത്തുപോകുന്നില്ലെങ്കിൽ, മെസേജിലെ നമ്പറിലല്ല, കാർഡിലെ നമ്പറിൽ ഉടൻ ബാങ്കിനെ വിളിക്കുക."
       }
     }
   },
   ur: {
     scenarios: {
       ceo_gift: {
-        title: "Boss on a new number wants gift cards",
-        ctx: "WhatsApp message to an accounts executive at 9 am. The profile photo is the MD's photo from the company website.",
-        who: "Rajesh Sir (new number)",
+        title: "نئے نمبر سے باس کو گفٹ کارڈ چاہییں",
+        ctx: "صبح 9 بجے اکاؤنٹس ایگزیکٹو کو WhatsApp میسج۔ پروفائل تصویر کمپنی کی ویب سائٹ والی MD کی تصویر ہے۔",
+        who: "راجیش سر (نیا نمبر)",
         subject: "",
-        text: "Hi, this is Rajesh. [[sender|My old phone is damaged, I am using this number for now.]] I am in a meeting with a big client. [[money|Buy 10 gift cards of ₹5,000 each]] and send me the codes [[urgent|within 30 minutes]]. [[secret|Please don't discuss this with anyone, it is a surprise for the client.]]",
-        why: "Scammers copy the MD's photo from the website and write from a new number. A real boss never asks for gift-card codes or for secrecy. New number + urgency + secrecy is the classic \"CEO fraud\".",
-        todo: "Don't buy anything. Call your boss on the number saved in your phone, or walk to their cabin. Tell IT or your manager so the whole office is warned."
+        text: "ہائے، میں راجیش ہوں۔ [[sender|میرا پرانا فون خراب ہو گیا ہے، ابھی یہی نمبر استعمال کر رہا ہوں۔]] میں ایک بڑے کلائنٹ کے ساتھ میٹنگ میں ہوں۔ [[money|₹5,000 والے 10 گفٹ کارڈ خریدیں]] اور کوڈ مجھے [[urgent|30 منٹ کے اندر]] بھیجیں۔ [[secret|اس بارے میں کسی سے بات مت کریں، کلائنٹ کے لیے سرپرائز ہے۔]]",
+        why: "فراڈیے ویب سائٹ سے MD کی تصویر اٹھا کر نئے نمبر سے لکھتے ہیں۔ اصلی باس کبھی گفٹ کارڈ کوڈ یا راز داری نہیں مانگتا۔ نیا نمبر + جلدی + راز = پرانا \"CEO فراڈ\"۔",
+        todo: "کچھ نہ خریدیں۔ باس کو فون میں محفوظ نمبر پر فون کریں یا ان کے کیبن جائیں۔ IT یا مینیجر کو بتائیں تاکہ پورا دفتر خبردار رہے۔"
       },
       it_real: {
-        title: "Password policy notice from IT",
-        ctx: "An email to all staff from the company's own IT helpdesk.",
-        who: "IT Helpdesk",
-        subject: "Password policy change from 15 October",
-        text: "Dear colleagues, from 15 October passwords must be at least 12 characters long. [[ok|You do not need to do anything today.]] When your password expires, change it [[ok|on the office portal you normally use]]. [[ok|IT will never ask for your password by email, phone or WhatsApp.]] For doubts, visit the helpdesk on the 2nd floor.",
-        why: "The sender is the company's own IT address. There is no link to click, no attachment, no deadline and no request for a password. Genuine notices tell you what will happen and let you use the normal portal yourself.",
-        todo: "Nothing urgent. If you are unsure whether a notice is real, walk to the helpdesk or call the extension number you already know."
+        title: "IT کی طرف سے پاس ورڈ پالیسی کا نوٹس",
+        ctx: "کمپنی کے اپنے IT ہیلپ ڈیسک سے تمام ملازمین کو ای میل۔",
+        who: "IT ہیلپ ڈیسک",
+        subject: "15 اکتوبر سے پاس ورڈ پالیسی میں تبدیلی",
+        text: "محترم ساتھیو، 15 اکتوبر سے پاس ورڈ کم از کم 12 حروف کا ہونا چاہیے۔ [[ok|آج آپ کو کچھ کرنے کی ضرورت نہیں۔]] پاس ورڈ کی مدت ختم ہونے پر اسے [[ok|اسی دفتری پورٹل پر بدلیں جو آپ ہمیشہ استعمال کرتے ہیں]]۔ [[ok|IT کبھی ای میل، فون یا WhatsApp پر آپ کا پاس ورڈ نہیں مانگے گا۔]] سوال ہو تو دوسری منزل پر ہیلپ ڈیسک آئیں۔",
+        why: "بھیجنے والا کمپنی کا اپنا IT پتا ہے۔ نہ کلک کرنے کو لنک، نہ اٹیچمنٹ، نہ آخری وقت، نہ پاس ورڈ کی مانگ۔ اصلی نوٹس بتاتے ہیں کہ کیا ہوگا اور معمول کا پورٹل آپ کو خود استعمال کرنے دیتے ہیں۔",
+        todo: "کچھ فوری نہیں۔ نوٹس کے اصلی ہونے پر شک ہو تو ہیلپ ڈیسک جائیں یا پہلے سے معلوم ایکسٹینشن نمبر پر فون کریں۔"
       },
       bec_vendor: {
-        title: "Vendor says its bank account has changed",
-        ctx: "An email to the accounts team about a pending invoice of ₹4,80,000.",
-        who: "Kaveri Logistics Accounts",
-        subject: "URGENT: Updated bank details for Invoice KL/2026/0912",
-        text: "Dear Sir/Madam, [[newacct|our company bank account has changed after an audit. Please pay the pending invoice of ₹4,80,000 to the new account given below.]] [[urgent|Payment must be released today]] to avoid delay of your shipment. [[sender|Kindly reply only to this email ID]], our office phones are under maintenance.",
-        why: "This is Business Email Compromise (BEC). Criminals hack or copy a vendor's email and send \"new bank details\". The address is slightly different from the real vendor, the phones \"are not working\" so you cannot verify, and everything is urgent.",
-        todo: "Never change a vendor's bank details because of an email. Call the vendor on the number from your old records or purchase order, never the number in the email. Use two-person approval for every bank-detail change."
+        title: "وینڈر کہتا ہے بینک کھاتہ بدل گیا",
+        ctx: "₹4,80,000 کے بقایا انوائس کے بارے میں اکاؤنٹس ٹیم کو ای میل۔",
+        who: "کاویری لاجسٹکس اکاؤنٹس",
+        subject: "فوری: انوائس KL/2026/0912 کے لیے نئی بینک تفصیلات",
+        text: "محترم جناب/محترمہ، [[newacct|آڈٹ کے بعد ہماری کمپنی کا بینک کھاتہ بدل گیا ہے۔ براہِ کرم ₹4,80,000 کا بقایا انوائس نیچے دیے گئے نئے کھاتے میں ادا کریں۔]] شپمنٹ میں تاخیر سے بچنے کے لیے [[urgent|ادائیگی آج ہی جاری کریں]]۔ [[sender|براہِ کرم صرف اسی ای میل ID پر جواب دیں]]، ہمارے دفتر کے فون مرمت میں ہیں۔",
+        why: "یہ بزنس ای میل کمپرومائز (BEC) ہے۔ مجرم وینڈر کا ای میل ہیک یا نقل کر کے \"نئی بینک تفصیلات\" بھیجتے ہیں۔ پتا اصلی وینڈر سے تھوڑا مختلف ہے، فون \"بند\" ہیں تاکہ آپ تصدیق نہ کر سکیں، اور سب کچھ فوری ہے۔",
+        todo: "ای میل کی بنیاد پر وینڈر کی بینک تفصیلات کبھی نہ بدلیں۔ پرانے ریکارڈ یا پرچیز آرڈر والے نمبر پر وینڈر کو فون کریں، ای میل والے نمبر پر کبھی نہیں۔ ہر بینک تفصیل کی تبدیلی پر دو لوگوں کی منظوری رکھیں۔"
       },
       gst_notice: {
-        title: "GST penalty notice with an attachment",
-        ctx: "An email to the accounts mailbox early in the morning.",
-        who: "GST Department",
-        subject: "Show Cause Notice - Penalty ₹1,24,500 - Action required",
-        text: "[[odd|Dear Taxpayer,]] a mismatch is found in your GST returns. A penalty of ₹1,24,500 is due. [[threat|Your GSTIN will be suspended in 48 hours]] if it is not paid. [[link|Open the attached notice and pay through the secure link]] to avoid legal action. [[attach|Attachment: GST_Notice_2026.html]]",
-        why: "Real GST notices appear in your account on the official GST portal and carry a DIN (Document Identification Number). An HTML attachment with a \"secure link\" is a fake login page that steals your GST login or payment details. The sender is not the official gov.in domain.",
-        todo: "Don't open the attachment. Log in to the official GST portal yourself by typing the address, or ask your CA to check. Report the email to IT and at cybercrime.gov.in."
+        title: "اٹیچمنٹ کے ساتھ GST جرمانے کا نوٹس",
+        ctx: "صبح سویرے اکاؤنٹس میل باکس میں آئی ای میل۔",
+        who: "GST محکمہ",
+        subject: "وجہ بتاؤ نوٹس - جرمانہ ₹1,24,500 - کارروائی ضروری",
+        text: "[[odd|محترم ٹیکس دہندہ،]] آپ کے GST ریٹرن میں فرق پایا گیا ہے۔ ₹1,24,500 جرمانہ واجب ہے۔ ادا نہ کرنے پر [[threat|آپ کا GSTIN 48 گھنٹوں میں معطل ہو جائے گا]]۔ قانونی کارروائی سے بچنے کے لیے [[link|منسلک نوٹس کھولیں اور محفوظ لنک سے ادا کریں]]۔ [[attach|اٹیچمنٹ: GST_Notice_2026.html]]",
+        why: "اصلی GST نوٹس سرکاری GST پورٹل پر آپ کے کھاتے میں نظر آتے ہیں اور ان پر DIN (دستاویز شناختی نمبر) ہوتا ہے۔ \"محفوظ لنک\" والا HTML اٹیچمنٹ جعلی لاگ ان صفحہ ہے جو آپ کا GST لاگ ان یا ادائیگی کی تفصیلات چراتا ہے۔ بھیجنے والا سرکاری gov.in ڈومین نہیں۔",
+        todo: "اٹیچمنٹ نہ کھولیں۔ پتا خود ٹائپ کر کے سرکاری GST پورٹل پر لاگ ان کریں، یا اپنے CA سے جانچنے کو کہیں۔ ای میل کی شکایت IT کو اور cybercrime.gov.in پر کریں۔"
       },
       otp_real: {
-        title: "OTP for a payment you just started",
-        ctx: "You have just started a UPI payment of ₹2,500 to your packaging vendor. This SMS arrives.",
+        title: "آپ کی ابھی شروع کی گئی ادائیگی کا OTP",
+        ctx: "آپ نے ابھی پیکیجنگ وینڈر کو ₹2,500 کی UPI ادائیگی شروع کی ہے۔ یہ SMS آتا ہے۔",
         who: "",
         subject: "",
-        text: "[[ok|Your OTP for the UPI payment of ₹2,500 to Sunrise Packaging that you just started is 482913.]] Valid for 10 minutes. [[ok|Do not share this OTP with anyone, not even the bank.]] - NovaBank",
-        why: "You started this payment yourself a moment ago, the amount and the payee match, and the message tells you not to share the code. A genuine OTP is only for the action you yourself requested, and the bank never asks you to tell it to anyone.",
-        todo: "Type the OTP only in the app you are using. If an OTP arrives when you did not start anything, somebody is trying to use your account: do not share it, and call the bank on the number printed on your card."
+        text: "[[ok|آپ کی ابھی شروع کی گئی Sunrise Packaging کو ₹2,500 کی UPI ادائیگی کے لیے آپ کا OTP 482913 ہے۔]] 10 منٹ کے لیے درست۔ [[ok|یہ OTP کسی کو نہ بتائیں، بینک کو بھی نہیں۔]] - NovaBank",
+        why: "یہ ادائیگی آپ نے خود ایک لمحہ پہلے شروع کی، رقم اور وصول کنندہ ملتے ہیں، اور میسج کوڈ کسی کو نہ بتانے کو کہتا ہے۔ اصلی OTP صرف آپ کے اپنے مانگے کام کے لیے ہوتا ہے، اور بینک اسے کسی کو بتانے کو کبھی نہیں کہتا۔",
+        todo: "OTP صرف اسی ایپ میں ٹائپ کریں جو آپ استعمال کر رہے ہیں۔ اگر آپ نے کچھ شروع نہیں کیا اور OTP آ جائے تو کوئی آپ کا کھاتہ استعمال کرنے کی کوشش کر رہا ہے: اسے نہ بتائیں، اور کارڈ پر چھپے نمبر پر بینک کو فون کریں۔"
       },
       digital_arrest: {
-        title: "Video call from a \"CBI officer\"",
-        ctx: "A video call from an unknown number. The caller wears a uniform and sits in an office with a flag behind him.",
-        who: "\"CBI Officer Verma\"",
+        title: "\"CBI افسر\" کی ویڈیو کال",
+        ctx: "انجان نمبر سے ویڈیو کال۔ کال کرنے والا وردی میں ہے اور پیچھے جھنڈے والے دفتر میں بیٹھا ہے۔",
+        who: "\"CBI افسر ورما\"",
         subject: "",
-        text: "\"[[threat|A parcel with drugs and 6 passports was booked in your name. A case is registered against you.]] [[urgent|Stay on this video call, do not disconnect]], and [[secret|do not tell anyone, not even your family, they are also under watch]]. [[money|Transfer ₹3,50,000 to this RBI verification account for checking]]; it will be returned after the investigation.\"",
-        why: "This is a \"digital arrest\". No police, CBI or court arrests anyone on a video call, and no agency asks you to transfer money to a \"verification account\". The uniform, office background and ID card are all fake. Secrecy and keeping you on the call stop you from thinking.",
-        todo: "Hang up at once. Real officers do not call on WhatsApp. Call 1930 or report at cybercrime.gov.in, and tell a colleague or family member immediately."
+        text: "\"[[threat|آپ کے نام پر منشیات اور 6 پاسپورٹ والا پارسل بک ہوا ہے۔ آپ کے خلاف مقدمہ درج ہے۔]] [[urgent|اسی ویڈیو کال پر رہیں، کال مت کاٹیں]]، اور [[secret|کسی کو مت بتائیں، گھر والوں کو بھی نہیں، ان پر بھی نظر ہے]]۔ [[money|جانچ کے لیے ₹3,50,000 اس RBI ویریفیکیشن کھاتے میں ٹرانسفر کریں]]؛ تفتیش کے بعد واپس مل جائیں گے۔\"",
+        why: "یہ \"ڈیجیٹل اریسٹ\" ہے۔ کوئی پولیس، CBI یا عدالت ویڈیو کال پر کسی کو گرفتار نہیں کرتی، اور کوئی ادارہ \"ویریفیکیشن کھاتے\" میں پیسے بھیجنے کو نہیں کہتا۔ وردی، دفتر کا منظر اور شناختی کارڈ سب جعلی ہیں۔ راز داری اور کال پر روکے رکھنا آپ کو سوچنے نہیں دیتا۔",
+        todo: "فوراً فون کاٹ دیں۔ اصلی افسر WhatsApp پر فون نہیں کرتے۔ 1930 پر فون کریں یا cybercrime.gov.in پر شکایت کریں، اور فوراً کسی ساتھی یا گھر والے کو بتائیں۔"
       },
       courier: {
-        title: "Call: your parcel is held at customs",
-        ctx: "A recorded voice, then a person. You have not ordered anything from abroad.",
-        who: "\"SpeedParcel Customer Service\"",
+        title: "کال: آپ کا پارسل کسٹمز میں روکا گیا ہے",
+        ctx: "پہلے ریکارڈ کی ہوئی آواز، پھر ایک آدمی۔ آپ نے باہر سے کچھ نہیں منگوایا۔",
+        who: "\"SpeedParcel کسٹمر سروس\"",
         subject: "",
-        text: "\"Hello, this is the customs department of SpeedParcel. [[threat|A parcel in your name is held at customs because it contains illegal items.]] To avoid a police case, [[urgent|press 1 now]] to speak to an officer, or [[money|pay the ₹2,999 clearance fee]] on the link we will send.\"",
-        why: "Courier companies do not call about illegal items, and customs does not collect fees by phone. Pressing 1 connects you to a fake \"officer\" who then tries a digital-arrest scam or asks for payments.",
-        todo: "Cut the call. If you really ordered something, check the tracking number on the courier's official website. Report the number on the Sanchar Saathi (Chakshu) portal."
+        text: "\"السلام علیکم، میں SpeedParcel کے کسٹمز شعبے سے بول رہا ہوں۔ [[threat|آپ کے نام کا پارسل غیر قانونی اشیاء کی وجہ سے کسٹمز میں روکا گیا ہے۔]] پولیس کیس سے بچنے کے لیے افسر سے بات کرنے کو [[urgent|ابھی 1 دبائیں]]، یا ہمارے بھیجے لنک پر [[money|₹2,999 کلیئرنس فیس ادا کریں]]۔\"",
+        why: "کوریئر کمپنیاں غیر قانونی اشیاء کے بارے میں فون نہیں کرتیں، اور کسٹمز فون پر فیس نہیں لیتا۔ 1 دبانے سے آپ جعلی \"افسر\" سے جڑتے ہیں، جو پھر ڈیجیٹل اریسٹ یا ادائیگی کی مانگ کرتا ہے۔",
+        todo: "کال کاٹیں۔ اگر واقعی کچھ منگوایا ہے تو کوریئر کی سرکاری ویب سائٹ پر ٹریکنگ نمبر دیکھیں۔ اس نمبر کی سنچار ساتھی (چکشو) پورٹل پر شکایت کریں۔"
       },
       task_job: {
-        title: "Telegram job: earn ₹8,000 a day rating hotels",
-        ctx: "A Telegram message after you applied for jobs online last week.",
-        who: "HR Priya - Online Jobs",
+        title: "Telegram نوکری: ہوٹلوں کو ریٹنگ دے کر روز ₹8,000",
+        ctx: "پچھلے ہفتے آن لائن نوکری کی درخواست دینے کے بعد آیا Telegram میسج۔",
+        who: "HR پریا - آن لائن جابز",
         subject: "",
-        text: "Congratulations, you are selected! [[prize|Earn ₹3,000 to ₹8,000 daily by rating hotels online]], only 20 minutes of work. The first 3 tasks are free. For premium tasks you [[money|deposit ₹5,000 and get back ₹7,500 within one hour]]. [[urgent|Only 4 seats left today!]]",
-        why: "This is a task scam. The first small payments are real, to build trust. Then you \"deposit\" for premium tasks and the money never comes back. No real job pays you to click, and no employer asks you to deposit money.",
-        todo: "Don't deposit anything. Block and report the account. If you have already paid, call 1930 immediately; the first hour matters most."
+        text: "مبارک ہو، آپ منتخب ہو گئے! [[prize|آن لائن ہوٹلوں کو ریٹنگ دے کر روز ₹3,000 سے ₹8,000 کمائیں]]، صرف 20 منٹ کا کام۔ پہلے 3 کام مفت۔ پریمیم کاموں کے لیے [[money|₹5,000 جمع کریں اور ایک گھنٹے میں ₹7,500 واپس پائیں]]۔ [[urgent|آج صرف 4 جگہیں باقی!]]",
+        why: "یہ ٹاسک فراڈ ہے۔ بھروسہ جیتنے کے لیے شروع کی چھوٹی ادائیگیاں اصلی ہوتی ہیں۔ پھر پریمیم کاموں کے لیے آپ \"جمع\" کرتے ہیں اور پیسے کبھی واپس نہیں آتے۔ کوئی اصلی نوکری کلک کرنے کے پیسے نہیں دیتی، اور کوئی آجر پیسے جمع کرنے کو نہیں کہتا۔",
+        todo: "کچھ جمع نہ کریں۔ اکاؤنٹ بلاک کر کے رپورٹ کریں۔ اگر پیسے دے چکے ہیں تو فوراً 1930 پر فون کریں؛ پہلا گھنٹہ سب سے اہم ہے۔"
       },
       vendor_real: {
-        title: "Payment reminder from a known vendor",
-        ctx: "An email from the packaging vendor you pay every month, from their usual address.",
-        who: "Sunrise Packaging Billing",
-        subject: "Payment reminder - Invoice SP/26-27/0431 due 10 Oct",
-        text: "Dear Meridian Textiles team, this is a gentle reminder that invoice SP/26-27/0431 for ₹86,000 is due on 10 October. [[ok|Our bank details are unchanged and are printed on the invoice you already have.]] [[ok|If you receive any email asking to change our bank account, please call our office on the number in your records before paying.]] Thank you.",
-        why: "A regular reminder from the known vendor address, no new bank details, no threat, and the vendor itself asks you to verify by phone if anything looks different. That is exactly how a genuine partner behaves.",
-        todo: "Pay through your normal process to the account already in your records. Any change request should be confirmed on a known phone number."
+        title: "جانے پہچانے وینڈر کی طرف سے ادائیگی کی یاد دہانی",
+        ctx: "جس پیکیجنگ وینڈر کو آپ ہر مہینے ادائیگی کرتے ہیں، اس کے معمول کے پتے سے ای میل۔",
+        who: "Sunrise Packaging بلنگ",
+        subject: "ادائیگی کی یاد دہانی - انوائس SP/26-27/0431، 10 اکتوبر تک",
+        text: "محترم میریڈین ٹیکسٹائلز ٹیم، یہ نرم یاد دہانی ہے کہ ₹86,000 کا انوائس SP/26-27/0431 10 اکتوبر تک ادا کرنا ہے۔ [[ok|ہماری بینک تفصیلات نہیں بدلیں اور آپ کے پاس موجود انوائس پر چھپی ہیں۔]] [[ok|اگر ہمارا بینک کھاتہ بدلنے کو کہتی کوئی ای میل آئے تو ادائیگی سے پہلے اپنے ریکارڈ والے نمبر پر ہمارے دفتر کو فون کریں۔]] شکریہ۔",
+        why: "جانے پہچانے وینڈر کے پتے سے معمول کی یاد دہانی، کوئی نئی بینک تفصیل نہیں، دھمکی نہیں، اور کچھ مختلف لگے تو وینڈر خود فون پر تصدیق کرنے کو کہتا ہے۔ اصلی شراکت دار ایسا ہی کرتا ہے۔",
+        todo: "اپنے ریکارڈ والے کھاتے میں معمول کے مطابق ادائیگی کریں۔ تبدیلی کی کوئی بھی درخواست معلوم فون نمبر پر پکی کریں۔"
       },
       deepfake: {
-        title: "The MD's voice asks for an urgent transfer",
-        ctx: "A phone call from an unknown number. The voice sounds exactly like your MD, with airport noise behind.",
-        who: "\"Rajesh Sir\" (the MD's voice)",
+        title: "MD کی آواز فوری ٹرانسفر مانگتی ہے",
+        ctx: "انجان نمبر سے فون۔ آواز بالکل آپ کے MD جیسی، پیچھے ہوائی اڈے کا شور۔",
+        who: "\"راجیش سر\" (MD کی آواز)",
         subject: "",
-        text: "\"Hello, it's me, I am at the airport, you can hear it is noisy. [[urgent|I need you to transfer ₹2,00,000 right now]] to a new supplier for the Dubai order. [[newacct|I will WhatsApp you the account number.]] [[secret|Don't call me back, my phone is going on flight mode, just do it before I land.]]\"",
-        why: "AI can copy anyone's voice from a 30-second clip of a speech or video. A cloned voice plus a new account number plus \"don't call me back\" is a deepfake scam. The background noise is added on purpose.",
-        todo: "Say you will call back, then call the MD on the saved number or check with a second senior person. Agree on a code word in your team for urgent phone requests. No transfer without the normal approval."
+        text: "\"ہیلو، میں ہی ہوں، ہوائی اڈے پر ہوں، شور سن رہے ہو نا۔ [[urgent|مجھے ابھی کے ابھی ₹2,00,000 ٹرانسفر کروانے ہیں]] دبئی آرڈر کے لیے ایک نئے سپلائر کو۔ [[newacct|کھاتہ نمبر میں WhatsApp کرتا ہوں۔]] [[secret|مجھے واپس فون مت کرنا، فون فلائٹ موڈ پر جا رہا ہے، میرے اترنے سے پہلے کر دینا۔]]\"",
+        why: "AI کسی تقریر یا ویڈیو کی 30 سیکنڈ کی کلپ سے کسی کی بھی آواز نقل کر سکتا ہے۔ نقلی آواز + نیا کھاتہ نمبر + \"واپس فون مت کرنا\" = ڈیپ فیک فراڈ۔ پیچھے کا شور جان بوجھ کر ڈالا جاتا ہے۔",
+        todo: "کہیں کہ آپ واپس فون کریں گے، پھر محفوظ نمبر پر MD کو فون کریں یا کسی دوسرے سینئر سے تصدیق کریں۔ فون پر فوری درخواستوں کے لیے ٹیم میں ایک خفیہ لفظ طے کریں۔ معمول کی منظوری کے بغیر کوئی ٹرانسفر نہیں۔"
       },
       qr_receive: {
-        title: "Buyer sends a QR code to \"receive\" money",
-        ctx: "You advertised 12 used office chairs on a classified-ads site. A buyer writes on WhatsApp.",
-        who: "Buyer for office chairs",
+        title: "پیسے \"لینے\" کے لیے خریدار QR کوڈ بھیجتا ہے",
+        ctx: "آپ نے ایک کلاسیفائیڈ سائٹ پر 12 پرانی دفتری کرسیوں کا اشتہار دیا۔ ایک خریدار WhatsApp پر لکھتا ہے۔",
+        who: "دفتری کرسیوں کا خریدار",
         subject: "",
-        text: "Hi, I saw your ad for 12 used office chairs at ₹18,000. I will pay the full amount now. [[upi|I have sent a QR code: scan it and enter your UPI PIN to receive the money.]] [[odd|I am an army officer posted outside, so my friend will pick up the chairs.]] [[urgent|Please do it in the next 5 minutes, my network is weak.]]",
-        why: "You never scan a QR or enter a PIN to RECEIVE money. Scanning and entering the PIN PAYS the other person. The \"army officer\" story and the hurry are standard tricks on classified-ad sites.",
-        todo: "Refuse. Ask the buyer to send money to your UPI ID; you need to do nothing to receive it. Report the number in the app."
+        text: "ہائے، ₹18,000 میں 12 پرانی دفتری کرسیوں کا آپ کا اشتہار دیکھا۔ میں پوری رقم ابھی ادا کرتا ہوں۔ [[upi|میں نے QR کوڈ بھیجا ہے: پیسے لینے کے لیے اسے اسکین کر کے اپنا UPI PIN ڈالیں۔]] [[odd|میں باہر تعینات فوجی افسر ہوں، اس لیے میرا دوست کرسیاں لے جائے گا۔]] [[urgent|براہِ کرم اگلے 5 منٹ میں کریں، میرا نیٹ ورک کمزور ہے۔]]",
+        why: "پیسے لینے کے لیے آپ کبھی QR اسکین نہیں کرتے یا PIN نہیں ڈالتے۔ اسکین کر کے PIN ڈالنے سے آپ سامنے والے کو ادائیگی کرتے ہیں۔ \"فوجی افسر\" کی کہانی اور جلدی کلاسیفائیڈ سائٹوں کی عام چالیں ہیں۔",
+        todo: "انکار کریں۔ خریدار سے کہیں کہ آپ کی UPI ID پر پیسے بھیجے؛ پیسے لینے کے لیے آپ کو کچھ نہیں کرنا پڑتا۔ ایپ میں نمبر رپورٹ کریں۔"
       },
       fake_care: {
-        title: "Customer-care number found on search",
-        ctx: "A refund did not arrive. You searched online for the bank's customer care and called the first number shown.",
-        who: "\"NovaBank Customer Care\"",
+        title: "سرچ میں ملا کسٹمر کیئر نمبر",
+        ctx: "ریفنڈ نہیں آیا۔ آپ نے آن لائن بینک کا کسٹمر کیئر ڈھونڈا اور سب سے پہلے دکھے نمبر پر فون کیا۔",
+        who: "\"NovaBank کسٹمر کیئر\"",
         subject: "",
-        text: "\"Thank you for calling NovaBank customer care. For your refund of ₹3,200 we need to verify you. [[otp|Please tell me your 16-digit card number, expiry date and the OTP you receive now.]] [[remote|Also install the Quick Support app I am sending so I can process it faster.]]\"",
-        why: "You called a fake number placed in search results or on a fake website. No bank asks for the full card number, expiry, CVV or OTP, and never asks you to install a remote-control app.",
-        todo: "Cut the call. Use only the number printed on the back of your card or inside the official app. Never install an app a caller asks for. If you shared anything, block the card in the app at once and call 1930."
+        text: "\"NovaBank کسٹمر کیئر کو فون کرنے کا شکریہ۔ ₹3,200 کے ریفنڈ کے لیے آپ کی تصدیق کرنی ہوگی۔ [[otp|براہِ کرم اپنا 16 ہندسوں کا کارڈ نمبر، میعاد کی تاریخ اور ابھی آنے والا OTP بتائیں۔]] [[remote|میرا بھیجا Quick Support ایپ بھی انسٹال کریں تاکہ میں جلدی کام کر سکوں۔]]\"",
+        why: "آپ نے سرچ نتائج یا جعلی ویب سائٹ پر ڈالے گئے جعلی نمبر پر فون کیا۔ کوئی بینک پورا کارڈ نمبر، میعاد، CVV یا OTP نہیں مانگتا، اور ریموٹ کنٹرول ایپ انسٹال کرنے کو کبھی نہیں کہتا۔",
+        todo: "کال کاٹیں۔ صرف کارڈ کے پیچھے چھپا یا سرکاری ایپ والا نمبر استعمال کریں۔ کال کرنے والے کے کہنے پر کبھی ایپ انسٹال نہ کریں۔ کچھ بتا چکے ہیں تو فوراً ایپ میں کارڈ بلاک کریں اور 1930 پر فون کریں۔"
       },
       hr_real: {
-        title: "Diwali holiday list from HR",
-        ctx: "An email to all staff from the company's HR address.",
-        who: "HR Department",
-        subject: "Holiday list for Diwali week",
-        text: "Dear all, the office will be closed from 7 to 9 November for Diwali. [[ok|The full holiday list is on the HR page of the intranet]], the same page you use for leave. [[ok|No action is needed from you.]] Wishing everyone a happy and safe Diwali. - HR Team",
-        why: "Sent from the company's own HR address, information only, no link to an outside site, no attachment to open and nothing to fill in. Genuine notices do not need urgency.",
-        todo: "Nothing to do. If an email about holidays or a bonus asks you to log in or fill in bank details, treat that as a red flag and ask HR in person."
+        title: "HR کی طرف سے دیوالی چھٹیوں کی فہرست",
+        ctx: "کمپنی کے HR پتے سے تمام ملازمین کو ای میل۔",
+        who: "HR شعبہ",
+        subject: "دیوالی ہفتے کی چھٹیوں کی فہرست",
+        text: "سب کو سلام، دیوالی کے لیے 7 سے 9 نومبر دفتر بند رہے گا۔ [[ok|چھٹیوں کی پوری فہرست انٹرانیٹ کے HR صفحے پر ہے]]، وہی صفحہ جو آپ چھٹی کے لیے استعمال کرتے ہیں۔ [[ok|آپ کو کچھ کرنے کی ضرورت نہیں۔]] سب کو خوشیوں بھری اور محفوظ دیوالی مبارک۔ - HR ٹیم",
+        why: "کمپنی کے اپنے HR پتے سے بھیجا گیا، صرف معلومات، باہر کی سائٹ کا لنک نہیں، کھولنے کو اٹیچمنٹ نہیں اور بھرنے کو کچھ نہیں۔ اصلی نوٹس کو جلدی کی ضرورت نہیں۔",
+        todo: "کچھ نہیں کرنا۔ اگر چھٹیوں یا بونس کے بارے میں کوئی ای میل لاگ ان کرنے یا بینک تفصیلات بھرنے کو کہے تو اسے خطرے کی نشانی سمجھیں اور HR سے روبرو پوچھیں۔"
       },
       screen_share: {
-        title: "\"UPI helpline\" wants to see your screen",
-        ctx: "A call minutes after a UPI payment failed and you complained on social media.",
-        who: "\"UPI Helpline\"",
+        title: "\"UPI ہیلپ لائن\" آپ کی اسکرین دیکھنا چاہتی ہے",
+        ctx: "UPI ادائیگی ناکام ہوئی اور آپ نے سوشل میڈیا پر شکایت کی، اس کے چند منٹ بعد فون آیا۔",
+        who: "\"UPI ہیلپ لائن\"",
         subject: "",
-        text: "\"Sir, your UPI payment of ₹1,500 is stuck. I can fix it in 2 minutes. [[remote|Please install the screen-sharing app from the link I sent and read me the 9-digit code on the screen.]] Keep your banking app open, I only need to see it. [[otp|When the OTP comes, don't cut the call, I will guide you.]]\"",
-        why: "Remote-access and screen-sharing apps let the caller see and control your phone; the 9-digit code gives them full access. Together with an OTP they can empty the account within minutes. Genuine helplines never ask to see your screen.",
-        todo: "Cut the call and uninstall any app you installed. Complain only inside the official UPI or bank app. If money has moved, call 1930 and your bank immediately."
+        text: "\"سر، آپ کی ₹1,500 کی UPI ادائیگی پھنسی ہوئی ہے۔ میں 2 منٹ میں ٹھیک کر دیتا ہوں۔ [[remote|میرے بھیجے لنک سے اسکرین شیئرنگ ایپ انسٹال کریں اور اسکرین پر لکھا 9 ہندسوں کا کوڈ مجھے پڑھ کر سنائیں۔]] بینکنگ ایپ کھلی رکھیں، مجھے صرف دیکھنا ہے۔ [[otp|OTP آئے تو کال مت کاٹیں، میں رہنمائی کروں گا۔]]\"",
+        why: "ریموٹ ایکسیس اور اسکرین شیئرنگ ایپس کال کرنے والے کو آپ کا فون دیکھنے اور چلانے دیتی ہیں؛ 9 ہندسوں کا کوڈ پوری رسائی دیتا ہے۔ OTP کے ساتھ وہ چند منٹ میں کھاتہ خالی کر سکتا ہے۔ اصلی ہیلپ لائنیں کبھی آپ کی اسکرین دیکھنے کو نہیں کہتیں۔",
+        todo: "کال کاٹیں اور انسٹال کی گئی ایپ ہٹا دیں۔ شکایت صرف سرکاری UPI یا بینک ایپ کے اندر کریں۔ پیسے چلے گئے ہوں تو فوراً 1930 اور اپنے بینک کو فون کریں۔"
       },
       invoice_exe: {
-        title: "Invoice attachment ending in .exe",
-        ctx: "An email to the accounts mailbox from a company you do not remember buying from.",
+        title: ".exe پر ختم ہونے والا انوائس اٹیچمنٹ",
+        ctx: "جس کمپنی سے خریداری یاد نہیں، اس کی طرف سے اکاؤنٹس میل باکس میں ای میل۔",
         who: "Global Trade Supplies",
-        subject: "Invoice attached - please process",
-        text: "[[odd|Dear Sir,]] please find attached the invoice for the goods delivered last week. [[attach|Attachment: Invoice_Oct2026.pdf.exe (412 KB)]] [[urgent|Kindly process payment today]] and confirm. [[odd|Regards, Accounts Dept.]]",
-        why: "A file ending in .exe is a program, not a PDF; the \".pdf\" in the name is a disguise. Opening it installs malware or ransomware that can lock every computer in the office. A vague greeting and no company signature are extra warnings.",
-        todo: "Don't open the attachment. Report the email to IT. Check your records: did you actually buy from this company? Turn on \"show file extensions\" on office computers so such tricks are visible."
+        subject: "انوائس منسلک ہے - براہِ کرم کارروائی کریں",
+        text: "[[odd|محترم جناب،]] پچھلے ہفتے بھیجے گئے مال کا انوائس منسلک ہے۔ [[attach|اٹیچمنٹ: Invoice_Oct2026.pdf.exe (412 KB)]] [[urgent|براہِ کرم آج ہی ادائیگی کریں]] اور تصدیق کریں۔ [[odd|خیر اندیش، اکاؤنٹس شعبہ۔]]",
+        why: ".exe پر ختم ہونے والی فائل PDF نہیں، پروگرام ہے؛ نام میں \".pdf\" صرف بھیس ہے۔ اسے کھولنے سے میلویئر یا رینسم ویئر انسٹال ہوتا ہے جو دفتر کا ہر کمپیوٹر لاک کر سکتا ہے۔ مبہم خطاب اور کمپنی کے دستخط کا نہ ہونا اضافی انتباہ ہیں۔",
+        todo: "اٹیچمنٹ نہ کھولیں۔ ای میل کی IT کو شکایت کریں۔ ریکارڈ دیکھیں: کیا آپ نے واقعی اس کمپنی سے خریدا تھا؟ ایسی چالیں نظر آئیں اس لیے دفتری کمپیوٹروں پر \"فائل ایکسٹینشن دکھائیں\" آن کریں۔"
       },
       echallan: {
-        title: "Traffic e-challan SMS with an app link",
-        ctx: "An SMS to the office driver's phone in the evening.",
+        title: "ایپ لنک والا ٹریفک ای چالان SMS",
+        ctx: "شام کو دفتر کے ڈرائیور کے فون پر SMS۔",
         who: "",
         subject: "",
-        text: "Traffic e-Challan: your vehicle KA-05-XX-1234 was recorded jumping a signal on 1 October. [[money|Fine ₹1,000.]] [[urgent|Pay within 24 hours]] to avoid double fine and court summons. [[link|Download the official challan app: echallan-pay.example.net/app.apk]]",
-        why: "Real e-challan messages come from a government sender ID, not a personal mobile number, and never ask you to download an .apk file. The APK is a malicious app that reads your SMS and OTPs.",
-        todo: "Delete the message. Check challans only on the official government e-challan website or the state police app. Report the number on Sanchar Saathi (Chakshu)."
+        text: "ٹریفک ای چالان: آپ کی گاڑی KA-05-XX-1234 نے 1 اکتوبر کو سگنل توڑا، یہ درج ہوا ہے۔ [[money|جرمانہ ₹1,000۔]] دوگنے جرمانے اور عدالتی سمن سے بچنے کے لیے [[urgent|24 گھنٹوں میں ادا کریں]]۔ [[link|سرکاری چالان ایپ ڈاؤن لوڈ کریں: echallan-pay.example.net/app.apk]]",
+        why: "اصلی ای چالان میسج ذاتی موبائل نمبر سے نہیں، سرکاری سینڈر ID سے آتے ہیں، اور کبھی .apk فائل ڈاؤن لوڈ کرنے کو نہیں کہتے۔ وہ APK آپ کے SMS اور OTP پڑھنے والی نقصان دہ ایپ ہے۔",
+        todo: "میسج ڈیلیٹ کریں۔ چالان صرف سرکاری ای چالان ویب سائٹ یا ریاستی پولیس ایپ میں دیکھیں۔ اس نمبر کی سنچار ساتھی (چکشو) پر شکایت کریں۔"
       },
       parcel_real: {
-        title: "Delivery update for a parcel you expect",
-        ctx: "You ordered packaging material last week. This SMS arrives.",
+        title: "متوقع پارسل کی ڈیلیوری کی معلومات",
+        ctx: "پچھلے ہفتے آپ نے پیکیجنگ کا سامان منگوایا تھا۔ یہ SMS آتا ہے۔",
         who: "",
         subject: "",
-        text: "SpeedParcel: your shipment SP48213 from Sunrise Packaging [[ok|will be delivered today between 2 pm and 5 pm.]] [[ok|No payment is due.]] [[ok|To track, use your shipment number on our website or app.]]",
-        why: "Sent from a registered sender ID (not a personal number), matches a parcel you expect, asks for no money and gives no link to tap. A genuine delivery message just informs you.",
-        todo: "Nothing to do. If a parcel message asks for a fee, a link or an app, stop and check on the official website using the shipment number."
+        text: "SpeedParcel: Sunrise Packaging کی طرف سے آپ کی شپمنٹ SP48213 [[ok|آج دوپہر 2 سے 5 بجے کے درمیان پہنچ جائے گی۔]] [[ok|کوئی ادائیگی باقی نہیں۔]] [[ok|ٹریک کرنے کے لیے ہماری ویب سائٹ یا ایپ پر شپمنٹ نمبر استعمال کریں۔]]",
+        why: "رجسٹرڈ سینڈر ID سے بھیجا گیا (ذاتی نمبر نہیں)، متوقع پارسل سے ملتا ہے، پیسے نہیں مانگتا اور ٹیپ کرنے کو لنک نہیں دیتا۔ اصلی ڈیلیوری میسج صرف اطلاع دیتا ہے۔",
+        todo: "کچھ نہیں کرنا۔ اگر پارسل کا میسج فیس، لنک یا ایپ مانگے تو رکیں اور شپمنٹ نمبر سے سرکاری ویب سائٹ پر دیکھیں۔"
       },
       kyc: {
-        title: "KYC expired, account blocked today",
-        ctx: "An SMS to the owner's phone at night.",
+        title: "KYC ختم، کھاتہ آج بند",
+        ctx: "رات کو مالک کے فون پر SMS۔",
         who: "",
         subject: "",
-        text: "Dear customer, [[threat|your NovaBank account will be blocked today]] because your KYC has expired. [[urgent|Update immediately]] at [[link|novabank-kyc-update.example.net]] or [[sender|call our officer on 94XXX XXX51]].",
-        why: "Banks never send KYC links from a personal mobile number and never block an account within hours. The link opens a fake bank page that steals your login and OTP; the \"officer\" asks you to install an app.",
-        todo: "Don't tap the link or call. If KYC is really due, the bank's own app or branch will tell you. Report the SMS on Sanchar Saathi (Chakshu)."
+        text: "محترم گاہک، آپ کا KYC ختم ہونے کی وجہ سے [[threat|آپ کا NovaBank کھاتہ آج بند کر دیا جائے گا]]۔ [[link|novabank-kyc-update.example.net]] پر [[urgent|فوراً اپ ڈیٹ کریں]] یا [[sender|ہمارے افسر کو 94XXX XXX51 پر فون کریں]]۔",
+        why: "بینک کبھی ذاتی موبائل نمبر سے KYC لنک نہیں بھیجتے اور چند گھنٹوں میں کھاتہ بند نہیں کرتے۔ لنک جعلی بینک صفحہ کھولتا ہے جو آپ کا لاگ ان اور OTP چراتا ہے؛ \"افسر\" ایپ انسٹال کرنے کو کہتا ہے۔",
+        todo: "لنک ٹیپ نہ کریں، فون بھی نہ کریں۔ اگر واقعی KYC باقی ہے تو بینک کی اپنی ایپ یا برانچ بتائے گی۔ SMS کی سنچار ساتھی (چکشو) پر شکایت کریں۔"
       },
       sim_swap: {
-        title: "Call: your SIM will be deactivated",
-        ctx: "A call to the office manager, who uses this number for bank OTPs.",
-        who: "\"Telecom company executive\"",
+        title: "کال: آپ کی SIM بند ہو جائے گی",
+        ctx: "دفتر کی مینیجر کو فون، جو یہ نمبر بینک OTP کے لیے استعمال کرتی ہیں۔",
+        who: "\"ٹیلی کام کمپنی کا افسر\"",
         subject: "",
-        text: "\"Madam, this is from your mobile network. [[threat|Your SIM will be deactivated in 24 hours]] because the 5G upgrade is pending. [[otp|To upgrade, read out the 20-digit number printed on your SIM card and press 1 after the SMS you receive.]] [[urgent|This offer closes today.]]\"",
-        why: "This is a SIM-swap attempt. With the 20-digit SIM number and your \"1\", the fraudster activates your number on their own SIM. Your phone goes dead and every OTP for banking and UPI then goes to them.",
-        todo: "Cut the call. Telecom companies never call for 5G upgrades. If your phone suddenly loses network for a long time, call your bank first, then your operator. Check SIMs issued in your name on Sanchar Saathi."
+        text: "\"میڈم، میں آپ کے موبائل نیٹ ورک سے بول رہا ہوں۔ 5G اپ گریڈ باقی ہونے کی وجہ سے [[threat|آپ کی SIM 24 گھنٹوں میں بند ہو جائے گی]]۔ [[otp|اپ گریڈ کے لیے اپنے SIM کارڈ پر چھپا 20 ہندسوں کا نمبر پڑھ کر سنائیں اور آنے والے SMS کے بعد 1 دبائیں۔]] [[urgent|یہ پیشکش آج ہی ختم ہو رہی ہے۔]]\"",
+        why: "یہ SIM سواپ کی کوشش ہے۔ 20 ہندسوں کے SIM نمبر اور آپ کے \"1\" سے دھوکے باز آپ کا نمبر اپنی SIM پر چالو کر لیتا ہے۔ آپ کا فون بند ہو جاتا ہے اور بینکنگ اور UPI کا ہر OTP اسے جاتا ہے۔",
+        todo: "کال کاٹیں۔ ٹیلی کام کمپنیاں 5G اپ گریڈ کے لیے کبھی فون نہیں کرتیں۔ اگر فون کا نیٹ ورک اچانک دیر تک چلا جائے تو پہلے بینک، پھر آپریٹر کو فون کریں۔ اپنے نام کی SIMs سنچار ساتھی پر دیکھیں۔"
       },
       mfa: {
-        title: "Seventh login approval request since midnight",
-        ctx: "Your phone keeps buzzing at night with sign-in approval requests from the office login app. Then a call comes.",
-        who: "SecureLogin app",
+        title: "آدھی رات سے ساتویں لاگ ان منظوری کی درخواست",
+        ctx: "رات کو دفتری لاگ ان ایپ کی سائن ان منظوری کی درخواستوں سے فون مسلسل بج رہا ہے۔ پھر ایک کال آتی ہے۔",
+        who: "SecureLogin ایپ",
         subject: "",
-        text: "[[otp|Approve sign-in? Someone is trying to sign in to your office account from a new device. Tap APPROVE to continue.]] [[odd|(This is the 7th request since midnight.)]] A moment later a caller says: \"[[urgent|This is IT, we are fixing a server. Please just approve the request so the alerts stop.]]\"",
-        why: "This is \"MFA fatigue\". The attacker already has your password and is spamming approval requests, hoping you tap Approve to make them stop. The \"IT\" call is part of the attack. Real IT never asks you to approve a login you did not start.",
-        todo: "Tap Deny every time. Change your password from a trusted device right away and tell IT. The repeated requests mean your password has already leaked."
+        text: "[[otp|سائن ان منظور کریں؟ کوئی نئے ڈیوائس سے آپ کے دفتری اکاؤنٹ میں سائن ان کر رہا ہے۔ آگے بڑھنے کے لیے APPROVE ٹیپ کریں۔]] [[odd|(آدھی رات سے یہ 7ویں درخواست ہے۔)]] تھوڑی دیر بعد ایک کال کرنے والا کہتا ہے: \"[[urgent|میں IT سے بول رہا ہوں، ہم سرور ٹھیک کر رہے ہیں۔ الرٹ بند ہوں اس لیے بس درخواست منظور کر دیں۔]]\"",
+        why: "اسے \"MFA تھکاوٹ\" کہتے ہیں۔ حملہ آور کے پاس آپ کا پاس ورڈ پہلے سے ہے اور وہ درخواستوں کی بوچھاڑ کر رہا ہے، اس امید پر کہ تنگ آ کر آپ Approve دبا دیں۔ \"IT\" کی کال حملے کا حصہ ہے۔ اصلی IT کبھی آپ کا نہ شروع کیا لاگ ان منظور کرنے کو نہیں کہتا۔",
+        todo: "ہر بار Deny دبائیں۔ بھروسے والے ڈیوائس سے فوراً پاس ورڈ بدلیں اور IT کو بتائیں۔ بار بار کی درخواستوں کا مطلب ہے کہ آپ کا پاس ورڈ پہلے ہی لیک ہو چکا ہے۔"
       },
       gst_real: {
-        title: "Monthly GST reminder from your CA",
-        ctx: "A WhatsApp message from your chartered accountant's saved number.",
-        who: "Mehta & Co. (our CA)",
+        title: "آپ کے CA کی طرف سے ماہانہ GST یاد دہانی",
+        ctx: "آپ کے چارٹرڈ اکاؤنٹنٹ کے محفوظ نمبر سے WhatsApp میسج۔",
+        who: "مہتا اینڈ کو. (ہمارے CA)",
         subject: "",
-        text: "Good morning. Reminder: GSTR-3B for September is due on 20 October. [[ok|Please upload the sales and purchase sheets to the same shared folder as every month.]] [[ok|No payment is needed from your side right now]]; I will send the challan details after filing, and we can confirm on our usual call.",
-        why: "Known CA, saved number, the usual monthly process, no new account number, no link and no urgency beyond the real due date. Verification happens on your regular call.",
-        todo: "Follow your normal process. If one day the \"CA\" sends a new bank account or asks you to pay through a link, call the CA office on the known number first."
+        text: "صبح بخیر۔ یاد دہانی: ستمبر کا GSTR-3B 20 اکتوبر تک جمع کرنا ہے۔ [[ok|براہِ کرم فروخت اور خرید کی شیٹس ہر مہینے کی طرح اسی شیئرڈ فولڈر میں اپ لوڈ کریں۔]] [[ok|ابھی آپ کی طرف سے کوئی ادائیگی نہیں چاہیے]]؛ فائلنگ کے بعد میں چالان کی تفصیلات بھیجوں گا، اور اپنی معمول کی کال پر پکا کر لیں گے۔",
+        why: "جانے پہچانے CA، محفوظ نمبر، معمول کا ماہانہ عمل، کوئی نیا کھاتہ نمبر نہیں، لنک نہیں اور اصل آخری تاریخ سے زیادہ جلدی نہیں۔ تصدیق آپ کی معمول کی کال پر ہوتی ہے۔",
+        todo: "اپنا معمول کا طریقہ اپنائیں۔ اگر کسی دن \"CA\" نیا بینک کھاتہ بھیجے یا لنک سے ادائیگی کو کہے تو پہلے معلوم نمبر پر CA کے دفتر کو فون کریں۔"
       },
       lookalike: {
-        title: "Salary slip on a look-alike domain",
-        ctx: "An email about a revised salary slip. Your company's real domain is meridiantextiles.example.com.",
-        who: "Payroll Team",
-        subject: "Your revised salary slip is ready",
-        text: "Dear employee, your salary structure has been revised from October. [[link|Log in at meridian-textiles-portal.example.com with your office password to view the new slip.]] [[urgent|The link expires in 12 hours.]] [[sender|Sent from payroll@meridian-textiles.example.com]]",
-        why: "The real company domain is meridiantextiles.example.com; the email uses meridian-textiles (with a hyphen), a look-alike domain. The link leads to a copied login page that steals your office password. A salary slip would be on the HR portal you always use.",
-        todo: "Don't click. Open the HR portal yourself by typing the address or from your bookmark. Report the email to IT; forwarding it helps them block the fake domain for everyone."
+        title: "ہوبہو ڈومین پر تنخواہ کی پرچی",
+        ctx: "نظرثانی شدہ تنخواہ کی پرچی کے بارے میں ای میل۔ آپ کی کمپنی کا اصلی ڈومین meridiantextiles.example.com ہے۔",
+        who: "پے رول ٹیم",
+        subject: "آپ کی نظرثانی شدہ تنخواہ کی پرچی تیار ہے",
+        text: "محترم ملازم، اکتوبر سے آپ کی تنخواہ کا ڈھانچہ بدل گیا ہے۔ [[link|نئی پرچی دیکھنے کے لیے meridian-textiles-portal.example.com پر دفتری پاس ورڈ سے لاگ ان کریں۔]] [[urgent|لنک 12 گھنٹوں میں ختم ہو جائے گا۔]] [[sender|payroll@meridian-textiles.example.com سے بھیجا گیا]]",
+        why: "کمپنی کا اصلی ڈومین meridiantextiles.example.com ہے؛ ای میل meridian-textiles (ہائفن کے ساتھ) استعمال کرتی ہے، جو ہوبہو دکھنے والا ڈومین ہے۔ لنک نقل شدہ لاگ ان صفحے پر لے جاتا ہے جو آپ کا دفتری پاس ورڈ چراتا ہے۔ تنخواہ کی پرچی اسی HR پورٹل پر ہوتی ہے جو آپ ہمیشہ استعمال کرتے ہیں۔",
+        todo: "کلک نہ کریں۔ پتا ٹائپ کر کے یا بک مارک سے HR پورٹل خود کھولیں۔ ای میل کی IT کو شکایت کریں؛ فارورڈ کرنے سے وہ سب کے لیے جعلی ڈومین بلاک کر سکتے ہیں۔"
       },
       usb: {
-        title: "Pen drive found in the parking lot",
-        ctx: "Monday morning, near the office entrance.",
-        who: "A pen drive found in the office parking",
+        title: "پارکنگ میں ملی پین ڈرائیو",
+        ctx: "پیر کی صبح، دفتر کے دروازے کے پاس۔",
+        who: "دفتر کی پارکنگ میں ملی پین ڈرائیو",
         subject: "",
-        text: "A pen drive lies near the entrance with a label: [[prize|\"Salary Revision 2026 - CONFIDENTIAL - Management only\"]]. A colleague says: \"[[remote|Let's plug it into the reception PC and see whose it is.]]\"",
-        why: "This is a \"USB drop\". Attackers leave pen drives with tempting labels; the moment one is plugged in, hidden software can install itself and spread across the office network. Curiosity is the attack.",
-        todo: "Don't plug it in anywhere. Hand it to IT or security in an envelope. Companies should disable auto-run and block unknown USB devices."
+        text: "دروازے کے پاس ایک پین ڈرائیو پڑی ہے، اس پر لیبل: [[prize|\"تنخواہ میں اضافہ 2026 - خفیہ - صرف انتظامیہ کے لیے\"]]۔ ایک ساتھی کہتا ہے: \"[[remote|چلو ریسیپشن کے PC میں لگا کر دیکھتے ہیں کس کی ہے۔]]\"",
+        why: "اسے \"USB ڈراپ\" کہتے ہیں۔ حملہ آور للچانے والے لیبل کی پین ڈرائیو چھوڑ جاتے ہیں؛ ایک لگاتے ہی چھپا سافٹ ویئر خود انسٹال ہو کر دفتری نیٹ ورک میں پھیل سکتا ہے۔ تجسس ہی حملہ ہے۔",
+        todo: "کہیں نہ لگائیں۔ لفافے میں ڈال کر IT یا سیکیورٹی کو دیں۔ کمپنیوں کو آٹو رن بند کر کے انجان USB ڈیوائس بلاک کرنے چاہییں۔"
       },
       wifi: {
-        title: "Free airport Wi-Fi asks for your email password",
-        ctx: "Waiting for a flight, you connect to a free network to approve two vendor payments.",
-        who: "Free Wi-Fi login screen at the airport",
+        title: "ہوائی اڈے کا مفت Wi-Fi ای میل پاس ورڈ مانگتا ہے",
+        ctx: "فلائٹ کا انتظار کرتے ہوئے، دو وینڈر ادائیگیاں منظور کرنے کے لیے آپ مفت نیٹ ورک سے جڑتے ہیں۔",
+        who: "ہوائی اڈے پر مفت Wi-Fi لاگ ان اسکرین",
         subject: "",
-        text: "Network: Airport_Free_WiFi_5G (no password). [[otp|To continue, sign in with your email address and email password.]] Then you plan to [[data|approve two vendor payments on the company banking portal]] while waiting for your flight.",
-        why: "Anyone can create a hotspot with an official-sounding name. On a fake network the attacker can see what you type, and a login page that asks for your email password is harvesting credentials. Banking on public Wi-Fi is a risk.",
-        todo: "Use your own mobile data or the company VPN for work and banking. Never type your office or email password on a Wi-Fi login page. Turn off auto-connect to open networks."
+        text: "نیٹ ورک: Airport_Free_WiFi_5G (کوئی پاس ورڈ نہیں)۔ [[otp|آگے بڑھنے کے لیے اپنا ای میل پتا اور ای میل پاس ورڈ ڈال کر سائن ان کریں۔]] پھر فلائٹ کے انتظار میں آپ [[data|کمپنی کے بینکنگ پورٹل پر دو وینڈر ادائیگیاں منظور کرنے]] کا سوچتے ہیں۔",
+        why: "سرکاری لگنے والے نام کا ہاٹ اسپاٹ کوئی بھی بنا سکتا ہے۔ جعلی نیٹ ورک پر حملہ آور آپ کا ٹائپ کیا دیکھ سکتا ہے، اور ای میل پاس ورڈ مانگنے والا لاگ ان صفحہ معلومات چرا رہا ہے۔ عوامی Wi-Fi پر بینکنگ خطرناک ہے۔",
+        todo: "کام اور بینکنگ کے لیے اپنا موبائل ڈیٹا یا کمپنی کا VPN استعمال کریں۔ Wi-Fi لاگ ان صفحے پر کبھی دفتری یا ای میل پاس ورڈ ٹائپ نہ کریں۔ کھلے نیٹ ورکس سے خود بخود جڑنا بند کریں۔"
       },
       upi_real: {
-        title: "Payment received notification",
-        ctx: "A notification from your own UPI app while you are at the counter.",
-        who: "UPI app",
+        title: "ادائیگی ملنے کا نوٹیفکیشن",
+        ctx: "کاؤنٹر پر ہوتے ہوئے آپ کی اپنی UPI ایپ کا نوٹیفکیشن۔",
+        who: "UPI ایپ",
         subject: "",
-        text: "[[ok|₹2,500 received from Anita Traders]] into your current account ending 4471. [[ok|No action needed.]] Transaction ID 628104...",
-        why: "Money coming IN never needs your PIN, OTP or a scan. The notification is from your own app, names the payer and asks nothing of you. Compare this with a \"collect request\" or a QR you are asked to scan: those take money OUT.",
-        todo: "Nothing to do. Check the amount against your invoice. If a \"payment received\" message ever asks you to approve, enter a PIN or scan, it is taking money, not giving it."
+        text: "[[ok|Anita Traders سے ₹2,500 موصول ہوئے]] آپ کے 4471 پر ختم ہونے والے کرنٹ کھاتے میں۔ [[ok|کسی کارروائی کی ضرورت نہیں۔]] ٹرانزیکشن ID 628104...",
+        why: "آنے والے پیسوں کے لیے کبھی PIN، OTP یا اسکین کی ضرورت نہیں۔ نوٹیفکیشن آپ کی اپنی ایپ کا ہے، ادا کرنے والے کا نام بتاتا ہے اور آپ سے کچھ نہیں مانگتا۔ اس کا موازنہ \"کلیکٹ ریکوئسٹ\" یا اسکین کرنے کو کہے گئے QR سے کریں: وہ پیسے باہر لے جاتے ہیں۔",
+        todo: "کچھ نہیں کرنا۔ رقم انوائس سے ملائیں۔ اگر کبھی \"ادائیگی موصول\" میسج منظوری، PIN یا اسکین مانگے تو وہ پیسے دے نہیں رہا، لے رہا ہے۔"
       },
       dpdp: {
-        title: "Colleague wants the customer list on WhatsApp",
-        ctx: "A WhatsApp message from a sales colleague's number in the evening.",
-        who: "Sameer (sales colleague)",
+        title: "ساتھی کو گاہکوں کی فہرست WhatsApp پر چاہیے",
+        ctx: "شام کو سیلز کے ساتھی کے نمبر سے WhatsApp میسج۔",
+        who: "سمیر (سیلز ساتھی)",
         subject: "",
-        text: "Bro, I am working from home today. [[data|Please export the full customer list with phone numbers and Aadhaar copies and send it to me on this WhatsApp]], I will delete it later. [[urgent|Need it in 10 minutes for the campaign.]] [[secret|No need to tell the manager, it's a small thing.]]",
-        why: "Customer phone numbers and Aadhaar copies are personal data protected by India's DPDP Act. Sending them on personal WhatsApp takes them outside company control, and this could also be a hacked account or an impersonation. \"Don't tell the manager\" is never acceptable.",
-        todo: "Say no politely. Share customer data only through the company's approved system, with the manager's approval and only the fields needed. If a colleague's account seems odd, call them."
+        text: "بھائی، آج میں گھر سے کام کر رہا ہوں۔ [[data|فون نمبروں اور آدھار کی کاپیوں سمیت گاہکوں کی پوری فہرست ایکسپورٹ کر کے مجھے اسی WhatsApp پر بھیج دو]]، بعد میں ڈیلیٹ کر دوں گا۔ [[urgent|مہم کے لیے 10 منٹ میں چاہیے۔]] [[secret|مینیجر کو بتانے کی ضرورت نہیں، چھوٹی سی بات ہے۔]]",
+        why: "گاہکوں کے فون نمبر اور آدھار کی کاپیاں بھارت کے DPDP قانون کے تحت محفوظ ذاتی ڈیٹا ہیں۔ ذاتی WhatsApp پر بھیجنے سے یہ کمپنی کے کنٹرول سے باہر چلے جاتے ہیں، اور یہ ہیک شدہ اکاؤنٹ یا بھیس بدلنا بھی ہو سکتا ہے۔ \"مینیجر کو مت بتانا\" کبھی قابلِ قبول نہیں۔",
+        todo: "نرمی سے انکار کریں۔ گاہکوں کا ڈیٹا صرف کمپنی کے منظور شدہ نظام سے، مینیجر کی منظوری کے ساتھ اور صرف ضروری تفصیلات شیئر کریں۔ ساتھی کا اکاؤنٹ عجیب لگے تو انہیں فون کریں۔"
       },
       otp_call: {
-        title: "\"Fraud department\" needs the OTP to cancel a payment",
-        ctx: "A call while an OTP SMS arrives on your phone.",
-        who: "\"NovaBank Fraud Department\"",
+        title: "ادائیگی منسوخ کرنے کو \"فراڈ شعبے\" کو OTP چاہیے",
+        ctx: "فون پر OTP SMS آتے ہی آئی کال۔",
+        who: "\"NovaBank فراڈ شعبہ\"",
         subject: "",
-        text: "\"Sir, [[threat|a transaction of ₹49,999 is happening on your card right now.]] To cancel it [[urgent|we must act within 60 seconds]]. [[otp|Tell me the OTP that has just arrived on your phone and I will reverse it.]] [[secret|Please do not disconnect or call anyone.]]\"",
-        why: "The OTP that \"just arrived\" is for the scammer's own attempt to pay with your card. Reading it out completes the payment. Banks never ask for an OTP to cancel anything, and the 60-second panic is created so you don't think.",
-        todo: "Cut the call. Open your bank app and block the card yourself, or call the number on the back of your card. Never read an OTP to anyone. If money has left, call 1930 right away."
+        text: "\"سر، [[threat|آپ کے کارڈ پر ابھی ₹49,999 کا لین دین ہو رہا ہے۔]] اسے منسوخ کرنے کے لیے [[urgent|ہمیں 60 سیکنڈ میں کارروائی کرنی ہوگی]]۔ [[otp|ابھی آپ کے فون پر آیا OTP بتائیں، میں اسے واپس کر دوں گا۔]] [[secret|براہِ کرم کال نہ کاٹیں اور کسی کو فون نہ کریں۔]]\"",
+        why: "\"ابھی آیا\" OTP دھوکے باز کی آپ کے کارڈ سے ادائیگی کی کوشش کے لیے ہے۔ اسے پڑھ کر سنانے سے ادائیگی مکمل ہو جاتی ہے۔ بینک کچھ بھی منسوخ کرنے کے لیے کبھی OTP نہیں مانگتے، اور 60 سیکنڈ کی گھبراہٹ اس لیے پیدا کی جاتی ہے کہ آپ سوچیں نہیں۔",
+        todo: "کال کاٹیں۔ بینک ایپ کھول کر خود کارڈ بلاک کریں، یا کارڈ کے پیچھے والے نمبر پر فون کریں۔ OTP کبھی کسی کو پڑھ کر نہ سنائیں۔ پیسے چلے گئے ہوں تو فوراً 1930 پر فون کریں۔"
       },
       hr_bonus: {
-        title: "Diwali bonus form asks for net-banking login",
-        ctx: "An email to all staff just before Diwali, from an address that looks like HR.",
-        who: "HR Rewards Team",
-        subject: "Diwali bonus ₹25,000 - confirm your bank account",
-        text: "Dear team member, we are pleased to announce a Diwali bonus of ₹25,000. [[attach|Open the attached form (Bonus_Form.html)]] and [[otp|enter your net-banking user ID and password]] so that the bonus is credited directly. [[urgent|Forms received after 6 pm today will not be processed.]] [[sender|HR Rewards - meridiantextiles-bonus.example.net]]",
-        why: "HR already has your salary account; no company asks for your net-banking login for a bonus. The sender is a look-alike domain, the HTML attachment is a fake bank login page, and a same-day deadline adds pressure.",
-        todo: "Don't open the attachment or enter anything. Ask HR in person or on the intranet. Report the email to IT so colleagues are warned."
+        title: "دیوالی بونس فارم نیٹ بینکنگ لاگ ان مانگتا ہے",
+        ctx: "دیوالی سے ٹھیک پہلے، HR جیسے دکھنے والے پتے سے تمام ملازمین کو ای میل۔",
+        who: "HR ریوارڈز ٹیم",
+        subject: "دیوالی بونس ₹25,000 - اپنا بینک کھاتہ پکا کریں",
+        text: "محترم ٹیم ممبر، ہمیں ₹25,000 کے دیوالی بونس کا اعلان کرتے ہوئے خوشی ہے۔ [[attach|منسلک فارم (Bonus_Form.html) کھولیں]] اور بونس سیدھا جمع ہونے کے لیے [[otp|اپنا نیٹ بینکنگ یوزر ID اور پاس ورڈ ڈالیں]]۔ [[urgent|آج شام 6 بجے کے بعد آنے والے فارم قبول نہیں ہوں گے۔]] [[sender|HR Rewards - meridiantextiles-bonus.example.net]]",
+        why: "HR کے پاس آپ کا تنخواہ کھاتہ پہلے سے ہے؛ کوئی کمپنی بونس کے لیے نیٹ بینکنگ لاگ ان نہیں مانگتی۔ بھیجنے والا ہوبہو ڈومین ہے، HTML اٹیچمنٹ جعلی بینک لاگ ان صفحہ ہے، اور اسی دن کی آخری مہلت دباؤ بڑھاتی ہے۔",
+        todo: "اٹیچمنٹ نہ کھولیں اور کچھ نہ ڈالیں۔ HR سے روبرو یا انٹرانیٹ پر پوچھیں۔ ساتھیوں کو خبردار کرنے کے لیے ای میل کی IT کو شکایت کریں۔"
       },
       electricity: {
-        title: "Office power will be cut tonight",
-        ctx: "An SMS to the shop owner's phone at 8:35 pm.",
+        title: "آج رات دفتر کی بجلی کٹ جائے گی",
+        ctx: "رات 8:35 بجے دکان کے مالک کے فون پر SMS۔",
         who: "",
         subject: "",
-        text: "Dear consumer, [[threat|your office electricity connection will be disconnected tonight at 9:30 pm]] because [[odd|last month bill is not update in our system]]. Please contact our officer [[sender|93XXX XXX40]] [[urgent|immediately]].",
-        why: "Electricity boards don't disconnect at night after one SMS from a personal mobile. When you call, the \"officer\" asks you to install an app or pay ₹10 through a link, and the real target is your bank account.",
-        todo: "Don't call. Check the bill in the electricity board's official app or office. Report the number on Sanchar Saathi (Chakshu)."
+        text: "محترم صارف، [[odd|پچھلے مہینے کا بل ہمارے سسٹم میں اپ ڈیٹ نہیں ہے]] اس لیے [[threat|آپ کے دفتر کا بجلی کنکشن آج رات 9:30 بجے کاٹ دیا جائے گا]]۔ براہِ کرم ہمارے افسر سے [[sender|93XXX XXX40]] پر [[urgent|فوراً]] رابطہ کریں۔",
+        why: "بجلی بورڈ ذاتی موبائل سے ایک SMS کے بعد رات کو بجلی نہیں کاٹتے۔ فون کرنے پر \"افسر\" ایپ انسٹال کرنے یا لنک سے ₹10 ادا کرنے کو کہتا ہے، اور اصل نشانہ آپ کا بینک کھاتہ ہوتا ہے۔",
+        todo: "فون نہ کریں۔ بل بجلی بورڈ کی سرکاری ایپ یا دفتر میں دیکھیں۔ اس نمبر کی سنچار ساتھی (چکشو) پر شکایت کریں۔"
       },
       wa_hijack: {
-        title: "Colleague asks you to forward a 6-digit code",
-        ctx: "A late-night WhatsApp message from a colleague's saved number, right after a code SMS arrived on your phone.",
-        who: "Rohan (colleague)",
+        title: "ساتھی 6 ہندسوں کا کوڈ فارورڈ کرنے کو کہتا ہے",
+        ctx: "آپ کے فون پر کوڈ کا SMS آنے کے فوراً بعد، رات دیر گئے ساتھی کے محفوظ نمبر سے WhatsApp میسج۔",
+        who: "روہن (ساتھی)",
         subject: "",
-        text: "Hey, sorry to disturb you so late. [[odd|I entered your number by mistake while logging into WhatsApp and a 6-digit code went to your phone.]] [[otp|Please forward me that code]], [[urgent|quickly, otherwise my account will be locked.]]",
-        why: "The code that arrived is the verification code for YOUR WhatsApp. Whoever gets it takes over your account and then messages all your contacts and office groups asking for money. The message itself may come from a colleague's already-hijacked account.",
-        todo: "Never forward a verification code. Phone the colleague to warn them that their account is hacked. Turn on two-step verification in WhatsApp settings."
+        text: "ارے، اتنی رات کو تنگ کرنے کی معذرت۔ [[odd|WhatsApp میں لاگ ان کرتے ہوئے غلطی سے تمہارا نمبر ڈال دیا اور 6 ہندسوں کا کوڈ تمہارے فون پر چلا گیا۔]] [[otp|وہ کوڈ مجھے فارورڈ کر دو]]، [[urgent|جلدی، ورنہ میرا اکاؤنٹ لاک ہو جائے گا۔]]",
+        why: "آیا ہوا کوڈ آپ کے اپنے WhatsApp کا ویریفیکیشن کوڈ ہے۔ جسے یہ ملے وہ آپ کا اکاؤنٹ قبضے میں لے کر آپ کے تمام رابطوں اور دفتری گروپوں کو پیسے مانگنے والے میسج بھیجتا ہے۔ یہ میسج بھی ساتھی کے پہلے سے ہیک شدہ اکاؤنٹ سے آ سکتا ہے۔",
+        todo: "ویریفیکیشن کوڈ کبھی فارورڈ نہ کریں۔ ساتھی کو فون کر کے بتائیں کہ ان کا اکاؤنٹ ہیک ہو گیا ہے۔ WhatsApp سیٹنگز میں ٹو اسٹیپ ویریفیکیشن آن کریں۔"
       },
       invest_group: {
-        title: "Stock-tips group with guaranteed returns",
-        ctx: "You were added to a WhatsApp group without asking.",
-        who: "VIP Stock Tips - Group admin",
+        title: "گارنٹی منافع والا اسٹاک ٹپس گروپ",
+        ctx: "آپ کو بغیر پوچھے ایک WhatsApp گروپ میں شامل کر دیا گیا۔",
+        who: "VIP Stock Tips - گروپ ایڈمن",
         subject: "",
-        text: "Welcome to our premium group! [[prize|Our members earned 32% returns last month with guaranteed insider tips.]] Download our trading app from [[link|this link, not from the app store]], and [[money|start with a deposit of ₹50,000]]. [[prize|See the screenshots of profits posted by members!]] [[urgent|Entry closes at midnight.]]",
-        why: "Nobody can guarantee returns, and \"insider tips\" are illegal. The app is fake: it shows imaginary profits so you deposit more, and withdrawal is never allowed. The \"members\" posting screenshots are the scammers.",
-        todo: "Leave and report the group. Invest only through SEBI-registered brokers and apps from the official app store. If you have deposited, call 1930 and report at cybercrime.gov.in."
+        text: "ہمارے پریمیم گروپ میں خوش آمدید! [[prize|گارنٹی والی اندرونی ٹپس سے ہمارے ممبروں نے پچھلے مہینے 32% منافع کمایا۔]] ہماری ٹریڈنگ ایپ [[link|ایپ اسٹور سے نہیں، اس لنک سے]] ڈاؤن لوڈ کریں، اور [[money|₹50,000 جمع کر کے شروع کریں]]۔ [[prize|ممبروں کے ڈالے منافع کے اسکرین شاٹ دیکھیں!]] [[urgent|داخلہ آدھی رات کو بند ہو جائے گا۔]]",
+        why: "کوئی منافع کی گارنٹی نہیں دے سکتا، اور \"اندرونی ٹپس\" غیر قانونی ہیں۔ ایپ جعلی ہے: آپ مزید جمع کریں اس لیے فرضی منافع دکھاتی ہے، اور پیسے نکالنے کبھی نہیں دیتی۔ اسکرین شاٹ ڈالنے والے \"ممبر\" دھوکے باز ہی ہیں۔",
+        todo: "گروپ چھوڑیں اور رپورٹ کریں۔ صرف SEBI رجسٹرڈ بروکرز اور سرکاری ایپ اسٹور کی ایپس سے سرمایہ کاری کریں۔ اگر جمع کر چکے ہیں تو 1930 پر فون کریں اور cybercrime.gov.in پر شکایت کریں۔"
       },
       bank_real: {
-        title: "Debit alert for a payment you made",
-        ctx: "Your accounts team paid the packaging vendor today. This SMS arrives.",
+        title: "آپ کی کی گئی ادائیگی کا ڈیبٹ الرٹ",
+        ctx: "آپ کی اکاؤنٹس ٹیم نے آج پیکیجنگ وینڈر کو ادائیگی کی۔ یہ SMS آتا ہے۔",
         who: "",
         subject: "",
-        text: "NovaBank: [[ok|₹86,000 debited from account ending 4471 on 10 Oct for NEFT to Sunrise Packaging]], ref N26101034. Balance ₹3,42,118. [[ok|If not done by you, call the number on the back of your debit card.]]",
-        why: "This matches the payment your accounts team made today, comes from the bank's sender ID, has no link or number inside the SMS and points you to the number on your own card.",
-        todo: "Match it with your payment records. If any debit alert does not match a payment you made, call the bank immediately using the number on the card, not a number from a message."
+        text: "NovaBank: [[ok|Sunrise Packaging کو NEFT کے لیے 10 اکتوبر کو 4471 پر ختم ہونے والے کھاتے سے ₹86,000 ڈیبٹ]]، حوالہ N26101034۔ بیلنس ₹3,42,118۔ [[ok|اگر آپ نے نہیں کیا تو اپنے ڈیبٹ کارڈ کے پیچھے والے نمبر پر فون کریں۔]]",
+        why: "یہ آپ کی اکاؤنٹس ٹیم کی آج کی ادائیگی سے ملتا ہے، بینک کے سینڈر ID سے آیا ہے، SMS میں کوئی لنک یا نمبر نہیں، اور آپ کے اپنے کارڈ والے نمبر کی طرف اشارہ کرتا ہے۔",
+        todo: "اپنے ادائیگی ریکارڈ سے ملائیں۔ اگر کوئی ڈیبٹ الرٹ آپ کی کی گئی ادائیگی سے نہ ملے تو میسج والے نہیں، کارڈ والے نمبر پر فوراً بینک کو فون کریں۔"
       }
     }
   }

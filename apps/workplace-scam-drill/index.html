@@ -218,6 +218,16 @@
       #app[data-print="posters"] .act h3 { font-size: 30pt; margin-bottom: 8mm; line-height: 1.25; }
       #app[data-print="posters"] .act p { font-size: 18pt; line-height: 1.5; }
       #app[data-print="posters"] .act .p-foot { display: block !important; margin-top: 12mm; font-size: 13pt; color: #333; }
+      /* checklist: the six habits and helplines on one A4 page */
+      #app[data-print="checklist"] > *:not(#panel-todo), #app[data-print="checklist"] #panel-todo > *:not(.poster) { display: none !important; }
+      #app[data-print="checklist"] .poster { border: 0; padding: 0; box-shadow: none; }
+      #app[data-print="checklist"] .poster h2 { font-size: 18pt; margin: 0 0 4mm; }
+      #app[data-print="checklist"] .acts { gap: 3mm; margin: 0 0 4mm; }
+      #app[data-print="checklist"] .act { padding: 3mm; }
+      #app[data-print="checklist"] .act h3 { font-size: 11.5pt; }
+      #app[data-print="checklist"] .act p { font-size: 10pt; }
+      #app[data-print="checklist"] .act .ai { font-size: 18pt; }
+      #app[data-print="checklist"] .act h3::before { content: "\2610  "; font-size: 13pt; }
       /* certificate: one A4 landscape page */
       #app[data-print="cert"] > *:not(#panel-cert), #app[data-print="cert"] #panel-cert > *:not(.cert-wrap) { display: none !important; }
       #app[data-print="cert"] .cert-wrap { max-width: none; }
@@ -249,7 +259,10 @@
     <section id="panel-todo" role="tabpanel" aria-labelledby="tab-todo" hidden>
       <div class="row spread no-print" style="margin-bottom:12px">
         <p class="muted mb0" data-i18n="todo_sub"></p>
-        <button type="button" class="btn btn-primary" id="printPosters">🖨️ <span data-i18n="print_posters"></span></button>
+        <div class="row">
+          <button type="button" class="btn" id="printChecklist">📋 <span data-i18n="print_checklist"></span></button>
+          <button type="button" class="btn btn-primary" id="printPosters">🖨️ <span data-i18n="print_posters"></span></button>
+        </div>
       </div>
       <article class="card poster" id="poster">
         <h2 data-i18n="todo_title"></h2>

@@ -636,6 +636,7 @@
   }
   window.addEventListener('afterprint', function () { $('#app').removeAttribute('data-print'); printMode = ''; });
   $('#printPosters').addEventListener('click', function () { doPrint('posters'); });
+  $('#printChecklist').addEventListener('click', function () { doPrint('checklist'); });
 
   /* ---------------- certificate ---------------- */
   var cert = store.get('cert', { name: '', org: '', trainer: '' });
