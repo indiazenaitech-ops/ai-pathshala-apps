@@ -7,7 +7,7 @@
   var store = EDU.store(SLUG);
   var t = EDU.t, $ = EDU.$, esc = EDU.esc, el = EDU.el;
   var DAY = 86400000, PAGE = 200, MORE = 500;
-  var QUOTA_WARN = 4 * 1024 * 1024, QUOTA_MAX = 5 * 1024 * 1024;   // localStorage is ~5 MB in most browsers
+  var QUOTA_WARN = 4 * 1024 * 1024, QUOTA_MAX = 5 * 1024 * 1024;   // browser storage for a site is ~5 MB in most browsers
   var UNITS = ['pcs', 'pkt', 'kg', 'g', 'l', 'ml', 'box', 'dz', 'm', 'bag', 'strip', 'btl'];
   var UNIT_ALIAS = { pc: 'pcs', pcs: 'pcs', piece: 'pcs', pieces: 'pcs', nos: 'pcs', no: 'pcs', unit: 'pcs', units: 'pcs', each: 'pcs', ea: 'pcs',
     pkt: 'pkt', packet: 'pkt', packets: 'pkt', pack: 'pkt', pouch: 'pkt', kg: 'kg', kgs: 'kg', kilo: 'kg', kilogram: 'kg', g: 'g', gm: 'g', gms: 'g', gram: 'g', grams: 'g',
