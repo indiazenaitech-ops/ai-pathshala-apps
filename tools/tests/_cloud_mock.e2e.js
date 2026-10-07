@@ -18,7 +18,7 @@ const http = require('http');
 const { chromium } = require('playwright-core');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => fs.existsSync(p));
+const CHROME = require('../chrome-path')();
 const SCRIPTS = ['shared/firebase-config.js', 'shared/cloud-mock.js', 'shared/cloud.js'];
 const FAKE_CFG = "window.EDU_FIREBASE = { apiKey: 'AIzaFakeKeyForTestsOnly', authDomain: 'demo-test.firebaseapp.com', projectId: 'demo-test', appId: '1:1:web:1' };";
 

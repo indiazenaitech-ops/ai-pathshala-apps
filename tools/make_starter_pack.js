@@ -22,7 +22,7 @@ const SHOTS = path.join(__dirname, 'shots', 'starter-pack');
 const SITE = 'https://apnipathshala.ai/';
 const YT = 'https://www.youtube.com/@Apni_Pathshala_AI';
 const ZIP = 'https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip';
-const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', '/usr/bin/google-chrome'].find(p => fs.existsSync(p));
+const CHROME = require('./chrome-path')();
 const PAGES = 10;
 
 /* ------------------------------------------------------------------ site data */

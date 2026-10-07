@@ -19,7 +19,7 @@
 const fs = require('fs'), path = require('path'), http = require('http');
 const ROOT = path.resolve(__dirname, '..', '..');
 const { chromium } = require(path.join(ROOT, 'tools', 'node_modules', 'playwright-core'));
-const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', '/usr/bin/google-chrome'].find(p => fs.existsSync(p));
+const CHROME = require('../../tools/chrome-path')();
 const PROJECT = 'demo-apni-pathshala';
 const FS = 'http://127.0.0.1:8080';
 const DOCS = `${FS}/v1/projects/${PROJECT}/databases/(default)/documents`;

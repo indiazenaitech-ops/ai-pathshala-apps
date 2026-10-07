@@ -13,7 +13,7 @@ const argv = process.argv.slice(2);
 const bi = argv.indexOf('--base');
 const BASE = bi >= 0 ? argv[bi + 1] : 'https://apnipathshala.ai/';
 const filter = argv.find((a, i) => !a.startsWith('--') && (bi < 0 || i !== bi + 1)) || '';
-const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => fs.existsSync(p));
+const CHROME = require('../../tools/chrome-path')();
 const FFMPEG = process.env.FFMPEG || 'ffmpeg';
 
 /* text typed into the apps for the screenshots (user content, so it follows the screenshot language) */

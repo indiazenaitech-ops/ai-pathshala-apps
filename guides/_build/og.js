@@ -9,7 +9,7 @@ const { chromium } = require(path.resolve(__dirname, '../../tools/node_modules/p
 const S = require('./structure.js');
 const ROOT = path.resolve(__dirname, '..', '..');
 const IMG = path.join(ROOT, 'guides', 'img');
-const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => fs.existsSync(p));
+const CHROME = require('../../tools/chrome-path')();
 const sb = { window: {} }; vm.runInNewContext(fs.readFileSync(path.join(ROOT, 'guides', 'strings.js'), 'utf8'), sb);
 const STR = sb.window.GUIDES_STRINGS;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])).replace(/&lt;(\/?)(b|i)&gt;/g, '');

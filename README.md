@@ -33,10 +33,10 @@ The shared runtime (`shared/edu.js`) provides the i18n, the page shell and helpe
 `shared/edu.css` provides the design system. See [AGENTS.md](AGENTS.md) for the contract every app follows.
 
 ```bash
-cd tools && npm install            # playwright-core (uses your installed Chrome)
+cd tools && npm install            # playwright-core (uses your installed Chrome; on Linux/cloud see CLAUDE.md)
 node tools/verify.js <slug>        # static + 12-language + interaction + offline checks
 node tools/verify.js home          # the library home page
-node tools/verify_pages.js schools # the For-schools page (same checks)
+node tools/verify_pages.js schools # also: business, about, contact (same checks)
 node tools/tests/_signup.check.js  # the "Stay updated" form on home, schools and business (Demo mode, 12 languages)
 node tools/build_catalog.js        # regenerate catalog.js, APPS.md, sitemap.xml and the apps JSON-LD in index.html
 ```

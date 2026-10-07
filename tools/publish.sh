@@ -12,7 +12,7 @@ git add .gitignore .nojekyll README.md LICENSE AGENTS.md APPS.md index.html cata
         tools/verify.js tools/build_catalog.js tools/publish.sh tools/package.json tools/package-lock.json \
         apps/_template tools/tests/_template.test.js
 # site pages + SEO files + site tools (each only if present, so a missing file never stops a publish)
-for f in schools.html business.html about.html contact.html robots.txt sitemap.xml tools/verify_pages.js tools/inject_og.js tools/make_og.js; do
+for f in schools.html business.html about.html contact.html robots.txt sitemap.xml tools/verify_pages.js tools/chrome-path.js CLAUDE.md tools/inject_og.js tools/make_og.js; do
   if [ -f "$f" ]; then git add "$f"; fi
 done
 # press kit / printable flyer (linked from schools.html via EDU_SITE.press in catalog.js)

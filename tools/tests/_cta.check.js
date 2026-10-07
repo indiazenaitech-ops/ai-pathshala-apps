@@ -22,7 +22,7 @@ const { chromium } = require('playwright-core');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const LANGS = ['en', 'hi', 'bn', 'mr', 'gu', 'pa', 'or', 'ta', 'te', 'kn', 'ml', 'ur'];
-const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => fs.existsSync(p));
+const CHROME = require('../chrome-path')();
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.webmanifest': 'application/manifest+json', '.pdf': 'application/pdf', '.wasm': 'application/wasm' };
 const SHOTS = path.join(ROOT, 'tools', 'shots', 'cta');
 const APPS = ['unit-converter', 'phishing-spotter', 'whiteboard', 'gst-calculator'];   /* a school app, a present-mode app, a full-canvas app, a work tool */

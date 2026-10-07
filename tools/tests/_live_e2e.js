@@ -28,7 +28,7 @@ const http = require('http');
 const { chromium } = require('playwright-core');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => fs.existsSync(p));
+const CHROME = require('../chrome-path')();
 const NO_FB = process.argv.includes('--no-fb');
 const SHOTS = (process.argv.find(a => a.startsWith('--shots=')) || '').slice(8);   // --shots=<dir>: save screenshots of the main screens
 const SDK = 'https://cdn.jsdelivr.net/npm/firebase@12.19.0/';

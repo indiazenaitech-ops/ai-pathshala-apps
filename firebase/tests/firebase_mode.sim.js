@@ -23,8 +23,7 @@ const http = require('http');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const { chromium } = require(path.join(ROOT, 'tools', 'node_modules', 'playwright-core'));
-const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
-  '/usr/bin/google-chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'].find(p => fs.existsSync(p));
+const CHROME = require('../../tools/chrome-path')();
 const arg = (name, def) => { const a = process.argv.find(x => x.startsWith('--' + name + '=')); return a ? Number(a.split('=')[1]) : def; };
 const N = arg('students', 40), Q = arg('questions', 10);
 const STRICT = process.argv.includes('--strict');

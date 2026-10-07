@@ -115,7 +115,7 @@ if (argv.includes('--static')) return finish();
 /* ---------- browser ---------- */
 (async () => {
   const { chromium } = require(path.join(ROOT, 'tools', 'node_modules', 'playwright-core'));
-  const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => fs.existsSync(p));
+  const CHROME = require('../../tools/chrome-path')();
   const srv = http.createServer((req, res) => {
     let p = decodeURIComponent(req.url.split('?')[0]); if (p.endsWith('/')) p += 'index.html';
     const fp = path.join(ROOT, p);

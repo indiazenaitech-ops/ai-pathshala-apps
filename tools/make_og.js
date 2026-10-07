@@ -15,8 +15,7 @@ const argv = process.argv.slice(2);
 const opt = (k) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : null; };
 const OUT = path.resolve(opt('--out') || path.join(ROOT, 'shared', 'img'));
 const ONLY = (opt('--only') || '').split(',').filter(Boolean);
-const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
-  '/usr/bin/google-chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'].find(p => fs.existsSync(p));
+const CHROME = require('./chrome-path')();
 
 const LOGO = 'data:image/png;base64,' + fs.readFileSync(path.join(ROOT, 'shared', 'img', 'icon-512.png')).toString('base64');
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
