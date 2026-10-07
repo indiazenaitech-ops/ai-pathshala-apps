@@ -31,7 +31,7 @@
     for (c = 0; c < ds.width; c++) {
       if (ds.types[c] === 'text' || ds.types[c] === 'bool') {
         var u = uniqueCount(ds, c, 200);
-        if (u >= 2 && u <= 50 && u < bestU) { best = c; bestU = u; }
+        if (u >= 2 && u <= 50) { best = c; break; }
       }
     }
     if (best < 0) for (c = 0; c < ds.width; c++) if (ds.types[c] === 'text' || ds.types[c] === 'date') { best = c; break; }
@@ -216,7 +216,7 @@
     var cfg = S.cfg, res = S.result, g = grid(res), hasCols = cfg.cols >= 0, table = EDU.$('#ptable');
     table.textContent = '';
     EDU.$('#h-out').textContent = valueTitle();
-    var hr = EDU.el('tr', {}, EDU.el('th', { class: 'corner no-i18n', scope: 'col', text: colName(cfg.rows) + (hasCols ? ' ↓ / ' + colName(cfg.cols) + ' →' : '') }));
+    var hr = EDU.el('tr', {}, EDU.el('th', { class: 'corner no-i18n', scope: 'col', text: colName(cfg.rows) + (hasCols ? ' ↓ / ' + colName(cfg.cols) + (document.documentElement.dir === 'rtl' ? ' ←' : ' →') : '') }));
     if (hasCols) res.colKeys.forEach(function (b) { hr.appendChild(EDU.el('th', { scope: 'col', class: b === BLANK ? 'blank' : 'no-i18n', text: keyLabel(b, cfg.cols, cfg.colGroup) })); });
     hr.appendChild(EDU.el('th', { scope: 'col', class: 'tot', text: hasCols ? EDU.t('grand_total') : (cfg.show === 'value' ? EDU.t('agg_' + cfg.agg) : EDU.t('show_' + cfg.show)) }));
     table.appendChild(EDU.el('thead', {}, hr));
@@ -225,7 +225,7 @@
       var lab = keyLabel(row.key, cfg.rows, cfg.rowGroup);
       var tr = EDU.el('tr', {}, EDU.el('th', { scope: 'row', class: row.key === BLANK ? 'blank' : 'no-i18n', text: lab, title: lab }));
       row.cells.forEach(function (v) { tr.appendChild(EDU.el('td', { text: fmtCell(v), dataset: { v: v === v ? String(v) : '' } })); });
-      tr.appendChild(EDU.el('td', { class: 'tot', text: fmtCell(row.total), dataset: { v: row.total === row.total ? String(row.total) : '', role: 'rowtotal' } }));
+      tr.appendChild(EDU.el('td', { class: hasCols ? 'tot' : '', text: fmtCell(row.total), dataset: { v: row.total === row.total ? String(row.total) : '', role: 'rowtotal' } }));
       tb.appendChild(tr);
     });
     table.appendChild(tb);
@@ -251,7 +251,7 @@
     var rows = g.rows.filter(function (r) { return r.total === r.total; }).slice(0, 25);
     if (!rows.length) { box.appendChild(EDU.el('p', { class: 'muted', text: EDU.t('chart_none') })); return; }
     var stackable = cfg.cols >= 0 && cfg.show !== 'pct_row' && (cfg.agg === 'sum' || cfg.agg === 'count') && cfg.show === 'value' && res.colKeys.length <= 8;
-    var W = 760, rowH = 30, top = 10, labW = 190, valW = 110, H = top + rows.length * rowH + 30;
+    var W = Math.max(340, Math.min(760, box.clientWidth || 760)), rowH = 30, top = 10, labW = Math.round(W * 0.26), valW = Math.max(78, Math.round(W * 0.16)), H = top + rows.length * rowH + 30;
     var lo = 0, hi = 0;
     rows.forEach(function (r) { if (r.total > hi) hi = r.total; if (r.total < lo) lo = r.total; });
     var ticks = D.niceTicks(lo, hi, 5), t0 = ticks[0], t1 = ticks[ticks.length - 1], x0 = labW + 8, x1 = W - valW;
@@ -459,6 +459,7 @@
     if (!confirm(EDU.t('confirm_reset'))) return;
     store.remove('src'); store.remove('cfg'); EDU.$('#paste').value = ''; loadSample('sales');
   });
+  var rsT; window.addEventListener('resize', function () { clearTimeout(rsT); rsT = setTimeout(function () { if (S.result) renderChart(); }, 200); });
   EDU.onLang(function () { if (S.src && S.src.kind === 'sample') loadSample(S.src.id, true); else renderAll(); });
 
   /* ---------- start ---------- */

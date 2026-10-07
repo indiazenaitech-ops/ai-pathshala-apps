@@ -163,8 +163,8 @@ window.DATACORE = (function () {
       var type = 'text';
       if (seen === 0) type = 'empty';
       else if (nBool === seen) type = 'bool';
-      else if (nDate >= 0.9 * seen) type = 'date';
-      else if (nNum >= 0.9 * seen) type = 'number';
+      else if (nDate >= 0.8 * seen) type = 'date';
+      else if (nNum >= 0.8 * seen) type = 'number';
       var arr = null, bad = 0;
       if (type === 'number' || type === 'date' || type === 'bool') {
         var fn = type === 'number' ? parseNum : type === 'date' ? parseDate : parseBool;

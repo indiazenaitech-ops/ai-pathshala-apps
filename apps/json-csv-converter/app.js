@@ -12,7 +12,7 @@
     mode: ['j2c', 'c2j', 'fmt'].indexOf(saved.mode) >= 0 ? saved.mode : 'j2c',
     arr: ['join', 'explode', 'json'].indexOf(saved.arr) >= 0 ? saved.arr : 'join',
     keepText: !!saved.keepText, nest: saved.nest !== false, outFmt: saved.outFmt || 'pretty', indent: saved.indent || '2',
-    tab: null, path: undefined, sample: saved.sample !== false, inputs: saved.inputs || {}, page: 0,
+    tab: null, path: undefined, big: null, sample: saved.sample !== false, inputs: saved.inputs || {}, page: 0,
     result: null, fileName: ''
   };
 
@@ -47,8 +47,13 @@
 
   /* ---------------- input ---------------- */
   var input = $('#input');
+  var BIG_VIEW = 2000000;
+  function inputText() { return S.big !== null ? S.big : input.value; }
   function setInput(text, name, isSample) {
-    input.value = text;
+    if (text.length > BIG_VIEW) {
+      /* a very big file: keep it in memory and show only the start, so typing and scrolling stay fast */
+      S.big = text; input.value = text.slice(0, 200000); input.readOnly = true; $('#big-note').hidden = false;
+    } else { S.big = null; input.value = text; input.readOnly = false; $('#big-note').hidden = true; }
     S.fileName = name || '';
     S.sample = !!isSample;
     S.path = undefined; S.page = 0;
@@ -56,7 +61,7 @@
     run(true);
   }
   function saveInput() {
-    var v = input.value;
+    var v = inputText();
     if (!S.sample) S.inputs[S.mode] = v.length <= SAVE_LIMIT ? v : '';
     else delete S.inputs[S.mode];
     persist();
@@ -69,7 +74,7 @@
   /* ---------------- conversion ---------------- */
   var timer = null;
   function run(force) {
-    var text = input.value;
+    var text = inputText();
     $('#in-size').textContent = sizeText(text.length);
     var big = text.length > AUTO_LIMIT;
     $('#convert').hidden = !big;
@@ -102,6 +107,7 @@
   }
   function goToError() {
     var b = $('#json-error'), line = +b.dataset.line, col = +b.dataset.col, txt = input.value, pos = 0;
+    if (S.big !== null) return;
     for (var l = 1; l < line; l++) { pos = txt.indexOf('\n', pos) + 1; if (pos <= 0) break; }
     pos += col - 1;
     input.focus(); input.setSelectionRange(pos, Math.min(txt.length, pos + 1));
@@ -267,6 +273,7 @@
     S.mode = m; S.tab = null; S.path = undefined; S.page = 0; S.fmtMin = false;
     renderMode();
     if (!keepText) {
+      S.big = null; input.readOnly = false; $('#big-note').hidden = true;
       var have = S.inputs[m];
       if (have) { input.value = have; S.sample = false; } else { input.value = sampleFor(m); S.sample = true; }
     }
