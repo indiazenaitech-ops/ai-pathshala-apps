@@ -166,6 +166,21 @@ code, kbd, pre, .mono { font-family: var(--mono); }
 @media (max-width: 760px) { .edu-foot-site .edu-foot-in { grid-template-columns: 1fr 1fr; } .edu-foot-about { grid-column: 1 / -1; } }
 :root[lang="ur"] .edu-foot-col h2, :root[lang="ur"] .edu-nav-a { line-height: 2; }
 
+/* One calm look for every site page (AIxploria-style, 2026-10-07): light background, soft white cards,
+   centred heroes and section titles with a short underline, centred icon-on-top tiles. Apps are not affected. */
+body.edu-site { background: radial-gradient(1000px 360px at 50% 0, var(--primary-soft), transparent 70%) no-repeat, color-mix(in srgb, var(--bg) 45%, var(--surface)); }
+.edu-site .card { border-radius: 14px; padding: 20px; box-shadow: 0 1px 2px rgba(20, 30, 35, .04), 0 6px 18px rgba(20, 30, 35, .05); }
+.edu-site .s-hero, .edu-site .p-hero { text-align: center; padding-top: 28px; }
+.edu-site .s-hero h2, .edu-site .p-hero h2, .edu-site .s-hero p, .edu-site .p-hero p { margin-inline: auto; }
+.edu-site .s-hero .cta, .edu-site .p-cta { justify-content: center; }
+.edu-site .sec > h2, .edu-site .band > h2 { text-align: center; position: relative; padding-bottom: 12px; margin-bottom: 22px; }
+.edu-site .sec > h2::after, .edu-site .band > h2::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 72px; height: 3px; border-radius: 3px;
+  transform: translateX(-50%); background: linear-gradient(90deg, var(--primary), var(--accent)); }
+.edu-site .tile, .edu-site .why-item, .edu-site .step, .edu-site .made .card { text-align: center; align-items: center; }
+.edu-site .why-item h3, .edu-site .step h3 { flex-direction: column; justify-content: center; }
+.edu-site .tile .btn, .edu-site .made .btn { align-self: center; }
+.edu-site .tile .row, .edu-site .tile .mail-box { justify-content: center; }
+
 /* ---------- "get updates" reminder (EDU shell, app pages only; see ctaInit in edu.js) ----------
    Never on first paint, never in full screen / projector mode, never over content: on wide screens a small pill in
    the header (it takes room from the title only), on phones and tablets a bar in the page flow above the footer. */
