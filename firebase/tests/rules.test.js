@@ -916,3 +916,32 @@ describe('stats/visits (public visitor counter)', () => {
     assert.strictEqual(await stored(), null);
   });
 });
+
+/* ================================================================== clicks/{c-v-l}: anonymous email-link click counters
+   What go/index.html does: ONE REST commit with a field transform count += 1, no sign-in. */
+describe('clicks/{key} (outreach A/B click counters)', () => {
+  const K = 'clicks/e1-a-quiz';
+  const stored = async (p = K) => { let v = null; await env.withSecurityRulesDisabled(async (ctx) => { const s = await getDoc(doc(ctx.firestore(), p)); v = s.exists() ? s.data() : null; }); return v; };
+  test('anyone can add exactly 1 (first write creates it at 1) and read a counter by key', async () => {
+    const db = nobody();
+    await assertSucceeds(setDoc(doc(db, K), { count: increment(1) }, { merge: true }));
+    assert.deepStrictEqual(await stored(), { count: 1 });
+    await assertSucceeds(updateDoc(doc(db, K), { count: increment(1) }));
+    assert.deepStrictEqual(await stored(), { count: 2 });
+    await assertSucceeds(getDoc(doc(db, K)));
+  });
+  test('ATTACK: no jumps, no going down, no extra fields, no delete, no list, no odd keys', async () => {
+    const db = nobody();
+    await env.withSecurityRulesDisabled(async (ctx) => { await setDoc(doc(ctx.firestore(), K), { count: 10 }); });
+    await assertFails(updateDoc(doc(db, K), { count: increment(5) }));
+    await assertFails(updateDoc(doc(db, K), { count: 3 }));
+    await assertFails(updateDoc(doc(db, K), { count: increment(1), email: 'x@y.z' }));
+    await assertFails(deleteDoc(doc(db, K)));
+    await assertFails(getDocs(collection(db, 'clicks')));
+    await assertFails(setDoc(doc(db, 'clicks/e1-a-quiz-extra'), { count: 1 }));
+    await assertFails(setDoc(doc(db, 'clicks/E1-A-QUIZ'), { count: 1 }));
+    await assertFails(setDoc(doc(db, 'clicks/e1-b-pdf'), { count: 7 }));
+    await assertFails(setDoc(doc(db, 'clicks/e1-b-pdf'), { count: 1, who: 'me' }));
+    assert.deepStrictEqual(await stored(), { count: 10 });
+  });
+});

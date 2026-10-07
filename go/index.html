@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>AI Pathshala</title>
+  <link rel="icon" href="../shared/img/icon-32.png">
+  <style>
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #faf6f0; color: #1b2a30; }
+    a { color: #0b4f5c; font-weight: 700; }
+    @media (prefers-color-scheme: dark) { body { background: #0e181c; color: #e6eef0; } a { color: #5cc0cf; } }
+  </style>
+</head>
+<body>
+  <p>Opening <a id="go" href="../">apnipathshala.ai</a>…</p>
+  <script src="../shared/firebase-config.js"></script>
+  <script>
+  /* Email link redirect with an anonymous click counter (outreach A/B test).
+     /go/?c=<campaign>&v=<variant>&l=<link id>  →  adds 1 to Firestore clicks/<c>-<v>-<l> = {count}, then opens the target.
+     Nothing about the person is stored or sent: no email, no ID, no cookie, no IP (firestore.rules allow exactly +1 on a
+     {count} field and nothing else). Unknown link ids go to the home page. Report: projects/ai_pathshala_outreach/click_report.py */
+  (function () {
+    'use strict';
+    var SITE = 'https://apnipathshala.ai/';
+    var TARGETS = {
+      all: '?lang=en', home: '?lang=en', schools: 'schools.html?lang=en', business: 'business.html?lang=en', updates: '?lang=en#updates',
+      quiz: 'teacher/', worksheet: 'apps/worksheet-generator/?lang=en', quizmaker: 'apps/quiz-maker/?lang=en',
+      photo: 'apps/form-photo-resizer/?lang=en', reportcard: 'apps/marks-report-card/?lang=en', python: 'apps/python-playground/?lang=en',
+      chatbot: 'apps/chatbot-builder/?lang=en', chart: 'apps/chart-maker/?lang=en', gst: 'apps/gst-invoice-maker/?lang=en',
+      pdf: 'apps/pdf-merge-split/?lang=en', resume: 'apps/resume-builder/?lang=en',
+      yt: 'https://www.youtube.com/@Apni_Pathshala_AI', course: 'https://youtu.be/CWzus88E6l8'
+    };
+    var p = new URLSearchParams(location.search);
+    var clean = function (s, n) { s = String(s || '').toLowerCase(); return /^[a-z0-9]{1,12}$/.test(s) ? s : n; };
+    var c = clean(p.get('c'), 'x'), v = clean(p.get('v'), 'x'), l = TARGETS[p.get('l')] ? p.get('l') : 'home';
+    var t = TARGETS[l]; var url = /^https?:/.test(t) ? t : SITE + t;
+    document.getElementById('go').href = url;
+    var went = false;
+    function go() { if (!went) { went = true; location.replace(url); } }
+    setTimeout(go, 900);   /* never wait long for the counter */
+    try {
+      var cfg = window.EDU_FIREBASE;
+      if (!cfg || !cfg.projectId || !cfg.apiKey) { go(); return; }
+      if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || p.get('test') === '1') { go(); return; }
+      var doc = 'projects/' + cfg.projectId + '/databases/(default)/documents/clicks/' + c + '-' + v + '-' + l;
+      var body = JSON.stringify({ writes: [{ transform: { document: doc, fieldTransforms: [{ fieldPath: 'count', increment: { integerValue: '1' } }] } }] });
+      fetch('https://firestore.googleapis.com/v1/projects/' + cfg.projectId + '/databases/(default)/documents:commit?key=' + encodeURIComponent(cfg.apiKey),
+        { method: 'POST', credentials: 'omit', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: body })
+        .then(go, go);
+    } catch (e) { go(); }
+  })();
+  </script>
+</body>
+</html>

@@ -450,6 +450,21 @@ service cloud.firestore {
       // No list / delete rule = denied. The owner can correct the number in the Firebase console if ever needed.
     }
 
+    // ------------------------------------------------------------------ clicks/{key}
+    // Anonymous email-link click counters for the outreach A/B test (go/index.html): clicks/<campaign>-<variant>-<link>
+    // = {count}. Nothing about the person is stored; like stats/visits, a counter can only start at 1 and only go UP BY
+    // EXACTLY 1 per write. Keys are short lowercase ids only. Anyone may read a counter by its key (no list).
+    match /clicks/{key} {
+      allow get: if key.matches('^[a-z0-9]{1,12}-[a-z0-9]{1,12}-[a-z0-9]{1,12}$');
+      allow create: if key.matches('^[a-z0-9]{1,12}-[a-z0-9]{1,12}-[a-z0-9]{1,12}$')
+        && incoming().keys().hasOnly(['count'])
+        && incoming().count is int
+        && incoming().count == 1;
+      allow update: if incoming().keys().hasOnly(['count'])
+        && incoming().count is int
+        && incoming().count == existing().count + 1;
+    }
+
     // Everything else (other collections, other paths) has no rule and is therefore denied.
   }
 }
