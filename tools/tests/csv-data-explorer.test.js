@@ -20,7 +20,7 @@ module.exports = async function ({ page, lang, expect }) {
   expect(/dx-badge-date/.test(badge), 'date of birth detected as a date column');
   expect(/dx-badge-bool/.test(await page.$eval('#cards [data-col="8"] .badge', el => el.className)), 'Passed detected as yes/no');
   const sum = await page.textContent('#summary');
-  expect(/16/.test(sum) && /9/.test(sum) && /2\.1%/.test(sum), "summary shows 16 rows, 9 columns, 2.1% missing: "' + sum);
+  expect(/16/.test(sum) && /9/.test(sum) && /2\.1%/.test(sum), 'summary shows 16 rows, 9 columns, 2.1% missing: ' + sum);
 
   /* 2. table: filter Maths between 70 and 100 → 9 students */
   await page.click('#tab-table');

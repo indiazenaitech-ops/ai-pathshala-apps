@@ -45,7 +45,7 @@ window.APP_STRINGS.en = {
   profile_title: 'Taste profile',
   profile_hint: 'For every rated video, each of its tags gets (stars − 3): 5★ adds +2, 4★ adds +1, 3★ adds nothing, 1★ subtracts 2. Length = square root of the sum of squares.',
   pred_stars: 'Predicted {s}★',
-  cf_from: 'from {n} similar users',
+  cf_from: '· similar users: {n}',
   cf_why: 'Similar users who rated this video: {list}. Predicted stars = 3 + (Σ similarity × (stars − 3)) ÷ (Σ similarity) = 3 + {num} ÷ {den} = {pred}.',
   cf_why_item: '{name} (similarity {sim}) gave {r}★',
   neighbours_title: 'Users most like you',
