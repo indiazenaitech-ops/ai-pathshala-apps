@@ -32,4 +32,4 @@ window.EDU_FIREBASE = {
 };
 
 /* Grievance / privacy contact shown in legal/privacy.html and the apps (DPDP Act 2023). */
-window.EDU_CONTACT_EMAIL = 'indiazenaitech@gmail.com';
+window.EDU_CONTACT_EMAIL = 'support@apnipathshala.ai';

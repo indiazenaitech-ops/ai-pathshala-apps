@@ -28,7 +28,7 @@
   var YOUTUBE = 'https://www.youtube.com/@Apni_Pathshala_AI';
   /* Site-wide settings: ONE place for the domain, links and the contact address.
      CONTACT_EMAIL is joined at run time so the address never sits in plain text in any page or file. */
-  var CONTACT_EMAIL = ['indiazenaitech', 'gmail.com'].join('@');
+  var CONTACT_EMAIL = ['support', 'apnipathshala.ai'].join('@');
   var SITE = {
     url: 'https://apnipathshala.ai/',
     youtube: YOUTUBE,
