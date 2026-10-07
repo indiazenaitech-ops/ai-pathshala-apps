@@ -66,6 +66,15 @@ function schoolsHtml(icons) {
     <span class="chip"><i>✓</i>CBSE AI 417/843 · CS · IP</span><span class="chip"><i>✓</i>मुफ़्त टीचर वर्कशॉप</span><span class="chip"><i>✓</i>₹0</span>
   </div></div>${tiles(icons)}<div class="url">apnipathshala.ai/schools</div>`);
 }
+/* English cards (default link previews for the site pages since 2026-10-07: WhatsApp shows ONE card per URL, so it is English) */
+const brandEn = `<div class="brand"><img src="${LOGO}" alt=""><div><b>AI Pathshala</b><span>AI की पाठशाला · YouTube @Apni_Pathshala_AI</span></div></div>`;
+function enCard(icons, title, sub, chips, url) {
+  return page(`<div class="wrap">${brandEn}
+  <h1 style="font-size:74px;margin-top:34px;max-width:720px">${title}</h1>
+  <h2 style="font-size:34px;margin-top:12px;max-width:720px">${sub}</h2>
+  <div class="chips" style="margin-top:24px;max-width:740px">${chips.map(c => `<span class="chip"><i>✓</i>${c}</span>`).join('')}</div>
+  </div>${tiles(icons)}<div class="url">${url}</div>`);
+}
 function appHtml(a) {
   const hi = (a.title && a.title.hi) || '', en = (a.title && a.title.en) || a.slug;
   const desc = (a.desc && a.desc.hi) || '';
@@ -98,6 +107,15 @@ function appHtml(a) {
   if (!ONLY.length) {
     jobs.push({ file: path.join(OUT, 'og-home.png'), html: homeHtml(icons) });
     jobs.push({ file: path.join(OUT, 'og-schools.png'), html: schoolsHtml(pickIcons(['ai-project-cycle', 'confusion-matrix-lab', 'sql-playground', 'attendance-register', 'marks-report-card', 'class-timer', 'tokenizer-lab', 'whiteboard', 'flashcards'])) });
+  }
+  if (!ONLY.length) {
+    const n = apps.length >= 100 ? '100+' : String(apps.length);
+    jobs.push({ file: path.join(OUT, 'og-everyone-en.png'), html: enCard(icons, `${n} free AI tools<br>for everyone`, 'Learn, teach and work: in 12 Indian languages',
+      ['No sign-up', 'No ads', 'Works offline'], 'apnipathshala.ai') });
+    jobs.push({ file: path.join(OUT, 'og-schools-en.png'), html: enCard(pickIcons(['ai-project-cycle', 'teachable-machine', 'python-playground', 'sql-playground', 'live-quiz', 'marks-report-card', 'attendance-register', 'worksheet-generator', 'certificate-maker']),
+      'Free AI apps for<br>your whole school', 'CBSE AI (417/843), CS and IP · guide for principals', ['No sign-up for students', 'No ads', '₹0'], 'apnipathshala.ai/schools') });
+    jobs.push({ file: path.join(OUT, 'og-business-en.png'), html: enCard(pickIcons(['gst-invoice-maker', 'salary-slip-maker', 'pdf-merge-split', 'stock-register', 'udhaar-khata', 'chart-maker', 'resume-builder', 'upi-qr-standee', 'image-compressor']),
+      'Free, private tools<br>for your team', 'GST, salary slips, PDFs, data: files never uploaded', ['No sign-up', 'Works offline', '12 languages'], 'apnipathshala.ai/business') });
   }
   if (argv.includes('--apps') || ONLY.length) {
     for (const a of apps) if (!ONLY.length || ONLY.includes(a.slug)) jobs.push({ file: path.join(OUT, 'og', a.slug + '.png'), html: appHtml(a) });
