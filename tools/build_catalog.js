@@ -22,9 +22,9 @@ const argv = process.argv.slice(2);
 const zipIdx = argv.indexOf('--zip');
 const zip = (zipIdx >= 0 ? argv[zipIdx + 1] : '') || DEFAULT_ZIP;
 const onlyPassing = argv.includes('--only-passing');
-const CATS = ['learn-ai', 'teacher-tools', 'math', 'science', 'coding', 'languages', 'study-skills', 'digital-safety', 'business', 'marketing', 'everyday'];
+const CATS = ['learn-ai', 'teacher-tools', 'math', 'science', 'coding', 'languages', 'study-skills', 'digital-safety', 'business', 'marketing', 'everyday', 'data'];
 /* categories for work and everyday use (not school subjects): no class level in the JSON-LD */
-const WORK_CATS = { business: 'BusinessApplication', marketing: 'BusinessApplication', everyday: 'UtilitiesApplication' };
+const WORK_CATS = { business: 'BusinessApplication', marketing: 'BusinessApplication', everyday: 'UtilitiesApplication', data: 'BusinessApplication' };
 
 function newestMtime(p) {
   let m = 0;
@@ -156,7 +156,7 @@ try {
           url: `${SITE_URL}apps/${a.slug}/`, applicationCategory: WORK_CATS[a.category] || 'EducationalApplication', operatingSystem: 'Any (web browser)',
           isAccessibleForFree: true, inLanguage: LANGS,
           ...(WORK_CATS[a.category]
-            ? { audience: { '@type': 'Audience', audienceType: a.category === 'everyday' ? 'Everyone' : 'Businesses, teams and creators' } }
+            ? { audience: { '@type': 'Audience', audienceType: a.category === 'everyday' ? 'Everyone' : a.category === 'data' ? 'Students, analysts and businesses' : 'Businesses, teams and creators' } }
             : { educationalLevel: level(a.grades), audience: { '@type': 'EducationalAudience', educationalRole: (a.audience || ['student']).join(', ') } }),
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
           publisher: { '@id': SITE_URL + '#org' }

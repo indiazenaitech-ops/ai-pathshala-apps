@@ -19,6 +19,7 @@ done
 if [ -d press ]; then git add press; fi
 # free downloads: the "AI Classroom Starter Pack" PDFs (shared/signup.js links them; built by tools/make_starter_pack.js)
 if [ -d downloads ]; then git add downloads; fi
+if [ -d docs ]; then git add docs; fi
 for f in tools/make_starter_pack.js tools/tests/_cta.check.js firebase/tests/signup.emulator.e2e.js; do if [ -f "$f" ]; then git add "$f"; fi; done
 # free how-to guides (guides/: static pages in 12 languages + screenshots + strings, built by guides/_build/build.js)
 # and the IndexNow key file (<32 hex>.txt at the root, its content = its name; used by tools/indexnow.js)
