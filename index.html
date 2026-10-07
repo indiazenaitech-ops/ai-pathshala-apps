@@ -50,44 +50,47 @@
     /* Library-first home (2026-10-07): search + category picker at the top, then the whole tool grid. */
     body { background: radial-gradient(900px 420px at 50% 0, var(--primary-soft), transparent 70%) no-repeat, linear-gradient(180deg, var(--surface-2), var(--bg) 560px) no-repeat, var(--bg); }
     .edu-main { padding-top: 0; }
-    .lib-hero { text-align: center; padding: 34px 0 18px; }
+    .lib-hero { text-align: center; padding: 18px 0 8px; }
     .lib-kicker { display: inline-flex; align-items: center; gap: 6px; margin: 0 0 10px; font-size: .85rem; font-weight: 700; color: var(--accent);
       background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); padding: 4px 12px; border-radius: 999px; }
-    .lib-hero h1 { font-size: clamp(1.7rem, 4.6vw, 2.9rem); line-height: 1.15; margin: 0 auto 10px; max-width: 22ch; letter-spacing: -.01em; }
+    .lib-hero h1 { font-size: clamp(1.35rem, 3.2vw, 2.05rem); line-height: 1.2; margin: 0 auto 4px; letter-spacing: -.01em; }
     .lib-hero h1 b { color: var(--primary); }
-    .lib-sub { color: var(--muted); margin: 0 auto 20px; max-width: 60ch; font-size: 1.05rem; }
+    .lib-sub { color: var(--muted); margin: 0 auto 12px; max-width: 75ch; font-size: .96rem; }
     .lib-search { display: flex; align-items: stretch; max-width: 760px; margin: 0 auto; background: var(--surface); border: 2px solid var(--border);
       border-radius: 16px; box-shadow: var(--shadow-lg); overflow: hidden; }
     .lib-search:focus-within { border-color: var(--primary); }
     .lib-search-ic { display: grid; place-items: center; padding-inline: 14px 4px; color: var(--muted); font-size: 1.1rem; }
-    .lib-search input { flex: 1 1 auto; min-width: 0; border: 0; border-radius: 0; background: transparent; font-size: 1.08rem; min-height: 56px; padding: 0 10px; box-shadow: none; outline: none; }
+    .lib-search input { flex: 1 1 auto; min-width: 0; border: 0; border-radius: 0; background: transparent; font-size: 1.05rem; min-height: 50px; padding: 0 10px; box-shadow: none; outline: none; }
     .lib-search select { flex: 0 0 auto; max-width: 13rem; border: 0; border-inline-start: 1px solid var(--border); border-radius: 0; background-color: var(--surface-2);
-      font-weight: 600; min-height: 56px; padding-inline: 12px; cursor: pointer; }
-    .trust { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; margin: 16px 0 0; padding: 0; color: var(--muted); font-size: .9rem; font-weight: 600; }
+      font-weight: 600; min-height: 50px; padding-inline: 12px; cursor: pointer; }
+    .trust { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; margin: 8px 0 0; padding: 0; color: var(--muted); font-size: .9rem; font-weight: 600; }
     .trust li::before { content: "✓ "; color: var(--success); font-weight: 800; }
     @media (max-width: 600px) {
-      .lib-hero { padding-top: 22px; text-align: start; }
+      .lib-hero { padding-top: 12px; text-align: start; }
       .lib-hero h1, .lib-sub { margin-inline: 0; }
-      .lib-sub { font-size: .98rem; margin-bottom: 14px; }
+      .lib-sub { display: none; } .lib-hero h1 { margin-bottom: 10px; }
       .lib-search { flex-wrap: wrap; }
       .lib-search input { flex-basis: calc(100% - 44px); min-height: 50px; }
       .lib-search select { flex: 1 1 100%; max-width: none; border-inline-start: 0; border-top: 1px solid var(--border); min-height: 46px; }
       .trust { justify-content: flex-start; gap: 4px 12px; font-size: .84rem; }
     }
 
-    .lib-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 18px 0 10px; }
+    .lib-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 12px 0 8px; }
     .aud-chips { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--surface-2); border-radius: 12px; }
     .aud-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 6px 12px; border-radius: 9px; border: 0; background: transparent;
       color: var(--muted); font: inherit; font-weight: 700; font-size: .92rem; cursor: pointer; }
     .aud-btn:hover { color: var(--text); }
     .aud-btn[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
     .aud-n { font-size: .74rem; color: var(--muted); font-family: "Noto Sans", system-ui, sans-serif; }
-    .lib-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-inline-start: auto; }
-    @media (max-width: 600px) { .lib-bar { margin-top: 14px; } .lib-actions { display: none; } .aud-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; } .aud-chips::-webkit-scrollbar { display: none; } .aud-btn { flex: none; white-space: nowrap; min-height: 38px; padding: 5px 10px; font-size: .88rem; } .trust li:nth-child(n+4) { display: none; } }
+    .lib-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 22px 0 0; }
+    .lib-bar .lib-count { margin: 0 0 0 auto; margin-inline-start: auto; }
+    @media (max-width: 600px) { .lib-bar { margin-top: 10px; } .lib-bar .lib-count { display: none; } .aud-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; } .aud-chips::-webkit-scrollbar { display: none; } .aud-btn { flex: none; white-space: nowrap; min-height: 38px; padding: 5px 10px; font-size: .88rem; } .trust li:nth-child(n+4) { display: none; } }
 
-    .cats { display: flex; flex-wrap: wrap; gap: 8px; padding: 2px 0 10px; }
-    @media (max-width: 760px) { .cats { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding-inline: 16px; } .cats::-webkit-scrollbar { display: none; } }
-    .cats .chip { flex: none; display: inline-flex; align-items: center; gap: 6px; }
+    .cats { display: flex; flex-wrap: nowrap; gap: 8px; padding: 2px 0 12px; overflow-x: auto; scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent); mask-image: linear-gradient(90deg, #000 92%, transparent); }
+    .cats::-webkit-scrollbar { display: none; }
+    [dir="rtl"] .cats { -webkit-mask-image: linear-gradient(270deg, #000 92%, transparent); mask-image: linear-gradient(270deg, #000 92%, transparent); }
+    @media (max-width: 760px) { .cats { margin: 0 -16px; padding-inline: 16px; } }
+    .cats .chip { flex: none; display: inline-flex; align-items: center; gap: 6px; padding-block: 5px; }
     .cats .chip .tiny { color: var(--muted); }
     .lib-count { color: var(--muted); font-size: .9rem; margin: 2px 0 12px; }
 
@@ -128,7 +131,6 @@
 <body>
   <main id="app">
     <section class="lib-hero" aria-labelledby="home-title">
-      <p class="lib-kicker"><span aria-hidden="true">✨</span> <span data-i18n="kicker"></span></p>
       <h1 id="home-title"></h1>
       <p class="lib-sub" data-i18n="lib_sub"></p>
       <form class="lib-search" role="search" id="lib-search">
@@ -147,15 +149,15 @@
 
     <div class="lib-bar">
       <div class="aud-chips" id="aud" role="group" data-i18n-aria-label="aud_label"></div>
-      <div class="lib-actions">
+      <p class="lib-count" id="count" aria-live="polite"></p>
+    </div>
+    <div class="cats" id="cats" role="toolbar" data-i18n-aria-label="cat_all_opt"></div>
+    <div id="list" class="apps"></div>
+    <p class="muted center" id="empty" hidden data-i18n="no_results"></p>
+    <div class="lib-actions no-print">
         <button class="btn btn-sm" id="share-lib" type="button">🔗 <span data-i18n="share_library"></span></button>
         <a class="btn btn-sm" id="zip" hidden>⬇ <span data-i18n="download_zip"></span></a>
       </div>
-    </div>
-    <div class="cats" id="cats" role="toolbar" data-i18n-aria-label="cat_all_opt"></div>
-    <p class="lib-count" id="count" aria-live="polite"></p>
-    <div id="list" class="apps"></div>
-    <p class="muted center" id="empty" hidden data-i18n="no_results"></p>
 
     <section class="band" aria-labelledby="made-h">
       <h2 id="made-h" data-i18n="made_title"></h2>
