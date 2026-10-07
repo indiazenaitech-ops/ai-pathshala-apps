@@ -363,7 +363,7 @@
     var r = room(), c = cls(), g = geom(r), arr = getChart();
     roomEl.className = 'room no-i18n' + (r.layout === 'exam' ? ' exam' : '');
     var cols = [], rows = [], i;
-    for (i = 0; i < g.dcols; i++) cols.push(g.gapC[i] ? '10px' : 'minmax(84px, 1fr)');
+    for (i = 0; i < g.dcols; i++) cols.push(g.gapC[i] ? '10px' : 'minmax(var(--seat-w), 1fr)');
     for (i = 0; i < g.drows; i++) rows.push(g.gapR[i] ? '10px' : 'auto');
     roomEl.style.gridTemplateColumns = cols.join(' ');
     roomEl.style.gridTemplateRows = rows.join(' ');
