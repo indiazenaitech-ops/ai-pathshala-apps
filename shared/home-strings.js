@@ -48,7 +48,7 @@ window.HOME_STRINGS = {
     youtube_cta: "Free video lessons on AI in Hindi",
     request_title: "Want a tool for your class or your work?",
     request_text: "Tell us in the comments on our YouTube channel. We build free tools on request.",
-    doc_title: "Free AI Tools for Schools, Work & Business · मुफ़्त AI टूल · 12 Indian languages | AI Pathshala",
+    doc_title: "100+ Free AI Tools for Everyone: Schools, Work & Business · 12 Indian Languages | AI Pathshala",
     doc_desc: "Free AI, learning and work tools in 12 Indian languages: CBSE AI (417/843), Python, maths and teacher tools for schools, plus tools for teams, shops and creators. No sign-up (teachers sign in only for the optional Live Quiz), no ads, works offline, your files never leave your device.",
     wa_home: "Free AI & productivity tools for everyone: schools, offices, shops and creators. AI, Python, maths, quizzes and more. No sign-up (teachers sign in only for the optional Live Quiz), no ads, works offline, in 12 Indian languages. Open: {url}",
     subscribe_yt: "Subscribe on YouTube",
