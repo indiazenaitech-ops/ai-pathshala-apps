@@ -351,9 +351,20 @@
   function trickText(id) { return C().tricks[id]; }
   /* template with numbers wrapped in LTR isolates so steps read correctly in Urdu */
   function num(v) { return '<bdi class="vm-n">' + esc(String(v)) + '</bdi>'; }
+  /* a run like "97 × 96 = 9312" or "(− 3) × (− 4)" is kept left-to-right as one piece, so Urdu shows it in maths order */
+  var ATOM = '(?:∛)?\\(?<bdi class="vm-n">[^<]*</bdi>\\)?[²³%]?|(?:∛)?\\d+[²³%]?';
+  var EXPR = new RegExp('(?:' + ATOM + ')(?:(?:\\s*(?:[×÷=+−≤≥≠→]|&lt;|&gt;)\\s*|\\s+(?=<bdi class="vm-n">[+−]))(?:' + ATOM + '))+', 'g');
   function tpl(str, v) {
-    return esc(str || '').replace(/\{(\w+)\}/g, function (m, k) { return k in v ? num(v[k]) : m; });
+    var h = esc(str || '').replace(/\{(\w+)\}/g, function (m, k) { return k in v ? num(v[k]) : m; });
+    return h.replace(EXPR, function (m) { return /vm-n/.test(m) ? '<span class="vm-expr">' + m + '</span>' : m; });
   }
+  /* plain-text formulas inside explanations ("n × 11 = n × 10 + n") also stay left-to-right in Urdu */
+  var FORMULA = /[0-9a-z(∛][0-9a-z()²³%∛ .]*(?:\s*[×÷=+−↔≤]\s*[0-9a-z()²³%∛ .]*[0-9a-z)²³%])+/g;
+  function mathWrap(str) {
+    var h = esc(str || '');
+    return document.documentElement.dir === 'rtl' ? h.replace(FORMULA, function (m) { return '<span class="vm-expr">' + m + '</span>'; }) : h;
+  }
+  function ansText(id, ans) { return id === 'div9' && ans && typeof ans === 'object' ? ans.q + ' (' + t('rem_short') + ' ' + ans.r + ')' : VEDIC.answerText(id, ans); }
   function stepHtml(id, step) {
     var tt = trickText(id);
     return tpl(tt.steps[step.k] || step.k, step.v);
@@ -392,7 +403,8 @@
     $('#ex-ans').className = 'vm-ex-ans vm-math';
     function showNext() {
       if (anim.i >= anim.steps.length) {
-        $('#ex-ans').textContent = VEDIC.answerText(id, r.answer) === '✓' ? t('check_ok_short') : VEDIC.answerText(id, r.answer) === '✗' ? t('check_bad_short') : VEDIC.answerText(id, r.answer);
+        var at = ansText(id, r.answer);
+        $('#ex-ans').textContent = at === '✓' ? t('check_ok_short') : at === '✗' ? t('check_bad_short') : at;
         $('#ex-ans').classList.add('show');
         $('#replay').disabled = false;
         return;
@@ -413,8 +425,8 @@
     $('#trick-name').textContent = tt.name;
     $('#trick-tag').textContent = tt.tagline;
     var ul = $('#trick-how'); ul.innerHTML = '';
-    tt.how.forEach(function (s) { ul.appendChild(el('li', { text: s })); });
-    $('#trick-why').textContent = tt.why;
+    tt.how.forEach(function (s) { var li = el('li'); li.innerHTML = mathWrap(s); ul.appendChild(li); });
+    $('#trick-why').innerHTML = mathWrap(tt.why);
     if (keep) {                                          // language change: keep the numbers, the try question and a running drill
       var vals = {};
       $$('#own-fields input, #own-fields select').forEach(function (e) { vals[e.id] = e.value; });
@@ -554,7 +566,7 @@
     showTryResult(r, same(S.trick, given, r.answer));
   }
   function showTryResult(r, ok) {
-    $('#try-fb').textContent = ok ? t('correct') : t('wrong_ans', { a: VEDIC.answerText(S.trick, r.answer) });
+    $('#try-fb').textContent = ok ? t('correct') : t('wrong_ans', { a: ansText(S.trick, r.answer) });
     $('#try-fb').className = 'vm-fb ' + (ok ? 'ok' : 'bad');
     var list = $('#try-steps'); list.innerHTML = '';
     r.steps.forEach(function (st) { var li = el('li', { class: 'vm-step' + (VEDIC.isFinal(st.k) ? ' final' : '') }); li.innerHTML = stepHtml(S.trick, st); list.appendChild(li); });
@@ -625,8 +637,8 @@
       var tr = el('tr', { class: x.ok ? 'ok' : 'bad' });
       var q = el('td', { class: 'vm-math' }); q.innerHTML = qHtml(S.trick, x.p);
       tr.appendChild(q);
-      tr.appendChild(el('td', { class: 'vm-math no-i18n', text: VEDIC.answerText(S.trick, x.given) }));
-      tr.appendChild(el('td', { class: 'vm-math no-i18n', text: VEDIC.answerText(S.trick, x.want) }));
+      tr.appendChild(el('td', { class: 'vm-math no-i18n', text: ansText(S.trick, x.given) }));
+      tr.appendChild(el('td', { class: 'vm-math no-i18n', text: ansText(S.trick, x.want) }));
       tr.appendChild(el('td', { text: x.ok ? '✓' : '✗', 'aria-label': x.ok ? t('correct') : t('wrong') }));
       tb.appendChild(tr);
     });
@@ -680,7 +692,7 @@
       var li = el('li', { class: 'vm-math no-i18n' });
       li.innerHTML = '<bdi>' + esc(VEDIC.questionMath(it.id, it.p)) + '</bdi> = <span class="vm-blank"></span>';
       ol.appendChild(li);
-      key.appendChild(el('li', { class: 'vm-math no-i18n', text: VEDIC.answerText(it.id, it.ans) }));
+      key.appendChild(el('li', { class: 'vm-math no-i18n', text: ansText(it.id, it.ans) }));
     });
     $('#ws-legend').hidden = !(sel === 'mixed' || sel === 'digitsum');
   }

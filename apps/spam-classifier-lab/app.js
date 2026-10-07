@@ -127,7 +127,10 @@
   /* ---------------- helpers ---------------- */
   function content(L) { var C = window.APP_CONTENT || {}; return C[L || EDU.lang] || C.en; }
   function hasOwn(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
-  function pct(p) {
+  /* numbers inside sentences keep their own left-to-right order (">99%" must not flip in Urdu) */
+  function iso(s) { return '\u2066' + s + '\u2069'; }
+  function pct(p) { return iso(pct0(p)); }
+  function pct0(p) {
     if (!isFinite(p)) p = 0;
     /* a Naive Bayes share is never exactly 0 or 100 %; rounding must not make the filter look "100 % sure" */
     if (p > 0 && p < 0.005) return '<' + EDU.fmt(0.01, { style: 'percent' });
@@ -141,7 +144,7 @@
     return EDU.fmt(r / 100, { style: 'percent', maximumFractionDigits: 0 });
   }
   function f3(x) { return EDU.fmt(x, { maximumSignificantDigits: 3 }); }
-  function times(x) { return EDU.fmt(x, { maximumFractionDigits: x < 10 ? 1 : 0 }); }
+  function times(x) { return iso(EDU.fmt(x, { maximumFractionDigits: x < 10 ? 1 : 0 })); }
   var SUP = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻', '+': '' };
   /* Small numbers as "1.3 × 10⁻⁹" so the underflow lesson is visible. null = too tiny to show. */
   function sci(x) {
@@ -281,11 +284,11 @@
     var step = function (key, vars) { return el('p', { class: 'maths-step', text: t(key, vars) }); };
     /* step 1: prior */
     body.appendChild(step('step_prior', { n: EDU.fmt(n), s: EDU.fmt(s), h: EDU.fmt(h) }));
-    body.appendChild(el('p', { class: 'formula no-i18n', text: t('prior_line', { s: EDU.fmt(s), h: EDU.fmt(h), n: EDU.fmt(n), ps: f3(c.prior.spam), ph: f3(c.prior.ham) }) }));
+    body.appendChild(el('p', { class: 'formula no-i18n', text: t('prior_line', { s: iso(EDU.fmt(s)), h: iso(EDU.fmt(h)), n: iso(EDU.fmt(n)), ps: iso(f3(c.prior.spam)), ph: iso(f3(c.prior.ham)) }) }));
     /* step 2: every word */
     body.appendChild(step('step_words'));
     body.appendChild(el('p', { class: 'formula', text: t('formula_word') }));
-    body.appendChild(el('p', { class: 'muted small mb0 no-i18n', text: t('vocab_line', { v: EDU.fmt(m.V), ws: EDU.fmt(m.nWords.spam), wh: EDU.fmt(m.nWords.ham) }) }));
+    body.appendChild(el('p', { class: 'muted small mb0 no-i18n', text: t('vocab_line', { v: iso(EDU.fmt(m.V)), ws: iso(EDU.fmt(m.nWords.spam)), wh: iso(EDU.fmt(m.nWords.ham)) }) }));
     if (c.words.length) {
       var table = el('table', { class: 'table maths no-i18n', id: 'maths-table' });
       var thead = el('thead'), tr = el('tr');
@@ -329,7 +332,7 @@
     /* step 4: compare */
     body.appendChild(step('step_compare'));
     var a = sci(c.product.spam), b = sci(c.product.ham);
-    if (a !== null && b !== null) body.appendChild(el('p', { class: 'formula final no-i18n', text: t('final_line', { a: a, b: b, p: pct(c.pSpam) }) }));
+    if (a !== null && b !== null) body.appendChild(el('p', { class: 'formula final no-i18n', text: t('final_line', { a: iso(a), b: iso(b), p: pct(c.pSpam) }) }));
     else body.appendChild(el('p', { class: 'formula final no-i18n', text: t('final_only', { p: pct(c.pSpam) }) }));
     var lo = isFinite(c.logOdds) ? EDU.fmt(c.logOdds, { maximumFractionDigits: 2, signDisplay: 'always' }) : (c.logOdds > 0 ? '+∞' : '−∞');
     body.appendChild(el('p', { class: 'muted small mb0', text: t('log_note', { lo: lo }) }));

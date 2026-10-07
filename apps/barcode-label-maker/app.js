@@ -387,7 +387,7 @@
     /* identical labels are built once and cloned */
     var cache = {};
     for (var p = 0; p < pages; p++) {
-      var frame = el('div', { class: 'page-frame' + (p >= MAX_SHOW ? ' more' : ''), style: { width: (g.pageW * PX_MM * s) + 'px', height: (g.pageH * PX_MM * s) + 'px' } });
+      var frame = el('div', { class: 'page-frame' + (p >= MAX_SHOW ? ' more' : '') + (p === pages - 1 ? ' last' : ''), style: { width: (g.pageW * PX_MM * s) + 'px', height: (g.pageH * PX_MM * s) + 'px' } });
       var page = el('div', { class: 'page', style: { width: g.pageW + 'mm', height: g.pageH + 'mm', transform: 'scale(' + s + ')' } });
       for (var k = 0; k < pp; k++) {
         var slot = p * pp + k;
@@ -510,10 +510,14 @@
       ctx.direction = rtl ? 'rtl' : 'ltr';
       var align = cs.textAlign === 'center' ? 'center' : (rtl ? 'right' : 'left');
       ctx.textAlign = align; ctx.textBaseline = 'middle';
-      var maxW = r.width * k, txt = e.textContent;
-      if (ctx.measureText(txt).width > maxW) { while (txt.length > 1 && ctx.measureText(txt + '…').width > maxW) txt = txt.slice(0, -1); txt += '…'; }
+      var maxW = r.width * k, txt = e.textContent, tw = ctx.measureText(txt).width, sx = 1;
+      if (e.scrollWidth > e.clientWidth + 1) {      // already cut with "…" on the label: cut it the same way
+        while (txt.length > 1 && ctx.measureText(txt + '…').width > maxW) txt = txt.slice(0, -1);
+        txt += '…';
+      } else if (tw > maxW) sx = maxW / tw;          // canvas fonts measure a little wider: squeeze, never cut
       var x = align === 'center' ? (r.left + r.width / 2 - base.left) * k : (align === 'right' ? (r.right - base.left) * k : (r.left - base.left) * k);
-      ctx.fillText(txt, x, (r.top + r.height / 2 - base.top) * k);
+      var yy = (r.top + r.height / 2 - base.top) * k;
+      ctx.save(); ctx.translate(x, yy); ctx.scale(sx, 1); ctx.fillText(txt, 0, 0); ctx.restore();
     });
     var bars = lbl.querySelector('svg.l-bars');
     if (bars) {

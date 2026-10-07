@@ -25,6 +25,7 @@
   function num(x, d) { return EDU.fmt(x, { minimumFractionDigits: d, maximumFractionDigits: d }); }
   function pct(x, d) { return isFinite(x) ? num(x * 100, d === undefined ? 2 : d) + '%' : '—'; }
   function signed(x, d) { if (!isFinite(x)) return '—'; var s = num(Math.abs(x), d); return (x > 0 ? '+' : x < 0 ? '−' : '') + s; }
+  function iso(x) { return '\u2066' + x + '\u2069'; }   /* keep numbers left-to-right inside Urdu sentences */
   function pFmt(p) { return p < 0.0001 ? '< 0.0001' : num(p, 4); }
   function alphaPct(a) { return EDU.fmt(a * 100, { maximumFractionDigits: 2 }) + '%'; }
   function parseCount(s) {
@@ -118,7 +119,7 @@
       comps.push(r);
     }
     last = { groups: g, comps: comps, alpha: alpha, conf: conf };
-    if (k > 2) box.appendChild(EDU.el('p', { class: 'callout small', text: t('three_note', { a: alphaPct(alpha) }) }));
+    if (k > 2) box.appendChild(EDU.el('p', { class: 'callout small', text: t('three_note', { a: iso(alphaPct(alpha)) }) }));
 
     comps.forEach(function (r) {
       var V = NAMES[r.v], blk = EDU.el('div', { class: 'ab-cmp ab-v-' + r.v, id: 'cmp-' + r.v });
@@ -127,15 +128,16 @@
       var vb = EDU.el('div', { class: 'callout ab-verdict ' + (kind === 'better' ? 'success' : kind === 'worse' ? 'danger' : 'warning'), id: 'verdict-' + r.v });
       vb.dataset.kind = kind;
       vb.appendChild(document.createTextNode(t('verdict_' + kind, { v: V })));
-      vb.appendChild(EDU.el('p', { text: t(kind === 'unsure' ? 'verdict_unsure_sub' : 'verdict_sig_sub', { p: pFmt(r.p), a: alphaPct(alpha) }) }));
+      vb.appendChild(EDU.el('p', { text: t(kind === 'unsure' ? 'verdict_unsure_sub' : 'verdict_sig_sub', { p: iso(pFmt(r.p)), a: iso(alphaPct(alpha)) }) }));
       blk.appendChild(vb);
 
       var tiles = EDU.el('div', { class: 'ab-tiles' });
       tiles.appendChild(tile('t-diff-' + r.v, t('st_diff', { v: V }), signed(r.diff * 100, 2), t('pts_unit'), r.sig ? (r.diff > 0 ? 'good' : 'bad') : '', r.diff));
       tiles.appendChild(tile('t-up-' + r.v, t('st_uplift'), isFinite(r.uplift) ? signed(r.uplift * 100, 1) + '%' : '—', '', '', isFinite(r.uplift) ? r.uplift : ''));
       tiles.appendChild(tile('t-p-' + r.v, t('st_p'), pFmt(r.p), t('p_need', { a: num(alpha, alpha < 0.01 ? 4 : 3) }), r.sig ? 'good' : '', r.p));
-      var ci = tile('t-ci-' + r.v, t('st_ci', { c: EDU.fmt(conf) }), t('st_ci_val', { lo: signed(r.lo * 100, 2), hi: signed(r.hi * 100, 2) }), t('pts_unit'), '', '');
+      var ci = tile('t-ci-' + r.v, t('st_ci', { c: EDU.fmt(conf) }), t('st_ci_val', { lo: iso(signed(r.lo * 100, 2)), hi: iso(signed(r.hi * 100, 2)) }), t('pts_unit'), '', '');
       ci.querySelector('.v').classList.add('small');
+      ci.querySelector('.v').classList.remove('ab-num');
       ci.querySelector('.v').dataset.lo = String(r.lo); ci.querySelector('.v').dataset.hi = String(r.hi);
       tiles.appendChild(ci);
       tiles.appendChild(tile('t-beat-' + r.v, t('st_beat', { v: V }), pct(r.beat, 1), t('st_beat_sub'), '', r.beat));
@@ -178,10 +180,10 @@
     var minN = Math.min.apply(null, ns), maxN = Math.max.apply(null, ns);
     if (S.splitP(ns) < 0.001 && maxN / minN > 1.01) {
       var tot = ns.reduce(function (a, b) { return a + b; }, 0);
-      W.push({ id: 'w-split', text: t('warn_split', { s: g.map(function (x) { return NAMES[x.v] + ' ' + pct(x.n / tot, 1); }).join(' · ') }) });
+      W.push({ id: 'w-split', text: t('warn_split', { s: g.map(function (x) { return NAMES[x.v] + ' ' + iso(pct(x.n / tot, 1)); }).join(' · ') }) });
     }
     var plan = planCalc();
-    if (plan.ok && minN < plan.n) W.push({ id: 'w-peek', text: t('warn_peek', { x: EDU.fmt(Math.floor(minN / plan.n * 100)), n: EDU.fmt(plan.n) }) });
+    if (plan.ok && minN < plan.n) W.push({ id: 'w-peek', text: t('warn_peek', { x: iso(EDU.fmt(Math.floor(minN / plan.n * 100))), n: iso(EDU.fmt(plan.n)) }) });
     else W.push({ id: 'w-peek-gen', text: t('warn_peek_gen'), info: true });
     W.forEach(function (w) { warns.appendChild(EDU.el('p', { class: 'callout ' + (w.info ? 'small' : 'warning'), id: w.id, text: w.text })); });
     drawChart();
@@ -200,7 +202,7 @@
     });
     lo = Math.max(0, lo); hi = Math.min(1, hi);
     if (hi - lo < 1e-4) { hi = Math.min(1, lo + 0.01); lo = Math.max(0, hi - 0.01); }
-    var W = 720, H = 270, L = 20, R = 20, T = 16, B = 52, iw = W - L - R, ih = H - T - B, N = 200;
+    var W = Math.round(Math.max(320, Math.min(720, box.clientWidth || 720))), H = W < 500 ? 230 : 270, L = 20, R = 20, T = 16, B = 52, iw = W - L - R, ih = H - T - B, N = 200;
     var curves = g.map(function (x) {
       var a = x.c + 1, b = x.n - x.c + 1, pts = [], mx = 0;
       for (var i = 0; i <= N; i++) { var p = lo + (hi - lo) * i / N, d = S.betaPdf(Math.min(1 - 1e-12, Math.max(1e-12, p)), a, b); pts.push([p, d]); if (d > mx) mx = d; }
@@ -217,7 +219,7 @@
     mk('line', { x1: L, x2: W - R, y1: T + ih, y2: T + ih, stroke: brd, 'stroke-width': 1.5 });
     /* nice ticks in % */
     var span = (hi - lo) * 100, steps = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 25], step = steps[steps.length - 1];
-    for (var s = 0; s < steps.length; s++) if (span / steps[s] <= 7) { step = steps[s]; break; }
+    for (var s = 0; s < steps.length; s++) if (span / steps[s] <= (W < 500 ? 5 : 7)) { step = steps[s]; break; }
     var dec = step < 0.1 ? 2 : step < 1 ? 1 : 0;
     for (var tk = Math.ceil(lo * 100 / step) * step; tk <= hi * 100 + 1e-9; tk += step) {
       var x = X(tk / 100);
@@ -269,7 +271,7 @@
     $('#pl-base').setAttribute('aria-invalid', String(!r.ok && !(r.p1 > 0 && r.p1 < 1)));
     $('#pl-change').setAttribute('aria-invalid', String(!r.ok && r.p1 > 0 && r.p1 < 1));
     if (!r.ok) { $('#pl-target').textContent = ''; $('#pl-formula').textContent = ''; $('#pl-n').dataset.value = ''; return; }
-    $('#pl-target').textContent = t('plan_target', { a: num(r.p1 * 100, 2), b: num(r.p2 * 100, 2) }) + (P.versions > 2 ? ' ' + t('plan_3note', { a: alphaPct(r.alpha) }) : '');
+    $('#pl-target').textContent = t('plan_target', { a: iso(num(r.p1 * 100, 2)), b: iso(num(r.p2 * 100, 2)) }) + (P.versions > 2 ? ' ' + t('plan_3note', { a: iso(alphaPct(r.alpha)) }) : '');
     $('#pl-n').textContent = EDU.fmt(r.n); $('#pl-n').dataset.value = String(r.n);
     $('#pl-total').textContent = EDU.fmt(r.total); $('#pl-total').dataset.value = String(r.total);
     $('#pl-days').textContent = isFinite(r.days) ? t('plan_days_val', { n: EDU.fmt(r.days) }) : '—';
@@ -322,7 +324,7 @@
       lines.push(t('verdict_' + kind, { v: V }) + ' ' + t('st_p') + ' = ' + pFmt(r.p) + '; ' + t('st_ci', { c: EDU.fmt(last.conf) }) + ': ' +
         t('st_ci_val', { lo: signed(r.lo * 100, 2), hi: signed(r.hi * 100, 2) }) + ' ' + t('pts_unit') + '; ' + t('st_beat', { v: V }) + ': ' + pct(r.beat, 1));
     });
-    EDU.copy(lines.join('\n'));
+    EDU.copy(lines.join('\n').replace(/[\u2066\u2069]/g, ''));
   });
   $('#print').addEventListener('click', function () { window.print(); });
   $('#reset').addEventListener('click', function () {
@@ -335,5 +337,6 @@
   function renderAll() { buildRows(); renderExNote(); renderSig(); renderPlan(); compute(); }
   EDU.onLang(renderAll);
   EDU.onTheme && EDU.onTheme(drawChart);
+  var rsz; window.addEventListener('resize', function () { clearTimeout(rsz); rsz = setTimeout(drawChart, 150); });
   renderAll();
 })();

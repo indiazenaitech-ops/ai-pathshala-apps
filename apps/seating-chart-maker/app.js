@@ -620,24 +620,23 @@
     if (kind === 'chart') {
       pa.appendChild(head(t('chart_title')));
       pa.appendChild(el('div', { class: 'pr-board', text: t('board_label') }));
-      var gapMM = r.layout === 'exam' ? 6 : 3;
+      var gapMM = r.layout === 'exam' ? 4 : 2.5;
       var realRows = g.drows - Object.keys(g.gapR).length, realCols = g.dcols - Object.keys(g.gapC).length;
-      var h = Math.max(8, Math.min(22, (150 - (g.drows - 1) * gapMM) / realRows));
+      var h = Math.max(7, Math.min(24, (148 - (g.drows - 1) * gapMM) / realRows));   // fits one landscape A4 page
       var w = (277 - (g.dcols - 1) * gapMM) / realCols;
-      var fs = Math.max(7, Math.min(18, h * 1.1, w * 0.55));
-      var grid = el('div', { class: 'pr-room no-i18n' + (r.layout === 'exam' ? ' exam' : '') });
+      var fs = Math.max(6.5, Math.min(20, (h - 4) * 2.4, w * 0.5));                   // name size in pt
+      var small = Math.max(5.5, Math.min(9, h * 0.6));
+      var grid = el('div', { class: 'pr-room no-i18n' + (r.layout === 'exam' ? ' exam' : ''), style: { gap: gapMM + 'mm' } });
       var cols = [], rows = [], i;
-      for (i = 0; i < g.dcols; i++) cols.push(g.gapC[i] ? '4mm' : '1fr');
-      for (i = 0; i < g.drows; i++) rows.push(g.gapR[i] ? '4mm' : 'auto');
+      for (i = 0; i < g.dcols; i++) cols.push(g.gapC[i] ? '3mm' : '1fr');
+      for (i = 0; i < g.drows; i++) rows.push(g.gapR[i] ? '2mm' : h + 'mm');
       grid.style.gridTemplateColumns = cols.join(' '); grid.style.gridTemplateRows = rows.join(' ');
       g.seats.forEach(function (seat, k) {
         var s = arr[k] ? stuById(arr[k]) : null;
-        var d = el('div', { class: 'pr-seat' + (s ? '' : ' empty'), style: { gridRow: String(seat.dr + 1), gridColumn: String(seat.dc + 1), minHeight: h + 'mm' } });
-        d.appendChild(el('div', { class: 'sm', text: EDU.fmt(k + 1) + (r.sets ? ' · ' + t('p_set') + ' ' + setOf(seat) : '') }));
-        if (s) {
-          d.appendChild(el('div', { class: 'nm', style: { fontSize: fs.toFixed(1) + 'pt' }, text: stuName(s) }));
-          if (s.roll) d.appendChild(el('div', { class: 'sm', text: s.roll }));
-        }
+        var d = el('div', { class: 'pr-seat' + (s ? '' : ' empty'), style: { gridRow: String(seat.dr + 1), gridColumn: String(seat.dc + 1), height: h + 'mm', minHeight: '0' } });
+        var info = [EDU.fmt(k + 1)]; if (r.sets) info.push(setOf(seat)); if (s && s.roll) info.push(t('p_roll') + ' ' + s.roll);
+        d.appendChild(el('div', { class: 'sm', style: { fontSize: small.toFixed(1) + 'pt' }, text: info.join(' · ') }));
+        if (s) d.appendChild(el('div', { class: 'nm', style: { fontSize: fs.toFixed(1) + 'pt' }, text: stuName(s) }));
         grid.appendChild(d);
       });
       pa.appendChild(grid);

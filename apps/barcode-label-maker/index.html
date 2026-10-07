@@ -28,6 +28,7 @@
 
     /* ---------- one label (physical size in mm; always black on white like paper) ---------- */
     .lbl { box-sizing: border-box; display: flex; gap: 1mm; overflow: hidden; background: #fff; color: #000; line-height: 1.18; font-family: var(--font); }
+    .lbl[lang="en"] { font-family: "Noto Sans", Arial, Helvetica, sans-serif; }
     .l-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
     .tx { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: none; }
     .l-name { font-weight: 800; }
@@ -57,7 +58,7 @@
     .page-frame.more { display: none; }
     .page-no { font-size: .8rem; color: var(--muted); text-align: center; direction: ltr; }
     .items-table td, .items-table th { vertical-align: middle; }
-    .items-table .code { font-family: var(--mono); font-size: .86rem; direction: ltr; unicode-bidi: isolate; overflow-wrap: anywhere; }
+    .items-table .code { min-width: 140px; font-family: var(--mono); font-size: .86rem; direction: ltr; unicode-bidi: isolate; overflow-wrap: anywhere; }
     .items-table input.copies { width: 74px; }
     .items-table .err td { background: var(--danger-soft); }
     .items-table .nm { overflow-wrap: anywhere; min-width: 110px; }
@@ -75,10 +76,12 @@
       #app > *:not(#sheetCard) { display: none !important; }
       #sheetCard { border: 0 !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; background: none !important; }
       #sheetCard > *:not(#sheetPages) { display: none !important; }
-      .sheet-pages { display: block !important; padding: 0 !important; background: none !important; gap: 0 !important; }
+      .sheet-pages { display: block !important; margin: 0 !important; padding: 0 !important; background: none !important; gap: 0 !important; }
       .page-no { display: none !important; }
       .page-frame, .page-frame.more { display: block !important; box-shadow: none !important; width: auto !important; height: auto !important; overflow: visible !important; break-after: page; page-break-after: always; }
-      .page-frame:last-of-type { break-after: auto; page-break-after: auto; }
+      .page-frame.last { break-after: auto; page-break-after: auto; }
+      .sheet-pages > p { display: none !important; }
+      .edu-main, main#app { min-height: 0 !important; }
       .page { position: relative !important; transform: none !important; }
       .page .slot-skip { display: none; }
       .lbl { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -109,10 +112,10 @@
           </div>
           <div id="codeStatus" aria-live="polite"></div>
           <div class="fgrid" style="margin-top:12px">
-            <label class="field wide"><span data-i18n="name_label"></span><input id="f-name" class="no-i18n" type="text" maxlength="80" data-i18n-placeholder="name_ph"></label>
+            <label class="field wide"><span data-i18n="name_label"></span><input id="f-name" class="no-i18n" dir="auto" type="text" maxlength="80" data-i18n-placeholder="name_ph"></label>
             <label class="field"><span data-i18n="mrp_label"></span><input id="f-mrp" class="no-i18n" type="text" inputmode="decimal" maxlength="12" placeholder="120"></label>
-            <label class="field"><span data-i18n="qty_label"></span><input id="f-qty" class="no-i18n" type="text" maxlength="24" data-i18n-placeholder="qty_ph"></label>
-            <label class="field"><span data-i18n="batch_label"></span><input id="f-batch" class="no-i18n" type="text" maxlength="24" placeholder="B-2610"></label>
+            <label class="field"><span data-i18n="qty_label"></span><input id="f-qty" class="no-i18n" dir="auto" type="text" maxlength="24" data-i18n-placeholder="qty_ph"></label>
+            <label class="field"><span data-i18n="batch_label"></span><input id="f-batch" class="no-i18n" dir="auto" type="text" maxlength="24" placeholder="B-2610"></label>
             <label class="field"><span data-i18n="copies_label"></span><input id="f-copies" type="number" min="1" max="2000" step="1" value="1"></label>
           </div>
           <div class="row" style="margin-top:14px">
@@ -129,9 +132,9 @@
           <p class="small muted" data-i18n="common_hint"></p>
           <div class="fgrid">
             <label class="field"><span data-i18n="pkd_label"></span><input id="f-pkd" type="month"></label>
-            <label class="field"><span data-i18n="bb_label"></span><input id="f-bb" class="no-i18n" type="text" maxlength="40" data-i18n-placeholder="bb_ph"></label>
+            <label class="field"><span data-i18n="bb_label"></span><input id="f-bb" class="no-i18n" dir="auto" type="text" maxlength="40" data-i18n-placeholder="bb_ph"></label>
             <label class="field"><span data-i18n="fssai_label"></span><input id="f-fssai" class="no-i18n" type="text" inputmode="numeric" maxlength="20" dir="ltr" placeholder="10012345678901"></label>
-            <label class="field wide"><span data-i18n="mfd_label"></span><input id="f-mfd" class="no-i18n" type="text" maxlength="120" data-i18n-placeholder="mfd_ph"></label>
+            <label class="field wide"><span data-i18n="mfd_label"></span><input id="f-mfd" class="no-i18n" dir="auto" type="text" maxlength="120" data-i18n-placeholder="mfd_ph"></label>
             <label class="field wide"><span data-i18n="qr_label"></span><input id="f-qr" class="no-i18n" type="text" maxlength="300" dir="ltr" data-i18n-placeholder="qr_ph"></label>
           </div>
           <p class="small callout warning" id="fssaiWarn" hidden data-i18n="fssai_warn" style="margin-top:10px"></p>
@@ -184,7 +187,7 @@
         </div>
       </div>
       <p class="callout warning small" id="fitWarn" hidden style="margin-top:10px"></p>
-      <details style="margin-top:12px">
+      <details id="adjustBox" style="margin-top:12px">
         <summary data-i18n="adjust_title"></summary>
         <div class="fgrid" style="margin-top:10px">
           <label class="field"><span data-i18n="off_x"></span><input id="o-x" type="number" min="-15" max="15" step="0.5" value="0"></label>

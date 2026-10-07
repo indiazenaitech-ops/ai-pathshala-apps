@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recipe Finder: What's in My Kitchen? · AI Pathshala</title>
+  <meta name="description" content="Free recipe finder: tap what you have at home (aloo, pyaaz, dahi…) and get Indian home recipes ranked by match, with missing items, substitutes, scaling, timers and a shopping list. In 12 Indian languages, works offline.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .privacy { margin: 0 0 14px; display: flex; gap: 8px; align-items: flex-start; }
+    h2 { font-size: 1.15rem; margin: 0; }
+    h3 { font-size: 1rem; margin: 0; }
+    .card-head { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .rf-layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; margin-bottom: 16px; }
+    @media (min-width: 960px) { .rf-layout { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } }
+    .num { font-variant-numeric: tabular-nums; }
+    .muted-s { color: var(--muted); font-size: .86rem; }
+
+    /* ---------- kitchen ---------- */
+    .search-wrap { position: relative; }
+    .search-wrap input { width: 100%; font-size: 1.05rem; }
+    .sugg { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; min-height: 0; }
+    .sugg:empty { display: none; }
+    .sugg .chip { background: var(--accent-soft); border-color: transparent; }
+    .sugg .chip small { color: var(--muted); font-weight: 500; }
+    .presets { gap: 6px; margin: 10px 0; }
+    .presets .btn { flex: 1 1 auto; }
+    .have-box { border: 1px dashed var(--border); border-radius: var(--radius-sm, 10px); padding: 10px; background: var(--surface-2); margin: 10px 0; }
+    .have-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip { min-height: 36px; }
+    .chip .x { font-weight: 800; opacity: .8; margin-inline-start: 2px; }
+    .have-empty { color: var(--muted); font-size: .9rem; }
+    .cat-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin: 12px 0 8px; }
+    .cat-tabs button { border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 8px; padding: 6px 10px; font: inherit; font-size: .86rem; font-weight: 600; cursor: pointer; min-height: 36px; }
+    .cat-tabs button[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+    .assume { margin-top: 4px; font-size: .92rem; align-items: flex-start; }
+    .assume input { margin-top: 3px; }
+
+    /* ---------- results ---------- */
+    .filters { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 10px 0; }
+    @media (min-width: 700px) { .filters { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    .filters select { width: 100%; }
+    .filters label { font-size: .82rem; }
+    .res-bar { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; margin: 6px 0 10px; }
+    .how { font-size: .86rem; margin: 0; }
+    .res-list { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 620px) and (max-width: 959px) { .res-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .rcard { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 4px 10px; width: 100%; text-align: start; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); padding: 10px 12px; font: inherit; cursor: pointer; }
+    .rcard:hover, .rcard:focus-visible { border-color: var(--primary); }
+    .rc-emo { font-size: 1.8rem; line-height: 1; grid-row: span 3; padding-top: 2px; text-align: center; }
+    .rc-name { font-weight: 700; font-size: 1.02rem; display: flex; gap: 6px; align-items: baseline; justify-content: space-between; }
+    .rc-pct { font-weight: 800; color: var(--primary); white-space: nowrap; }
+    .rc-pct.full { color: var(--success); }
+    .rc-meta { color: var(--muted); font-size: .82rem; display: flex; flex-wrap: wrap; gap: 4px 10px; }
+    .rc-miss { font-size: .84rem; color: var(--danger); }
+    .rc-miss.ok { color: var(--success); }
+    .rcard .progress { height: 6px; margin-top: 4px; }
+    .rcard .progress > span.full { background: var(--success); }
+    .diet { display: inline-block; width: 12px; height: 12px; border: 2px solid currentColor; border-radius: 2px; position: relative; vertical-align: -1px; }
+    .diet::after { content: ''; position: absolute; inset: 2px; border-radius: 50%; background: currentColor; }
+    .diet.veg { color: #1e8e3e; } .diet.egg { color: #b0701c; } .diet.nonveg { color: #c62828; }
+    .empty-msg { padding: 14px; text-align: center; color: var(--muted); }
+
+    /* ---------- recipe view ---------- */
+    .rv-top { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .rv-title { display: flex; gap: 10px; align-items: center; margin: 4px 0 8px; }
+    .rv-title .emo { font-size: 2.2rem; }
+    .rv-title h2 { font-size: 1.45rem; }
+    .rv-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .rv-cols { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 860px) { .rv-cols { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); } }
+    .serv { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 6px 0 10px; }
+    .ing-list { list-style: none; margin: 0; padding: 0; }
+    .ing-list li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 4px 8px; padding: 7px 0; border-bottom: 1px solid var(--border); align-items: start; }
+    .ing-list .mk { font-weight: 800; text-align: center; }
+    .ing-list li.have .mk { color: var(--success); }
+    .ing-list li.miss .mk { color: var(--danger); }
+    .ing-list li.assumed .mk, .ing-list li.opt .mk { color: var(--muted); }
+    .ing-list .q { font-weight: 700; white-space: nowrap; text-align: end; }
+    .ing-list .sub { grid-column: 2 / 4; font-size: .82rem; color: var(--muted); }
+    .ing-list .tag { font-size: .76rem; color: var(--muted); font-weight: 500; }
+    .ing-list li.miss .nm { color: var(--danger); font-weight: 600; }
+    .steps { margin: 0; padding-inline-start: 1.4em; }
+    .steps li { margin: 0 0 12px; line-height: 1.55; }
+    .steps li::marker { font-weight: 800; color: var(--primary); }
+    .steps .btn { margin-top: 4px; }
+    .rv-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .rv-sum { margin: 8px 0; }
+
+    /* ---------- shopping list ---------- */
+    .shop-list { list-style: none; margin: 0 0 10px; padding: 0; }
+    .shop-list li { display: flex; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .shop-list li .nm { flex: 1 1 auto; min-width: 0; }
+    .shop-list li.done .nm { text-decoration: line-through; color: var(--muted); }
+    .shop-list li .q { font-weight: 700; white-space: nowrap; }
+    .icon-btn { border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 8px; min-width: 40px; min-height: 40px; cursor: pointer; font: inherit; }
+
+    /* ---------- timers ---------- */
+    .timers { position: fixed; inset-inline: 10px; bottom: 10px; z-index: 60; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; pointer-events: none; }
+    .timer { pointer-events: auto; display: flex; gap: 8px; align-items: center; background: var(--text); color: var(--bg); border-radius: 12px; padding: 6px 6px 6px 12px; box-shadow: 0 4px 16px rgba(0,0,0,.25); max-width: 100%; }
+    .timer .t { font-weight: 800; font-size: 1.15rem; font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+    .timer .l { font-size: .84rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52vw; }
+    .timer.done { background: var(--danger); color: #fff; animation: blink 1s infinite; }
+    .timer button { border: 0; background: rgba(255,255,255,.18); color: inherit; border-radius: 8px; min-width: 36px; min-height: 36px; cursor: pointer; font: inherit; font-weight: 800; }
+    @keyframes blink { 50% { opacity: .65; } }
+
+    /* ---------- cook mode ---------- */
+    .cook { position: fixed; inset: 0; z-index: 80; background: var(--bg); color: var(--text); display: flex; flex-direction: column; padding: 14px; overflow-y: auto; }
+    .cook[hidden] { display: none; }
+    .cook-head { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+    .cook-head h2 { font-size: 1.1rem; }
+    .cook-body { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; max-width: 900px; width: 100%; margin: 0 auto; padding: 20px 0; }
+    .cook-step-n { color: var(--primary); font-weight: 800; font-size: 1rem; margin-bottom: 8px; }
+    .cook-text { font-size: clamp(1.35rem, 3.4vw, 2.3rem); line-height: 1.45; font-weight: 600; margin: 0; }
+    .cook-nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 900px; width: 100%; margin: 0 auto; }
+    .cook-nav .btn { flex: 1 1 140px; min-height: 52px; font-size: 1.05rem; }
+    .cook .progress { margin: 6px auto 0; max-width: 900px; width: 100%; }
+
+    @media print {
+      body.rf-viewing #app > *:not(#recipeView) { display: none !important; }
+      #recipeView { border: 0; padding: 0; }
+      .timers, .cook { display: none !important; }
+      .steps .btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="callout success small privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+
+    <div class="rf-layout" id="mainLayout">
+      <!-- ---------- what is in my kitchen ---------- -->
+      <section class="card" id="kitchen" aria-labelledby="hKitchen">
+        <div class="card-head"><h2 id="hKitchen"><span aria-hidden="true">🧺</span> <span data-i18n="h_kitchen"></span></h2></div>
+        <div class="field search-wrap">
+          <label for="ingSearch" data-i18n="lbl_search"></label>
+          <input id="ingSearch" type="search" autocomplete="off" spellcheck="false" enterkeyhint="done" data-i18n-placeholder="ph_search">
+          <span class="hint" data-i18n="search_hint"></span>
+        </div>
+        <div id="sugg" class="sugg" aria-live="polite"></div>
+
+        <div class="row presets">
+          <button type="button" class="btn btn-sm" id="preBasics" data-preset="basics"></button>
+          <button type="button" class="btn btn-sm" id="preVeg" data-preset="veg"></button>
+          <button type="button" class="btn btn-sm" id="preDairy" data-preset="dairy"></button>
+          <button type="button" class="btn btn-sm" id="preDal" data-preset="dal"></button>
+        </div>
+        <label class="check assume"><input type="checkbox" id="assumeSpices"> <span data-i18n="assume_spices"></span></label>
+
+        <div class="have-box">
+          <div class="have-head">
+            <h3 id="haveTitle"></h3>
+            <button type="button" class="btn btn-sm btn-ghost" id="btnClearHave" data-i18n="clear_all"></button>
+          </div>
+          <div id="haveList" class="chips" aria-live="polite"></div>
+        </div>
+
+        <h3 data-i18n="h_tap"></h3>
+        <div class="cat-tabs" id="catTabs" role="group" data-i18n-aria-label="h_tap"></div>
+        <div class="chips" id="catChips"></div>
+      </section>
+
+      <!-- ---------- recipes ---------- -->
+      <section class="card" id="results" aria-labelledby="hRecipes">
+        <div class="card-head">
+          <h2 id="hRecipes"><span aria-hidden="true">🍳</span> <span data-i18n="h_recipes"></span></h2>
+          <button type="button" class="btn btn-accent" id="btnRandom"><span aria-hidden="true">🎲</span> <span data-i18n="btn_random"></span></button>
+        </div>
+        <p class="how muted" data-i18n="how_match"></p>
+        <div class="filters">
+          <div class="field"><label for="fDiet" data-i18n="f_diet"></label><select id="fDiet"></select></div>
+          <div class="field"><label for="fTime" data-i18n="f_time"></label><select id="fTime"></select></div>
+          <div class="field"><label for="fMeal" data-i18n="f_meal"></label><select id="fMeal"></select></div>
+          <div class="field"><label for="fRegion" data-i18n="f_region"></label><select id="fRegion"></select></div>
+        </div>
+        <div class="res-bar">
+          <label class="check"><input type="checkbox" id="fFav"> <span data-i18n="f_fav"></span></label>
+          <span class="muted-s" id="resCount" aria-live="polite"></span>
+        </div>
+        <p class="callout small" id="resNote" hidden></p>
+        <div class="res-list" id="resList"></div>
+        <div class="row" style="justify-content:center;margin-top:12px"><button type="button" class="btn" id="btnMore" data-i18n="btn_more" hidden></button></div>
+      </section>
+    </div>
+
+    <!-- ---------- one recipe ---------- -->
+    <section class="card" id="recipeView" hidden aria-live="polite">
+      <div class="rv-top no-print">
+        <button type="button" class="btn btn-sm" id="btnBack"><span aria-hidden="true">←</span> <span data-i18n="btn_back"></span></button>
+        <button type="button" class="btn btn-sm" id="btnFav"></button>
+      </div>
+      <div class="rv-title"><span class="emo" id="rvEmo" aria-hidden="true"></span><h2 id="rvName"></h2></div>
+      <div class="rv-badges" id="rvBadges"></div>
+      <div class="rv-cols">
+        <div>
+          <h3 data-i18n="h_ingredients"></h3>
+          <div class="serv no-print">
+            <span id="servLbl" data-i18n="servings"></span>
+            <div class="seg" id="servSeg" role="group" data-i18n-aria-label="servings"></div>
+          </div>
+          <p class="print-only" id="servPrint"></p>
+          <p class="callout small rv-sum" id="rvSum"></p>
+          <ul class="ing-list" id="rvIngs"></ul>
+          <p class="muted-s" id="rvJain" hidden></p>
+          <div class="rv-actions no-print">
+            <button type="button" class="btn btn-sm" id="btnAddMissing"><span aria-hidden="true">🛒</span> <span data-i18n="btn_add_missing"></span></button>
+            <button type="button" class="btn btn-sm" id="btnAddAll" data-i18n="btn_add_all"></button>
+          </div>
+        </div>
+        <div>
+          <h3 data-i18n="h_steps"></h3>
+          <p class="muted-s" data-i18n="steps_note"></p>
+          <ol class="steps" id="rvSteps"></ol>
+          <div class="rv-actions no-print">
+            <button type="button" class="btn btn-primary" id="btnCook"><span aria-hidden="true">👩‍🍳</span> <span data-i18n="btn_cook"></span></button>
+            <button type="button" class="btn" id="btnPrint"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
+            <button type="button" class="btn" id="btnShare"><span aria-hidden="true">🔗</span> <span data-i18n="btn_share_recipe"></span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- shopping list ---------- -->
+    <section class="card no-print" id="shopCard" aria-labelledby="hShop" style="margin-bottom:16px">
+      <div class="card-head"><h2 id="hShop"><span aria-hidden="true">🛒</span> <span data-i18n="h_shop"></span></h2><span class="badge" id="shopCount"></span></div>
+      <p class="muted-s" id="shopEmpty" data-i18n="shop_empty"></p>
+      <ul class="shop-list" id="shopList"></ul>
+      <div class="row" id="shopBtns">
+        <button type="button" class="btn btn-sm" id="btnShopCopy"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
+        <a class="btn btn-sm" id="btnShopWa" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="btn_whatsapp"></span></a>
+        <button type="button" class="btn btn-sm btn-danger" id="btnShopClear" data-i18n="clear"></button>
+      </div>
+    </section>
+
+    <details class="card no-print">
+      <summary><strong data-i18n="h_help"></strong></summary>
+      <ul>
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+        <li data-i18n="tip5"></li>
+      </ul>
+      <p class="small"><strong data-i18n="h_inside"></strong> <span data-i18n="inside"></span></p>
+      <p class="small muted" data-i18n="disclaimer"></p>
+    </details>
+
+    <!-- ---------- cook mode ---------- -->
+    <div class="cook" id="cook" hidden role="dialog" aria-modal="true" aria-labelledby="cookName">
+      <div class="cook-head">
+        <h2 id="cookName"></h2>
+        <button type="button" class="icon-btn" id="cookClose" data-i18n-aria-label="close">✕</button>
+      </div>
+      <div class="progress"><span id="cookProg"></span></div>
+      <div class="cook-body">
+        <div class="cook-step-n" id="cookN"></div>
+        <p class="cook-text" id="cookText" aria-live="polite"></p>
+        <label class="check" style="margin-top:18px"><input type="checkbox" id="cookAuto"> <span data-i18n="auto_read"></span></label>
+      </div>
+      <div class="cook-nav">
+        <button type="button" class="btn" id="cookPrev"><span aria-hidden="true">←</span> <span data-i18n="previous"></span></button>
+        <button type="button" class="btn" id="cookSpeak"><span aria-hidden="true">🔊</span> <span data-i18n="btn_read"></span></button>
+        <button type="button" class="btn btn-accent" id="cookTimer"></button>
+        <button type="button" class="btn btn-primary" id="cookNext"><span data-i18n="next"></span> <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+
+    <div class="timers" id="timers" aria-live="polite"></div>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="data.js"></script>
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
