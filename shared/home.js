@@ -8,15 +8,15 @@
   var SITE = Object.assign({ zip: '' }, window.EDU_SITE || {});
   /* Category ids: keep in sync with tools/verify.js, tools/build_catalog.js and cat_<id> in home-strings.js.
      This order is the order of the category picker and of the "by category" sort. */
-  var CATS = ['learn-ai', 'everyday', 'business', 'marketing', 'teacher-tools', 'math', 'science', 'coding', 'languages', 'study-skills', 'digital-safety'];
-  var SCHOOL_CATS = ['learn-ai', 'teacher-tools', 'math', 'science', 'coding', 'languages', 'study-skills', 'digital-safety'];
-  var CAT_ICON = { 'learn-ai': '🤖', everyday: '🧰', business: '💼', marketing: '📣', 'teacher-tools': '🧑‍🏫', math: '➗', science: '🔬', coding: '💻', languages: '🔤', 'study-skills': '📚', 'digital-safety': '🛡️' };
-  var CAT_COLOR = { 'learn-ai': '--c3', everyday: '--c4', business: '--c1', marketing: '--c5', 'teacher-tools': '--c2', math: '--c7', science: '--c4', coding: '--c3', languages: '--c6', 'study-skills': '--c1', 'digital-safety': '--c5' };
+  var CATS = ['learn-ai', 'data', 'everyday', 'business', 'marketing', 'teacher-tools', 'math', 'science', 'coding', 'languages', 'study-skills', 'digital-safety'];
+  var SCHOOL_CATS = ['learn-ai', 'data', 'teacher-tools', 'math', 'science', 'coding', 'languages', 'study-skills', 'digital-safety'];
+  var CAT_ICON = { 'learn-ai': '🤖', data: '📊', everyday: '🧰', business: '💼', marketing: '📣', 'teacher-tools': '🧑‍🏫', math: '➗', science: '🔬', coding: '💻', languages: '🔤', 'study-skills': '📚', 'digital-safety': '🛡️' };
+  var CAT_COLOR = { 'learn-ai': '--c3', data: '--c6', everyday: '--c4', business: '--c1', marketing: '--c5', 'teacher-tools': '--c2', math: '--c7', science: '--c4', coding: '--c3', languages: '--c6', 'study-skills': '--c1', 'digital-safety': '--c5' };
   /* Audiences: which categories each one shows. An audience with no published apps is hidden. */
   var AUDS = [
     { id: 'all', icon: '🌐', cats: CATS },
     { id: 'schools', icon: '🏫', cats: SCHOOL_CATS },
-    { id: 'business', icon: '💼', cats: ['business', 'learn-ai', 'digital-safety'] },
+    { id: 'business', icon: '💼', cats: ['business', 'data', 'learn-ai', 'digital-safety'] },
     { id: 'marketing', icon: '📣', cats: ['marketing', 'everyday'] }
   ];
   var APPS = (window.EDU_CATALOG || []).filter(function (a) { return CATS.indexOf(a.category) >= 0; });

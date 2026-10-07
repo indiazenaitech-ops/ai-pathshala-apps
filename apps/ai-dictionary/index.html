@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Dictionary · AI Pathshala</title>
+  <meta name="description" content="120 AI, machine learning and generative AI terms explained simply with everyday Indian examples, in 12 Indian languages. Term of the day, search, flashcards, quiz, read aloud, WhatsApp share, printable glossary. Free, offline.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    /* ---------- topic colours (tokens from edu.css work in light + dark) ---------- */
+    .tp-basics { --tp: var(--c1); } .tp-ml { --tp: var(--c3); } .tp-genai { --tp: var(--c2); } .tp-safety { --tp: var(--c5); } .tp-careers { --tp: var(--c4); }
+    .badge.tp { background: color-mix(in srgb, var(--tp) 16%, var(--surface)); color: var(--text); border-color: color-mix(in srgb, var(--tp) 55%, var(--border)); }
+    .badge.tp::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--tp); flex: none; }
+
+    #howto summary { cursor: pointer; min-height: 32px; display: flex; align-items: center; }
+    #howto ul { margin: 10px 0 0; padding-inline-start: 1.2em; }
+    #howto li + li { margin-top: 6px; }
+    #howto h3 { margin-top: 14px; }
+    .ad-privacy { display: flex; gap: 8px; align-items: flex-start; margin: 12px 0 0; }
+
+    .tabs { margin-top: 16px; }
+    .tabs button { min-height: 44px; font-size: 1rem; }
+    .ltr { direction: ltr; unicode-bidi: isolate; }
+
+    /* ---------- dictionary layout ---------- */
+    .ad-layout { display: grid; gap: 14px; grid-template-areas: "search" "detail" "filters" "list"; align-items: start; }
+    .ad-search { grid-area: search; } .ad-detail { grid-area: detail; } .ad-filters { grid-area: filters; } .ad-listwrap { grid-area: list; }
+    @media (min-width: 900px) {
+      .ad-layout { grid-template-columns: minmax(0, 350px) minmax(0, 1fr); grid-template-areas: "search detail" "filters detail" "list detail"; }
+      .ad-detail { position: sticky; top: 72px; }
+    }
+    .ad-search input { width: 100%; font-size: 1.05rem; min-height: 46px; }
+    #ad-status { min-height: 1.3em; margin: 6px 0 0; }
+    .ad-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ad-chips .chip { min-height: 40px; }
+    .ad-chips .chip .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--tp); flex: none; }
+    .ad-az { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; }
+    .ad-az button {
+      min-width: 36px; min-height: 36px; padding: 0 6px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface);
+      color: var(--text); font: inherit; font-weight: 700; font-size: .9rem; cursor: pointer; font-family: "Noto Sans", system-ui, sans-serif;
+    }
+    .ad-az button:hover:not(:disabled) { background: var(--surface-2); }
+    .ad-az button[aria-pressed="true"] { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); }
+    .ad-az button:disabled { opacity: .3; cursor: default; }
+    .ad-az .az-all { min-width: auto; padding: 0 10px; font-family: inherit; }
+    .ad-tools { margin-top: 12px; }
+
+    .ad-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: min(62vh, 680px); overflow-y: auto; overscroll-behavior: contain; padding-inline-end: 2px; }
+    @media (max-width: 899px) { .ad-list { max-height: 52vh; } }
+    .ad-item {
+      width: 100%; text-align: start; display: grid; grid-template-columns: 6px minmax(0, 1fr); gap: 0 10px; align-items: stretch;
+      padding: 8px 10px 8px 0; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text);
+      font: inherit; cursor: pointer; min-height: 48px; overflow: hidden;
+    }
+    .ad-item::before { content: ""; display: block; background: var(--tp); border-radius: 0 3px 3px 0; }
+    [dir="rtl"] .ad-item::before { border-radius: 3px 0 0 3px; }
+    .ad-item:hover { background: var(--surface-2); }
+    .ad-item[aria-current="true"] { border-color: var(--primary); background: var(--primary-soft); box-shadow: inset 0 0 0 1px var(--primary); }
+    .ad-item-main { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+    .ad-item-term { font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+    .ad-item-local { color: var(--muted); font-size: .9rem; line-height: 1.35; overflow-wrap: anywhere; }
+    .ad-item-short { color: var(--muted); font-size: .82rem; line-height: 1.35; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+    :root[lang="ur"] .ad-item-local, :root[lang="ur"] .ad-item-short { line-height: 1.9; }
+    .ad-empty { text-align: center; padding: 20px 12px; border: 2px dashed var(--border); border-radius: var(--radius-sm); color: var(--muted); }
+
+    /* ---------- detail ---------- */
+    .ad-dhead { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-start; }
+    .ad-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+    .ad-term { font-size: clamp(1.6rem, 4.5vw, 2.3rem); line-height: 1.15; margin: 0; overflow-wrap: anywhere; font-family: "Noto Sans", system-ui, sans-serif; }
+    .ad-local { font-size: clamp(1.05rem, 2.6vw, 1.35rem); color: var(--muted); font-weight: 600; margin: 4px 0 0; overflow-wrap: anywhere; }
+    .ad-dnav { margin-inline-start: auto; gap: 6px; }
+    .ad-dnav .btn { min-height: 40px; }
+    .ad-short { font-size: clamp(1.05rem, 2.5vw, 1.25rem); font-weight: 600; line-height: 1.45; margin: 14px 0 0; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface-2); }
+    .ad-detail h3 { font-size: .95rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin: 16px 0 6px; }
+    :root[lang="ur"] .ad-detail h3 { text-transform: none; letter-spacing: 0; }
+    .ad-long { margin: 0; line-height: 1.6; }
+    .ad-example { margin-top: 14px; }
+    .ad-example p { margin: 4px 0 0; }
+    .ad-related { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ad-related .chip { min-height: 36px; }
+    .ad-related .chip .en { font-family: "Noto Sans", system-ui, sans-serif; }
+    .ad-related .chip .lc { font-weight: 500; color: inherit; opacity: .85; }
+    .ad-actions { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .ad-actions .btn svg { width: 20px; height: 20px; }
+    .ad-tod { margin-top: 10px; }
+    @media (max-width: 520px) { .ad-dnav { width: 100%; margin-inline-start: 0; } .ad-dnav .btn { flex: 1 1 auto; } }
+
+    /* ---------- flashcards ---------- */
+    .fc-bar { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-end; justify-content: space-between; }
+    .fc-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .fc-head .progress { flex: 1 1 140px; min-width: 100px; }
+    .fc-count { font-weight: 800; font-variant-numeric: tabular-nums; min-width: 4ch; }
+    .fc-stage { display: grid; gap: 14px; justify-items: center; }
+    .fc-card {
+      width: min(100%, 760px); perspective: 1600px; background: none; border: 0; padding: 0; margin: 0;
+      cursor: pointer; font: inherit; color: inherit; text-align: center; display: block; border-radius: 20px;
+      -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+    }
+    .fc-inner { display: grid; transition: transform .5s cubic-bezier(.3, .75, .3, 1); transform-style: preserve-3d; min-height: clamp(220px, 38vh, 400px); }
+    .fc-card.flipped .fc-inner { transform: rotateY(180deg); }
+    .fc-face {
+      grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+      padding: 38px 22px 26px; border-radius: 20px; border: 2px solid var(--border); background: var(--surface);
+      box-shadow: var(--shadow-lg); position: relative; overflow-wrap: anywhere; min-width: 0;
+      -webkit-backface-visibility: hidden; backface-visibility: hidden;
+    }
+    .fc-back { transform: rotateY(180deg); background: var(--primary-soft); border-color: var(--primary); }
+    .fc-side { position: absolute; inset-block-start: 10px; inset-inline-start: 16px; font-size: .78rem; font-weight: 700; letter-spacing: .04em; color: var(--muted); }
+    .fc-term { font-weight: 800; font-size: clamp(1.6rem, 5.5vw, 3rem); line-height: 1.15; font-family: "Noto Sans", system-ui, sans-serif; }
+    .fc-local { font-weight: 600; font-size: clamp(1.05rem, 3vw, 1.5rem); color: var(--muted); }
+    .fc-meaning { font-weight: 600; font-size: clamp(1.05rem, 2.8vw, 1.45rem); line-height: 1.45; max-width: 60ch; }
+    .fc-ex { font-size: clamp(.92rem, 2.2vw, 1.05rem); color: var(--muted); max-width: 60ch; line-height: 1.5; }
+    :root[lang="ur"] .fc-meaning, :root[lang="ur"] .fc-ex { line-height: 1.9; }
+    .fc-rate { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; width: min(100%, 760px); }
+    .fc-rate .btn { min-height: 56px; font-size: 1.05rem; flex-wrap: wrap; }
+    .fc-knew { background: var(--success-soft); border-color: var(--success); color: var(--text); }
+    .fc-again { background: var(--warning-soft); border-color: var(--warning); color: var(--text); }
+    .fc-kbd { font-size: .75em; font-weight: 600; opacity: .8; }
+    @media (hover: none), (max-width: 520px) { .fc-kbd { display: none; } }
+    .fc-done { text-align: center; padding: 18px; background: var(--surface-2); border-radius: var(--radius); }
+    .fc-done .big-number { color: var(--primary); }
+    @media (prefers-reduced-motion: reduce) { .fc-inner { transition: none; } }
+
+    /* ---------- quiz ---------- */
+    .q-bar { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-end; }
+    .q-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+    .q-stage { background: var(--surface-2); border-radius: var(--radius); padding: 18px; }
+    .q-ask { margin: 0 0 6px; color: var(--muted); font-weight: 600; }
+    .q-text { font-size: clamp(1.15rem, 3vw, 1.6rem); font-weight: 800; margin: 0 0 14px; line-height: 1.35; overflow-wrap: anywhere; }
+    .q-text .en { font-family: "Noto Sans", system-ui, sans-serif; }
+    :root[lang="ur"] .q-text { line-height: 1.9; }
+    .q-options { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .q-opt { min-height: 56px; font-size: 1rem; text-align: start; justify-content: flex-start; position: relative; padding-inline-start: 38px; line-height: 1.35; white-space: normal; overflow-wrap: anywhere; }
+    .q-opt .q-key { position: absolute; inset-block-start: 50%; transform: translateY(-50%); inset-inline-start: 10px; width: 22px; height: 22px; border-radius: 50%; background: var(--surface-2); color: var(--muted); font-size: .75rem; font-weight: 700; display: grid; place-items: center; }
+    .q-opt .en { font-family: "Noto Sans", system-ui, sans-serif; }
+    .q-opt .lc { color: var(--muted); font-weight: 500; }
+    .q-opt:disabled { opacity: .55; cursor: default; }
+    .q-opt.ok, .q-opt.bad { opacity: 1; }
+    .q-opt.ok { border: 2px solid var(--success); background: var(--success-soft); }
+    .q-opt.bad { border: 2px solid var(--danger); background: var(--danger-soft); }
+    #q-feedback { min-height: 1.6em; margin: 12px 0 8px; font-size: 1.02rem; }
+    #q-feedback strong.ok { color: var(--success); } #q-feedback strong.bad { color: var(--danger); }
+    .q-end { text-align: center; }
+    .q-end .big-number { color: var(--primary); }
+    .q-end-msg { font-size: clamp(1.05rem, 2.4vw, 1.3rem); font-weight: 700; margin: 6px 0; }
+
+    /* ---------- printed glossary ---------- */
+    #glossary h1 { font-size: 18pt; margin: 0 0 4pt; }
+    #glossary .gl-note { font-size: 9.5pt; color: #444; margin: 0 0 8pt; }
+    .gl-table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+    .gl-table th, .gl-table td { border: 1px solid #999; padding: 4pt 6pt; vertical-align: top; text-align: start; }
+    .gl-table th { background: #eee; }
+    .gl-table td.n { width: 22pt; text-align: center; color: #555; }
+    .gl-table td.t { width: 28%; }
+    .gl-table .gl-term { font-weight: 700; font-family: "Noto Sans", system-ui, sans-serif; }
+    .gl-table .gl-local { color: #444; }
+    .gl-table .gl-topic { font-size: 8pt; color: #555; }
+    .gl-table tr { break-inside: avoid; page-break-inside: avoid; }
+    @media print {
+      .edu-main > :not(#glossary) { display: none !important; }
+      #glossary { display: block !important; color: #000; }
+      body { background: #fff; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+
+    <div class="tabs no-print" role="tablist" id="tabs">
+      <button type="button" role="tab" id="tab-dict" data-tab="dict" aria-controls="p-dict" data-i18n="tab_dict"></button>
+      <button type="button" role="tab" id="tab-cards" data-tab="cards" aria-controls="p-cards" data-i18n="tab_cards"></button>
+      <button type="button" role="tab" id="tab-quiz" data-tab="quiz" aria-controls="p-quiz" data-i18n="tab_quiz"></button>
+    </div>
+
+    <!-- ===== Dictionary ===== -->
+    <section id="p-dict" role="tabpanel" aria-labelledby="tab-dict">
+      <div class="ad-layout">
+        <div class="card ad-search">
+          <label class="field"><span data-i18n="search_label"></span>
+            <input type="search" id="ad-search" class="no-i18n" autocomplete="off" spellcheck="false" data-i18n-placeholder="search_ph">
+          </label>
+          <p class="small muted" id="ad-status" aria-live="polite"></p>
+        </div>
+
+        <div class="card ad-detail" id="detail" aria-live="polite"></div>
+
+        <div class="card ad-filters">
+          <div class="field">
+            <span id="lbl-topic" data-i18n="topic_label"></span>
+            <div class="ad-chips" id="topic-chips" role="group" aria-labelledby="lbl-topic"></div>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <span id="lbl-az" data-i18n="az_label"></span>
+            <div class="ad-az" id="az" role="group" aria-labelledby="lbl-az" dir="ltr"></div>
+          </div>
+          <div class="row ad-tools no-print">
+            <button type="button" class="btn btn-sm" id="tod-btn"><span aria-hidden="true">⭐ </span><span data-i18n="tod_badge"></span></button>
+            <button type="button" class="btn btn-sm" id="print-btn"><span aria-hidden="true">🖨 </span><span data-i18n="print_glossary"></span></button>
+          </div>
+        </div>
+
+        <div class="card ad-listwrap">
+          <ul class="ad-list" id="list" data-i18n-aria-label="list_aria"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Flashcards ===== -->
+    <section id="p-cards" role="tabpanel" aria-labelledby="tab-cards" hidden>
+      <div class="card stack">
+        <div class="fc-bar">
+          <div class="field">
+            <span id="lbl-fc-topic" data-i18n="topic_label"></span>
+            <div class="seg" role="group" aria-labelledby="lbl-fc-topic" id="fc-topic"></div>
+          </div>
+          <span class="badge success" id="fc-known" aria-live="polite"></span>
+        </div>
+        <div class="fc-head">
+          <span class="fc-count" id="fc-count"></span>
+          <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="fc-prog"><span id="fc-bar" style="width:0%"></span></div>
+          <button type="button" class="edu-iconbtn" id="fc-speak" data-i18n-aria-label="read_aloud" data-i18n-title="read_aloud">🔊</button>
+        </div>
+        <div class="fc-stage" id="fc-stage">
+          <button type="button" class="fc-card" id="fc-card">
+            <span class="fc-inner">
+              <span class="fc-face fc-front" id="fc-front"></span>
+              <span class="fc-face fc-back" id="fc-back" aria-hidden="true"></span>
+            </span>
+          </button>
+          <div class="stack center" id="fc-fliprow">
+            <p class="muted small mb0" data-i18n="flip_hint"></p>
+            <button type="button" class="btn btn-primary btn-lg" id="fc-flip"><span data-i18n="show_meaning"></span> <kbd class="fc-kbd no-i18n">Space</kbd></button>
+          </div>
+          <div class="fc-rate" id="fc-rate" hidden>
+            <button type="button" class="btn fc-knew" id="fc-knew"><span aria-hidden="true">✓</span> <span data-i18n="knew"></span> <kbd class="fc-kbd no-i18n">1</kbd></button>
+            <button type="button" class="btn fc-again" id="fc-again"><span aria-hidden="true">↻</span> <span data-i18n="again"></span> <kbd class="fc-kbd no-i18n">2</kbd></button>
+          </div>
+        </div>
+        <div class="fc-done" id="fc-done" hidden>
+          <h2 class="mb0" data-i18n="cards_done"></h2>
+          <div class="big-number" id="fc-done-n"></div>
+          <p id="fc-done-msg" class="mb0"></p>
+          <div class="row" style="justify-content:center;margin-top:12px">
+            <button type="button" class="btn btn-accent" id="fc-review"></button>
+            <button type="button" class="btn btn-primary" id="fc-restart" data-i18n="restart"></button>
+          </div>
+        </div>
+        <div class="row spread">
+          <span class="tiny muted" data-i18n="cards_keys"></span>
+          <button type="button" class="btn btn-sm btn-danger" id="fc-forget" data-i18n="forget_known"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Quiz ===== -->
+    <section id="p-quiz" role="tabpanel" aria-labelledby="tab-quiz" hidden>
+      <div class="card stack">
+        <div class="q-bar">
+          <div class="field">
+            <span id="lbl-qmode" data-i18n="quiz_mode"></span>
+            <div class="seg" role="group" aria-labelledby="lbl-qmode" id="q-mode">
+              <button type="button" id="qm-m2t" data-v="m2t" data-i18n="q_m2t"></button>
+              <button type="button" id="qm-t2m" data-v="t2m" data-i18n="q_t2m"></button>
+            </div>
+          </div>
+          <div class="field">
+            <span id="lbl-qtopic" data-i18n="topic_label"></span>
+            <div class="seg" role="group" aria-labelledby="lbl-qtopic" id="q-topic"></div>
+          </div>
+        </div>
+        <div class="q-meta">
+          <span class="badge primary" id="q-progress"></span>
+          <span><span data-i18n="score"></span>: <strong id="q-score" aria-live="polite"></strong></span>
+          <span class="muted small" id="q-best"></span>
+        </div>
+        <div class="progress"><span id="q-bar" style="width:0%"></span></div>
+        <div class="q-stage" id="q-stage">
+          <p class="q-ask" id="q-ask"></p>
+          <p class="q-text" id="q-text"></p>
+          <div class="q-options" id="q-options"></div>
+          <p id="q-feedback" aria-live="polite"></p>
+          <div class="row"><button type="button" class="btn btn-primary btn-lg" id="q-next" data-i18n="next" disabled></button></div>
+        </div>
+        <div class="q-stage q-end" id="q-end" hidden>
+          <div class="big-number" id="q-end-score"></div>
+          <p id="q-end-msg" class="q-end-msg"></p>
+          <p id="q-end-best" class="muted"></p>
+          <button type="button" class="btn btn-primary btn-lg" id="q-again" data-i18n="play_again"></button>
+        </div>
+        <div class="row spread">
+          <span class="tiny muted" data-i18n="quiz_keys"></span>
+          <button type="button" class="btn btn-danger btn-sm" id="reset" data-i18n="reset"></button>
+        </div>
+      </div>
+    </section>
+
+    <details class="card no-print" id="howto" style="margin-top:16px">
+      <summary><strong data-i18n="how_title"></strong></summary>
+      <ul id="tips"></ul>
+      <h3 data-i18n="inside_title"></h3>
+      <p class="mb0" data-i18n="inside_text"></p>
+      <p class="ad-privacy small muted mb0"><span aria-hidden="true">🔒</span><span data-i18n="privacy_line"></span></p>
+    </details>
+
+    <!-- glossary: printed only -->
+    <section id="glossary" class="print-only"></section>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="data.js"></script>
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
