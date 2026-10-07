@@ -21,9 +21,9 @@
   function iso(x) { return '⁦' + x + '⁩'; }
   function fv(v, extra) {                 /* a value of the current population, with its unit */
     if (!isFinite(v)) return '—';
-    if (st.pop === 'income') return '₹' + EDU.fmt(Math.round(v));
-    if (st.pop === 'heights') return t('u_cm', { v: num(v, 1 + (extra || 0)) });
-    return num(v, 2 + (extra || 0));
+    if (st.pop === 'income') return iso('₹' + EDU.fmt(Math.round(v)));
+    if (st.pop === 'heights') return t('u_cm', { v: iso(num(v, 1 + (extra || 0))) });
+    return iso(num(v, 2 + (extra || 0)));
   }
   function rupees(v) { return '₹' + EDU.fmt(Math.round(v)); }
 
@@ -63,7 +63,8 @@
     ticks.forEach(function (v) {
       var x = X(v);
       g.beginPath(); g.moveTo(x, y); g.lineTo(x, y + 5); g.stroke();
-      g.fillText(labelFn(v), x, y + 18);
+      var lb = labelFn(v), hw = g.measureText(lb).width / 2 + 2;
+      g.fillText(lb, Math.min(c.w - hw, Math.max(hw, x)), y + 18);
     });
     g.fillStyle = col('--text'); g.font = '600 12px "Noto Sans", system-ui, sans-serif';
     g.fillText(label, (X(x0) + X(x1)) / 2, c.h - 3);
@@ -129,7 +130,7 @@
     if (!m) hint = t('hint_start');
     else if (m < 100) hint = t('hint_more');
     else if (st.n === 1) hint = t('hint_n1');
-    else hint = t('hint_compare', { o: iso(fv(sdm, 1)), s: iso(fv(se(), 1)) }) + (st.pop === 'income' && st.n < 15 ? ' ' + t('hint_skew') : ' ' + t('hint_bell'));
+    else hint = t('hint_compare', { o: fv(sdm, 1), s: fv(se(), 1) }) + (st.pop === 'income' && st.n < 15 ? ' ' + t('hint_skew') : ' ' + t('hint_bell'));
     $('#clt-hint').textContent = hint;
     drawPop(); drawDist();
   }
@@ -206,13 +207,13 @@
     var tc = st.n >= 2 ? S.tcrit(st.conf, st.n - 1) : NaN;
     $('#ci-formula').textContent = st.n >= 2 ? t('ci_formula', { t: iso(num(tc, 3)), n: iso(EDU.fmt(st.n)), c: iso(EDU.fmt(Math.round(st.conf * 100))) }) : '';
     var c = prep($('#c-ci')), g = c.g;
-    var half = 5 * p.sigma / Math.sqrt(Math.max(2, st.n)) * (st.n < 5 ? 2 : 1), lo = p.mu - half, hi = p.mu + half;
+    var half = 5 * p.sigma / Math.sqrt(Math.max(2, st.n)) * (st.n < 5 ? 2 : 1), lo = Math.max(p.min, p.mu - half), hi = Math.min(p.max, p.mu + half);
     var L = 14, Rr = 14, T = 10, X = function (v) { return L + (v - lo) / (hi - lo) * (c.w - L - Rr); };
     var y0 = c.h - 34;
     g.strokeStyle = col('--border'); g.lineWidth = 1.5; g.beginPath(); g.moveTo(L, y0 + 0.5); g.lineTo(c.w - Rr, y0 + 0.5); g.stroke();
     g.fillStyle = col('--muted'); g.textAlign = 'center';
-    [-1, 0, 1].forEach(function (k) {
-      var v = p.mu + k * half * 0.8; g.fillText(st.pop === 'income' ? rupees(v) : num(v, st.pop === 'dice' ? 2 : 1), X(v), y0 + 18);
+    [lo + (p.mu - lo) * 0.2, p.mu, hi - (hi - p.mu) * 0.2].forEach(function (v) {
+      g.fillText(st.pop === 'income' ? rupees(v) : num(v, st.pop === 'dice' ? 2 : 1), X(v), y0 + 18);
     });
     g.fillStyle = col('--text'); g.font = '600 12px "Noto Sans", system-ui, sans-serif'; g.fillText(t('axis_' + st.pop), c.w / 2, c.h - 3);
     if (!tot) { emptyText(c, st.n < 2 ? 'ci_need2_short' : 'ci_empty'); return; }
@@ -287,7 +288,7 @@
     var out = [], bad = 0;
     String(txt || '').split(/[\s;]+/).forEach(function (tok) {
       if (!tok) return;
-      tok = tok.replace(/^₹/, '');
+      tok = tok.replace(/^₹/, '').replace(/^,+|,+$/g, '');
       var parts = /^\d{1,3}(,\d{2})*,\d{3}$/.test(tok) || /^\d{1,3}(,\d{3})+$/.test(tok) ? [tok.replace(/,/g, '')] : tok.split(',');
       parts.forEach(function (x) {
         if (x === '') return;
@@ -322,12 +323,14 @@
     var ticks = []; for (var tv = 0; tv <= mx; tv += stp) ticks.push(tv);
     var y0 = axis(c, 0, mx, X, ticks, function (x) { return c.w < 520 && x >= 1000 ? EDU.fmt(x / 1000) + 'k' : EDU.fmt(x); }, t('axis_mm'));
     var mean = st.mmRich ? m1 : m0, med = st.mmRich ? d1 : d0;
-    var placed = {};
+    var placed = {}, cnt = {}, maxK = 1;
+    data.forEach(function (x) { var px = Math.round(X(x) / 8); cnt[px] = (cnt[px] || 0) + 1; if (cnt[px] > maxK) maxK = cnt[px]; });
+    var stepY = Math.min(11, (y0 - 70) / maxK);
     data.forEach(function (x, idx) {
       var px = Math.round(X(x) / 8), k = placed[px] = (placed[px] || 0) + 1;
       var rich = st.mmRich && idx === data.length - 1;
       g.fillStyle = rich ? col('--c5') : col('--c1');
-      g.beginPath(); g.arc(X(x), y0 - 10 - (k - 1) * 11, rich ? 8 : 5, 0, 2 * Math.PI); g.fill();
+      g.beginPath(); g.arc(X(x), y0 - 10 - (k - 1) * stepY, rich ? 8 : Math.min(5, Math.max(3, stepY / 2 + 1)), 0, 2 * Math.PI); g.fill();
     });
     vline(c, X(mean), 26, y0, col('--c2'), 3);
     vline(c, X(med), 46, y0, col('--c3'), 3, [6, 4]);

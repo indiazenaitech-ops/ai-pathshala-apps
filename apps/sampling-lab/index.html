@@ -27,6 +27,11 @@
     .sl-seed input { width: 9ch; min-height: 42px; font-weight: 700; }
     .sl-tabs { margin-top: 18px; }
     .sl-tabs button { min-height: 44px; font-size: .98rem; }
+    @media (max-width: 560px) {
+      .sl-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; border-bottom: 0; }
+      .sl-tabs button { white-space: normal; line-height: 1.25; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); }
+      .sl-tabs button[aria-selected="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+    }
     .sl-panel > * + * { margin-top: 14px; }
     .sl-tiles { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
     .sl-tile { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; background: var(--surface); min-width: 0; }
@@ -139,13 +144,13 @@
     <section class="card sl-panel" id="p-clt" role="tabpanel" aria-labelledby="tab-clt">
       <p class="muted sl-hide-present" data-i18n="clt_intro"></p>
       <div class="sl-tiles" aria-live="polite">
-        <div class="sl-tile mu"><span class="k" data-i18n="t_mu"></span><span class="v sl-num" id="v-mu"></span></div>
-        <div class="sl-tile"><span class="k" data-i18n="t_sigma"></span><span class="v sl-num" id="v-sigma"></span></div>
-        <div class="sl-tile xb"><span class="k" data-i18n="t_xbar"></span><span class="v sl-num" id="v-xbar"></span></div>
+        <div class="sl-tile mu"><span class="k" data-i18n="t_mu"></span><span class="v" id="v-mu"></span></div>
+        <div class="sl-tile"><span class="k" data-i18n="t_sigma"></span><span class="v" id="v-sigma"></span></div>
+        <div class="sl-tile xb"><span class="k" data-i18n="t_xbar"></span><span class="v" id="v-xbar"></span></div>
         <div class="sl-tile"><span class="k" data-i18n="t_count"></span><span class="v sl-num" id="v-count"></span></div>
-        <div class="sl-tile"><span class="k" data-i18n="t_meanmeans"></span><span class="v sl-num" id="v-mm"></span></div>
-        <div class="sl-tile"><span class="k" data-i18n="t_sdmeans"></span><span class="v sl-num" id="v-sdm"></span></div>
-        <div class="sl-tile hl"><span class="k" data-i18n="t_se"></span><span class="v sl-num" id="v-se"></span></div>
+        <div class="sl-tile"><span class="k" data-i18n="t_meanmeans"></span><span class="v" id="v-mm"></span></div>
+        <div class="sl-tile"><span class="k" data-i18n="t_sdmeans"></span><span class="v" id="v-sdm"></span></div>
+        <div class="sl-tile hl"><span class="k" data-i18n="t_se"></span><span class="v" id="v-se"></span></div>
       </div>
       <div class="sl-btns">
         <button class="btn btn-primary" type="button" id="take1" data-i18n="take_1"></button>

@@ -65,6 +65,6 @@ module.exports = async function ({ page, expect, log }) {
 
   // 7) settings survive a reload
   await page.reload({ waitUntil: 'load' });
-  await page.waitForSelector('#v-se');
+  await page.waitForSelector('#quiz .sl-q');
   expect(await page.inputValue('#n-range') === '30' && await page.getAttribute('#tab-quiz', 'aria-selected') === 'true', 'n and tab remembered');
 };
