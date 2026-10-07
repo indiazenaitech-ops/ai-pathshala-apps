@@ -119,8 +119,8 @@
     /* sender line */
     var fromText = el('bdi', { class: 'ltr no-i18n', text: d.from });
     var fromNode = fromText;
-    if (d.from && o.interactive && !o.revealed) fromNode = liveBtn('f:sender:1', fromText, d.senderFlag ? 'sender' : null);
-    else if (d.from && o.revealed && d.senderFlag) fromNode = flagBtn('sender', 'f:sender:1', fromText);
+    if (d.from && o.interactive && !o.revealed) fromNode = liveBtn('f:sender:0', fromText, d.senderFlag ? 'sender' : null);
+    else if (d.from && o.revealed && d.senderFlag) fromNode = flagBtn('sender', 'f:sender:0', fromText);
 
     var isEmail = d.ch === 'email';
     var nameEl = el('div', { class: 'mock-name' }, c.who ? el('span', { text: c.who }) : (isEmail ? el('span', { text: t('ch_email') }) : fromNode));
