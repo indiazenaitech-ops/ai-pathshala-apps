@@ -151,7 +151,7 @@
     function finish(msgKey) {
       if (msgKey) T(W / 2, H / 2, EDU.t(msgKey), { fs: 22, anchor: 'middle', fill: th.muted });
       if (d.bad) warns.push(EDU.t('warn_bad', { n: EDU.fmt(d.bad) }));
-      return { svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" font-family=\'' + FONT + '\'>' + out.join('') + '</svg>', warns: warns, marks: marks };
+      return { svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" direction="ltr" font-family=\'' + FONT + '\'>' + out.join('') + '</svg>', warns: warns, marks: marks };
     }
     if (!anyNum || !ser.length) return finish('no_data');
 
@@ -250,7 +250,7 @@
         if (o.labels && p.lab) T(X(p.x) + 11, Y(p.y) - 9, fit(p.lab, 140, 15), { fs: 15, fill: th.muted });
       });
       var rr2 = D.pearson(new Float64Array(xv), new Float64Array(yv)).r;
-      if (isFinite(rr2)) T(R2, Tp + 4, 'r = ' + EDU.fmt(rr2, { maximumFractionDigits: 2, minimumFractionDigits: 2 }), { fs: 18, anchor: 'end', fill: th.muted, bold: true });
+      if (isFinite(rr2)) T(rr2 >= 0 ? L + 12 : R2 - 12, Tp + 22, 'r = ' + EDU.fmt(rr2, { maximumFractionDigits: 2, minimumFractionDigits: 2 }), { fs: 18, anchor: rr2 >= 0 ? 'start' : 'end', fill: th.muted, bold: true });
       if (o.x || xName) T((L + R2) / 2, H - pad, fit(o.x || xName, R2 - L, fsL, true), { fs: fsL, anchor: 'middle', bold: true, fill: th.muted });
       if (!o.y && yName) o = Object.assign({}, o, { y: yName });
       if (o.y) T(pad + 12, (Tp + B) / 2, fit(o.y, B - Tp, fsL, true), { fs: fsL, anchor: 'middle', bold: true, rot: -90, fill: th.muted });
@@ -340,7 +340,7 @@
     var everyV = rotate ? Math.max(1, Math.ceil(24 / bandW)) : 1;
     for (i = 0; i < n; i += everyV) {
       var lxc = cL + i * bandW + bandW / 2;
-      if (rotate) T(lxc + 6, cB + 18, fit(labels[i], 170, fsTick), { fs: Math.min(fsTick, Math.max(11, bandW * everyV * 0.8)), anchor: 'end', rot: -40 });
+      if (rotate) T(lxc + 6, cB + 18, fit(labels[i], Math.max(40, Math.min(170, (lxc - pad) / 0.77)), fsTick), { fs: Math.min(fsTick, Math.max(11, bandW * everyV * 0.8)), anchor: 'end', rot: -40 });
       else T(lxc, cB + 26, labels[i], { fs: fsTick, anchor: 'middle' });
     }
     if (type === 'bar' || type === 'stacked') {
@@ -389,7 +389,9 @@
   /* ---------- drawing the preview ---------- */
   var drawTimer;
   function draw() {
-    var sz = SIZES[S.size], res = buildSvg(sz[0], sz[1], false), stage = EDU.$('#stage');
+    var sz = SIZES[S.size], stage = EDU.$('#stage'), pw = sz[0], ph = sz[1], sw = stage.clientWidth;
+    if (sw && sw < 700) { ph = Math.round(ph * 760 / pw); pw = 760; }        /* small screens: bigger text in the preview */
+    var res = buildSvg(pw, ph, false);
     stage.innerHTML = res.svg;
     stage.setAttribute('aria-label', (S.o.title ? S.o.title + ' · ' : '') + EDU.t('type_' + S.type));
     var w = EDU.$('#warn'); w.textContent = '';
@@ -541,6 +543,8 @@
   function renderAll() { renderTypes(); renderGrid(); fillOpts(); markSamples(); renderGoal(); draw(); }
   EDU.onLang(function () { if (S.sample) loadSample(S.sample, true); else renderAll(); });
   EDU.onTheme(draw);
+  var lastW = 0;
+  window.addEventListener('resize', function () { var w = EDU.$('#stage').clientWidth; if ((w < 700) !== (lastW < 700)) drawSoon(); lastW = w; });
 
   if (S) renderAll(); else loadSample('sales');
   window.__cm = { state: function () { return S; }, build: buildSvg };
