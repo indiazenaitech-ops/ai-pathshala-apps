@@ -495,7 +495,6 @@
           col('brand', pageLink('about.html', 'nav_about', { id: 'edu-foot-about' }), pageLink('contact.html', 'nav_contact', { id: 'edu-foot-contact' }),
             pageLink('legal/privacy.html', 'shell_privacy', { id: 'edu-foot-privacy' }), pageLink('legal/terms.html', 'shell_terms')),
           col('foot_col_follow', el('a', { href: YOUTUBE, target: '_blank', rel: 'noopener' }, el('span', { 'data-i18n': 'footer_channel', text: t('footer_channel') })),
-            el('a', { href: SITE.repo, target: '_blank', rel: 'noopener' }, el('span', { 'data-i18n': 'foot_source', text: t('foot_source') })),
             el('a', { href: SITE.zip, rel: 'noopener' }, el('span', { 'data-i18n': 'foot_zip', text: t('foot_zip') })))));
     } else {
       foot = el('footer', { class: 'edu-foot' },
