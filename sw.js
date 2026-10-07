@@ -39,7 +39,10 @@ self.addEventListener('fetch', function (e) {
   if (req.method !== 'GET' || req.headers.has('range')) return;
   var url = new URL(req.url);
   if (url.origin === location.origin) {
-    e.respondWith(fetch(req).then(function (res) {
+    /* cache: 'no-cache' asks the server whether the file changed (a quick 304 if not), so site updates reach phones at
+       once instead of after the browser's 10-minute HTTP cache; offline still falls back to the saved copy below. */
+    var fresh = req.mode === 'navigate' ? req : new Request(req, { cache: 'no-cache' });
+    e.respondWith(fetch(fresh).then(function (res) {
       if (res && res.ok) { var copy = res.clone(); caches.open(CACHE).then(function (c) { c.put(req, copy); }); }
       return res;
     }).catch(function () {
