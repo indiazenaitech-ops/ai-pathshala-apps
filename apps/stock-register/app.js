@@ -263,20 +263,21 @@
   function actBtn(act, id, cls, label) { return '<button type="button" class="btn btn-sm ' + (cls || '') + '" data-act="' + act + '" data-id="' + id + '">' + esc(label) + '</button>'; }
   function rowHTML(it) {
     var s = stockOf(it), st = statusOf(it);
+    function L(k) { return ' data-l="' + esc(t(k)) + '"'; }   // column label, shown above each value in the phone card layout
     return '<tr data-id="' + it.id + '" data-status="' + st + '"' + (ui.hit === it.id ? ' class="hit"' : '') + '>' +
       '<td class="nm no-i18n"><strong>' + esc(it.name) + '</strong>' + (it.sample ? ' <span class="badge">' + esc(t('example')) + '</span>' : '') +
       (it.supplier ? '<div class="tiny muted">' + esc(it.supplier) + '</div>' : '') + '</td>' +
-      '<td class="mono no-i18n" dir="ltr">' + esc(it.sku) + '</td>' +
-      '<td class="no-i18n">' + esc(it.cat) + '</td>' +
-      '<td class="num tnum' + (s < 0 ? ' neg' : '') + '">' + fq(s) + ' <span class="small muted">' + esc(unitName(it.unit)) + '</span></td>' +
-      '<td class="num tnum">' + (it.min ? fq(it.min) : '–') + '</td>' +
-      '<td>' + statusBadges(it) + '</td>' +
-      '<td class="num tnum">' + money(it.buy) + '</td>' +
-      '<td class="num tnum">' + money(it.sell) + '</td>' +
-      '<td class="num tnum">' + fq(it.gst) + '</td>' +
-      '<td class="num tnum">' + money(Math.max(0, s) * it.buy) + '</td>' +
-      '<td class="tnum">' + (it.expiry ? fmtDate(it.expiry) : '–') + '</td>' +
-      '<td class="no-print"><div class="acts">' + actBtn('in', it.id, 'btn-primary', t('act_in')) + actBtn('out', it.id, 'btn-accent', t('act_out')) + actBtn('adj', it.id, '', t('act_adj')) + actBtn('edit', it.id, '', t('edit')) + '</div></td></tr>';
+      '<td class="mono no-i18n' + (it.sku ? '' : ' empty-cell') + '" dir="ltr"' + L('col_sku') + '>' + esc(it.sku) + '</td>' +
+      '<td class="no-i18n' + (it.cat ? '' : ' empty-cell') + '"' + L('col_cat') + '>' + esc(it.cat) + '</td>' +
+      '<td class="num tnum' + (s < 0 ? ' neg' : '') + '"' + L('col_stock') + '>' + fq(s) + ' <span class="small muted">' + esc(unitName(it.unit)) + '</span></td>' +
+      '<td class="num tnum"' + L('col_min') + '>' + (it.min ? fq(it.min) : '–') + '</td>' +
+      '<td' + L('col_status') + '>' + statusBadges(it) + '</td>' +
+      '<td class="num tnum"' + L('col_buy') + '>' + money(it.buy) + '</td>' +
+      '<td class="num tnum"' + L('col_sell') + '>' + money(it.sell) + '</td>' +
+      '<td class="num tnum"' + L('col_gst') + '>' + fq(it.gst) + '</td>' +
+      '<td class="num tnum"' + L('col_value') + '>' + money(Math.max(0, s) * it.buy) + '</td>' +
+      '<td class="tnum' + (it.expiry ? '' : ' empty-cell') + '"' + L('col_expiry') + '>' + (it.expiry ? fmtDate(it.expiry) : '–') + '</td>' +
+      '<td class="no-print acts-cell"><div class="acts">' + actBtn('in', it.id, 'btn-primary', t('act_in')) + actBtn('out', it.id, 'btn-accent', t('act_out')) + actBtn('adj', it.id, '', t('act_adj')) + actBtn('edit', it.id, '', t('edit')) + '</div></td></tr>';
   }
   function renderStock() {
     var list = filteredItems(), shown = list.slice(0, ui.shown);
@@ -618,12 +619,13 @@
       var headerish = rows.length > 1 && rows[0].slice(4, 8).every(function (c) { return isNaN(num(c)); });
       data = headerish ? rows.slice(1) : rows;
     }
-    var update = $('#csv-update').checked, added = 0, updated = 0, skipped = 0, bySku = {}, pending = {}, today = todayISO();
-    items.forEach(function (it) { if (it.sku) bySku[it.sku.toLowerCase()] = it; });
+    var update = $('#csv-update').checked, added = 0, updated = 0, skipped = 0, bySku = {}, byName = {}, pending = {}, today = todayISO();
+    /* rows match existing items by SKU; rows without a SKU match an item without a SKU of the same name (so re-importing an export adds no copies) */
+    items.forEach(function (it) { if (it.sku) bySku[it.sku.toLowerCase()] = it; else byName[it.name.toLowerCase()] = it; });
     data.forEach(function (r) {
-      var get = function (k) { return map[k] === undefined ? '' : String(r[map[k]] == null ? '' : r[map[k]]); };
+      var get = function (k) { var v = map[k] === undefined ? '' : String(r[map[k]] == null ? '' : r[map[k]]); return /^'[=+\-@]/.test(v) ? v.slice(1) : v; };   // undo csvSafe()
       var name = str(get('name'), 160); if (!name || /[<>]/.test(name) && name.length > 120) { skipped++; return; }
-      var sku = str(get('sku'), 64), ex = sku ? bySku[sku.toLowerCase()] : null, stock = num(get('stock'));
+      var sku = str(get('sku'), 64), ex = sku ? bySku[sku.toLowerCase()] : byName[name.toLowerCase()] || null, stock = num(get('stock'));
       var has = function (k) { return map[k] !== undefined && get(k).trim() !== ''; };
       if (ex) {
         if (!update) { skipped++; return; }
@@ -644,7 +646,7 @@
       } else {
         var it = normItem({ name: name, sku: sku, cat: get('cat'), unit: get('unit'), buy: get('buy'), sell: get('sell'), gst: get('gst'), min: get('min'), supplier: get('supplier'), expiry: get('expiry') });
         if (!it) { skipped++; return; }
-        items.push(it); if (it.sku) bySku[it.sku.toLowerCase()] = it; added++;
+        items.push(it); if (it.sku) bySku[it.sku.toLowerCase()] = it; else byName[it.name.toLowerCase()] = it; added++;
         if (!isNaN(stock) && stock > 0 && stock <= 1e9) { entries.push(normEntry({ item: it.id, type: 'in', qty: stock, date: today, note: t('import_note') })); pending[it.id] = stock; }
       }
     });

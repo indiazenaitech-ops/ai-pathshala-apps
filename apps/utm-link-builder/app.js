@@ -75,18 +75,20 @@
   function saveHist() { store.set('hist', hist.slice(0, MAX_HIST)); }
 
   /* ------------------------------------------------------------ core: clean + URL */
-  function isDyn(v) { return /\{\{[^}]*\}\}/.test(v); }
+  /* ad-platform placeholders the platform fills in later: Meta {{campaign.name}}, Google Ads ValueTrack {keyword} */
+  function isDyn(v) { return /\{\{[^}]*\}\}|\{[a-z_][\w:.\-]*\}/i.test(v); }
   function cleanVal(v, sep) {
     v = String(v == null ? '' : v).trim();
     if (!v) return '';
     if (isDyn(v)) return v.replace(/\s+/g, '');
     v = v.toLowerCase().replace(/[\s]+/g, sep);
     v = v.replace(/[^\p{L}\p{M}\p{N}\-_.]+/gu, sep);
-    var re = sep === '-' ? /-{2,}/g : /_{2,}/g;
+    var re = sep === '-' ? /[-_]*-[-_]*/g : /[-_]*_[-_]*/g;        // "A - B" with _ gives a_b, not a_-_b
     return v.replace(re, sep).replace(/^[-_.]+|[-_.]+$/g, '');
   }
   function enc(v) {
-    return encodeURIComponent(v).replace(/%7B%7B/gi, '{{').replace(/%7D%7D/gi, '}}');
+    var e = encodeURIComponent(v);
+    return isDyn(v) ? e.replace(/%7B/gi, '{').replace(/%7D/gi, '}') : e;
   }
   function finalTags(tags, clean, sep) {
     var out = [];

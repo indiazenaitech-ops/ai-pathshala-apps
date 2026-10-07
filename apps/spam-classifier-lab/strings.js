@@ -57,7 +57,7 @@ window.APP_STRINGS = {
     step2_hint: 'The filter learns only from these messages. Add your own, remove some, and watch the verdict above change at once.',
     lbl_spam: 'Spam',
     lbl_ham: 'Not spam',
-    n_msgs: '{n} messages',
+    n_msgs: 'Messages: {n}',
     empty_label: 'No messages yet.',
     test_badge: 'test',
     test_badge_title: 'Held out for the fair test: the filter does not learn from this message',

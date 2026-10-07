@@ -86,7 +86,12 @@
     return m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date();
   }
   function measureCtx() { var c = measureCtx.c || (measureCtx.c = document.createElement('canvas').getContext('2d')); return c; }
-  function textWidth(text, size, family) { var c = measureCtx(); c.font = size + 'px ' + family; return c.measureText(text).width; }
+  function textWidth(text, size, family) {
+    /* a weight like "600 " must come before the size in a CSS font string, or the browser ignores the whole value */
+    var c = measureCtx(), m = /^(\d{3}|bold)\s+(.*)$/.exec(family);
+    c.font = m ? m[1] + ' ' + size + 'px ' + m[2] : size + 'px ' + family;
+    return c.measureText(text).width;
+  }
   function loadImg(src) {
     return new Promise(function (res, rej) { var im = new Image(); im.onload = function () { res(im); }; im.onerror = function () { rej(code('img')); }; im.src = src; });
   }
@@ -965,6 +970,7 @@
     function col(hex) { var c = hexRgb(hex); return L.rgb(c[0] / 255, c[1] / 255, c[2] / 255); }
 
     /* 1. form fields */
+    var late = [], dropFields = [];   // Indic / Urdu values are drawn as images after flattening, or the empty field box would paint over them
     if (fields.length) {
       var form = pdf.getForm(), all = form.getFields();
       for (var fi = 0; fi < fields.length; fi++) {
@@ -977,16 +983,18 @@
             if (isAscii(v)) pf.setText(v || undefined);
             else {
               pf.setText(undefined);
+              if (!S.flatten) dropFields.push(pf);   // a live (empty) field would cover the picture in PDF viewers
               /* Indic / Urdu text: draw an image into every widget box of this field */
               for (var r = 0; r < f.rects.length; r++) {
                 var rc = f.rects[r], pg = pages[rc.page]; if (!pg) continue;
-                var bw = rc.r[2] - rc.r[0], bh = rc.r[3] - rc.r[1], size = Math.min(bh * 0.7, 14);
-                var fake = { text: v, size: size, font: 'sans', color: '#000000', w: Math.min(bw - 2, textWidth(v, size, SANS) + size * 0.3), h: size * 1.2 };
-                var pngBytes = textToPng(fake), im = await pdf.embedPng(pngBytes);
+                var bw = rc.r[2] - rc.r[0], bh = rc.r[3] - rc.r[1], size = Math.min(bh * 0.7, 14), tw = textWidth(v, size, SANS) + size * 0.3;
+                if (tw > bw - 2 && tw > 0) { size = Math.max(4, size * (bw - 2) / tw); tw = textWidth(v, size, SANS) + size * 0.3; }   // shrink long text to fit the box
+                var fake = { text: v, size: size, font: 'sans', color: '#000000', w: Math.min(bw - 2, tw), h: size * 1.2 };
+                var im = await pdf.embedPng(textToPng(fake));
                 var rot = pg.getRotation().angle, vp = await viewportOf(rc.page);
                 var vr = vp.convertToViewportRectangle(rc.r), vx = Math.min(vr[0], vr[2]), vy = Math.min(vr[1], vr[3]), vh = Math.abs(vr[3] - vr[1]);
                 var anchor = vp.convertToPdfPoint(vx + 1, vy + (vh + fake.h) / 2);
-                pg.drawImage(im, { x: anchor[0], y: anchor[1], width: fake.w, height: fake.h, rotate: L.degrees(rot) });
+                late.push({ pg: pg, im: im, opt: { x: anchor[0], y: anchor[1], width: fake.w, height: fake.h, rotate: L.degrees(rot) } });
               }
             }
           } else if (f.type === 'check') { if (f.value) pf.check(); else pf.uncheck(); }
@@ -998,6 +1006,8 @@
         try { form.flatten(); }
         catch (e) { console.warn('[' + SLUG + '] flatten failed, fields left fillable', e); try { form.updateFieldAppearances(await font()); } catch (e2) { /* ignore */ } }
       }
+      dropFields.forEach(function (pf) { try { form.removeField(pf); } catch (e) { /* ignore */ } });
+      late.forEach(function (d) { d.pg.drawImage(d.im, d.opt); });
     }
 
     /* 2. items */

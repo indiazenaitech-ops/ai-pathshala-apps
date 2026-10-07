@@ -83,8 +83,8 @@
     steps.push({ k: 'cross', v: { a: a, db: sgn(db), left: left } });
     steps.push({ k: 'prod', v: { da: sgn(da), db: sgn(db), prod: prod, k: k } });
     if (prod < 0) {
-      var l2 = left - 1, p2 = prod + base;
-      steps.push({ k: 'borrow', v: { left: left, l2: l2, prod: prod, base: base, p2: p2 } });
+      var bc = Math.ceil(-prod / base), l2 = left - bc, p2 = prod + bc * base;   // borrow as many bases as needed
+      steps.push({ k: 'borrow', v: { left: left, l2: l2, prod: prod, c: bc, cb: bc * base, p2: pad(p2, k) } });
       left = l2; prod = p2;
     } else if (prod >= base) {
       var c = Math.floor(prod / base), l3 = left + c, p3 = prod % base;
@@ -310,7 +310,7 @@
     return String(ans);
   }
 
-var FINAL = { ans: 1, root: 1, match: 1, mismatch: 1 };
+  var FINAL = { ans: 1, root: 1, match: 1, mismatch: 1 };
   var VEDIC = {
     tricks: TRICKS, byId: BY_ID, openers: OPENERS,
     solve: function (id, p) { return BY_ID[id].solve(p); },
@@ -408,18 +408,34 @@ var FINAL = { ans: 1, root: 1, match: 1, mismatch: 1 };
     $('#replay').disabled = !instant;
     showNext();
   }
-  function renderTrick() {
+  function renderTrick(keep) {
     var id = S.trick, tt = trickText(id);
     $('#trick-name').textContent = tt.name;
     $('#trick-tag').textContent = tt.tagline;
     var ul = $('#trick-how'); ul.innerHTML = '';
     tt.how.forEach(function (s) { ul.appendChild(el('li', { text: s })); });
     $('#trick-why').textContent = tt.why;
-    renderOwnInputs();
-    playExample(anim.params && anim.trick === id ? anim.params : VEDIC.openers[id], false);
-    anim.trick = id;
-    newTry();
-    resetDrillUI();
+    if (keep) {                                          // language change: keep the numbers, the try question and a running drill
+      var vals = {};
+      $$('#own-fields input, #own-fields select').forEach(function (e) { vals[e.id] = e.value; });
+      renderOwnInputs();
+      Object.keys(vals).forEach(function (k) { var e = document.getElementById(k); if (e) e.value = vals[k]; });
+      if (anim.params) playExample(anim.params, true);
+      if (TRY.p) {
+        $('#try-q').innerHTML = qHtml(id, TRY.p);
+        $('#try-a-label').textContent = id === 'div9' ? t('quotient') : t('your_answer');
+        if (TRY.answered) { var tryA = $('#try-a').value, tryR = $('#try-r').value; TRY.answered = false; checkTryRender(tryA, tryR); }
+      } else newTry();
+      if (D.on) { $('#drill-q').innerHTML = qHtml(id, D.qs[D.i]); $('#drill-count').textContent = t('q_of', { i: EDU.fmt(D.i + 1), n: EDU.fmt(D.qs.length) }); $('#drill-a-label').textContent = id === 'div9' ? t('quotient') : t('your_answer'); }
+      else if ($('#drill-done').hidden) resetDrillUI();
+      else { $('#drill-score').textContent = t('drill_score', { r: EDU.fmt(D.right), n: EDU.fmt(D.qs.length), s: fmtSec(+$('#drill-score').dataset.ms || 0) }); }
+    } else {
+      renderOwnInputs();
+      playExample(anim.params && anim.trick === id ? anim.params : VEDIC.openers[id], false);
+      anim.trick = id;
+      newTry();
+      resetDrillUI();
+    }
     renderWorksheet(false);
     renderProgress();
     $('#ws-trick').value = S.trick;
@@ -528,12 +544,21 @@ var FINAL = { ans: 1, root: 1, match: 1, mismatch: 1 };
     if (given === null) { $('#try-fb').textContent = t('enter_number'); $('#try-fb').className = 'vm-fb warn'; return; }
     var r = VEDIC.solve(S.trick, TRY.p), ok = same(S.trick, given, r.answer), P = prog(S.trick);
     TRY.answered = true; P.tried++; if (ok) P.right++; saveProg();
+    showTryResult(r, ok);
+    renderPicker(); renderProgress();
+  }
+  function checkTryRender(a, rr) {                       // re-draw an already-checked answer (language change), no scoring
+    $('#try-a').value = a; $('#try-r').value = rr;
+    var given = readAnswer($('#try-a'), $('#try-r')); if (given === null) return;
+    var r = VEDIC.solve(S.trick, TRY.p); TRY.answered = true;
+    showTryResult(r, same(S.trick, given, r.answer));
+  }
+  function showTryResult(r, ok) {
     $('#try-fb').textContent = ok ? t('correct') : t('wrong_ans', { a: VEDIC.answerText(S.trick, r.answer) });
     $('#try-fb').className = 'vm-fb ' + (ok ? 'ok' : 'bad');
     var list = $('#try-steps'); list.innerHTML = '';
     r.steps.forEach(function (st) { var li = el('li', { class: 'vm-step' + (VEDIC.isFinal(st.k) ? ' final' : '') }); li.innerHTML = stepHtml(S.trick, st); list.appendChild(li); });
     list.hidden = false;
-    renderPicker(); renderProgress();
   }
   $('#try-check').addEventListener('click', checkTry);
   $('#try-next').addEventListener('click', newTry);
@@ -726,12 +751,14 @@ var FINAL = { ans: 1, root: 1, match: 1, mismatch: 1 };
   document.addEventListener('fullscreenchange', function () { if (!document.fullscreenElement && document.body.classList.contains('vm-present')) setPresent(false); });
 
   /* ---------- language + first render ---------- */
-  function renderAll() {
+  function renderAll(keep) {
     fillWsSelect();
     renderPicker();
-    renderTrick();
+    renderTrick(keep);
     showTab(S.tab);
   }
-  EDU.onLang(function () { stopAnim(); renderAll(); if (anim.params) playExample(anim.params, true); });
-  renderAll();
+  var firstDone = false;
+  EDU.onLang(function () { if (!firstDone) return; stopAnim(); renderAll(true); });
+  renderAll(false);
+  firstDone = true;
 })();

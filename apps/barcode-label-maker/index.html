@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Barcode & MRP Label Maker · AI Pathshala</title>
+  <meta name="description" content="Free barcode and MRP label maker for shops and small brands: EAN-13 with check digit, Code 128, MRP, net quantity, FSSAI and batch, A4 65 / 24 label sheets and 50×25 mm rolls, CSV batch, PNG. Works offline, in 12 Indian languages.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style id="pageRule">@page { size: 210mm 297mm; margin: 0; }</style>
+  <style>
+    .sr-only { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: -1px; padding: 0; border: 0; }
+    .privacy { display: flex; gap: 10px; align-items: flex-start; margin: -6px 0 14px; font-size: .9rem; }
+    .privacy .lock { flex: none; font-size: 1.2rem; line-height: 1.3; }
+    .layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+    @media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+    .card h2 { font-size: 1.15rem; margin: 0 0 12px; }
+    .fgrid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); }
+    .fgrid .wide { grid-column: 1 / -1; }
+    .field input, .field select, .field textarea { width: 100%; min-height: 42px; }
+    .seg button { min-height: 40px; }
+    .code-input { font-family: var(--mono); font-size: 1.05rem; letter-spacing: .03em; }
+    #codeStatus { margin-top: 10px; }
+    #codeStatus .full { font-family: var(--mono); font-weight: 700; direction: ltr; unicode-bidi: isolate; }
+    .num-mm { max-width: 110px; }
+    .stick { position: sticky; top: 70px; }
+    @media (max-width: 860px) { .stick { position: static; } }
+
+    /* ---------- one label (physical size in mm; always black on white like paper) ---------- */
+    .lbl { box-sizing: border-box; display: flex; gap: 1mm; overflow: hidden; background: #fff; color: #000; line-height: 1.18; font-family: var(--font); }
+    .l-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+    .tx { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: none; }
+    .l-name { font-weight: 800; }
+    .l-line { display: flex; gap: .5em; align-items: baseline; min-width: 0; flex: none; }
+    .l-line .tx { flex: 0 1 auto; min-width: 0; }
+    .l-mrp { font-weight: 800; flex-shrink: 0 !important; }
+    .l-incl { font-size: .74em; }
+    .l-bars { flex: 1 1 0; min-height: 0; width: 100%; display: block; margin-top: .2em; }
+    .l-hr { text-align: center; font-family: "Noto Sans Mono", ui-monospace, Consolas, monospace; font-size: .86em; letter-spacing: .06em; direction: ltr; }
+    .l-sm { font-size: .76em; }
+    .l-qr { flex: none; display: block; align-self: center; }
+    .lbl.outline { outline: .2mm dashed #9aa; outline-offset: -.1mm; }
+
+    /* preview of one label, scaled up on screen */
+    .lp-wrap { display: grid; place-items: center; background: var(--surface-2); border-radius: var(--radius-sm); padding: 14px; overflow: hidden; }
+    .lp-box { position: relative; }
+    .lp-box .lbl { position: absolute; top: 0; left: 0; transform-origin: 0 0; box-shadow: 0 1px 4px rgba(0, 0, 0, .25); }
+    #labelWarn:empty { display: none; }
+
+    /* ---------- sheet ---------- */
+    .preset-seg button { padding: 8px 10px; }
+    .sheet-pages { display: grid; gap: 14px; justify-items: center; background: var(--surface-2); border-radius: var(--radius-sm); padding: 12px; direction: ltr; }
+    .page-frame { position: relative; overflow: hidden; box-shadow: 0 1px 6px rgba(0, 0, 0, .25); background: #fff; }
+    .page { position: absolute; top: 0; left: 0; transform-origin: 0 0; background: #fff; overflow: hidden; }
+    .page .lbl { position: absolute; }
+    .page .slot-skip { position: absolute; border: .3mm dashed #ccc; box-sizing: border-box; background: repeating-linear-gradient(45deg, #f4f4f4 0 2mm, #fff 2mm 4mm); }
+    .page-frame.more { display: none; }
+    .page-no { font-size: .8rem; color: var(--muted); text-align: center; direction: ltr; }
+    .items-table td, .items-table th { vertical-align: middle; }
+    .items-table .code { font-family: var(--mono); font-size: .86rem; direction: ltr; unicode-bidi: isolate; overflow-wrap: anywhere; }
+    .items-table input.copies { width: 74px; }
+    .items-table .err td { background: var(--danger-soft); }
+    .items-table .nm { overflow-wrap: anywhere; min-width: 110px; }
+    .items-table .acts { white-space: nowrap; }
+    .items-table .acts .btn { min-height: 38px; padding: 6px 10px; }
+    .tip100 { font-weight: 600; }
+    details.card summary { cursor: pointer; font-size: 1.05rem; }
+    details.card[open] summary { margin-bottom: 10px; }
+    .help-list { padding-inline-start: 1.3em; display: grid; gap: 6px; margin: 0; }
+
+    /* ---------- print: only the label pages, at true size ---------- */
+    @media print {
+      html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; }
+      #app { padding: 0 !important; margin: 0 !important; }
+      #app > *:not(#sheetCard) { display: none !important; }
+      #sheetCard { border: 0 !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; background: none !important; }
+      #sheetCard > *:not(#sheetPages) { display: none !important; }
+      .sheet-pages { display: block !important; padding: 0 !important; background: none !important; gap: 0 !important; }
+      .page-no { display: none !important; }
+      .page-frame, .page-frame.more { display: block !important; box-shadow: none !important; width: auto !important; height: auto !important; overflow: visible !important; break-after: page; page-break-after: always; }
+      .page-frame:last-of-type { break-after: auto; page-break-after: auto; }
+      .page { position: relative !important; transform: none !important; }
+      .page .slot-skip { display: none; }
+      .lbl { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .lbl.outline.no-print-outline { outline: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="privacy muted"><span class="lock" aria-hidden="true">🔒</span><span data-i18n="privacy_line"></span></p>
+
+    <div class="layout">
+      <div class="stack" style="margin:0">
+        <section class="card" id="productCard">
+          <h2>📦 <span data-i18n="h_product"></span></h2>
+          <div class="field">
+            <span data-i18n="type_label"></span>
+            <div class="seg" role="group" data-i18n-aria-label="type_label">
+              <button type="button" id="type-auto" data-type="auto" data-i18n="type_auto"></button>
+              <button type="button" id="type-ean13" data-type="ean13">EAN-13</button>
+              <button type="button" id="type-code128" data-type="code128">Code 128</button>
+            </div>
+          </div>
+          <div class="fgrid" style="margin-top:12px">
+            <label class="field wide"><span data-i18n="code_label"></span>
+              <input id="f-code" class="code-input no-i18n" type="text" inputmode="text" autocomplete="off" spellcheck="false" maxlength="60" dir="ltr" data-i18n-placeholder="code_ph"></label>
+          </div>
+          <div id="codeStatus" aria-live="polite"></div>
+          <div class="fgrid" style="margin-top:12px">
+            <label class="field wide"><span data-i18n="name_label"></span><input id="f-name" class="no-i18n" type="text" maxlength="80" data-i18n-placeholder="name_ph"></label>
+            <label class="field"><span data-i18n="mrp_label"></span><input id="f-mrp" class="no-i18n" type="text" inputmode="decimal" maxlength="12" placeholder="120"></label>
+            <label class="field"><span data-i18n="qty_label"></span><input id="f-qty" class="no-i18n" type="text" maxlength="24" data-i18n-placeholder="qty_ph"></label>
+            <label class="field"><span data-i18n="batch_label"></span><input id="f-batch" class="no-i18n" type="text" maxlength="24" placeholder="B-2610"></label>
+            <label class="field"><span data-i18n="copies_label"></span><input id="f-copies" type="number" min="1" max="2000" step="1" value="1"></label>
+          </div>
+          <div class="row" style="margin-top:14px">
+            <button type="button" class="btn btn-primary" id="btnAdd">➕ <span data-i18n="add_to_sheet"></span></button>
+            <button type="button" class="btn" id="btnFill">🧾 <span data-i18n="fill_sheet"></span></button>
+            <button type="button" class="btn btn-primary" id="btnUpdate" hidden>💾 <span data-i18n="update_item"></span></button>
+            <button type="button" class="btn btn-ghost" id="btnCancelEdit" hidden><span data-i18n="cancel"></span></button>
+          </div>
+          <p class="small muted mb0" id="editNote" hidden style="margin-top:8px"></p>
+        </section>
+
+        <section class="card" id="commonCard">
+          <h2>🏷️ <span data-i18n="h_common"></span></h2>
+          <p class="small muted" data-i18n="common_hint"></p>
+          <div class="fgrid">
+            <label class="field"><span data-i18n="pkd_label"></span><input id="f-pkd" type="month"></label>
+            <label class="field"><span data-i18n="bb_label"></span><input id="f-bb" class="no-i18n" type="text" maxlength="40" data-i18n-placeholder="bb_ph"></label>
+            <label class="field"><span data-i18n="fssai_label"></span><input id="f-fssai" class="no-i18n" type="text" inputmode="numeric" maxlength="20" dir="ltr" placeholder="10012345678901"></label>
+            <label class="field wide"><span data-i18n="mfd_label"></span><input id="f-mfd" class="no-i18n" type="text" maxlength="120" data-i18n-placeholder="mfd_ph"></label>
+            <label class="field wide"><span data-i18n="qr_label"></span><input id="f-qr" class="no-i18n" type="text" maxlength="300" dir="ltr" data-i18n-placeholder="qr_ph"></label>
+          </div>
+          <p class="small callout warning" id="fssaiWarn" hidden data-i18n="fssai_warn" style="margin-top:10px"></p>
+          <div class="row" style="margin-top:12px">
+            <label class="check"><input type="checkbox" id="f-incl"> <span data-i18n="incl_label"></span></label>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <span data-i18n="labellang_label"></span>
+            <div class="seg" role="group" data-i18n-aria-label="labellang_label">
+              <button type="button" id="ll-en" data-ll="en">English</button>
+              <button type="button" id="ll-ui" data-ll="ui" data-i18n="labellang_ui"></button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="card stick" id="previewCard">
+        <h2>👀 <span data-i18n="h_preview"></span></h2>
+        <div class="lp-wrap"><div class="lp-box" id="labelPreview" aria-live="polite"></div></div>
+        <p class="small muted" id="labelSize" style="margin:8px 0 0;text-align:center"></p>
+        <div id="labelWarn" class="stack" style="margin-top:10px"></div>
+        <div class="row" style="margin-top:12px">
+          <button type="button" class="btn" id="btnPng">🖼️ <span data-i18n="png_btn"></span></button>
+        </div>
+      </section>
+    </div>
+
+    <section class="card" id="sheetCard" style="margin-top:16px">
+      <h2>🖨️ <span data-i18n="h_sheet"></span></h2>
+      <div class="field">
+        <span data-i18n="preset_label"></span>
+        <div class="seg preset-seg" role="group" data-i18n-aria-label="preset_label">
+          <button type="button" id="preset-a4_65" data-preset="a4_65" data-i18n="preset_65"></button>
+          <button type="button" id="preset-a4_24" data-preset="a4_24" data-i18n="preset_24"></button>
+          <button type="button" id="preset-roll" data-preset="roll" data-i18n="preset_roll"></button>
+          <button type="button" id="preset-custom" data-preset="custom" data-i18n="preset_custom"></button>
+        </div>
+      </div>
+      <div id="customBox" hidden style="margin-top:12px">
+        <div class="fgrid">
+          <label class="field"><span data-i18n="c_page"></span><select id="c-page"><option value="a4" data-i18n="c_page_a4"></option><option value="roll" data-i18n="c_page_roll"></option></select></label>
+          <label class="field"><span data-i18n="c_w"></span><input id="c-w" type="number" min="10" max="200" step="0.1"></label>
+          <label class="field"><span data-i18n="c_h"></span><input id="c-h" type="number" min="8" max="280" step="0.1"></label>
+          <label class="field"><span data-i18n="c_cols"></span><input id="c-cols" type="number" min="1" max="12" step="1"></label>
+          <label class="field"><span data-i18n="c_rows"></span><input id="c-rows" type="number" min="1" max="40" step="1"></label>
+          <label class="field"><span data-i18n="c_top"></span><input id="c-top" type="number" min="0" max="60" step="0.1"></label>
+          <label class="field"><span data-i18n="c_left"></span><input id="c-left" type="number" min="0" max="60" step="0.1"></label>
+          <label class="field"><span data-i18n="c_gx"></span><input id="c-gx" type="number" min="0" max="30" step="0.1"></label>
+          <label class="field"><span data-i18n="c_gy"></span><input id="c-gy" type="number" min="0" max="30" step="0.1"></label>
+        </div>
+      </div>
+      <p class="callout warning small" id="fitWarn" hidden style="margin-top:10px"></p>
+      <details style="margin-top:12px">
+        <summary data-i18n="adjust_title"></summary>
+        <div class="fgrid" style="margin-top:10px">
+          <label class="field"><span data-i18n="off_x"></span><input id="o-x" type="number" min="-15" max="15" step="0.5" value="0"></label>
+          <label class="field"><span data-i18n="off_y"></span><input id="o-y" type="number" min="-15" max="15" step="0.5" value="0"></label>
+          <label class="field"><span data-i18n="skip_label"></span><input id="o-skip" type="number" min="0" max="500" step="1" value="0"></label>
+        </div>
+        <label class="check" style="margin-top:10px"><input type="checkbox" id="o-border"> <span data-i18n="border_label"></span></label>
+      </details>
+
+      <h3 style="margin:16px 0 8px" data-i18n="items_title"></h3>
+      <div class="scroll-x">
+        <table class="table items-table">
+          <thead><tr><th data-i18n="col_name"></th><th data-i18n="col_code"></th><th data-i18n="col_mrp"></th><th data-i18n="col_copies"></th><th><span class="sr-only" data-i18n="col_actions"></span></th></tr></thead>
+          <tbody id="itemsBody"></tbody>
+        </table>
+      </div>
+      <p class="muted small" id="itemsEmpty" hidden data-i18n="items_empty"></p>
+      <p class="callout danger small" id="itemsErr" hidden></p>
+      <div class="row" style="margin-top:12px">
+        <button type="button" class="btn" id="btnImport">📥 <span data-i18n="import_csv"></span></button>
+        <button type="button" class="btn btn-ghost" id="btnSampleCsv">📄 <span data-i18n="sample_csv"></span></button>
+        <button type="button" class="btn btn-ghost" id="btnClear">🗑️ <span data-i18n="clear_list"></span></button>
+      </div>
+      <p class="small muted" data-i18n="csv_hint" style="margin-top:8px"></p>
+
+      <div class="callout accent" style="margin-top:14px">
+        <p class="tip100 mb0" data-i18n="tip_100"></p>
+      </div>
+      <div class="row spread" style="margin-top:12px">
+        <p class="mb0" id="sheetInfo" aria-live="polite"></p>
+        <button type="button" class="btn btn-primary btn-lg" id="btnPrint">🖨️ <span data-i18n="print_btn"></span></button>
+      </div>
+      <div class="sheet-pages" id="sheetPages" style="margin-top:12px"></div>
+    </section>
+
+    <details class="card" style="margin-top:16px">
+      <summary><strong data-i18n="help_title"></strong></summary>
+      <ul class="help-list">
+        <li data-i18n="help_1"></li>
+        <li data-i18n="help_2"></li>
+        <li data-i18n="help_3"></li>
+        <li data-i18n="help_4"></li>
+        <li data-i18n="help_5"></li>
+        <li data-i18n="help_6"></li>
+      </ul>
+    </details>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="barcode.js"></script>
+  <script src="qr.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

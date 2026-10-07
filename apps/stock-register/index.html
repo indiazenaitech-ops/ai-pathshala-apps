@@ -56,6 +56,28 @@
     table.stock td.nm, table.ledger td.nm, table.exp td.nm { white-space: normal; min-width: 170px; max-width: 300px; }
     table.ledger td.note { white-space: normal; min-width: 140px; max-width: 260px; }
     .acts { display: flex; gap: 4px; }
+    table.stock .acts { display: grid; grid-template-columns: repeat(2, auto); justify-content: start; }
+    @media (min-width: 641px) { table.stock th, table.stock td { padding-inline: 6px; } table.stock td.nm { min-width: 150px; } }
+    /* phones: each item becomes a small card, value labels come from data-l */
+    @media (max-width: 640px) {
+      table.stock thead { display: none; }
+      table.stock, table.stock tbody { display: block; width: 100%; }
+      table.stock tr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 10px; padding: 10px 2px; border-bottom: 1px solid var(--border); }
+      table.stock tr.hit { background: var(--primary-soft); }
+      table.stock td { display: block; border: 0; padding: 0; white-space: normal; text-align: start; min-width: 0; overflow-wrap: anywhere; }
+      table.stock td.nm, table.stock td.acts-cell { grid-column: 1 / -1; max-width: none; min-width: 0; }
+      table.stock td.empty-cell { display: none; }
+      table.stock td[data-l]::before { content: attr(data-l); display: block; font-size: .72rem; font-weight: 600; color: var(--muted); line-height: 1.3; }
+      table.stock td.num { font-size: 1rem; }
+      table.stock .acts { display: flex; flex-wrap: wrap; gap: 6px; }
+      table.stock .acts .btn-sm { flex: 1 1 auto; min-height: 40px; white-space: nowrap; padding-inline: 10px; }
+      table.stock tr:hover td, table.stock td { background: transparent; }
+      table.stock td:nth-child(4) { order: 1; font-weight: 700; }
+      table.stock td:nth-child(6) { order: 2; }
+      table.stock td:nth-child(5) { order: 3; }
+      table.stock td:nth-child(n+7), table.stock td:nth-child(2), table.stock td:nth-child(3) { order: 4; }
+      table.stock td.acts-cell { order: 5; }
+    }
     .acts .btn-sm { min-width: 42px; min-height: 36px; }
     tr.hit td { background: var(--primary-soft) !important; }
     .badge.warn { background: var(--warning-soft); color: var(--warning); border-color: transparent; }

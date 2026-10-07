@@ -11,7 +11,7 @@
   /* ---------------- EAN-13 ---------------- */
   var L = ['0001101', '0011001', '0010011', '0111101', '0100011', '0110001', '0101111', '0111011', '0110111', '0001011'];
   var PARITY = ['LLLLLL', 'LLGLGG', 'LLGGLG', 'LLGGGL', 'LGLLGG', 'LGGLLG', 'LGGGLL', 'LGLGLG', 'LGLGGL', 'LGGLGL'];
-  function G(d) { return L[d].split('').reverse().join(''); }               // G = L mirrored
+  function G(d) { return R(d).split('').reverse().join(''); }               // G = R mirrored (L inverted, then reversed)
   function R(d) { return L[d].replace(/[01]/g, function (c) { return c === '0' ? '1' : '0'; }); }   // R = L inverted
 
   function ean13Check(d12) {
