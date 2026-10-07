@@ -80,18 +80,19 @@
     return cat === 'all' || a.category === cat;
   }
 
-  function card(a) {
-    var foot = el('div', { class: 'app-foot' },
-      el('span', { class: 'cat-tag', text: t('cat_' + a.category) }),
-      el('span', { class: 'badge', text: gradesLabel(a) }));
-    (a.needs || []).forEach(function (n) { foot.appendChild(el('span', { class: 'badge', text: t('badge_' + n) })); });
-    foot.appendChild(el('span', { class: 'app-open' }, t('open'), ' ', el('span', { class: 'arrow', 'aria-hidden': 'true', text: '→' })));
-    return el('a', { class: 'card app-card', href: 'apps/' + a.slug + '/index.html?lang=' + EDU.lang, style: { '--cat': 'var(' + (CAT_COLOR[a.category] || '--c1') + ')' } },
+  /* AIxploria-style card: number + audience on top, centred icon and name, short description, one tag, one button. */
+  function card(a, i) {
+    var needs = (a.needs || []).map(function (n) { return t('badge_' + n); }).join(' · ');
+    return el('a', { class: 'app-card', href: 'apps/' + a.slug + '/index.html?lang=' + EDU.lang, style: { '--cat': 'var(' + (CAT_COLOR[a.category] || '--c1') + ')' } },
       el('div', { class: 'app-top' },
-        el('div', { class: 'ic', 'aria-hidden': 'true', text: a.icon }),
+        el('span', { class: 'app-n', 'aria-hidden': 'true', text: EDU.fmt(i + 1) }),
+        el('span', { class: 'app-aud', text: gradesLabel(a) })),
+      el('div', { class: 'app-name' },
+        el('span', { class: 'ic', 'aria-hidden': 'true', text: a.icon }),
         el('h3', { text: loc(a.title) })),
       el('p', { text: loc(a.desc) }),
-      foot);
+      el('span', { class: 'cat-tag', text: '# ' + t('cat_' + a.category) + (needs ? ' · ' + needs : '') }),
+      el('span', { class: 'app-open' }, el('span', { 'aria-hidden': 'true', text: '↗ ' }), t('open')));
   }
 
   function rerender() { syncUrl(); renderAud(); renderCats(); renderList(); }
@@ -103,7 +104,6 @@
       var n = au.id === 'all' ? APPS.length : audCount(au);
       if (au.id !== 'all' && !n) return;
       var b = el('button', { class: 'aud-btn', type: 'button', id: 'aud-' + au.id, 'aria-pressed': String(aud === au.id) },
-        el('span', { class: 'aud-ic', 'aria-hidden': 'true', text: au.icon }),
         el('span', { class: 'aud-txt', text: t('aud_' + au.id) }),
         el('span', { class: 'aud-n', text: EDU.fmt(n) }));
       b.addEventListener('click', function () {
@@ -124,7 +124,7 @@
     var total = cats.reduce(function (s, c) { return s + COUNTS[c]; }, 0);
     function mk(id, icon, label, n) {
       var b = el('button', { class: 'chip', type: 'button', 'aria-pressed': String(cat === id) },
-        el('span', { 'aria-hidden': 'true', text: icon }), label, el('span', { class: 'tiny', text: EDU.fmt(n) }));
+        label, el('span', { class: 'tiny', text: EDU.fmt(n) }));
       b.addEventListener('click', function () { setCat(id); });
       box.appendChild(b);
       sel.appendChild(el('option', { value: id, text: (id === 'all' ? t('cat_all_opt') : label) + ' (' + EDU.fmt(n) + ')' }));
@@ -156,7 +156,7 @@
       hits.sort(function (x, y) { return y[0] - x[0]; });
       shown = hits.map(function (p) { return p[1]; });
     } else if (cat === 'all') shown = mixed(shown);
-    shown.forEach(function (a) { list.appendChild(card(a)); });
+    shown.forEach(function (a, i) { list.appendChild(card(a, i)); });
     $('#empty').hidden = shown.length > 0;
     $('#count').textContent = shown.length ? t(global ? 'count_all' : 'count_shown', { n: EDU.fmt(shown.length) }) : '';
   }
