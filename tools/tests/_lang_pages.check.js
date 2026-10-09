@@ -21,7 +21,7 @@ const srv = http.createServer((q, r) => {
   const base = `http://127.0.0.1:${srv.address().port}/`;
   const browser = await chromium.launch({ executablePath: CHROME, headless: true });
   const errors = []; let ok = 0;
-  for (const l of LANGS) for (const page of ['', ...APPS.map(a => `apps/${a}/`)]) {
+  for (const l of LANGS) for (const page of ['', 'schools.html', 'business.html', 'about.html', 'contact.html', 'videos.html', ...APPS.map(a => `apps/${a}/`)]) {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } }); const pg = await ctx.newPage();
     const errs = []; pg.on('pageerror', e => errs.push(e.message));
     pg.on('requestfailed', q => { if (q.url().startsWith(base)) errs.push('failed ' + q.url()); });

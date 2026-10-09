@@ -552,7 +552,12 @@
     if (shell.back) shell.back.href = homeHref;
     if (shell.schoolsLink) shell.schoolsLink.href = ROOT + 'schools.html?lang=' + state.lang;
     if (shell.businessLink) shell.businessLink.href = ROOT + 'business.html?lang=' + state.lang;
-    (shell.langLinks || []).forEach(function (p) { p[0].href = ROOT + p[1] + '?lang=' + state.lang; });
+    /* site pages that exist per language (tools/build_lang_pages.js): on the live site link to /<lang>/<page> */
+    var LOCALIZED = { 'index.html': '', 'schools.html': 'schools.html', 'business.html': 'business.html', 'about.html': 'about.html', 'contact.html': 'contact.html', 'videos.html': 'videos.html' };
+    var live = state.lang !== 'en' && location.hostname === 'apnipathshala.ai';
+    (shell.langLinks || []).forEach(function (p) {
+      p[0].href = live && LOCALIZED.hasOwnProperty(p[1]) ? ROOT + state.lang + '/' + LOCALIZED[p[1]] : ROOT + p[1] + '?lang=' + state.lang;
+    });
     if (shell.nav) shell.nav.setAttribute('aria-label', t('brand'));
     refreshWa();
     ctaRefresh();

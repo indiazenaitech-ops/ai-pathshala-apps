@@ -13,7 +13,7 @@
     $('#mail-btn').href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(t('email_subject'));
     $('#yt').href = CONF.youtube || EDU.YOUTUBE;
     $('#wa-page').href = EDU.waLink(t('wa_contact', { url: EDU.shareUrl() }));
-    $('#privacy').href = 'legal/privacy.html?lang=' + EDU.lang;
+    $('#privacy').href = EDU.ROOT + 'legal/privacy.html?lang=' + EDU.lang;
     document.title = t('doc_title');
     setMeta('description', t('doc_desc'));
   }

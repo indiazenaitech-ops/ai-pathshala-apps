@@ -121,7 +121,7 @@
     var press = SITE.press || null;
     var flyer = press && ((EDU.lang === 'hi' || EDU.lang === 'mr' ? press.flyer_hi : press.flyer_en) || press.flyer);
     $('#flyer').hidden = !flyer;
-    if (flyer) $('#flyer-link').href = flyer;
+    if (flyer) $('#flyer-link').href = /^https?:/.test(flyer) ? flyer : EDU.ROOT + flyer;
     renderAlign();
     renderFaq();
     document.title = t('doc_title');

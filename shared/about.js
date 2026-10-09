@@ -16,7 +16,7 @@
     $('#v4').textContent = t('v4', { langs: EDU.LANGS.map(function (l) { return l.native; }).join(', ') });
     ['#browse', '#browse-2'].forEach(function (s) { setHref(s, 'index.html' + L); });
     ['#contact', '#contact-2'].forEach(function (s) { setHref(s, 'contact.html' + L); });
-    setHref('#guides', 'guides/index.html' + L);
+    setHref('#guides', EDU.ROOT + 'guides/index.html' + L);
     setHref('#yt', CONF.youtube || EDU.YOUTUBE);
     document.title = t('doc_title');
     setMeta('description', t('doc_desc'));

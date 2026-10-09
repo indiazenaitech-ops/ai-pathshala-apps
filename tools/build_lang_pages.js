@@ -117,4 +117,33 @@ for (const a of apps) {
     written += writeFile(`${l}/index.html`, h); pages++;
   }
 }
+/* ---------- site pages: schools, business, about, contact, videos ---------- */
+const SITE_PAGES = [['schools.html', 'SCHOOLS_STRINGS', 'shared/schools-strings.js'], ['business.html', 'BUSINESS_STRINGS', 'shared/business-strings.js'],
+  ['about.html', 'ABOUT_STRINGS', 'shared/about-strings.js'], ['contact.html', 'CONTACT_STRINGS', 'shared/contact-strings.js'],
+  ['videos.html', 'VIDEOS_STRINGS', 'shared/videos-strings.js']];
+const LANG_START = '<!-- lang-links:start (tools/build_lang_pages.js) -->', LANG_END = '<!-- lang-links:end -->';
+for (const [file, global, strFile] of SITE_PAGES) {
+  if (!fs.existsSync(path.join(ROOT, file))) continue;
+  const T = load(strFile, global), L = langLinks(file);
+  let src = fs.readFileSync(path.join(ROOT, file), 'utf8');
+  /* the English page: same hreflang links + picker map, in a block this script owns */
+  const enBlock = [LANG_START, ...L.tags, `<script>window.EDU_LANG_URLS = ${json(L.map)};</script>`, LANG_END].map(x => '  ' + x).join('\n');
+  const re = /[ \t]*<!-- lang-links:start[^>]*-->[\s\S]*?<!-- lang-links:end -->/;
+  const enNext = re.test(src) ? src.replace(re, () => enBlock) : src.replace(/([ \t]*<link rel="canonical"[^>]*>)/, (m) => m + '\n' + enBlock);
+  written += writeFile(file, enNext); src = enNext;
+  for (const l of OTHER) {
+    const S = T[l] || T.en, title = S.doc_title || T.en.doc_title, desc = S.doc_desc || T.en.doc_desc;
+    const head = [
+      `<meta name="description" content="${esc(desc)}">`,
+      `<link rel="canonical" href="${L.url(l)}">`, ...L.tags,
+      `<meta property="og:type" content="website">`, `<meta property="og:site_name" content="${esc(brandOf[l])}">`,
+      `<meta property="og:url" content="${L.url(l)}">`, `<meta property="og:title" content="${esc(title)}">`,
+      `<meta property="og:description" content="${esc(desc)}">`, `<meta property="og:image" content="${SITE}shared/img/og-everyone-en.png">`,
+      `<meta property="og:locale" content="${LOCALE[l]}">`, `<meta name="twitter:card" content="summary_large_image">`,
+      `<script>window.EDU_PAGE_LANG = ${json(l)}; window.EDU_LANG_URLS = ${json(L.map)};</script>`
+    ];
+    const h = localize(src.replace(re, ''), l, '../', head, title);
+    written += writeFile(`${l}/${file}`, h); pages++;
+  }
+}
 console.log(`language pages: ${pages} (${written} changed) in ${OTHER.join(' ')}`);
