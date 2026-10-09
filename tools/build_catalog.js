@@ -122,6 +122,8 @@ for (const a of apps) urls.push({ loc: `${SITE_URL}apps/${a.slug}/`, lastmod: la
 /* language pages made by tools/build_lang_pages.js: <lang>/ and <lang>/apps/<slug>/ (only those that exist) */
 for (const l of ['hi', 'bn', 'mr', 'gu', 'pa', 'or', 'ta', 'te', 'kn', 'ml', 'ur']) {
   if (fs.existsSync(path.join(ROOT, l, 'index.html'))) urls.push({ loc: `${SITE_URL}${l}/`, lastmod: urls[0].lastmod, pri: '0.9' });
+  for (const pg of ['schools.html', 'business.html', 'about.html', 'contact.html', 'videos.html'])
+    if (fs.existsSync(path.join(ROOT, l, pg))) urls.push({ loc: `${SITE_URL}${l}/${pg}`, lastmod: day(newestMtime(path.join(ROOT, pg))), pri: '0.6' });
   for (const a of apps) if (fs.existsSync(path.join(ROOT, l, 'apps', a.slug, 'index.html'))) urls.push({ loc: `${SITE_URL}${l}/apps/${a.slug}/`, lastmod: lastmod[a.slug], pri: '0.7' });
 }
 /* free how-to guides, one static page per language (guides/index.html, guides/<slug>/, guides/<lang>/, guides/<lang>/<slug>/;
