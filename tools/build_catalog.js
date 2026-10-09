@@ -168,3 +168,17 @@ try {
     if (writeIfChanged(idx, next)) console.log(`index.html: apps JSON-LD updated (${apps.length} apps)`);
   }
 } catch (e) { console.log('index.html JSON-LD skipped: ' + e.message); }
+
+/* index.html: a static, crawlable copy of the app grid inside #list (English), between <!-- build:apps-static --> markers.
+   Search engines and no-JS visitors see real links to every app; shared/home.js replaces it with the live grid on load. */
+try {
+  const html = fs.readFileSync(idx, 'utf8');
+  const re = /(<!-- build:apps-static[^>]*-->)[\s\S]*?(<!-- \/build:apps-static -->)/;
+  if (!re.test(html)) console.log('index.html: no apps-static markers, skipped');
+  else {
+    const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const cards = apps.map(a => `<a class="app-card" href="apps/${a.slug}/"><div class="app-name"><span class="ic" aria-hidden="true">${esc(a.icon)}</span><h3>${esc(a.title.en)}</h3></div><p>${esc(a.desc.en)}</p></a>`).join('\n      ');
+    const next = html.replace(re, (m0, a, b) => a + '\n      ' + cards + '\n      ' + b);
+    if (writeIfChanged(idx, next)) console.log(`index.html: static app grid updated (${apps.length} apps)`);
+  }
+} catch (e) { console.log('index.html static grid skipped: ' + e.message); }

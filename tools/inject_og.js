@@ -31,17 +31,31 @@ const clip = (s, n) => { s = String(s || '').replace(/\s+/g, ' ').trim(); return
 function block(m, html) {
   const url = `${SITE_URL}apps/${m.slug}/`;
   const en = (m.title && m.title.en) || m.slug, hi = (m.title && m.title.hi) || '';
-  const title = hi && hi !== en ? `${en} · ${hi} | AI Pathshala` : `${en} | AI Pathshala`;
+  /* English previews and titles (owner, 7 Oct: shares in English must look English; one card per URL) */
+  const title = `${en}: free online tool | AI Pathshala`;
   const desc = clip([(m.desc && m.desc.en) || '', (m.desc && m.desc.hi) || ''].filter(Boolean).join(' · '), 280);
   const ogDesc = clip(((m.desc && m.desc.en) || '') + ' Free, no sign-up, no ads, 12 Indian languages.', 300);
-  const img = fs.existsSync(path.join(ROOT, 'shared', 'img', 'og', m.slug + '.png')) ? `${SITE_URL}shared/img/og/${m.slug}.png` : `${SITE_URL}shared/img/og-home.png`;
+  const img = fs.existsSync(path.join(ROOT, 'shared', 'img', 'og', m.slug + '.png')) ? `${SITE_URL}shared/img/og/${m.slug}.png` : `${SITE_URL}shared/img/og-everyone-en.png`;
+  const WORK = { business: 'BusinessApplication', marketing: 'BusinessApplication', everyday: 'UtilitiesApplication', data: 'BusinessApplication' };
+  const ld = {
+    '@context': 'https://schema.org', '@type': 'WebApplication', name: en, alternateName: hi && hi !== en ? hi : undefined,
+    url, description: (m.desc && m.desc.en) || undefined, image: img,
+    applicationCategory: WORK[m.category] || 'EducationalApplication', operatingSystem: 'Any (web browser)', browserRequirements: 'Requires JavaScript',
+    isAccessibleForFree: true, inLanguage: ['en', 'hi', 'bn', 'mr', 'gu', 'pa', 'or', 'ta', 'te', 'kn', 'ml', 'ur'],
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+    publisher: { '@type': 'Organization', name: 'AI Pathshala', url: SITE_URL }
+  };
+  const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'AI Pathshala', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: en, item: url }] };
+  const json = o => JSON.stringify(o).replace(/</g, '\u003c');
   const outside = html.replace(BLOCK_RE, '');
   const lines = [
     START,
     `<link rel="canonical" href="${url}">`,
     /<meta[^>]+name=["']description["']/i.test(outside) ? null : `<meta name="description" content="${attr(desc)}">`,
     `<meta property="og:type" content="website">`,
-    `<meta property="og:site_name" content="AI की पाठशाला · AI Pathshala">`,
+    `<meta property="og:site_name" content="AI Pathshala">`,
     `<meta property="og:url" content="${url}">`,
     `<meta property="og:title" content="${attr(title)}">`,
     `<meta property="og:description" content="${attr(ogDesc)}">`,
@@ -49,11 +63,12 @@ function block(m, html) {
     `<meta property="og:image:width" content="1200">`,
     `<meta property="og:image:height" content="630">`,
     `<meta property="og:locale" content="en_IN">`,
-    `<meta property="og:locale:alternate" content="hi_IN">`,
     `<meta name="twitter:card" content="summary_large_image">`,
     `<meta name="twitter:title" content="${attr(title)}">`,
     `<meta name="twitter:description" content="${attr(ogDesc)}">`,
     `<meta name="twitter:image" content="${img}">`,
+    `<script type="application/ld+json">${json(ld)}</script>`,
+    `<script type="application/ld+json">${json(crumbs)}</script>`,
     END
   ].filter(Boolean);
   return lines.map(l => '  ' + l).join('\n') + '\n';
