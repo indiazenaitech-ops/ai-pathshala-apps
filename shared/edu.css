@@ -346,3 +346,23 @@ kbd { background: var(--surface-2); border: 1px solid var(--border); border-bott
 .print-only { display: none; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* ---------- video lessons with a built-in player (shared/videos.js: home #videos + videos.html) ---------- */
+.vid-filter { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+.vid-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.vid-card, .edu-site .vid-card { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+.vid-media { position: relative; aspect-ratio: 16 / 9; background: #000; }
+.vid-media iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.vid-play { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; cursor: pointer; background: #000; display: block; }
+.vid-play img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .92; transition: opacity .15s; }
+.vid-play:hover img, .vid-play:focus-visible img { opacity: 1; }
+.vid-play:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.vid-btn { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); filter: drop-shadow(0 2px 6px rgba(0,0,0,.4)); line-height: 0; }
+.vid-dur { position: absolute; right: 8px; bottom: 8px; background: rgba(0,0,0,.78); color: #fff; font-size: .78rem; font-weight: 700; padding: 2px 7px; border-radius: 6px; }
+.vid-body { padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.vid-lang { align-self: flex-start; font-size: .72rem; font-weight: 700; color: var(--muted); border: 1px solid var(--border); border-radius: 4px; padding: 1px 8px; }
+.vid-body h3 { margin: 0; font-size: 1rem; line-height: 1.4; flex: 1; }
+.vid-yt { font-size: .86rem; font-weight: 600; color: var(--muted); text-decoration: none; }
+.vid-yt:hover { color: var(--primary); text-decoration: underline; }
+.vid-note { font-size: .82rem; color: var(--muted); margin: 12px 0 0; }
+.vid-more { text-align: center; margin-top: 16px; }

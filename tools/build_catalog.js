@@ -116,7 +116,7 @@ const newestApp = Object.values(lastmod).sort().pop() || day();
 const urls = [{ loc: SITE_URL, lastmod: [day(newestMtime(path.join(ROOT, 'index.html'))), newestApp].sort().pop(), pri: '1.0' }];
 if (fs.existsSync(path.join(ROOT, 'schools.html'))) urls.push({ loc: SITE_URL + 'schools.html', lastmod: day(Math.max(newestMtime(path.join(ROOT, 'schools.html')), newestMtime(path.join(ROOT, 'shared', 'schools-strings.js')))), pri: '0.9' });
 if (fs.existsSync(path.join(ROOT, 'business.html'))) urls.push({ loc: SITE_URL + 'business.html', lastmod: day(Math.max(newestMtime(path.join(ROOT, 'business.html')), newestMtime(path.join(ROOT, 'shared', 'business-strings.js')))), pri: '0.9' });
-for (const [pg, str] of [['about.html', 'about-strings.js'], ['contact.html', 'contact-strings.js']]) if (fs.existsSync(path.join(ROOT, pg))) urls.push({ loc: SITE_URL + pg, lastmod: day(Math.max(newestMtime(path.join(ROOT, pg)), newestMtime(path.join(ROOT, 'shared', str)))), pri: '0.6' });
+for (const [pg, str] of [['about.html', 'about-strings.js'], ['contact.html', 'contact-strings.js'], ['videos.html', 'videos-strings.js']]) if (fs.existsSync(path.join(ROOT, pg))) urls.push({ loc: SITE_URL + pg, lastmod: day(Math.max(newestMtime(path.join(ROOT, pg)), newestMtime(path.join(ROOT, 'shared', str)))), pri: '0.6' });
 if (press && press.kit) urls.push({ loc: SITE_URL + press.kit, lastmod: day(newestMtime(pressDir)), pri: '0.5' });
 for (const a of apps) urls.push({ loc: `${SITE_URL}apps/${a.slug}/`, lastmod: lastmod[a.slug], pri: '0.8' });
 /* free how-to guides, one static page per language (guides/index.html, guides/<slug>/, guides/<lang>/, guides/<lang>/<slug>/;
