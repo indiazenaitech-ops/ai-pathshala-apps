@@ -79,7 +79,16 @@
   /* ---------------- language ---------------- */
   function langInfo(code) { for (var i = 0; i < LANGS.length; i++) if (LANGS[i].code === code) return LANGS[i]; return LANGS[0]; }
 
+  /* Language pages (apnipathshala.ai/<lang>/...): window.EDU_PAGE_LANG fixes the page's language, and
+     window.EDU_LANG_URLS = {code: url} sends the language picker to the matching page (only on the live site). */
+  var PAGE_LANG = CODES.indexOf(window.EDU_PAGE_LANG) >= 0 ? window.EDU_PAGE_LANG : null;
+  function langUrl(code) {
+    var m = window.EDU_LANG_URLS;
+    if (!m || !m[code] || location.hostname !== 'apnipathshala.ai') return null;
+    return m[code] + (location.hash || '');
+  }
   function detectLang() {
+    if (PAGE_LANG) return PAGE_LANG;
     try {
       var q = new URLSearchParams(location.search).get('lang');
       if (q && CODES.indexOf(q) >= 0) return q;
@@ -155,12 +164,13 @@
 
   function setLang(code) {
     if (CODES.indexOf(code) < 0) code = 'en';
+    if (state.lang && code !== state.lang && langUrl(code)) { lsSet('edu.lang', code); location.href = langUrl(code); return; }
     state.lang = code;
     lsSet('edu.lang', code);
     applyLangAttrs();
     try {
       var u = new URL(location.href);
-      if (u.searchParams.get('lang') !== code) { u.searchParams.set('lang', code); history.replaceState(history.state, '', u.toString()); }
+      if (!PAGE_LANG && u.searchParams.get('lang') !== code) { u.searchParams.set('lang', code); history.replaceState(history.state, '', u.toString()); }
     } catch (e) { }
     apply(document);
     refreshShell();
@@ -536,8 +546,10 @@
     shell.themeBtn.title = t('theme');
     var titleText = state.titleKey ? t(state.titleKey) : '';
     shell.title.textContent = titleText;
-    shell.brand.href = ROOT + 'index.html?lang=' + state.lang;
-    if (shell.back) shell.back.href = ROOT + 'index.html?lang=' + state.lang;
+    /* the library home in this language: /<lang>/ on the live site (language pages), else index.html?lang= (ZIP, tests) */
+    var homeHref = state.lang !== 'en' && location.hostname === 'apnipathshala.ai' ? ROOT + state.lang + '/' : ROOT + 'index.html?lang=' + state.lang;
+    shell.brand.href = homeHref;
+    if (shell.back) shell.back.href = homeHref;
     if (shell.schoolsLink) shell.schoolsLink.href = ROOT + 'schools.html?lang=' + state.lang;
     if (shell.businessLink) shell.businessLink.href = ROOT + 'business.html?lang=' + state.lang;
     (shell.langLinks || []).forEach(function (p) { p[0].href = ROOT + p[1] + '?lang=' + state.lang; });

@@ -81,9 +81,15 @@
   }
 
   /* AIxploria-style card: number + audience on top, centred icon and name, short description, one tag, one button. */
+  /* App links go to the app's page in the chosen language: apps/<slug>/ for English, <lang>/apps/<slug>/ otherwise
+     (on a language home page, /<lang>/, the relative apps/<slug>/ already is that page). index.html keeps the ZIP working. */
+  function appHref(slug) {
+    if (window.EDU_PAGE_LANG) return 'apps/' + slug + '/index.html';
+    return (EDU.lang === 'en' ? '' : EDU.lang + '/') + 'apps/' + slug + '/index.html' + (EDU.lang === 'en' ? '?lang=en' : '');
+  }
   function card(a, i) {
     var needs = (a.needs || []).map(function (n) { return t('badge_' + n); }).join(' · ');
-    return el('a', { class: 'app-card', href: 'apps/' + a.slug + '/index.html?lang=' + EDU.lang, style: { '--cat': 'var(' + (CAT_COLOR[a.category] || '--c1') + ')' } },
+    return el('a', { class: 'app-card', href: appHref(a.slug), style: { '--cat': 'var(' + (CAT_COLOR[a.category] || '--c1') + ')' } },
       el('div', { class: 'app-top' },
         el('span', { class: 'app-n', 'aria-hidden': 'true', text: EDU.fmt(i + 1) }),
         el('span', { class: 'app-aud', text: gradesLabel(a) })),
@@ -170,9 +176,9 @@
     h1.appendChild(document.createTextNode(parts[0]));
     if (parts.length > 1) { h1.appendChild(el('b', { text: EDU.fmt(APPS.length) })); h1.appendChild(document.createTextNode(parts[1])); }
     setHref('#subscribe', CONF.subscribe || EDU.YOUTUBE);
-    setHref('#schools-link', 'schools.html?lang=' + EDU.lang);
-    setHref('#biz-link', 'business.html?lang=' + EDU.lang);
-    setHref('#contact-link', 'contact.html?lang=' + EDU.lang);
+    setHref('#schools-link', EDU.ROOT + 'schools.html?lang=' + EDU.lang);
+    setHref('#biz-link', EDU.ROOT + 'business.html?lang=' + EDU.lang);
+    setHref('#contact-link', EDU.ROOT + 'contact.html?lang=' + EDU.lang);
     var zip = $('#zip'), zipUrl = SITE.zip || CONF.zip;
     if (zip && zipUrl) { zip.hidden = false; zip.href = zipUrl; }
     document.title = t('doc_title');

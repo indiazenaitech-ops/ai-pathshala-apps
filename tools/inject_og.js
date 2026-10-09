@@ -49,10 +49,16 @@ function block(m, html) {
     { '@type': 'ListItem', position: 1, name: 'AI Pathshala', item: SITE_URL },
     { '@type': 'ListItem', position: 2, name: en, item: url }] };
   const json = o => JSON.stringify(o).replace(/</g, '\u003c');
+  const LANG12 = ['en', 'hi', 'bn', 'mr', 'gu', 'pa', 'or', 'ta', 'te', 'kn', 'ml', 'ur'];
+  const langUrl = l => `${SITE_URL}${l === 'en' ? '' : l + '/'}apps/${m.slug}/`;
   const outside = html.replace(BLOCK_RE, '');
   const lines = [
     START,
     `<link rel="canonical" href="${url}">`,
+    /* hreflang: this app in all 12 languages (pages made by tools/build_lang_pages.js) + the language picker's URL map */
+    ...LANG12.map(l => `<link rel="alternate" hreflang="${l}" href="${langUrl(l)}">`),
+    `<link rel="alternate" hreflang="x-default" href="${url}">`,
+    `<script>window.EDU_LANG_URLS = ${json(Object.fromEntries(LANG12.map(l => [l, langUrl(l)])))};</script>`,
     /<meta[^>]+name=["']description["']/i.test(outside) ? null : `<meta name="description" content="${attr(desc)}">`,
     `<meta property="og:type" content="website">`,
     `<meta property="og:site_name" content="AI Pathshala">`,

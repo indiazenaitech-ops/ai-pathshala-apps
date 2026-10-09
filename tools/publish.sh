@@ -6,13 +6,16 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 ZIP="https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip"
 node tools/build_catalog.js --only-passing --zip "$ZIP"
+# language pages (<lang>/ and <lang>/apps/<slug>/) from the published catalog, then the sitemap again so it lists them
+node tools/build_lang_pages.js
+node tools/build_catalog.js --only-passing --zip "$ZIP" > /dev/null
 
 [ -f CNAME ] && git add CNAME
 git add .gitignore .nojekyll README.md LICENSE AGENTS.md APPS.md index.html catalog.js manifest.webmanifest sw.js shared \
         tools/verify.js tools/build_catalog.js tools/publish.sh tools/package.json tools/package-lock.json \
         apps/_template tools/tests/_template.test.js
 # site pages + SEO files + site tools (each only if present, so a missing file never stops a publish)
-for f in schools.html business.html about.html contact.html videos.html robots.txt sitemap.xml tools/verify_pages.js tools/chrome-path.js CLAUDE.md tools/inject_og.js tools/make_og.js; do
+for f in schools.html business.html about.html contact.html videos.html robots.txt sitemap.xml tools/verify_pages.js tools/chrome-path.js tools/build_lang_pages.js CLAUDE.md tools/inject_og.js tools/make_og.js; do
   if [ -f "$f" ]; then git add "$f"; fi
 done
 # press kit / printable flyer (linked from schools.html via EDU_SITE.press in catalog.js)
@@ -28,7 +31,7 @@ for f in [0-9a-f]*.txt tools/indexnow.js; do
   if [ -f "$f" ] && { [ "$f" = tools/indexnow.js ] || [[ "$f" =~ ^[0-9a-f]{32}\.txt$ && "$(cat "$f")" == "${f%.txt}" ]]; }; then git add "$f"; fi
 done
 # Live Quiz: legal pages, short links, Firebase rules/tests (node_modules is gitignored), spec + e2e tests
-for d in legal join teacher firebase go; do if [ -d "$d" ]; then git add "$d"; fi; done
+for d in legal join teacher firebase go hi bn mr gu pa or ta te kn ml ur; do if [ -d "$d" ]; then git add "$d"; fi; done
 for f in LIVE_SPEC.md tools/tests/_live_e2e.js tools/tests/_cloud_mock.e2e.js tools/tests/_legal.check.js tools/tests/_signup.check.js; do if [ -f "$f" ]; then git add "$f"; fi; done
 for slug in $(cat tools/.publish_stage); do
   git add "apps/$slug"

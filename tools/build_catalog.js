@@ -119,6 +119,11 @@ if (fs.existsSync(path.join(ROOT, 'business.html'))) urls.push({ loc: SITE_URL +
 for (const [pg, str] of [['about.html', 'about-strings.js'], ['contact.html', 'contact-strings.js'], ['videos.html', 'videos-strings.js']]) if (fs.existsSync(path.join(ROOT, pg))) urls.push({ loc: SITE_URL + pg, lastmod: day(Math.max(newestMtime(path.join(ROOT, pg)), newestMtime(path.join(ROOT, 'shared', str)))), pri: '0.6' });
 if (press && press.kit) urls.push({ loc: SITE_URL + press.kit, lastmod: day(newestMtime(pressDir)), pri: '0.5' });
 for (const a of apps) urls.push({ loc: `${SITE_URL}apps/${a.slug}/`, lastmod: lastmod[a.slug], pri: '0.8' });
+/* language pages made by tools/build_lang_pages.js: <lang>/ and <lang>/apps/<slug>/ (only those that exist) */
+for (const l of ['hi', 'bn', 'mr', 'gu', 'pa', 'or', 'ta', 'te', 'kn', 'ml', 'ur']) {
+  if (fs.existsSync(path.join(ROOT, l, 'index.html'))) urls.push({ loc: `${SITE_URL}${l}/`, lastmod: urls[0].lastmod, pri: '0.9' });
+  for (const a of apps) if (fs.existsSync(path.join(ROOT, l, 'apps', a.slug, 'index.html'))) urls.push({ loc: `${SITE_URL}${l}/apps/${a.slug}/`, lastmod: lastmod[a.slug], pri: '0.7' });
+}
 /* free how-to guides, one static page per language (guides/index.html, guides/<slug>/, guides/<lang>/, guides/<lang>/<slug>/;
    built by guides/_build/build.js). Folders starting with _ and the img/ i18n/ assets are skipped. */
 const guidesDir = path.join(ROOT, 'guides');
