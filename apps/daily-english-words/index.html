@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daily English Words · AI Pathshala</title>
+  <meta name="description" content="600 useful English words in 60 daily lists of 10: meaning in 11 Indian languages, pronunciation, example sentence with translation, audio, practice games, spaced repetition, streaks and a printable worksheet. Free, offline, no sign-up.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    /* ---------- today card ---------- */
+    .dew-today { display: grid; gap: 14px; }
+    .dew-today-head { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: flex-start; justify-content: space-between; }
+    .dew-today-main { flex: 1 1 260px; min-width: 0; display: grid; gap: 6px; }
+    .dew-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+    .dew-today h2 { margin: 0; font-size: clamp(1.35rem, 3.4vw, 1.9rem); line-height: 1.2; overflow-wrap: anywhere; }
+    .dew-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; flex: 0 1 330px; }
+    .dew-stat { background: var(--surface-2); border-radius: var(--radius-sm); padding: 8px 6px; text-align: center; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+    .dew-stat b { font-size: 1.35rem; line-height: 1.15; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .dew-stat span { font-size: .76rem; color: var(--muted); line-height: 1.3; overflow-wrap: anywhere; }
+    .dew-goal { display: grid; gap: 6px; }
+    .dew-goal-row { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; }
+    .dew-goal-row .seg button { padding: 6px 11px; font-size: .85rem; }
+    .dew-goal.done .progress > span { background: var(--success); }
+    .dew-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    @media (max-width: 560px) {
+      .dew-stats { flex-basis: 100%; }
+      .dew-actions .btn { flex: 1 1 calc(50% - 10px); justify-content: center; }
+      .dew-actions .btn:first-child { flex-basis: 100%; }
+    }
+    :root[lang="ur"] .dew-stat span, :root[lang="ur"] .dew-m, :root[lang="ur"] .dew-tr, :root[lang="ur"] .dew-opt { line-height: 1.8; }
+
+    /* ---------- tabs ---------- */
+    .dew-tabs { margin: 16px 0 14px; }
+    .dew-tabs button { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
+    .dew-tabs .ic { font-size: 1.15rem; }
+    .dew-tabs .cnt { font-size: .74rem; padding: 1px 7px; }
+    @media (max-width: 560px) { .dew-tabs button { flex: 1 1 45%; justify-content: center; padding-inline: 8px; } }
+    #p-learn, #p-practice, #p-review, #p-lists { scroll-margin-top: 76px; }
+
+    /* ---------- learn: list toolbar + word cards ---------- */
+    .dew-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+    .dew-bar .row { gap: 8px; }
+    .dew-words { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .dew-word { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 4px 12px; align-items: start; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+    .dew-word.due { border-inline-start: 5px solid var(--warning); }
+    .dew-word.known { border-inline-start: 5px solid var(--success); }
+    .dew-num { width: 32px; height: 32px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; font-weight: 800; font-size: .9rem; margin-top: 2px; }
+    .dew-main { min-width: 0; display: grid; gap: 4px; }
+    .dew-wrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+    .dew-w { font-size: 1.35rem; font-weight: 800; line-height: 1.25; overflow-wrap: anywhere; }
+    .dew-pron { color: var(--muted); font-family: var(--mono); font-size: .9rem; }
+    .dew-pos { font-size: .7rem; align-self: center; }
+    .dew-m { font-size: 1.05rem; font-weight: 600; overflow-wrap: anywhere; }
+    .dew-ex { color: var(--text); font-style: italic; line-height: 1.4; overflow-wrap: anywhere; }
+    .dew-ex b, .dew-prompt .dew-ex b { font-style: normal; color: var(--primary); }
+    .dew-tr { color: var(--muted); line-height: 1.45; overflow-wrap: anywhere; }
+    .dew-tr:empty { display: none; }
+    .dew-acts { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+    .dew-acts .edu-iconbtn { width: 40px; height: 40px; }
+    .dew-acts .badge { font-size: .7rem; }
+    .dew-hidden .dew-m, .dew-hidden .dew-tr { display: none; }
+    .dew-hidden .dew-reveal { display: inline-flex; }
+    .dew-reveal { display: none; align-self: start; }
+    .dew-word.revealed .dew-m, .dew-word.revealed .dew-tr { display: block; }
+    .dew-word.revealed .dew-reveal { display: none; }
+    @media (max-width: 520px) {
+      .dew-word { grid-template-columns: 30px minmax(0, 1fr); padding: 10px 12px; }
+      .dew-num { width: 28px; height: 28px; font-size: .82rem; }
+      .dew-acts { grid-column: 1 / -1; flex-direction: row; justify-content: flex-end; align-items: center; margin-top: 2px; }
+      .dew-w { font-size: 1.22rem; }
+    }
+    .dew-foot { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+    .dew-foot p { margin: 0; flex: 1 1 240px; }
+    #p-learn:fullscreen { overflow: auto; padding: 3vh 4vw; background: var(--bg); }
+    #p-learn:fullscreen .dew-words { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    #p-learn:fullscreen .dew-w { font-size: clamp(1.6rem, 2.6vw, 2.4rem); }
+    #p-learn:fullscreen .dew-m { font-size: clamp(1.1rem, 1.8vw, 1.6rem); }
+    #p-learn:fullscreen .dew-ex, #p-learn:fullscreen .dew-tr { font-size: clamp(1rem, 1.5vw, 1.35rem); }
+
+    /* ---------- practice ---------- */
+    .dew-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .dew-head .progress { flex: 1 1 120px; min-width: 90px; }
+    .dew-count { font-weight: 800; font-variant-numeric: tabular-nums; }
+    .dew-prompt { display: grid; gap: 10px; justify-items: center; text-align: center; padding: 22px 14px; border-radius: 16px; background: var(--surface-2); border: 1px solid var(--border); }
+    .dew-prompt .dew-w { font-size: clamp(1.7rem, 5vw, 2.6rem); }
+    .dew-prompt .dew-m { font-weight: 700; font-size: 1.15rem; }
+    .dew-prompt .dew-ex { font-size: 1.05rem; }
+    .dew-prompt .dew-ask { color: var(--muted); font-size: .9rem; margin: 0; }
+    .dew-blank { display: inline-block; min-width: 5ch; border-bottom: 2px solid var(--primary); margin-inline: 2px; }
+    .dew-listen { font-size: 2.6rem; width: 84px; height: 84px; border-radius: 50%; }
+    .dew-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .dew-options.one { grid-template-columns: minmax(0, 1fr); }
+    .dew-opt { min-height: 58px; padding: 12px 14px; border-radius: 14px; border: 2px solid var(--border); background: var(--surface); color: var(--text); font: inherit; font-weight: 600; font-size: 1.02rem; line-height: 1.35; cursor: pointer; text-align: start; display: flex; align-items: center; gap: 10px; overflow-wrap: anywhere; min-width: 0; touch-action: manipulation; }
+    .dew-opt .k { flex: none; width: 26px; height: 26px; border-radius: 8px; background: var(--surface-2); display: grid; place-items: center; font-size: .8rem; color: var(--muted); }
+    .dew-opt:hover:not(:disabled) { background: var(--surface-2); }
+    .dew-opt:disabled { cursor: default; }
+    .dew-opt.ok { border-color: var(--success); background: var(--success-soft); }
+    .dew-opt.bad { border-color: var(--danger); background: var(--danger-soft); }
+    .dew-opt.en { font-size: 1.2rem; font-weight: 700; justify-content: center; text-align: center; }
+    @media (max-width: 520px) { .dew-options { grid-template-columns: minmax(0, 1fr); } .dew-options.en { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    #pracInput { width: 100%; font-size: 1.25rem; min-height: 50px; direction: ltr; text-align: start; }
+    #pracFeedback:empty { display: none; }
+    .dew-result { text-align: center; }
+    .dew-result .big-number { color: var(--accent); }
+    .dew-mist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; text-align: start; }
+    .dew-mist li { border-inline-start: 4px solid var(--danger); background: var(--surface-2); border-radius: 8px; padding: 8px 12px; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+    .dew-mist b { font-size: 1.05rem; }
+
+    /* ---------- review ---------- */
+    .dew-due { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .dew-due .big-number { color: var(--primary); }
+    .dew-card { width: 100%; background: var(--surface); border: 2px solid var(--border); border-radius: 20px; padding: 30px 20px 24px; min-height: 230px; display: grid; gap: 10px; justify-items: center; align-content: center; text-align: center; cursor: pointer; font: inherit; color: inherit; box-shadow: var(--shadow-lg); position: relative; overflow-wrap: anywhere; }
+    .dew-card.back { background: var(--primary-soft); border-color: var(--primary); }
+    .dew-card .dew-w { font-size: clamp(1.9rem, 6vw, 3rem); }
+    .dew-card .dew-m { font-size: clamp(1.15rem, 3vw, 1.6rem); }
+    .dew-card .dew-ex { font-size: 1.05rem; }
+    .dew-side { position: absolute; inset-block-start: 10px; inset-inline-start: 16px; font-size: .74rem; font-weight: 700; letter-spacing: .04em; color: var(--muted); }
+    .dew-rate { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+    .dew-rate .btn { flex-direction: column; gap: 2px; min-height: 60px; padding: 8px 6px; line-height: 1.2; }
+    .dew-rate .btn small { font-weight: 500; font-size: .74rem; opacity: .85; }
+    .dew-rate .r-again { background: var(--danger-soft); border-color: var(--danger); color: var(--text); }
+    .dew-rate .r-hard { background: var(--warning-soft); border-color: var(--warning); color: var(--text); }
+    .dew-rate .r-good { background: var(--success-soft); border-color: var(--success); color: var(--text); }
+    .dew-rate .r-easy { background: var(--info-soft); border-color: var(--info); color: var(--text); }
+    @media (max-width: 420px) { .dew-rate { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .dew-kbd { font-size: .78rem; }
+    @media (hover: none), (max-width: 560px) { .dew-kbd { display: none; } }
+    .dew-sum { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .dew-sum > div { background: var(--surface-2); border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; min-width: 0; }
+    .dew-sum b { display: block; font-size: 1.9rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .dew-sum span { font-size: .82rem; color: var(--muted); }
+
+    /* ---------- lists ---------- */
+    .dew-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .dew-chips .chip { min-height: 40px; }
+    .dew-lists { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    .dew-list { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); }
+    .dew-list.cur { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-soft); }
+    .dew-list.full { border-inline-start: 5px solid var(--success); }
+    .dew-list-t { font-weight: 700; overflow-wrap: anywhere; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+    .dew-list-s { color: var(--muted); font-size: .82rem; display: flex; flex-wrap: wrap; gap: 4px 10px; }
+    .dew-list .progress { height: 6px; margin-top: 4px; grid-column: 1 / -1; }
+    .dew-pstats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+    .dew-pstats > div { background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px; text-align: center; }
+    .dew-pstats b { display: block; font-size: 1.5rem; line-height: 1.1; }
+    .dew-pstats span { font-size: .78rem; color: var(--muted); }
+    .dew-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+    @media (max-width: 520px) { .dew-btns .btn { flex: 1 1 calc(50% - 8px); justify-content: center; } }
+    .dew-help summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; }
+    .dew-help ul { padding-inline-start: 22px; margin: 12px 0; }
+    .dew-help li + li { margin-top: 6px; }
+    .dew-help h3 { margin-top: 14px; }
+    .mt { margin-top: 16px; }
+    .mb0 { margin-bottom: 0; }
+    [dir="rtl"] .arr { display: inline-block; transform: scaleX(-1); }
+    .empty { text-align: center; padding: 18px; border: 2px dashed var(--border); border-radius: var(--radius-sm); color: var(--muted); }
+
+    /* ---------- printed worksheet ---------- */
+    .pr-meta { display: flex; flex-wrap: wrap; gap: 6pt 24pt; margin: 6pt 0 10pt; }
+    .pr-table { width: 100%; border-collapse: collapse; margin-bottom: 14pt; }
+    .pr-table th, .pr-table td { border: 1px solid #999; padding: 6pt 8pt; vertical-align: top; text-align: start; font-size: 11pt; overflow-wrap: anywhere; }
+    .pr-table th { background: #eee; font-size: 10pt; }
+    .pr-table .pr-n { width: 22pt; text-align: center; color: #555; }
+    .pr-table .pr-w { font-weight: 700; font-size: 12pt; white-space: nowrap; }
+    .pr-table .pr-p { font-family: var(--mono); font-size: 10pt; color: #333; white-space: nowrap; }
+    .pr-table .pr-own { width: 26%; }
+    .pr-table tr { break-inside: avoid; page-break-inside: avoid; }
+    .pr-blanks { margin: 0; padding-inline-start: 22pt; }
+    .pr-blanks li { margin-bottom: 8pt; font-size: 12pt; line-height: 1.6; }
+    .pr-bank { border: 1px dashed #666; padding: 6pt 10pt; margin: 6pt 0 10pt; font-size: 11pt; }
+    @media print {
+      #app > *:not(#printArea) { display: none !important; }
+      #printArea { display: block !important; color: #000; background: #fff; }
+      #printArea h1 { font-size: 18pt; margin: 0 0 4pt; }
+      #printArea h2 { font-size: 13pt; margin: 12pt 0 6pt; }
+      body { background: #fff; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+
+    <!-- ================= TODAY ================= -->
+    <section class="card dew-today" id="todayCard" aria-labelledby="listTitle">
+      <div class="dew-today-head">
+        <div class="dew-today-main">
+          <div class="dew-badges">
+            <span class="badge primary" id="dayBadge"></span>
+            <span class="badge" id="themeBadge"></span>
+          </div>
+          <h2 id="listTitle"></h2>
+          <p class="muted small mb0" id="listSub"></p>
+        </div>
+        <div class="dew-stats" aria-live="polite">
+          <div class="dew-stat"><b id="statStreak"></b><span data-i18n="streak"></span></div>
+          <div class="dew-stat"><b id="statLearned"></b><span data-i18n="learned_total"></span></div>
+          <div class="dew-stat"><b id="statDue"></b><span data-i18n="due_today"></span></div>
+        </div>
+      </div>
+      <div class="dew-goal" id="goalWrap">
+        <div class="dew-goal-row">
+          <span id="goalText" class="small"></span>
+          <div class="row" style="gap:8px">
+            <span class="tiny muted" data-i18n="goal_label"></span>
+            <div class="seg" id="goalSeg" role="group" data-i18n-aria-label="goal_label">
+              <button type="button" data-v="5">5</button><button type="button" data-v="10">10</button><button type="button" data-v="20">20</button>
+            </div>
+          </div>
+        </div>
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="goalProg"><span id="goalBar" style="width:0%"></span></div>
+      </div>
+      <div class="dew-actions">
+        <button type="button" class="btn btn-primary btn-lg" id="goLearn"><span aria-hidden="true">📖 </span><span data-i18n="go_learn"></span></button>
+        <button type="button" class="btn" id="goPractice"><span aria-hidden="true">✍️ </span><span data-i18n="go_practice"></span></button>
+        <button type="button" class="btn" id="goReview"><span aria-hidden="true">🔁 </span><span id="goReviewTxt"></span></button>
+      </div>
+    </section>
+
+    <div class="tabs dew-tabs no-print" role="tablist" data-i18n-aria-label="modes">
+      <button type="button" role="tab" id="tab-learn" aria-controls="p-learn"><span class="ic" aria-hidden="true">📖</span><span data-i18n="tab_learn"></span></button>
+      <button type="button" role="tab" id="tab-practice" aria-controls="p-practice"><span class="ic" aria-hidden="true">✍️</span><span data-i18n="tab_practice"></span></button>
+      <button type="button" role="tab" id="tab-review" aria-controls="p-review"><span class="ic" aria-hidden="true">🔁</span><span data-i18n="tab_review"></span> <span class="badge accent cnt" id="dueBadge" hidden></span></button>
+      <button type="button" role="tab" id="tab-lists" aria-controls="p-lists"><span class="ic" aria-hidden="true">📚</span><span data-i18n="tab_lists"></span></button>
+    </div>
+
+    <!-- ================= LEARN ================= -->
+    <section id="p-learn" role="tabpanel" aria-labelledby="tab-learn">
+      <div class="card stack">
+        <div class="dew-bar">
+          <div class="row">
+            <button type="button" class="btn btn-sm" id="prevList"><span aria-hidden="true" class="arr">←</span> <span data-i18n="previous"></span></button>
+            <button type="button" class="btn btn-sm" id="nextList"><span data-i18n="next"></span> <span aria-hidden="true" class="arr">→</span></button>
+          </div>
+          <div class="row">
+            <label class="check small"><input type="checkbox" id="hideChk"> <span data-i18n="hide_meanings"></span></label>
+            <button type="button" class="btn btn-sm" id="playAll"><span aria-hidden="true">🔊 </span><span data-i18n="play_all"></span></button>
+            <button type="button" class="btn btn-sm" id="printBtn"><span aria-hidden="true">🖨 </span><span data-i18n="worksheet"></span></button>
+            <button type="button" class="edu-iconbtn" id="fsBtn" data-i18n-aria-label="fullscreen" data-i18n-title="fullscreen">⛶</button>
+          </div>
+        </div>
+        <ol class="dew-words" id="wordList"></ol>
+        <div class="dew-foot">
+          <p class="muted small" id="learnHint" data-i18n="learn_hint"></p>
+          <button type="button" class="btn btn-primary btn-lg" id="markLearned"><span aria-hidden="true">✓ </span><span id="markTxt"></span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PRACTICE ================= -->
+    <section id="p-practice" role="tabpanel" aria-labelledby="tab-practice" hidden>
+      <div id="pracSetup" class="card stack">
+        <h2 class="mb0" data-i18n="practice_title"></h2>
+        <p class="muted mb0" id="pracHelp"></p>
+        <div class="row" style="gap:16px 28px">
+          <div class="field"><span id="modeLbl" data-i18n="mode_label"></span>
+            <div class="seg" id="modeSeg" role="group" aria-labelledby="modeLbl">
+              <button type="button" data-v="mcq"><span aria-hidden="true">🅰 </span><span data-i18n="mode_mcq"></span></button>
+              <button type="button" data-v="type"><span aria-hidden="true">⌨ </span><span data-i18n="mode_type"></span></button>
+              <button type="button" data-v="listen"><span aria-hidden="true">🔊 </span><span data-i18n="mode_listen"></span></button>
+            </div>
+          </div>
+          <div class="field"><span id="poolLbl" data-i18n="pool_label"></span>
+            <div class="seg" id="poolSeg" role="group" aria-labelledby="poolLbl">
+              <button type="button" data-v="list" data-i18n="pool_list"></button>
+              <button type="button" data-v="learned" data-i18n="pool_learned"></button>
+            </div>
+          </div>
+        </div>
+        <p class="callout warning" id="poolWarn" hidden data-i18n="pool_need"></p>
+        <div><button type="button" class="btn btn-primary btn-lg" id="startPractice"><span aria-hidden="true">▶ </span><span data-i18n="start_practice"></span></button></div>
+      </div>
+
+      <div id="pracRun" class="card stack" hidden>
+        <div class="dew-head">
+          <span class="dew-count" id="pracCount"></span>
+          <div class="progress" aria-hidden="true"><span id="pracBar" style="width:0%"></span></div>
+          <span class="badge success" id="pracScore"></span>
+          <button type="button" class="edu-iconbtn" id="pracSpeak" data-i18n-aria-label="read_aloud" data-i18n-title="read_aloud">🔊</button>
+        </div>
+        <div class="dew-prompt" id="pracPrompt"></div>
+        <div id="pracOptions" class="dew-options" role="group"></div>
+        <div id="pracTypeWrap" class="stack" hidden>
+          <label class="field"><span data-i18n="your_answer"></span>
+            <input type="text" id="pracInput" class="no-i18n" autocomplete="off" autocapitalize="off" spellcheck="false" lang="en" data-i18n-placeholder="type_ph">
+          </label>
+          <div class="row" id="pracAskRow">
+            <button type="button" class="btn btn-primary" id="pracCheck" data-i18n="check"></button>
+            <button type="button" class="btn" id="pracSkip" data-i18n="dont_know"></button>
+          </div>
+        </div>
+        <div id="pracFeedback" aria-live="polite"></div>
+        <div class="row" id="pracNextRow" hidden>
+          <button type="button" class="btn btn-primary" id="pracNext"><span data-i18n="next"></span> <span aria-hidden="true" class="arr">→</span></button>
+        </div>
+        <div class="row" style="justify-content:flex-end"><button type="button" class="btn btn-sm" id="pracEnd" data-i18n="end_practice"></button></div>
+      </div>
+
+      <div id="pracResult" class="card stack dew-result" hidden>
+        <h2 class="mb0" data-i18n="practice_done"></h2>
+        <div class="big-number" id="pracFinal" aria-live="polite"></div>
+        <p id="pracMsg" class="mb0"></p>
+        <h3 id="mistHead" class="mb0" data-i18n="mistakes" style="text-align:start"></h3>
+        <ul class="dew-mist" id="pracMist"></ul>
+        <div class="row" style="justify-content:center">
+          <button type="button" class="btn btn-accent" id="pracRetry"><span aria-hidden="true">🔁 </span><span data-i18n="retry_mistakes"></span></button>
+          <button type="button" class="btn btn-primary" id="pracNew" data-i18n="new_practice"></button>
+          <button type="button" class="btn" id="pracToReview" data-i18n="go_review_now"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= REVIEW ================= -->
+    <section id="p-review" role="tabpanel" aria-labelledby="tab-review" hidden>
+      <div id="revStart" class="card stack center">
+        <div class="dew-due">
+          <span class="big-number" id="dueCount" aria-live="polite"></span>
+          <span class="muted" data-i18n="due_count_label"></span>
+        </div>
+        <p id="revEmpty" class="empty mb0" hidden data-i18n="review_empty"></p>
+        <p id="revAllDone" class="mb0" style="font-weight:800;color:var(--success);font-size:1.2rem" hidden data-i18n="all_reviewed"></p>
+        <p id="revNext" class="muted mb0" hidden></p>
+        <div class="row" style="justify-content:center">
+          <button type="button" class="btn btn-primary btn-lg" id="startReview"><span aria-hidden="true">▶ </span><span data-i18n="start_review"></span></button>
+          <button type="button" class="btn" id="revGoLearn" hidden><span aria-hidden="true">📖 </span><span data-i18n="go_learn"></span></button>
+        </div>
+      </div>
+
+      <div id="revRun" class="card stack" hidden>
+        <div class="dew-head">
+          <span class="dew-count" id="revCount"></span>
+          <div class="progress" aria-hidden="true"><span id="revBar" style="width:0%"></span></div>
+          <button type="button" class="edu-iconbtn" id="revSpeak" data-i18n-aria-label="read_aloud" data-i18n-title="read_aloud">🔊</button>
+        </div>
+        <button type="button" class="dew-card" id="revCard"></button>
+        <div id="revFlipRow" class="stack center">
+          <button type="button" class="btn btn-primary btn-lg" id="revShow"><span data-i18n="show_answer"></span> <kbd class="dew-kbd no-i18n">Space</kbd></button>
+        </div>
+        <div class="dew-rate" id="revRate" hidden>
+          <button type="button" class="btn r-again" id="rateAgain"><span data-i18n="rate_again"></span><small id="ivAgain"></small></button>
+          <button type="button" class="btn r-hard" id="rateHard"><span data-i18n="rate_hard"></span><small id="ivHard"></small></button>
+          <button type="button" class="btn r-good" id="rateGood"><span data-i18n="rate_good"></span><small id="ivGood"></small></button>
+          <button type="button" class="btn r-easy" id="rateEasy"><span data-i18n="rate_easy"></span><small id="ivEasy"></small></button>
+        </div>
+        <div class="row spread">
+          <span class="tiny muted dew-kbd" data-i18n="kbd_hint"></span>
+          <button type="button" class="btn btn-sm" id="revEnd" data-i18n="end_review"></button>
+        </div>
+      </div>
+
+      <div id="revDone" class="card stack" hidden>
+        <h2 class="mb0"><span aria-hidden="true">🎉 </span><span data-i18n="review_done"></span></h2>
+        <div class="dew-sum" aria-live="polite">
+          <div><b id="sumReviewed"></b><span data-i18n="sum_reviewed"></span></div>
+          <div><b id="sumAgain"></b><span data-i18n="sum_again"></span></div>
+          <div><b id="sumStreak"></b><span data-i18n="streak"></span></div>
+        </div>
+        <p id="sumNext" class="muted mb0"></p>
+        <div class="row"><button type="button" class="btn btn-primary" id="revDoneBtn" data-i18n="done"></button></div>
+      </div>
+    </section>
+
+    <!-- ================= LISTS ================= -->
+    <section id="p-lists" role="tabpanel" aria-labelledby="tab-lists" hidden>
+      <div class="card stack">
+        <h2 class="mb0" data-i18n="lists_title"></h2>
+        <div class="dew-chips" id="packChips" role="group" data-i18n-aria-label="packs_label"></div>
+        <p class="muted small mb0" id="packInfo"></p>
+        <ol class="dew-lists" id="listGrid"></ol>
+      </div>
+
+      <div class="card stack mt">
+        <h3 class="mb0" data-i18n="progress_title"></h3>
+        <div class="dew-pstats" aria-live="polite">
+          <div><b id="psWords"></b><span data-i18n="ps_words"></span></div>
+          <div><b id="psLists"></b><span data-i18n="ps_lists"></span></div>
+          <div><b id="psBest"></b><span data-i18n="ps_best"></span></div>
+          <div><b id="psReviews"></b><span data-i18n="ps_reviews"></span></div>
+        </div>
+        <div class="dew-btns">
+          <a class="btn btn-wa" id="waShare" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬 </span><span data-i18n="share_progress"></span></a>
+          <button type="button" class="btn" id="copyShare"><span aria-hidden="true">📋 </span><span data-i18n="copy"></span></button>
+          <button type="button" class="btn" id="nativeShare" hidden><span aria-hidden="true">↗ </span><span data-i18n="share"></span></button>
+          <button type="button" class="btn" id="backupBtn"><span aria-hidden="true">💾 </span><span data-i18n="backup"></span></button>
+          <button type="button" class="btn" id="restoreBtn"><span aria-hidden="true">📂 </span><span data-i18n="restore"></span></button>
+          <button type="button" class="btn btn-danger" id="resetBtn"><span aria-hidden="true">↺ </span><span data-i18n="reset_progress"></span></button>
+        </div>
+        <p class="tiny muted mb0"><span aria-hidden="true">🔒 </span><span data-i18n="privacy_line"></span></p>
+      </div>
+    </section>
+
+    <details class="card dew-help mt" id="help">
+      <summary data-i18n="help_title"></summary>
+      <ul>
+        <li data-i18n="help_1"></li>
+        <li data-i18n="help_2"></li>
+        <li data-i18n="help_3"></li>
+        <li data-i18n="help_4"></li>
+        <li data-i18n="help_5"></li>
+        <li data-i18n="help_6"></li>
+      </ul>
+      <h3 data-i18n="inside_title"></h3>
+      <p class="mb0" data-i18n="inside_text"></p>
+    </details>
+
+    <div id="printArea" class="print-only"></div>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
