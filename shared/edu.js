@@ -26,12 +26,14 @@
   ];
   var CODES = LANGS.map(function (l) { return l.code; });
   var YOUTUBE = 'https://www.youtube.com/@Apni_Pathshala_AI';
+  var FACEBOOK = 'https://www.facebook.com/profile.php?id=61595329859117';
   /* Site-wide settings: ONE place for the domain, links and the contact address.
      CONTACT_EMAIL is joined at run time so the address never sits in plain text in any page or file. */
   var CONTACT_EMAIL = ['support', 'apnipathshala.ai'].join('@');
   var SITE = {
     url: 'https://apnipathshala.ai/',
     youtube: YOUTUBE,
+    facebook: FACEBOOK,
     subscribe: YOUTUBE + '?sub_confirmation=1',
     repo: 'https://github.com/indiazenaitech-ops/ai-pathshala-apps',
     zip: 'https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip',
@@ -491,6 +493,7 @@
     var businessLink = el('a', { href: ROOT + 'business.html', id: 'edu-foot-business' }, '💼 ', el('span', { 'data-i18n': 'shell_business', text: t('shell_business') }));
     var privacyLink = el('a', { href: ROOT + 'legal/privacy.html', id: 'edu-foot-privacy' }, '🔒 ', el('span', { 'data-i18n': 'shell_privacy', text: t('shell_privacy') }));
     var ytLink = el('a', { href: YOUTUBE, target: '_blank', rel: 'noopener' }, '▶ ', el('span', { 'data-i18n': 'footer_channel', text: t('footer_channel') }));
+    var fbLink = function () { return el('a', { href: FACEBOOK, target: '_blank', rel: 'noopener', id: 'edu-foot-facebook' }, 'Facebook'); };
     var foot;
     if (opts.nav) {
       var col = function (key) { var ul = el('ul'); Array.prototype.slice.call(arguments, 1).forEach(function (a) { ul.appendChild(el('li', null, a)); }); return el('div', { class: 'edu-foot-col' }, el('h2', { 'data-i18n': key, text: t(key) }), ul); };
@@ -505,13 +508,13 @@
           col('brand', pageLink('about.html', 'nav_about', { id: 'edu-foot-about' }), pageLink('contact.html', 'nav_contact', { id: 'edu-foot-contact' }),
             pageLink('legal/privacy.html', 'shell_privacy', { id: 'edu-foot-privacy' }), pageLink('legal/terms.html', 'shell_terms')),
           col('foot_col_follow', el('a', { href: YOUTUBE, target: '_blank', rel: 'noopener' }, el('span', { 'data-i18n': 'footer_channel', text: t('footer_channel') })),
-            el('a', { href: SITE.zip, rel: 'noopener' }, el('span', { 'data-i18n': 'foot_zip', text: t('foot_zip') })))));
+            fbLink(), el('a', { href: SITE.zip, rel: 'noopener' }, el('span', { 'data-i18n': 'foot_zip', text: t('foot_zip') })))));
     } else {
       foot = el('footer', { class: 'edu-foot' },
         el('div', { class: 'edu-foot-in' },
           el('span', { 'data-i18n': 'footer_free', text: t('footer_free') }),
           el('span', { class: 'edu-foot-links' }, schoolsLink, businessLink, privacyLink,
-            pageLink('about.html', 'nav_about', { id: 'edu-foot-about' }), pageLink('contact.html', 'nav_contact', { id: 'edu-foot-contact' }), ytLink, srcBtn)));
+            pageLink('about.html', 'nav_about', { id: 'edu-foot-about' }), pageLink('contact.html', 'nav_contact', { id: 'edu-foot-contact' }), ytLink, fbLink(), srcBtn)));
     }
     document.body.appendChild(foot);
 
