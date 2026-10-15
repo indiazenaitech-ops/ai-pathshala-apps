@@ -1,4 +1,4 @@
-# App list (106)
+# App list (112)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -64,11 +64,13 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🗣️ | [Learn Indian Languages](https://apnipathshala.ai/apps/indian-languages-phrasebook/) | languages | all | Phrasebook and trainer between any two of 12 Indian languages: 456 everyday phrases with audio, Roman pronunciation, games and a daily 10. |
 | 🔊 | [Read Aloud](https://apnipathshala.ai/apps/read-aloud/) | languages | 1-12 | Hear any text read aloud in 12 Indian languages with word highlighting, echo reading and adjustable speed. |
 | 🐝 | [Spelling Bee](https://apnipathshala.ai/apps/spelling-bee/) | languages | 1-8 | Hear English words and spell them: 125 words for Class 1–8, meanings in your language, hints, a class spelling bee and printable tests. |
+| 🔎 | [Ask Your Notes (AI Search)](https://apnipathshala.ai/apps/ask-your-notes/) | study-skills | all | Ask a question about your notes or a PDF in any language and see the exact paragraphs that answer it. AI runs on your device. |
 | 📝 | [Essay & Word Counter](https://apnipathshala.ai/apps/word-counter/) | study-skills | 6-12 | Live word, character and sentence counts in any Indian language, with exam word-limit bars, long-sentence checks and format guides. |
 | 📆 | [Exam Study Planner](https://apnipathshala.ai/apps/study-planner/) | study-skills | 6-12 | Turn your date sheet into a day-by-day revision plan: weighted chapters, Pomodoro breaks, 2 revision rounds, light days, progress. |
 | 📇 | [Flashcards](https://apnipathshala.ai/apps/flashcards/) | study-skills | all | Make flashcard decks and remember them with spaced repetition, a typing quiz and a match game. Share on WhatsApp, print. |
 | 🧠 | [Mind Map Maker](https://apnipathshala.ai/apps/mind-map/) | study-skills | 4-12 | Make colourful mind maps for notes, revision, essays and projects. Templates, outline view, PNG, print. Works offline. |
 | ⌨️ | [Typing Tutor](https://apnipathshala.ai/apps/typing-tutor/) | study-skills | 3-12 | Learn touch typing with colour-coded fingers, live speed and accuracy, stars for every lesson and practice in 12 Indian languages. |
+| 🙈 | [Face Blur for Safe Sharing](https://apnipathshala.ai/apps/face-blur/) | digital-safety | all | AI finds every face in a photo and hides it (blur, pixels, black box, emoji). Checks hidden GPS too. Nothing is uploaded. |
 | 🔐 | [Password Strength Lab](https://apnipathshala.ai/apps/password-checker/) | digital-safety | 6-12 | See how fast a password can be guessed, spot the patterns attackers try first, and make strong passphrases. All on your device. |
 | 🚩 | [Spot the Scam](https://apnipathshala.ai/apps/phishing-spotter/) | digital-safety | 6-12 | A cyber-safety game: decide if Indian SMS, WhatsApp and call messages are safe or scams, and learn the red flags. |
 | 🧾 | [GST Calculator & GSTIN Checker](https://apnipathshala.ai/apps/gst-calculator/) | business | all | Add or remove GST with the CGST/SGST/IGST split, make a quick bill, plan prices against MRP and check a GSTIN. Offline. |
@@ -86,6 +88,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 📒 | [Udhaar Khata (Credit Book)](https://apnipathshala.ai/apps/udhaar-khata/) | business | all | Private credit book for your shop: who owes you, daily cash book, WhatsApp reminders with your UPI ID, CSV export and encrypted backup. |
 | 💳 | [UPI QR & Payment Standee](https://apnipathshala.ai/apps/upi-qr-standee/) | business | all | Make a printable Scan & Pay UPI QR standee, table tent or stickers for your shop, plus a counter mode with the bill amount. |
 | 📇 | [Visiting Card Maker](https://apnipathshala.ai/apps/visiting-card-maker/) | business | all | Design a visiting card with QR, logo and 10 designs, print 10 per A4 sheet with crop marks, or share a PNG on WhatsApp. |
+| ✂️ | [AI Background Remover](https://apnipathshala.ai/apps/background-remover/) | marketing | all | Remove the background from a photo of a person or product: transparent PNG, white, colour or blur. Runs on your device, no upload. |
 | 📇 | [Excel to Contacts (VCF)](https://apnipathshala.ai/apps/contact-list-vcf/) | marketing | all | Clean a customer list from Excel, fix mobile numbers, merge duplicates and download a VCF or Google Contacts CSV. Nothing is uploaded. |
 | 🪔 | [Festival Greeting & Offer Poster](https://apnipathshala.ai/apps/festival-poster-maker/) | marketing | all | Festival wishes and shop offer posters with your logo, photo and UPI QR, for WhatsApp, Instagram and print. Photos stay on your device. |
 | 🖼️ | [Image Compressor & Resizer](https://apnipathshala.ai/apps/image-compressor/) | marketing | all | Resize, compress and watermark 100 photos at once for Instagram, WhatsApp, YouTube, Amazon and websites. Photos never leave your device. |
@@ -94,6 +97,8 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 💬 | [WhatsApp Business Link Kit](https://apnipathshala.ai/apps/whatsapp-business-kit/) | marketing | all | Click-to-chat links, ready messages in 12 languages, payment reminders for a customer list and a website chat button. |
 | 🎬 | [YouTube Thumbnail Maker](https://apnipathshala.ai/apps/thumbnail-maker/) | marketing | all | Click-worthy YouTube thumbnails and Shorts covers with a big Hindi or regional headline, stickers and your photo, all on your device. |
 | 🎂 | [Age & Date Calculator](https://apnipathshala.ai/apps/age-date-calculator/) | everyday | all | Exact age on any date, exam/job age eligibility, days between dates, add working days, notice period and countdown. Works offline. |
+| ✨ | [AI Photo Enhancer](https://apnipathshala.ai/apps/photo-enhancer/) | everyday | all | Make small, blurry or old photos 2× or 4× bigger and clearer with AI, plus one-tap auto fix. Your photo is not uploaded. |
+| 📝 | [AI Text Summarizer](https://apnipathshala.ai/apps/smart-summarizer/) | everyday | all | Get the key points, keywords and highlights of notes, chapters, articles or PDFs. Works offline in 12 languages; text is not uploaded. |
 | 🧮 | [EMI, SIP & FD Calculator](https://apnipathshala.ai/apps/emi-savings-calculator/) | everyday | all | Loan EMI with schedule, prepayment, rate change, APR and flat-rate checks, plus SIP, FD, RD and PPF calculators. Private, works offline. |
 | 🪪 | [Form Photo & Signature Resizer](https://apnipathshala.ai/apps/form-photo-resizer/) | everyday | all | Resize photo, signature or thumb to the exact px, cm and KB for SSC, UPSC, IBPS, NEET or PAN forms. Nothing is uploaded. |
 | 💌 | [Invitation Card Maker](https://apnipathshala.ai/apps/invitation-card-maker/) | everyday | all | Wedding, birthday, griha pravesh, pooja and shop invitations with Indian motifs, for WhatsApp or A5 print. Details stay on your device. |
@@ -102,6 +107,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 📄 | [Resume & CV Builder](https://apnipathshala.ai/apps/resume-builder/) | everyday | all | Make a job-ready resume with a live A4 preview, ATS-safe and Govt/PSU templates, and a free PDF. Your details stay on your device. |
 | 🧾 | [Split Bill & Trip Expenses](https://apnipathshala.ai/apps/split-bill/) | everyday | all | Split trip, dinner and room expenses between friends: who paid, who owes, the fewest UPI payments to settle up, and a WhatsApp summary. |
 | 🎵 | [Sur & Taal Trainer](https://apnipathshala.ai/apps/sur-taal-trainer/) | everyday | all | Tanpura drone, live swar meter for your voice, sargam alankars with a score, tabla-style taal metronome and tuner. Nothing is recorded. |
+| 🎙️ | [Voice Note to Text](https://apnipathshala.ai/apps/voice-to-text/) | everyday | all | Turn voice notes, recordings and videos into text and subtitles (SRT) with on-device AI. Your audio is not uploaded. |
 | 🆎 | [A/B Test Calculator](https://apnipathshala.ai/apps/ab-test-calculator/) | data | all | Did version B really beat A, or was it luck? p-value, confidence range, chance to win and a sample-size planner. |
 | 📈 | [Chart Maker](https://apnipathshala.ai/apps/chart-maker/) | data | all | Type or paste data and make bar, line, pie, donut, scatter or histogram charts. Download PNG or SVG. |
 | 🧹 | [Data Cleaning Lab](https://apnipathshala.ai/apps/data-cleaning-lab/) | data | all | Clean messy CSV lists: spaces, duplicates, dates, mobile numbers and ₹ amounts. Save the steps as a recipe and replay it next month. |
