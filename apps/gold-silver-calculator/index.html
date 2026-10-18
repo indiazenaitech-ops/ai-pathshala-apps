@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gold &amp; Silver Price Calculator · AI Pathshala</title>
+  <meta name="description" content="Free gold and silver jewellery price calculator for India: making charges, wastage/VA, 3% GST with CGST/SGST, price per gram, old gold exchange, compare jewellers, tola and 22K rate converter, BIS HUID checklist. Offline, 12 languages.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    /* numbers always run left to right, also in Urdu */
+    .gs-num, .gs-ltr, .gs-m { direction: ltr; unicode-bidi: isolate; font-family: "Noto Sans", system-ui, "Segoe UI", sans-serif; font-variant-numeric: tabular-nums; }
+    [dir="rtl"] input.gs-num { text-align: right; }
+    .gs-m { overflow-wrap: anywhere; }
+    .gs-privacy { display: flex; gap: 8px; align-items: flex-start; margin: -6px 0 14px; padding: 8px 12px; border-radius: var(--radius-sm);
+      background: var(--success-soft); color: var(--text); font-size: .92rem; font-weight: 600; max-width: 75ch; }
+
+    /* tabs */
+    .gs-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 0 0 16px; }
+    .gs-tabs button { font: inherit; font-weight: 700; font-size: .95rem; color: var(--text); background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 8px 6px; min-height: 52px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      gap: 6px; text-align: center; line-height: 1.2; }
+    .gs-tabs button:hover { background: var(--surface-2); }
+    .gs-tabs button[aria-selected="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+    .gs-tabs .ic { font-size: 1.2rem; }
+    @media (max-width: 760px) {
+      .gs-tabs { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+      .gs-tabs button { grid-column: span 2; flex-direction: column; gap: 2px; font-size: .84rem; padding: 6px 4px; }
+      .gs-tabs button:nth-child(4), .gs-tabs button:nth-child(5) { grid-column: span 3; }
+    }
+
+    .gs-panel > * + * { margin-top: 16px; }
+    .gs-two { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+    @media (min-width: 900px) { .gs-two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+    .card h2 { font-size: 1.2rem; }
+    .card h3 { font-size: 1.05rem; }
+    .gs-lbl { font-weight: 600; font-size: .92rem; }
+    .gs-sub { font-weight: 600; font-size: .84rem; color: var(--muted); }
+    .gs-seg { display: flex; width: 100%; }
+    .gs-seg button { flex: 1 1 0; min-height: 44px; line-height: 1.25; padding: 8px; }
+    .gs-chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .gs-chips .chip { min-height: 42px; min-width: 58px; justify-content: center; font-size: .95rem; }
+    .gs-fine { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+    .gs-fine input { width: 110px; }
+    .gs-fine .hint { flex-basis: 100%; color: var(--muted); font-size: .84rem; }
+
+    /* input with ₹ / unit parts */
+    .gs-in { display: flex; align-items: stretch; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); min-height: 46px; overflow: hidden; }
+    .gs-in:focus-within { outline: 2px solid var(--primary); border-color: var(--primary); }
+    .gs-in input { flex: 1 1 60px; min-width: 60px; width: 100%; border: 0 !important; outline: 0 !important; border-radius: 0; background: transparent; font-size: 1.08rem; font-weight: 600; }
+    .gs-in select { flex: 0 0 auto; min-width: 0; max-width: 62%; border: 0; border-inline-start: 1px solid var(--border); border-radius: 0; background: var(--surface-2); font-size: .88rem; }
+    .gs-in select:focus { outline: 0; }
+    .gs-pfx, .gs-sfx { display: grid; place-items: center; padding-inline: 10px; color: var(--muted); font-weight: 700; background: var(--surface-2); white-space: nowrap; }
+    .gs-pfx { border-inline-end: 1px solid var(--border); }
+    .gs-sfx { border-inline-start: 1px solid var(--border); }
+    .gs-pfx:empty, .gs-sfx:empty { display: none; }
+    .gs-in.bad { border-color: var(--danger); }
+    input[aria-invalid="true"] { border-color: var(--danger); }
+    .gs-pair { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    @media (max-width: 520px) { .gs-pair { grid-template-columns: minmax(0, 1fr); } }
+    .gs-err { color: var(--danger); font-weight: 600; margin: 0; font-size: .9rem; }
+    .gs-err:empty, .gs-info:empty, .gs-derived:empty { display: none; }
+    .gs-derived { margin: 0; font-weight: 700; color: var(--primary); font-size: .92rem; }
+    .gs-info { margin: 0; font-size: .88rem; color: var(--muted); }
+    .gs-own { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--surface-2); }
+    .gs-own .hint { color: var(--muted); font-size: .86rem; }
+
+    /* results */
+    .gs-result { background: color-mix(in srgb, var(--primary-soft) 55%, var(--surface)); border-color: color-mix(in srgb, var(--primary) 30%, var(--border)); }
+    .gs-res-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; justify-content: space-between; }
+    .gs-res-lbl { font-weight: 700; color: var(--muted); }
+    .gs-res-head .badge { white-space: normal; }
+    .gs-big { font-size: clamp(2rem, 6vw, 2.8rem); font-weight: 800; line-height: 1.15; margin: 4px 0 12px; color: var(--primary); }
+    .gs-big.neg { color: var(--success); }
+    .gs-empty { margin: 8px 0; font-size: 1.02rem; }
+    .gs-break { font-size: .97rem; }
+    .gs-break th { background: transparent; font-weight: 500; position: static; }
+    .gs-break td.v { text-align: end; white-space: nowrap; font-weight: 600; }
+    .gs-break tr.sub th, .gs-break tr.sub td { font-weight: 700; }
+    .gs-break tr.sum th, .gs-break tr.sum td { font-weight: 800; font-size: 1.06rem; border-bottom: 0; }
+    .gs-break tr.dim th, .gs-break tr.dim td { color: var(--muted); }
+    .gs-break tr:hover td { background: transparent; }
+    @media (max-width: 560px) { .gs-break { font-size: .9rem; } .gs-break th, .gs-break td { padding: 7px 5px; } }
+    .gs-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .gs-tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+    .gs-tile span { display: block; color: var(--muted); font-size: .82rem; line-height: 1.3; }
+    .gs-tile b { display: block; font-size: 1.12rem; margin-top: 2px; overflow-wrap: anywhere; }
+    .gs-tile.hl b { color: var(--primary); }
+    .gs-tile.warn b { color: var(--warning); }
+    .gs-msg { margin: 12px 0 0; font-size: .92rem; }
+    .gs-actions { margin-top: 14px; }
+    .gs-note { font-size: .9rem; }
+    .gs-note p { margin: 0; }
+    .gs-note p + p { margin-top: 6px; }
+    .gs-pay { margin-top: 14px; padding: 12px; border-radius: var(--radius-sm); background: var(--surface); border: 1px dashed var(--border); }
+    .gs-pay .row { justify-content: space-between; }
+
+    /* compare */
+    .gs-shops { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @media (max-width: 900px) { .gs-shops { grid-template-columns: minmax(0, 1fr); } }
+    .gs-shop > * + * { margin-top: 10px; }
+    .gs-shop.is-best { border-color: var(--success); box-shadow: 0 0 0 2px color-mix(in srgb, var(--success) 45%, transparent); }
+    .gs-shop-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .gs-shop-head h3 { margin: 0; }
+    .gs-shop-out { font-weight: 700; }
+    .gs-tbl td.v, .gs-tbl th.v { text-align: end; white-space: nowrap; }
+    .gs-tbl tr.best td { background: var(--success-soft); font-weight: 700; }
+    @media (max-width: 560px) { .gs-tbl th, .gs-tbl td { padding: 7px 5px; font-size: .86rem; } }
+
+    /* converter */
+    .gs-units { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); margin-top: 10px; }
+
+    /* checklist */
+    .gs-ck { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .gs-ck label { display: flex; gap: 12px; align-items: flex-start; font-weight: 400; font-size: .98rem; padding: 10px 12px;
+      border: 1px solid var(--border); border-radius: 10px; background: var(--surface); cursor: pointer; }
+    .gs-ck input { margin-top: 3px; flex: none; width: 22px; height: 22px; }
+    .gs-ck label:has(input:checked) { background: var(--success-soft); border-color: color-mix(in srgb, var(--success) 40%, var(--border)); }
+    .gs-ck b { display: block; margin-bottom: 2px; }
+    details.card summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; min-height: 32px; }
+    details.card ul { margin: 10px 0 0; padding-inline-start: 22px; }
+    details.card li + li { margin-top: 6px; }
+
+    /* print: only the generated #print-area */
+    #print-area { display: none; }
+    @media print {
+      #app > *:not(#print-area) { display: none !important; }
+      #print-area { display: block !important; font-size: 12pt; color: #000; }
+      #print-area h1 { font-size: 18pt; margin: 0 0 6pt; }
+      #print-area table { width: 100%; border-collapse: collapse; margin: 8pt 0; }
+      #print-area th, #print-area td { border: 1px solid #999; padding: 4pt 6pt; text-align: start; vertical-align: top; }
+      #print-area td.v, #print-area th.v { text-align: end; white-space: nowrap; }
+      #print-area .pa-grand td, #print-area .pa-grand th { font-weight: 800; font-size: 13pt; }
+      #print-area .pa-small { font-size: 9pt; color: #444; }
+      #print-area ul { padding-inline-start: 18pt; }
+      #print-area li { margin-bottom: 4pt; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="gs-privacy no-print"><span aria-hidden="true">🔒</span><span data-i18n="privacy"></span></p>
+
+    <nav class="gs-tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
+      <button type="button" role="tab" id="tab-price" data-tab="price" aria-controls="panel-price"><span class="ic" aria-hidden="true">💍</span><span data-i18n="tab_price"></span></button>
+      <button type="button" role="tab" id="tab-exch" data-tab="exch" aria-controls="panel-exch"><span class="ic" aria-hidden="true">♻️</span><span data-i18n="tab_exch"></span></button>
+      <button type="button" role="tab" id="tab-cmp" data-tab="cmp" aria-controls="panel-cmp"><span class="ic" aria-hidden="true">⚖️</span><span data-i18n="tab_cmp"></span></button>
+      <button type="button" role="tab" id="tab-conv" data-tab="conv" aria-controls="panel-conv"><span class="ic" aria-hidden="true">🔁</span><span data-i18n="tab_conv"></span></button>
+      <button type="button" role="tab" id="tab-check" data-tab="check" aria-controls="panel-check"><span class="ic" aria-hidden="true">✅</span><span data-i18n="tab_check"></span></button>
+    </nav>
+
+    <!-- 1. Jewellery price -->
+    <section id="panel-price" role="tabpanel" aria-labelledby="tab-price" class="gs-panel" hidden>
+      <div class="gs-two">
+        <div class="card stack">
+          <div class="field">
+            <span class="gs-lbl" id="p-metal-lbl" data-i18n="metal_label"></span>
+            <div class="seg gs-seg" id="p-metal" role="group" aria-labelledby="p-metal-lbl">
+              <button type="button" data-metal="gold" data-i18n="m_gold"></button>
+              <button type="button" data-metal="silver" data-i18n="m_silver"></button>
+              <button type="button" data-metal="plat" data-i18n="m_plat"></button>
+            </div>
+          </div>
+          <div class="field">
+            <span class="gs-lbl" id="p-pur-lbl" data-i18n="purity_label"></span>
+            <div class="gs-chips" id="p-pur" role="group" aria-labelledby="p-pur-lbl"></div>
+            <div class="gs-fine" id="p-fine-box" hidden>
+              <label for="p-fine" data-i18n="fine_label"></label>
+              <input id="p-fine" class="gs-num" type="text" inputmode="decimal" autocomplete="off" placeholder="958">
+              <span class="hint" data-i18n="fine_hint"></span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="p-rate" data-i18n="rate_label"></label>
+            <div class="gs-in" id="p-rate-wrap"><span class="gs-pfx" aria-hidden="true">₹</span><input id="p-rate" class="gs-num" type="text" inputmode="decimal" autocomplete="off" aria-describedby="p-rate-hint"><select id="p-runit" data-i18n-aria-label="rate_unit_aria"></select></div>
+            <span class="gs-sub" id="p-rfor-lbl" data-i18n="rate_for_label"></span>
+            <div class="seg gs-seg" id="p-rfor" role="group" aria-labelledby="p-rfor-lbl">
+              <button type="button" data-rfor="pur"></button>
+              <button type="button" data-rfor="base"></button>
+            </div>
+            <p class="gs-derived" id="p-derived"></p>
+            <span class="hint" id="p-rate-hint" data-i18n="rate_hint"></span>
+          </div>
+          <div class="gs-pair">
+            <div class="field">
+              <label for="p-w" data-i18n="weight_label"></label>
+              <div class="gs-in" id="p-w-wrap"><input id="p-w" class="gs-num" type="text" inputmode="decimal" autocomplete="off"><select id="p-wu" data-i18n-aria-label="wunit_aria"></select></div>
+            </div>
+            <div class="field">
+              <label for="p-sw" data-i18n="stone_wt_label"></label>
+              <div class="gs-in" id="p-sw-wrap"><input id="p-sw" class="gs-num" type="text" inputmode="decimal" autocomplete="off" placeholder="0"><select id="p-swu" data-i18n-aria-label="wunit_aria"></select></div>
+            </div>
+          </div>
+          <p class="gs-info" id="p-net"></p>
+          <div class="field">
+            <span class="gs-lbl" id="p-mk-lbl" data-i18n="making_label"></span>
+            <div class="seg gs-seg" id="p-mktype" role="group" aria-labelledby="p-mk-lbl">
+              <button type="button" data-mk="pct" data-i18n="mk_pct"></button>
+              <button type="button" data-mk="pg" data-i18n="mk_pg"></button>
+              <button type="button" data-mk="flat" data-i18n="mk_flat"></button>
+            </div>
+            <div class="gs-in" id="p-mk-wrap"><span class="gs-pfx" id="p-mk-pfx" aria-hidden="true"></span><input id="p-mk" class="gs-num" type="text" inputmode="decimal" autocomplete="off" placeholder="0" aria-labelledby="p-mk-lbl"><span class="gs-sfx" id="p-mk-sfx" aria-hidden="true"></span></div>
+          </div>
+          <div class="gs-pair">
+            <div class="field">
+              <label for="p-disc" data-i18n="disc_label"></label>
+              <div class="gs-in" id="p-disc-wrap"><input id="p-disc" class="gs-num" type="text" inputmode="decimal" autocomplete="off" placeholder="0"><span class="gs-sfx" aria-hidden="true">%</span></div>
+            </div>
+            <div class="field">
+              <label for="p-wst" data-i18n="wastage_label"></label>
+              <div class="gs-in" id="p-wst-wrap"><input id="p-wst" class="gs-num" type="text" inputmode="decimal" autocomplete="off" placeholder="0"><select id="p-wstu" data-i18n-aria-label="wastage_label"></select></div>
+            </div>
+          </div>
+          <p class="gs-info" data-i18n="wastage_hint"></p>
+          <div class="gs-pair">
+            <div class="field">
+              <label for="p-stones" data-i18n="stones_label"></label>
+              <div class="gs-in" id="p-stones-wrap"><span class="gs-pfx" aria-hidden="true">₹</span><input id="p-stones" class="gs-num" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+            </div>
+            <div class="field">
+              <label for="p-other" data-i18n="other_label"></label>
+              <div class="gs-in" id="p-other-wrap"><span class="gs-pfx" aria-hidden="true">₹</span><input id="p-other" class="gs-num" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+            </div>
+          </div>
+          <p class="gs-info" data-i18n="other_hint"></p>
+          <p class="gs-err" id="p-err" role="alert"></p>
+          <div class="field">
+            <span class="gs-lbl" id="p-mode-lbl" data-i18n="mode_label"></span>
+            <div class="seg gs-seg" id="p-mode" role="group" aria-labelledby="p-mode-lbl">
+              <button type="button" data-mode="buy" data-i18n="mode_buy"></button>
+              <button type="button" data-mode="own" data-i18n="mode_own"></button>
+            </div>
+            <div class="gs-own" id="p-own-box" hidden>
+              <span class="hint" data-i18n="own_hint"></span>
+              <span class="gs-lbl" id="p-jw-lbl" data-i18n="jw_rate_label"></span>
+              <div class="gs-chips" id="p-jw" role="group" aria-labelledby="p-jw-lbl">
+                <button type="button" class="chip" data-jw="5">5%</button>
+                <button type="button" class="chip" data-jw="18">18%</button>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <span class="gs-lbl" id="p-supply-lbl" data-i18n="supply_label"></span>
+            <div class="seg gs-seg" id="p-supply" role="group" aria-labelledby="p-supply-lbl">
+              <button type="button" data-supply="intra" data-i18n="supply_intra"></button>
+              <button type="button" data-supply="inter" data-i18n="supply_inter"></button>
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" id="p-round"><span data-i18n="round_label"></span></label>
+          <div class="row"><button type="button" class="btn btn-sm btn-danger" id="p-reset" data-i18n="reset_tab"></button></div>
+        </div>
+        <div class="card gs-result" id="p-result" aria-live="polite"></div>
+      </div>
+      <div class="callout gs-note" id="p-note">
+        <p><strong data-i18n="gst_rule_title"></strong></p>
+        <p data-i18n="gst_rule_1"></p>
+        <p data-i18n="gst_rule_2"></p>
+        <p data-i18n="gst_rule_3"></p>
+      </div>
+    </section>
+
+    <!-- 2. Old gold exchange -->
+    <section id="panel-exch" role="tabpanel" aria-labelledby="tab-exch" class="gs-panel" hidden>
+      <div class="gs-two">
+        <div class="card stack">
+          <h2 class="mb0" data-i18n="ex_title"></h2>
+          <div class="field">
+            <span class="gs-lbl" id="x-metal-lbl" data-i18n="metal_label"></span>
+            <div class="seg gs-seg" id="x-metal" role="group" aria-labelledby="x-metal-lbl">
+              <button type="button" data-metal="gold" data-i18n="m_gold"></button>
+              <button type="button" data-metal="silver" data-i18n="m_silver"></button>
+            </div>
+          </div>
+          <div class="gs-pair">
+            <div class="field">
+              <label for="x-w" data-i18n="ex_weight"></label>
+              <div class="gs-in" id="x-w-wrap"><input id="x-w" class="gs-num" type="text" inputmode="decimal" autocomplete="off"><select id="x-wu" data-i18n-aria-label="wunit_aria"></select></div>
+            </div>
+            <div class="field">
+              <label for="x-sw" data-i18n="stone_wt_label"></label>
+              <div class="gs-in" id="x-sw-wrap"><input id="x-sw" class="gs-num" type="text" inputmode="decimal" autocomplete="off" placeholder="0"><select id="x-swu" data-i18n-aria-label="wunit_aria"></select></div>
+            </div>
+          </div>
+          <p class="gs-info" id="x-net"></p>
+          <div class="field">
+            <span class="gs-lbl" id="x-pur-lbl" data-i18n="ex_purity"></span>
+            <div class="gs-chips" id="x-pur" role="group" aria-labelledby="x-pur-lbl"></div>
+            <div class="gs-fine" id="x-fine-box" hidden>
+              <label for="x-fine" data-i18n="fine_label"></label>
+              <input id="x-fine" class="gs-num" type="text" inputmode="decimal" autocomplete="off" placeholder="912">
+              <span class="hint" data-i18n="fine_hint"></span>
+            </div>
+            <span class="hint" data-i18n="ex_purity_hint"></span>
+          </div>
+          <div class="field">
+            <label for="x-rate" data-i18n="rate_label"></label>
+            <div class="gs-in" id="x-rate-wrap"><span class="gs-pfx" aria-hidden="true">₹</span><input id="x-rate" class="gs-num" type="text" inputmode="decimal" autocomplete="off"><select id="x-runit" data-i18n-aria-label="rate_unit_aria"></select></div>
+            <span class="gs-sub" id="x-rfor-lbl" data-i18n="rate_for_label"></span>
+            <div class="seg gs-seg" id="x-rfor" role="group" aria-labelledby="x-rfor-lbl">
+              <button type="button" data-rfor="pur"></button>
+              <button type="button" data-rfor="base"></button>
+            </div>
+            <p class="gs-derived" id="x-derived"></p>
+          </div>
+          <div class="field">
+            <label for="x-ded" data-i18n="ex_ded"></label>
+            <div class="gs-in" id="x-ded-wrap"><input id="x-ded" class="gs-num" type="text" inputmode="decimal" autocomplete="off" placeholder="0"><span class="gs-sfx" aria-hidden="true">%</span></div>
+            <span class="hint" data-i18n="ex_ded_hint"></span>
+          </div>
+          <div class="field">
+            <label for="x-new" data-i18n="ex_new_label"></label>
+            <div class="gs-in" id="x-new-wrap"><span class="gs-pfx" aria-hidden="true">₹</span><input id="x-new" class="gs-num" type="text" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+            <div class="row"><button type="button" class="btn btn-sm" id="x-use" data-i18n="ex_use_price"></button></div>
+          </div>
+          <p class="gs-err" id="x-err" role="alert"></p>
+          <div class="row"><button type="button" class="btn btn-sm btn-danger" id="x-reset" data-i18n="reset_tab"></button></div>
+        </div>
+        <div class="card gs-result" id="x-result" aria-live="polite"></div>
+      </div>
+      <div class="callout gs-note"><p data-i18n="ex_note"></p></div>
+    </section>
+
+    <!-- 3. Compare shops -->
+    <section id="panel-cmp" role="tabpanel" aria-labelledby="tab-cmp" class="gs-panel" hidden>
+      <div class="card stack">
+        <h2 class="mb0" data-i18n="cmp_title"></h2>
+        <p class="muted small mb0" data-i18n="cmp_intro"></p>
+        <div class="gs-pair">
+          <div class="field">
+            <label for="c-w" data-i18n="cmp_weight"></label>
+            <div class="gs-in" id="c-w-wrap"><input id="c-w" class="gs-num" type="text" inputmode="decimal" autocomplete="off"><span class="gs-sfx" aria-hidden="true" data-i18n="u_g"></span></div>
+          </div>
+          <div class="field">
+            <label for="c-runit" data-i18n="cmp_unit"></label>
+            <select id="c-runit"></select>
+          </div>
+        </div>
+        <p class="gs-err" id="c-err" role="alert"></p>
+      </div>
+      <div class="gs-shops" id="c-shops"></div>
+      <div class="card" id="c-result" aria-live="polite"></div>
+    </section>
+
+    <!-- 4. Rate converter -->
+    <section id="panel-conv" role="tabpanel" aria-labelledby="tab-conv" class="gs-panel" hidden>
+      <div class="gs-two">
+        <div class="card stack">
+          <h2 class="mb0" data-i18n="cv_title"></h2>
+          <div class="field">
+            <span class="gs-lbl" id="v-metal-lbl" data-i18n="metal_label"></span>
+            <div class="seg gs-seg" id="v-metal" role="group" aria-labelledby="v-metal-lbl">
+              <button type="button" data-metal="gold" data-i18n="m_gold"></button>
+              <button type="button" data-metal="silver" data-i18n="m_silver"></button>
+              <button type="button" data-metal="plat" data-i18n="m_plat"></button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="v-rate" data-i18n="rate_label"></label>
+            <div class="gs-in" id="v-rate-wrap"><span class="gs-pfx" aria-hidden="true">₹</span><input id="v-rate" class="gs-num" type="text" inputmode="decimal" autocomplete="off"><select id="v-runit" data-i18n-aria-label="rate_unit_aria"></select></div>
+          </div>
+          <div class="field">
+            <span class="gs-lbl" id="v-pur-lbl" data-i18n="cv_for"></span>
+            <div class="gs-chips" id="v-pur" role="group" aria-labelledby="v-pur-lbl"></div>
+            <div class="gs-fine" id="v-fine-box" hidden>
+              <label for="v-fine" data-i18n="fine_label"></label>
+              <input id="v-fine" class="gs-num" type="text" inputmode="decimal" autocomplete="off" placeholder="958">
+              <span class="hint" data-i18n="fine_hint"></span>
+            </div>
+          </div>
+          <p class="gs-err" id="v-err" role="alert"></p>
+          <p class="gs-info" data-i18n="cv_units_note"></p>
+          <div class="row"><button type="button" class="btn btn-sm btn-danger" id="v-reset" data-i18n="reset_tab"></button></div>
+        </div>
+        <div class="card" id="v-result" aria-live="polite"></div>
+      </div>
+      <div class="callout gs-note"><p data-i18n="cv_method"></p></div>
+    </section>
+
+    <!-- 5. Buyer checklist -->
+    <section id="panel-check" role="tabpanel" aria-labelledby="tab-check" class="gs-panel" hidden>
+      <div class="card stack">
+        <div class="row spread">
+          <h2 class="mb0" data-i18n="ck_title"></h2>
+          <strong id="ck-count" aria-live="polite"></strong>
+        </div>
+        <ul class="gs-ck" id="ck-list"></ul>
+        <div class="row">
+          <button type="button" class="btn" id="ck-print">🖨 <span data-i18n="print"></span></button>
+          <button type="button" class="btn btn-danger" id="ck-clear" data-i18n="ck_clear"></button>
+        </div>
+        <p class="muted small mb0" data-i18n="ck_source"></p>
+      </div>
+    </section>
+
+    <details class="card no-print" style="margin-top:16px">
+      <summary data-i18n="how_title"></summary>
+      <ul>
+        <li data-i18n="how_1"></li>
+        <li data-i18n="how_2"></li>
+        <li data-i18n="how_3"></li>
+        <li data-i18n="how_4"></li>
+        <li data-i18n="how_5"></li>
+        <li data-i18n="how_6"></li>
+      </ul>
+    </details>
+    <p class="muted small no-print" id="rules-checked" style="margin-top:12px"></p>
+
+    <div id="print-area" aria-hidden="true"></div>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="calc.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
