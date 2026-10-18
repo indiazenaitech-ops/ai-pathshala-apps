@@ -12,7 +12,11 @@
 (function () {
   'use strict';
 
-  function num(v, d) { v = Number(v); return isFinite(v) ? v : (d === undefined ? 0 : d); }
+  /* empty boxes (null, undefined, '') are "no value", never 0: Number(null) would be 0 */
+  function num(v, d) {
+    if (v === null || v === undefined || v === '') return d === undefined ? 0 : d;
+    v = Number(v); return isFinite(v) ? v : (d === undefined ? 0 : d);
+  }
   function round(v, dp) { var m = Math.pow(10, dp === undefined ? 2 : dp); return Math.round((v + Number.EPSILON) * m) / m; }
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 

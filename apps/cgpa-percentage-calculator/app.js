@@ -316,7 +316,7 @@
       box.appendChild(el('button', { type: 'button', class: 'chip no-i18n sem-chip', id: 'sem-chip-' + i, 'aria-pressed': i === S.uni.cur ? 'true' : 'false', dataset: { i: i }, text: semName(sm, i),
         onclick: function () { S.uni.cur = i; save(); renderUni(); } }));
     });
-    if (S.uni.sems.length < MAX_SEMS) box.appendChild(el('button', { type: 'button', class: 'chip add', id: 'sem-add', text: '＋ ' + t('un_add_sem'), onclick: addSem }));
+    if (S.uni.sems.length < MAX_SEMS) box.appendChild(el('button', { type: 'button', class: 'chip add', id: 'sem-add-chip', text: '＋ ' + t('un_add_sem'), onclick: addSem }));
   }
   function addSem() {
     if (S.uni.sems.length >= MAX_SEMS) { EDU.toast(t('un_max_sems', { n: EDU.fmt(MAX_SEMS) })); return; }
@@ -422,7 +422,6 @@
     if (!confirm(t('un_sem_confirm', { name: semName(curSem(), S.uni.cur) }))) return;
     S.uni.sems.splice(S.uni.cur, 1); S.uni.cur = Math.max(0, S.uni.cur - 1); save(); renderUni();
   });
-  $('#sem-add-2') && $('#sem-add-2').addEventListener('click', addSem);
   $('#sem-add').addEventListener('click', addSem);
   $('#formula').addEventListener('change', function () { S.uni.formula = $('#formula').value; save(); updateUniPct(); });
   bindNum('f-a', function () { return S.uni; }, 'a', -1000, 1000, updateUniPct);
@@ -442,13 +441,14 @@
         el('td', null, el('button', { type: 'button', class: 'btn cg-del sc-del', dataset: { i: i }, 'aria-label': t('delete'), text: '✕' }))));
     });
   }
-  /* subjects keep their letter when it still exists; otherwise the grade with the nearest share of the maximum */
-  function remapGrades(oldScale, newScale) {
+  /* subjects keep their letter when it still exists; otherwise the grade with the nearest share of the maximum.
+     byShare = true (preset switch 10 <-> 4): always go by share, because "A" means 8/10 on one scale and 4/4 on the other */
+  function remapGrades(oldScale, newScale, byShare) {
     var oldMax = C.scaleMax(oldScale) || 1, newMax = C.scaleMax(newScale) || 1;
     var letters = newScale.map(function (r) { return r.g; });
     S.uni.sems.forEach(function (sm) {
       sm.subjects.forEach(function (s) {
-        if (letters.indexOf(s.grade) >= 0) return;
+        if (!byShare && letters.indexOf(s.grade) >= 0) return;
         var p = C.pointsFor(oldScale, s.grade);
         if (p === null) { s.grade = letters[0] || ''; return; }
         var want = p / oldMax * newMax, best = newScale[0];
@@ -460,7 +460,7 @@
   function setPreset(kind) {
     var old = S.uni.scale;
     S.uni.kind = kind; S.uni.scale = C.scaleCopy(kind);
-    remapGrades(old, S.uni.scale); save(); renderUni();
+    remapGrades(old, S.uni.scale, true); save(); renderUni();
     EDU.toast(t('un_scale_switched', { max: EDU.fmt(C.scaleMax(S.uni.scale)) }));
   }
   $$('#scale-preset button').forEach(function (b) { b.addEventListener('click', function () { if (b.dataset.kind !== S.uni.kind) setPreset(b.dataset.kind); }); });
