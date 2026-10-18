@@ -290,7 +290,7 @@
     var id = S.tpl, fs = fieldsOf(id), you = $('#fYou'), to = $('#fTo'), det = $('#fDet');
     you.innerHTML = ''; to.innerHTML = ''; det.innerHTML = '';
     fs.forEach(function (k) {
-      var box = FD[k].c ? you : (/^to_/.test(k) ? to : det);
+      var box = FD[k].c ? you : (/^to_(desig|org|addr)$/.test(k) ? to : det);
       box.appendChild(fieldEl(id, k));
     });
     var tl = $('#tips'); tl.innerHTML = '';

@@ -20,7 +20,8 @@
     if (vars && rtl()) {
       var o = {};
       Object.keys(vars).forEach(function (k) { o[k] = FSI + vars[k] + PDI; });
-      vars = o;
+      /* "{x}%" in a sentence: keep the % sign inside the isolate, next to its number */
+      return EDU.t(key, o).replace(/⁩%/g, '%⁩');
     }
     return EDU.t(key, vars);
   }
@@ -384,8 +385,8 @@
         answer: t('ans_of', { x: X(x), y: X(y), r: A(res) }),
         steps: [
           st(t('s_of1', { x: X(x) }), [ln(X(x) + '% = ' + F(X(x), '100'))]),
-          st(t('s_of2', { y: X(y) }), [ln(F(Q(x), '100') + ' × ' + Q(y) + ' = ' + F(Q(x) + ' × ' + Q(y), '100') + ' = ' + F(X(x * y), '100')),
-            ln('= ' + B(X(res)) + apx(res))])
+          st(t('s_of2', { y: X(y) }), [ln(F(Q(x), '100') + ' × ' + Q(y) + ' = ' + F(Q(x) + ' × ' + Q(y), '100')),
+            ln('= ' + F(X(x * y), '100') + ' = ' + B(X(res)) + apx(res))])
         ]
       };
     }

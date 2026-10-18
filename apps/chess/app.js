@@ -82,7 +82,7 @@
   }
 
   /* ================================================================ board widget */
-  var boardSeq = 0;
+  var boardSeq = 0, ALL_BOARDS = [];
   function el(tag, attrs) { var e = document.createElementNS(SVGNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
   function sqColor(sq) { return ((sq >> 4) + (sq & 7)) & 1 ? 'L' : 'D'; }
 
@@ -104,8 +104,10 @@
     }
     host.innerHTML = '';
     host.appendChild(svg);
+    svg.addEventListener('contextmenu', function (e) { e.preventDefault(); });
     var B = { svg: svg, host: host, board: new Int8Array(128), flipped: false, last: null, check: -1, hint: null, dots: true,
       sel: -1, cursor: -1, interactive: true, anim: null, marks: [], o: o };
+    ALL_BOARDS.push(B);
 
     function xy(sq) { var f = sq & 7, r = sq >> 4; return B.flipped ? [(7 - f) * 100, r * 100] : [f * 100, (7 - r) * 100]; }
     function sqAt(ev) {
@@ -196,7 +198,8 @@
       if (B.sel >= 0 && B.sel !== sq && tryTo(B.sel, sq)) { ev.preventDefault(); return; }
       if (o.canPick(sq)) {
         ev.preventDefault();
-        var was = B.sel === sq;
+        var was = B.sel === sq && !B.keepSel;
+        B.keepSel = false;
         B.sel = sq;
         drag = { id: ev.pointerId, from: sq, x: ev.clientX, y: ev.clientY, was: was, moved: false };
         try { svg.setPointerCapture(ev.pointerId); } catch (e) { }
@@ -958,7 +961,7 @@
     L.sq = E.sqIndex(ls.at);
     L.pos.board[L.sq] = ls.code;
     ls.pawns.forEach(function (s) { L.pos.board[E.sqIndex(s)] = 9; });
-    LB.set({ board: L.pos.board, sel: L.sq, last: null, check: -1, dots: true });
+    LB.set({ board: L.pos.board, sel: L.sq, keepSel: true, last: null, check: -1, dots: true });
     renderLearnText();
   }
   function initLearn() {
@@ -972,7 +975,7 @@
         if (p === 1 && (to >> 4) === 7) L.pos.board[to] = 5;   /* a pawn reaching the end becomes a queen */
         L.sq = to; L.count++;
         beep(false);
-        LB.set({ board: L.pos.board, last: { from: from, to: to }, sel: pawnsLeft() ? to : -1, anim: { from: from, to: to } });
+        LB.set({ board: L.pos.board, last: { from: from, to: to }, sel: pawnsLeft() ? to : -1, keepSel: true, anim: { from: from, to: to } });
         learnMsg();
       }
     });
@@ -1047,6 +1050,7 @@
     renderPlay();
     renderPuzzles();
     renderLearnText();
+    ALL_BOARDS.forEach(function (b) { b.render(); });
     Object.keys(SP).forEach(function (k) { if (SP[k].msg) SP[k].msgEl.textContent = SP[k].msg(); });
   });
   document.addEventListener('visibilitychange', function () { if (!document.hidden) lastClockTick = Date.now(); else saveGame(); });
@@ -1062,7 +1066,7 @@
         flipped: G.flipped, times: G.times ? G.times.slice() : null, view: view };
     },
     legalUci: function (fen, moves) { var p = E.buildPosition(fen || E.START_FEN, moves || []); return p ? p.legalMoves().map(E.uci) : null; },
-    puzzle: function () { return { idx: P.idx, done: P.done, phase: P.phase, solved: solved.length, total: PUZ.length, sol: PUZ[P.idx].sol, n: PUZ[P.idx].n }; },
+    puzzle: function () { return { fen: P.game.fen(), idx: P.idx, done: P.done, phase: P.phase, solved: solved.length, total: PUZ.length, sol: PUZ[P.idx].sol, n: PUZ[P.idx].n }; },
     lesson: function () { return { piece: L.piece, left: pawnsLeft(), count: L.count }; }
   };
 })();

@@ -60,7 +60,7 @@
   function size() {
     var box = $('#stage'), w = box.clientWidth || 360;
     var fsOn = document.fullscreenElement === $('#play') || document.webkitFullscreenElement === $('#play');
-    var hMax = fsOn ? window.innerHeight - 260 : Math.max(320, (window.innerHeight || 800) - 40);
+    var vh = window.innerHeight || 800, hMax = fsOn ? vh - 260 : (window.innerWidth >= 980 ? Math.max(420, vh - 250) : Math.max(320, vh - 40));
     S = Math.max(240, Math.floor(Math.min(w, 660, hMax)));
     DPR = Math.min(window.devicePixelRatio || 1, 2.5);
     cv.width = Math.round(S * DPR); cv.height = Math.round(S * DPR);

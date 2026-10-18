@@ -17,6 +17,9 @@
   function C() { var A = window.APP_CONTENT || {}; return A[EDU.lang] || A.en || { tips: [], terms: {} }; }
   function tx(id) { var v = (C().terms || {})[id] || ((window.APP_CONTENT || {}).en || { terms: {} }).terms[id] || ['', '', '', '']; return { local: v[0], short: v[1], long: v[2], example: v[3] }; }
   function topicName(tp) { return t('topic_' + tp); }
+  /* screen-reader name of a term in the page language: the localized word (which already carries the term in the
+     local script), the English term itself only in English or when no local word exists */
+  function ariaTerm(x, c) { return EDU.lang !== 'en' && c.local ? c.local : x.term; }
   function sorted() { return TERMS.slice().sort(function (a, b) { return a.term.localeCompare(b.term, 'en'); }); }
   var SORTED = sorted();
   function letterOf(x) { return x.term.charAt(0).toUpperCase(); }
@@ -159,7 +162,7 @@
     var hasSel = items.some(function (x) { return x.id === S.sel; });
     items.forEach(function (x, i) {
       var c = tx(x.id);
-      var b = el('button', { type: 'button', class: 'ad-item tp-' + x.topic, dataset: { id: x.id }, 'aria-label': t('item_aria', { term: x.term, topic: topicName(x.topic) }) },
+      var b = el('button', { type: 'button', class: 'ad-item tp-' + x.topic, dataset: { id: x.id }, 'aria-label': t('item_aria', { term: ariaTerm(x, c), topic: topicName(x.topic) }) },
         el('span', { class: 'ad-item-main' },
           el('span', { class: 'ad-item-term no-i18n ltr', lang: 'en', text: x.term }),
           c.local && c.local !== x.term ? el('span', { class: 'ad-item-local', text: c.local }) : null,
@@ -349,7 +352,7 @@
     var card = $('#fc-card');
     card.dataset.id = x.id;
     card.classList.toggle('flipped', FC.flipped);
-    card.setAttribute('aria-label', FC.flipped ? c.short : x.term);
+    card.setAttribute('aria-label', FC.flipped ? c.short : ariaTerm(x, c));
     var front = $('#fc-front'); front.innerHTML = '';
     front.appendChild(el('span', { class: 'fc-side', text: t('col_term') }));
     front.appendChild(el('span', { class: 'badge tp tp-' + x.topic, text: topicName(x.topic) }));

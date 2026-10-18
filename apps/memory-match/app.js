@@ -363,7 +363,7 @@
       game.scores.map(function (s, i) { return { s: s, i: i }; }).sort(function (a, b) { return b.s - a.s || a.i - b.i; }).forEach(function (o) {
         rank.appendChild(EDU.el('li', { class: o.s === mx ? 'win' : '' },
           EDU.el('span', { class: 'mm-sym', style: { color: 'var(--' + ['c1', 'c2', 'c3', 'c5'][o.i] + ')' }, 'aria-hidden': 'true', text: SYM[o.i] }),
-          EDU.el('span', { class: 'nm', text: playerName(o.i) }),
+          EDU.el('span', { class: 'nm' + ((settings.names[o.i] || '').trim() ? ' no-i18n' : ''), text: (o.s === mx ? '🏆 ' : '') + playerName(o.i) }),
           EDU.el('b', { text: t('res_pairs', { n: EDU.fmt(o.s) }) })));
       });
     } else {
