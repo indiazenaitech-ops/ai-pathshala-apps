@@ -1,4 +1,4 @@
-# App list (130)
+# App list (133)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -129,8 +129,11 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🧮 | [Pivot Table Maker](https://apnipathshala.ai/apps/pivot-table-maker/) | data | all | Summarise a CSV like Excel pivot tables: totals by region or month, counts, averages, % of total, filters, top N and a chart. |
 | 🎯 | [Statistics & Sampling Lab](https://apnipathshala.ai/apps/sampling-lab/) | data | 9-12 | Learn by experiment: random samples, the central limit theorem, standard error, 95% intervals, survey bias and mean vs median. |
 | 🎯 | [Carrom](https://apnipathshala.ai/apps/carrom/) | games | all | Real-physics carrom for 2 players on one device, vs the computer, or solo practice, with simple Indian rules and scoring. |
+| ♟️ | [Chess](https://apnipathshala.ai/apps/chess/) | games | all | Play chess with a friend or the computer (6 levels), solve mate puzzles and learn how each piece moves. Works offline. |
 | 🎲 | [Ludo](https://apnipathshala.ai/apps/ludo/) | games | all | Classic Ludo for 2–4 players: pass-and-play with family or play the computer, with Indian house rules. No ads, works offline. |
 | 🃏 | [Memory Card Game](https://apnipathshala.ai/apps/memory-match/) | games | all | Flip cards and find the pairs: picture decks for little ones, plus numbers, letters, words and sums in your language. Solo or 2–4 players. |
+| 🎉 | [Party Games: Dumb Charades](https://apnipathshala.ai/apps/party-games/) | games | all | Dumb Charades, Antakshari, Draw & Guess and icebreakers with a timer and team scores. Word cards in 12 languages, works offline. |
+| 🪔 | [Rangoli & Kolam Maker](https://apnipathshala.ai/apps/rangoli-maker/) | games | all | Design rangoli and kolam with mirror and turning symmetry, colour in mandala patterns, then print or save them. Works offline. |
 | 🐍 | [Snakes & Ladders](https://apnipathshala.ai/apps/snakes-ladders/) | games | all | Play Saanp-Seedhi with 2-4 players or the computer, incl. the Moksha Patam values board. Free, offline, no ads. |
 | 🔢 | [Sudoku](https://apnipathshala.ai/apps/sudoku/) | games | all | Ad-free Sudoku in 9×9, 6×6 and 4×4: real difficulty levels, a daily puzzle, notes, hints that explain each step and printable puzzles. |
 | ⭕ | [Tic-Tac-Toe & More](https://apnipathshala.ai/apps/pen-paper-games/) | games | all | Tic-Tac-Toe, Four in a Row, Dots and Boxes and Bulls and Cows: play a friend or a fair computer and see how it thinks. Works offline. |
