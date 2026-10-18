@@ -36,7 +36,7 @@ function block(m, html) {
   const desc = clip([(m.desc && m.desc.en) || '', (m.desc && m.desc.hi) || ''].filter(Boolean).join(' · '), 280);
   const ogDesc = clip(((m.desc && m.desc.en) || '') + ' Free, no sign-up, no ads, 12 Indian languages.', 300);
   const img = fs.existsSync(path.join(ROOT, 'shared', 'img', 'og', m.slug + '.png')) ? `${SITE_URL}shared/img/og/${m.slug}.png` : `${SITE_URL}shared/img/og-everyone-en.png`;
-  const WORK = { business: 'BusinessApplication', marketing: 'BusinessApplication', everyday: 'UtilitiesApplication', data: 'BusinessApplication' };
+  const WORK = { business: 'BusinessApplication', marketing: 'BusinessApplication', everyday: 'UtilitiesApplication', data: 'BusinessApplication', games: 'GameApplication' };
   const ld = {
     '@context': 'https://schema.org', '@type': 'WebApplication', name: en, alternateName: hi && hi !== en ? hi : undefined,
     url, description: (m.desc && m.desc.en) || undefined, image: img,

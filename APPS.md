@@ -1,4 +1,4 @@
-# App list (112)
+# App list (120)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -61,6 +61,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🐢 | [Turtle Coding](https://apnipathshala.ai/apps/turtle-coding/) | coding | 3-8 | Snap blocks together or type simple code to make a turtle draw shapes. Learn loops and angles with fun challenges. |
 | 🌐 | [Web Page Maker](https://apnipathshala.ai/apps/html-playground/) | coding | 6-12 | Learn HTML, CSS and JavaScript with a live preview, console, ready templates and a tag cheat sheet. Works offline. |
 | 🔤 | [Alphabet Explorer](https://apnipathshala.ai/apps/alphabet-explorer/) | languages | 1-5 | See, hear and trace the letters of 10 Indian scripts and English, with matra charts and a listen-and-tap game. |
+| 🗓️ | [Daily English Words](https://apnipathshala.ai/apps/daily-english-words/) | languages | all | 600 useful English words in 60 daily lists: meaning in your language, pronunciation, example, audio, practice and spaced repetition. |
 | 🗣️ | [Learn Indian Languages](https://apnipathshala.ai/apps/indian-languages-phrasebook/) | languages | all | Phrasebook and trainer between any two of 12 Indian languages: 456 everyday phrases with audio, Roman pronunciation, games and a daily 10. |
 | 🔊 | [Read Aloud](https://apnipathshala.ai/apps/read-aloud/) | languages | 1-12 | Hear any text read aloud in 12 Indian languages with word highlighting, echo reading and adjustable speed. |
 | 🐝 | [Spelling Bee](https://apnipathshala.ai/apps/spelling-bee/) | languages | 1-8 | Hear English words and spell them: 125 words for Class 1–8, meanings in your language, hints, a class spelling bee and printable tests. |
@@ -73,12 +74,15 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🙈 | [Face Blur for Safe Sharing](https://apnipathshala.ai/apps/face-blur/) | digital-safety | all | AI finds every face in a photo and hides it (blur, pixels, black box, emoji). Checks hidden GPS too. Nothing is uploaded. |
 | 🔐 | [Password Strength Lab](https://apnipathshala.ai/apps/password-checker/) | digital-safety | 6-12 | See how fast a password can be guessed, spot the patterns attackers try first, and make strong passphrases. All on your device. |
 | 🚩 | [Spot the Scam](https://apnipathshala.ai/apps/phishing-spotter/) | digital-safety | 6-12 | A cyber-safety game: decide if Indian SMS, WhatsApp and call messages are safe or scams, and learn the red flags. |
+| 🛡️ | [Workplace Scam & Cyber Drill](https://apnipathshala.ai/apps/workplace-scam-drill/) | digital-safety | all | 32 mock emails, WhatsApp, SMS and calls: fake boss, bank-detail change, digital arrest, QR, KYC. Team quiz, posters, certificate. |
+| 🏷️ | [Barcode & MRP Label Maker](https://apnipathshala.ai/apps/barcode-label-maker/) | business | all | Price labels with EAN-13 or Code 128 barcodes, MRP, FSSAI and batch. A4 label sheets, rolls, CSV batch, PNG. Offline. |
 | 🧾 | [GST Calculator & GSTIN Checker](https://apnipathshala.ai/apps/gst-calculator/) | business | all | Add or remove GST with the CGST/SGST/IGST split, make a quick bill, plan prices against MRP and check a GSTIN. Offline. |
 | 🧾 | [GST Invoice & Quotation Maker](https://apnipathshala.ai/apps/gst-invoice-maker/) | business | all | Make GST tax invoices, quotations, challans and receipts with CGST/SGST/IGST, HSN summary, UPI QR and PDF. Data stays on your device. |
 | 📝 | [Image to Text (OCR)](https://apnipathshala.ai/apps/image-to-text/) | business | all | Turn photos, screenshots and scanned PDFs into editable text in 12 Indian languages. Runs on your device: nothing is uploaded. |
 | 🔤 | [Kruti Dev - Unicode Converter](https://apnipathshala.ai/apps/krutidev-unicode/) | business | all | Convert Kruti Dev 010 typing to Unicode Hindi and back, for Hindi, Marathi and Sanskrit. Your text never leaves your device. |
 | 📊 | [Live Poll & Voting](https://apnipathshala.ai/apps/live-poll/) | business | all | Run a live poll on the big screen. People vote on phones with a code or QR, no account. Live bar chart, CSV. Free. |
 | 📑 | [PDF Merge, Split & Organise](https://apnipathshala.ai/apps/pdf-merge-split/) | business | all | Merge PDFs and photos, split by page ranges, reorder, rotate, add page numbers or KYC watermarks. Files never leave your device. |
+| 🏠 | [Rent Receipt Maker (HRA)](https://apnipathshala.ai/apps/rent-receipt-maker/) | business | all | Monthly rent receipts for HRA in one go: rent changes, landlord PAN, words, revenue stamp, 3 per A4 page, plus an HRA exemption calculator. |
 | 💰 | [Salary & Income Tax Calculator](https://apnipathshala.ai/apps/salary-tax-calculator/) | business | all | CTC to monthly in-hand pay, old vs new regime, salary hike and in-hand to CTC for Tax Year 2026-27. Private: nothing leaves your device. |
 | 🧾 | [Salary Slip Maker](https://apnipathshala.ai/apps/salary-slip-maker/) | business | all | Monthly payslips with PF, ESI, professional tax, LOP and net pay in words. Print or save as PDF, batch from CSV. Nothing leaves your device. |
 | 🎬 | [Screen Recorder](https://apnipathshala.ai/apps/screen-recorder/) | business | all | Record your screen, a window or a tab with voice and a camera bubble. No upload, no time limit, no watermark. Videos stay on your device. |
@@ -102,11 +106,13 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🧮 | [EMI, SIP & FD Calculator](https://apnipathshala.ai/apps/emi-savings-calculator/) | everyday | all | Loan EMI with schedule, prepayment, rate change, APR and flat-rate checks, plus SIP, FD, RD and PPF calculators. Private, works offline. |
 | 🪪 | [Form Photo & Signature Resizer](https://apnipathshala.ai/apps/form-photo-resizer/) | everyday | all | Resize photo, signature or thumb to the exact px, cm and KB for SSC, UPSC, IBPS, NEET or PAN forms. Nothing is uploaded. |
 | 💌 | [Invitation Card Maker](https://apnipathshala.ai/apps/invitation-card-maker/) | everyday | all | Wedding, birthday, griha pravesh, pooja and shop invitations with Indian motifs, for WhatsApp or A5 print. Details stay on your device. |
+| 🍳 | [Kitchen Recipe Finder](https://apnipathshala.ai/apps/recipe-finder/) | everyday | all | Tap what you have at home and get Indian home recipes ranked by match, with missing items, substitutes and a shopping list. |
 | 💍 | [Marriage Biodata Maker](https://apnipathshala.ai/apps/biodata-maker/) | everyday | all | Make a neat marriage biodata in any of 12 Indian languages: 8 designs, photo, horoscope. Print, PDF or WhatsApp image. Stays private. |
 | 🗜️ | [PDF Compress & JPG to PDF](https://apnipathshala.ai/apps/pdf-compress-convert/) | everyday | all | Compress a PDF under 100 KB or 200 KB, turn photos into a PDF, save pages as JPG, unlock your own PDF. Files stay on your device. |
 | 📄 | [Resume & CV Builder](https://apnipathshala.ai/apps/resume-builder/) | everyday | all | Make a job-ready resume with a live A4 preview, ATS-safe and Govt/PSU templates, and a free PDF. Your details stay on your device. |
 | 🧾 | [Split Bill & Trip Expenses](https://apnipathshala.ai/apps/split-bill/) | everyday | all | Split trip, dinner and room expenses between friends: who paid, who owes, the fewest UPI payments to settle up, and a WhatsApp summary. |
 | 🎵 | [Sur & Taal Trainer](https://apnipathshala.ai/apps/sur-taal-trainer/) | everyday | all | Tanpura drone, live swar meter for your voice, sargam alankars with a score, tabla-style taal metronome and tuner. Nothing is recorded. |
+| 🎟️ | [Tambola Tickets & Caller](https://apnipathshala.ai/apps/tambola-housie/) | everyday | all | Print valid Tambola (Housie) tickets, call numbers 1–90 aloud on a big screen and check every claim. Free, offline. |
 | 🎙️ | [Voice Note to Text](https://apnipathshala.ai/apps/voice-to-text/) | everyday | all | Turn voice notes, recordings and videos into text and subtitles (SRT) with on-device AI. Your audio is not uploaded. |
 | 🆎 | [A/B Test Calculator](https://apnipathshala.ai/apps/ab-test-calculator/) | data | all | Did version B really beat A, or was it luck? p-value, confidence range, chance to win and a sample-size planner. |
 | 📈 | [Chart Maker](https://apnipathshala.ai/apps/chart-maker/) | data | all | Type or paste data and make bar, line, pie, donut, scatter or histogram charts. Download PNG or SVG. |
@@ -116,3 +122,5 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🔄 | [JSON ↔ CSV Converter](https://apnipathshala.ai/apps/json-csv-converter/) | data | all | Convert JSON or JSON Lines to CSV (nested fields flattened) and CSV to typed JSON. Find JSON errors by line and column. |
 | 🧮 | [Pivot Table Maker](https://apnipathshala.ai/apps/pivot-table-maker/) | data | all | Summarise a CSV like Excel pivot tables: totals by region or month, counts, averages, % of total, filters, top N and a chart. |
 | 🎯 | [Statistics & Sampling Lab](https://apnipathshala.ai/apps/sampling-lab/) | data | 9-12 | Learn by experiment: random samples, the central limit theorem, standard error, 95% intervals, survey bias and mean vs median. |
+| 🎲 | [Ludo](https://apnipathshala.ai/apps/ludo/) | games | all | Classic Ludo for 2–4 players: pass-and-play with family or play the computer, with Indian house rules. No ads, works offline. |
+| 🐍 | [Snakes & Ladders](https://apnipathshala.ai/apps/snakes-ladders/) | games | all | Play Saanp-Seedhi with 2-4 players or the computer, incl. the Moksha Patam values board. Free, offline, no ads. |
