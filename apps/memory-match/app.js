@@ -98,7 +98,8 @@
   }
   function txt(s, opts) {
     opts = opts || {};
-    return '<span class="mm-txt ' + sizeCls(s, opts.big) + (opts.lat ? ' lat' : '') + '"' + (opts.lang ? ' lang="' + opts.lang + '"' : '') + ' dir="auto">' + EDU.esc(s) + '</span>';
+    var wrap = / /.test(String(s)) && !opts.big;
+    return '<span class="mm-txt ' + sizeCls(s, opts.big) + (opts.lat ? ' lat' : '') + (wrap ? '' : ' nw') + '"' + (opts.lang ? ' lang="' + opts.lang + '"' : '') + ' dir="auto">' + EDU.esc(s) + '</span>';
   }
   function emo(e, sm) { return '<span class="mm-emoji' + (sm ? ' sm' : '') + '" aria-hidden="true">' + e + '</span>'; }
   /* returns {html, label, say, lang} for one side of one item */
@@ -220,6 +221,7 @@
     if (board.style.getPropertyValue('--cols') !== String(c)) {
       board.style.setProperty('--cols', c);
       board.style.setProperty('--rows', sz.r * sz.c / c);
+      if (board.children.length) fitText(board);
     }
   }
   function renderBoard() {
@@ -239,7 +241,20 @@
     board.style.removeProperty('--cols');
     applyCols();
     for (var i = 0; i < game.cards.length; i++) updateCard(i);
+    fitText(board);
     $('#sayBtn').hidden = deckById(game.deck).kind !== 'learn';
+  }
+  /* biggest text size that fits each card without breaking a word (size classes are in cqi, so they scale with the card) */
+  var FIT = ['f-xl', 'f-l', 'f-m', 'f-s', 'f-xs', 'f-xxs'];
+  function fitText(root) {
+    EDU.$$('.mm-txt', root).forEach(function (el) {
+      var face = el.parentElement, k = 0;
+      FIT.forEach(function (c) { el.classList.remove(c); });
+      el.classList.add(FIT[0]);
+      while (k < FIT.length - 1 && (el.scrollWidth > el.clientWidth + 1 || face.scrollHeight > face.clientHeight + 1)) {
+        el.classList.remove(FIT[k]); k++; el.classList.add(FIT[k]);
+      }
+    });
   }
   function cardEl(i) { return $('#board').children[i]; }
   function updateCard(i) {
@@ -556,6 +571,7 @@
         if (el) el.querySelector('.mm-face').innerHTML = faceFor(game.deck, game.items[cd.p], cd.s).html;
         updateCard(i);
       }
+      fitText($('#board'));
       renderStats();
       if (!game.peeking) setMsg(game.done ? (game.mode === 'players' ? winnerText() : t('res_solo')) : isMulti() ? t('turn_of', { name: playerName(game.turn) }) : t('msg_start'));
       if (!$('#result').hidden) showResult();
