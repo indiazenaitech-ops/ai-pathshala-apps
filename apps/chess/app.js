@@ -416,6 +416,7 @@
       fifty: 'over_fifty', seventyfive: 'over_seventyfive', insufficient: 'over_insufficient', agreed: 'over_agreed', claimed: 'over_claimed',
       resign: winW ? 'over_resign_b' : 'over_resign_w', time: winW ? 'over_time_b' : 'over_time_w', timedraw: 'over_time_draw'
     };
+    if (r === 'file') return t('over_file', { res: t(st.result === '1-0' ? 'res_w' : (st.result === '0-1' ? 'res_b' : 'res_draw')) });
     return t(map[r] || 'res_draw');
   }
   function renderStatus() {
@@ -694,10 +695,7 @@
     if (p.error === 'move' && (!p.game || !p.game.moves.length)) { msg.textContent = t('load_bad_move', { move: p.at }); return; }
     newGame(true, p.game.startFen);
     p.game.moves.forEach(function (m) { G.game.playUci(m.uci); if (G.times) G.hist.push(G.times.slice()); });
-    if (p.result && p.result !== '*' && !status().over) {
-      G.game.setResult(p.result, p.result === '1/2-1/2' ? 'agreed' : (p.result === '1-0' ? 'resign' : 'resign'));
-      if (p.result === '1-0') G.game.result.reason = 'resign';
-    }
+    if (p.result && p.result !== '*' && !status().over) G.game.setResult(p.result, 'file');
     cancelAll(); cpuReq = 0;
     overShown = status().over;   /* a finished game from a file: no pop-up, the result is shown below the board */
     saveGame(); renderPlay();
@@ -1059,6 +1057,7 @@
   /* small hook for the automated test: fixed random seeds + read-only state; normal play is unchanged */
   window.__gameTest = {
     setSeed: function (n) { testSeed = n >>> 0; },
+    setClock: function (w, b) { if (G.times) { G.times = [w, b]; lastClockTick = Date.now(); } },
     state: function () {
       var st = status();
       return { fen: G.game.fen(), turn: G.game.pos.turn === 0 ? 'w' : 'b', moves: G.game.moves.map(function (m) { return m.san; }), uci: G.game.moves.map(function (m) { return m.uci; }),

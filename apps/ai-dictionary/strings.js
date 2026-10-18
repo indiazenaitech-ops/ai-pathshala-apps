@@ -396,7 +396,7 @@ window.APP_STRINGS.ur = {
   share_text: '{term}: {meaning}\n\nاپنی زبان میں AI کے 120 الفاظ مفت سیکھیں: {url}',
   print_glossary: 'فرہنگ پرنٹ کریں', glossary_title: 'AI لغت: {n} الفاظ', glossary_note: 'مفت، آف لائن، 12 ہندوستانی زبانیں · {url} · پرنٹ: {date}',
   col_no: 'نمبر', col_term: 'لفظ', col_meaning: 'معنی',
-  list_aria: 'الفاظ کی فہرست', item_aria: '{term}, {topic}',
+  list_aria: 'الفاظ کی فہرست', item_aria: '{term}، {topic}',
   known_count: 'آپ {n} میں سے {k} الفاظ جانتے ہیں', card_count: 'کارڈ {i} / {n}',
   flip_hint: 'پہلے معنی سوچیں، پھر کارڈ پر ٹیپ کریں یا Space دبائیں۔',
   show_meaning: 'معنی دکھائیں', knew: 'مجھے معلوم تھا', again: 'بعد میں دوبارہ دکھائیں',

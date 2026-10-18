@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Handwriting Practice Sheets · AI Pathshala</title>
+  <meta name="description" content="Free printable tracing and four-line handwriting practice sheets for letters, numbers, words and your own text in 12 Indian scripts.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .hw-layout { grid-template-columns: minmax(0, 340px) minmax(0, 1fr); }
+    @media (max-width: 860px) { .hw-layout { grid-template-columns: minmax(0, 1fr); } }
+    .help summary { cursor: pointer; padding: 4px 0; min-height: 32px; }
+    .tips { margin: 10px 0 0; padding-inline-start: 1.2em; }
+    .tips li + li { margin-top: 6px; }
+    .hw-controls h2 { font-size: 1.15rem; margin: 0; }
+    .hw-controls h3 { font-size: 1rem; margin: 0; }
+    .flabel { font-weight: 600; font-size: .92rem; margin-bottom: 5px; }
+    .hint { color: var(--muted); font-size: .84rem; margin: 0; }
+    .seg { max-width: 100%; }
+    .seg button { min-height: 40px; }
+    .opts { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; }
+    .opts > .full { grid-column: 1 / -1; }
+    .nums { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .hw-controls select, .hw-controls input[type="text"], .hw-controls input[type="number"], .hw-controls input[type="date"], .hw-controls textarea { min-height: 40px; width: 100%; }
+    #custom { min-height: 96px; resize: vertical; font-size: 1.05rem; }
+    #base { font-size: 1.2rem; }
+    .check { min-height: 40px; }
+    .actions { align-items: center; }
+    #status { font-weight: 700; }
+    #fit-note[hidden] { display: none; }
+    [hidden] { display: none !important; }
+
+    /* ---------- the A4 pages ---------- */
+    #pages { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+    .hw-page { width: 100%; max-width: 820px; aspect-ratio: 210 / 297; padding: 5.714%; background: #fff; border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .18), 0 6px 20px rgba(0, 0, 0, .08); box-sizing: border-box; }
+    .hw-page svg { display: block; width: 100%; height: auto; aspect-ratio: 186 / 273; }
+    :root[data-theme="dark"] .hw-page { box-shadow: 0 0 0 1px rgba(255, 255, 255, .12); }
+
+    @media print {
+      @page { size: A4 portrait; margin: 12mm; }
+      .edu-intro { display: none !important; }
+      .hw-layout { display: block; }
+      #sheet-area { display: block; }
+      #pages { display: block; gap: 0; }
+      .hw-page { width: 186mm; height: 272mm; max-width: none; aspect-ratio: auto; padding: 0; margin: 0; box-shadow: none !important;
+        border-radius: 0; break-after: page; page-break-after: always; break-inside: avoid; overflow: hidden; }
+      .hw-page:last-child { break-after: auto; page-break-after: auto; }
+      .hw-page svg { width: 186mm; height: 272mm; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <details class="card no-print help">
+      <summary><strong data-i18n="how_title"></strong></summary>
+      <ul class="tips">
+        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li><li data-i18n="tip5"></li><li data-i18n="tip6"></li>
+      </ul>
+    </details>
+
+    <div class="split hw-layout" style="margin-top:16px">
+      <aside class="card stack no-print hw-controls" aria-labelledby="set-h">
+        <h2 id="set-h" data-i18n="settings_h"></h2>
+        <div class="field">
+          <label for="sheet-lang" data-i18n="lbl_sheet_lang"></label>
+          <select id="sheet-lang"></select>
+          <p class="hint" data-i18n="sheet_lang_hint"></p>
+        </div>
+        <div>
+          <div class="flabel" id="lbl-type" data-i18n="lbl_type"></div>
+          <div class="seg" data-opt="type" role="group" aria-labelledby="lbl-type">
+            <button type="button" data-v="letters" data-i18n="type_letters"></button><button type="button" data-v="numbers" data-i18n="type_numbers"></button><button type="button" data-v="words" data-i18n="type_words"></button><button type="button" data-v="sentences" data-i18n="type_sentences"></button><button type="button" data-v="custom" data-i18n="type_custom"></button>
+          </div>
+        </div>
+
+        <div class="stack" id="grp-letters">
+          <div>
+            <div class="flabel" id="lbl-group" data-i18n="lbl_group"></div>
+            <div class="seg" id="groups" role="group" aria-labelledby="lbl-group"></div>
+          </div>
+          <div class="field" id="grp-base">
+            <label for="base" data-i18n="lbl_base"></label>
+            <select id="base" class="no-i18n"></select>
+          </div>
+        </div>
+
+        <div class="stack" id="grp-numbers">
+          <div>
+            <div class="flabel" id="lbl-nmode" data-i18n="lbl_nmode"></div>
+            <div class="seg" data-opt="nMode" role="group" aria-labelledby="lbl-nmode">
+              <button type="button" data-v="digits" data-i18n="num_digits"></button><button type="button" data-v="names" data-i18n="num_names"></button>
+            </div>
+          </div>
+          <div class="nums">
+            <div class="field"><label for="n-from" data-i18n="lbl_from"></label><input type="number" id="n-from" min="0" max="100" inputmode="numeric"></div>
+            <div class="field"><label for="n-to" data-i18n="lbl_to"></label><input type="number" id="n-to" min="0" max="100" inputmode="numeric"></div>
+          </div>
+          <label class="check" id="grp-native"><input type="checkbox" id="opt-native"> <span data-i18n="opt_native"></span></label>
+          <p class="hint" id="names-note" data-i18n="names_note"></p>
+        </div>
+
+        <div class="stack" id="grp-custom">
+          <div class="field">
+            <label for="custom" data-i18n="lbl_custom"></label>
+            <textarea id="custom" class="no-i18n" rows="4" maxlength="4000" data-i18n-placeholder="custom_ph"></textarea>
+          </div>
+          <div>
+            <div class="flabel" id="lbl-split" data-i18n="lbl_split"></div>
+            <div class="seg" data-opt="split" role="group" aria-labelledby="lbl-split">
+              <button type="button" data-v="word" data-i18n="split_word"></button><button type="button" data-v="line" data-i18n="split_line"></button>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider">
+        <h3 data-i18n="sec_look"></h3>
+        <div class="opts">
+          <div class="full">
+            <div class="flabel" id="lbl-size" data-i18n="lbl_size"></div>
+            <div class="seg" data-opt="size" role="group" aria-labelledby="lbl-size">
+              <button type="button" data-v="s" data-i18n="size_s"></button><button type="button" data-v="m" data-i18n="size_m"></button><button type="button" data-v="l" data-i18n="size_l"></button><button type="button" data-v="xl" data-i18n="size_xl"></button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="copies" data-i18n="lbl_copies"></label>
+            <select id="copies">
+              <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="8">8</option><option value="10">10</option>
+              <option value="fill" data-i18n="copies_fill"></option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="blanks" data-i18n="lbl_blanks"></label>
+            <select id="blanks"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+          </div>
+          <div class="field">
+            <label for="rpp" data-i18n="lbl_rpp"></label>
+            <select id="rpp">
+              <option value="auto" data-i18n="rpp_auto"></option>
+              <option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="8">8</option><option value="10">10</option><option value="12">12</option><option value="15">15</option><option value="20">20</option>
+            </select>
+          </div>
+          <div class="full">
+            <div class="flabel" id="lbl-spacing" data-i18n="lbl_spacing"></div>
+            <div class="seg" data-opt="spacing" role="group" aria-labelledby="lbl-spacing">
+              <button type="button" data-v="tight" data-i18n="sp_tight"></button><button type="button" data-v="normal" data-i18n="sp_normal"></button><button type="button" data-v="wide" data-i18n="sp_wide"></button>
+            </div>
+          </div>
+          <div class="full">
+            <div class="flabel" id="lbl-ruling" data-i18n="lbl_ruling"></div>
+            <div class="seg" data-opt="ruling" role="group" aria-labelledby="lbl-ruling">
+              <button type="button" data-v="auto" data-i18n="rule_auto"></button><button type="button" data-v="four" data-i18n="rule_four"></button><button type="button" data-v="head" id="rule-head" data-i18n="rule_head"></button><button type="button" data-v="plain" data-i18n="rule_plain"></button><button type="button" data-v="none" data-i18n="rule_none"></button>
+            </div>
+          </div>
+          <div class="full">
+            <div class="flabel" id="lbl-colors" data-i18n="lbl_colors"></div>
+            <div class="seg" data-opt="colors" role="group" aria-labelledby="lbl-colors">
+              <button type="button" data-v="rb" data-i18n="col_rb"></button><button type="button" data-v="grey" data-i18n="col_grey"></button><button type="button" data-v="blue" data-i18n="col_blue"></button><button type="button" data-v="black" data-i18n="col_black"></button>
+            </div>
+          </div>
+          <div class="full">
+            <div class="flabel" id="lbl-trace" data-i18n="lbl_trace"></div>
+            <div class="seg" data-opt="trace" role="group" aria-labelledby="lbl-trace">
+              <button type="button" data-v="dots" data-i18n="tr_dots"></button><button type="button" data-v="grey" data-i18n="tr_grey"></button>
+            </div>
+          </div>
+          <div class="full" id="grp-latin">
+            <div class="flabel" id="lbl-latin" data-i18n="lbl_latin"></div>
+            <div class="seg" data-opt="latin" role="group" aria-labelledby="lbl-latin">
+              <button type="button" data-v="print" data-i18n="lat_print"></button><button type="button" data-v="font" data-i18n="lat_font"></button>
+            </div>
+          </div>
+          <label class="check full" id="grp-start"><input type="checkbox" id="opt-start"> <span data-i18n="opt_start"></span></label>
+        </div>
+
+        <hr class="divider">
+        <h3 data-i18n="sec_head"></h3>
+        <label class="check"><input type="checkbox" id="opt-header"> <span data-i18n="opt_header"></span></label>
+        <div class="stack" id="head-fields">
+          <div class="field"><label for="f-title" data-i18n="lbl_title"></label><input type="text" id="f-title" class="no-i18n" maxlength="120" autocomplete="off" data-i18n-placeholder="title_ph"></div>
+          <div class="field"><label for="f-name" data-i18n="lbl_name"></label><input type="text" id="f-name" class="no-i18n" maxlength="120" autocomplete="off" data-i18n-placeholder="name_ph"></div>
+          <div class="field"><label for="f-school" data-i18n="lbl_school"></label><input type="text" id="f-school" class="no-i18n" maxlength="120" autocomplete="organization"></div>
+          <div class="nums">
+            <div class="field"><label for="f-class" data-i18n="lbl_class"></label><input type="text" id="f-class" class="no-i18n" maxlength="40" autocomplete="off"></div>
+            <div class="field"><label for="f-date" data-i18n="lbl_date"></label><input type="date" id="f-date"></div>
+          </div>
+          <label class="check"><input type="checkbox" id="opt-stars"> <span data-i18n="opt_stars"></span></label>
+        </div>
+        <div class="row spread">
+          <span class="tiny muted" data-i18n="saved_local"></span>
+          <button type="button" class="btn btn-danger btn-sm" id="btn-reset" data-i18n="reset"></button>
+        </div>
+      </aside>
+
+      <section class="stack" id="sheet-area" aria-labelledby="status">
+        <div class="row actions no-print">
+          <button type="button" class="btn btn-primary" id="btn-print"><span aria-hidden="true">🖨</span> <span data-i18n="btn_print"></span></button>
+          <span id="status" aria-live="polite"></span>
+        </div>
+        <p class="callout warning small no-print mb0" id="fit-note" aria-live="polite" hidden></p>
+        <p class="callout small no-print mb0" data-i18n="pdf_hint"></p>
+        <div id="pages" class="no-i18n"></div>
+      </section>
+    </div>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="data.js"></script>
+  <script src="strokes.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -340,11 +340,11 @@
     box.innerHTML = '';
     S.teams.forEach(function (tm, i) {
       var name = teamName(i), custom = !!tm.name;
-      var tile = el('div', { class: 'score-tile' + (i === S.turn ? ' turn' : ''), id: 'tile-' + i },
+      var tile = el('div', { class: 'score-tile' + (i === S.turn ? ' is-turn' : ''), id: 'tile-' + i },
         el('div', { class: 'st-name' },
           el('span', { class: 'dot', 'aria-hidden': 'true' }),
           el('span', { class: 'nm' + (custom ? ' no-i18n' : ''), text: name }),
-          i === S.turn ? el('span', { class: 'turn-badge', text: '▶ ' + t('now_playing') }) : null),
+          i === S.turn ? el('span', { class: 'turn-badge', role: 'img', 'aria-label': t('now_playing'), title: t('now_playing'), text: '▶' }) : null),
         el('button', { type: 'button', class: 'btn st-btn', 'aria-label': t('minus_point', { name: name }), title: t('minus_point', { name: name }), dataset: { i: String(i), d: '-1' }, text: '−' }),
         el('div', { class: 'st-score num', id: 'score-' + i, 'aria-label': t('score_aria', { name: name, n: fmt(tm.score) }), text: fmt(tm.score) }),
         el('button', { type: 'button', class: 'btn st-btn', 'aria-label': t('plus_point', { name: name }), title: t('plus_point', { name: name }), dataset: { i: String(i), d: '1' }, text: '+' }));

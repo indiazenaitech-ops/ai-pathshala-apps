@@ -169,8 +169,8 @@
       ['g_con', 'ا آ ب پ ت ٹ ث ج چ ح خ د ڈ ذ ر ڑ ز ژ س ش ص ض ط ظ ع غ ف ق ک گ ل م ن ں و ہ ھ ء ی ے ئ ؤ'.split(' ')],
       ['g_sig', ['َ', 'ِ', 'ُ', 'ّ', 'ً', 'ٰ']], ['g_pun', ['،', '؟', '۔', '؛', '٪']], ['g_num', '۰۱۲۳۴۵۶۷۸۹'.split('')]];
     var vowNames = d.south ? ['a', 'aa', 'i', 'ii', 'u', 'uu', 'R', 'es', 'e', 'ai', 'os', 'o', 'au'] : ['a', 'aa', 'i', 'ii', 'u', 'uu', 'R', 'e', 'ai', 'o', 'au', 'aw'];
-    var vowels = uniq(vowNames.map(function (v) { return chr(s, VOW[v][0]); }));
-    var mat = uniq(vowNames.slice(1).map(function (v) { var m = chr(s, VOW[v][1]); return m && /\p{M}/u.test(m[0]) ? m : ''; }));
+    var vowels = uniq(vowNames.map(function (v) { return chr(s, VOW[v][0]); }).filter(function (c) { return c.length === 1; }));
+    var mat = uniq(vowNames.slice(1).map(function (v) { var m = chr(s, VOW[v][1]); return m && m.length === 1 && /\p{M}/u.test(m) ? m : ''; }));
     var cs = []; for (var o = 0x15; o <= 0x39; o++) cs.push(chr(s, o));
     cs = uniq(cs.filter(function (c) { return c && /\p{L}/u.test(c[0]); }));
     var extra = [];
@@ -184,8 +184,9 @@
     return [['g_vow', vowels], ['g_mat', mat], ['g_con', cs], ['g_extra', uniq(extra)], ['g_sig', signs], ['g_num', nums], ['g_pun', pun.concat(['₹', '-', '?', '!'])]];
   }
   function renderPalette() {
-    var p = $('#palette'); p.textContent = '';
+    var p = $('#palette'), seen = {}; p.textContent = '';
     paletteGroups().forEach(function (g) {
+      g[1] = g[1].filter(function (c) { if (seen[c]) return false; seen[c] = 1; return true; });
       if (!g[1].length) return;
       var box = el('div', { class: 'it-keys no-i18n' });
       g[1].forEach(function (c) {
@@ -292,6 +293,7 @@
     convOut.value = r.text;
     convOut.style.fontFamily = FONT[S.convTo] || FONT.roman;
     convOut.dir = 'ltr';
+    convOut.style.height = 'auto'; convOut.style.height = Math.min(Math.max(convOut.scrollHeight + 4, 140), 640) + 'px';
     var msg = [];
     if (src.trim() && !found) msg.push(t('conv_none'));
     else if (found) msg.push(t('conv_from', { script: scriptName(found) }));

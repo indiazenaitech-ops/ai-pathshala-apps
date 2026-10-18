@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Land Area Converter · AI Pathshala</title>
+  <meta name="description" content="Convert bigha, katha, guntha, cent, marla, ground and other local land units state by state, find plot area and land price. Free, offline.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .lac-ltr, .math { direction: ltr; unicode-bidi: isolate; font-variant-numeric: tabular-nums; }
+    .math { overflow-wrap: anywhere; }
+    .lac-tabs button { font-size: 1rem; min-height: 44px; }
+    .lac-pane[hidden] { display: none !important; }
+    .lac-main { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+    .lac-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+    @media (min-width: 940px) { .lac-main { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); } }
+    .lac-h { font-size: 1.12rem; margin: 0 0 10px; }
+    .lac-in { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 560px) { .lac-in.two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .lac-in.three { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    .lac-in select, .lac-in input { width: 100%; min-height: 44px; }
+    .lac-big-in { font-size: 1.5rem; font-weight: 700; direction: ltr; text-align: start; }
+    [dir="rtl"] .lac-big-in, [dir="rtl"] .lac-num { text-align: right; }
+    .lac-num { direction: ltr; font-variant-numeric: tabular-nums; }
+    input[aria-invalid="true"] { border-color: var(--danger); }
+    .lac-sum { margin-top: 14px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--primary-soft);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--primary) 30%, transparent); }
+    .lac-sum .math { display: block; font-size: clamp(1.25rem, 3.4vw, 1.8rem); font-weight: 800; line-height: 1.35; }
+    .lac-sum .sub { display: block; color: var(--muted); font-size: .92rem; margin-top: 4px; }
+    .lac-err { color: var(--danger); font-weight: 600; margin: 8px 0 0; }
+    .lac-err:empty { display: none; }
+    .lac-actions { margin-top: 12px; }
+    .lac-res { display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 560px) { .lac-res { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .lac-r { display: flex; flex-direction: column; align-items: stretch; gap: 2px; text-align: start; width: 100%; min-height: 56px;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 10px; padding: 8px 12px; font: inherit; cursor: pointer; }
+    .lac-r:hover { background: var(--surface-2); }
+    .lac-r:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
+    .lac-r .top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+    .lac-r .n { font-weight: 600; }
+    .lac-r .v { font-weight: 800; font-size: 1.15rem; }
+    .lac-r .s { color: var(--muted); font-size: .8rem; }
+    .lac-r.local .n::after { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-inline-start: 6px; vertical-align: middle; }
+    .lac-r.is-in { background: var(--accent-soft); border-color: var(--accent); }
+    .lac-r[aria-pressed="true"] { background: var(--primary-soft); border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
+    .lac-steps { list-style: none; margin: 0; padding: 0; counter-reset: st; display: grid; gap: 10px; }
+    .lac-steps li { counter-increment: st; position: relative; padding-inline-start: 38px; min-height: 28px; }
+    .lac-steps li::before { content: counter(st); position: absolute; inset-inline-start: 0; top: 0; width: 28px; height: 28px; border-radius: 50%;
+      background: var(--primary); color: var(--primary-ink); font-weight: 700; display: grid; place-items: center; font-size: .88rem; }
+    .lac-steps .lbl { display: block; font-weight: 600; }
+    .lac-steps .math { display: block; color: var(--primary); font-weight: 700; margin-top: 2px; }
+    .lac-steps li.ans .math { color: var(--text); font-size: 1.12rem; }
+    .lac-size { display: grid; gap: 6px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .lac-size:last-child { border-bottom: 0; }
+    .lac-size .hd { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+    .lac-size .hd b { font-size: 1rem; }
+    .lac-size select, .lac-size input { width: 100%; min-height: 42px; }
+    .lac-size .src { font-size: .76rem; color: var(--muted); }
+    .lac-size .note { font-size: .86rem; margin: 0; }
+    .lac-legend { display: inline-flex; align-items: center; gap: 6px; }
+    .lac-legend::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+    .lac-seg { display: flex; flex-wrap: wrap; }
+    .lac-seg button { min-height: 42px; flex: 1 1 auto; }
+    .lac-svg { width: 100%; max-height: 360px; display: block; background: var(--surface-2); border-radius: var(--radius-sm); }
+    .lac-walk { width: 100%; }
+    .lac-walk td, .lac-walk th { padding: 6px; vertical-align: middle; }
+    .lac-walk input { width: 100%; min-height: 42px; }
+    .lac-walk .idx { width: 2.2em; font-weight: 700; color: var(--muted); }
+    .lac-walk .del { width: 44px; }
+    .lac-walk .del .btn { min-width: 40px; padding: 6px; }
+    .lac-ptable td.v { font-weight: 700; white-space: nowrap; }
+    details.card summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; min-height: 32px; }
+    details.card ul { margin: 10px 0 0; padding-inline-start: 22px; }
+    details.card li + li { margin-top: 6px; }
+    .lac-srcs { font-size: .82rem; color: var(--muted); }
+    @media print {
+      .lac-tabs, .lac-actions, details.lac-how, .lac-size select, .lac-size input, .btn { display: none !important; }
+      .lac-main { grid-template-columns: minmax(0, 1fr) !important; }
+      .lac-r { break-inside: avoid; border-color: #999; }
+      .card { box-shadow: none; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="print-only" id="print-head"></p>
+    <div class="tabs lac-tabs no-print" role="tablist">
+      <button id="tab-convert" role="tab" data-tab="convert" data-i18n="tab_convert"></button>
+      <button id="tab-plot" role="tab" data-tab="plot" data-i18n="tab_plot"></button>
+      <button id="tab-price" role="tab" data-tab="price" data-i18n="tab_price"></button>
+    </div>
+    <div class="row no-print" style="margin-bottom:12px">
+      <label class="field grow" style="max-width:420px">
+        <span data-i18n="lbl_state"></span>
+        <select id="state"></select>
+      </label>
+    </div>
+    <section id="pane-convert" class="lac-pane"></section>
+    <section id="pane-plot" class="lac-pane" hidden></section>
+    <section id="pane-price" class="lac-pane" hidden></section>
+    <p class="callout warning" style="margin-top:16px" data-i18n="warn_local"></p>
+    <details class="card lac-how" style="margin-top:16px">
+      <summary data-i18n="help"></summary>
+      <ul>
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+        <li data-i18n="tip5"></li>
+      </ul>
+    </details>
+    <div class="row no-print" style="margin-top:16px">
+      <button class="btn btn-danger" id="reset-all" data-i18n="reset"></button>
+      <span class="muted small" data-i18n="saved_local"></span>
+    </div>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

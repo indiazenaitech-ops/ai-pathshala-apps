@@ -138,14 +138,14 @@ module.exports = async function ({ page, lang, expect }) {
   await page.fill('#cmp-a', 'Apple\nBanana\nCherry\nDates\nElder');
   await page.fill('#cmp-b', 'Apple\nBlueberry\nCherry\nDates\nFig\nGrape');
   await page.click('#cmp-by [data-by="line"]');
-  await page.waitForFunction(() => document.querySelector('#cmp-sum').dataset.state === 'diff', null, { timeout: 8000 });
+  await page.waitForFunction(() => { const d = document.querySelector('#cmp-sum').dataset; return d.ladd === '3' && d.ldel === '2'; }, null, { timeout: 8000 }).catch(() => {});
   const sum = await page.evaluate(() => Object.assign({}, document.querySelector('#cmp-sum').dataset));
   expect(sum.add === '3' && sum.del === '2' && sum.same === '3', 'line diff +3 −2 =3, got ' + JSON.stringify(sum));
   expect((await page.$$('#cmp-out td.mk.a')).length === 3 && (await page.$$('#cmp-out td.mk.d')).length === 2, 'added/removed rows marked with + and −');
   await page.fill('#cmp-a', 'मेरा नाम राम है। The quick brown fox.');
   await page.fill('#cmp-b', 'मेरा नाम श्याम है। The quick red fox.');
   await page.click('#cmp-by [data-by="word"]');
-  await page.waitForFunction(() => document.querySelector('#cmp-sum').dataset.add === '2', null, { timeout: 8000 });
+  await page.waitForFunction(() => { const d = document.querySelector('#cmp-sum').dataset; return d.ladd === '1' && d.add === '2'; }, null, { timeout: 8000 }).catch(() => {});
   const w = await page.evaluate(() => Object.assign({}, document.querySelector('#cmp-sum').dataset));
   expect(w.add === '2' && w.del === '2', 'word diff +2 −2, got ' + JSON.stringify(w));
   expect((await page.textContent('#cmp-out ins')).trim() === 'श्याम', 'Hindi word shown as added');
