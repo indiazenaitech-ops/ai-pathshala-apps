@@ -1,10 +1,11 @@
-# App list (125)
+# App list (130)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
 | | App | Category | Classes | What it does |
 |---|---|---|---|---|
 | 🎓 | [AI Basics Quiz](https://apnipathshala.ai/apps/ai-basics-quiz/) | learn-ai | 6-12 | 30 MCQs on AI, ML, project cycle, evaluation, ethics and GenAI for CBSE AI (417): practice, timed test, projector quiz and certificates. |
+| 📖 | [AI Dictionary](https://apnipathshala.ai/apps/ai-dictionary/) | learn-ai | all | 120 AI, ML and GenAI terms explained simply with Indian examples: search, term of the day, flashcards, quiz, read aloud, print. |
 | ⚖️ | [AI Ethics Discussion Cards](https://apnipathshala.ai/apps/ai-ethics-dilemmas/) | learn-ai | 8-12 | 12 real-life AI dilemmas for class talk: read the story, vote with live bars, discuss in timed groups, print cards. |
 | 🤖 | [AI or Not? Sorting Game](https://apnipathshala.ai/apps/ai-around-us/) | learn-ai | 3-10 | Sort everyday things like face unlock, a fan or Google Maps into Uses AI or No AI, and learn why. |
 | 🔄 | [AI Project Cycle Canvas](https://apnipathshala.ai/apps/ai-project-cycle/) | learn-ai | 8-12 | Plan an AI project the CBSE way: 4Ws problem canvas, data, modelling, evaluation and ethics. 3 samples, autosave, print. |
@@ -112,10 +113,12 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🍳 | [Kitchen Recipe Finder](https://apnipathshala.ai/apps/recipe-finder/) | everyday | all | Tap what you have at home and get Indian home recipes ranked by match, with missing items, substitutes and a shopping list. |
 | 💍 | [Marriage Biodata Maker](https://apnipathshala.ai/apps/biodata-maker/) | everyday | all | Make a neat marriage biodata in any of 12 Indian languages: 8 designs, photo, horoscope. Print, PDF or WhatsApp image. Stays private. |
 | 🗜️ | [PDF Compress & JPG to PDF](https://apnipathshala.ai/apps/pdf-compress-convert/) | everyday | all | Compress a PDF under 100 KB or 200 KB, turn photos into a PDF, save pages as JPG, unlock your own PDF. Files stay on your device. |
+| ％ | [Percentage & Marks Calculator](https://apnipathshala.ai/apps/percentage-calculator/) | everyday | all | Percentages with step-by-step working: marks %, CGPA to %, SGPA, discounts, profit & loss and 75% attendance. Works offline. |
 | 📄 | [Resume & CV Builder](https://apnipathshala.ai/apps/resume-builder/) | everyday | all | Make a job-ready resume with a live A4 preview, ATS-safe and Govt/PSU templates, and a free PDF. Your details stay on your device. |
 | 🧾 | [Split Bill & Trip Expenses](https://apnipathshala.ai/apps/split-bill/) | everyday | all | Split trip, dinner and room expenses between friends: who paid, who owes, the fewest UPI payments to settle up, and a WhatsApp summary. |
 | 🎵 | [Sur & Taal Trainer](https://apnipathshala.ai/apps/sur-taal-trainer/) | everyday | all | Tanpura drone, live swar meter for your voice, sargam alankars with a score, tabla-style taal metronome and tuner. Nothing is recorded. |
 | 🎟️ | [Tambola Tickets & Caller](https://apnipathshala.ai/apps/tambola-housie/) | everyday | all | Print valid Tambola (Housie) tickets, call numbers 1–90 aloud on a big screen and check every claim. Free, offline. |
+| 🔤 | [Text Tools: Clean & Compare](https://apnipathshala.ai/apps/text-tools/) | everyday | all | Change case, remove extra spaces and duplicate lines, sort, find and replace, extract e-mails and mobile numbers, and compare two texts. |
 | 🎙️ | [Voice Note to Text](https://apnipathshala.ai/apps/voice-to-text/) | everyday | all | Turn voice notes, recordings and videos into text and subtitles (SRT) with on-device AI. Your audio is not uploaded. |
 | 🆎 | [A/B Test Calculator](https://apnipathshala.ai/apps/ab-test-calculator/) | data | all | Did version B really beat A, or was it luck? p-value, confidence range, chance to win and a sample-size planner. |
 | 📈 | [Chart Maker](https://apnipathshala.ai/apps/chart-maker/) | data | all | Type or paste data and make bar, line, pie, donut, scatter or histogram charts. Download PNG or SVG. |
@@ -125,7 +128,9 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🔄 | [JSON ↔ CSV Converter](https://apnipathshala.ai/apps/json-csv-converter/) | data | all | Convert JSON or JSON Lines to CSV (nested fields flattened) and CSV to typed JSON. Find JSON errors by line and column. |
 | 🧮 | [Pivot Table Maker](https://apnipathshala.ai/apps/pivot-table-maker/) | data | all | Summarise a CSV like Excel pivot tables: totals by region or month, counts, averages, % of total, filters, top N and a chart. |
 | 🎯 | [Statistics & Sampling Lab](https://apnipathshala.ai/apps/sampling-lab/) | data | 9-12 | Learn by experiment: random samples, the central limit theorem, standard error, 95% intervals, survey bias and mean vs median. |
+| 🎯 | [Carrom](https://apnipathshala.ai/apps/carrom/) | games | all | Real-physics carrom for 2 players on one device, vs the computer, or solo practice, with simple Indian rules and scoring. |
 | 🎲 | [Ludo](https://apnipathshala.ai/apps/ludo/) | games | all | Classic Ludo for 2–4 players: pass-and-play with family or play the computer, with Indian house rules. No ads, works offline. |
+| 🃏 | [Memory Card Game](https://apnipathshala.ai/apps/memory-match/) | games | all | Flip cards and find the pairs: picture decks for little ones, plus numbers, letters, words and sums in your language. Solo or 2–4 players. |
 | 🐍 | [Snakes & Ladders](https://apnipathshala.ai/apps/snakes-ladders/) | games | all | Play Saanp-Seedhi with 2-4 players or the computer, incl. the Moksha Patam values board. Free, offline, no ads. |
 | 🔢 | [Sudoku](https://apnipathshala.ai/apps/sudoku/) | games | all | Ad-free Sudoku in 9×9, 6×6 and 4×4: real difficulty levels, a daily puzzle, notes, hints that explain each step and printable puzzles. |
 | ⭕ | [Tic-Tac-Toe & More](https://apnipathshala.ai/apps/pen-paper-games/) | games | all | Tic-Tac-Toe, Four in a Row, Dots and Boxes and Bulls and Cows: play a friend or a fair computer and see how it thinks. Works offline. |
