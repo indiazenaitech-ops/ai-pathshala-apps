@@ -1,4 +1,4 @@
-# App list (133)
+# App list (136)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -67,6 +67,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🗣️ | [Learn Indian Languages](https://apnipathshala.ai/apps/indian-languages-phrasebook/) | languages | all | Phrasebook and trainer between any two of 12 Indian languages: 456 everyday phrases with audio, Roman pronunciation, games and a daily 10. |
 | 🔊 | [Read Aloud](https://apnipathshala.ai/apps/read-aloud/) | languages | 1-12 | Hear any text read aloud in 12 Indian languages with word highlighting, echo reading and adjustable speed. |
 | 🐝 | [Spelling Bee](https://apnipathshala.ai/apps/spelling-bee/) | languages | 1-8 | Hear English words and spell them: 125 words for Class 1–8, meanings in your language, hints, a class spelling bee and printable tests. |
+| ⌨️ | [Type in Indian Languages](https://apnipathshala.ai/apps/indian-typing/) | languages | all | Type English letters and get correct Hindi, Tamil, Bengali, Urdu and 10 more scripts to paste anywhere. Works offline. |
 | 🔎 | [Ask Your Notes (AI Search)](https://apnipathshala.ai/apps/ask-your-notes/) | study-skills | all | Ask a question about your notes or a PDF in any language and see the exact paragraphs that answer it. AI runs on your device. |
 | 📝 | [Essay & Word Counter](https://apnipathshala.ai/apps/word-counter/) | study-skills | 6-12 | Live word, character and sentence counts in any Indian language, with exam word-limit bars, long-sentence checks and format guides. |
 | 📆 | [Exam Study Planner](https://apnipathshala.ai/apps/study-planner/) | study-skills | 6-12 | Turn your date sheet into a day-by-day revision plan: weighted chapters, Pomodoro breaks, 2 revision rounds, light days, progress. |
@@ -128,8 +129,10 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🔄 | [JSON ↔ CSV Converter](https://apnipathshala.ai/apps/json-csv-converter/) | data | all | Convert JSON or JSON Lines to CSV (nested fields flattened) and CSV to typed JSON. Find JSON errors by line and column. |
 | 🧮 | [Pivot Table Maker](https://apnipathshala.ai/apps/pivot-table-maker/) | data | all | Summarise a CSV like Excel pivot tables: totals by region or month, counts, averages, % of total, filters, top N and a chart. |
 | 🎯 | [Statistics & Sampling Lab](https://apnipathshala.ai/apps/sampling-lab/) | data | 9-12 | Learn by experiment: random samples, the central limit theorem, standard error, 95% intervals, survey bias and mean vs median. |
+| 🧠 | [Brain Puzzles: 2048 & More](https://apnipathshala.ai/apps/brain-puzzles/) | games | all | 2048, Number Slide (15-puzzle), Memory Sequence and Lights Out: classic brain games with best scores, undo and hints. No ads, works offline. |
 | 🎯 | [Carrom](https://apnipathshala.ai/apps/carrom/) | games | all | Real-physics carrom for 2 players on one device, vs the computer, or solo practice, with simple Indian rules and scoring. |
 | ♟️ | [Chess](https://apnipathshala.ai/apps/chess/) | games | all | Play chess with a friend or the computer (6 levels), solve mate puzzles and learn how each piece moves. Works offline. |
+| 🐅 | [Indian Board Games](https://apnipathshala.ai/apps/indian-board-games/) | games | all | Play Aadu Puli Attam (goats and tigers), Pallanguzhi and Navakankari with a friend or the computer, with rules and a little history. |
 | 🎲 | [Ludo](https://apnipathshala.ai/apps/ludo/) | games | all | Classic Ludo for 2–4 players: pass-and-play with family or play the computer, with Indian house rules. No ads, works offline. |
 | 🃏 | [Memory Card Game](https://apnipathshala.ai/apps/memory-match/) | games | all | Flip cards and find the pairs: picture decks for little ones, plus numbers, letters, words and sums in your language. Solo or 2–4 players. |
 | 🎉 | [Party Games: Dumb Charades](https://apnipathshala.ai/apps/party-games/) | games | all | Dumb Charades, Antakshari, Draw & Guess and icebreakers with a timer and team scores. Word cards in 12 languages, works offline. |
