@@ -147,8 +147,8 @@
     #callerCard.presenting .cl-top { margin-bottom: 1.2vh; }
     #callerCard.presenting .cl-title { font-size: clamp(1.2rem, 3.6vh, 2.4rem); }
     #callerCard.presenting .cl-main { flex: 1; align-items: center; grid-template-columns: minmax(0, 37fr) minmax(0, 63fr); gap: 2vh 3vw; }
-    #callerCard.presenting .ball { width: min(44vh, 30vw); }
-    #callerCard.presenting .ball-num { font-size: min(25vh, 17vw); }
+    #callerCard.presenting .ball { width: min(38vh, 28vw); }
+    #callerCard.presenting .ball-num { font-size: min(21vh, 15.5vw); }
     #callerCard.presenting .cl-info { font-size: clamp(1rem, 2.6vh, 1.6rem); }
     #callerCard.presenting .coin { width: min(7vh, 4.6vw); height: min(7vh, 4.6vw); font-size: min(3.2vh, 2.1vw); }
     #callerCard.presenting .coin:first-child { width: min(8.4vh, 5.4vw); height: min(8.4vh, 5.4vw); font-size: min(3.8vh, 2.5vw); }
@@ -216,7 +216,13 @@
 
     /* ---------- help, footer row ---------- */
     .help { margin-top: 16px; }
-    .help summary { cursor: pointer; font-weight: 700; min-height: 40px; display: flex; align-items: center; }
+    .help summary, .order summary { cursor: pointer; font-weight: 700; min-height: 40px; display: flex; align-items: center; gap: 8px; list-style: none; }
+    .help summary::-webkit-details-marker, .order summary::-webkit-details-marker { display: none; }
+    .help summary::after, .order summary::after { content: "▾"; margin-inline-start: auto; color: var(--muted); transition: transform .2s; }
+    .help[open] > summary::after, .order[open] > summary::after { transform: rotate(180deg); }
+    #srcSeg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #srcSeg button { min-height: 44px; line-height: 1.25; }
+    #srcSeg button + button { border-inline-start: 1px solid var(--border); }
     .help ul { margin: 10px 0 4px; padding-inline-start: 1.3em; display: grid; gap: 8px; }
     .reset-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 16px; }
 
@@ -292,12 +298,10 @@
               </div>
               <div class="field">
                 <label for="code" data-i18n="f_code"></label>
-                <div class="code-row">
-                  <input type="text" id="code" class="no-i18n code-in" maxlength="16" autocomplete="off" spellcheck="false" autocapitalize="characters" aria-describedby="codeHint">
-                  <button type="button" class="btn" id="newCode"><span aria-hidden="true">🎲</span><span data-i18n="new_code"></span></button>
-                </div>
+                <input type="text" id="code" class="no-i18n code-in" maxlength="16" autocomplete="off" spellcheck="false" autocapitalize="characters" aria-describedby="codeHint">
               </div>
             </div>
+            <div><button type="button" class="btn btn-sm" id="newCode"><span aria-hidden="true">🎲</span><span data-i18n="new_code"></span></button></div>
             <p class="hint" id="codeHint" data-i18n="code_hint"></p>
             <p class="callout danger small mb0" id="codeErr" role="alert" hidden data-i18n="code_bad"></p>
             <div class="field">

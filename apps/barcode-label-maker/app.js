@@ -120,9 +120,15 @@
     s.appendChild(svgEl('path', { d: d, fill: '#000' }));
     return s;
   }
+  /* a bare UPI ID (name@bank) becomes a upi://pay link, so phone UPI apps open the payment screen */
+  var VPA_RE = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/;
+  function qrPayload(text) {
+    text = String(text || '').trim();
+    return VPA_RE.test(text) ? 'upi://pay?pa=' + text.toLowerCase() + '&cu=INR' : text;
+  }
   function qrData(text) {
     if (!text || !Q) return null;
-    var q = Q.encode(text, 'M');
+    var q = Q.encode(qrPayload(text), 'M');
     return q && q.ok ? q : null;
   }
   function qrSvg(q, sizeMM) {
@@ -294,6 +300,7 @@
     box.style.width = (g.w * PX_MM * s) + 'px';
     box.style.height = (g.h * PX_MM * s) + 'px';
     box.setAttribute('data-scale', String(s));
+    box.setAttribute('data-qr', curQr() ? qrPayload(S.common.qr) : '');
     $('#labelSize').textContent = t('label_size', { w: fmtMM(g.w), h: fmtMM(g.h) });
 
     /* warnings: thin bars, too little room for the bars, QR too long */

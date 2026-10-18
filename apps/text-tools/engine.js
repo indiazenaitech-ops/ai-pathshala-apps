@@ -549,7 +549,7 @@ function TT_FACTORY() {
   /* ---------------- extract ---------------- */
   var TLD = 'com|in|org|net|edu|gov|info|biz|ai|io|app|dev|me|co|online|site|store|shop|tech|xyz|live|news|blog|today|world';
   var RE_EMAIL = /[A-Za-z0-9](?:[A-Za-z0-9._%+\-]*[A-Za-z0-9_%+\-])?@[A-Za-z0-9](?:[A-Za-z0-9\-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9\-]*[A-Za-z0-9])?)*\.[A-Za-z]{2,24}/g;
-  /* https://… and www.… addresses, plus bare names such as cbse.gov.in or example.com/fees (known endings only) */
+  /* addresses that start with http(s) or www., plus bare names such as cbse.gov.in or example.com/fees (known endings only) */
   var RE_URL = rx('(?:https?:\\/\\/|www\\.)[^\\s<>"\'`]+|(?<![@\\w.\\-\\/])(?:[a-z0-9](?:[a-z0-9\\-]*[a-z0-9])?\\.)+(?:' + TLD + ')(?:\\.in)?(?![\\w\\-@])(?:\\/[^\\s<>"\'`]*)?', 'gi',
     /(?:https?:\/\/|www\.)[^\s<>"'`]+/gi);
   function cleanUrl(u) {

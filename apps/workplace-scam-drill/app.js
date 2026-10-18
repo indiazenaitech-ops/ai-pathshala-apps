@@ -648,7 +648,13 @@
   });
   function fmtDate(iso) {
     var d = iso ? new Date(iso + 'T00:00:00') : new Date();
-    try { return new Intl.DateTimeFormat(EDU.langInfo(EDU.lang).tag || 'en-IN', { day: 'numeric', month: 'long', year: 'numeric' }).format(d); } catch (e) { return d.toDateString(); }
+    var p2 = function (x) { return (x < 10 ? '0' : '') + x; }, plainDate = p2(d.getDate()) + '/' + p2(d.getMonth() + 1) + '/' + d.getFullYear();
+    try {
+      /* Western digits in every language; if the browser has no month names for the language, use 17/10/2026 */
+      var out = new Intl.DateTimeFormat((EDU.langInfo(EDU.lang).tag || 'en-IN') + '-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric', numberingSystem: 'latn' }).format(d);
+      if ((EDU.lang !== 'en' && /[A-Za-z]/.test(out)) || /(?![0-9])\p{Nd}/u.test(out)) return plainDate;
+      return out;
+    } catch (e) { return plainDate; }
   }
   function renderCert() {
     var r = store.get('lastResult', null);

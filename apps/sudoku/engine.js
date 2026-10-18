@@ -9,12 +9,13 @@ function SudokuEngineFactory() {
   var LEVELS = ['easy', 'medium', 'hard', 'expert'];
   var LEVELS_FOR = { 4: ['easy', 'medium'], 6: ['easy', 'medium', 'hard'], 9: LEVELS };
   /* Generator plan per size and level: [logic tier the puzzle must need, fewest clues, most clues, attempts].
-     Tier 1 = singles, 2 = pointing / box-line / pairs, 3 = triples, quads, X-Wing, 4 = Y-Wing, XYZ-Wing, Swordfish.
+     Tier 1 = singles, 2 = pointing / box-line / pairs, 3 = triples, quads, X-Wing, Swordfish, Y-Wing, XYZ-Wing,
+     4 = a short "try it and see" step (one of two choices soon runs into a dead end).
      The clue range is where the generator stops removing numbers once the tier is reached. */
   var PLAN = {
     9: { easy: [1, 36, 40, 1], medium: [2, 29, 32, 40], hard: [3, 25, 28, 60], expert: [4, 22, 26, 120] },
-    6: { easy: [1, 16, 18, 1], medium: [2, 11, 13, 60], hard: [3, 9, 11, 120] },
-    4: { easy: [1, 8, 8, 1], medium: [1, 4, 6, 1] }
+    6: { easy: [1, 16, 18, 1], medium: [1, 11, 13, 1], hard: [2, 8, 10, 150] },
+    4: { easy: [1, 9, 10, 1], medium: [1, 5, 6, 1] }
   };
 
   var POP = new Uint8Array(512), DIG = new Uint8Array(512);   /* bit count, and digit of the lowest set bit */

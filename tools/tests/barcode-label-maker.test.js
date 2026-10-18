@@ -91,6 +91,14 @@ module.exports = async function ({ page, expect, t }) {
   expect(!(await page.isVisible('#productCard')), 'editor hidden when printing');
   await page.emulateMedia({ media: 'screen' });
 
+  // 8b. a bare UPI ID becomes a payable upi:// link in the QR; a web link stays as it is
+  await page.fill('#f-qr', 'SharmaFoods@okaxis');
+  await page.waitForSelector('#labelPreview svg.l-qr', { timeout: 3000 }).catch(() => {});
+  expect((await page.getAttribute('#labelPreview', 'data-qr')) === 'upi://pay?pa=sharmafoods@okaxis&cu=INR', 'UPI ID turned into a upi://pay link');
+  await page.fill('#f-qr', 'https://apnipathshala.ai');
+  expect((await page.getAttribute('#labelPreview', 'data-qr')) === 'https://apnipathshala.ai', 'web link kept as typed');
+  await page.fill('#f-qr', '');
+
   // 9. PNG download
   await page.click('#type-auto');
   await page.fill('#f-code', '890123456789');

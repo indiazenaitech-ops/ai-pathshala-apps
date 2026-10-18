@@ -178,6 +178,15 @@
     var pen = wide ? R.wd : nb ? R.nb : 0, bat = 0, bye = 0, lb = 0, wd = 0;
     if (x === '') bat = r; else if (x === 'b') bye = r; else if (x === 'lb') lb = r; else if (wide) wd = r;
     else if (nbx === 'b') bye = r; else if (nbx === 'lb') lb = r; else bat = r;
+    /* the winning hit: only the runs needed count, unless it is a boundary (Law 16.6) */
+    if (inn.target > 0 && r !== 4 && r !== 6) {
+      var over = inn.runs + pen + bat + bye + lb + wd - inn.target;
+      if (over > 0) {
+        var cut = Math.min(over, bat + bye + lb + wd);
+        if (bat) bat -= cut; else if (bye) bye -= cut; else if (lb) lb -= cut; else wd -= cut;
+        r -= cut;
+      }
+    }
     var total = pen + bat + bye + lb + wd;
     var sI = inn.s, nI = inn.ns, st = inn.bt[sI], bw = inn.bw[inn.bowler], ov = curOver(inn), fhWas = inn.fh;
 

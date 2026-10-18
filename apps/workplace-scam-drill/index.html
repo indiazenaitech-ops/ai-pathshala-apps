@@ -183,7 +183,13 @@
     .cert .c-date { font-weight: 700; }
     .cert .c-disc { margin-top: calc(var(--u) * 1.4); font-size: calc(var(--u) * 1.45); color: #7a4a00; background: #fff4d6; border-radius: calc(var(--u) * .6); padding: calc(var(--u) * .5) calc(var(--u) * 1.4); }
     .cert .c-seal { position: absolute; inset-inline-end: calc(var(--u) * 6); top: calc(var(--u) * 5); width: calc(var(--u) * 11); height: calc(var(--u) * 11); border-radius: 50%; background: #0b4f5c; color: #fff; display: grid; place-items: center; font-size: calc(var(--u) * 5); box-shadow: 0 0 0 calc(var(--u) * .5) #fffdf7, 0 0 0 calc(var(--u) * .9) #0b4f5c; }
-    :root[lang="ur"] .cert { line-height: 1.8; }
+    /* Nastaliq is tall: tighter lines and smaller small print so the certificate stays on one page */
+    :root[lang="ur"] .cert { line-height: 1.6; padding-block: calc(var(--u) * 4); }
+    :root[lang="ur"] .cert .c-head { margin: calc(var(--u) * 1.2) 0 calc(var(--u) * .6); }
+    :root[lang="ur"] .cert .c-body, :root[lang="ur"] .cert .c-pledge { font-size: calc(var(--u) * 1.75); }
+    :root[lang="ur"] .cert .c-pledge { margin-top: calc(var(--u) * .8); }
+    :root[lang="ur"] .cert .c-score { margin-top: calc(var(--u) * .8); }
+    :root[lang="ur"] .cert .c-disc { margin-top: calc(var(--u) * .8); }
     .cert-form { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); margin-bottom: 14px; }
     details#howto summary { cursor: pointer; font-size: 1.05rem; }
     details#howto[open] summary { margin-bottom: 10px; }
@@ -221,12 +227,19 @@
       /* checklist: the six habits and helplines on one A4 page */
       #app[data-print="checklist"] > *:not(#panel-todo), #app[data-print="checklist"] #panel-todo > *:not(.poster) { display: none !important; }
       #app[data-print="checklist"] .poster { border: 0; padding: 0; box-shadow: none; }
-      #app[data-print="checklist"] .poster h2 { font-size: 18pt; margin: 0 0 4mm; }
-      #app[data-print="checklist"] .acts { gap: 3mm; margin: 0 0 4mm; }
-      #app[data-print="checklist"] .act { padding: 3mm; }
-      #app[data-print="checklist"] .act h3 { font-size: 11.5pt; }
-      #app[data-print="checklist"] .act p { font-size: 10pt; }
-      #app[data-print="checklist"] .act .ai { font-size: 18pt; }
+      #app[data-print="checklist"] .poster h2 { font-size: 17pt; margin: 0 0 3mm; }
+      #app[data-print="checklist"] .acts { gap: 2.5mm; margin: 0 0 3mm; }
+      #app[data-print="checklist"] .act { padding: 2.5mm 3mm; gap: 2.5mm; }
+      #app[data-print="checklist"] .act h3 { font-size: 11pt; line-height: 1.3; margin-bottom: 1mm; }
+      #app[data-print="checklist"] .act p { font-size: 9.5pt; line-height: 1.4; }
+      #app[data-print="checklist"] .act .ai { font-size: 16pt; }
+      #app[data-print="checklist"] .helpline { padding: 3mm 4mm; }
+      #app[data-print="checklist"] .helpline h3 { font-size: 12pt; margin-bottom: 2mm; }
+      #app[data-print="checklist"] .hl-grid { gap: 2mm 5mm; }
+      #app[data-print="checklist"] .hl-grid p { font-size: 9.5pt; line-height: 1.4; }
+      #app[data-print="checklist"] .hl-big { font-size: 20pt; }
+      #app[data-print="checklist"] .hl-web { font-size: 10.5pt; }
+      #app[data-print="checklist"] .poster-foot { margin-top: 3mm; }
       #app[data-print="checklist"] .act h3::before { content: "\2610  "; font-size: 13pt; }
       /* certificate: one A4 landscape page */
       #app[data-print="cert"] > *:not(#panel-cert), #app[data-print="cert"] #panel-cert > *:not(.cert-wrap) { display: none !important; }

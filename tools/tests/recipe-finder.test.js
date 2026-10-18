@@ -23,13 +23,13 @@ module.exports = async function ({ page, expect }) {
   expect(at && at.pct === 100, 'aloo_tamatar in top 3 with 100%: ' + JSON.stringify(top));
 
   // 3. a recipe missing exactly one ingredient shows it as missing (card and recipe view)
+  // pick the best-ranked recipe missing exactly one item (no substitute at home); it may be on a later page
   const one = await page.evaluate(() => {
-    const hs = {}; ['oil', 'onion', 'potato', 'salt', 'tomato'].forEach(k => { hs[k] = 1; });
-    const cards = [...document.querySelectorAll('#resList .rcard')].map(e => e.dataset.id);
-    for (const id of cards) { const m = RF_TEST.match(RF_DATA.rec.find(r => r.id === id), hs); if (m.missing.length === 1 && !m.subs[m.missing[0]]) return { id, miss: m.missing[0], pct: m.pct }; }
+    for (const x of RF_TEST.ranked()) { const m = x.m; if (m.missing.length === 1 && !m.subs[m.missing[0]]) return { id: x.r.id, miss: m.missing[0], pct: m.pct }; }
     return null;
   });
   expect(one && one.pct < 100, 'found a recipe missing one item: ' + JSON.stringify(one));
+  for (let i = 0; i < 10 && !(await page.$(`#resList .rcard[data-id="${one.id}"]`)); i++) { await page.click('#btnMore'); await settle(); }
   const card = await page.$(`#resList .rcard[data-id="${one.id}"]`);
   const missName = await page.evaluate(id => (APP_CONTENT[document.documentElement.lang] || APP_CONTENT.en).ing[id].split('|')[0], one.miss);
   expect((await card.textContent()).includes(missName), `card of ${one.id} says ${missName} is missing`);
