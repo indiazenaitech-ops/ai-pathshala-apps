@@ -209,7 +209,7 @@
   }
 
   /* draw one copy of a text; x = left edge in page mm, y0 = top of the row */
-  function drawText(P, text, x, y0, w, kind) {
+  function drawText(P, text, x, y0, w, kind, hint) {
     var model = kind === 'model', o = '';
     if (!P.stroke) {
       var fam = esc(P.L.stack.replace(/"/g, "'"));
@@ -222,8 +222,8 @@
     var s = P.s, cx = x, tr = TRACK[S.spacing] || 2, hints = '';
     var dotted = !model && S.trace !== 'grey';
     var col = model ? INK : (S.trace === 'grey' ? GREY_FILL : TRACE);
-    var sw = model ? 1.3 : (dotted ? 1.15 : 1.6);
-    var strokeAttr = 'fill="none" stroke="' + col + '" stroke-width="' + sw + '" stroke-linecap="round" stroke-linejoin="round"' + (dotted ? ' stroke-dasharray="0 2.3"' : '');
+    var sw = model ? 1.75 : (dotted ? 1.5 : 1.9);
+    var strokeAttr = 'fill="none" stroke="' + col + '" stroke-width="' + sw + '" stroke-linecap="round" stroke-linejoin="round"' + (dotted ? ' stroke-dasharray="0 2.7"' : '');
     for (var i = 0; i < text.length; i++) {
       var ch = text.charAt(i);
       if (ch === ' ') { cx += ST.space * s; continue; }
@@ -231,15 +231,16 @@
       var gl = ST.glyphs[ch], gx = cx + ST.side * s;
       o += '<g transform="translate(' + f2(gx) + ',' + f2(y0 + P.top) + ') scale(' + f2(s * 1000) / 1000 + ')">';
       gl[1].forEach(function (d) { o += '<path d="' + d + '" ' + strokeAttr + '/>'; });
-      (gl[2] || []).forEach(function (pt) { o += '<circle cx="' + pt[0] + '" cy="' + pt[1] + '" r="' + (model ? 1.05 : 0.95) + '" fill="' + (model ? INK : col) + '"/>'; });
-      if (S.start) {
-        gl[1].forEach(function (d, k) {
+      (gl[2] || []).forEach(function (pt) { o += '<circle cx="' + pt[0] + '" cy="' + pt[1] + '" r="' + (model ? 1.3 : 1.15) + '" fill="' + (model ? INK : col) + '"/>'; });
+      if (S.start && hint) {
+        gl[1].slice().reverse().forEach(function (d, kr) {        // last stroke first, so stroke 1's green dot is on top
+          var k = gl[1].length - 1 - kr;
           var st = strokeStart(d); if (!st) return;
           var c = k ? DOT2 : DOT1;
-          hints += '<circle cx="' + f2(st.x) + '" cy="' + f2(st.y) + '" r="1.25" fill="' + c + '"/>';
+          hints += '<circle cx="' + f2(st.x) + '" cy="' + f2(st.y) + '" r="1.5" fill="' + c + '"/>';
           if (st.arrow) {
-            var px = -st.uy, py = st.ux, tx = st.ax + st.ux * 1.3, ty = st.ay + st.uy * 1.3, bx = st.ax - st.ux * 0.9, by = st.ay - st.uy * 0.9;
-            hints += '<path d="M' + f2(tx) + ',' + f2(ty) + ' L' + f2(bx + px * 1.1) + ',' + f2(by + py * 1.1) + ' L' + f2(bx - px * 1.1) + ',' + f2(by - py * 1.1) + 'Z" fill="' + c + '"/>';
+            var px = -st.uy, py = st.ux, tx = st.ax + st.ux * 1.7, ty = st.ay + st.uy * 1.7, bx = st.ax - st.ux * 1.1, by = st.ay - st.uy * 1.1;
+            hints += '<path d="M' + f2(tx) + ',' + f2(ty) + ' L' + f2(bx + px * 1.35) + ',' + f2(by + py * 1.35) + ' L' + f2(bx - px * 1.35) + ',' + f2(by - py * 1.35) + 'Z" fill="' + c + '"/>';
           }
         });
         o += hints; hints = '';
@@ -308,6 +309,11 @@
         for (var c = 0; c < copies; c++) parts.forEach(function (p, k) { place(p, 'trace', parts.length > 1 && k === 0); });
       }
       lines.push(line);
+      var all = []; lines.forEach(function (l) { all = all.concat(l.cells); });
+      var hintCells = all.filter(function (c) { return c.kind === 'trace'; });
+      if (!hintCells.length) hintCells = all;
+      var n0 = Math.max(1, parts.length);
+      hintCells.slice(0, n0).forEach(function (c) { c.hint = true; });
       for (var b = 0; b < blanks; b++) lines.push({ P: P, cells: [], item: idx, blank: true });
       blocks.push(lines);
     });
@@ -317,7 +323,7 @@
   function paginate(Lo) {
     var headH = S.header ? 33 : 0, footH = 6;
     var avail = PH - headH - footH;
-    var minPitch = Lo.H + Math.max(3, 0.3 * Lo.H);
+    var minPitch = Lo.H + Math.max(4, 0.42 * Lo.H);
     var maxRows = Math.max(1, Math.floor(avail / minPitch));
     var want = S.rpp === 'auto' ? maxRows : EDU.clamp(parseInt(S.rpp, 10) || maxRows, 1, 40);
     var rpp = Math.min(want, maxRows);
@@ -338,7 +344,7 @@
     var code = sheetLang(), L = D.langs[code], rtl = L.dir === 'rtl';
     var fam = esc(L.stack.replace(/"/g, "'") + ", 'Noto Sans', sans-serif");
     var X = function (x) { return rtl ? PW - x : x; };
-    var anchor = function (a) { return rtl ? (a === 'start' ? 'end' : a === 'end' ? 'start' : a) : a; };
+    var anchor = function (a) { return a; };          // with direction="rtl", "start" is already the right edge
     var dirA = rtl ? ' direction="rtl"' : '';
     var o = '', boxW = S.stars ? 31 : 0, textEnd = PW - (boxW ? boxW + 4 : 0);
     function txt(x, y, size, s, a, extra) {
@@ -417,7 +423,7 @@
         }
         ln.cells.forEach(function (c) {
           var x = rtl ? PW - Lo.gutter - c.x - c.w : Lo.gutter + c.x;
-          o += '<g class="hw-' + c.kind + '">' + drawText(P, c.t, x, y0, c.w, c.kind) + '</g>';
+          o += '<g class="hw-' + c.kind + '">' + drawText(P, c.t, x, y0, c.w, c.kind, c.hint) + '</g>';
         });
       });
       if (openItem >= 0) o += '</g>';

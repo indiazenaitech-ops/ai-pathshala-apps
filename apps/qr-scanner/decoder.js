@@ -303,7 +303,8 @@
       else if (d02 >= d01 && d02 >= d12) { tl = p[1]; a = p[0]; b = p[2]; hyp = d02; l1 = d01; l2 = d12; }
       else { tl = p[2]; a = p[0]; b = p[1]; hyp = d01; l1 = d02; l2 = d12; }
       if (l1 < msAvg * 10 || l2 < msAvg * 10) continue;     // smallest QR: 14 modules between centres
-      var score = Math.abs(l1 - l2) / Math.max(l1, l2) + Math.abs(hyp - Math.sqrt(l1 * l1 + l2 * l2)) / hyp + msVar * 0.5;
+      var score = Math.abs(l1 - l2) / Math.max(l1, l2) + Math.abs(hyp - Math.sqrt(l1 * l1 + l2 * l2)) / hyp + msVar * 0.5 +
+        0.3 / Math.min(p[0].count, p[1].count, p[2].count);
       if (score > 0.6) continue;
       // orientation: TR x BL cross product positive in image coordinates (y down)
       var cross = (a.x - tl.x) * (b.y - tl.y) - (a.y - tl.y) * (b.x - tl.x);
@@ -536,16 +537,25 @@
     var ux = (tr.x - tl.x) / span, uy = (tr.y - tl.y) / span, vx = (bl.x - tl.x) / span, vy = (bl.y - tl.y) / span;
     var brx = tr.x - tl.x + bl.x, bry = tr.y - tl.y + bl.y;
     var ver = (dim - 17) / 4, src, dst, results = [];
-    var cands = [];
+    var cands = [], BRsrc = [3.5, 3.5, dim - 3.5, 3.5, dim - 3.5, dim - 3.5, 3.5, dim - 3.5];
+    /* second guess for the 4th corner when the photo is taken at an angle: finder patterns that look
+       bigger are closer to the camera, so stretch each side by the ratio of module sizes */
+    var rv = bl.ms / tl.ms, ru = tr.ms / tl.ms;
+    var p2x = ((bl.x + (tr.x - tl.x) * rv) + (tr.x + (bl.x - tl.x) * ru)) / 2;
+    var p2y = ((bl.y + (tr.y - tl.y) * rv) + (tr.y + (bl.y - tl.y) * ru)) / 2;
+    var corners = [[brx, bry]];
+    if (Math.abs(p2x - brx) + Math.abs(p2y - bry) > ms * 1.5) corners.push([p2x, p2y]);
     if (ver >= 2) {
       var k = (span - 3) / span;
-      var est = [tl.x + k * (brx - tl.x), tl.y + k * (bry - tl.y)];
-      var al = findAlignment(bits, w, h, est, ux, uy, vx, vy, ms);
-      if (al) cands.push({ src: [3.5, 3.5, dim - 3.5, 3.5, dim - 6.5, dim - 6.5, 3.5, dim - 3.5], dst: [tl.x, tl.y, tr.x, tr.y, al[0], al[1], bl.x, bl.y] });
+      for (var ci = 0; ci < corners.length; ci++) {
+        var est = [tl.x + k * (corners[ci][0] - tl.x), tl.y + k * (corners[ci][1] - tl.y)];
+        var al = findAlignment(bits, w, h, est, ux, uy, vx, vy, ms);
+        if (al) cands.push({ src: [3.5, 3.5, dim - 3.5, 3.5, dim - 6.5, dim - 6.5, 3.5, dim - 3.5], dst: [tl.x, tl.y, tr.x, tr.y, al[0], al[1], bl.x, bl.y] });
+      }
     }
-    cands.push({ src: [3.5, 3.5, dim - 3.5, 3.5, dim - 3.5, dim - 3.5, 3.5, dim - 3.5], dst: [tl.x, tl.y, tr.x, tr.y, brx, bry, bl.x, bl.y] });
-    for (var c = 0; c < cands.length; c++) {
-      var T = quadToQuad(cands[c].src, cands[c].dst);
+    for (ci = 0; ci < corners.length; ci++) cands.push({ src: BRsrc, dst: [tl.x, tl.y, tr.x, tr.y, corners[ci][0], corners[ci][1], bl.x, bl.y] });
+    function attempt(src, dst) {
+      var T = quadToQuad(src, dst);
       var m = sampleGrid(bits, w, h, T, dim);
       for (var flip = 0; flip < 2; flip++) {
         var mm = flip ? transpose(m, dim) : m;
@@ -556,21 +566,42 @@
         var r = decodeMatrix(mm, dim);
         if (r) { r.mirrored = !!flip; return r; }
       }
+      return null;
+    }
+    var c, r;
+    for (c = 0; c < cands.length; c++) { r = attempt(cands[c].src, cands[c].dst); if (r) return r; }
+    /* perspective (photo taken at an angle): the 4th corner is not where the parallelogram puts it.
+       Nudge it around in module steps; format info + Reed-Solomon reject wrong guesses. */
+    var offs = [], R = dim > 100 ? 2 : 3, a, b;
+    for (a = -R; a <= R; a++) for (b = -R; b <= R; b++) if (a || b) offs.push([a, b]);
+    offs.sort(function (p, q) { return Math.abs(p[0]) + Math.abs(p[1]) - Math.abs(q[0]) - Math.abs(q[1]); });
+    for (c = 0; c < cands.length; c++) {
+      for (var o = 0; o < offs.length; o++) {
+        if (Date.now() > deadline) return null;
+        var d = cands[c].dst.slice(), s = offs[o][0] * 0.75, t = offs[o][1] * 0.75;
+        d[4] += s * ux + t * vx; d[5] += s * uy + t * vy;
+        r = attempt(cands[c].src, d);
+        if (r) return r;
+      }
     }
     return null;
   }
 
+  var deadline = 0;
   function decodeBits(bits, w, h) {
     var triples = rankTriples(findFinders(bits, w, h));
     for (var i = 0; i < triples.length; i++) {
+      if (Date.now() > deadline) return null;
       var r = tryTriple(bits, w, h, triples[i]);
       if (r) return r;
     }
     return null;
   }
 
-  function decodeQR(img) {
+  /* opts.budget: rough time limit in ms (camera frames use a small one) */
+  function decodeQR(img, opts) {
     if (!img || !img.width || !img.height) return null;
+    deadline = Date.now() + ((opts && opts.budget) || 2500);
     var w = img.width, h = img.height, g = toGray(img);
     var bits = binarizeAdaptive(g, w, h), r = decodeBits(bits, w, h), i;
     if (r) return r;
@@ -762,7 +793,7 @@
   function scan(img, opts) {
     opts = opts || {};
     var r = null;
-    if (opts.qr !== false) r = decodeQR(img);
+    if (opts.qr !== false) r = decodeQR(img, opts);
     if (!r && opts.oneD !== false) r = decode1D(img);
     return r;
   }

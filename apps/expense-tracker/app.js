@@ -261,13 +261,13 @@
   function setNum(sel, s, neg) { var e = $(sel); e.textContent = s; e.classList.toggle('neg', !!neg); }
   function txRow(x) {
     var c = catOf(x), note = txNote(x), who = memName(x.w);
-    var sub = [catName(c), dmy(x.d), modeName(x.m)].concat(who ? [who] : []).join(' · ');
+    var sub = el('span', { class: 'es' }, catName(c) + ' · ', numSpan(dmy(x.d)), ' · ' + modeName(x.m) + (who ? ' · ' + who : ''));
     var title = el('span', { class: 'et' + (x.s || !note ? '' : ' no-i18n'), text: note || catName(c) });
     if (x.s) title.appendChild(el('span', { class: 'badge', text: t('example') }));
     if (x.r) title.appendChild(el('span', { class: 'badge primary', text: x.rv ? t('b_review') : t('b_repeat') }));
     return el('button', { type: 'button', class: 'erow', 'data-id': x.id },
       el('span', { class: 'eav', 'aria-hidden': 'true', text: c.e }),
-      el('span', { class: 'einfo' }, title, el('span', { class: 'es', text: sub })),
+      el('span', { class: 'einfo' }, title, sub),
       el('span', { class: 'ea num ' + (x.k === 'i' ? 'i' : 'o'), text: (x.k === 'i' ? '+' : '−') + money(x.p) }));
   }
   function sortDesc(a, b) { return a.d < b.d ? 1 : a.d > b.d ? -1 : b.cr - a.cr; }

@@ -21,6 +21,7 @@
     .ibg-play { display: flex; flex-direction: column; gap: 10px; }
     .ibg-tools { display: flex; flex-wrap: wrap; gap: 8px; }
     .ibg-tools .btn { min-height: 42px; }
+    .ibg-tools #fs { margin-inline-start: auto; min-width: 42px; padding-inline: 10px; }
     .ibg-status { min-height: 3.2em; font-weight: 600; display: flex; align-items: center; }
     .ibg-status.win { border-color: var(--success); background: var(--success-soft); }
     .ibg-scores { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
@@ -31,7 +32,7 @@
     .ibg-score .nums { font-size: .86rem; color: var(--muted); }
     .ibg-score .nums b { color: var(--text); font-size: 1.05rem; }
     .ibg-board { padding: 6px; display: flex; justify-content: center; background: var(--surface); }
-    .ibg-board svg { display: block; width: 100%; max-width: 620px; height: auto; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+    .ibg-board svg { display: block; width: 100%; max-width: 620px; max-height: 74vh; height: auto; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
     .ibg-board svg .pt { cursor: pointer; outline: none; }
     .ibg-board svg .pt:focus-visible .hit { stroke: var(--accent); stroke-width: 1.2; stroke-dasharray: 2 1.2; }
     .ibg-board svg .hit { fill: transparent; }
@@ -85,7 +86,7 @@
           <button class="btn btn-primary" id="newGame" data-i18n="new_game"></button>
           <button class="btn" id="undo" data-i18n="undo"></button>
           <button class="btn" id="hint" data-i18n="hint"></button>
-          <button class="btn btn-ghost" id="fs" data-i18n="fullscreen"></button>
+          <button class="btn btn-ghost" id="fs" data-i18n-aria-label="fullscreen" data-i18n-title="fullscreen"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
         </div>
         <div class="callout ibg-status" id="status" aria-live="polite"></div>
         <div class="ibg-scores" id="scores"></div>

@@ -424,9 +424,9 @@
     var nb = newBest[id] ? ' ' + t('new_best') : '';
     if (id === 't2048') {
       var tg = BP.g2048.target(g.n);
-      if (g.won && !g.keep) return { cls: 'win', txt: t('st_2048_won', { target: fmt(tg) }) + nb };
+      if (g.won && !g.keep) return { cls: 'win', txt: t('st_2048_won', { target: tg }) + nb };
       if (g.over) return { cls: 'lose', txt: t('st_2048_over', { score: fmt(g.score) }) + nb };
-      return { txt: t('st_2048_play', { target: fmt(tg) }) };
+      return { txt: t('st_2048_play', { target: tg }) };
     }
     if (id === 'slide') {
       if (g.solved) return { cls: 'win', txt: t('st_slide_won', { moves: fmt(g.moves), time: mmss(g.ms) }) + nb };
@@ -479,7 +479,7 @@
     if (id === 'lights') box.appendChild(sizeSeg(g, [3, 5], { 3: 'kids' }));
   }
   function ruleText(id, g) {
-    if (id === 't2048') return t('rule_2048', { target: fmt(BP.g2048.target(g.n)) });
+    if (id === 't2048') return t('rule_2048', { target: BP.g2048.target(g.n) });
     if (id === 'slide') return t('rule_slide');
     if (id === 'simon') return t(g.mode === 'strict' ? 'rule_simon_strict' : 'rule_simon_relaxed', { max: SIMON_MAX, lives: SIMON_LIVES });
     return t('rule_lights');

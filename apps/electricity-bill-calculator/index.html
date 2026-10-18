@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Electricity Bill &amp; Power Use · AI Pathshala</title>
+  <meta name="description" content="Units used by each appliance (AC, fan, fridge, geyser), bill estimate from your tariff slabs, inverter battery backup and rooftop solar size.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .eb-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: -6px 0 14px; }
+    .eb-top .badge { font-size: .82rem; padding: 4px 10px; white-space: normal; }
+
+    .eb-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 16px; }
+    .eb-tabs button {
+      font: inherit; font-weight: 700; font-size: .98rem; color: var(--text); background: var(--surface);
+      border: 1px solid var(--border); border-radius: 12px; padding: 8px 6px; min-height: 52px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px; text-align: center; line-height: 1.2;
+    }
+    .eb-tabs button:hover { background: var(--surface-2); }
+    .eb-tabs button[aria-selected="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+    .eb-tabs .ic { font-size: 1.2rem; }
+    @media (max-width: 560px) {
+      .eb-tabs { gap: 6px; }
+      .eb-tabs button { flex-direction: column; gap: 2px; font-size: .84rem; padding: 6px 3px; }
+    }
+
+    .eb-panel > * + * { margin-top: 16px; }
+    .eb-split { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+    @media (max-width: 860px) { .eb-split { grid-template-columns: minmax(0, 1fr); } }
+    .eb-col > * + * { margin-top: 16px; }
+    .card h2 { font-size: 1.2rem; }
+    .card h3 { font-size: 1.05rem; }
+    .eb-form > * + * { margin-top: 12px; }
+    .eb-form .field input, .eb-form .field select { width: 100%; min-height: 44px; }
+    .eb-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; align-items: end; }
+    .hint { color: var(--muted); font-size: .84rem; margin: 0; line-height: 1.45; }
+    .eb-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .eb-chips .chip { min-height: 40px; }
+    .seg button { min-height: 42px; }
+    .eb-seg-full { display: flex; width: 100%; flex-wrap: nowrap; }
+    .eb-seg-full button { flex: 1 1 0; line-height: 1.2; padding-inline: 8px; }
+
+    /* appliance rows */
+    .ap-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+    .ap-head h2 { margin: 0; }
+    .ap-list > * + * { margin-top: 8px; }
+    .ap-row {
+      display: grid; gap: 4px 8px; align-items: end; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 8px 10px;
+      grid-template-columns: minmax(0, 2.2fr) repeat(4, minmax(0, 1fr)) minmax(0, 1.1fr) 44px;
+    }
+    .ap-row.off { opacity: .6; }
+    .ap-name { display: flex; flex-direction: column; gap: 4px; min-width: 0; align-self: center; }
+    .ap-name .nm { font-weight: 700; display: flex; gap: 6px; align-items: center; min-width: 0; overflow-wrap: anywhere; }
+    .ap-name .nm .ic { font-size: 1.25rem; flex: none; }
+    .ap-name select, .ap-name input { width: 100%; min-height: 40px; font-size: .9rem; padding-inline: 8px; }
+    .ap-row .field { gap: 2px; }
+    .ap-row .field > label { font-size: .76rem; color: var(--muted); font-weight: 600; line-height: 1.25; }
+    .ap-row .field input { width: 100%; min-height: 42px; padding-inline: 8px; font-variant-numeric: tabular-nums; }
+    .ap-row .allday { min-height: 42px; display: flex; align-items: center; font-size: .82rem; color: var(--muted); line-height: 1.2; }
+    .ap-units { text-align: end; align-self: center; }
+    .ap-units b { display: block; font-size: 1.15rem; font-variant-numeric: tabular-nums; color: var(--primary); }
+    .ap-units span { font-size: .76rem; color: var(--muted); }
+    .ap-row .rm { width: 44px; height: 44px; padding: 0; align-self: center; font-size: 1.1rem; }
+    @media (max-width: 760px) {
+      .ap-row { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .ap-row .ap-name { grid-column: 1 / 3; grid-row: 1; }
+      .ap-row .ap-units { grid-column: 3 / 4; grid-row: 1; }
+      .ap-row .rm { grid-column: 4 / 5; grid-row: 1; justify-self: end; }
+    }
+    .ap-total { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; justify-content: space-between; margin-top: 12px; padding: 12px 14px; border-radius: 12px; background: var(--primary-soft); }
+    .ap-total .big-number { font-size: clamp(1.9rem, 6vw, 2.8rem); color: var(--primary); }
+    .ap-total .lbl { font-weight: 700; }
+    .ap-add { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .ap-add select { flex: 1 1 220px; min-height: 44px; }
+
+    /* bars */
+    .bars > * + * { margin-top: 8px; }
+    .bar-row { display: grid; grid-template-columns: minmax(0, 9em) minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: .9rem; }
+    .bar-row .nm { overflow-wrap: anywhere; line-height: 1.25; }
+    .bar-track { height: 16px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+    .bar-track > span { display: block; height: 100%; border-radius: inherit; min-width: 2px; }
+    .bar-row .val { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+    .bar-row .val small { color: var(--muted); font-weight: 600; }
+    .k1 { background: var(--c1); } .k2 { background: var(--c2); } .k3 { background: var(--c3); } .k4 { background: var(--c4); }
+    .k5 { background: var(--c5); } .k6 { background: var(--c6); } .k7 { background: var(--c7); } .k8 { background: var(--c8); }
+
+    .tips { list-style: none; padding: 0; margin: 0; }
+    .tips li { padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .tips li:last-child { border-bottom: 0; }
+    .tips b { display: block; }
+    .tips .save { display: inline-block; margin-top: 4px; color: var(--success); font-weight: 700; font-size: .9rem; }
+    .tips p { margin: 2px 0 0; font-size: .92rem; }
+
+    /* results */
+    .res-big { display: flex; flex-direction: column; gap: 2px; }
+    .res-big .lbl { color: var(--muted); font-weight: 600; }
+    .res-big .big-number { font-size: clamp(2rem, 6vw, 3rem); color: var(--primary); overflow-wrap: anywhere; }
+    .kv { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 0; margin: 0; font-size: .95rem; }
+    .kv dt { color: var(--muted); padding-inline-end: 12px; }
+    .kv dd { margin: 0; font-weight: 700; text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .kv dt small { display: block; font-size: .8rem; }
+    .kv .tot { border-top: 2px solid var(--border); padding-top: 8px; font-size: 1.05rem; color: var(--text); }
+    .kv dd.neg { color: var(--success); }
+    .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .stat { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+    .stat span { display: block; color: var(--muted); font-size: .84rem; line-height: 1.3; }
+    .stat b { display: block; font-size: 1.15rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; margin-top: 2px; }
+    .stat.hl { background: var(--primary-soft); } .stat.hl b { color: var(--primary); }
+    .stat.good b { color: var(--success); }
+    .formula { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; font-size: .9rem; }
+    .formula p { margin: 0; }
+    .formula .calc { direction: ltr; unicode-bidi: isolate; text-align: start; font-variant-numeric: tabular-nums; font-weight: 700; margin-top: 4px; overflow-wrap: anywhere; }
+    .err { color: var(--danger); font-weight: 600; }
+
+    /* slabs */
+    .slab-row { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr) 44px; gap: 4px 8px; align-items: end; }
+    .slab-row .rng { align-self: center; font-weight: 700; font-size: .9rem; overflow-wrap: anywhere; }
+    .slab-row .field > label { font-size: .76rem; color: var(--muted); }
+    .slab-row input { width: 100%; min-height: 42px; }
+    .slab-row .rm { width: 44px; height: 44px; padding: 0; }
+    .slabs > * + * { margin-top: 8px; }
+    .sample-badge { white-space: normal; font-size: .8rem; }
+
+    .solar-link { font-weight: 700; }
+    details.card summary { cursor: pointer; font-weight: 700; min-height: 32px; }
+    details.card ul { padding-inline-start: 22px; }
+    details.card li + li { margin-top: 6px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    :root[lang="ur"] .ap-row .field > label, :root[lang="ur"] .stat span, :root[lang="ur"] .eb-tabs button,
+    :root[lang="ur"] .slab-row .field > label, :root[lang="ur"] .kv dt, :root[lang="ur"] .hint { line-height: 1.9; }
+
+    @media print {
+      :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+        --primary: #0b4f5c; --primary-ink: #fff; --success: #15803d; --danger: #b42318;
+        --c1: #0b7285; --c2: #e8590c; --c3: #5f3dc4; --c4: #2b8a3e; --c5: #c2255c; --c6: #b08900; --c7: #1971c2; --c8: #868e96;
+      }
+      [role="tabpanel"][hidden] { display: block !important; }
+      .eb-panel { break-inside: avoid-page; margin-top: 14px; }
+      .ap-add, .rm, .eb-chips, .actions, #addSlab, #loadSample { display: none !important; }
+      .ap-row { break-inside: avoid; }
+      #printHead h1 { font-size: 1.4rem; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <div id="printHead" class="print-only"><h1 data-i18n="app_title"></h1><p class="small" id="printDate"></p></div>
+    <p class="edu-intro" data-i18n="intro"></p>
+    <div class="eb-top no-print">
+      <span class="badge success"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></span>
+    </div>
+
+    <div class="eb-tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
+      <button type="button" role="tab" id="tab-use" data-tab="use" aria-controls="p-use"><span class="ic" aria-hidden="true">🔌</span><span data-i18n="tab_use"></span></button>
+      <button type="button" role="tab" id="tab-bill" data-tab="bill" aria-controls="p-bill"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_bill"></span></button>
+      <button type="button" role="tab" id="tab-inv" data-tab="inv" aria-controls="p-inv"><span class="ic" aria-hidden="true">🔋</span><span data-i18n="tab_inv"></span></button>
+      <button type="button" role="tab" id="tab-sol" data-tab="sol" aria-controls="p-sol"><span class="ic" aria-hidden="true">☀️</span><span data-i18n="tab_sol"></span></button>
+    </div>
+
+    <!-- ================================================= appliances -->
+    <section id="p-use" class="eb-panel" role="tabpanel" aria-labelledby="tab-use">
+      <div class="card">
+        <div class="ap-head"><h2 data-i18n="use_h"></h2></div>
+        <p class="hint" data-i18n="use_note"></p>
+        <div class="ap-list" id="apList" style="margin-top:12px"></div>
+        <div class="ap-add no-print">
+          <label for="apPick" class="sr-only" data-i18n="add_appl" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></label>
+          <select id="apPick"></select>
+          <button type="button" class="btn btn-primary" id="apAdd"><span aria-hidden="true">＋</span> <span data-i18n="add_appl"></span></button>
+        </div>
+        <div class="ap-total" aria-live="polite" id="apTotalBox">
+          <span class="lbl" data-i18n="total_units"></span>
+          <span><span class="big-number" id="apTotal">0</span> <span class="muted" id="apTotalUnit"></span></span>
+          <span class="muted small" id="apTotalDay"></span>
+        </div>
+        <p class="hint" style="margin-top:10px" data-i18n="kwh_note"></p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h2 data-i18n="chart_h"></h2>
+          <div class="bars" id="bars"></div>
+        </div>
+        <div class="card">
+          <h2 data-i18n="tips_h"></h2>
+          <ul class="tips" id="tips"></ul>
+        </div>
+      </div>
+      <details class="card">
+        <summary data-i18n="star_h"></summary>
+        <p data-i18n="star_1"></p>
+        <p data-i18n="star_2"></p>
+        <p data-i18n="star_3"></p>
+      </details>
+    </section>
+
+    <!-- ================================================= bill -->
+    <section id="p-bill" class="eb-panel" role="tabpanel" aria-labelledby="tab-bill" hidden>
+      <div class="eb-split">
+        <div class="eb-col">
+          <div class="card eb-form">
+            <h2 data-i18n="bill_h"></h2>
+            <label class="check"><input type="checkbox" id="bUseTotal"> <span id="bUseTotalLbl"></span></label>
+            <div class="field">
+              <label for="bUnits" data-i18n="bill_units"></label>
+              <input type="number" id="bUnits" inputmode="decimal" min="0" step="any">
+            </div>
+            <div class="field">
+              <span class="lbl" style="font-weight:600;color:var(--text);font-size:.92rem" data-i18n="period" id="periodLbl"></span>
+              <div class="seg eb-seg-full" id="bPeriod" role="group" aria-labelledby="periodLbl">
+                <button type="button" data-v="1" data-i18n="p1"></button>
+                <button type="button" data-v="2" data-i18n="p2"></button>
+              </div>
+              <p class="hint" data-i18n="period_note"></p>
+            </div>
+          </div>
+          <div class="card eb-form">
+            <div class="row spread"><h3 class="mb0" data-i18n="slabs_h"></h3><span class="badge accent sample-badge" id="sampleBadge" data-i18n="sample_badge"></span></div>
+            <div class="slabs" id="slabs"></div>
+            <div class="row">
+              <button type="button" class="btn btn-sm" id="addSlab" style="min-height:40px"><span aria-hidden="true">＋</span> <span data-i18n="add_slab"></span></button>
+              <button type="button" class="btn btn-sm" id="loadSample" style="min-height:40px" data-i18n="load_sample"></button>
+            </div>
+            <div class="field">
+              <span style="font-weight:600;font-size:.92rem" data-i18n="method" id="methodLbl"></span>
+              <div class="seg eb-seg-full" id="bMethod" role="group" aria-labelledby="methodLbl">
+                <button type="button" data-v="tel" data-i18n="m_tel"></button>
+                <button type="button" data-v="flat" data-i18n="m_flat"></button>
+              </div>
+              <p class="hint" data-i18n="method_note"></p>
+            </div>
+          </div>
+          <div class="card eb-form">
+            <h3 data-i18n="charges_h"></h3>
+            <div class="eb-pair">
+              <div class="field">
+                <label for="bFixed" data-i18n="fixed"></label>
+                <input type="number" id="bFixed" inputmode="decimal" min="0" step="any">
+              </div>
+              <div class="field">
+                <label for="bFxMode" data-i18n="fixed_mode"></label>
+                <select id="bFxMode"><option value="m" data-i18n="fx_month"></option><option value="kw" data-i18n="fx_kw"></option></select>
+              </div>
+            </div>
+            <div class="field" id="bLoadWrap">
+              <label for="bLoad" data-i18n="load_kw"></label>
+              <input type="number" id="bLoad" inputmode="decimal" min="0" step="any">
+            </div>
+            <div class="eb-pair">
+              <div class="field">
+                <label for="bDuty" data-i18n="duty"></label>
+                <input type="number" id="bDuty" inputmode="decimal" min="0" step="any">
+              </div>
+              <div class="field">
+                <label for="bDutyOn" data-i18n="duty_on"></label>
+                <select id="bDutyOn"><option value="e" data-i18n="duty_e"></option><option value="all" data-i18n="duty_all"></option></select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="bFuel" data-i18n="fuel"></label>
+              <input type="number" id="bFuel" inputmode="decimal" step="any">
+              <p class="hint" data-i18n="fuel_note"></p>
+            </div>
+            <div class="eb-pair">
+              <div class="field">
+                <label for="bOther" data-i18n="other"></label>
+                <input type="number" id="bOther" inputmode="decimal" step="any">
+              </div>
+              <div class="field">
+                <label for="bSub" data-i18n="subsidy"></label>
+                <input type="number" id="bSub" inputmode="decimal" min="0" step="any">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="eb-col">
+          <div class="card" aria-live="polite" id="billOut">
+            <div class="res-big"><span class="lbl" data-i18n="b_total"></span><span class="big-number" id="bTotal">₹0</span><span class="muted" id="bAvg"></span></div>
+            <dl class="kv" id="bBreak" style="margin-top:14px"></dl>
+            <p class="err" id="bErr" hidden></p>
+          </div>
+          <p class="callout warning small" data-i18n="bill_disc"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================= inverter -->
+    <section id="p-inv" class="eb-panel" role="tabpanel" aria-labelledby="tab-inv" hidden>
+      <div class="eb-split">
+        <div class="card eb-form">
+          <h2 data-i18n="inv_h"></h2>
+          <div class="field">
+            <span style="font-weight:600;font-size:.92rem" data-i18n="inv_mode" id="invModeLbl"></span>
+            <div class="seg eb-seg-full" id="iMode" role="group" aria-labelledby="invModeLbl">
+              <button type="button" data-v="h" data-i18n="m_hours"></button>
+              <button type="button" data-v="ah" data-i18n="m_ah"></button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="iLoad" data-i18n="inv_load"></label>
+            <input type="number" id="iLoad" inputmode="decimal" min="0" step="any">
+          </div>
+          <div class="eb-chips" id="iQuick"><span class="small muted" data-i18n="quick_add"></span></div>
+          <div class="field" id="iWantWrap">
+            <label for="iWant" data-i18n="want_hours"></label>
+            <input type="number" id="iWant" inputmode="decimal" min="0" step="any">
+          </div>
+          <div class="eb-pair">
+            <div class="field" id="iAhWrap">
+              <label for="iAh" data-i18n="bat_ah"></label>
+              <input type="number" id="iAh" inputmode="decimal" min="0" step="any">
+            </div>
+            <div class="field">
+              <label for="iV" data-i18n="bat_v"></label>
+              <input type="number" id="iV" inputmode="decimal" min="0" step="any">
+            </div>
+          </div>
+          <div class="eb-pair">
+            <div class="field">
+              <label for="iN" data-i18n="bat_n"></label>
+              <input type="number" id="iN" inputmode="numeric" min="1" step="1">
+            </div>
+            <div class="field">
+              <label for="iEff" data-i18n="inv_eff"></label>
+              <input type="number" id="iEff" inputmode="decimal" min="1" max="100" step="any">
+            </div>
+          </div>
+          <div class="field">
+            <label for="iDod" data-i18n="dod"></label>
+            <input type="number" id="iDod" inputmode="decimal" min="1" max="100" step="any">
+          </div>
+          <div class="eb-chips">
+            <span class="small muted" data-i18n="bat_type"></span>
+            <button type="button" class="chip" data-dod="80" data-i18n="bt_lead"></button>
+            <button type="button" class="chip" data-dod="90" data-i18n="bt_li"></button>
+          </div>
+        </div>
+        <div class="eb-col">
+          <div class="card" aria-live="polite" id="invOut">
+            <div class="res-big"><span class="lbl" id="iResLbl"></span><span class="big-number" id="iRes"></span><span class="muted" id="iResSub"></span></div>
+            <div class="stats" style="margin-top:14px">
+              <div class="stat"><span data-i18n="r_energy"></span><b id="iEnergy"></b></div>
+              <div class="stat"><span data-i18n="r_va"></span><b id="iVa"></b></div>
+            </div>
+            <div class="formula" style="margin-top:14px">
+              <p><b data-i18n="formula_h"></b></p>
+              <p id="iFormula"></p>
+              <p class="calc no-i18n" id="iCalc"></p>
+            </div>
+            <p class="err" id="iErr" hidden></p>
+          </div>
+          <p class="callout small" data-i18n="inv_note"></p>
+          <p class="hint" data-i18n="va_note"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================= solar -->
+    <section id="p-sol" class="eb-panel" role="tabpanel" aria-labelledby="tab-sol" hidden>
+      <div class="eb-split">
+        <div class="card eb-form">
+          <h2 data-i18n="sol_h"></h2>
+          <label class="check"><input type="checkbox" id="sUseTotal"> <span id="sUseTotalLbl"></span></label>
+          <div class="field">
+            <label for="sUnits" data-i18n="sol_units"></label>
+            <input type="number" id="sUnits" inputmode="decimal" min="0" step="any">
+          </div>
+          <div class="field">
+            <label for="sGen" data-i18n="sol_gen"></label>
+            <input type="number" id="sGen" inputmode="decimal" min="0" step="any">
+            <p class="hint" data-i18n="sol_gen_note"></p>
+          </div>
+          <div class="field">
+            <label for="sArea" data-i18n="sol_area"></label>
+            <input type="number" id="sArea" inputmode="decimal" min="0" step="any">
+            <p class="hint" data-i18n="sol_area_note"></p>
+          </div>
+          <div class="field">
+            <label for="sCat" data-i18n="sol_state"></label>
+            <select id="sCat"><option value="gen" data-i18n="st_gen"></option><option value="spl" data-i18n="st_spl"></option></select>
+          </div>
+          <div class="field">
+            <label for="sCost" data-i18n="sol_cost"></label>
+            <input type="number" id="sCost" inputmode="decimal" min="0" step="any">
+            <p class="hint" data-i18n="sol_cost_note"></p>
+          </div>
+          <label class="check"><input type="checkbox" id="sUseAvg"> <span id="sUseAvgLbl"></span></label>
+          <div class="field">
+            <label for="sTariff" data-i18n="sol_tariff"></label>
+            <input type="number" id="sTariff" inputmode="decimal" min="0" step="any">
+          </div>
+        </div>
+        <div class="eb-col">
+          <div class="card" aria-live="polite" id="solOut">
+            <div class="res-big"><span class="lbl" data-i18n="r_size"></span><span class="big-number" id="sSize"></span><span class="muted" id="sExact"></span></div>
+            <div class="stats" style="margin-top:14px">
+              <div class="stat"><span data-i18n="r_area"></span><b id="sAreaOut"></b></div>
+              <div class="stat"><span data-i18n="r_gen"></span><b id="sGenOut"></b></div>
+              <div class="stat hl"><span data-i18n="r_sub"></span><b id="sSub"></b></div>
+              <div class="stat"><span data-i18n="r_net"></span><b id="sNet"></b></div>
+              <div class="stat good"><span data-i18n="r_save"></span><b id="sSave"></b></div>
+              <div class="stat"><span data-i18n="r_payback"></span><b id="sPay"></b></div>
+            </div>
+            <p class="err" id="sErr" hidden></p>
+          </div>
+          <div class="callout success small">
+            <p class="mt0" data-i18n="sub_rules"></p>
+            <p class="mb0"><span data-i18n="sub_check"></span> <a class="solar-link" href="https://pmsuryaghar.gov.in/" target="_blank" rel="noopener noreferrer">pmsuryaghar.gov.in</a></p>
+          </div>
+          <p class="hint" data-i18n="sol_note"></p>
+        </div>
+      </div>
+    </section>
+
+    <div class="card" style="margin-top:16px">
+      <div class="actions no-print">
+        <button type="button" class="btn btn-primary" id="copySum"><span aria-hidden="true">📋</span> <span data-i18n="copy_summary"></span></button>
+        <button type="button" class="btn" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
+        <button type="button" class="btn btn-danger" id="resetBtn"><span data-i18n="reset"></span></button>
+      </div>
+      <p class="hint" style="margin-top:8px" data-i18n="saved_note"></p>
+    </div>
+
+    <details class="card no-print" style="margin-top:16px">
+      <summary data-i18n="how_h"></summary>
+      <ul>
+        <li data-i18n="how_1"></li>
+        <li data-i18n="how_2"></li>
+        <li data-i18n="how_3"></li>
+        <li data-i18n="how_4"></li>
+        <li data-i18n="how_5"></li>
+      </ul>
+    </details>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

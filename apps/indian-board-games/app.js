@@ -148,7 +148,7 @@
     g.busy = true; g.sel = null; g.hint = null;
     var view = { pits: g.s.pits.slice(), st: g.s.st.slice(), hl: pit, hand: 0, flash: -1 };
     g.view = view;
-    var i = 0, delay = Math.max(70, Math.min(260, Math.round(7000 / Math.max(1, ev.length))));
+    var i = 0, delay = Math.max(60, Math.min(230, Math.round(4500 / Math.max(1, ev.length))));
     var token = {};
     g.anim = token;
     function step() {

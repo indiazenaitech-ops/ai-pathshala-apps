@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fuel, Mileage &amp; Trip Cost · AI Pathshala</title>
+  <meta name="description" content="Free petrol, diesel, CNG and EV calculator: mileage (km/l), fuel log with charts, road-trip cost per person, bike vs car vs bus, and EV vs petrol break-even. Data stays on your device.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .num { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+    h2 { font-size: 1.15rem; margin: 0 0 12px; }
+    h3 { font-size: 1rem; margin: 0 0 8px; }
+    .ft-tabs { margin-bottom: 16px; }
+    .ft-tabs button { font-size: 1rem; min-height: 44px; }
+    .ft-panel { display: grid; gap: 16px; }
+    .ft-two { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+    @media (min-width: 900px) { .ft-two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+    .fields { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; }
+    .fields .wide { grid-column: 1 / -1; }
+    @media (max-width: 520px) { .fields { grid-template-columns: minmax(0, 1fr); } }
+    .field input, .field select { width: 100%; }
+    input[inputmode="decimal"], input[inputmode="numeric"] { direction: ltr; text-align: start; font-variant-numeric: tabular-nums; }
+    [dir="rtl"] input[inputmode="decimal"], [dir="rtl"] input[inputmode="numeric"] { text-align: right; }
+    input[aria-invalid="true"] { border-color: var(--danger); }
+    .hint { font-weight: 400; color: var(--muted); font-size: .84rem; margin: 0; }
+    .msg { margin: 0; }
+    .msg:empty { display: none; }
+    .seg.full { display: flex; width: 100%; }
+    .seg.full button { flex: 1 1 auto; min-height: 42px; }
+    .seg button { min-height: 40px; }
+    .card-head { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .card-head h2 { margin: 0; flex: 1 1 auto; }
+
+    /* result tiles */
+    .tiles { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin-top: 14px; }
+    .stat { background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px 12px; min-width: 0; }
+    .stat.hi { background: var(--primary-soft); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--primary) 35%, transparent); }
+    .stat-l { color: var(--muted); font-weight: 600; font-size: .82rem; line-height: 1.3; }
+    .stat-v { font-size: 1.4rem; font-weight: 800; line-height: 1.25; overflow-wrap: anywhere; }
+    .stat-s { color: var(--muted); font-size: .8rem; overflow-wrap: anywhere; }
+    @media (max-width: 480px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .stat-v { font-size: 1.15rem; } .stat-l { font-size: .76rem; } }
+    .breakdown { display: grid; gap: 2px; margin-top: 14px; font-size: .95rem; }
+    .breakdown div { display: flex; justify-content: space-between; gap: 12px; padding: 5px 2px; border-bottom: 1px dashed var(--border); }
+    .breakdown div.tot { font-weight: 800; border-bottom: 0; border-top: 2px solid var(--border); font-size: 1.05rem; }
+    .breakdown span:first-child { min-width: 0; overflow-wrap: anywhere; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .split-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; min-height: 40px; }
+
+    /* vehicles + log */
+    .veh-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+    .veh-bar .field { flex: 1 1 220px; }
+    .veh-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+    .veh-form { margin-top: 12px; display: grid; gap: 10px; }
+    .log-form { border: 1px solid var(--primary); border-radius: var(--radius-sm); padding: 14px; background: var(--surface-2); display: grid; gap: 12px; margin-top: 14px; }
+    .check-big { display: flex; align-items: center; gap: 10px; cursor: pointer; min-height: 40px; font-weight: 600; }
+    .check-big input { width: 22px; height: 22px; flex: none; margin: 0; }
+    .ex-note { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; margin-top: 12px; }
+    .ex-note p { margin: 0; flex: 1 1 220px; }
+    .log-table td, .log-table th { white-space: nowrap; }
+    .log-table td.acts { padding: 2px 4px; }
+    .iconbtn { width: 40px; height: 40px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--muted); font: inherit; cursor: pointer; display: inline-grid; place-items: center; }
+    .iconbtn:hover, .iconbtn:focus-visible { background: var(--surface-2); color: var(--text); border-color: var(--border); }
+    .iconbtn.danger:hover { color: var(--danger); background: var(--danger-soft); }
+    .log-table tr.editing td { background: var(--primary-soft); }
+    .empty { color: var(--muted); padding: 12px; border: 1px dashed var(--border); border-radius: 10px; margin: 0; }
+
+    /* charts */
+    .chart { width: 100%; height: auto; display: block; }
+    .chart text { font-family: "Noto Sans", system-ui, sans-serif; }
+    .chart-box { margin-top: 8px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--muted); font-size: .8rem; margin-top: 4px; }
+    .legend i { display: inline-block; width: 14px; height: 4px; border-radius: 2px; margin-inline-end: 6px; vertical-align: middle; }
+
+    /* comparison bars */
+    .cmp { display: grid; gap: 10px; margin-top: 12px; }
+    .cmp-row { display: grid; gap: 4px 10px; grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding: 8px 10px; border: 1px solid var(--border); border-radius: 12px; }
+    .cmp-row.best { border-color: var(--success); background: var(--success-soft); }
+    .cmp-name { font-weight: 700; overflow-wrap: anywhere; }
+    .cmp-val { font-weight: 800; text-align: end; }
+    .cmp-sub { color: var(--muted); font-size: .82rem; grid-column: 1 / -1; }
+    .cmp-bar { grid-column: 1 / -1; height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+    .cmp-bar span { display: block; height: 100%; background: var(--c1); border-radius: 999px; }
+    .cmp-row.best .cmp-bar span { background: var(--success); }
+
+    /* EV */
+    .ev-side h3 { display: flex; gap: 8px; align-items: center; }
+    .be-big { font-size: clamp(1.5rem, 5vw, 2.2rem); font-weight: 800; line-height: 1.2; margin: 4px 0; }
+    .assume { margin: 0; padding-inline-start: 1.2em; display: grid; gap: 6px; }
+
+    /* units */
+    .conv-out { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-top: 12px; }
+    .formula { font-size: 1.15rem; font-weight: 700; margin-top: 12px; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--primary-soft); overflow-wrap: anywhere; }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    .help summary { cursor: pointer; font-weight: 700; min-height: 32px; }
+    .help ul { margin: 10px 0 0; padding-inline-start: 1.3em; display: grid; gap: 8px; }
+    .reset-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 16px; }
+    .reset-row .btn { min-height: 40px; }
+    :root[lang="ur"] .stat-v, :root[lang="ur"] .be-big, :root[lang="ur"] .formula { font-family: "Noto Sans", system-ui, sans-serif; }
+
+    @media print {
+      .ft-tabs, .actions, .veh-btns, .log-form, .iconbtn, .help, .reset-row, .seg, .ex-note { display: none !important; }
+      .card { box-shadow: none; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="callout small" style="margin: 0 0 14px"><span aria-hidden="true">ℹ️</span> <span data-i18n="note_prices"></span></p>
+
+    <div class="tabs ft-tabs" role="tablist" data-i18n-aria-label="tabs_aria">
+      <button type="button" role="tab" id="tab-mileage" aria-controls="p-mileage" data-tab="mileage"><span aria-hidden="true">⛽</span> <span data-i18n="tab_mileage"></span></button>
+      <button type="button" role="tab" id="tab-trip" aria-controls="p-trip" data-tab="trip"><span aria-hidden="true">🛣️</span> <span data-i18n="tab_trip"></span></button>
+      <button type="button" role="tab" id="tab-ev" aria-controls="p-ev" data-tab="ev"><span aria-hidden="true">🔌</span> <span data-i18n="tab_ev"></span></button>
+      <button type="button" role="tab" id="tab-units" aria-controls="p-units" data-tab="units"><span aria-hidden="true">🔁</span> <span data-i18n="tab_units"></span></button>
+    </div>
+
+    <!-- ================= MILEAGE ================= -->
+    <section class="ft-panel" id="p-mileage" role="tabpanel" aria-labelledby="tab-mileage">
+      <div class="ft-two">
+        <section class="card" aria-labelledby="hQuick">
+          <h2 id="hQuick" data-i18n="h_quick"></h2>
+          <p class="hint" data-i18n="quick_hint" style="margin-bottom: 12px"></p>
+          <div class="fields">
+            <div class="field wide">
+              <label for="qFuel" data-i18n="lbl_fuel"></label>
+              <select id="qFuel" class="fuel-sel"></select>
+            </div>
+            <div class="field">
+              <label for="qStart" data-i18n="lbl_odo_start"></label>
+              <input id="qStart" type="text" inputmode="decimal" autocomplete="off" value="12000">
+            </div>
+            <div class="field">
+              <label for="qEnd" data-i18n="lbl_odo_end"></label>
+              <input id="qEnd" type="text" inputmode="decimal" autocomplete="off" value="12400">
+            </div>
+            <div class="field">
+              <label for="qQty" id="qQtyLbl"></label>
+              <input id="qQty" type="text" inputmode="decimal" autocomplete="off" value="25">
+            </div>
+            <div class="field">
+              <label for="qPrice" id="qPriceLbl"></label>
+              <input id="qPrice" type="text" inputmode="decimal" autocomplete="off" value="105">
+            </div>
+          </div>
+          <p class="callout danger small msg" id="qMsg" role="alert" style="margin-top: 12px"></p>
+          <div class="tiles" id="qOut" aria-live="polite">
+            <div class="stat hi"><div class="stat-l" data-i18n="th_mileage"></div><div class="stat-v num" id="qMileage"></div></div>
+            <div class="stat"><div class="stat-l" data-i18n="st_cpk"></div><div class="stat-v num" id="qCpk"></div></div>
+            <div class="stat"><div class="stat-l" data-i18n="res_distance"></div><div class="stat-v num" id="qDist"></div></div>
+            <div class="stat"><div class="stat-l" data-i18n="r_fuel_cost"></div><div class="stat-v num" id="qCost"></div><div class="stat-s num" id="qL100"></div></div>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn" id="qUseTrip"><span aria-hidden="true">🛣️</span> <span data-i18n="btn_use_trip"></span></button>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="hLog">
+          <h2 id="hLog" data-i18n="h_log"></h2>
+          <div class="veh-bar">
+            <div class="field">
+              <label for="vSel" data-i18n="lbl_vehicle"></label>
+              <select id="vSel" class="no-i18n"></select>
+            </div>
+            <div class="veh-btns">
+              <button type="button" class="btn" id="vAdd"><span aria-hidden="true">＋</span> <span data-i18n="btn_add_vehicle"></span></button>
+              <button type="button" class="btn" id="vEdit" data-i18n="edit"></button>
+              <button type="button" class="btn btn-danger" id="vDel" data-i18n="delete"></button>
+            </div>
+          </div>
+          <form class="panel veh-form" id="vForm" hidden>
+            <div class="fields">
+              <div class="field">
+                <label for="vName" data-i18n="lbl_vname"></label>
+                <input id="vName" type="text" class="no-i18n" maxlength="40" autocomplete="off" data-i18n-placeholder="ph_vname">
+              </div>
+              <div class="field">
+                <label for="vFuel" data-i18n="lbl_fuel"></label>
+                <select id="vFuel" class="fuel-sel"></select>
+              </div>
+            </div>
+            <p class="callout danger small msg" id="vMsg" role="alert"></p>
+            <div class="row">
+              <button type="submit" class="btn btn-primary" id="vSave" data-i18n="save"></button>
+              <button type="button" class="btn" id="vCancel" data-i18n="cancel"></button>
+            </div>
+          </form>
+
+          <div class="callout ex-note" id="exNote" hidden>
+            <p data-i18n="ex_note"></p>
+            <button type="button" class="btn btn-sm" id="exClear" data-i18n="btn_clear_ex"></button>
+          </div>
+
+          <form class="log-form" id="lForm" aria-labelledby="lFormTitle">
+            <h3 id="lFormTitle" style="margin: 0"></h3>
+            <div class="fields">
+              <div class="field">
+                <label for="lDate" data-i18n="f_date"></label>
+                <input id="lDate" type="date">
+              </div>
+              <div class="field">
+                <label for="lOdo" data-i18n="f_odo"></label>
+                <input id="lOdo" type="text" inputmode="decimal" autocomplete="off">
+              </div>
+              <div class="field">
+                <label for="lQty" id="lQtyLbl"></label>
+                <input id="lQty" type="text" inputmode="decimal" autocomplete="off">
+              </div>
+              <div class="field">
+                <label for="lPrice" id="lPriceLbl"></label>
+                <input id="lPrice" type="text" inputmode="decimal" autocomplete="off">
+              </div>
+              <div class="field wide">
+                <label class="check-big"><input type="checkbox" id="lFull" checked> <span data-i18n="f_full"></span></label>
+                <p class="hint" data-i18n="full_hint"></p>
+              </div>
+            </div>
+            <p class="callout danger small msg" id="lMsg" role="alert"></p>
+            <div class="row">
+              <button type="submit" class="btn btn-primary" id="lSave"></button>
+              <button type="button" class="btn" id="lCancel" data-i18n="cancel" hidden></button>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <section class="card" aria-labelledby="hStats">
+        <div class="card-head">
+          <h2 id="hStats"><span data-i18n="h_stats"></span> <bdi class="no-i18n" id="statsName"></bdi></h2>
+        </div>
+        <div class="tiles" id="logStats" aria-live="polite">
+          <div class="stat hi"><div class="stat-l" data-i18n="st_avg"></div><div class="stat-v num" id="sAvg"></div><div class="stat-s num" id="sAvgSub"></div></div>
+          <div class="stat"><div class="stat-l" data-i18n="st_cpk"></div><div class="stat-v num" id="sCpk"></div></div>
+          <div class="stat"><div class="stat-l" data-i18n="st_spent"></div><div class="stat-v num" id="sSpent"></div></div>
+          <div class="stat"><div class="stat-l" data-i18n="st_dist"></div><div class="stat-v num" id="sDist"></div></div>
+          <div class="stat"><div class="stat-l" data-i18n="st_fills"></div><div class="stat-v num" id="sFills"></div></div>
+        </div>
+        <p class="callout warning small" id="needTwo" data-i18n="need_two_full" hidden style="margin: 12px 0 0"></p>
+        <div class="ft-two" style="margin-top: 16px">
+          <div>
+            <h3 data-i18n="ch_trend"></h3>
+            <div class="chart-box" id="trendBox"></div>
+            <div class="legend"><span><i style="background: var(--c1)"></i><span data-i18n="lg_each"></span></span><span><i style="background: var(--accent)"></i><span data-i18n="lg_avg"></span></span></div>
+          </div>
+          <div>
+            <h3 data-i18n="ch_month"></h3>
+            <div class="chart-box" id="monthBox"></div>
+          </div>
+        </div>
+        <h3 style="margin-top: 18px" data-i18n="h_entries"></h3>
+        <div class="scroll-x">
+          <table class="table log-table" id="logTable">
+            <thead><tr>
+              <th data-i18n="th_date"></th><th data-i18n="th_odo"></th><th data-i18n="th_qty"></th><th data-i18n="th_price"></th>
+              <th data-i18n="th_cost"></th><th data-i18n="th_mileage"></th><th><span class="sr-only" data-i18n="th_actions"></span></th>
+            </tr></thead>
+            <tbody id="logBody"></tbody>
+          </table>
+        </div>
+        <p class="empty" id="logEmpty" data-i18n="log_empty" hidden></p>
+        <div class="actions">
+          <button type="button" class="btn" id="logCsv"><span aria-hidden="true">⬇</span> <span data-i18n="btn_csv"></span></button>
+          <button type="button" class="btn" id="logCopy"><span aria-hidden="true">⧉</span> <span data-i18n="btn_copy"></span></button>
+          <button type="button" class="btn" id="logPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
+        </div>
+      </section>
+    </section>
+
+    <!-- ================= TRIP ================= -->
+    <section class="ft-panel" id="p-trip" role="tabpanel" aria-labelledby="tab-trip" hidden>
+      <div class="ft-two">
+        <section class="card" aria-labelledby="hTrip">
+          <h2 id="hTrip" data-i18n="h_trip"></h2>
+          <div class="fields">
+            <div class="field wide">
+              <span class="hint" id="tWayLbl" data-i18n="lbl_way"></span>
+              <div class="seg full" id="tWay" role="group" aria-labelledby="tWayLbl">
+                <button type="button" data-way="one" id="tWayOne" data-i18n="trip_oneway"></button><button type="button" data-way="round" id="tWayRound" data-i18n="trip_round"></button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="tDist" data-i18n="lbl_distance"></label>
+              <input id="tDist" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="tFuel" data-i18n="lbl_fuel"></label>
+              <select id="tFuel" class="fuel-sel"></select>
+            </div>
+            <div class="field">
+              <label for="tMileage" id="tMileageLbl"></label>
+              <input id="tMileage" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="tPrice" id="tPriceLbl"></label>
+              <input id="tPrice" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field wide" id="tFromLogWrap" hidden>
+              <button type="button" class="btn btn-sm" id="tFromLog"></button>
+            </div>
+            <div class="field wide">
+              <label for="tTolls" data-i18n="lbl_tolls"></label>
+              <input id="tTolls" type="text" inputmode="decimal" autocomplete="off">
+              <p class="hint" data-i18n="toll_hint"></p>
+            </div>
+            <div class="field">
+              <label for="tParking" data-i18n="lbl_parking"></label>
+              <input id="tParking" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="tFood" data-i18n="lbl_food"></label>
+              <input id="tFood" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="tStay" data-i18n="lbl_stay"></label>
+              <input id="tStay" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="tOther" data-i18n="lbl_other"></label>
+              <input id="tOther" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field wide">
+              <label for="tPeople" data-i18n="lbl_people"></label>
+              <input id="tPeople" type="text" inputmode="numeric" autocomplete="off">
+            </div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="hTripRes">
+          <h2 id="hTripRes" data-i18n="h_trip_res"></h2>
+          <p class="callout danger small msg" id="tMsg" role="alert"></p>
+          <div aria-live="polite" id="tOut">
+            <div class="tiles" style="margin-top: 0">
+              <div class="stat hi"><div class="stat-l" data-i18n="r_total"></div><div class="stat-v num" id="tTotal"></div></div>
+              <div class="stat hi"><div class="stat-l" data-i18n="r_pp"></div><div class="stat-v num" id="tPP"></div><div class="stat-s" id="tPPsub"></div></div>
+              <div class="stat"><div class="stat-l" data-i18n="r_fuel_needed"></div><div class="stat-v num" id="tFuelNeed"></div></div>
+              <div class="stat"><div class="stat-l" data-i18n="r_cpk"></div><div class="stat-v num" id="tCpk"></div></div>
+            </div>
+            <div class="breakdown" id="tBreak"></div>
+          </div>
+          <div class="actions">
+            <a class="btn btn-primary split-link" id="tSplit" href="../split-bill/index.html"><span aria-hidden="true">🧾</span> <span data-i18n="split_link"></span></a>
+            <button type="button" class="btn" id="tCopy"><span aria-hidden="true">⧉</span> <span data-i18n="btn_copy"></span></button>
+            <button type="button" class="btn" id="tPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
+          </div>
+        </section>
+      </div>
+
+      <section class="card" aria-labelledby="hCmp">
+        <h2 id="hCmp" data-i18n="h_compare"></h2>
+        <p class="hint" data-i18n="cmp_hint"></p>
+        <div class="fields" style="margin-top: 12px">
+          <div class="field">
+            <label for="cBikeMil" data-i18n="lbl_bike_mileage"></label>
+            <input id="cBikeMil" type="text" inputmode="decimal" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="cBikePrice" data-i18n="lbl_bike_price"></label>
+            <input id="cBikePrice" type="text" inputmode="decimal" autocomplete="off">
+          </div>
+          <div class="field wide">
+            <label for="cTicket" data-i18n="lbl_ticket"></label>
+            <input id="cTicket" type="text" inputmode="decimal" autocomplete="off">
+          </div>
+        </div>
+        <div class="cmp" id="cmpOut" aria-live="polite"></div>
+        <p class="hint" style="margin-top: 10px" data-i18n="bike_note"></p>
+      </section>
+    </section>
+
+    <!-- ================= EV ================= -->
+    <section class="ft-panel" id="p-ev" role="tabpanel" aria-labelledby="tab-ev" hidden>
+      <section class="card" aria-labelledby="hEv">
+        <h2 id="hEv" data-i18n="h_ev"></h2>
+        <div class="fields">
+          <div class="field">
+            <span class="hint" id="eKindLbl" data-i18n="lbl_kind"></span>
+            <div class="seg full" id="eKind" role="group" aria-labelledby="eKindLbl">
+              <button type="button" data-kind="car" id="eKindCar"><span aria-hidden="true">🚗</span> <span data-i18n="kind_car"></span></button><button type="button" data-kind="2w" id="eKind2w"><span aria-hidden="true">🛵</span> <span data-i18n="kind_2w"></span></button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="eKm" data-i18n="lbl_km_month"></label>
+            <input id="eKm" type="text" inputmode="decimal" autocomplete="off">
+          </div>
+        </div>
+        <p class="hint" style="margin-top: 8px" data-i18n="kind_hint"></p>
+      </section>
+      <div class="ft-two">
+        <section class="card ev-side" aria-labelledby="hEvFuel">
+          <h3 id="hEvFuel"><span aria-hidden="true">⛽</span> <span data-i18n="h_fuel_vehicle"></span></h3>
+          <div class="fields">
+            <div class="field wide">
+              <label for="eFuel" data-i18n="lbl_fuel"></label>
+              <select id="eFuel"></select>
+            </div>
+            <div class="field wide">
+              <label for="eFPrice" data-i18n="lbl_onroad"></label>
+              <input id="eFPrice" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="eFMil" id="eFMilLbl"></label>
+              <input id="eFMil" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="eFRate" id="eFRateLbl"></label>
+              <input id="eFRate" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field wide">
+              <label for="eFServ" data-i18n="lbl_service"></label>
+              <input id="eFServ" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+          </div>
+        </section>
+        <section class="card ev-side" aria-labelledby="hEvEv">
+          <h3 id="hEvEv"><span aria-hidden="true">🔌</span> <span data-i18n="h_ev_vehicle"></span></h3>
+          <div class="fields">
+            <div class="field wide">
+              <label for="eEPrice" data-i18n="lbl_onroad"></label>
+              <input id="eEPrice" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="eEff" data-i18n="lbl_ev_eff"></label>
+              <input id="eEff" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="eHome" data-i18n="lbl_home_tariff"></label>
+              <input id="eHome" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="ePublic" data-i18n="lbl_public_tariff"></label>
+              <input id="ePublic" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="eHomeShare" data-i18n="lbl_home_share"></label>
+              <input id="eHomeShare" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="eLoss" data-i18n="lbl_loss"></label>
+              <input id="eLoss" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="eEServ" data-i18n="lbl_service"></label>
+              <input id="eEServ" type="text" inputmode="decimal" autocomplete="off">
+            </div>
+          </div>
+        </section>
+      </div>
+      <section class="card" aria-labelledby="hEvRes">
+        <h2 id="hEvRes" data-i18n="h_ev_res"></h2>
+        <p class="callout danger small msg" id="eMsg" role="alert"></p>
+        <div aria-live="polite" id="eOut">
+          <div class="callout success" id="eBeBox">
+            <div class="small" style="font-weight: 700" data-i18n="r_breakeven"></div>
+            <div class="be-big" id="eBe"></div>
+            <div class="small" id="eBeSub"></div>
+          </div>
+          <div class="tiles">
+            <div class="stat"><div class="stat-l" data-i18n="r_fv_cpk"></div><div class="stat-v num" id="eFCpk"></div><div class="stat-s num" id="eFMonth"></div></div>
+            <div class="stat"><div class="stat-l" data-i18n="r_ev_cpk"></div><div class="stat-v num" id="eECpk"></div><div class="stat-s num" id="eEMonth"></div></div>
+            <div class="stat hi"><div class="stat-l" data-i18n="r_saving"></div><div class="stat-v num" id="eSave"></div><div class="stat-s num" id="eSaveYr"></div></div>
+            <div class="stat"><div class="stat-l" data-i18n="r_extra"></div><div class="stat-v num" id="eDiff"></div></div>
+          </div>
+        </div>
+        <h3 style="margin-top: 18px" data-i18n="ch_cum"></h3>
+        <div class="chart-box" id="evBox"></div>
+        <div class="legend"><span><i style="background: var(--c2)"></i><span data-i18n="h_fuel_vehicle"></span></span><span><i style="background: var(--c4)"></i><span data-i18n="h_ev_vehicle"></span></span></div>
+        <div class="actions">
+          <button type="button" class="btn" id="eCopy"><span aria-hidden="true">⧉</span> <span data-i18n="btn_copy"></span></button>
+          <button type="button" class="btn" id="ePrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
+        </div>
+        <h3 style="margin-top: 18px" data-i18n="h_assume"></h3>
+        <ul class="assume small">
+          <li data-i18n="as_1"></li>
+          <li data-i18n="as_2"></li>
+          <li data-i18n="as_3"></li>
+          <li data-i18n="as_4"></li>
+          <li data-i18n="as_5"></li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- ================= UNITS ================= -->
+    <section class="ft-panel" id="p-units" role="tabpanel" aria-labelledby="tab-units" hidden>
+      <div class="ft-two">
+        <section class="card" aria-labelledby="hUEff">
+          <h2 id="hUEff" data-i18n="h_units_eff"></h2>
+          <div class="fields">
+            <div class="field">
+              <label for="uVal" data-i18n="lbl_value"></label>
+              <input id="uVal" type="text" inputmode="decimal" autocomplete="off" value="15">
+            </div>
+            <div class="field">
+              <label for="uFrom" data-i18n="lbl_unit"></label>
+              <select id="uFrom">
+                <option value="kmpl" data-i18n="u_kmpl"></option>
+                <option value="l100" data-i18n="u_l100"></option>
+                <option value="mpguk" data-i18n="u_mpguk"></option>
+                <option value="mpgus" data-i18n="u_mpgus"></option>
+              </select>
+            </div>
+          </div>
+          <div class="conv-out" id="uOut" aria-live="polite"></div>
+          <p class="hint" style="margin-top: 10px" data-i18n="mpg_note"></p>
+        </section>
+        <section class="card" aria-labelledby="hUCost">
+          <h2 id="hUCost" data-i18n="h_units_cost"></h2>
+          <div class="field">
+            <span class="hint" id="uSolveLbl" data-i18n="lbl_solve"></span>
+            <div class="seg full" id="uSolve" role="group" aria-labelledby="uSolveLbl">
+              <button type="button" data-solve="cpk" data-i18n="solve_cpk"></button><button type="button" data-solve="mil" data-i18n="solve_mil"></button><button type="button" data-solve="price" data-i18n="solve_price"></button>
+            </div>
+          </div>
+          <div class="fields" style="margin-top: 12px">
+            <div class="field" id="uPriceF">
+              <label for="uPrice" data-i18n="lbl_u_price"></label>
+              <input id="uPrice" type="text" inputmode="decimal" autocomplete="off" value="105">
+            </div>
+            <div class="field" id="uMilF">
+              <label for="uMil" data-i18n="lbl_u_mileage"></label>
+              <input id="uMil" type="text" inputmode="decimal" autocomplete="off" value="15">
+            </div>
+            <div class="field" id="uCpkF">
+              <label for="uCpk" data-i18n="lbl_u_cpk"></label>
+              <input id="uCpk" type="text" inputmode="decimal" autocomplete="off" value="5">
+            </div>
+          </div>
+          <div class="formula num" id="uFormula" aria-live="polite"></div>
+          <p class="small muted" id="uFormulaSub" style="margin: 8px 0 0"></p>
+        </section>
+      </div>
+    </section>
+
+    <details class="card help" style="margin-top: 16px">
+      <summary data-i18n="help"></summary>
+      <ul>
+        <li data-i18n="tip_1"></li>
+        <li data-i18n="tip_2"></li>
+        <li data-i18n="tip_3"></li>
+        <li data-i18n="tip_4"></li>
+        <li data-i18n="tip_5"></li>
+        <li data-i18n="tip_6"></li>
+      </ul>
+    </details>
+
+    <div class="reset-row">
+      <button type="button" class="btn btn-danger btn-sm" id="btnReset" data-i18n="reset"></button>
+      <span class="tiny muted" data-i18n="saved_local"></span>
+    </div>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
