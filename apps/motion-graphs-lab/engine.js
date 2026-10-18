@@ -127,10 +127,14 @@
     var H = '½';
     function step(find, eq, lines) { st.push({ find: find, eq: eq, lines: lines }); }
     function sq(x) { return fmt(x) + '²'; }
-    function root(find, val, sign) {
-      if (val < -1e-9) return false;
-      var r = Math.sqrt(Math.max(0, val)) * sign;
-      return r;
+    /* a square root has two signs: keep the preferred one unless only the other gives a positive time
+       (e.g. a ball thrown up with u = 10, a = −9.8, s = 0 lands with v = −10 after 2.04 s, not v = +10 at t = 0) */
+    function pickRoot(r, preferred, timeOf) {
+      if (!(r > 1e-9)) return preferred;
+      var t1 = timeOf(r * preferred), t2 = timeOf(-r * preferred);
+      if (t1 > 1e-9) return preferred;
+      if (t2 > 1e-9) return -preferred;
+      return t1 >= -1e-9 ? preferred : -preferred;
     }
     try {
       if ('u' in k && 'a' in k && 't' in k) {
@@ -154,7 +158,9 @@
         var v2 = u * u + 2 * a * s;
         if (v2 < -1e-9) { res.error = 'err_root'; return res; }
         var sign = u !== 0 ? (sgn(s) === sgn(u) ? sgn(u) : sgn(a)) : (a !== 0 ? sgn(a) : 1);
-        v = Math.sqrt(Math.max(0, v2)) * sign;
+        var rv = Math.sqrt(Math.max(0, v2));
+        if (a !== 0) { sign = pickRoot(rv, sign, function (cand) { return (cand - u) / a; }); }
+        v = rv * sign;
         step('v', 'e3', ['v² = ' + sq(u) + ' + 2 × ' + fmt(a) + ' × ' + fmt(s), 'v² = ' + fmt(v2), 'v = ' + (sign < 0 ? '−' : '') + '√' + fmt(v2) + ' = ' + fmt(v) + ' m/s']);
         if (a !== 0) { t = (v - u) / a; step('t', 'e1', ['t = (v − u) / a', 't = (' + fmt(v) + ' − ' + fmt(u) + ') / ' + fmt(a), 't = ' + fmt(t) + ' s']); }
         else if (u !== 0) { t = s / u; step('t', 'e4', ['t = s / u (a = 0)', 't = ' + fmt(s) + ' / ' + fmt(u), 't = ' + fmt(t) + ' s']); }
@@ -180,8 +186,9 @@
       } else if ('v' in k && 'a' in k && 's' in k) {
         var u2 = v * v - 2 * a * s;
         if (u2 < -1e-9) { res.error = 'err_root'; return res; }
-        var sg = v !== 0 ? sgn(v) : 1;
-        u = Math.sqrt(Math.max(0, u2)) * sg;
+        var sg = v !== 0 ? sgn(v) : 1, ru = Math.sqrt(Math.max(0, u2));
+        if (a !== 0) { sg = pickRoot(ru, sg, function (cand) { return (v - cand) / a; }); }
+        u = ru * sg;
         step('u', 'e3', ['u² = v² − 2as', 'u² = ' + sq(v) + ' − 2 × ' + fmt(a) + ' × ' + fmt(s), 'u² = ' + fmt(u2), 'u = ' + (sg < 0 ? '−' : '') + '√' + fmt(u2) + ' = ' + fmt(u) + ' m/s']);
         if (a === 0) { if (v === 0) { res.error = 'err_impossible'; return res; } t = s / v; step('t', 'e4', ['t = s / v (a = 0)', 't = ' + fmt(s) + ' / ' + fmt(v), 't = ' + fmt(t) + ' s']); }
         else { t = (v - u) / a; step('t', 'e1', ['t = (v − u) / a', 't = (' + fmt(v) + ' − ' + fmt(u) + ') / ' + fmt(a), 't = ' + fmt(t) + ' s']); }

@@ -175,7 +175,9 @@
         var ct = Math.min(m.T, Math.max(0, tc)), st = M.at(m, ct), val = st[vk], cx = X(ct), cy = Y(val), right = cx > W - 90;
         cl.setAttribute('x1', cx); cl.setAttribute('x2', cx);
         cc.setAttribute('cx', cx); cc.setAttribute('cy', cy);
-        ctx.setAttribute('x', cx + (right ? -9 : 9)); ctx.setAttribute('y', cy - 9); ctx.setAttribute('text-anchor', right ? 'end' : 'start');
+        /* label above the point, or below it when the point is near the top (so it never covers the axis title) */
+        var below = cy < pad.t + 26;
+        ctx.setAttribute('x', cx + (right ? -9 : 9)); ctx.setAttribute('y', below ? cy + 18 : cy - 9); ctx.setAttribute('text-anchor', right ? 'end' : 'start');
         ctx.textContent = fmt(val) + ' ' + ux;
       };
       setCursor(o.cursorT);
