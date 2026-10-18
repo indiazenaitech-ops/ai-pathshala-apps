@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Type in Indian Languages · AI Pathshala</title>
+  <meta name="description" content="Free phonetic typing for Hindi, Marathi, Bengali, Punjabi, Gujarati, Odia, Tamil, Telugu, Kannada, Malayalam and Urdu. Type English letters, get correct Unicode. Works offline.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    #app { --sf: "Noto Sans Devanagari", "Nirmala UI", "Mangal", sans-serif; --fs: 1.5rem; }
+    .it-priv { margin: 0 0 14px; }
+    .it-priv .badge { white-space: normal; font-size: .85rem; line-height: 1.45; padding: 5px 12px; border-radius: 12px; }
+    .it-bar { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: flex-end; }
+    .it-bar .field { flex: 0 1 260px; }
+    .it-bar select { min-height: 46px; font-size: 1.05rem; }
+    .it-opts { display: flex; flex-wrap: wrap; gap: 4px 20px; flex: 1 1 320px; }
+    .it-opts .check { min-height: 40px; line-height: 1.35; }
+    :root[lang="ur"] .it-opts .check { line-height: 1.9; }
+    .tabs { margin: 18px 0 14px; }
+    .tabs button { min-height: 44px; font-size: 1rem; }
+    .it-mode button { min-height: 42px; }
+    .it-pane { display: grid; gap: 14px; }
+    .it-boxes { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: stretch; }
+    @media (max-width: 860px) { .it-boxes { grid-template-columns: minmax(0, 1fr); } }
+    .it-boxes.inline { grid-template-columns: minmax(0, 1fr); }
+    .it-box { display: flex; flex-direction: column; gap: 8px; }
+    .it-box h2 { margin: 0; font-size: 1.05rem; }
+    .it-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; }
+    .it-stats { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    textarea.it-roman { min-height: 150px; height: 100%; font-size: 1.15rem; line-height: 1.6; font-family: "Noto Sans", system-ui, sans-serif; text-align: left; }
+    textarea.it-out { min-height: 190px; height: 100%; font-family: var(--sf); font-size: var(--fs); line-height: 1.7; background: var(--surface-2); }
+    .it-out[readonly] { cursor: text; }
+    .it-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .it-tools .btn { flex: 0 1 auto; }
+    .it-size { display: inline-flex; gap: 4px; align-items: center; }
+    .it-size .btn { min-width: 44px; padding-inline: 8px; }
+    .it-preview { font-family: var(--sf); }
+    .it-hint { margin: 0; }
+    .it-hint .pair { white-space: nowrap; }
+    .it-hint kbd, .it-pair kbd, .it-guide kbd { direction: ltr; unicode-bidi: isolate; font-family: var(--mono); }
+
+    .it-pal h2 { font-size: 1.05rem; margin: 0 0 6px; }
+    .it-pal h3 { font-size: .9rem; margin: 12px 0 6px; color: var(--muted); font-weight: 600; }
+    .it-keys { display: flex; flex-wrap: wrap; gap: 6px; }
+    .it-key { font-family: var(--sf); font-size: 1.35rem; min-width: 46px; min-height: 46px; padding: 2px 8px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; line-height: 1.3; }
+    .it-key:hover { background: var(--surface-2); }
+    .it-key:active { transform: translateY(1px); }
+    .it-key.sm { font-size: 1rem; }
+
+    .it-guide table { width: 100%; }
+    .it-guide td, .it-guide th { vertical-align: middle; }
+    .it-guide td.o { font-family: var(--sf); font-size: 1.35rem; line-height: 1.5; }
+    .it-guide kbd { font-size: .95rem; margin-inline-end: 4px; display: inline-block; margin-block: 2px; }
+    @media (max-width: 480px) { .it-guide .table th, .it-guide .table td { padding: 6px 6px; } .it-guide td.o { font-size: 1.2rem; } }
+    .it-ggrid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); align-items: start; }
+    .it-rules { margin: 0; padding-inline-start: 22px; }
+    .it-rules li { margin-bottom: 10px; }
+    .it-ex { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    .it-pair { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--border); }
+    .it-pair .u { font-family: var(--sf); font-size: 1.15rem; }
+    .it-pair .arr { color: var(--muted); }
+    [dir="rtl"] .it-pair .arr { display: inline-block; transform: scaleX(-1); }
+    .it-sc { font-family: var(--sf); }
+
+    .it-conv-bar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: flex-end; }
+    .it-conv-bar .field { flex: 0 1 280px; }
+    textarea.it-cin { min-height: 140px; font-size: 1.25rem; line-height: 1.7; font-family: "Noto Sans Devanagari", "Noto Sans Bengali", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Oriya", "Nirmala UI", sans-serif; }
+    textarea.it-cout { min-height: 140px; font-size: 1.35rem; line-height: 1.7; background: var(--surface-2); }
+    .it-note { margin: 0; }
+    details.card { margin-top: 16px; }
+    details.card > summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; min-height: 40px; padding-block: 6px; }
+    details.card[open] > summary { margin-bottom: 10px; }
+    .it-tips li + li { margin-top: 6px; }
+    :root[lang="ur"] .it-pair, :root[lang="ur"] .it-guide td { line-height: 1.8; }
+    #printArea { display: none; }
+    @media print {
+      #app > *:not(#printArea) { display: none !important; }
+      #printArea { display: block !important; }
+      #printArea pre { white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--sf); font-size: 15pt; line-height: 1.7; margin: 0; }
+      #printArea .it-guide td.o { font-size: 14pt; }
+      #printArea .it-ggrid { display: block; }
+      #printArea .card { margin-bottom: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="it-priv"><span class="badge success" data-i18n="privacy"></span></p>
+
+    <section class="card it-bar no-print">
+      <label class="field"><span data-i18n="lang_label"></span>
+        <select id="lang"></select>
+      </label>
+      <div class="it-opts" role="group" aria-labelledby="optsTitle">
+        <span id="optsTitle" data-i18n="opts_title" hidden></span>
+        <label class="check" id="smartWrap"><input type="checkbox" id="optSmart"> <span data-i18n="opt_smart"></span></label>
+        <label class="check"><input type="checkbox" id="optCap"> <span data-i18n="opt_cap"></span></label>
+        <label class="check"><input type="checkbox" id="optDigits"> <span data-i18n="opt_digits"></span></label>
+      </div>
+    </section>
+
+    <div class="tabs no-print" role="tablist" id="tabs">
+      <button type="button" role="tab" id="tab-type" data-tab="type" aria-controls="panel-type" data-i18n="tab_type"></button>
+      <button type="button" role="tab" id="tab-guide" data-tab="guide" aria-controls="panel-guide" data-i18n="tab_guide"></button>
+      <button type="button" role="tab" id="tab-conv" data-tab="conv" aria-controls="panel-conv" data-i18n="tab_conv"></button>
+    </div>
+
+    <!-- ===== Type ===== -->
+    <section id="panel-type" role="tabpanel" aria-labelledby="tab-type" class="it-pane">
+      <div class="row no-print">
+        <div class="seg it-mode" role="group" aria-labelledby="modeLabel">
+          <span id="modeLabel" data-i18n="mode_label" hidden></span>
+          <button type="button" id="modeLive" data-i18n="mode_live" aria-pressed="true"></button>
+          <button type="button" id="modeInline" data-i18n="mode_inline" aria-pressed="false"></button>
+        </div>
+        <p class="small muted mb0" id="modeHelp" style="flex:1 1 260px"></p>
+      </div>
+      <div class="it-boxes" id="boxes">
+        <div class="card it-box" id="romanCard">
+          <div class="it-head"><h2 id="romanTitle" data-i18n="roman_title"></h2></div>
+          <textarea id="roman" class="it-roman no-i18n" dir="ltr" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-labelledby="romanTitle" data-i18n-placeholder="roman_ph"></textarea>
+          <p class="tiny muted it-hint" id="hint"></p>
+        </div>
+        <div class="card it-box">
+          <div class="it-head"><h2 id="outTitle"></h2><span class="it-stats" id="stats" aria-live="polite"></span></div>
+          <textarea id="out" class="it-out no-i18n" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-labelledby="outTitle" readonly></textarea>
+          <div class="it-tools no-print">
+            <button type="button" class="btn btn-primary" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy_text"></span></button>
+            <a class="btn btn-wa" id="waBtn" href="#" target="_blank" rel="noopener"><span data-i18n="send_wa"></span></a>
+            <button type="button" class="btn" id="dlBtn"><span aria-hidden="true">⬇</span> <span data-i18n="dl_txt"></span></button>
+            <button type="button" class="btn" id="printBtn"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
+            <button type="button" class="btn" id="convertAllBtn" hidden data-i18n="convert_all"></button>
+            <button type="button" class="btn" id="sampleBtn" data-i18n="sample"></button>
+            <button type="button" class="btn btn-danger" id="clearBtn" data-i18n="clear"></button>
+            <span class="it-size" role="group" aria-labelledby="sizeLabel">
+              <span id="sizeLabel" class="small muted" data-i18n="font_size"></span>
+              <button type="button" class="btn" id="fontDown" data-i18n-aria-label="font_smaller">A−</button>
+              <button type="button" class="btn" id="fontUp" data-i18n-aria-label="font_bigger">A+</button>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <section class="card it-pal no-print" aria-labelledby="palTitle">
+        <h2 id="palTitle" data-i18n="pal_title"></h2>
+        <p class="small muted mb0" id="palHelp"></p>
+        <div id="palette"></div>
+      </section>
+    </section>
+
+    <!-- ===== Typing guide ===== -->
+    <section id="panel-guide" role="tabpanel" aria-labelledby="tab-guide" class="it-pane" hidden>
+      <div class="card">
+        <div class="row spread">
+          <h2 class="mb0" id="guideTitle"></h2>
+          <button type="button" class="btn no-print" id="guidePrint"><span aria-hidden="true">🖨</span> <span data-i18n="guide_print"></span></button>
+        </div>
+        <p class="small muted" data-i18n="guide_intro"></p>
+        <div id="guideBody" class="it-guide"></div>
+      </div>
+    </section>
+
+    <!-- ===== Script converter ===== -->
+    <section id="panel-conv" role="tabpanel" aria-labelledby="tab-conv" class="it-pane" hidden>
+      <div class="card stack">
+        <p class="callout warning it-note" data-i18n="conv_note"></p>
+        <label class="field"><span data-i18n="conv_in"></span>
+          <textarea id="convIn" class="it-cin no-i18n" spellcheck="false" autocomplete="off" data-i18n-placeholder="conv_ph"></textarea>
+        </label>
+        <div class="it-conv-bar">
+          <label class="field"><span data-i18n="conv_to"></span><select id="convTo"></select></label>
+          <button type="button" class="btn" id="convSample" data-i18n="sample"></button>
+          <button type="button" class="btn" id="convSwap"><span aria-hidden="true">⇄</span> <span data-i18n="conv_swap"></span></button>
+        </div>
+        <div class="it-head"><h3 class="mb0" data-i18n="conv_out"></h3><span class="it-stats" id="convStats" aria-live="polite"></span></div>
+        <textarea id="convOut" class="it-cout no-i18n" readonly data-i18n-aria-label="conv_out"></textarea>
+        <div class="it-tools">
+          <button type="button" class="btn btn-primary" id="convCopy"><span aria-hidden="true">📋</span> <span data-i18n="copy_text"></span></button>
+        </div>
+      </div>
+    </section>
+
+    <details class="card">
+      <summary data-i18n="help_title"></summary>
+      <ul class="it-tips">
+        <li data-i18n="tip_1"></li>
+        <li data-i18n="tip_2"></li>
+        <li data-i18n="tip_3"></li>
+        <li data-i18n="tip_4"></li>
+        <li data-i18n="tip_5"></li>
+        <li data-i18n="tip_6"></li>
+      </ul>
+    </details>
+
+    <details class="card">
+      <summary data-i18n="inside_title"></summary>
+      <p data-i18n="inside_1"></p>
+      <p data-i18n="inside_2"></p>
+      <p class="mb0" data-i18n="inside_3"></p>
+    </details>
+
+    <div class="row no-print" style="margin-top:16px; justify-content:space-between">
+      <span class="tiny muted" data-i18n="saved_local"></span>
+      <button type="button" class="btn btn-danger" id="resetBtn" data-i18n="reset"></button>
+    </div>
+    <div id="printArea"></div>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="translit.js"></script>
+  <script src="words.js"></script>
+  <script src="typing.js"></script>
+  <script src="convert.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
