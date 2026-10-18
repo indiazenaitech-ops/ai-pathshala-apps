@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flowchart & Algorithm Lab · AI Pathshala</title>
+  <meta name="description" content="Free classroom app: build a program from blocks and see it as a flowchart, pseudocode and Python at once. Run it step by step with a variable table and a dry-run table. Works offline, 12 Indian languages.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    /* ---------- layout: editor | view, run under the editor, dry-run table across ---------- */
+    .fc-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-areas: "editor view" "run view" "dry dry"; align-items: start; }
+    .fc-editor { grid-area: editor; } .fc-view { grid-area: view; } .fc-run { grid-area: run; } .fc-dry { grid-area: dry; }
+    @media (min-width: 961px) and (min-height: 600px) { .fc-view { position: sticky; top: 70px; } }
+    @media (max-width: 960px) { .fc-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "editor" "view" "run" "dry"; } }
+    .ltr { direction: ltr; unicode-bidi: isolate; }
+    .mono { font-family: var(--mono); }
+    .h-sec { font-size: 1.02rem; margin: 0 0 6px; }
+    .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    .toolbar .row { align-items: flex-end; }
+    .toolbar select, .toolbar input { width: 100%; }
+    .toolbar .field { flex: 1 1 220px; }
+    .icon-btn { font-size: 1.05rem; }
+
+    /* ---------- block editor ---------- */
+    .blk-list { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .blk { --bc: var(--c8); display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 6px 8px 6px 10px; border: 1px solid var(--border); border-inline-start: 5px solid var(--bc);
+      border-radius: var(--radius-sm); background: var(--surface); min-width: 0; }
+    .blk[data-type="input"], .blk[data-type="output"] { --bc: var(--c7); }
+    .blk[data-type="process"] { --bc: var(--primary); }
+    .blk[data-type="decision"] { --bc: var(--c2); }
+    .blk[data-type="while"], .blk[data-type="for"] { --bc: var(--c3); }
+    .blk.cur { background: var(--accent-soft); border-color: var(--accent); }
+    .blk-main { display: flex; align-items: center; gap: 8px; flex: 1 1 180px; min-width: 0; cursor: pointer; border: 0; background: none; font: inherit; color: inherit; text-align: start; padding: 4px 0; min-height: 40px; border-radius: 6px; }
+    .blk-main:hover { color: var(--primary); }
+    .blk-ic { flex: none; font-size: 1.15rem; line-height: 1; }
+    .blk-kind { flex: none; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--bc); min-width: 0; }
+    :root:not([lang="en"]) .blk-kind { text-transform: none; letter-spacing: 0; font-size: .78rem; }
+    .blk-txt { font-family: var(--mono); font-size: .95rem; overflow-wrap: anywhere; min-width: 0; direction: ltr; unicode-bidi: isolate; text-align: start; }
+    .blk-acts { display: flex; gap: 2px; margin-inline-start: auto; flex: none; }
+    .blk-acts button { width: 40px; height: 40px; padding: 0; border: 0; background: transparent; color: var(--muted); border-radius: 8px; font: inherit; font-size: 1rem; cursor: pointer; display: inline-grid; place-items: center; }
+    .blk-acts button:hover { background: var(--surface-2); color: var(--text); }
+    .blk-acts button:disabled { opacity: .3; cursor: default; }
+    .blk-nest { flex-basis: 100%; display: grid; gap: 6px; padding-inline-start: 10px; border-inline-start: 2px dashed color-mix(in srgb, var(--bc) 50%, transparent); margin-inline-start: 4px; }
+    .blk-lbl { font-size: .8rem; font-weight: 700; color: var(--bc); margin-top: 2px; }
+    .blk-add { align-self: flex-start; border: 1px dashed var(--border); background: transparent; color: var(--muted); border-radius: 8px; padding: 0 12px; min-height: 36px; font: inherit; font-weight: 600; font-size: .86rem; cursor: pointer; }
+    .blk-add:hover { color: var(--primary); border-color: var(--primary); background: var(--primary-soft); }
+    .blk-list > .blk-add { min-height: 42px; }
+    .ed-empty { color: var(--muted); padding: 18px 10px; text-align: center; border: 2px dashed var(--border); border-radius: var(--radius-sm); }
+
+    /* ---------- block modal ---------- */
+    .typegrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    @media (max-width: 420px) { .typegrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .typebtn { --bc: var(--c8); display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 6px; border: 2px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font: inherit; font-weight: 700; font-size: .88rem; cursor: pointer; min-height: 60px; }
+    .typebtn span:first-child { font-size: 1.3rem; }
+    .typebtn[aria-pressed="true"] { border-color: var(--bc); background: color-mix(in srgb, var(--bc) 14%, var(--surface)); }
+    .typebtn[data-type="input"], .typebtn[data-type="output"] { --bc: var(--c7); } .typebtn[data-type="process"] { --bc: var(--primary); }
+    .typebtn[data-type="decision"] { --bc: var(--c2); } .typebtn[data-type="while"], .typebtn[data-type="for"] { --bc: var(--c3); }
+    .md-form input[type="text"] { width: 100%; font-family: var(--mono); direction: ltr; }
+    .md-form .for-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .md-err { color: var(--danger); font-weight: 600; min-height: 1.2em; }
+    .md-err:empty { display: none; }
+
+    /* ---------- flowchart ---------- */
+    .fc-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .fc-wrap { overflow: auto; max-height: 72vh; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); position: relative; }
+    .fc-wrap svg { display: block; max-width: none; }
+    .fc-node { cursor: pointer; }
+    .fc-node.term, .fc-node.dot { cursor: default; }
+    .fc-node:focus-visible { outline: none; }
+    .fc-node:focus-visible .shape { stroke: var(--accent); stroke-width: 3; }
+    .fc-node text { font-weight: 600; pointer-events: none; }
+    .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; font-size: .82rem; color: var(--muted); margin-top: 8px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend svg { width: 30px; height: 20px; }
+
+    /* ---------- code views ---------- */
+    .code { font-family: var(--mono); font-size: .92rem; line-height: 1.55; background: var(--surface-2); border-radius: var(--radius-sm); padding: 12px 10px; overflow-x: auto; direction: ltr; text-align: left; counter-reset: ln; min-height: 120px; max-height: 72vh; overflow-y: auto; }
+    .code .ln { white-space: pre; padding-inline-start: 3.2em; position: relative; border-radius: 4px; }
+    .code .ln::before { counter-increment: ln; content: counter(ln); position: absolute; left: 0; width: 2.4em; text-align: right; color: var(--muted); font-size: .85em; opacity: .8; }
+    .code .ln.cur { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+    .code .kw { color: var(--c3); font-weight: 700; }
+    .code .cm { color: var(--muted); font-style: italic; white-space: pre-wrap; }
+    .code .st { color: var(--c4); }
+    .code .nb { color: var(--c2); }
+    .code-empty { color: var(--muted); font-style: italic; font-family: var(--font); }
+    .code-tools { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 8px; }
+
+    /* ---------- run panel ---------- */
+    .run-btns .btn { min-width: 96px; }
+    .status { font-weight: 600; margin: 0; }
+    .status.ok { color: var(--success); } .status.bad { color: var(--danger); }
+    .in-panel { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .in-panel label { flex: 1 1 100%; }
+    .in-panel input { flex: 1 1 140px; font-family: var(--mono); min-height: 44px; font-size: 1.05rem; }
+    .in-panel .btn { min-height: 44px; }
+    .console { font-family: var(--mono); font-size: 1rem; background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px 12px; min-height: 96px; max-height: 240px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; direction: ltr; text-align: left; }
+    .console .cl { padding: 1px 0; }
+    .console .cl.new { animation: edu-pop .2s ease-out; }
+    .console .empty { color: var(--muted); font-family: var(--font); font-style: italic; }
+    .vars-wrap { max-height: 240px; overflow: auto; border-radius: var(--radius-sm); }
+    #vars td.v { font-family: var(--mono); direction: ltr; unicode-bidi: isolate; text-align: left; }
+    #vars tr.chg td { background: var(--accent-soft); font-weight: 700; }
+    #vars td.n { font-family: var(--mono); direction: ltr; unicode-bidi: isolate; }
+    #inputs-pre { font-family: var(--mono); min-height: 64px; direction: ltr; text-align: left; }
+    .err-box { margin: 0; }
+    .err-box code { direction: ltr; unicode-bidi: isolate; }
+
+    /* ---------- dry-run table ---------- */
+    .dry-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+    #dry td, #dry th { font-size: .9rem; white-space: nowrap; }
+    #dry td.ins, #dry td.v, #dry td.o { font-family: var(--mono); direction: ltr; unicode-bidi: isolate; text-align: left; }
+    #dry td.o { white-space: pre-wrap; max-width: 320px; }
+    #dry tr.bad td { background: var(--danger-soft); }
+    #dry tr.term td { color: var(--muted); font-style: italic; }
+    .dry-wrap { max-height: 60vh; overflow: auto; }
+    .dry-wrap .table th { position: sticky; top: 0; z-index: 1; }
+
+    /* ---------- words to know ---------- */
+    .wk { display: grid; gap: 10px 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 10px 0 0; }
+    @media (max-width: 640px) { .wk { grid-template-columns: minmax(0, 1fr); } }
+    .wk div { background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px 12px; }
+    .wk dt { font-weight: 800; color: var(--primary); }
+    .wk dd { margin: 2px 0 0; }
+
+    /* Urdu Nastaliq needs taller lines */
+    :root[lang="ur"] .blk-kind, :root[lang="ur"] .blk-lbl, :root[lang="ur"] .legend, :root[lang="ur"] .status, :root[lang="ur"] .wk dd { line-height: 2; }
+    :root[lang="ur"] .typebtn, :root[lang="ur"] .blk-add { line-height: 1.9; }
+
+    /* ---------- print: title, flowchart, pseudocode, Python, dry-run table ---------- */
+    #print-head { display: none; }
+    @media print {
+      @page { size: A4; margin: 12mm; }
+      :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+        --primary: #0b4f5c; --accent: #d9501c; --accent-soft: #fdf0ea; --c2: #e8590c; --c3: #5f3dc4; --c4: #2b8a3e; --c7: #1971c2; --c8: #868e96;
+      }
+      body { font-size: 11pt; }
+      .edu-intro, .toolbar, .fc-editor, .fc-run, #howto, #words, .tabs, .fc-tools, .code-tools, .legend, #fc-hint, .dry-head .btn { display: none !important; }
+      #print-head { display: block; margin-bottom: 8pt; }
+      #print-head h2 { font-size: 16pt; margin: 0; }
+      .fc-grid { display: block; }
+      .fc-view, .fc-dry { position: static; box-shadow: none; border: 0; padding: 0; margin: 0 0 10pt; }
+      .fc-view [role="tabpanel"] { display: block !important; margin-bottom: 10pt; }
+      .fc-view [role="tabpanel"][hidden] { display: block !important; }
+      .print-h { display: block !important; font-size: 13pt; margin: 8pt 0 4pt; }
+      .fc-wrap { max-height: none; overflow: visible; border: 0; }
+      .fc-wrap svg { max-width: 100%; height: auto; }
+      .code { max-height: none; overflow: visible; background: #f4f4f4; font-size: 10pt; break-inside: avoid; }
+      .code .ln { white-space: pre-wrap; }
+      .code .ln.cur { background: none; box-shadow: none; }
+      .dry-wrap { max-height: none; overflow: visible; }
+      #dry td, #dry th { font-size: 9pt; white-space: normal; }
+      .fc-dry.empty { display: none; }
+    }
+    .print-h { display: none; }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+
+    <div id="print-head"><h2 id="print-title" class="no-i18n"></h2><p class="small muted" data-i18n="pr_by"></p></div>
+
+    <section class="card toolbar no-print stack" id="toolbar">
+      <div class="row">
+        <div class="field">
+          <label for="ex-select" data-i18n="ex_label"></label>
+          <select id="ex-select"></select>
+        </div>
+        <div class="field">
+          <label for="prog-name" data-i18n="prog_name"></label>
+          <input id="prog-name" type="text" class="no-i18n" maxlength="60" data-i18n-placeholder="prog_name_ph">
+        </div>
+      </div>
+      <div class="row">
+        <button type="button" class="btn" id="btn-new">✨ <span data-i18n="btn_new"></span></button>
+        <button type="button" class="btn" id="btn-save">💾 <span data-i18n="btn_save"></span></button>
+        <button type="button" class="btn" id="btn-load">📂 <span data-i18n="btn_load"></span></button>
+        <button type="button" class="btn" id="btn-share">🔗 <span data-i18n="btn_share"></span></button>
+        <button type="button" class="btn" id="btn-png">🖼️ <span data-i18n="btn_png"></span></button>
+        <button type="button" class="btn" id="btn-print">🖨️ <span data-i18n="print"></span></button>
+        <button type="button" class="btn btn-danger" id="btn-reset">↺ <span data-i18n="reset"></span></button>
+      </div>
+    </section>
+
+    <div class="fc-grid">
+      <!-- ===== block editor ===== -->
+      <section class="card fc-editor stack no-print" id="editor-card" aria-labelledby="ed-title">
+        <h2 class="h-sec" id="ed-title" data-i18n="ed_title"></h2>
+        <p class="muted small mb0" data-i18n="ed_hint"></p>
+        <div id="blocks" class="blk-list"></div>
+      </section>
+
+      <!-- ===== views: flowchart / pseudocode / python ===== -->
+      <section class="card fc-view" id="view-card">
+        <div class="tabs no-print" role="tablist" id="tabs">
+          <button type="button" role="tab" id="tab-flow" data-panel="panel-flow" aria-controls="panel-flow" aria-selected="true">🔀 <span data-i18n="tab_flow"></span></button>
+          <button type="button" role="tab" id="tab-pseudo" data-panel="panel-pseudo" aria-controls="panel-pseudo" aria-selected="false">📝 <span data-i18n="tab_pseudo"></span></button>
+          <button type="button" role="tab" id="tab-python" data-panel="panel-python" aria-controls="panel-python" aria-selected="false">🐍 <span data-i18n="tab_python"></span></button>
+        </div>
+        <section id="panel-flow" role="tabpanel" aria-labelledby="tab-flow">
+          <div class="fc-tools">
+            <div class="row" role="group" data-i18n-aria-label="zoom_label">
+              <button type="button" class="btn btn-sm icon-btn" id="zoom-out" data-i18n-aria-label="zoom_out" data-i18n-title="zoom_out">−</button>
+              <span class="small mono ltr" id="zoom-pct" aria-live="polite">100%</span>
+              <button type="button" class="btn btn-sm icon-btn" id="zoom-in" data-i18n-aria-label="zoom_in" data-i18n-title="zoom_in">+</button>
+              <button type="button" class="btn btn-sm" id="zoom-fit" data-i18n="zoom_fit"></button>
+            </div>
+            <button type="button" class="btn btn-sm" id="fs">⛶ <span data-i18n="fullscreen"></span></button>
+          </div>
+          <div class="fc-wrap" id="fc-wrap"></div>
+          <p class="muted small" id="fc-hint" data-i18n="fc_hint" style="margin:8px 0 0"></p>
+          <div class="legend" id="legend"></div>
+        </section>
+        <section id="panel-pseudo" role="tabpanel" aria-labelledby="tab-pseudo" hidden>
+          <h3 class="print-h" data-i18n="pr_pseudo"></h3>
+          <div class="code-tools"><button type="button" class="btn btn-sm" id="copy-pseudo">📋 <span data-i18n="copy_code"></span></button></div>
+          <div class="code no-i18n" id="pseudo" dir="ltr" aria-live="off"></div>
+        </section>
+        <section id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
+          <h3 class="print-h" data-i18n="pr_python"></h3>
+          <div class="code-tools"><button type="button" class="btn btn-sm" id="copy-python">📋 <span data-i18n="copy_code"></span></button></div>
+          <div class="code no-i18n" id="python" dir="ltr" aria-live="off"></div>
+        </section>
+      </section>
+
+      <!-- ===== run / dry run ===== -->
+      <section class="card fc-run stack no-print" id="run-card" aria-labelledby="run-title">
+        <h2 class="h-sec" id="run-title" data-i18n="run_title"></h2>
+        <div class="row run-btns">
+          <button type="button" class="btn btn-primary" id="btn-run">▶ <span data-i18n="btn_run"></span></button>
+          <button type="button" class="btn" id="btn-step">⏭ <span data-i18n="btn_step"></span></button>
+          <button type="button" class="btn" id="btn-pause">⏸ <span data-i18n="btn_pause"></span></button>
+          <button type="button" class="btn btn-ghost" id="btn-restart">↺ <span data-i18n="btn_restart"></span></button>
+          <div class="field" style="margin-inline-start:auto">
+            <label for="speed" class="small" data-i18n="speed"></label>
+            <select id="speed">
+              <option value="slow" data-i18n="sp_slow"></option>
+              <option value="normal" data-i18n="sp_normal"></option>
+              <option value="fast" data-i18n="sp_fast"></option>
+              <option value="instant" data-i18n="sp_instant"></option>
+            </select>
+          </div>
+        </div>
+        <p class="status" id="run-status" aria-live="polite" data-status="ready"></p>
+        <div class="callout danger err-box" id="run-error" hidden aria-live="assertive"></div>
+        <div class="callout accent in-panel" id="in-panel" hidden>
+          <label for="in-val" id="in-label" class="no-i18n"></label>
+          <input type="text" id="in-val" class="no-i18n" dir="ltr" autocomplete="off" inputmode="text">
+          <button type="button" class="btn btn-primary" id="in-ok" data-i18n="in_ok"></button>
+        </div>
+        <div class="field">
+          <label for="inputs-pre" data-i18n="inputs_label"></label>
+          <textarea id="inputs-pre" class="no-i18n" rows="2" spellcheck="false"></textarea>
+          <span class="hint" data-i18n="inputs_hint"></span>
+        </div>
+        <div class="grid-2">
+          <div>
+            <h3 class="h-sec" data-i18n="console_title"></h3>
+            <div class="console no-i18n" id="console" role="log" aria-live="polite" aria-atomic="false"></div>
+          </div>
+          <div>
+            <h3 class="h-sec" data-i18n="vars_title"></h3>
+            <div class="vars-wrap scroll-x">
+              <table class="table" id="vars">
+                <thead><tr><th data-i18n="var_name"></th><th data-i18n="var_value"></th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card fc-dry stack empty" id="dry-card" aria-labelledby="dry-title">
+        <div class="dry-head">
+          <h2 class="h-sec mb0" id="dry-title" data-i18n="dr_title"></h2>
+          <button type="button" class="btn btn-sm" id="btn-csv">📊 <span data-i18n="dr_csv"></span></button>
+        </div>
+        <p class="muted small mb0" id="dry-note"></p>
+        <div class="dry-wrap scroll-x">
+          <table class="table" id="dry"><thead></thead><tbody></tbody></table>
+        </div>
+      </section>
+    </div>
+
+    <details class="card" id="words" style="margin-top:16px">
+      <summary><strong data-i18n="wk_title"></strong></summary>
+      <dl class="wk">
+        <div><dt data-i18n="wk_algorithm"></dt><dd data-i18n="wk_algorithm_d"></dd></div>
+        <div><dt data-i18n="wk_flowchart"></dt><dd data-i18n="wk_flowchart_d"></dd></div>
+        <div><dt data-i18n="wk_pseudocode"></dt><dd data-i18n="wk_pseudocode_d"></dd></div>
+        <div><dt data-i18n="wk_variable"></dt><dd data-i18n="wk_variable_d"></dd></div>
+        <div><dt data-i18n="wk_condition"></dt><dd data-i18n="wk_condition_d"></dd></div>
+        <div><dt data-i18n="wk_loop"></dt><dd data-i18n="wk_loop_d"></dd></div>
+        <div><dt data-i18n="wk_dryrun"></dt><dd data-i18n="wk_dryrun_d"></dd></div>
+        <div><dt data-i18n="wk_decomp"></dt><dd data-i18n="wk_decomp_d"></dd></div>
+      </dl>
+    </details>
+
+    <details class="card" id="howto" style="margin-top:16px">
+      <summary><strong data-i18n="howto_title"></strong></summary>
+      <ul>
+        <li data-i18n="how1"></li>
+        <li data-i18n="how2"></li>
+        <li data-i18n="how3"></li>
+        <li data-i18n="how4"></li>
+        <li data-i18n="how5"></li>
+        <li data-i18n="how6"></li>
+      </ul>
+    </details>
+    <p class="muted tiny no-print" style="margin-top:12px">🔒 <span data-i18n="saved_local"></span></p>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="content.js"></script>
+  <script src="examples.js"></script>
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
