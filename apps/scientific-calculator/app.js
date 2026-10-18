@@ -161,7 +161,7 @@
   /* op = the key continues the last answer (+, ×, ², !, …) */
   function insert(s, op) {
     if (st.done) {
-      st.done = false;
+      st.done = false; note('');
       if (op) setValue('Ans' + s);
       else setValue(s);
       return;
@@ -365,7 +365,7 @@
   $('#fs-btn').addEventListener('click', function () { EDU.fullscreen(); });
 
   /* ------------------------------------------------------------------ keyboard */
-  inp.addEventListener('input', function () { st.done = false; caretKnown = true; changed(); });
+  inp.addEventListener('input', function () { if (st.done) note(''); st.done = false; caretKnown = true; changed(); });
   inp.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' || e.key === '=') { e.preventDefault(); equals(); return; }
     if (e.key === 'Escape') { e.preventDefault(); clearAll(); return; }

@@ -386,5 +386,245 @@
     pRB.build(); priceUnits(); renderPrice();
   });
 
-/* PART3 */
+  /* ============================================================ 2. Old gold exchange */
+  var lastEx = null;
+  var xRB = rateBlock('x', function () { return X; }, ['gold', 'silver'], function (mc) { if (mc) exchUnits(); renderExch(); });
+  function exchUnits() {
+    fillSel($('#x-wu'), WU[X.metal], 'wu_', X.wu); X.wu = $('#x-wu').value;
+    fillSel($('#x-swu'), SWU, 'wu_', X.swu); X.swu = $('#x-swu').value;
+  }
+  var XF = [['x-w', 'w'], ['x-sw', 'sw'], ['x-ded', 'ded'], ['x-new', 'newAmt']];
+  function renderExch() {
+    XF.forEach(function (f) { setVal($('#' + f[0]), X[f[1]]); });
+    $('#x-use').disabled = !(lastPrice && !lastPrice.r.own);
+    var rb = xRB.read(), err = '', bad = {}, empty = false;
+    function take(id, raw, scale, maxInt, opt, maxV) {
+      var r = fld(raw, scale, maxInt, opt, maxV);
+      if (r.e === 'empty') { empty = true; return null; }
+      if (r.e) { bad[id] = 1; if (!err) err = errText(r.e); return null; }
+      return r.v;
+    }
+    var w = take('x-w', X.w, 6, 6), sw = take('x-sw', X.sw, 6, 6, true), ded = take('x-ded', X.ded, 2, 3, true, C.PCT);
+    var nr = C.parseDec(X.newAmt, 2, 12), newAmt = null;
+    if (!nr.err) newAmt = nr.v; else if (nr.err !== 'empty') { bad['x-new'] = 1; if (!err) err = errText(nr.err); }
+    ['x-w', 'x-sw', 'x-ded', 'x-new'].forEach(function (id) { markBad(id, bad[id]); });
+    if (!err && rb.err && rb.err !== 'rate_empty' && rb.err !== 'fine_empty') err = errText(rb.err);
+    var box = $('#x-result'); box.innerHTML = ''; $('#x-net').textContent = '';
+    var o = null;
+    if (!err && !rb.err && !empty && w > 0n) {
+      o = { gw: C.toUg(w, X.wu), sw: C.toUg(sw, X.swu), P: rb.P, U: rb.U, F: rb.F, ded: ded, newAmt: newAmt, ru: rb.ru };
+      if (o.sw > o.gw) { err = t('err_stone'); markBad('x-sw', true); o = null; }
+    }
+    $('#x-err').textContent = err;
+    if (!o) { lastEx = null; box.appendChild(el('p', { class: 'muted gs-empty', id: 'x-empty', text: err || t('res_empty') })); save(); return; }
+    var r = C.exchange(o), s = X.m[X.metal];
+    lastEx = { o: o, r: r };
+    $('#x-net').textContent = t('net_line', { n: g$(r.nw), p: g$(r.pureUg) });
+    box.appendChild(el('div', { class: 'gs-res-head' }, el('span', { class: 'gs-res-lbl', text: t('ex_value') }),
+      el('span', { class: 'badge primary', text: metalPur(X.metal, s) })));
+    box.appendChild(el('div', { class: 'gs-big', id: 'x-value' }, m$(r.value)));
+    box.appendChild(el('table', { class: 'table gs-break' }, el('tbody', null, exRows(r).map(function (row) { return kv(row[0], row[1], m$(row[2]), row[3]); }))));
+    box.appendChild(el('div', { class: 'gs-tiles' },
+      tile('x-perg', t('tl_ex_perg'), m$(r.valueG), 'hl'),
+      tile('x-pure', t('tl_ex_pure'), el('bdi', { class: 'gs-m', text: g$(r.netPureUg) }))));
+    if (r.pay !== null) {
+      var pay = r.pay >= 0n;
+      box.appendChild(el('div', { class: 'gs-pay' },
+        el('div', { class: 'row' }, el('span', { text: t('row_ex_new') }), m$(o.newAmt)),
+        el('div', { class: 'row' }, el('span', { text: t('row_ex_minus') }), m$(-r.value)),
+        el('div', { class: 'row' }, el('strong', { text: t(pay ? 'ex_pay' : 'ex_refund') }),
+          el('div', { class: 'gs-big' + (pay ? '' : ' neg'), id: 'x-pay', style: { margin: '0' } }, m$(pay ? r.pay : -r.pay)))));
+    }
+    box.appendChild(actions('x', exLines));
+    save();
+  }
+  function exRows(r) {
+    var o = lastEx ? lastEx.o : null;
+    return [['r-ex-gross', t('row_ex_gross', { w: g$(r.nw), r: iso(C.money(r.rateG) + '/' + t('u_g')) }), r.gv],
+      ['r-ex-ded', t('row_ex_ded', { p: iso(C.pctTxt(o ? o.ded : 0n) + '%') }), -r.dedAmt],
+      ['r-ex-value', t('row_ex_value'), r.value, 'sum']];
+  }
+  function exLines() {
+    var o = lastEx.o, r = lastEx.r, s = X.m[X.metal];
+    var rows = exRows(r).map(function (row) { return [row[1], C.money(row[2]), row[3]]; });
+    if (r.pay !== null) {
+      rows.push([t('row_ex_new'), C.money(o.newAmt)]);
+      rows.push([t(r.pay >= 0n ? 'ex_pay' : 'ex_refund'), C.money(r.pay >= 0n ? r.pay : -r.pay), 'sum']);
+    }
+    return { title: t('ex_title') + ' · ' + metalPur(X.metal, s), sub: t('sum_rate', { r: iso(C.money(o.P)), u: t('ru_' + o.ru), w: g$(o.gw), n: g$(r.nw) }), rows: rows, foot: [t('ex_note')] };
+  }
+  XF.forEach(function (f) { $('#' + f[0]).addEventListener('input', function () { X[f[1]] = this.value; renderExch(); }); });
+  $('#x-wu').addEventListener('change', function () { X.wu = this.value; renderExch(); });
+  $('#x-swu').addEventListener('change', function () { X.swu = this.value; renderExch(); });
+  $('#x-use').addEventListener('click', function () {
+    if (!lastPrice) return;
+    X.newAmt = C.inputText(lastPrice.r.total); $('#x-new').value = X.newAmt; renderExch();
+  });
+  $('#x-reset').addEventListener('click', function () {
+    if (!confirm(t('confirm_reset'))) return;
+    var keep = X.m; X = defExch(); X.m = keep;
+    XF.forEach(function (f) { $('#' + f[0]).value = X[f[1]]; });
+    xRB.build(); exchUnits(); renderExch();
+  });
+
+  /* ============================================================ 3. Compare quotes */
+  var SF = ['name', 'rate', 'mk', 'wst', 'stones'];
+  function buildShops() {
+    fillSel($('#c-runit'), RU.gold, 'ru_', K.runit);
+    setVal($('#c-w'), K.w);
+    var host = $('#c-shops'); host.innerHTML = '';
+    K.shops.forEach(function (s, i) {
+      function inp(f, lbl, attrs, pfx, sfx) {
+        var id = 'c-' + f + '-' + i;
+        var input = el('input', Object.assign({ id: id, type: 'text', autocomplete: 'off', dataset: { f: f, i: String(i) } }, attrs || {}));
+        input.value = s[f] || '';
+        return el('div', { class: 'field' }, el('label', { for: id, text: lbl }),
+          el('div', { class: 'gs-in', id: id + '-wrap' }, pfx ? el('span', { class: 'gs-pfx', 'aria-hidden': 'true', text: pfx }) : null, input,
+            sfx ? el('span', { class: 'gs-sfx', 'aria-hidden': 'true', text: sfx }) : null));
+      }
+      var mkSel = el('select', { id: 'c-mkt-' + i, dataset: { f: 'mkType', i: String(i) }, 'aria-label': t('shop_mk') });
+      ['pct', 'pg', 'flat'].forEach(function (k) { mkSel.appendChild(el('option', { value: k, text: t('mk_' + k) })); });
+      mkSel.value = s.mkType;
+      var mkId = 'c-mk-' + i, mkIn = el('input', { id: mkId, class: 'gs-num', type: 'text', inputmode: 'decimal', autocomplete: 'off', placeholder: '0', dataset: { f: 'mk', i: String(i) } });
+      mkIn.value = s.mk || '';
+      host.appendChild(el('section', { class: 'card gs-shop', id: 'c-shop-' + i },
+        el('div', { class: 'gs-shop-head' }, el('h3', { text: t('shop_n', { n: i + 1 }) }), el('span', { class: 'badge success', id: 'c-badge-' + i, hidden: true, text: '★ ' + t('cmp_best') })),
+        inp('name', t('shop_name'), { placeholder: t('shop_name_ph') }),
+        inp('rate', t('shop_rate', { u: t('ru_' + K.runit) }), { class: 'gs-num', inputmode: 'decimal' }, '₹'),
+        el('div', { class: 'field' }, el('label', { for: mkId, text: t('shop_mk') }),
+          el('div', { class: 'gs-in', id: mkId + '-wrap' }, mkIn, mkSel)),
+        el('div', { class: 'gs-pair' },
+          inp('wst', t('shop_wst'), { class: 'gs-num', inputmode: 'decimal', placeholder: '0' }, null, '%'),
+          inp('stones', t('shop_stones'), { class: 'gs-num', inputmode: 'decimal', placeholder: '0' }, '₹')),
+        el('p', { class: 'gs-shop-out', id: 'c-out-' + i, 'aria-live': 'off' })));
+    });
+    renderCmp();
+  }
+  function renderCmp() {
+    var wr = fld(K.w, 6, 6), err = '';
+    markBad('c-w', !!wr.e && wr.e !== 'empty');
+    if (wr.e && wr.e !== 'empty') err = errText(wr.e);
+    var gw = wr.v || 0n, U = C.RUNITS[K.runit];
+    var res = K.shops.map(function (s, i) {
+      var rate = fld(s.rate, 2, 11), mk = s.mkType === 'pct' ? fld(s.mk, 2, 3, true, C.PCT) : fld(s.mk, 2, s.mkType === 'pg' ? 8 : 12, true);
+      var wst = fld(s.wst, 2, 3, true, C.PCT), st = fld(s.stones, 2, 12, true);
+      markBad('c-rate-' + i, rate.e && rate.e !== 'empty'); markBad('c-mk-' + i, !!mk.e); markBad('c-wst-' + i, !!wst.e); markBad('c-stones-' + i, !!st.e);
+      var out = $('#c-out-' + i);
+      if (rate.e === 'empty' || (!rate.e && rate.v === 0n) || gw === 0n || err) { if (out) out.textContent = ''; return null; }
+      if (rate.e || mk.e || wst.e || st.e) { if (out) out.textContent = t('cmp_bad'); return null; }
+      var r = C.price({ gw: gw, sw: 0n, P: rate.v, U: U, F: 91600n, mkType: s.mkType, mk: mk.v, wstType: 'pct', wst: wst.v, disc: 0n, stones: st.v, other: 0n, mode: 'buy' });
+      if (out) out.textContent = t('cmp_shop_total', { x: iso(C.money(r.total)), g: iso(C.money(r.perG) + '/' + t('u_g')) });
+      return r;
+    });
+    $('#c-err').textContent = err;
+    var best = C.cheapest(res.map(function (r) { return r ? r.total : null; }));
+    K.shops.forEach(function (s, i) {
+      $('#c-shop-' + i).classList.toggle('is-best', best.indexOf(i) >= 0 && best.length < res.filter(Boolean).length);
+      $('#c-badge-' + i).hidden = !(best.indexOf(i) >= 0 && res.filter(Boolean).length > 1);
+    });
+    var box = $('#c-result'); box.innerHTML = '';
+    var valid = res.filter(Boolean);
+    if (!valid.length) { box.appendChild(el('p', { class: 'muted mb0', id: 'c-empty', text: err || t('cmp_empty') })); save(); return; }
+    var low = res[best[0]].total, high = valid.reduce(function (a, r) { return r.total > a ? r.total : a; }, 0n);
+    function name(i) { return String(K.shops[i].name || '').trim() || t('shop_n', { n: i + 1 }); }
+    box.appendChild(el('h2', { text: t('cmp_res_title') }));
+    box.appendChild(el('div', { class: 'scroll-x' }, el('table', { class: 'table gs-tbl', id: 'c-table' },
+      el('thead', null, el('tr', null, el('th', { scope: 'col', text: t('cmp_col_shop') }), el('th', { scope: 'col', class: 'v', text: t('cmp_col_total') }),
+        el('th', { scope: 'col', class: 'v', text: t('cmp_col_perg') }), el('th', { scope: 'col', class: 'v', text: t('cmp_col_diff') }))),
+      el('tbody', null, res.map(function (r, i) {
+        if (!r) return null;
+        var isBest = best.indexOf(i) >= 0;
+        return el('tr', { class: isBest ? 'best' : '', dataset: { shop: String(i) } },
+          el('td', { class: 'no-i18n' }, (isBest ? '★ ' : '') + name(i)),
+          el('td', { class: 'v', id: 'c-total-' + i }, m$(r.total)), el('td', { class: 'v' }, m$(r.perG)),
+          el('td', { class: 'v' }, isBest ? t('cmp_best') : m$(r.total - low, true)));
+      })))));
+    if (valid.length > 1 && high > low) box.appendChild(el('p', { class: 'gs-msg callout success', id: 'c-best', text: t('cmp_saves', { s: best.map(name).join(', '), x: iso(C.money(high - low)) }) }));
+    box.appendChild(el('p', { class: 'muted small gs-msg', text: t('cmp_note') }));
+    save();
+  }
+  $('#c-shops').addEventListener('input', function (e) {
+    var f = e.target.dataset.f, i = e.target.dataset.i; if (!f || i === undefined) return;
+    K.shops[+i][f] = e.target.value; renderCmp();
+  });
+  $('#c-shops').addEventListener('change', function (e) {
+    if (e.target.tagName !== 'SELECT') return;
+    K.shops[+e.target.dataset.i].mkType = e.target.value; renderCmp();
+  });
+  $('#c-w').addEventListener('input', function () { K.w = this.value; renderCmp(); });
+  $('#c-runit').addEventListener('change', function () { K.runit = this.value; buildShops(); });
+
+  /* ============================================================ 4. Rate converter */
+  var vRB = rateBlock('v', function () { return V; }, METALS, function () { renderConv(); });
+  var CV_UNITS = { gold: ['g', '10g', 'tola', 'sov'], silver: ['g', '10g', 'tola', 'kg'], plat: ['g', '10g', 'tola', 'sov'] };
+  function renderConv() {
+    var rb = vRB.read(), box = $('#v-result'), s = V.m[V.metal];
+    box.innerHTML = '';
+    var err = rb.err && rb.err !== 'rate_empty' && rb.err !== 'fine_empty' ? errText(rb.err) : '';
+    $('#v-err').textContent = err;
+    if (rb.err) { box.appendChild(el('p', { class: 'muted mb0', id: 'v-empty', text: err || t('cv_err_empty') })); save(); return; }
+    box.appendChild(el('h2', { text: t('cv_res') }));
+    var list = PUR[V.metal].slice();
+    if (s.pur === 'custom') list.push('custom');
+    list.forEach(function (id) {
+      var F = id === 'custom' ? rb.F : BigInt(id) * 100n, mine = id === s.pur;
+      var grid = el('div', { class: 'gs-units' });
+      CV_UNITS[V.metal].forEach(function (u) {
+        var val = C.convert(rb.P, rb.F, F, rb.U, C.RUNITS[u]);
+        grid.appendChild(el('div', { class: 'gs-tile' + (mine && u === s.runit ? ' hl' : ''), id: 'v-' + id + '-' + u }, el('span', { text: t('ru_' + u) }), el('b', null, m$(val))));
+      });
+      box.appendChild(el('div', { class: 'stack', style: { marginTop: '14px' } },
+        el('h3', { class: 'mb0' }, t('m_' + V.metal) + ' ', el('bdi', { class: 'gs-ltr', text: purLabel(V.metal, id, s.fine) }),
+          mine ? el('span', { class: 'badge primary', style: { marginInlineStart: '8px' }, text: t('cv_this') }) : null),
+        grid));
+    });
+    save();
+  }
+  $('#v-reset').addEventListener('click', function () {
+    if (!confirm(t('confirm_reset'))) return;
+    var d = defConv(); V.metal = d.metal; V.m = d.m; vRB.build(); renderConv();
+  });
+
+  /* ============================================================ 5. Buyer checklist */
+  var CK_N = 9;
+  function renderCheck() {
+    var list = $('#ck-list'); list.innerHTML = '';
+    for (var i = 1; i <= CK_N; i++) {
+      (function (i) {
+        var cb = el('input', { type: 'checkbox', id: 'ck-' + i });
+        cb.checked = CK.indexOf(i) >= 0;
+        cb.addEventListener('change', function () {
+          CK = CK.filter(function (x) { return x !== i; }); if (cb.checked) CK.push(i);
+          save(); countCheck();
+        });
+        list.appendChild(el('li', null, el('label', { for: 'ck-' + i }, cb, el('span', null, el('b', { text: t('ck_' + i + '_t') }), t('ck_' + i + '_d')))));
+      })(i);
+    }
+    countCheck();
+  }
+  function countCheck() { $('#ck-count').textContent = t('ck_count', { n: CK.length, t: CK_N }); }
+  $('#ck-clear').addEventListener('click', function () { CK = []; save(); renderCheck(); });
+  $('#ck-print').addEventListener('click', function () {
+    var pa = $('#print-area'); pa.innerHTML = '';
+    pa.appendChild(el('h1', { text: t('ck_title') }));
+    var ul = el('ul');
+    for (var i = 1; i <= CK_N; i++) ul.appendChild(el('li', null, el('strong', { text: (CK.indexOf(i) >= 0 ? '☑ ' : '☐ ') + t('ck_' + i + '_t') + ' ' }), t('ck_' + i + '_d')));
+    pa.appendChild(ul);
+    pa.appendChild(el('p', { class: 'pa-small', text: t('ck_source') }));
+    window.print();
+  });
+
+  /* ============================================================ everything */
+  function renderAll() {
+    $('#rules-checked').textContent = t('rules_checked', { d: fmtDate(new Date(RULES_CHECKED + 'T00:00:00')) });
+    pRB.build(); priceUnits(); renderPrice();
+    xRB.build(); exchUnits(); renderExch();
+    buildShops();
+    vRB.build(); renderConv();
+    renderCheck();
+  }
+  EDU.onLang(renderAll);
+  window.addEventListener('afterprint', function () { $('#print-area').innerHTML = ''; });
+  showTab(tab);
+  renderAll();
 })();

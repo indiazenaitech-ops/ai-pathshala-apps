@@ -491,8 +491,9 @@ window.ChessEngineFactory = function ChessEngineFactory() {
     for (var k = 0; k < this.keys.length; k++) if (this.keys[k] === key) n++;
     return n;
   };
-  Game.prototype.status = function () {
-    var pos = this.pos, check = pos.inCheck();
+  /* opts.manual: threefold / 50-move draws must be claimed (claim: true); fivefold / 75 moves still end the game */
+  Game.prototype.status = function (opts) {
+    var pos = this.pos, check = pos.inCheck(), manual = !!(opts && opts.manual);
     if (this.result) return { over: true, result: this.result.result, reason: this.result.reason, check: check };
     var legal = pos.legalMoves();
     if (!legal.length) {
@@ -500,9 +501,10 @@ window.ChessEngineFactory = function ChessEngineFactory() {
         : { over: true, result: '1/2-1/2', reason: 'stalemate', check: false };
     }
     if (insufficient(pos)) return { over: true, result: '1/2-1/2', reason: 'insufficient', check: check };
-    if (this.repetitions() >= 3) return { over: true, result: '1/2-1/2', reason: 'threefold', check: check };
-    if (pos.half >= 100) return { over: true, result: '1/2-1/2', reason: 'fifty', check: check };
-    return { over: false, check: check, legal: legal };
+    var reps = this.repetitions();
+    if (reps >= (manual ? 5 : 3)) return { over: true, result: '1/2-1/2', reason: manual ? 'fivefold' : 'threefold', check: check };
+    if (pos.half >= (manual ? 150 : 100)) return { over: true, result: '1/2-1/2', reason: manual ? 'seventyfive' : 'fifty', check: check };
+    return { over: false, check: check, legal: legal, claim: reps >= 3 ? 'threefold' : (pos.half >= 100 ? 'fifty' : null) };
   };
   Game.prototype.fen = function () { return this.pos.fen(); };
 

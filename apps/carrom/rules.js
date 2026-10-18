@@ -211,7 +211,7 @@
         must touch it, striker spots along the base line with a clear path, cut angle under about 70°;
      2) the best of those (and a few plain shots) are tried in a copy of the board with the real physics;
      3) the best tried shot is played with aim noise for the chosen level. */
-  var NOISE = { easy: [3.2, 0.12], medium: [1.3, 0.05], hard: [0.35, 0.02] };
+  var NOISE = { easy: [2.4, 0.1], medium: [1.1, 0.05], hard: [0.35, 0.02] };
   function segClear(ax, ay, bx, by, pieces, skip, rad) {
     var vx = bx - ax, vy = by - ay, L2 = vx * vx + vy * vy || 1e-9;
     for (var i = 0; i < pieces.length; i++) {
@@ -240,70 +240,100 @@
     if (!b.breakDone && M.mode !== 'practice') {
       [0, -1.5, 1.5].forEach(function (x, i) { cands.push({ x: x, ang: i === 0 ? 0 : (x > 0 ? -2 : 2), power: 1, geo: 50 - i }); });
     } else {
-      var tg = targetsFor(M);
+      var tg = targetsFor(M), WL = B.HALF - B.SR;
+      /* aim points: the ghost spot itself, or its mirror image in one of the 4 cushions (a bank shot) */
+      var mirrors = [null, ['x', WL], ['x', -WL], ['y', WL], ['y', -WL]];
+      function mir(m, x, y) { return !m ? [x, y] : m[0] === 'x' ? [2 * m[1] - x, y] : [x, 2 * m[1] - y]; }
+      function addShots(T, gx, gy, ux, uy, d1, isPot) {
+        var sy = side * B.BASE_Y;
+        for (var x = -B.BASE_X; x <= B.BASE_X + 1e-9; x += B.BASE_X / 12) {
+          if (!P.fits(pieces, x, sy)) continue;
+          for (var mi = 0; mi < mirrors.length; mi++) {
+            var m = mirrors[mi], ap = mir(m, gx, gy);
+            var vx = ap[0] - x, vy = ap[1] - sy, dS = Math.sqrt(vx * vx + vy * vy); if (dS < 0.5) continue;
+            var ang = P.angleOf(side, vx, vy);
+            if (Math.abs(ang) > 88) continue;
+            /* direction of the striker when it reaches the ghost spot (after the bounce for a bank shot) */
+            var dx = vx / dS, dy = vy / dS;
+            if (m) {
+              var hitT = m[0] === 'x' ? (m[1] - x) / (dx || 1e-9) : (m[1] - sy) / (dy || 1e-9);
+              if (!(hitT > 0 && hitT < dS)) continue;
+              var bx = x + dx * hitT, by = sy + dy * hitT;
+              if (Math.abs(bx) > WL + 1e-6 || Math.abs(by) > WL + 1e-6) continue;
+              if (!segClear(x, sy, bx, by, pieces, [], B.SR) || !segClear(bx, by, gx, gy, pieces, [T.id], B.SR)) continue;
+              if (m[0] === 'x') dx = -dx; else dy = -dy;
+            } else if (!segClear(x, sy, gx, gy, pieces, [T.id], B.SR)) continue;
+            var cosc = isPot ? dx * ux + dy * uy : 1;
+            if (cosc < 0.34) continue;
+            var pw;
+            if (isPot) {
+              var vc = P.speedFor(Math.max(0.5, d1 - B.PR * 0.6), 28);
+              pw = P.speedToPower(P.speedFor(dS, vc / (xfer * cosc)) * (m ? 1.3 : 1.06));
+            } else pw = m ? 0.75 : 0.5;
+            if (pw > 1) continue;
+            cands.push({ x: x, ang: ang, power: Math.min(1, pw), target: T.id,
+              geo: isPot ? cosc * cosc * 100 - dS * 0.25 - d1 * 0.35 - (m ? 25 : 0) : -60 - dS * 0.1 - (m ? 10 : 0) });
+          }
+        }
+      }
       tg.forEach(function (T) {
         P.POCKETS.forEach(function (pk) {
           var ux = pk[0] - T.x, uy = pk[1] - T.y, d1 = Math.sqrt(ux * ux + uy * uy); ux /= d1; uy /= d1;
           if (!segClear(T.x, T.y, pk[0], pk[1], pieces, [T.id], B.CR)) return;
-          var gx = T.x - ux * (B.SR + T.r), gy = T.y - uy * (B.SR + T.r);
-          for (var x = -B.BASE_X; x <= B.BASE_X + 1e-9; x += B.BASE_X / 15) {
-            var sy = side * B.BASE_Y;
-            if (!P.fits(pieces, x, sy)) continue;
-            var vx = gx - x, vy = gy - sy, dS = Math.sqrt(vx * vx + vy * vy); if (dS < 0.5) continue;
-            var ang = P.angleOf(side, vx, vy);
-            if (Math.abs(ang) > 88) continue;
-            var cosc = (vx * ux + vy * uy) / dS;
-            if (cosc < 0.34) continue;
-            if (!segClear(x, sy, gx, gy, pieces, [T.id], B.SR)) continue;
-            var vc = P.speedFor(Math.max(0.5, d1 - B.PR * 0.6), 28);
-            var vs = P.speedFor(dS, vc / (xfer * cosc)) * 1.06;
-            var pw = P.speedToPower(vs);
-            if (pw > 1) continue;
-            cands.push({ x: x, ang: ang, power: Math.min(1, pw), geo: cosc * cosc * 100 - dS * 0.25 - d1 * 0.35, target: T.id });
-          }
+          addShots(T, T.x - ux * (B.SR + T.r), T.y - uy * (B.SR + T.r), ux, uy, d1, true);
         });
       });
       cands.sort(function (a, b2) { return b2.geo - a.geo; });
       var keep = [], per = {};
-      cands.forEach(function (cd) { var k = cd.target; per[k] = (per[k] || 0) + 1; if (per[k] <= 3 && keep.length < 14) keep.push(cd); });
+      cands.forEach(function (cd) { var k = cd.target; per[k] = (per[k] || 0) + 1; if (per[k] <= 2 && keep.length < 10) keep.push(cd); });
       cands = keep;
       if (cands.length < 4) {
-        /* plain shots straight at own coins: push them around, maybe one drops */
-        tg.slice(0, 6).forEach(function (T, i) {
-          [-B.BASE_X * 0.6, 0, B.BASE_X * 0.6].forEach(function (x) {
-            var sy = side * B.BASE_Y; if (!P.fits(pieces, x, sy)) return;
-            var ang = P.angleOf(side, T.x - x, T.y - sy);
-            if (Math.abs(ang) <= 88) cands.push({ x: x, ang: ang, power: 0.55 + 0.08 * (i % 3), geo: -50 - i });
-          });
-        });
+        /* no good pot: just hit own coins (straight or off a cushion) to move them somewhere better */
+        var more = [];
+        var save = cands; cands = more;
+        tg.forEach(function (T) { addShots(T, T.x, T.y, 0, 0, 0, false); });
+        more.sort(function (a, b2) { return b2.geo - a.geo; });
+        cands = save.concat(more.filter(function (cd, i) { return i % 3 === 0; }).slice(0, 8));
       }
       if (!cands.length) cands.push({ x: 0, ang: 0, power: 0.6, geo: -100 });
     }
     return { cands: cands, i: 0, best: null };
   }
-  /* try one candidate in a copy of the board; returns false when all are tried */
+  /* try one candidate in a copy of the board (each candidate three times: straight and nudged both ways, so the
+     computer prefers shots that still work when the aim is a little off); returns false when all are tried */
+  var TRIES = [0, 1, -1];
   function aiStep(M, plan) {
-    if (plan.i >= plan.cands.length) return false;
-    var cd = plan.cands[plan.i++], b = M.board, side = sideOf(b.turn), c = b.colors[b.turn];
+    var nTry = TRIES.length;
+    if (plan.i >= plan.cands.length * nTry) return false;
+    var ci = Math.floor(plan.i / nTry), ti = plan.i % nTry, cd = plan.cands[ci], b = M.board, side = sideOf(b.turn), c = b.colors[b.turn];
+    plan.i++;
+    var nz = NOISE[M.opts.level] || NOISE.medium, off = TRIES[ti] * Math.max(0.6, nz[0] * 0.8);
     var ps = P.clone(b.pieces), s = P.strikerOf({ p: ps });
-    var fx = P.fitStriker(ps, side, cd.x); if (fx === null) return true;
-    s.x = fx; s.y = side * B.BASE_Y; s.on = true;
-    var w = P.world(ps), d = P.dir(side, cd.ang);
-    P.fire(w, d.x, d.y, cd.power);
-    P.run(w, 12);
-    var sc = 0, practice = M.mode === 'practice', touched = false;
-    w.ev.forEach(function (e) {
-      if (e.type === 'hit' && (e.ka === 's' || e.kb === 's')) touched = true;
-      if (e.type !== 'pocket') return;
-      if (e.k === 's') sc -= 30;
-      else if (e.k === 'q') sc += practice ? 10 : (b.queen.st === 'on' && (!M.opts.queenFirst || offBoard(b, c) > 0) ? 9 : -2);
-      else if (practice || e.k === c) sc += 10;
-      else sc -= 9;
-    });
-    if (!touched) sc -= 5;
-    cd.sim = sc;
-    if (!plan.best || sc > plan.best.sim || (sc === plan.best.sim && cd.geo > plan.best.geo)) plan.best = cd;
-    return plan.i < plan.cands.length;
+    var fx = P.fitStriker(ps, side, cd.x);
+    var sc = -40;
+    if (fx !== null) {
+      s.x = fx; s.y = side * B.BASE_Y; s.on = true;
+      var w = P.world(ps), d = P.dir(side, cd.ang + off);
+      P.fire(w, d.x, d.y, cd.power);
+      P.run(w, 12);
+      sc = 0;
+      var practice = M.mode === 'practice', touched = false;
+      w.ev.forEach(function (e) {
+        if (e.type === 'hit' && (e.ka === 's' || e.kb === 's')) touched = true;
+        if (e.type !== 'pocket') return;
+        if (e.k === 's') sc -= 30;
+        else if (e.k === 'q') sc += practice ? 10 : (b.queen.st === 'on' && (!M.opts.queenFirst || offBoard(b, c) > 0) ? 9 : -2);
+        else if (practice || e.k === c) sc += 10;
+        else sc -= 9;
+      });
+      if (!touched) sc -= 5;
+    }
+    cd.sims = (cd.sims || 0) + sc * (ti === 0 ? 2 : 1);
+    if (ti === nTry - 1) {
+      cd.sim = cd.sims / (nTry + 1);
+      if (!plan.best || cd.sim > plan.best.sim || (cd.sim === plan.best.sim && cd.geo > plan.best.geo)) plan.best = cd;
+    }
+    return plan.i < plan.cands.length * nTry;
   }
   function aiPick(M, plan, rnd) {
     rnd = rnd || Math.random;

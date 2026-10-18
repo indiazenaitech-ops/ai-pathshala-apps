@@ -152,10 +152,9 @@
           '= (' + N(-b) + ' ± √' + N(Q.D) + ') / (' + den + ')',
           '= (' + N(-b) + ' ± ' + N(Q.sqrtD) + ') / ' + N(2 * a)
         ]));
-        var l1 = 'x₁ = ' + (s1 && s1 !== N(Q.roots[0]) ? s1 + ' ≈ ' : '') + N(Q.roots[0]);
-        var l2 = 'x₂ = ' + (s2 && s2 !== N(Q.roots[1]) ? s2 + ' ≈ ' : '') + N(Q.roots[1]);
-        steps.appendChild(step(t('st_roots'), [l1, l2], 0));
-        steps.lastChild.lastChild.className += ' ans';
+        var l1 = 'x₁ = (' + N(-b) + ' + ' + N(Q.sqrtD) + ') / ' + NB(2 * a) + ' = ' + (s1 && s1 !== N(Q.roots[0]) ? s1 + ' ≈ ' : '') + N(Q.roots[0]);
+        var l2 = 'x₂ = (' + N(-b) + ' − ' + N(Q.sqrtD) + ') / ' + NB(2 * a) + ' = ' + (s2 && s2 !== N(Q.roots[1]) ? s2 + ' ≈ ' : '') + N(Q.roots[1]);
+        steps.appendChild(step(t('st_roots'), [l1, l2]));
         ans.appendChild(rootChip('x₁', ex && ex.rational ? s1 : N(Q.roots[0]), ex && !ex.rational ? s1 : null));
         ans.appendChild(rootChip('x₂', ex && ex.rational ? s2 : N(Q.roots[1]), ex && !ex.rational ? s2 : null));
         check(a, b, c, Q.roots[0] + Q.roots[1], Q.roots[0] * Q.roots[1]);

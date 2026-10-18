@@ -408,11 +408,6 @@
       box.appendChild(el('div', { class: 'ld-bar' + (i === 5 ? ' six' : '') },
         el('b', { text: EDU.fmt(n) }), el('i', { style: { height: Math.round(n / max * 78) + '%' } }), el('span', { text: String(i + 1) })));
     });
-    if (total) {
-      var line = el('div', { class: 'ld-exp', 'aria-hidden': 'true' });
-      line.style.bottom = 'calc(' + (total / 6 / max * 78) + '% * (100% - 40px) / 100% + 22px)';
-      box.appendChild(line);
-    }
     txt.textContent = total ? t('stats_text', { six: EDU.fmt(st[5]), total: EDU.fmt(total), pct: EDU.fmt(st[5] / total * 100, { maximumFractionDigits: 1 }) }) + ' ' + t('stats_expect')
       : t('stats_none');
   }
