@@ -42,15 +42,28 @@
     if (v.kind === 'len') return lenStr(v);
     return String(v);
   }
-  /* translated template where every {var} becomes a left-to-right span */
+  /* translated template where every {var} becomes a left-to-right span. In Urdu (RTL) every maths run
+     ("tan {a}° = h ÷ {d}") is kept together in one left-to-right isolate so formulas read correctly. */
+  var RTL_RUN = /[\u0600-\u06FF\u0750-\u077F][\s\S]*?(?=[A-Za-z0-9√π²θ≈{(]|$)|[^\u0600-\u06FF\u0750-\u077F]+/g;
   function tn(key, vars) {
-    var frag = document.createDocumentFragment();
+    var frag = document.createDocumentFragment(), rtl = isRtl(), buf = '';
+    var flush = function () { if (buf) { frag.appendChild(ltr(buf)); buf = ''; } };
     EDU.t(key).split(/(\{\w+\})/).forEach(function (part) {
       var m = /^\{(\w+)\}$/.exec(part);
-      if (!m) { if (part) frag.appendChild(document.createTextNode(part)); return; }
-      var v = vars[m[1]];
-      frag.appendChild(v === undefined ? document.createTextNode(part) : ltr(fmtVar(v)));
+      if (m) {
+        var v = vars[m[1]], txt = v === undefined ? part : fmtVar(v);
+        if (rtl) buf += txt; else frag.appendChild(v === undefined ? document.createTextNode(part) : ltr(txt));
+        return;
+      }
+      if (!part) return;
+      if (!rtl) { frag.appendChild(document.createTextNode(part)); return; }
+      (part.match(RTL_RUN) || [part]).forEach(function (run) {
+        if (/[\u0600-\u06FF\u0750-\u077F]/.test(run)) { flush(); frag.appendChild(document.createTextNode(run)); }
+        else if (!buf && !run.trim()) frag.appendChild(document.createTextNode(run));
+        else buf += run;
+      });
     });
+    flush();
     return frag;
   }
   function thetaText(deg) {
@@ -69,7 +82,7 @@
       inv: { fn: 'sin', text: '1/2' },
       conv: { deg: 30 },
       hd: {
-        c: 'a',
+        cur: 'a',
         a: { d: 30, a1: 30, e: 0 },
         b: { H: 72.5, a1: 45, a2: 0, e: 0 },
         c: { d: 20, a1: 60, a2: 30, side: 'same', e: 0 },
@@ -105,7 +118,7 @@
     if (s.inv && typeof s.inv === 'object') { o.inv.fn = FNS.indexOf(s.inv.fn) >= 0 ? s.inv.fn : 'sin'; o.inv.text = str(s.inv.text, 40, '1/2'); }
     if (s.conv && typeof s.conv === 'object') o.conv.deg = num(s.conv.deg, -1e7, 1e7, 30);
     if (s.hd && typeof s.hd === 'object') {
-      if (CASES.indexOf(s.hd.c) >= 0) o.hd.c = s.hd.c;
+      if (CASES.indexOf(s.hd.cur) >= 0) o.hd.cur = s.hd.cur;
       CASES.forEach(function (c) {
         var src = s.hd[c], dst = o.hd[c];
         if (!src || typeof src !== 'object') return;
@@ -209,7 +222,7 @@
       else text(p[2], cx - 8, Y(p[1]), C.muted, 'right', 'middle', fs - 1, 600, false);
     });
     /* quadrant names with the sign rule */
-    var ql = [['I', t('q_all')], ['II', 'sin'], ['III', 'tan'], ['IV', 'cos']], qp = [[0.8, 0.82], [-0.8, 0.82], [-0.8, -0.82], [0.8, -0.82]];
+    var ql = [['I', 'All'], ['II', 'sin'], ['III', 'tan'], ['IV', 'cos']], qp = [[0.8, 0.82], [-0.8, 0.82], [-0.8, -0.82], [0.8, -0.82]];
     ql.forEach(function (q, i) {
       var on = qd === i + 1;
       text(q[0] + ' · ' + q[1] + ' +', X(qp[i][0]) + (i === 0 || i === 3 ? 10 : -10), Y(qp[i][1]), on ? C.text : C.muted, i === 0 || i === 3 ? 'left' : 'right', 'middle', fs - 1, on ? 800 : 600, false);
@@ -254,15 +267,18 @@
       seg(px + sx * k, cy, px + sx * k, cy + sy * k, C.muted, 1.2); seg(px + sx * k, cy + sy * k, px, cy + sy * k, C.muted, 1.2);
     }
     if (Math.abs(c) * R > 26) text('cos θ', (cx + px) / 2, cy + (s >= 0 ? 14 : -14), C.cos, 'center', 'middle', fs, 800);
-    if (Math.abs(s) * R > 26) text('sin θ', px + (c >= 0 ? 8 : -8), (cy + py) / 2, C.sin, c >= 0 ? 'left' : 'right', 'middle', fs, 800);
+    var sinLeft = c < 0 || (showTan && c > 0.72);   /* near the tangent line the label moves to the inner side */
+    if (Math.abs(s) * R > 26) text('sin θ', px + (sinLeft ? -8 : 8), (cy + py) / 2, C.sin, sinLeft ? 'right' : 'left', 'middle', fs, 800);
     /* radius and point */
     seg(cx, cy, px, py, C.rad, 3.5);
     ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, Math.PI * 2); ctx.fillStyle = C.text; ctx.fill();
     text('O', cx - 8, cy + 12, C.muted, 'right', 'middle', fs - 1, 700, false);
     ctx.beginPath(); ctx.arc(px, py, 10, 0, Math.PI * 2); ctx.fillStyle = C.handle; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = C.bg; ctx.stroke();
     if (S.uc.labels) {
-      var lx = px + (c >= 0 ? 16 : -16), ly = py + (s >= 0 ? -14 : 14);
-      text('P(' + fmt(c, 2) + ', ' + fmt(s, 2) + ')', lx, ly, C.text, c >= 0 ? 'left' : 'right', 'middle', fs, 800);
+      var pl = 'P(' + fmt(c, 2) + ', ' + fmt(s, 2) + ')', ly = py + (s >= 0 ? -14 : 14);
+      ctx.font = '800 ' + fs + 'px ' + FONT;
+      var pw = ctx.measureText(pl).width, pLeft = c < 0 || px + 16 + pw > W - 4;   /* keep the label inside the canvas */
+      text(pl, px + (pLeft ? -16 : 16), ly, C.text, pLeft ? 'right' : 'left', 'middle', fs, 800);
       /* readout box */
       var lines = [[thetaText(deg).replace(' ≈ ', '  ≈ '), C.text], ['sin θ = ' + exOrDec(null, s), C.sin], ['cos θ = ' + exOrDec(null, c), C.cos], ['tan θ = ' + exOrDec(null, tan), C.tan]];
       var bw = 0; ctx.font = '800 ' + fs + 'px ' + FONT;
@@ -328,7 +344,7 @@
     var tb = $('#uc-six tbody'); tb.innerHTML = '';
     FNS.forEach(function (fn) {
       var v = r[fn];
-      tb.appendChild(el('tr', { id: 'uc-' + fn, dataset: { fn: fn, v: v === null ? 'nd' : r4(v) } },
+      tb.appendChild(el('tr', { id: 'ucr-' + fn, dataset: { fn: fn, v: v === null ? 'nd' : r4(v) } },
         el('td', { class: 'fnm ltr fx no-i18n', text: fn + ' θ' }),
         el('td', { class: 'no-i18n' }, ex ? (ex[fn] === null ? el('span', { class: 'nd', text: t('not_defined') }) : ex[fn]) : '–'),
         el('td', { class: 'no-i18n' }, v === null ? el('span', { class: 'nd', text: t('not_defined') }) : fmt(v, 4)),
@@ -467,7 +483,7 @@
     return F;
   }
   function buildHdForm() {
-    var c = S.hd.c, v = S.hd[c], box = $('#hd-inputs'); box.innerHTML = '';
+    var c = S.hd.cur, v = S.hd[c], box = $('#hd-inputs'); box.innerHTML = '';
     $('#hd-case').value = c;
     hdFields(c, v).forEach(function (f) {
       var id = 'hd-' + f.k, input;
@@ -483,10 +499,10 @@
       box.appendChild(el('div', { class: 'field' }, el('label', { for: id, i18n: f.key }), input));
     });
   }
-  $('#hd-case').addEventListener('change', function () { S.hd.c = CASES.indexOf(this.value) >= 0 ? this.value : 'a'; save(); buildHdForm(); renderHd(); });
+  $('#hd-case').addEventListener('change', function () { S.hd.cur = CASES.indexOf(this.value) >= 0 ? this.value : 'a'; save(); buildHdForm(); renderHd(); });
 
   function renderHd() {
-    var c = S.hd.c, v = S.hd[c], res = T.solveHD(c, v), box = $('#hd-result'); box.innerHTML = '';
+    var c = S.hd.cur, v = S.hd[c], res = T.solveHD(c, v), box = $('#hd-result'); box.innerHTML = '';
     box.setAttribute('data-ok', res.ok ? '1' : '0');
     if (!res.ok) {
       box.appendChild(el('p', { class: 'callout danger mb0', id: 'hd-err', dataset: { err: res.err }, text: t(res.err) }));
@@ -648,7 +664,7 @@
         el('h3', { text: tx.title }), el('p', { text: tx.text }),
         el('details', {}, el('summary', { text: t('show_answer') }), ans),
         el('button', { type: 'button', class: 'btn btn-primary prob-load', dataset: { id: p.id }, onclick: function () {
-          S.hd.c = p.c; Object.assign(S.hd[p.c], p.set); save(); buildHdForm(); renderHd();
+          S.hd.cur = p.c; Object.assign(S.hd[p.c], p.set); save(); buildHdForm(); renderHd();
           EDU.toast(t('problem_loaded'));
           try { $('#hd-result').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { }
         } }, '📥 ', t('load_problem'))));
@@ -691,7 +707,7 @@
       el('span', { class: 'pill', id: 'iq-progress', text: t('iq_progress', { n: fmt(q.i + 1, 0), total: fmt(q.order.length, 0) }) }),
       el('span', { class: 'pill' }, t('score') + ': ', el('b', { id: 'iq-score', text: fmt(q.score, 0) }))));
     box.appendChild(el('div', { class: 'progress', 'aria-hidden': 'true' }, el('span', { style: { width: Math.round((q.i + (q.picked !== null ? 1 : 0)) / q.order.length * 100) + '%' } })));
-    box.appendChild(el('p', { class: 'qtext', id: 'iq-q', dataset: { id: item.id } }, item.q));
+    box.appendChild(el('p', { class: 'qtext', id: 'iq-q', dataset: { id: item.id } }, isRtl() && !/[\u0600-\u06FF]/.test(item.q) ? ltr(item.q) : item.q));
     var opts = el('div', { class: 'opts', role: 'group' });
     item.opts.forEach(function (o, i) {
       var cls = 'opt iq-opt' + (q.picked !== null ? (i === item.a ? ' win' : ' lose') + (i === q.picked ? ' picked' : '') : '');
