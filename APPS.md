@@ -1,4 +1,4 @@
-# App list (120)
+# App list (125)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -43,6 +43,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 📝 | [Maths Worksheet Generator](https://apnipathshala.ai/apps/worksheet-generator/) | math | 1-8 | Printable maths worksheets with answer keys for Classes 1–8: 19 topics, Indian word problems, and on-screen practice with instant marks. |
 | 🧮 | [Mental Maths Challenge](https://apnipathshala.ai/apps/math-practice/) | math | 1-8 | Timed mental-maths games: tables, + − × ÷, squares, cubes and percentages, with mistake review and a two-player race. |
 | 🎲 | [Probability Lab](https://apnipathshala.ai/apps/probability-lab/) | math | 6-12 | Toss coins, roll dice, spin, draw balls and cards up to 10,000 times, and watch experimental probability approach theory. |
+| 🧮 | [Scientific Calculator](https://apnipathshala.ai/apps/scientific-calculator/) | math | 6-12 | Scientific calculator with sin cos tan, log, powers, nCr, fractions and history, plus a quadratic and linear equation solver with steps. |
 | 📊 | [Statistics Calculator](https://apnipathshala.ai/apps/statistics-calculator/) | math | 8-12 | Mean, median, mode, quartiles, variance and SD with NCERT-style step-by-step working, plus histograms and ogives. |
 | 📏 | [Unit Converter](https://apnipathshala.ai/apps/unit-converter/) | math | 4-12 | Convert length, mass, temperature, area, speed, data and more with steps; read big numbers in lakh–crore and million–billion. |
 | 🧮 | [Vedic Maths](https://apnipathshala.ai/apps/vedic-maths/) | math | 5-10 | 10 mental-maths tricks with animated steps: multiply by 11, Nikhilam, squares, cube roots. Then timed drills and printable worksheets. |
@@ -103,8 +104,10 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🎂 | [Age & Date Calculator](https://apnipathshala.ai/apps/age-date-calculator/) | everyday | all | Exact age on any date, exam/job age eligibility, days between dates, add working days, notice period and countdown. Works offline. |
 | ✨ | [AI Photo Enhancer](https://apnipathshala.ai/apps/photo-enhancer/) | everyday | all | Make small, blurry or old photos 2× or 4× bigger and clearer with AI, plus one-tap auto fix. Your photo is not uploaded. |
 | 📝 | [AI Text Summarizer](https://apnipathshala.ai/apps/smart-summarizer/) | everyday | all | Get the key points, keywords and highlights of notes, chapters, articles or PDFs. Works offline in 12 languages; text is not uploaded. |
+| 🏏 | [Cricket Scorer](https://apnipathshala.ai/apps/cricket-scorer/) | everyday | all | Score gully, school and office cricket ball by ball: live score, run rate, target, full scorecard and a WhatsApp summary. Offline. |
 | 🧮 | [EMI, SIP & FD Calculator](https://apnipathshala.ai/apps/emi-savings-calculator/) | everyday | all | Loan EMI with schedule, prepayment, rate change, APR and flat-rate checks, plus SIP, FD, RD and PPF calculators. Private, works offline. |
 | 🪪 | [Form Photo & Signature Resizer](https://apnipathshala.ai/apps/form-photo-resizer/) | everyday | all | Resize photo, signature or thumb to the exact px, cm and KB for SSC, UPSC, IBPS, NEET or PAN forms. Nothing is uploaded. |
+| 🪙 | [Gold & Silver Price Calculator](https://apnipathshala.ai/apps/gold-silver-calculator/) | everyday | all | Check a jewellery bill: making, wastage, 3% GST and price per gram. Value old gold, compare shops, convert tola and 22K rates. |
 | 💌 | [Invitation Card Maker](https://apnipathshala.ai/apps/invitation-card-maker/) | everyday | all | Wedding, birthday, griha pravesh, pooja and shop invitations with Indian motifs, for WhatsApp or A5 print. Details stay on your device. |
 | 🍳 | [Kitchen Recipe Finder](https://apnipathshala.ai/apps/recipe-finder/) | everyday | all | Tap what you have at home and get Indian home recipes ranked by match, with missing items, substitutes and a shopping list. |
 | 💍 | [Marriage Biodata Maker](https://apnipathshala.ai/apps/biodata-maker/) | everyday | all | Make a neat marriage biodata in any of 12 Indian languages: 8 designs, photo, horoscope. Print, PDF or WhatsApp image. Stays private. |
@@ -124,3 +127,5 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🎯 | [Statistics & Sampling Lab](https://apnipathshala.ai/apps/sampling-lab/) | data | 9-12 | Learn by experiment: random samples, the central limit theorem, standard error, 95% intervals, survey bias and mean vs median. |
 | 🎲 | [Ludo](https://apnipathshala.ai/apps/ludo/) | games | all | Classic Ludo for 2–4 players: pass-and-play with family or play the computer, with Indian house rules. No ads, works offline. |
 | 🐍 | [Snakes & Ladders](https://apnipathshala.ai/apps/snakes-ladders/) | games | all | Play Saanp-Seedhi with 2-4 players or the computer, incl. the Moksha Patam values board. Free, offline, no ads. |
+| 🔢 | [Sudoku](https://apnipathshala.ai/apps/sudoku/) | games | all | Ad-free Sudoku in 9×9, 6×6 and 4×4: real difficulty levels, a daily puzzle, notes, hints that explain each step and printable puzzles. |
+| ⭕ | [Tic-Tac-Toe & More](https://apnipathshala.ai/apps/pen-paper-games/) | games | all | Tic-Tac-Toe, Four in a Row, Dots and Boxes and Bulls and Cows: play a friend or a fair computer and see how it thinks. Works offline. |
