@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>India GK Quiz Game · AI Pathshala</title>
+  <meta name="description" content="A free India general knowledge quiz game: 300 questions in 10 topics, solo ladder, Quick 10, family and class teams, in 12 Indian languages.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    #setup, #game, #results { scroll-margin-top: 76px; }
+    @media (max-width: 560px) { #setup, #game, #results { scroll-margin-top: 112px; } }
+    .num, .lt, .g-timer, .ts, .lad-pts, .vote-n, .big-pts { font-family: system-ui, "Segoe UI", Roboto, "Noto Sans", sans-serif; font-variant-numeric: tabular-nums; }
+
+    /* ---------- setup ---------- */
+    .modes { display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 980px) { .modes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 560px) { .modes { grid-template-columns: minmax(0, 1fr); } }
+    .mode {
+      display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 12px; row-gap: 2px; align-items: center;
+      text-align: start; font: inherit; color: var(--text); background: var(--surface);
+      border: 2px solid var(--border); border-radius: 14px; padding: 12px 14px; cursor: pointer; min-height: 72px;
+    }
+    @media (hover: hover) { .mode:hover { background: var(--surface-2); } }
+    .mode .mode-ic { grid-row: 1 / span 2; font-size: 2rem; line-height: 1; }
+    .mode .mode-name { font-weight: 800; font-size: 1.05rem; line-height: 1.25; }
+    .mode .mode-desc { color: var(--muted); font-size: .86rem; line-height: 1.35; }
+    .mode[aria-pressed="true"] { border-color: var(--primary); background: var(--primary-soft); box-shadow: 0 0 0 1px var(--primary); }
+    .opt-grid { display: grid; gap: 12px 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items: start; }
+    .opt-grid select { width: 100%; }
+    .seg { flex-wrap: wrap; }
+    .team-inputs { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+    .team-inputs input { width: 100%; }
+    .start-row { align-items: center; }
+    @media (max-width: 560px) { .start-row .btn { flex: 1 1 100%; } }
+    .tips { margin: 10px 0 4px; padding-inline-start: 22px; }
+    .tips li { margin-bottom: 6px; }
+    details.card > summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; min-height: 28px; }
+    .best-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+    .best-list li { padding: 6px 12px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); font-weight: 600; }
+    .resume-box { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .resume-box p { margin: 0; flex: 1 1 240px; }
+
+    /* ---------- game ---------- */
+    .g-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .g-top .badge { font-size: .9rem; padding: 4px 10px; }
+    .g-top .sp { flex: 1 1 auto; }
+    .g-score { font-weight: 800; font-size: 1.15rem; padding: 3px 12px; border-radius: 999px; background: var(--primary-soft); border: 1px solid var(--primary); white-space: nowrap; }
+    .g-timer { font-weight: 800; font-size: 1.15rem; padding: 3px 12px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); white-space: nowrap; min-width: 4.2em; text-align: center; }
+    .g-timer.low { color: var(--danger); background: var(--danger-soft); border-color: var(--danger); }
+    .g-body { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+    .g-body.with-ladder { grid-template-columns: minmax(0, 1fr) 200px; }
+    @media (max-width: 860px) { .g-body.with-ladder { grid-template-columns: minmax(0, 1fr); } }
+    .g-main { display: grid; gap: 14px; min-width: 0; }
+    .qtext { font-size: clamp(1.3rem, 2.8vw, 2.2rem); line-height: 1.35; margin: 0; overflow-wrap: anywhere; font-weight: 800; }
+    .qtext:focus { outline: none; }
+    :root[lang="ur"] .qtext, :root[lang="ur"] .opt, :root[lang="ur"] .fb { line-height: 1.9; }
+    .opts { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 700px) { .opts { grid-template-columns: minmax(0, 1fr); } }
+    .opt {
+      display: flex; align-items: center; gap: 12px; width: 100%; text-align: start;
+      font: inherit; font-weight: 700; font-size: clamp(1.05rem, 1.9vw, 1.5rem); line-height: 1.3; color: var(--text); background: var(--surface);
+      border: 2px solid var(--border); border-radius: 14px; padding: 10px 14px; min-height: 64px; cursor: pointer; overflow-wrap: anywhere;
+    }
+    @media (hover: hover) { .opt:hover:not(:disabled) { background: var(--surface-2); border-color: color-mix(in srgb, var(--primary) 45%, var(--border)); } }
+    .opt:disabled { cursor: default; color: var(--text); }
+    .opt .ot { flex: 1 1 auto; min-width: 0; }
+    .opt .mk { flex: none; font-size: 1.2em; font-weight: 800; margin-inline-start: auto; }
+    .opt.is-right { border-color: var(--success); background: var(--success-soft); }
+    .opt.is-right .mk { color: var(--success); }
+    .opt.is-wrong { border-color: var(--danger); background: var(--danger-soft); }
+    .opt.is-wrong .mk { color: var(--danger); }
+    .opt.gone { visibility: hidden; }
+    .opt.dim { opacity: .55; }
+    .lt { flex: none; width: 2.1em; height: 2.1em; border-radius: 50%; display: inline-grid; place-items: center; font-weight: 800; color: #fff; background: var(--c1); font-size: .85em; }
+    .lt.l1 { background: var(--c2); } .lt.l2 { background: var(--c3); } .lt.l3 { background: var(--c7); }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .lt { color: #0e181c; } }
+    :root[data-theme="dark"] .lt { color: #0e181c; }
+    .helpers { display: flex; flex-wrap: wrap; gap: 8px; }
+    .helpers .btn { min-height: 44px; }
+    .helpers .btn[disabled] { text-decoration: line-through; opacity: .55; }
+    .helpers .stop { margin-inline-start: auto; }
+    @media (max-width: 560px) { .helpers .stop { margin-inline-start: 0; flex: 1 1 100%; } }
+    .fb { border-radius: 12px; padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--border); }
+    .fb:empty { display: none; }
+    .fb.ok { background: var(--success-soft); border-color: var(--success); }
+    .fb.bad { background: var(--danger-soft); border-color: var(--danger); }
+    .fb .fb-h { margin: 0 0 4px; font-weight: 800; font-size: 1.15rem; }
+    .fb .fb-e { margin: 0; }
+    .next-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .next-row .btn-lg { min-width: 12em; }
+    @media (max-width: 560px) { .next-row .btn { flex: 1 1 100%; } }
+
+    /* ladder */
+    .ladder { background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px; padding: 10px; }
+    .ladder h3 { margin: 0 0 8px; font-size: 1rem; }
+    .ladder ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column-reverse; gap: 3px; }
+    .ladder li { display: flex; align-items: center; gap: 8px; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: .95rem; }
+    .ladder li .lad-n { color: var(--muted); min-width: 1.6em; }
+    .ladder li .lad-pts { margin-inline-start: auto; }
+    .ladder li.safe { color: var(--accent); }
+    .ladder li.safe .lad-pts::after { content: " ★"; }
+    .ladder li.done { opacity: .6; }
+    .ladder li.now { background: var(--primary); color: #fff; opacity: 1; }
+    .ladder li.now .lad-n { color: inherit; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ladder li.now { color: #0e181c; } }
+    :root[data-theme="dark"] .ladder li.now { color: #0e181c; }
+    @media (max-width: 860px) {
+      .ladder ol { flex-direction: row; flex-wrap: wrap; }
+      .ladder li { flex: 1 0 calc(20% - 4px); justify-content: center; padding: 4px 2px; font-size: .82rem; background: var(--surface); }
+      .ladder li .lad-n { display: none; }
+      .ladder li .lad-pts { margin: 0; }
+    }
+
+    /* teams */
+    .team-board { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .team-card { border: 2px solid var(--border); border-radius: 14px; padding: 8px 12px; background: var(--surface); display: grid; gap: 2px; }
+    .team-card .tn { font-weight: 700; overflow-wrap: anywhere; display: flex; align-items: center; gap: 6px; }
+    .team-card .dot { width: .8em; height: .8em; border-radius: 50%; flex: none; }
+    .team-card .ts { font-size: 1.8rem; font-weight: 800; line-height: 1.1; }
+    .team-card.turn { border-color: var(--primary); background: var(--primary-soft); box-shadow: 0 0 0 1px var(--primary); }
+    .team-card.out { opacity: .5; }
+    .buzz { display: grid; gap: 8px; }
+    .buzz p { margin: 0; font-weight: 700; }
+    .buzz-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .buzz-row .btn { min-height: 52px; font-size: 1.1rem; font-weight: 800; flex: 1 1 140px; }
+    .buzz-row .btn[aria-pressed="true"] { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+    /* ask the family */
+    .votes { display: grid; gap: 10px; }
+    .vote { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+    .vote .btn { min-width: 52px; min-height: 48px; font-weight: 800; font-size: 1.1rem; }
+    .vote .bar { height: 22px; border-radius: 6px; background: var(--surface-2); overflow: hidden; border: 1px solid var(--border); }
+    .vote .bar i { display: block; height: 100%; background: var(--primary); width: 0; }
+    .vote .vlab { font-size: .9rem; overflow-wrap: anywhere; }
+    .vote-n { font-weight: 800; min-width: 2.5em; text-align: end; }
+
+    /* results */
+    .big-pts { font-size: clamp(2.4rem, 7vw, 4rem); font-weight: 900; line-height: 1.1; margin: 0; color: var(--primary); }
+    .res-head { display: grid; gap: 6px; }
+    .res-head p { margin: 0; }
+    .review { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .review li { border: 1px solid var(--border); border-inline-start: 5px solid var(--danger); border-radius: 10px; padding: 10px 14px; background: var(--surface); }
+    .review .rq { font-weight: 700; margin: 0 0 4px; }
+    .review p { margin: 2px 0; }
+    .review .ra { color: var(--danger); }
+    .review .rc { color: var(--success); font-weight: 700; }
+    .final-board { display: grid; gap: 8px; }
+    .final-board .team-card.win { border-color: var(--accent); background: var(--accent-soft); }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .opt.is-right { animation: pop .35s ease-out; }
+      @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+    }
+    @media print {
+      #setup, #game, .no-print, .edu-top, .edu-foot { display: none !important; }
+      #results { border: 0; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+
+    <!-- ===================== setup ===================== -->
+    <section id="setup" class="stack">
+      <div id="resumeBox" class="card callout accent resume-box" hidden>
+        <p id="resumeNote"></p>
+        <button class="btn btn-primary" id="bResume" data-i18n="b_resume"></button>
+        <button class="btn btn-ghost" id="bDiscard" data-i18n="b_discard"></button>
+      </div>
+
+      <div class="card stack">
+        <h2 data-i18n="h_choose"></h2>
+        <div class="modes" role="group" data-i18n-aria-label="h_choose">
+          <button class="mode" id="modeSolo" data-mode="solo" aria-pressed="true"><span class="mode-ic" aria-hidden="true">🪜</span><span class="mode-name" data-i18n="m_solo"></span><span class="mode-desc" data-i18n="m_solo_d"></span></button>
+          <button class="mode" id="modeQuick" data-mode="quick" aria-pressed="false"><span class="mode-ic" aria-hidden="true">⚡</span><span class="mode-name" data-i18n="m_quick"></span><span class="mode-desc" data-i18n="m_quick_d"></span></button>
+          <button class="mode" id="modeTeams" data-mode="teams" aria-pressed="false"><span class="mode-ic" aria-hidden="true">👨‍👩‍👧‍👦</span><span class="mode-name" data-i18n="m_teams"></span><span class="mode-desc" data-i18n="m_teams_d"></span></button>
+          <button class="mode" id="modePractice" data-mode="practice" aria-pressed="false"><span class="mode-ic" aria-hidden="true">📚</span><span class="mode-name" data-i18n="m_practice"></span><span class="mode-desc" data-i18n="m_practice_d"></span></button>
+        </div>
+
+        <div class="opt-grid">
+          <div class="field">
+            <label for="selCat" data-i18n="l_cat"></label>
+            <select id="selCat"></select>
+          </div>
+          <div class="field" id="fLevel">
+            <label for="selLevel" data-i18n="l_level"></label>
+            <select id="selLevel">
+              <option value="0" data-i18n="lv_any"></option>
+              <option value="1" data-i18n="lv_1"></option>
+              <option value="2" data-i18n="lv_2"></option>
+              <option value="3" data-i18n="lv_3"></option>
+            </select>
+          </div>
+          <div class="field" id="fTimer">
+            <span class="label" id="lblTimer" data-i18n="l_timer"></span>
+            <div class="seg" role="group" aria-labelledby="lblTimer" id="segTimer"></div>
+          </div>
+          <div class="field" id="fNq">
+            <span class="label" id="lblNq" data-i18n="l_nq"></span>
+            <div class="seg" role="group" aria-labelledby="lblNq" id="segNq"></div>
+          </div>
+        </div>
+        <p class="muted small" id="soloNote" data-i18n="solo_note"></p>
+
+        <div id="teamSetup" class="stack" hidden>
+          <div class="opt-grid">
+            <div class="field">
+              <span class="label" id="lblTeamsN" data-i18n="l_teams_n"></span>
+              <div class="seg" role="group" aria-labelledby="lblTeamsN" id="segTeams"></div>
+            </div>
+            <div class="field">
+              <span class="label" id="lblStyle" data-i18n="l_style"></span>
+              <div class="seg" role="group" aria-labelledby="lblStyle" id="segStyle">
+                <button class="btn" data-style="turns" id="styleTurns" data-i18n="st_turns"></button>
+                <button class="btn" data-style="buzz" id="styleBuzz" data-i18n="st_buzz"></button>
+              </div>
+              <p class="muted small" id="styleNote"></p>
+            </div>
+          </div>
+          <div class="team-inputs" id="teamInputs"></div>
+          <label class="check" id="fMinus"><input type="checkbox" id="chkMinus"> <span data-i18n="l_minus"></span></label>
+        </div>
+
+        <div class="row">
+          <label class="check"><input type="checkbox" id="chkRead"> <span data-i18n="l_autoread"></span></label>
+          <label class="check"><input type="checkbox" id="chkSound"> <span data-i18n="l_sound"></span></label>
+        </div>
+        <div class="row start-row">
+          <button class="btn btn-primary btn-lg" id="bStart" data-i18n="b_start"></button>
+          <span class="muted small" data-i18n="fresh_note"></span>
+        </div>
+      </div>
+
+      <div class="card stack">
+        <h2 data-i18n="h_best"></h2>
+        <ul class="best-list" id="bestList" aria-live="polite"></ul>
+        <div class="row"><button class="btn btn-ghost btn-sm" id="bResetAll" data-i18n="b_reset_all"></button></div>
+      </div>
+
+      <details class="card">
+        <summary data-i18n="h_how"></summary>
+        <ul class="tips">
+          <li data-i18n="tip1"></li>
+          <li data-i18n="tip2"></li>
+          <li data-i18n="tip3"></li>
+          <li data-i18n="tip4"></li>
+          <li data-i18n="tip5"></li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- ===================== game ===================== -->
+    <section id="game" class="card stack" hidden>
+      <div class="g-top">
+        <span class="badge" id="gMode"></span>
+        <span class="badge" id="gCat"></span>
+        <span class="badge" id="gLevel"></span>
+        <span class="muted" id="gProg"></span>
+        <span class="sp"></span>
+        <span class="g-timer" id="gTimer" hidden></span>
+        <span class="g-score" id="gScore" aria-live="polite"></span>
+      </div>
+      <div class="g-body" id="gBody">
+        <div class="g-main">
+          <div class="team-board" id="teamBoard" aria-live="polite" hidden></div>
+          <div class="helpers" id="helpers" hidden>
+            <button class="btn" id="h5050" data-i18n="help_5050"></button>
+            <button class="btn" id="hSkip" data-i18n="help_skip"></button>
+            <button class="btn" id="hFamily" data-i18n="help_family"></button>
+            <button class="btn btn-ghost stop" id="bStop"></button>
+          </div>
+          <p class="muted small" id="turnNote" hidden></p>
+          <h2 class="qtext" id="qText" tabindex="-1"></h2>
+          <div class="buzz" id="buzz" hidden>
+            <p data-i18n="buzz_q"></p>
+            <div class="buzz-row" id="buzzRow"></div>
+          </div>
+          <div class="opts" id="opts"></div>
+          <div class="fb" id="fb" aria-live="polite"></div>
+          <div class="next-row">
+            <button class="btn btn-primary btn-lg" id="bNext" hidden></button>
+            <button class="btn" id="bRead"><span aria-hidden="true">🔊</span> <span data-i18n="b_read"></span></button>
+            <button class="btn btn-ghost" id="bFull" data-i18n="b_full"></button>
+            <button class="btn btn-ghost" id="bEnd" data-i18n="b_end"></button>
+          </div>
+          <p class="tiny muted" data-i18n="kbd_hint"></p>
+        </div>
+        <aside class="ladder" id="ladder" hidden>
+          <h3 data-i18n="h_ladder"></h3>
+          <ol id="ladderList"></ol>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===================== results ===================== -->
+    <section id="results" class="card stack" hidden>
+      <div class="res-head" aria-live="polite">
+        <h2 data-i18n="h_results"></h2>
+        <p class="big-pts" id="resBig"></p>
+        <p id="resLine"></p>
+        <p id="resBest" class="badge" hidden></p>
+      </div>
+      <div class="final-board" id="finalBoard" hidden></div>
+      <h3 data-i18n="h_review"></h3>
+      <ul class="review" id="review"></ul>
+      <div class="row no-print">
+        <button class="btn btn-primary btn-lg" id="bAgain" data-i18n="b_again"></button>
+        <button class="btn" id="bMenu" data-i18n="b_menu"></button>
+        <button class="btn btn-ghost" id="bPrint" data-i18n="print"></button>
+      </div>
+    </section>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
