@@ -151,7 +151,7 @@
   }
   function renderBlock(b, list, i) {
     var row = el('div', { class: 'blk', dataset: { id: b.id, type: b.type } });
-    row.appendChild(el('button', { type: 'button', class: 'blk-main', 'aria-label': t('bt_' + b.type) + ': ' + summary(b), onclick: function () { openModal(b, list); } },
+    row.appendChild(el('button', { type: 'button', class: 'blk-main no-i18n', 'aria-label': t('bt_' + b.type) + ': ' + summary(b), onclick: function () { openModal(b, list); } },
       el('span', { class: 'blk-ic', 'aria-hidden': 'true', text: ICON[b.type] }),
       el('span', { class: 'blk-kind', text: t('bt_' + b.type) }),
       el('span', { class: 'blk-txt no-i18n', text: summary(b) })));
@@ -357,7 +357,7 @@
     var C = palette(forExport);
     var lay = F.layout(P, { measure: measure, labels: labels() });
     if (!forExport) lastLayout = lay;
-    var svg = svgEl('svg', { xmlns: SVGNS, viewBox: '0 0 ' + lay.width + ' ' + lay.height, width: lay.width, height: lay.height, 'font-family': fontFamily(), 'font-size': 14, class: 'fc-svg', role: 'img' });
+    var svg = svgEl('svg', { xmlns: SVGNS, viewBox: '0 0 ' + lay.width + ' ' + lay.height, width: lay.width, height: lay.height, 'font-family': fontFamily(), 'font-size': 14, class: 'fc-svg no-i18n', role: 'img' });
     svg.setAttribute('aria-label', t('tab_flow') + ': ' + (P.name || ''));
     var defs = svgEl('defs');
     var mk = svgEl('marker', { id: forExport ? 'arrow-x' : 'arrow', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 8, markerHeight: 8, orient: 'auto-start-reverse' });
@@ -664,7 +664,11 @@
     });
     note.textContent = rows.length > DRY_ROWS ? t('dr_more', { n: EDU.fmt(DRY_ROWS), total: EDU.fmt(rows.length) }) : '';
   }
-  function fileBase() { return (String(P.name || 'flowchart').replace(/[\\\/:*?"<>|\u0000-\u001f]+/g, ' ').trim().replace(/\s+/g, '-').slice(0, 40) || 'flowchart'); }
+  /* file names: the program name when it is plain ASCII; otherwise "program" (some browsers drop non-Latin download names) */
+  function fileBase() {
+    var n = String(P.name || '').replace(/[\\\/:*?"<>|\u0000-\u001f]+/g, ' ').trim().replace(/\s+/g, '-').slice(0, 40);
+    return /^[\x20-\x7e]+$/.test(n) ? n : 'program';
+  }
   $('#btn-csv').addEventListener('click', function () {
     var r = run.r; if (!r || !r.trace.length) return;
     var vars = r.varOrder, rows = [[t('dr_step'), t('dr_line')].concat(vars, [t('dr_out')])];

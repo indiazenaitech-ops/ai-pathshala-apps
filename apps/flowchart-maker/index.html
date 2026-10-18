@@ -10,7 +10,8 @@
   <style>
     /* ---------- layout: editor | view, run under the editor, dry-run table across ---------- */
     .fc-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-areas: "editor view" "run view" "dry dry"; align-items: start; }
-    .fc-editor { grid-area: editor; } .fc-view { grid-area: view; } .fc-run { grid-area: run; } .fc-dry { grid-area: dry; }
+    .fc-editor { grid-area: editor; } .fc-view-area { grid-area: view; min-width: 0; align-self: stretch; } .fc-view { margin: 0; } .fc-run { grid-area: run; } .fc-dry { grid-area: dry; }
+    /* the view sticks while you scroll the editor, but only inside its own grid area (so it never slides over the dry-run table) */
     @media (min-width: 961px) and (min-height: 600px) { .fc-view { position: sticky; top: 70px; } }
     @media (max-width: 960px) { .fc-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "editor" "view" "run" "dry"; } }
     .ltr { direction: ltr; unicode-bidi: isolate; }
@@ -139,6 +140,7 @@
       #print-head { display: block; margin-bottom: 8pt; }
       #print-head h2 { font-size: 16pt; margin: 0; }
       .fc-grid { display: block; }
+      .fc-view-area { display: block; }
       .fc-view, .fc-dry { position: static; box-shadow: none; border: 0; padding: 0; margin: 0 0 10pt; }
       .fc-view [role="tabpanel"] { display: block !important; margin-bottom: 10pt; }
       .fc-view [role="tabpanel"][hidden] { display: block !important; }
@@ -192,6 +194,7 @@
       </section>
 
       <!-- ===== views: flowchart / pseudocode / python ===== -->
+      <div class="fc-view-area">
       <section class="card fc-view" id="view-card">
         <div class="tabs no-print" role="tablist" id="tabs">
           <button type="button" role="tab" id="tab-flow" data-panel="panel-flow" aria-controls="panel-flow" aria-selected="true">🔀 <span data-i18n="tab_flow"></span></button>
@@ -223,6 +226,7 @@
           <div class="code no-i18n" id="python" dir="ltr" aria-live="off"></div>
         </section>
       </section>
+      </div>
 
       <!-- ===== run / dry run ===== -->
       <section class="card fc-run stack no-print" id="run-card" aria-labelledby="run-title">
