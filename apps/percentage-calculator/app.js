@@ -60,7 +60,12 @@
     if (Math.abs(v) >= 1e15) return sci(v);
     return EDU.fmt(v, { maximumFractionDigits: d === undefined ? 2 : d });
   }
-  function X(v) { return N(v, 4); }                                   /* the (almost) exact value, for the working */
+  /* the (almost) exact value, for the working: 4 decimals, more for small numbers (0.00012345) */
+  function X(v) {
+    if (v === null || v === undefined || !isFinite(v)) return '—';
+    var a = Math.abs(clean(v));
+    return N(v, a !== 0 && a < 1 ? Math.min(8, 5 - Math.floor(Math.log10(a))) : 4);
+  }
   function P(v, d) { return N(v, d) + '%'; }
   function money(v) {
     if (v === null || v === undefined || !isFinite(v)) return '—';
@@ -191,10 +196,10 @@
     marks: { get: function () { return S.marks.rows; }, box: 'mk-rows', max: 30, ph: 'subj_n',
       blank: function () { return { n: '', m: '', o: '100' }; },
       cols: [['n', 'col_subject'], ['m', 'col_marks'], ['o', 'col_outof']] },
-    sg: { get: function () { return S.cgpa.sg; }, box: 'sg-rows', max: 30, ph: 'subj_n',
+    sg: { get: function () { return S.cgpa.sg; }, box: 'sg-rows', max: 30, ph: 'subj_n', rx: 'col_points',
       blank: function () { return { n: '', c: '', g: '' }; },
       cols: [['n', 'col_subject'], ['c', 'col_credits'], ['g', 'col_gp']] },
-    sem: { get: function () { return S.cgpa.sem; }, box: 'sm-rows', max: 20, ph: 'sem_n',
+    sem: { get: function () { return S.cgpa.sem; }, box: 'sm-rows', max: 20, ph: 'sem_n', rx: 'col_points',
       blank: function () { return { n: '', s: '', c: '' }; },
       cols: [['n', 'col_sem'], ['s', 'col_sgpa'], ['c', 'col_credits']] }
   };
@@ -219,7 +224,7 @@
         });
         row.appendChild(el('div', { class: 'pc-cell c-' + ['n', 'a', 'b'][ci] }, el('span', { class: 'pc-mini', 'aria-hidden': 'true', text: t(c[1]) }), inp));
       });
-      row.appendChild(el('div', { class: 'pc-rx', id: kind + '-x-' + i }));
+      row.appendChild(el('div', { class: 'pc-rx' }, el('span', { class: 'pc-mini', 'aria-hidden': 'true', text: R.rx ? t(R.rx) : '%' }), el('span', { id: kind + '-x-' + i, dir: 'ltr' })));
       row.appendChild(el('button', { type: 'button', class: 'btn btn-ghost pc-del', id: kind + '-del-' + i, 'aria-label': t('del_row', { n: i + 1 }), title: t('del_row', { n: i + 1 }), text: '✕',
         onclick: function () {
           var l = R.get();
@@ -266,11 +271,12 @@
     });
     return { v: v, err: err };
   }
-  /* checks the two number columns of every row; empty rows are skipped */
+  /* checks the number columns of every row; a row whose key columns are empty is skipped */
   function scanRows(kind, spec, product, check) {
-    var list = ROWS[kind].get(), ok = [], err = null;
+    var list = ROWS[kind].get(), ok = [], err = null, keys = spec.filter(function (s) { return s.key; });
+    if (!keys.length) keys = spec;
     list.forEach(function (r, i) {
-      var vals = {}, e = null, empty = spec.every(function (s) { return !String(r[s.f] || '').trim(); });
+      var vals = {}, e = null, empty = keys.every(function (s) { return !String(r[s.f] || '').trim(); });
       spec.forEach(function (s) {
         var bad = false;
         if (!empty && !e) {
@@ -323,15 +329,16 @@
       LAST[tab] = null;
       return;
     }
+    var ex = o.extra ? LAST_EXTRA[tab] : '';
     live.innerHTML = head + '<div class="pc-bigs">' + o.tiles.map(function (x, i) { if (i === 0 && !x.id) x.id = 'out-' + tab; return tileHtml(x); }).join('') + '</div>' +
-      (o.answer ? '<p class="pc-ans" id="ans-' + tab + '">' + esc(o.answer) + '</p>' : '');
+      (o.answer ? '<p class="pc-ans" id="ans-' + tab + '">' + esc(o.answer) + '</p>' : '') + (ex ? '<p class="pc-sr">' + esc(ex) + '</p>' : '');
     var w = '';
     if (o.steps && o.steps.length) w += '<h3>' + esc(t('working')) + '</h3>' + stepsHtml(o.steps);
     w += notesHtml(o.notes);
     if (o.extra) w += o.extra;
     work.innerHTML = w;
     if (o.after) work.appendChild(el('div', { class: 'pc-actions no-print' }, o.after));
-    var copy = plain(o.answer || ''), share = copy, ex = o.extra ? LAST_EXTRA[tab] : '';
+    var copy = plain(o.answer || ''), share = copy;
     if (o.steps && o.steps.length) copy += '\n\n' + plain(t('working')) + ':\n' + stepsText(o.steps);
     if (ex) { copy += '\n\n' + plain(ex); share += '\n' + plain(ex); }
     LAST[tab] = { copy: copy.trim(), share: share.trim() };
@@ -339,7 +346,7 @@
   }
   /* a second block inside the result card (marks needed, classes left) */
   function section(title, tiles, msg, cls, steps) {
-    return '<div class="pc-sec" aria-live="polite"><h3>' + esc(title) + '</h3>' +
+    return '<div class="pc-sec"><h3>' + esc(title) + '</h3>' +
       (tiles.length ? '<div class="pc-bigs">' + tiles.map(tileHtml).join('') + '</div>' : '') +
       (msg ? '<div class="callout' + (cls ? ' ' + cls : '') + '"><p>' + esc(msg) + '</p></div>' : '') +
       (steps && steps.length ? stepsHtml(steps) : '') + '</div>';
@@ -448,7 +455,7 @@
 
   /* ================================================================ 2. marks % */
   function calcMarks() {
-    var sc = scanRows('marks', [{ f: 'm', lbl: 'col_marks', min: 0 }, { f: 'o', lbl: 'col_outof', gt0: true }],
+    var sc = scanRows('marks', [{ f: 'm', lbl: 'col_marks', min: 0, key: true }, { f: 'o', lbl: 'col_outof', gt0: true }],
       function (o) { return AP(o.v.m / o.v.o * 100); },
       function (v) { return v.m > v.o ? { f: 'm', msg: t('err_over', { m: X(v.m), o: X(v.o) }) } : null; });
     if (sc.err) return { err: sc.err };
@@ -567,7 +574,7 @@
         after: toPctBtn(sg)
       };
     }
-    sc = scanRows('sem', [{ f: 's', lbl: 'col_sgpa', min: 0, max: 10 }, { f: 'c', lbl: 'col_credits', gt0: true, opt: true }],
+    sc = scanRows('sem', [{ f: 's', lbl: 'col_sgpa', min: 0, max: 10, key: true }, { f: 'c', lbl: 'col_credits', gt0: true, opt: true }],
       function (o) { return o.v.c === null ? '—' : X(o.v.s * o.v.c); });
     if (sc.err) return { err: sc.err };
     if (!sc.ok.length) return { err: t('no_rows_sem') };
@@ -696,11 +703,11 @@
     var bu = used[0].bu, perTxt = t('per_' + bu), uTxt = t('u_' + bu), best = used[0], worst = used[0];
     used.forEach(function (o) { if (o.per < best.per - 1e-12) best = o; if (o.per > worst.per + 1e-12) worst = o; });
     var steps = used.map(function (o) {
-      var txt = o.u === bu ? t('s_un_base', { name: o.name, u: uTxt, q: X(o.base) }) : t('s_un', { name: o.name, q: X(o.q) + ' ' + t('u_' + o.u), bq: X(o.base), u: uTxt });
+      var txt = o.u === bu ? t('s_un_base', { name: o.name, per: perTxt, q: X(o.base) }) : t('s_un', { name: o.name, q: X(o.q) + ' ' + t('u_' + o.u), bq: X(o.base), u: uTxt, per: perTxt });
       return st(txt, [ln(X(o.p) + ' ÷ ' + X(o.base) + ' = ' + B(X(o.per)) + apx(o.per))]);
     });
     var same = Math.abs(worst.per - best.per) < 1e-9, notes = [];
-    steps.push(st(same ? t('un_same', { u: uTxt }) : t('s_un_best', { u: uTxt, name: best.name })));
+    steps.push(st(same ? t('un_same', { per: perTxt }) : t('s_un_best', { per: perTxt, name: best.name })));
     var tiles = [{ lbl: t('lbl_best', { name: best.name, per: perTxt }), val: money(best.per), main: true }];
     if (!same) tiles.push({ lbl: t('lbl_cheaper', { name: worst.name }), val: AP((worst.per - best.per) / worst.per * 100), cls: 'good' });
     var tbl = '<div class="scroll-x pc-table"><table class="table"><thead><tr><th>' + esc(t('col_pack')) + '</th><th>' + esc(t('un_price')) + '</th><th>' + esc(t('un_qty')) +
@@ -710,7 +717,7 @@
         return '<tr' + (isBest ? ' class="best"' : '') + '><td>' + esc(o.name) + '</td><td>' + esc(money(o.p)) + '</td><td>' + esc(X(o.q) + ' ' + t('u_' + o.u)) + '</td><td>' +
           esc(money(o.per)) + '</td><td>' + esc(isBest || same ? t('best_tag') : '+' + AP(diff)) + '</td></tr>';
       }).join('') + '</tbody></table></div>';
-    return { tiles: tiles, answer: same ? t('un_same', { u: uTxt }) : t('ans_unit', { name: best.name, p: money(best.per), per: perTxt }), steps: steps, notes: notes, extra: tbl };
+    return { tiles: tiles, answer: same ? t('un_same', { per: perTxt }) : t('ans_unit', { name: best.name, p: money(best.per), per: perTxt }), steps: steps, notes: notes, extra: tbl };
   }
 
   /* ================================================================ 5. profit & loss */
@@ -824,7 +831,7 @@
     }
     var extra = '';
     if (L !== null) {
-      var tot = h + L, needTot = Math.ceil(tn * tot / (100 * td) - 1e-9), mm = Math.max(0, needTot - a), msg, cls, et = [];
+      var tot = h + L, needTot = Math.ceil(tn * tot / (100 * td)), mm = Math.max(0, needTot - a), msg, cls, et = [];
       var es = [st(t('s_end1', { h: X(h), l: X(L), t: X(T) }), [ln(X(h) + ' + ' + X(L) + ' = ' + X(tot)), ln(F(X(T), '100') + ' × ' + X(tot) + ' = ' + X(T * tot / 100) + (Math.abs(T * tot / 100 - needTot) > 1e-9 ? ' → ' + B(X(needTot)) : ''))]),
         st(t('s_end2'), [ln(X(needTot) + ' − ' + X(a) + ' = ' + B(X(needTot - a)))])];
       if (mm > L) { msg = t('end_all', { l: X(L), p: AP((a + L) / tot * 100) }); cls = 'danger'; }
