@@ -126,15 +126,10 @@
   });
   $('#btnSample').addEventListener('click', function () {
     var cfg = C.sanitize({ pps: 6, overs: 2, toss: 1, decision: 'bowl', rules: { wd: 1, nb: 1, freeHit: true } });
-    var ev = [{ t: 'open', s: 0, n: 1 }, { t: 'bowl', p: 5 }];
-    var balls = [[1], [4], [0, 'wd'], [0], [6], [2], [1, 'lb'], null, [1], [0], [4], [2, 'nb'], [0], [1]];
-    balls.forEach(function (b, i) {
-      if (b === null) ev.push({ t: 'bowl', p: 4 });
-      else ev.push({ t: 'ball', r: b[0], x: b[1] || '' });
-      if (i === 5) { ev.push({ t: 'ball', r: 0, x: '', w: { k: 'caught', f: 2 } }); ev.push({ t: 'bat', p: 2 }); }
-    });
-    ev.push({ t: 'open', s: 0, n: 1 }, { t: 'bowl', p: 5 });
-    [[1], [0], [4], [0, 'wd'], [1]].forEach(function (b) { ev.push({ t: 'ball', r: b[0], x: b[1] || '' }); });
+    var B = function (r, x, extra) { var e = { t: 'ball', r: r, x: x || '' }; if (extra) Object.keys(extra).forEach(function (k) { e[k] = extra[k]; }); return e; };
+    var ev = [{ t: 'open', s: 0, n: 1 }, { t: 'bowl', p: 5 }, B(1), B(4), B(0, 'wd'), B(0), B(6), B(0, '', { w: { k: 'caught', f: 2 } }), { t: 'bat', p: 2 }, B(2),
+      { t: 'bowl', p: 4 }, B(1, 'lb'), B(2), B(0), B(4), B(2, 'nb'), B(0), B(1),
+      { t: 'open', s: 0, n: 1 }, { t: 'bowl', p: 5 }, B(1), B(0), B(4), B(0, 'wd'), B(1)];
     startMatch(cfg, ev);
   });
   function startMatch(cfg, ev) {
@@ -314,7 +309,7 @@
   function renderPad() {
     var nd = M.need, I = inn(), canBall = nd.k === 'ball' && !changing && !M.done;
     var pad = $('#pad');
-    pad.setAttribute('aria-disabled', String(!canBall));
+    pad.classList.toggle('off', !canBall);
     $$('#padRuns .key, .pad-x .btn').forEach(function (b) { b.disabled = !canBall; });
     $('#xWd').setAttribute('aria-pressed', String(armed.x === 'wd'));
     $('#xNb').setAttribute('aria-pressed', String(armed.x === 'nb'));

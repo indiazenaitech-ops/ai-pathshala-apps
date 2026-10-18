@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Expense Tracker &amp; Budget · AI Pathshala</title>
+  <meta name="description" content="Free private expense tracker and monthly budget planner: quick add with UPI/cash, category budgets with alerts, charts, repeat entries, CSV import/export and encrypted backup. Data never leaves your phone.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    @page { size: A4 portrait; margin: 12mm; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    .flip { display: inline-block; font-family: system-ui, "Segoe UI", Roboto, sans-serif; font-weight: 700; }
+    [dir="rtl"] .flip { transform: scaleX(-1); }
+    .num { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+    .mb0 { margin-bottom: 0; }
+    .mt0 { margin-top: 0; }
+    .privacy { margin: 0 0 14px; display: flex; gap: 8px; align-items: flex-start; }
+    .field input, .field select, .field textarea { width: 100%; }
+    input[dir="ltr"] { text-align: start; }
+    h3 { margin-bottom: .35em; }
+    .two { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+    @media (max-width: 560px) { .two { grid-template-columns: minmax(0, 1fr); } }
+    .notice { margin-bottom: 12px; }
+    .notice .row { gap: 8px; }
+
+    /* ---------- month bar + tiles ---------- */
+    .dash { padding: 12px 14px; margin-bottom: 12px; }
+    .m-nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; }
+    .m-nav .grp { display: flex; align-items: center; gap: 6px; }
+    .navbtn { min-width: 44px; font-size: 1.3rem; padding: 4px 10px; }
+    .m-label { font-size: 1.2rem; font-weight: 800; margin: 0; min-width: 8.5rem; text-align: center; }
+    .tiles { display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .stat { background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px 14px; min-width: 0; }
+    .stat-l { color: var(--muted); font-weight: 600; font-size: .86rem; line-height: 1.3; }
+    .stat-v { font-size: 1.5rem; font-weight: 800; line-height: 1.25; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; direction: ltr; unicode-bidi: isolate; }
+    .stat-s { color: var(--muted); font-size: .8rem; line-height: 1.35; }
+    .stat.out .stat-v { color: var(--danger); }
+    .stat.in .stat-v { color: var(--success); }
+    .stat .stat-v.neg { color: var(--danger); }
+    @media (max-width: 620px) {
+      .dash { padding: 10px; }
+      .tiles { gap: 6px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stat { padding: 8px 10px; }
+      .stat-l { font-size: .78rem; }
+      .stat-v { font-size: 1.2rem; }
+      .stat-s { font-size: .72rem; }
+    }
+    #alerts:empty { display: none; }
+    #alerts { margin-bottom: 12px; display: grid; gap: 6px; }
+    #alerts .callout { margin: 0; padding: 8px 12px; font-size: .92rem; }
+
+    /* ---------- tabs ---------- */
+    .tabs button { font-size: 1rem; min-height: 46px; padding-inline: 14px; }
+    .tabs button .ti { margin-inline-end: 6px; }
+    @media (max-width: 620px) {
+      .tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; overflow: visible; }
+      .tabs button { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 4px; padding: 6px 2px; white-space: normal; font-size: .86rem; line-height: 1.2; text-align: center; min-height: 46px; overflow-wrap: anywhere; }
+      .tabs button .ti { margin: 0; font-size: 1.05rem; }
+      :root[lang="ta"] .tabs button, :root[lang="ml"] .tabs button { font-size: .76rem; }
+    }
+    .tabpanel.off { display: none; }
+
+    /* ---------- quick add ---------- */
+    .seg.kind button { min-height: 42px; padding-inline: 16px; }
+    .seg.kind button[data-v="e"][aria-pressed="true"] { background: var(--danger); color: #fff; }
+    .seg.kind button[data-v="i"][aria-pressed="true"] { background: var(--success); color: #fff; }
+    .form-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+    .form-head h2 { margin: 0; font-size: 1.2rem; }
+    .amt-in { font-size: 1.6rem; font-weight: 800; padding: 8px 12px; min-height: 54px; font-variant-numeric: tabular-nums; }
+    .amt-prev { color: var(--muted); font-size: .85rem; min-height: 1.2em; direction: ltr; unicode-bidi: isolate; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chips .chip { min-height: 40px; }
+    .chips .chip .ce { font-size: 1.1rem; line-height: 1; }
+    .chip.add-chip { border-style: dashed; }
+    .seg.modes { display: flex; }
+    .seg.modes button { flex: 1 1 auto; min-height: 42px; }
+    .date-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .date-row input { flex: 1 1 10rem; min-width: 0; min-height: 42px; }
+    .date-row .btn { min-height: 42px; }
+    .who-row { display: flex; gap: 6px; align-items: center; }
+    .who-row select { flex: 1 1 auto; min-width: 0; min-height: 42px; }
+    .save-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .save-row .btn-primary { flex: 1 1 12rem; min-height: 52px; font-size: 1.1rem; }
+    .save-row .btn { min-height: 52px; }
+    .err { color: var(--danger); font-weight: 600; margin: 0; }
+    .err:empty { display: none; }
+
+    /* ---------- entry list ---------- */
+    .elist { display: flex; flex-direction: column; gap: 6px; }
+    .erow { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; min-height: 56px; padding: 7px 10px;
+      border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); font: inherit; text-align: start; cursor: pointer; }
+    .erow:hover, .erow:focus-visible { border-color: var(--primary); background: var(--surface-2); }
+    .eav { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 1.2rem; background: var(--surface-2); flex: none; }
+    .einfo { min-width: 0; }
+    .et { font-weight: 700; overflow-wrap: anywhere; display: block; }
+    .es { display: block; color: var(--muted); font-size: .8rem; margin-top: 2px; overflow-wrap: anywhere; }
+    .ea { font-weight: 800; font-size: 1.02rem; text-align: end; }
+    .ea.o { color: var(--danger); }
+    .ea.i { color: var(--success); }
+    .erow .badge { margin-inline-start: 4px; vertical-align: middle; }
+    .list-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .list-h h2, .list-h h3 { margin: 0; font-size: 1.1rem; }
+    .filters { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); }
+    .filters select, .filters input { min-height: 42px; width: 100%; }
+    .search input { width: 100%; min-height: 44px; }
+    .res-line { font-weight: 600; margin: 0; }
+    .seg.ranges { display: flex; flex-wrap: wrap; }
+    .seg.ranges button { flex: 1 1 auto; min-height: 40px; }
+
+    /* ---------- reports ---------- */
+    .rep-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); align-items: start; }
+    .donut-wrap { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr); gap: 14px; align-items: center; }
+    @media (max-width: 480px) { .donut-wrap { grid-template-columns: minmax(0, 1fr); justify-items: center; } }
+    .donut { position: relative; width: 100%; max-width: 190px; aspect-ratio: 1; }
+    .donut svg { width: 100%; height: 100%; display: block; transform: rotate(-90deg); }
+    .donut .ctr { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 22%; }
+    .donut .ctr b { font-size: 1.05rem; direction: ltr; unicode-bidi: isolate; overflow-wrap: anywhere; }
+    .donut .ctr span { font-size: .75rem; color: var(--muted); }
+    .legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; width: 100%; }
+    .legend li { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: .9rem; }
+    .sw { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+    .legend .lv { text-align: end; white-space: nowrap; }
+    .legend .lv small { color: var(--muted); margin-inline-start: 4px; }
+    .bars { display: flex; align-items: flex-end; gap: 2px; height: 160px; border-bottom: 1px solid var(--border); padding-top: 6px; position: relative; direction: ltr; }
+    .bars .b { flex: 1 1 0; min-width: 0; height: 100%; display: flex; align-items: flex-end; }
+    .bars .b > span { display: block; width: 100%; border-radius: 3px 3px 0 0; background: var(--c1); min-height: 0; }
+    .bars .b.today > span { background: var(--accent); }
+    .bars .b.zero > span { background: transparent; }
+    .bars .avg { position: absolute; inset-inline: 0; border-top: 2px dashed var(--muted); opacity: .7; pointer-events: none; }
+    .xlab { display: flex; gap: 2px; font-size: .7rem; color: var(--muted); direction: ltr; }
+    .xlab span { flex: 1 1 0; min-width: 0; text-align: center; overflow: visible; white-space: nowrap; }
+    .chart-meta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: .82rem; color: var(--muted); margin-bottom: 4px; }
+    .trend { display: flex; align-items: flex-end; gap: 10px; height: 170px; border-bottom: 1px solid var(--border); direction: ltr; }
+    .trend .g { flex: 1 1 0; min-width: 0; height: 100%; display: flex; align-items: flex-end; gap: 3px; justify-content: center; }
+    .trend .g > span { flex: 0 1 18px; border-radius: 4px 4px 0 0; }
+    .trend .g.sel { background: var(--surface-2); border-radius: 6px 6px 0 0; }
+    .tlab { display: flex; gap: 10px; font-size: .74rem; color: var(--muted); direction: ltr; margin-top: 4px; }
+    .tlab span { flex: 1 1 0; text-align: center; min-width: 0; overflow-wrap: anywhere; }
+    .leg-inline { display: flex; gap: 14px; flex-wrap: wrap; font-size: .84rem; margin-top: 8px; }
+    .leg-inline span { display: inline-flex; align-items: center; gap: 6px; }
+    table.tbl { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    .tbl th, .tbl td { padding: 6px 8px; border-bottom: 1px solid var(--border); text-align: start; }
+    .tbl th { font-size: .8rem; color: var(--muted); font-weight: 700; }
+    .tbl td.n, .tbl th.n { text-align: end; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .tbl td.up { color: var(--danger); font-weight: 700; }
+    .tbl td.down { color: var(--success); font-weight: 700; }
+    .ins { margin: 0; padding-inline-start: 1.2em; display: grid; gap: 8px; }
+    .ins li { line-height: 1.5; }
+
+    /* ---------- budgets ---------- */
+    .brow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 9rem); gap: 6px 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .brow:last-child { border-bottom: 0; }
+    .brow .bn { font-weight: 700; overflow-wrap: anywhere; }
+    .brow input { width: 100%; min-height: 42px; text-align: end; }
+    .brow .bst { grid-column: 1 / -1; display: grid; gap: 4px; }
+    .brow .bst .progress { height: 12px; }
+    .brow .bst small { color: var(--muted); display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .progress.warn > span { background: var(--warning); }
+    .progress.over > span { background: var(--danger); }
+    .brow small .w { color: var(--warning); font-weight: 700; }
+    .brow small .o { color: var(--danger); font-weight: 700; }
+    .brow.total { background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px 12px; border: 0; margin-bottom: 6px; }
+    .check { display: flex; gap: 8px; align-items: flex-start; }
+    .check input { width: 20px; height: 20px; margin-top: 2px; flex: none; }
+
+    /* ---------- repeat ---------- */
+    .rlist { display: flex; flex-direction: column; gap: 6px; }
+    .rrow { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid var(--border); border-radius: 12px; }
+    .rrow.off { opacity: .6; }
+    .rrow .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; grid-column: 1 / -1; }
+    .rrow .acts .btn { min-height: 40px; }
+    .rv-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .rv-row .row { gap: 6px; }
+
+    /* ---------- data ---------- */
+    .st-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); align-items: start; }
+    .btn-col { display: grid; gap: 8px; }
+    .btn-col .btn { min-height: 46px; justify-content: flex-start; }
+    .meter { height: 10px; background: var(--surface-2); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+    .meter > span { display: block; height: 100%; background: var(--primary); }
+    .plist { display: flex; flex-wrap: wrap; gap: 6px; }
+    .plist .chip { min-height: 40px; }
+    .plist .chip .x { font-weight: 800; margin-inline-start: 2px; }
+    .add-line { display: flex; gap: 6px; }
+    .add-line input { flex: 1 1 auto; min-width: 0; min-height: 42px; }
+    .emo-grid { display: flex; flex-wrap: wrap; gap: 4px; }
+    .emo-grid button { width: 44px; height: 44px; font-size: 1.3rem; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; }
+    .emo-grid button[aria-pressed="true"] { border-color: var(--primary); background: var(--primary-soft); box-shadow: 0 0 0 2px var(--primary); }
+    .map-grid { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+    .map-grid select { width: 100%; min-height: 40px; }
+    .prev-wrap { max-height: 220px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+    .prev-wrap table { font-size: .8rem; }
+    .prev-wrap td, .prev-wrap th { white-space: nowrap; }
+    .edu-modal { max-width: min(96vw, 720px); }
+    .help summary { cursor: pointer; font-weight: 700; font-size: 1.02rem; min-height: 32px; }
+    .help ul { margin: 12px 0 4px; padding-inline-start: 1.3em; }
+    .help li + li { margin-top: 8px; }
+
+    .undo-bar { position: fixed; inset-inline: 0; bottom: 64px; display: flex; justify-content: center; z-index: 950; padding: 0 16px; pointer-events: none; }
+    .undo-bar > div { pointer-events: auto; display: flex; gap: 10px; align-items: center; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-lg); padding: 8px 8px 8px 14px; max-width: 520px; }
+    .undo-bar .btn { min-height: 40px; }
+    :root[lang="ur"] .es, :root[lang="ur"] .stat-l { line-height: 1.8; }
+
+    .print-head { display: none; }
+    @media print {
+      .edu-intro, .privacy, .tabs, .notice, .help, .no-print, .undo-bar, #alerts, .m-nav .navbtn, #m-today { display: none !important; }
+      .tabpanel { display: none !important; }
+      body.pr-rep #p-rep { display: block !important; }
+      body.pr-list #p-list { display: block !important; }
+      .print-head { display: block !important; font-weight: 800; font-size: 14pt; margin-bottom: 6px; color: #000; }
+      .card { border: .5pt solid #999; box-shadow: none; break-inside: avoid; }
+      .stat { border: .5pt solid #999; }
+      .bars .b > span, .trend .g > span, .sw { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .donut svg circle { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .erow { break-inside: avoid; border: .5pt solid #bbb; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="callout success small privacy no-print"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+
+    <div class="callout warning notice" id="rv-box" hidden>
+      <div class="row spread"><span id="rv-txt"></span><button type="button" class="btn btn-sm btn-primary" id="rv-open" data-i18n="rv_btn"></button></div>
+    </div>
+    <div class="callout notice" id="sample-box" hidden>
+      <div class="row spread"><span data-i18n="sample_note"></span><button type="button" class="btn btn-sm" id="sample-remove" data-i18n="remove_samples"></button></div>
+    </div>
+    <div class="callout danger notice" id="quota-box" hidden><span data-i18n="save_failed"></span></div>
+
+    <section class="card dash">
+      <div class="print-head" id="print-head"></div>
+      <div class="m-nav">
+        <div class="grp">
+          <button type="button" class="btn navbtn" id="m-prev" data-i18n-aria-label="prev_month" data-i18n-title="prev_month"><span class="flip" aria-hidden="true">‹</span></button>
+          <h2 class="m-label" id="m-label" aria-live="polite"></h2>
+          <button type="button" class="btn navbtn" id="m-next" data-i18n-aria-label="next_month" data-i18n-title="next_month"><span class="flip" aria-hidden="true">›</span></button>
+        </div>
+        <button type="button" class="btn btn-sm" id="m-today" data-i18n="this_month"></button>
+      </div>
+      <div class="tiles" id="tiles" aria-live="polite">
+        <div class="stat out"><div class="stat-l" data-i18n="t_spent"></div><div class="stat-v" id="d-spent"></div><div class="stat-s" id="d-spent-s"></div></div>
+        <div class="stat in"><div class="stat-l" data-i18n="t_income"></div><div class="stat-v" id="d-income"></div><div class="stat-s" id="d-income-s"></div></div>
+        <div class="stat"><div class="stat-l" data-i18n="t_saved"></div><div class="stat-v" id="d-saved"></div><div class="stat-s" id="d-saved-s"></div></div>
+        <div class="stat"><div class="stat-l" data-i18n="t_rate"></div><div class="stat-v" id="d-rate"></div><div class="stat-s" id="d-rate-s"></div></div>
+      </div>
+    </section>
+
+    <div id="alerts" aria-live="polite"></div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="tab-add" data-tab="add" aria-controls="p-add"><span class="ti" aria-hidden="true">➕</span><span data-i18n="tab_add"></span></button>
+      <button type="button" role="tab" id="tab-list" data-tab="list" aria-controls="p-list"><span class="ti" aria-hidden="true">📋</span><span data-i18n="tab_list"></span></button>
+      <button type="button" role="tab" id="tab-rep" data-tab="rep" aria-controls="p-rep"><span class="ti" aria-hidden="true">📊</span><span data-i18n="tab_rep"></span></button>
+      <button type="button" role="tab" id="tab-bud" data-tab="bud" aria-controls="p-bud"><span class="ti" aria-hidden="true">🎯</span><span data-i18n="tab_bud"></span></button>
+      <button type="button" role="tab" id="tab-rec" data-tab="rec" aria-controls="p-rec"><span class="ti" aria-hidden="true">🔁</span><span data-i18n="tab_rec"></span></button>
+      <button type="button" role="tab" id="tab-data" data-tab="data" aria-controls="p-data"><span class="ti" aria-hidden="true">💾</span><span data-i18n="tab_data"></span></button>
+    </div>
+
+    <!-- ADD -->
+    <section class="tabpanel" id="p-add" role="tabpanel" aria-labelledby="tab-add">
+      <div class="rep-grid">
+        <form class="card stack" id="f-add" novalidate>
+          <div class="form-head">
+            <h2 id="f-title"></h2>
+            <div class="seg kind" id="f-kind" role="group" data-i18n-aria-label="kind">
+              <button type="button" data-v="e" data-i18n="kind_exp"></button><button type="button" data-v="i" data-i18n="kind_inc"></button>
+            </div>
+          </div>
+          <label class="field"><span data-i18n="amount"></span>
+            <input type="text" id="f-amt" class="amt-in no-i18n" inputmode="decimal" dir="ltr" autocomplete="off" maxlength="18" placeholder="0">
+            <span class="amt-prev no-i18n" id="f-amt-prev" aria-live="polite"></span>
+          </label>
+          <div class="field"><span data-i18n="category"></span><div class="chips" id="f-cats" role="group" data-i18n-aria-label="category"></div></div>
+          <div class="field"><span data-i18n="mode_label"></span>
+            <div class="seg modes" id="f-mode" role="group" data-i18n-aria-label="mode_label">
+              <button type="button" data-v="upi" data-i18n="m_upi"></button><button type="button" data-v="cash" data-i18n="m_cash"></button><button type="button" data-v="card" data-i18n="m_card"></button><button type="button" data-v="net" data-i18n="m_net"></button>
+            </div>
+          </div>
+          <div class="two">
+            <label class="field"><span data-i18n="date"></span>
+              <span class="date-row"><input type="date" id="f-date"><button type="button" class="btn btn-sm" id="f-today" data-i18n="today"></button><button type="button" class="btn btn-sm" id="f-yday" data-i18n="yesterday"></button></span>
+            </label>
+            <div class="field"><label for="f-who" data-i18n="who"></label>
+              <span class="who-row"><select id="f-who"></select><button type="button" class="btn btn-sm" id="f-addmem" data-i18n-aria-label="mem_title" data-i18n-title="mem_title">👪 ＋</button></span>
+            </div>
+          </div>
+          <label class="field"><span data-i18n="note"></span><input type="text" id="f-note" class="no-i18n" maxlength="120" data-i18n-placeholder="note_ph"></label>
+          <p class="err" id="f-err" aria-live="assertive"></p>
+          <div class="save-row">
+            <button type="submit" class="btn btn-primary" id="f-save"></button>
+            <button type="button" class="btn" id="f-cancel" data-i18n="cancel" hidden></button>
+            <button type="button" class="btn btn-danger" id="f-del" data-i18n="delete" hidden></button>
+          </div>
+        </form>
+        <div class="card stack">
+          <div class="list-h"><h3 data-i18n="recent"></h3><button type="button" class="btn btn-sm" id="see-all" data-i18n="see_all"></button></div>
+          <div class="elist" id="recent"></div>
+          <p class="muted mb0" id="recent-empty" data-i18n="no_entries" hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIST -->
+    <section class="tabpanel off" id="p-list" role="tabpanel" aria-labelledby="tab-list">
+      <div class="card stack">
+        <div class="search"><input type="search" id="l-q" class="no-i18n" data-i18n-placeholder="search_ph" data-i18n-aria-label="search"></div>
+        <div class="seg ranges no-print" id="l-range" role="group" data-i18n-aria-label="range">
+          <button type="button" data-v="sel" data-i18n="r_sel"></button><button type="button" data-v="last3" data-i18n="r_last3"></button><button type="button" data-v="year" data-i18n="r_year"></button><button type="button" data-v="all" data-i18n="r_all"></button>
+        </div>
+        <div class="filters no-print">
+          <label class="field"><span data-i18n="kind"></span><select id="l-kind"><option value="" data-i18n="f_all"></option><option value="e" data-i18n="kind_exp"></option><option value="i" data-i18n="kind_inc"></option></select></label>
+          <label class="field"><span data-i18n="category"></span><select id="l-cat"></select></label>
+          <label class="field"><span data-i18n="mode_label"></span><select id="l-mode"></select></label>
+          <label class="field"><span data-i18n="who"></span><select id="l-who"></select></label>
+          <label class="field"><span data-i18n="f_from"></span><input type="date" id="l-from"></label>
+          <label class="field"><span data-i18n="f_to"></span><input type="date" id="l-to"></label>
+        </div>
+        <div class="list-h">
+          <p class="res-line" id="l-res" aria-live="polite"></p>
+          <span class="row no-print">
+            <button type="button" class="btn btn-sm" id="l-clear" data-i18n="clear_filters"></button>
+            <button type="button" class="btn btn-sm" id="l-csv"><span aria-hidden="true">⬇</span> <span data-i18n="export_filtered"></span></button>
+            <button type="button" class="btn btn-sm" id="l-print"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
+          </span>
+        </div>
+        <div class="elist" id="l-rows"></div>
+        <p class="muted mb0" id="l-empty" data-i18n="none_found" hidden></p>
+        <button type="button" class="btn no-print" id="l-more" data-i18n="show_more" hidden></button>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section class="tabpanel off" id="p-rep" role="tabpanel" aria-labelledby="tab-rep">
+      <div class="row spread no-print" style="margin-bottom:12px">
+        <p class="muted small mb0" data-i18n="rep_help"></p>
+        <span class="row">
+          <button type="button" class="btn btn-sm" id="r-csv"><span aria-hidden="true">⬇</span> <span data-i18n="month_csv"></span></button>
+          <button type="button" class="btn btn-sm" id="r-print"><span aria-hidden="true">🖨</span> <span data-i18n="print_report"></span></button>
+        </span>
+      </div>
+      <div class="rep-grid">
+        <div class="card stack">
+          <h3 class="mt0" data-i18n="rep_ins"></h3>
+          <ul class="ins" id="r-ins" aria-live="polite"></ul>
+        </div>
+        <div class="card stack">
+          <h3 class="mt0" data-i18n="rep_cat"></h3>
+          <div class="donut-wrap" id="r-donut-wrap">
+            <div class="donut" id="r-donut" role="img" data-i18n-aria-label="rep_cat"></div>
+            <ul class="legend" id="r-legend"></ul>
+          </div>
+          <p class="muted mb0" id="r-nospend" data-i18n="no_spend" hidden></p>
+        </div>
+        <div class="card stack">
+          <h3 class="mt0" data-i18n="rep_daily"></h3>
+          <div class="chart-meta"><span id="r-dmax"></span><span id="r-davg"></span></div>
+          <div class="bars" id="r-bars" role="img" data-i18n-aria-label="rep_daily"></div>
+          <div class="xlab" id="r-xlab" aria-hidden="true"></div>
+        </div>
+        <div class="card stack">
+          <h3 class="mt0" data-i18n="rep_trend"></h3>
+          <div class="trend" id="r-trend" role="img" data-i18n-aria-label="rep_trend"></div>
+          <div class="tlab" id="r-tlab" aria-hidden="true"></div>
+          <div class="leg-inline"><span><i class="sw" style="background:var(--c2)"></i><span data-i18n="t_spent"></span></span><span><i class="sw" style="background:var(--c4)"></i><span data-i18n="t_income"></span></span></div>
+        </div>
+        <div class="card stack">
+          <h3 class="mt0" data-i18n="rep_compare"></h3>
+          <div class="scroll-x"><table class="tbl" id="r-cmp"></table></div>
+        </div>
+        <div class="card stack">
+          <h3 class="mt0" data-i18n="rep_top"></h3>
+          <div class="elist" id="r-top"></div>
+          <p class="muted mb0" id="r-top-empty" data-i18n="no_spend" hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUDGETS -->
+    <section class="tabpanel off" id="p-bud" role="tabpanel" aria-labelledby="tab-bud">
+      <div class="rep-grid">
+        <div class="card stack">
+          <h2 class="mt0" data-i18n="bud_title"></h2>
+          <p class="small muted mb0" data-i18n="bud_help"></p>
+          <div id="b-rows"></div>
+          <label class="check"><input type="checkbox" id="b-carry"><span><span data-i18n="bud_carry"></span><br><span class="tiny muted" data-i18n="bud_carry_help"></span></span></label>
+          <div class="row"><button type="button" class="btn btn-sm" id="b-clear" data-i18n="bud_clear"></button></div>
+        </div>
+        <div class="card stack">
+          <h3 class="mt0" data-i18n="r_title"></h3>
+          <p class="small mb0" data-i18n="r_text"></p>
+          <p class="small mb0" id="b-rule" aria-live="polite"></p>
+          <button type="button" class="btn btn-sm" id="b-rule-use" data-i18n="r_use" hidden></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPEAT -->
+    <section class="tabpanel off" id="p-rec" role="tabpanel" aria-labelledby="tab-rec">
+      <div class="rep-grid">
+        <div class="card stack">
+          <h2 class="mt0" data-i18n="rec_title"></h2>
+          <p class="small muted mb0" data-i18n="rec_help"></p>
+          <div class="chips" id="rc-presets"></div>
+          <form class="panel stack" id="rc-form" novalidate hidden>
+            <div class="form-head">
+              <h3 class="mb0" id="rc-title"></h3>
+              <div class="seg kind" id="rc-kind" role="group" data-i18n-aria-label="kind">
+                <button type="button" data-v="e" data-i18n="kind_exp"></button><button type="button" data-v="i" data-i18n="kind_inc"></button>
+              </div>
+            </div>
+            <div class="two">
+              <label class="field"><span data-i18n="amount"></span><input type="text" id="rc-amt" class="no-i18n" inputmode="decimal" dir="ltr" autocomplete="off" maxlength="18" placeholder="0"></label>
+              <label class="field"><span data-i18n="note"></span><input type="text" id="rc-note" class="no-i18n" maxlength="80"></label>
+            </div>
+            <div class="two">
+              <label class="field"><span data-i18n="category"></span><select id="rc-cat"></select></label>
+              <label class="field"><span data-i18n="mode_label"></span><select id="rc-mode"></select></label>
+            </div>
+            <div class="two">
+              <label class="field"><span data-i18n="rec_day"></span><input type="number" id="rc-day" min="1" max="31" step="1" inputmode="numeric" dir="ltr" value="1"></label>
+              <label class="field"><span data-i18n="rec_from"></span><select id="rc-from"></select></label>
+            </div>
+            <label class="field"><span data-i18n="who"></span><select id="rc-who"></select></label>
+            <p class="err" id="rc-err" aria-live="assertive"></p>
+            <div class="row">
+              <button type="submit" class="btn btn-primary" id="rc-save" data-i18n="save"></button>
+              <button type="button" class="btn" id="rc-cancel" data-i18n="cancel"></button>
+              <button type="button" class="btn btn-danger" id="rc-del" data-i18n="delete" hidden></button>
+            </div>
+          </form>
+        </div>
+        <div class="card stack">
+          <div class="list-h"><h3 data-i18n="rec_list"></h3><span class="badge" id="rc-total"></span></div>
+          <div class="rlist" id="rc-rows"></div>
+          <p class="muted mb0" id="rc-empty" data-i18n="rec_none" hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATA -->
+    <section class="tabpanel off" id="p-data" role="tabpanel" aria-labelledby="tab-data">
+      <div class="st-grid">
+        <div class="stack">
+          <div class="card stack">
+            <h2 class="mt0" data-i18n="data_title"></h2>
+            <p class="small muted mb0" data-i18n="bk_help"></p>
+            <p class="small mb0" id="bk-last"></p>
+            <div class="btn-col">
+              <button type="button" class="btn btn-primary" id="bk-json"><span aria-hidden="true">💾</span> <span data-i18n="json_bk"></span></button>
+              <button type="button" class="btn" id="bk-enc"><span aria-hidden="true">🔐</span> <span data-i18n="enc_bk"></span></button>
+              <button type="button" class="btn" id="bk-restore"><span aria-hidden="true">📂</span> <span data-i18n="restore"></span></button>
+              <button type="button" class="btn" id="csv-all"><span aria-hidden="true">⬇</span> <span data-i18n="csv_all"></span></button>
+              <button type="button" class="btn" id="csv-imp"><span aria-hidden="true">⬆</span> <span data-i18n="csv_imp"></span></button>
+            </div>
+            <p class="tiny muted mb0" data-i18n="enc_note"></p>
+          </div>
+          <div class="card stack">
+            <h3 class="mt0" data-i18n="store_title"></h3>
+            <div class="meter" id="store-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-i18n-aria-label="store_title"><span></span></div>
+            <p class="small mb0" id="store-txt"></p>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="card stack">
+            <h3 class="mt0" data-i18n="mem_title"></h3>
+            <p class="small muted mb0" data-i18n="mem_help"></p>
+            <div class="plist no-i18n" id="mem-list"></div>
+            <form class="add-line" id="mem-form"><input type="text" id="mem-name" class="no-i18n" maxlength="30" data-i18n-placeholder="mem_ph" data-i18n-aria-label="mem_ph"><button type="submit" class="btn" data-i18n="add"></button></form>
+          </div>
+          <div class="card stack">
+            <h3 class="mt0" data-i18n="cat_custom"></h3>
+            <p class="small muted mb0" data-i18n="cat_custom_help"></p>
+            <div class="plist" id="cat-list"></div>
+            <div class="row"><button type="button" class="btn btn-sm" id="cat-new"><span aria-hidden="true">＋</span> <span data-i18n="nc_title"></span></button></div>
+          </div>
+          <div class="card stack">
+            <h3 class="mt0" data-i18n="reset_title"></h3>
+            <p class="small muted mb0" data-i18n="reset_help"></p>
+            <div class="row"><button type="button" class="btn btn-danger" id="reset-all" data-i18n="reset"></button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <details class="card help no-print" style="margin-top:16px">
+      <summary data-i18n="help"></summary>
+      <ul>
+        <li data-i18n="help_1"></li>
+        <li data-i18n="help_2"></li>
+        <li data-i18n="help_3"></li>
+        <li data-i18n="help_4"></li>
+        <li data-i18n="help_5"></li>
+        <li data-i18n="help_6"></li>
+      </ul>
+    </details>
+  </main>
+
+  <div class="undo-bar no-print" id="undo-bar" hidden><div><span id="undo-txt"></span><button type="button" class="btn btn-sm btn-primary" id="undo-btn" data-i18n="undo"></button></div></div>
+
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

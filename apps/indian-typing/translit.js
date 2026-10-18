@@ -49,7 +49,13 @@
 
   function valid(cp) { return /[\p{L}\p{M}\p{N}\p{P}]/u.test(String.fromCharCode(cp)); }
   /* the character for a Devanagari offset in script sc (consonant, vowel, sign) */
+  var MEMO = {};
   function chr(sc, o) {
+    var key = sc + o;
+    if (MEMO[key] === undefined) MEMO[key] = chr0(sc, o);
+    return MEMO[key];
+  }
+  function chr0(sc, o) {
     var d = S[sc], guard = 0;
     while (guard++ < 6) {
       if (d.map && d.map[o] !== undefined) return d.map[o];

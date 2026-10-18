@@ -480,7 +480,20 @@
         var A = cur.segOf[(2 * v[0] + 1) + ',' + (2 * v[1] + 1)], B = cur.segOf[(2 * v[0] + 1) + ',' + (2 * v[1] - 1)];
         return A !== undefined && B !== undefined && A !== B;
       });
-      if (!cands.length) break;
+      if (!cands.length) {
+        /* the lines only touch at mirrors: changing or removing one mirror joins them */
+        var fixed = false, keys = Object.keys(mir);
+        for (var q = 0; q < keys.length && !fixed; q++) {
+          var old = mir[keys[q]], opts = [old === 'w' ? 'c' : 'w', null];
+          for (var o = 0; o < opts.length && !fixed; o++) {
+            if (opts[o]) mir[keys[q]] = opts[o]; else delete mir[keys[q]];
+            var tr = sys.curves(mir);
+            if (tr.list.length < cur.list.length) { cur = tr; fixed = true; } else mir[keys[q]] = old;
+          }
+        }
+        if (!fixed) break;
+        continue;
+      }
       var pick = cands[Math.floor(rand() * cands.length)], type = rand() < 0.5 ? 'w' : 'c';
       var orb = orbit(pick[0], pick[1]), before = cur.list.length, placed = [];
       orb.forEach(function (v) { var key = v[0] + ',' + v[1]; if (!mir[key] && sys.internal(v[0], v[1])) { mir[key] = type; placed.push(key); } });
@@ -582,7 +595,8 @@
   }
   function paisleyEye(R, deg, s) {
     var a = deg * Math.PI / 180, c = P(R, deg);
-    return circ(c[0] + 0.05 * s * Math.sin(a) * -1 * 0, c[1] + 0, 0) && circ(c[0] - 0.05 * s * Math.sin(a), c[1] + 0.05 * s * Math.cos(a), s * 0.24);
+    /* the "eye" sits in the round part of the mango: local (0, 0.08) of the paisley */
+    return circ(c[0] - 0.08 * s * Math.sin(a), c[1] + 0.08 * s * Math.cos(a), s * 0.24);
   }
   function range(n) { var a = []; for (var i = 0; i < n; i++) a.push(i); return a; }
 

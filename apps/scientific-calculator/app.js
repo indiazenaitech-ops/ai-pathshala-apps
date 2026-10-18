@@ -227,7 +227,7 @@
       resEl.textContent = ''; resEl.className = 'sc-result'; resEl.removeAttribute('data-value'); resEl.removeAttribute('data-code');
       var v = inp.value.trim(), r = v ? S.evaluate(v, ctx()) : null;
       if (r && r.ok && !/^[−-]?[\d.]+$/.test(v)) { prevEl.innerHTML = '= ' + numHTML(r.value); prevEl.setAttribute('data-size', sizeOf(prevEl.textContent.length)); }
-      else prevEl.textContent = '';
+      else prevEl.textContent = v ? '' : '0';
       if (/\de|e\d/.test(v) && !/E/.test(v)) note(t('tip_small_e'));
       else if (noteMsg === t('tip_small_e')) note('');
     }

@@ -24,7 +24,7 @@
     if (id === 'dots') { g.size = keep.size || 4; var dg = PPG.dots.geom(g.size, g.size); g.lines = zeros(dg.L); g.boxes = zeros(dg.B); g.last = -1; g.pts = { 1: 0, 2: 0 }; g.again = false; }
     if (id === 'bulls') {
       g.len = keep.len || 4; g.hist = { 1: [], 2: [] }; g.secret = { 1: '', 2: '' }; g.best = keep.best || 0; g.played = keep.played || 0;
-      g.err = ''; g.solvedBy = 0; g.gaveUp = false;
+      g.err = ''; g.gaveUp = false; g.hint = !!keep.hint;
       if (g.mode === 'solo') { g.phase = 'play'; g.secret[1] = randomSecret(g.len); g.turn = 1; }
       else { g.phase = 'setup1'; g.secret[1] = g.mode === 'cpu' ? randomSecret(g.len) : ''; g.turn = g.starter; }
     }
@@ -106,7 +106,7 @@
     else if (id === 'dots') req = { game: 'dots', R: g.size, C: g.size, lines: g.lines.slice(), boxes: g.boxes.slice(), p: 2, level: g.level };
     else req = { game: 'bulls', len: g.len, zero: true, hist: g.hist[2].slice(), level: g.level };
     busy[id] = g.gen; render();
-    var t0 = Date.now(), gen = g.gen;
+    var gen = g.gen;
     Promise.all([think(req), later(id === 'dots' && g.again ? 380 : 480)]).then(function (out) {
       busy[id] = 0;
       var res = out[0], g2 = S.games[id];
@@ -115,7 +115,6 @@
       else if (id === 'c4') c4Play(g, res.move);
       else if (id === 'dots') dotsDraw(g, res.move);
       else bcApply(g, 2, res.guess);
-      void t0;
     });
   }
   function cpuAll() { GAMES.forEach(cpuTurn); }
@@ -145,7 +144,7 @@
   }
   function newGame(id, opts) {
     var g = S.games[id];
-    S.games[id] = freshGame(id, Object.assign({ mode: g.mode, level: g.level, starter: g.starter, score: g.score, gen: g.gen, size: g.size, len: g.len, best: g.best, played: g.played }, opts || {}));
+    S.games[id] = freshGame(id, Object.assign({ mode: g.mode, level: g.level, starter: g.starter, score: g.score, gen: g.gen, size: g.size, len: g.len, best: g.best, played: g.played, hint: g.hint }, opts || {}));
     busy[id] = 0; rateCache = {};
     save(); render(); cpuTurn(id);
   }
@@ -304,7 +303,8 @@
       p = dotsXY(dg, l);
       var x1 = p[0] * DS + DP, y1 = p[1] * DS + DP, x2 = p[2] * DS + DP, y2 = p[3] * DS + DP, own = g.lines[l];
       s.appendChild(svg('line', { class: 'ln' + (own ? ' p' + own : '') + (l === g.last ? ' last' : ''), x1: x1, y1: y1, x2: x2, y2: y2 }));
-      var hit = svg('line', { class: 'hit' + (own ? ' on' : ''), x1: x1, y1: y1, x2: x2, y2: y2, 'data-line': l, tabindex: l === focusLine ? '0' : '-1', role: 'button',
+      var hz = y1 === y2, HW = 23, HG = 12;
+      var hit = svg('rect', { class: 'hit' + (own ? ' on' : ''), x: hz ? x1 + HG : x1 - HW, y: hz ? y1 - HW : y1 + HG, width: hz ? DS - 2 * HG : 2 * HW, height: hz ? 2 * HW : DS - 2 * HG, rx: 10, 'data-line': l, tabindex: l === focusLine ? '0' : '-1', role: 'button',
         'aria-label': t('dots_line', { a: fmt(p[1] + 1) + '-' + fmt(p[0] + 1), b: fmt(p[3] + 1) + '-' + fmt(p[2] + 1) }) + (own ? ' (' + pname(own, g) + ')' : '') });
       if (own || g.over || cpuNow) hit.setAttribute('aria-disabled', 'true');
       s.appendChild(hit);
@@ -356,7 +356,7 @@
     beep(r.b === g.len ? 'win' : p);
     var n1 = g.hist[1].length, n2 = g.hist[2].length, s1 = solved(g, 1), s2 = solved(g, 2);
     if (g.mode === 'solo') {
-      if (r.b === g.len) { g.over = true; g.winner = 1; g.played++; if (!g.best || n1 < g.best) g.best = n1; beep('win'); }
+      if (r.b === g.len) { g.over = true; g.winner = 1; g.played++; if (!g.best || n1 < g.best) g.best = n1; }
     } else if ((s1 || s2) && n1 === n2) {
       finish(g, s1 && s2 ? 0 : s1 ? 1 : 2);
     } else g.turn = other(p);
@@ -490,8 +490,7 @@
       return;
     }
     [1, 2].forEach(function (p) {
-      var v = S.tab === 'dots' && !g.over && g.moves ? fmt(g.score[p]) + ' · ' + fmt(g.pts[p]) : fmt(g.score[p]);
-      box.appendChild(el('div', { class: 'sc p' + p, id: 'score-' + p, title: pname(p, g) }, el('span', { class: 'k no-i18n', text: pname(p, g) }), el('span', { class: 'v', text: S.tab === 'dots' ? fmt(g.score[p]) : v })));
+      box.appendChild(el('div', { class: 'sc p' + p, id: 'score-' + p, title: pname(p, g) }, el('span', { class: 'k no-i18n', text: pname(p, g) }), el('span', { class: 'v', text: fmt(g.score[p]) })));
     });
     box.appendChild(el('div', { class: 'sc', id: 'score-d' }, el('span', { class: 'k', text: t('draws') }), el('span', { class: 'v', text: fmt(g.score.d) })));
     if (S.tab === 'dots') {

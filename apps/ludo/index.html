@@ -133,12 +133,16 @@
     .ld-bar b { font-size: .8rem; font-variant-numeric: tabular-nums; }
     .ld-bar span { font-weight: 800; }
     .ld-exp { position: absolute; inset-inline: 0; border-top: 2px dashed var(--muted); pointer-events: none; }
+    .ld-stats summary, .help summary { list-style: none; gap: 8px; }
+    .ld-stats summary::-webkit-details-marker, .help summary::-webkit-details-marker { display: none; }
+    .ld-stats summary::after, .help summary::after { content: "▾"; margin-inline-start: auto; color: var(--muted); transition: transform .2s; }
+    .ld-stats[open] > summary::after, .help[open] > summary::after { transform: rotate(180deg); }
     .help ul { margin: 10px 0 0; padding-inline-start: 1.3em; }
     .help li + li { margin-top: 6px; }
 
     /* ---------- dialogs ---------- */
     .ld-dlg { border: 0; border-radius: var(--radius); padding: 0; width: min(580px, calc(100vw - 24px)); max-height: calc(100vh - 24px);
-      background: var(--surface); color: var(--text); box-shadow: var(--shadow-lg); }
+      background: var(--surface); color: var(--text); box-shadow: var(--shadow-lg); overflow: auto; overscroll-behavior: contain; }
     .ld-dlg::backdrop { background: rgba(5, 15, 20, .6); }
     .ld-dlg.ld-fallback { position: fixed; inset: 0; margin: auto; z-index: 1000; overflow: auto; height: fit-content; }
     .ld-dlg-in { padding: 16px 18px 18px; }

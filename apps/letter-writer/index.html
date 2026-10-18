@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Letter &amp; Application Writer · AI Pathshala</title>
+  <meta name="description" content="Free letter and application writer: leave, bank, work, complaint and RTI formats in 12 Indian languages. Fill in, print or copy. Stays on your device.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .lw-note { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 12px; }
+    .lw-note .ic { flex: none; line-height: 1.4; }
+    .help summary { cursor: pointer; font-weight: 700; padding-block: 4px; }
+    .help ul { margin: 10px 0 4px; padding-inline-start: 1.3em; }
+    .help li + li { margin-top: 6px; }
+    .card h2 { font-size: 1.08rem; margin: 0 0 10px; }
+    .lw-groups { display: flex; flex-wrap: wrap; gap: 6px; }
+    .lw-groups button, .lw-tpls button { min-height: 42px; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      border-radius: 999px; padding: 6px 14px; font: inherit; font-weight: 600; font-size: .9rem; cursor: pointer; text-align: start; }
+    .lw-groups button[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-ink, #fff); }
+    .lw-tpls { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); }
+    .lw-tpls button { border-radius: 10px; font-weight: 500; }
+    .lw-tpls button[aria-pressed="true"] { border-color: var(--primary); background: var(--primary-soft); box-shadow: 0 0 0 2px var(--primary); font-weight: 700; }
+    .lw-opts { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); margin-top: 14px; }
+    .lw-opts select { width: 100%; }
+    .lw-opts .seg { width: 100%; }
+    .lw-opts .seg button { flex: 1 1 0; min-height: 42px; }
+    .lw-layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); margin-top: 14px; align-items: start; }
+    .lw-form > .card + .card { margin-top: 14px; }
+    .fgrid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+    .fgrid .field.wide { grid-column: 1 / -1; }
+    .fgrid input, .fgrid textarea { width: 100%; min-width: 0; }
+    .fgrid textarea { min-height: 70px; resize: vertical; }
+    .fgrid .field > label { font-weight: 600; font-size: .92rem; overflow-wrap: anywhere; }
+    .fhint { color: var(--muted); font-size: .8rem; margin: 0; }
+    input[type="tel"] { font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 11px; min-height: 40px; max-width: 100%; }
+    input[aria-invalid="true"] { border-color: var(--danger); }
+    .lw-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .lw-actions .btn { flex: 1 1 140px; min-height: 42px; }
+    .tips ul { margin: 6px 0 0; padding-inline-start: 1.25em; }
+    .tips li + li { margin-top: 6px; }
+    .drafts { display: grid; gap: 8px; margin-top: 8px; }
+    .draft { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; background: var(--surface-2); border-radius: 10px; padding: 8px 10px; }
+    .draft .dt { flex: 1 1 180px; min-width: 0; overflow-wrap: anywhere; }
+    .draft .dt b { display: block; font-size: .92rem; }
+    .draft .dt span { font-size: .8rem; color: var(--muted); }
+    .draft .btn { min-height: 40px; }
+    .pv-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; justify-content: space-between; }
+    .pv-head h2 { margin: 0; }
+    .pv-stage { background: var(--surface-2); border-radius: var(--radius-sm, 10px); padding: 10px; margin-top: 10px; }
+    /* the letter itself: always white paper, dark ink, also in dark mode */
+    .sheet { background: #fff; color: #1b1b1b; color-scheme: light; box-shadow: 0 2px 12px rgba(0,0,0,.18); border-radius: 3px;
+      padding: clamp(18px, 6%, 56px) clamp(16px, 7%, 64px); font-size: 15px; line-height: 1.6; text-align: start; max-width: 794px; margin: 0 auto;
+      font-family: "Noto Sans", "Noto Sans Devanagari", "Noto Sans Bengali", "Noto Sans Gurmukhi", "Noto Sans Gujarati", "Noto Sans Oriya", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Nastaliq Urdu", "Nirmala UI", sans-serif;
+      overflow-wrap: anywhere; }
+    .sheet[lang="en"] { font-family: Georgia, "Times New Roman", "Noto Serif", serif; }
+    .sheet[lang="ur"] { line-height: 2.2; font-family: "Noto Nastaliq Urdu", "Noto Naskh Arabic", "Nirmala UI", sans-serif; }
+    .sheet .blk { margin: 0 0 1em; }
+    .sheet .blk p { margin: 0; }
+    .sheet .lbl { font-weight: 700; }
+    .sheet .subj { font-weight: 700; }
+    .sheet .subj .v { text-decoration: none; }
+    .sheet .body p { margin: 0 0 .8em; text-align: justify; white-space: pre-wrap; }
+    .sheet[lang="ur"] .body p { text-align: start; }
+    .sheet .body p.list { text-align: start; padding-inline-start: 1.2em; }
+    .sheet .sig-gap { height: 2.6em; }
+    .sheet .signhint { color: #777; font-size: .85em; }
+    .sheet .row2 { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 2em; }
+    .sheet .blank { color: #9a9a9a; letter-spacing: .05em; }
+    .sheet .v { background: rgba(255, 214, 0, .18); border-radius: 2px; }
+    #printRoot { position: fixed; top: 0; inset-inline-start: 0; width: 0; height: 0; overflow: hidden; pointer-events: none; }
+    @media (min-width: 980px) {
+      .lw-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); }
+      .lw-preview { position: sticky; top: 64px; }
+      .lw-go { display: none !important; }
+    }
+    @page { size: A4 portrait; margin: 20mm 20mm 18mm; }
+    @media print {
+      body > *:not(#printRoot) { display: none !important; }
+      html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+      #printRoot { position: static !important; width: auto !important; height: auto !important; overflow: visible !important; }
+      #printRoot .sheet { box-shadow: none; padding: 0; max-width: none; font-size: 12pt; border-radius: 0; }
+      #printRoot .sheet .v { background: none; }
+      #printRoot .sheet .blank { color: #000; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="callout success small lw-note"><span class="ic" aria-hidden="true">🔒</span><span data-i18n="privacy"></span></p>
+    <p class="callout warning small lw-note"><span class="ic" aria-hidden="true">⚠️</span><span data-i18n="warn_numbers"></span></p>
+
+    <details class="card help no-print">
+      <summary data-i18n="help_title"></summary>
+      <ul>
+        <li data-i18n="help_1"></li>
+        <li data-i18n="help_2"></li>
+        <li data-i18n="help_3"></li>
+        <li data-i18n="help_4"></li>
+        <li data-i18n="help_5"></li>
+      </ul>
+    </details>
+
+    <section class="card" style="margin-top:14px">
+      <h2 id="pickLbl" data-i18n="pick_title"></h2>
+      <div class="lw-groups" id="groups" role="group" aria-labelledby="pickLbl"></div>
+      <div class="lw-tpls" id="tpls" role="group" aria-labelledby="pickLbl"></div>
+      <div class="lw-opts">
+        <div class="field">
+          <label for="letterLang" data-i18n="letter_lang"></label>
+          <select id="letterLang" class="no-i18n"></select>
+        </div>
+        <div class="field">
+          <span id="layLbl" class="lbl-like" data-i18n="layout"></span>
+          <div class="seg" id="laySeg" role="group" aria-labelledby="layLbl">
+            <button type="button" data-lay="std" data-i18n="lay_std"></button>
+            <button type="button" data-lay="exam" data-i18n="lay_exam"></button>
+          </div>
+        </div>
+        <div class="field">
+          <span id="genLbl" data-i18n="gender"></span>
+          <div class="seg" id="genSeg" role="group" aria-labelledby="genLbl">
+            <button type="button" data-gen="f" data-i18n="gen_f"></button>
+            <button type="button" data-gen="m" data-i18n="gen_m"></button>
+          </div>
+        </div>
+      </div>
+      <p class="fhint" id="layHint" style="margin-top:8px"></p>
+    </section>
+
+    <div class="lw-layout">
+      <section class="lw-form" id="formCol">
+        <div class="card"><h2 data-i18n="sec_you"></h2><div class="fgrid" id="fYou"></div></div>
+        <div class="card" id="cardTo"><h2 data-i18n="sec_to"></h2><div class="fgrid" id="fTo"></div></div>
+        <div class="card"><h2 data-i18n="sec_details"></h2><div class="fgrid" id="fDet"></div>
+          <div class="lw-actions">
+            <button class="btn btn-ghost" type="button" id="btnSample">✨ <span data-i18n="fill_sample"></span></button>
+            <button class="btn btn-ghost" type="button" id="btnClear">⌫ <span data-i18n="clear_fields"></span></button>
+          </div>
+        </div>
+        <div class="card tips callout accent" id="tipsCard">
+          <h2 data-i18n="tips_title"></h2>
+          <ul id="tips"></ul>
+        </div>
+        <button class="btn btn-primary btn-lg lw-go" type="button" id="goPreview" style="margin-top:14px;width:100%">👁 <span data-i18n="see_letter"></span></button>
+        <div class="card" style="margin-top:14px">
+          <h2 data-i18n="drafts_title"></h2>
+          <p class="fhint" data-i18n="drafts_hint"></p>
+          <div class="drafts no-i18n" id="drafts"></div>
+          <p class="muted small" id="noDrafts" data-i18n="no_drafts"></p>
+          <div class="lw-actions">
+            <button class="btn btn-danger" type="button" id="btnReset">↺ <span data-i18n="reset"></span></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="lw-preview" id="previewCol">
+        <div class="card">
+          <div class="pv-head">
+            <h2 data-i18n="preview_title"></h2>
+            <span class="badge" id="pvLang"></span>
+          </div>
+          <div class="lw-actions">
+            <button class="btn btn-primary" type="button" id="btnPrint">🖨 <span data-i18n="print_btn"></span></button>
+            <button class="btn" type="button" id="btnCopy">📋 <span data-i18n="copy_text"></span></button>
+            <button class="btn" type="button" id="btnTxt">⬇ <span data-i18n="download_txt"></span></button>
+            <button class="btn btn-accent" type="button" id="btnSave">💾 <span data-i18n="save_draft"></span></button>
+          </div>
+          <div class="pv-stage"><article class="sheet no-i18n" id="sheet" aria-live="polite"></article></div>
+          <p class="fhint" style="margin-top:8px" data-i18n="print_tip"></p>
+        </div>
+      </section>
+    </div>
+  </main>
+  <div id="printRoot" aria-hidden="true"></div>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

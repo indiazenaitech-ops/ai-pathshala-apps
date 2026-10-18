@@ -35,17 +35,19 @@
     .scores { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
     .sc { background: var(--surface-2); border-radius: 10px; padding: 6px 10px; min-width: 0; border-top: 4px solid var(--border); }
     .sc.p1 { border-top-color: var(--p1); } .sc.p2 { border-top-color: var(--p2); }
-    .sc .k { display: block; font-size: .8rem; font-weight: 700; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sc .k { display: block; font-size: .8rem; font-weight: 700; color: var(--muted); line-height: 1.25; overflow-wrap: anywhere; }
     .sc .v { font-size: 1.6rem; font-weight: 800; font-family: "Noto Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; }
     .rule { margin: 0; font-size: .92rem; }
     .opt { display: flex; flex-direction: column; gap: 6px; }
+    .opt .seg { display: flex; }
+    .opt .seg button { flex: 1 1 0; padding-inline: 6px; }
     .check { min-height: 40px; }
     .hint { color: var(--muted); font-size: .86rem; margin: 0; }
     .board-host { display: flex; justify-content: center; }
     .is-busy { cursor: progress; }
 
     /* tic-tac-toe */
-    .ttt { direction: ltr; display: grid; gap: 6px; width: min(100%, 440px); aspect-ratio: 1 / 1; }
+    .ttt { direction: ltr; display: grid; gap: 6px; width: min(100%, 440px, max(280px, 100vh - 300px)); aspect-ratio: 1 / 1; }
     .ttt button { position: relative; border: 2px solid var(--border); background: var(--surface-2); color: var(--text); border-radius: 12px; font: inherit;
       font-family: "Noto Sans", system-ui, sans-serif; font-weight: 800; font-size: clamp(1.6rem, 9vw, 3.4rem); line-height: 1; cursor: pointer; min-width: 40px; min-height: 40px; padding: 0; }
     .ttt.n4 button { font-size: clamp(1.4rem, 7vw, 2.6rem); } .ttt.n5 button { font-size: clamp(1.2rem, 6vw, 2.2rem); }
@@ -64,7 +66,7 @@
     .think-box { margin: 0; font-size: .9rem; }
 
     /* four in a row */
-    .c4 { direction: ltr; width: min(100%, 520px); }
+    .c4 { direction: ltr; width: min(100%, 520px, max(300px, (100vh - 330px) * 1.05)); }
     .c4-cols { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-bottom: 6px; }
     .c4-cols button { min-height: 44px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2); color: var(--text); font: inherit; font-weight: 800; cursor: pointer; padding: 0; }
     .c4-cols button:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-soft); }
@@ -79,16 +81,17 @@
     @keyframes drop { from { transform: translateY(var(--dy, -300px)); } to { transform: none; } }
 
     /* dots and boxes */
-    .dots { direction: ltr; width: min(100%, 520px); }
+    .dots { direction: ltr; width: min(100%, 520px, max(300px, 100vh - 300px)); }
     .dots svg { display: block; width: 100%; height: auto; touch-action: manipulation; }
     .dots .dt { fill: var(--text); }
     .dots .ln { stroke: var(--border); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 2 12; }
     .dots .ln.p1 { stroke: var(--p1); stroke-dasharray: none; stroke-width: 10; }
     .dots .ln.p2 { stroke: var(--p2); stroke-dasharray: none; stroke-width: 10; }
     .dots .ln.last { stroke-width: 15; }
-    .dots .hit { stroke: transparent; stroke-width: 46; stroke-linecap: round; cursor: pointer; pointer-events: stroke; }
+    .dots .hit { fill: transparent; cursor: pointer; pointer-events: all; }
+    .dots .hit:hover:not(.on) { fill: color-mix(in srgb, var(--primary) 12%, transparent); }
     .dots .hit:focus { outline: none; }
-    .dots .hit:focus-visible { stroke: color-mix(in srgb, var(--accent) 40%, transparent); }
+    .dots .hit:focus-visible { fill: color-mix(in srgb, var(--accent) 30%, transparent); }
     .dots .hit.on { cursor: default; }
     .dots .bx.p1 { fill: var(--p1-soft); } .dots .bx.p2 { fill: var(--p2-soft); }
     .dots .bt { font: 800 40px "Noto Sans", system-ui, sans-serif; text-anchor: middle; dominant-baseline: central; }

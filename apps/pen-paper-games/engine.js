@@ -287,10 +287,13 @@
         for (i = 0; i < 9; i++) cats.push(ex.scores[i] === null ? null : ex.scores[i] > 0 ? 'win' : ex.scores[i] < 0 ? 'lose' : 'draw');
         return { exact: true, cats: cats, scores: ex.scores, games: ex.games, positions: ex.positions };
       }
-      var res = tttSearch(board, n, k, p, { maxDepth: 6, timeMs: timeMs || 350 }), T = 8;
+      /* not proven: rate each square against the best and worst unproven squares on this board */
+      var res = tttSearch(board, n, k, p, { maxDepth: 6, timeMs: timeMs || 350 }), hi = -Infinity, lo = Infinity, s;
+      for (i = 0; i < res.scores.length; i++) { s = res.scores[i]; if (s !== null && s < NEAR && s > -NEAR) { if (s > hi) hi = s; if (s < lo) lo = s; } }
+      var range = hi - lo, goodAt = hi - Math.max(2, range * 0.25), badAt = hi - Math.max(10, range * 0.8);
       for (i = 0; i < res.scores.length; i++) {
-        var s = res.scores[i];
-        cats.push(s === null ? null : s >= NEAR ? 'win' : s <= -NEAR ? 'lose' : s >= T ? 'good' : s <= -T ? 'bad' : 'even');
+        s = res.scores[i];
+        cats.push(s === null ? null : s >= NEAR ? 'win' : s <= -NEAR ? 'lose' : s >= goodAt ? 'good' : s <= badAt ? 'bad' : 'even');
       }
       return { exact: false, cats: cats, scores: res.scores, depth: res.depth, nodes: res.nodes };
     }

@@ -153,7 +153,7 @@
     $('#cover').hidden = !hide;
     $('#cover-txt').textContent = t('paused');
     var b = $('#btn-pause');
-    b.textContent = (paused ? '▶ ' : '⏸ ') + t(paused ? 'resume' : 'pause');
+    b.textContent = (paused ? '▶ ' : '‖ ') + t(paused ? 'resume' : 'pause');
     b.disabled = !game || game.done;
   }
   document.addEventListener('visibilitychange', function () {
@@ -207,8 +207,7 @@
     }
     return bad;
   }
-  var rafR = 0;
-  function render() { if (!rafR) rafR = requestAnimationFrame(function () { rafR = 0; draw(); }); }
+  function render() { draw(); }     /* 81 small cells: drawing at once is cheap and keeps taps instant */
   function draw() {
     if (!game) return;
     var n = game.n, G = E.geo(n), nc = n === 4 ? 2 : 3, sd = sel >= 0 ? game.v[sel] : 0, show = S.mistakes || checkFlash;
