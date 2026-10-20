@@ -122,10 +122,23 @@ Categories. School library: `learn-ai` (Learn AI), `teacher-tools`, `math`, `sci
 - `business`: Work & business (teams, meetings, HR, finance, invoices)
 - `marketing`: Marketing & creators (campaigns, social media, SEO, content, branding)
 - `everyday`: Everyday tools (PDFs, images, text, calculators, privacy-safe utilities)
+- `data`: Data & analytics (CSV, charts, pivots, statistics for work and study)
+- `games`: Games & fun (Indian board games, puzzles, brain games, party and family games, creative toys)
 
-The home page groups categories by audience (`?for=` link parameter): Schools & colleges = the 8 school categories;
-Work & business = `business`, `learn-ai`, `digital-safety`; Marketing & creators = `marketing`, `everyday`;
-Everyone = all. A new category id must be added in `tools/verify.js`, `tools/build_catalog.js`, `shared/home.js`
+The home page groups categories by audience (`?for=` link parameter): Schools & colleges = the 8 school categories + `data`;
+Work & business = `business`, `data`, `learn-ai`, `digital-safety`; Marketing & creators = `marketing`, `everyday`;
+Everyone = all (the only place `games` shows).
+
+Apps in `games`:
+- `"grades": "all"`, `"audience": ["student", "teacher"]`. Family-friendly content only (children use the site).
+- No gambling or betting mechanics (no Teen Patti/Rummy for stakes, no coins or points that look like money, no loot
+  boxes), no online play or chat, no endless-play hooks: every game has a natural end (a match, a level, a puzzle).
+- Pass-and-play on one device and a computer opponent where the game needs one; works with touch, mouse and keyboard.
+- Share message: define your own key in strings.js, e.g. `wa_game: "{title}: a free game from AI Pathshala. No sign-up,
+  no ads, works offline, in 12 Indian languages. Play here: {url}"` (all 12 languages) and pass
+  `EDU.init({ ..., waKey: 'wa_game' })`.
+- Same quality bar: correct rules (state which regional variant you follow and offer the common house-rule toggles),
+  sound effects off by default or easy to mute, `prefers-reduced-motion` respected, game state saved in `EDU.store`. A new category id must be added in `tools/verify.js`, `tools/build_catalog.js`, `shared/home.js`
 and `cat_<id>` in `shared/home-strings.js`.
 
 Apps in `business`, `marketing` and `everyday`:
