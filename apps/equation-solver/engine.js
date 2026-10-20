@@ -817,9 +817,9 @@
       var surdLines = ['√' + D + ' = √(' + (sd.k * sd.k) + ' × ' + sd.m + ') = ' + sqrtStr(D)];
       if (sd.k > 1) surdLines.push('x = [' + nb + ' ± ' + sqrtStr(D) + '] / ' + (2 * a));
       var gg = gcd(gcd(Math.abs(b), sd.k), 2 * a);
-      if (gg > 1) surdLines.push(res.exact + '   (dividing by ' + gg + ')');
+      if (gg > 1) surdLines.push(res.exact);
       if (res.exactSplit) surdLines.push(res.exactSplit);
-      pushStep(steps, { t: sd.k > 1 ? 'step_formula_surd' : 'step_formula_surd_simple', v: { g: gg }, m: surdLines });
+      pushStep(steps, { t: gg > 1 ? 'step_formula_surd_div' : 'step_formula_surd', v: { g: gg }, m: surdLines });
       pushStep(steps, { t: 'step_formula_roots', m: ['x = ' + res.roots[0].text + ' ≈ ' + dec(res.roots[0].value, 2), 'x = ' + res.roots[1].text + ' ≈ ' + dec(res.roots[1].value, 2)] });
     }
   }
