@@ -33,7 +33,7 @@ window.FND_MSGS = [
   { id: 'job_offer', lvl: 'sr', kind: 'wa', ans: 'fake', flags: ['money', 'urgent', 'domain', 'round'], step: 'url', from: '+91 97XXX XXXXX', time: '11:47', fwd: true },
   { id: 'bank_block', lvl: 'sr', kind: 'sms', ans: 'fake', flags: ['urgent', 'domain', 'money'], step: 'bank', from: '+91 63XXX XXXXX', time: '15:21' },
   { id: 'banana_cure', lvl: 'sr', kind: 'post', ans: 'fake', flags: ['miracle', 'true100', 'nowho', 'round'], step: 'official', handle: '@healthy_desi_life', verified: false, pic: '🍌🍌🩺' },
-  { id: 'quote_card', lvl: 'sr', kind: 'post', ans: 'verify', flags: ['nowho', 'nosource'], step: 'official', handle: '@rampura_politics_live', verified: false, pic: '🗣️' },
+  { id: 'quote_card', lvl: 'sr', kind: 'post', ans: 'verify', flags: ['nowho', 'nosource'], step: 'official', handle: '@rampura_politics_live', verified: false, quote: true },
   { id: 'literacy_post', lvl: 'sr', kind: 'post', ans: 'verify', flags: ['nosource', 'round', 'emo'], step: 'official', handle: '@proud_nandpuri', verified: false },
   { id: 'metro_shot', lvl: 'sr', kind: 'shot', ans: 'verify', flags: ['nosource'], step: 'date' }
 ];
