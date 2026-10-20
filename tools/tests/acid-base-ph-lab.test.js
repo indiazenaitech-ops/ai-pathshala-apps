@@ -147,7 +147,7 @@ module.exports = async function ({ page, expect, t, log }) {
   await page.evaluate(() => { window.print = () => {}; });
   await page.click('#print-summary-2');
   await page.waitForTimeout(150);
-  const sum = await page.evaluate(() => ({ subs: document.querySelectorAll('#summary .sum-subs span').length, inds: document.querySelectorAll('#summary .sum-tbl tbody tr').length }));
+  const sum = await page.evaluate(() => ({ subs: document.querySelectorAll('#summary .sum-subs > span').length, inds: document.querySelectorAll('#summary .sum-tbl tbody tr').length }));
   expect(sum.subs === 24 && sum.inds === 7 + 4, 'summary lists 24 substances, 7 indicators and 4 salts, got ' + JSON.stringify(sum));
 
   // --- garbage in storage never crashes the app ---

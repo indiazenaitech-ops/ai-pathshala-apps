@@ -31,12 +31,14 @@
   }
   function cleanGame(g) {
     if (!g || typeof g !== 'object' || !Array.isArray(g.rounds) || g.rounds.length !== GAME_N) return null;
+    if (!(Number(g.i) >= 0 && Number(g.i) <= GAME_N - 1)) return null;
     var rounds = g.rounds.map(function (p) { return Math.round(num(p, 0, 14, 7)); });
     var i = Math.round(num(g.i, 0, GAME_N - 1, 0));
     return { rounds: rounds, i: i, score: Math.round(num(g.score, 0, i + 1, 0)), picked: g.picked === null || g.picked === undefined ? null : Math.round(num(g.picked, 0, 14, 0)), done: !!g.done, chart: !!g.chart };
   }
   function cleanQuiz(q) {
     if (!q || typeof q !== 'object') return null;
+    if (!(Number(q.i) >= 0 && Number(q.i) <= QN - 1)) return null;   /* an impossible question number: start a fresh quiz */
     var i = Math.round(num(q.i, 0, QN - 1, 0));
     return { i: i, score: Math.round(num(q.score, 0, i + 1, 0)), picked: q.picked === null || q.picked === undefined ? null : Math.round(num(q.picked, 0, 3, 0)), done: !!q.done };
   }
