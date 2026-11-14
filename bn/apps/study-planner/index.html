@@ -238,35 +238,35 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">পরীক্ষার প্রস্তুতি দিনে দিনে পরিকল্পনা করুন: পরীক্ষার রুটিন আর অধ্যায়গুলো লিখুন, আর পান একটি টাইমটেবিল — পোমোডোরো বিরতি, দুবার রিভিশন আর প্রতিটি পরীক্ষার আগে একটি হালকা দিন সহ।</p>
 
     <div id="sample-note" class="callout accent no-print" hidden>
-      <span data-i18n="sample_note"></span>
-      <button class="btn btn-sm btn-primary" id="start-empty-2" type="button" data-i18n="start_empty"></button>
-      <button class="btn btn-sm" id="hide-note" type="button" data-i18n="got_it"></button>
+      <span data-i18n="sample_note">এটি দশম শ্রেণির অর্ধবার্ষিক পরীক্ষার একটি নমুনা প্ল্যান, যাতে আপনি দেখতে পারেন অ্যাপটি কীভাবে কাজ করে। “পরীক্ষা ও অধ্যায়”-এ নিজের বিষয়, পরীক্ষার তারিখ আর অধ্যায় লিখুন।</span>
+      <button class="btn btn-sm btn-primary" id="start-empty-2" type="button" data-i18n="start_empty">নিজের প্ল্যান শুরু করুন</button>
+      <button class="btn btn-sm" id="hide-note" type="button" data-i18n="got_it">বুঝেছি</button>
     </div>
 
     <div class="tabs no-print" role="tablist" id="tabs">
-      <button type="button" role="tab" id="tab-plan" data-tab="plan" aria-controls="p-plan"><span class="ti" aria-hidden="true">📅</span><span data-i18n="tab_plan"></span></button>
-      <button type="button" role="tab" id="tab-exams" data-tab="exams" aria-controls="p-exams"><span class="ti" aria-hidden="true">📝</span><span data-i18n="tab_exams"></span></button>
-      <button type="button" role="tab" id="tab-time" data-tab="time" aria-controls="p-time"><span class="ti" aria-hidden="true">⏰</span><span data-i18n="tab_time"></span></button>
-      <button type="button" role="tab" id="tab-tips" data-tab="tips" aria-controls="p-tips"><span class="ti" aria-hidden="true">💡</span><span data-i18n="tab_tips"></span></button>
+      <button type="button" role="tab" id="tab-plan" data-tab="plan" aria-controls="p-plan"><span class="ti" aria-hidden="true">📅</span><span data-i18n="tab_plan">আমার প্ল্যান</span></button>
+      <button type="button" role="tab" id="tab-exams" data-tab="exams" aria-controls="p-exams"><span class="ti" aria-hidden="true">📝</span><span data-i18n="tab_exams">পরীক্ষা ও অধ্যায়</span></button>
+      <button type="button" role="tab" id="tab-time" data-tab="time" aria-controls="p-time"><span class="ti" aria-hidden="true">⏰</span><span data-i18n="tab_time">পড়ার সময়</span></button>
+      <button type="button" role="tab" id="tab-tips" data-tab="tips" aria-controls="p-tips"><span class="ti" aria-hidden="true">💡</span><span data-i18n="tab_tips">স্বাস্থ্যকর টিপস</span></button>
     </div>
 
     <!-- ================= PLAN ================= -->
     <section id="p-plan" class="tabpanel no-print" role="tabpanel" aria-labelledby="tab-plan">
       <div id="plan-empty" class="card empty-plan" hidden>
         <p class="big-number" aria-hidden="true">📅</p>
-        <p data-i18n="empty_plan"></p>
+        <p data-i18n="empty_plan">এখনও কোনো প্ল্যান নেই। পরীক্ষা আর অধ্যায় লিখুন, তারপর “আমার প্ল্যান বানান” টিপুন।</p>
         <div class="row" style="justify-content:center">
-          <button class="btn btn-primary btn-lg" id="go-exams" type="button" data-i18n="go_exams"></button>
+          <button class="btn btn-primary btn-lg" id="go-exams" type="button" data-i18n="go_exams">আমার পরীক্ষা লিখুন</button>
         </div>
       </div>
 
       <div id="plan-main">
         <div class="sum-grid">
           <section class="card cd-card" aria-live="polite">
-            <h2 class="h-sm" data-i18n="next_exam"></h2>
+            <h2 class="h-sm" data-i18n="next_exam">পরের পরীক্ষা</h2>
             <div class="cd-row">
               <span class="cd-num" id="cd-days"></span>
               <div class="cd-txt"><b id="cd-unit"></b><span id="cd-what" class="muted small"></span></div>
@@ -280,7 +280,7 @@
           </section>
 
           <section class="card prog-card" aria-live="polite">
-            <h2 class="h-sm" data-i18n="progress_label"></h2>
+            <h2 class="h-sm" data-i18n="progress_label">অগ্রগতি</h2>
             <div class="pct-row"><span class="pct-num" id="pct"></span><span id="done-of" class="muted small"></span></div>
             <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="pct-bar-wrap" data-i18n-aria-label="progress_label"><span id="pct-bar"></span></div>
             <div class="sp-list" id="subj-prog"></div>
@@ -291,14 +291,14 @@
 
         <div class="card toolbar">
           <div class="seg" role="group" data-i18n-aria-label="view_label" id="view-seg">
-            <button type="button" id="view-list" data-v="list"><span aria-hidden="true">☰ </span><span data-i18n="view_list"></span></button>
-            <button type="button" id="view-cal" data-v="cal"><span aria-hidden="true">▦ </span><span data-i18n="view_cal"></span></button>
+            <button type="button" id="view-list" data-v="list"><span aria-hidden="true">☰ </span><span data-i18n="view_list">তালিকা</span></button>
+            <button type="button" id="view-cal" data-v="cal"><span aria-hidden="true">▦ </span><span data-i18n="view_cal">ক্যালেন্ডার</span></button>
           </div>
-          <button class="btn" id="reschedule" type="button"><span aria-hidden="true">↻</span> <span data-i18n="reschedule"></span> <span class="count-badge" id="missed-badge"></span></button>
+          <button class="btn" id="reschedule" type="button"><span aria-hidden="true">↻</span> <span data-i18n="reschedule">বাদ পড়াগুলো আবার সাজান</span> <span class="count-badge" id="missed-badge"></span></button>
           <span class="spacer"></span>
           <button class="btn" id="print-btn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
-          <button class="btn" id="csv-btn" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="export_csv"></span></button>
-          <button class="btn" id="ics-btn" type="button"><span aria-hidden="true">📆</span> <span data-i18n="export_ics"></span></button>
+          <button class="btn" id="csv-btn" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="export_csv">CSV (Excel)</span></button>
+          <button class="btn" id="ics-btn" type="button"><span aria-hidden="true">📆</span> <span data-i18n="export_ics">ক্যালেন্ডার ফাইল</span></button>
         </div>
 
         <div id="plan-list" class="stack"></div>
@@ -309,21 +309,21 @@
     <!-- ================= EXAMS + CHAPTERS ================= -->
     <section id="p-exams" class="tabpanel no-print" role="tabpanel" aria-labelledby="tab-exams" hidden>
       <div class="card who">
-        <label class="field"><span data-i18n="your_name"></span><input type="text" id="in-name" maxlength="60" autocomplete="off" class="no-i18n"></label>
-        <label class="field"><span data-i18n="your_class"></span><input type="text" id="in-class" maxlength="30" autocomplete="off" data-i18n-placeholder="class_ph" class="no-i18n"></label>
+        <label class="field"><span data-i18n="your_name">ছাত্র/ছাত্রীর নাম (প্রিন্টের জন্য)</span><input type="text" id="in-name" maxlength="60" autocomplete="off" class="no-i18n"></label>
+        <label class="field"><span data-i18n="your_class">শ্রেণি</span><input type="text" id="in-class" maxlength="30" autocomplete="off" data-i18n-placeholder="class_ph" class="no-i18n"></label>
       </div>
       <div class="callout">
-        <b data-i18n="datesheet_title"></b>
-        <p class="small mb0" data-i18n="exams_help"></p>
+        <b data-i18n="datesheet_title">আপনার পরীক্ষার রুটিন</b>
+        <p class="small mb0" data-i18n="exams_help">প্রতিটি বিষয় তার পরীক্ষার তারিখ আর পরীক্ষায় আসা অধ্যায়গুলো সহ লিখুন। প্রতিটি অধ্যায় কতটা কঠিন আর আপনি কতটা জানেন তা বেছে নিন: কঠিন ও দুর্বল অধ্যায় বেশি সময় পায়।</p>
       </div>
       <div id="subj-list" class="subj-list"></div>
       <div class="actions">
-        <button class="btn" id="add-subject" type="button"><span aria-hidden="true">＋</span> <span data-i18n="add_subject"></span></button>
-        <button class="btn btn-primary btn-lg" id="make-plan" type="button"><span aria-hidden="true">✨</span> <span data-i18n="make_plan"></span></button>
+        <button class="btn" id="add-subject" type="button"><span aria-hidden="true">＋</span> <span data-i18n="add_subject">বিষয় যোগ করুন</span></button>
+        <button class="btn btn-primary btn-lg" id="make-plan" type="button"><span aria-hidden="true">✨</span> <span data-i18n="make_plan">আমার প্ল্যান বানান</span></button>
       </div>
       <div class="actions">
-        <button class="btn btn-sm" id="start-empty" type="button" data-i18n="start_empty"></button>
-        <button class="btn btn-sm btn-danger" id="reset-all" type="button" data-i18n="reset_sample"></button>
+        <button class="btn btn-sm" id="start-empty" type="button" data-i18n="start_empty">নিজের প্ল্যান শুরু করুন</button>
+        <button class="btn btn-sm btn-danger" id="reset-all" type="button" data-i18n="reset_sample">নমুনা প্ল্যানে ফিরুন</button>
         <span class="muted small" data-i18n="saved_local"></span>
       </div>
     </section>
@@ -332,37 +332,37 @@
     <section id="p-time" class="tabpanel no-print" role="tabpanel" aria-labelledby="tab-time" hidden>
       <div class="grid-2">
         <div class="card stack">
-          <h2 data-i18n="time_title"></h2>
-          <label class="field"><span data-i18n="start_date"></span><input type="date" id="in-start"></label>
+          <h2 data-i18n="time_title">আমি কখন পড়তে পারি?</h2>
+          <label class="field"><span data-i18n="start_date">পড়া শুরুর তারিখ</span><input type="date" id="in-start"></label>
           <div>
-            <h3 class="mb0" data-i18n="hours_title"></h3>
-            <p class="muted small" data-i18n="hours_help"></p>
+            <h3 class="mb0" data-i18n="hours_title">প্রতিদিন কত ঘণ্টা পড়তে পারি</h3>
+            <p class="muted small" data-i18n="hours_help">স্কুল, টিউশন, হোমওয়ার্ক, খাওয়া আর খেলার পরে যেটুকু আসল পড়ার সময় থাকে, শুধু সেটাই গুনুন।</p>
             <div class="hours-grid" id="hours-grid"></div>
           </div>
           <div class="panel stack">
-            <h3 class="mb0" data-i18n="leave_title"></h3>
-            <p class="muted small mb0" data-i18n="leave_help"></p>
+            <h3 class="mb0" data-i18n="leave_title">স্টাডি লিভ / ছুটি</h3>
+            <p class="muted small mb0" data-i18n="leave_help">বোর্ড পরীক্ষার আগে অনেকে স্টাডি লিভ পায়। স্কুল বন্ধ হলে তারিখ আর তখন প্রতিদিন কত ঘণ্টা পড়তে পারবেন তা বেছে নিন। না হলে খালি রাখুন।</p>
             <div class="row">
-              <label class="field grow"><span data-i18n="leave_from"></span><input type="date" id="in-leave"></label>
-              <label class="field"><span data-i18n="leave_hours"></span><input type="number" id="in-leave-h" min="0" max="16" step="0.5" inputmode="decimal"></label>
+              <label class="field grow"><span data-i18n="leave_from">স্কুল ছুটি কবে থেকে</span><input type="date" id="in-leave"></label>
+              <label class="field"><span data-i18n="leave_hours">প্রতিদিন কত ঘণ্টা</span><input type="number" id="in-leave-h" min="0" max="16" step="0.5" inputmode="decimal"></label>
             </div>
           </div>
         </div>
         <div class="card stack">
-          <h2 data-i18n="pomo_title"></h2>
+          <h2 data-i18n="pomo_title">পড়ার সেশন আর বিরতি</h2>
           <div class="seg" role="group" id="pomo-seg" data-i18n-aria-label="pomo_title">
-            <button type="button" id="pomo-25" data-v="25" data-i18n="pomo_25"></button>
-            <button type="button" id="pomo-50" data-v="50" data-i18n="pomo_50"></button>
+            <button type="button" id="pomo-25" data-v="25" data-i18n="pomo_25">25 মিনিট + 5 মিনিট বিরতি</button>
+            <button type="button" id="pomo-50" data-v="50" data-i18n="pomo_50">50 মিনিট + 10 মিনিট বিরতি</button>
           </div>
-          <p class="muted small" data-i18n="pomo_help"></p>
+          <p class="muted small" data-i18n="pomo_help">এটাই পোমোডোরো পদ্ধতি: পুরো মন দিয়ে পড়ুন, তারপর ছোট বিরতি নিন। প্রায় 2 ঘণ্টা পরে 15–30 মিনিটের লম্বা বিরতি নিন। ছোট ক্লাসের ছাত্রছাত্রীরা 25 মিনিট বেছে নিক।</p>
           <div class="opt-list">
-            <label class="check"><input type="checkbox" id="opt-light"><span data-i18n="opt_light"></span></label>
-            <label class="check"><input type="checkbox" id="opt-rest"><span data-i18n="opt_rest"></span></label>
-            <label class="check"><input type="checkbox" id="opt-prac"><span data-i18n="opt_prac"></span></label>
+            <label class="check"><input type="checkbox" id="opt-light"><span data-i18n="opt_light">প্রতিটি পরীক্ষার আগে হালকা দিন: শুধু দ্রুত শেষ রিভিশন, তারপর বিশ্রাম</span></label>
+            <label class="check"><input type="checkbox" id="opt-rest"><span data-i18n="opt_rest">পরীক্ষার দিনে পড়া নয় (পরীক্ষার পরে বিশ্রাম)</span></label>
+            <label class="check"><input type="checkbox" id="opt-prac"><span data-i18n="opt_prac">প্রতিটি বিষয়ের জন্য একটি প্র্যাকটিস পেপার যোগ করুন (নমুনা প্রশ্নপত্র বা আগের বছরের প্রশ্ন)</span></label>
           </div>
           <div id="cap-box" class="callout" aria-live="polite"></div>
           <div class="actions">
-            <button class="btn btn-primary btn-lg" id="make-plan-2" type="button"><span aria-hidden="true">✨</span> <span data-i18n="make_plan"></span></button>
+            <button class="btn btn-primary btn-lg" id="make-plan-2" type="button"><span aria-hidden="true">✨</span> <span data-i18n="make_plan">আমার প্ল্যান বানান</span></button>
           </div>
         </div>
       </div>
@@ -370,27 +370,27 @@
 
     <!-- ================= TIPS ================= -->
     <section id="p-tips" class="tabpanel no-print" role="tabpanel" aria-labelledby="tab-tips" hidden>
-      <h2 data-i18n="tips_title"></h2>
+      <h2 data-i18n="tips_title">পরীক্ষার সময়ের ভালো অভ্যাস</h2>
       <div class="tips" id="tips"></div>
       <div class="card how">
-        <h2 data-i18n="how_title"></h2>
+        <h2 data-i18n="how_title">প্ল্যানার কীভাবে কাজ করে</h2>
         <ol>
-          <li data-i18n="how_1"></li>
-          <li data-i18n="how_2"></li>
-          <li data-i18n="how_3"></li>
-          <li data-i18n="how_4"></li>
+          <li data-i18n="how_1">প্রতিটি অধ্যায় সময় পায় সেটা কতটা কঠিন আর আপনি কতটা জানেন তার ভিত্তিতে। কঠিন ও দুর্বল অধ্যায় পায় মোটামুটি জানা সহজ অধ্যায়ের 3 গুণ সময়।</li>
+          <li data-i18n="how_2">প্রতিটি বিষয়ের ক্রম: অধ্যায় পড়া (কঠিন ও দুর্বলগুলো আগে) → সব অধ্যায়ের রিভিশন 1 → প্র্যাকটিস পেপার → পরীক্ষার আগের হালকা দিনে শেষ রিভিশন।</li>
+          <li data-i18n="how_3">প্রতিদিন এটি সেই বিষয় বাছে যার পরীক্ষা কাছে আর যার সবচেয়ে বেশি কাজ বাকি (বাকি কাজ ÷ বাকি দিন)। দিনে 1–3টি বিষয়, ব্লকে ব্লকে, যাতে বারবার বিষয় বদলাতে না হয়।</li>
+          <li data-i18n="how_4">এটি কাজ সমানভাবে ছড়িয়ে দেয় আর শেষের দিকে কিছু সময় ফাঁকা রাখে। সময় কম হলে আগে প্র্যাকটিস পেপার, তারপর অতিরিক্ত রিভিশন বাদ দেয় — আর আপনাকে জানিয়ে দেয়।</li>
         </ol>
       </div>
     </section>
 
     <details class="card help no-print" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">কীভাবে ব্যবহার করবেন / ক্লাসের জন্য আইডিয়া</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
+        <li data-i18n="help_1">“পরীক্ষা ও অধ্যায়” খুলুন: প্রতিটি বিষয়, তার পরীক্ষার তারিখ আর অধ্যায়গুলো লিখুন। প্রতিটি অধ্যায়ের জন্য সহজ/মাঝারি/কঠিন আর দুর্বল/মোটামুটি/ভালো বেছে নিন।</li>
+        <li data-i18n="help_2">“পড়ার সময়”-এ সপ্তাহের প্রতিটি দিনে আসলে কত ঘণ্টা পড়তে পারেন লিখুন, আর 25 বা 50 মিনিটের সেশন বেছে নিন। তারপর “আমার প্ল্যান বানান” টিপুন।</li>
+        <li data-i18n="help_3">প্রতিদিন “আমার প্ল্যান” খুলে শেষ করা সেশনে টিক দিন। কিছু বাদ গেলে “বাদ পড়াগুলো আবার সাজান” টিপুন, সেগুলো সামনের দিনে চলে যাবে।</li>
+        <li data-i18n="help_4">প্ল্যান প্রিন্ট করে পড়ার টেবিলের পাশে লাগান, বা Google Calendar-এর জন্য ক্যালেন্ডার ফাইল (.ics) ডাউনলোড করুন। আপনার প্ল্যান শুধু এই ডিভাইসেই সেভ থাকে।</li>
+        <li data-i18n="help_5">ক্লাসের কাজ: শ্রেণিশিক্ষক পরীক্ষার রুটিন জানান; প্রত্যেক ছাত্রছাত্রী নিজের প্ল্যান বানিয়ে প্রিন্ট করে। এক সপ্তাহ পরে জোড়ায় জোড়ায় আলোচনা করুন কী কাজে লাগল আর কী বদলাবেন।</li>
       </ul>
     </details>
 

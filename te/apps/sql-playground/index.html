@@ -145,11 +145,11 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">CBSE 11–12 తరగతుల కోసం సిద్ధంగా ఉన్న స్కూల్ డేటాబేస్‌పై SQL సాధన చేయండి. క్వెరీ రాసి, రన్ చేసి, వెంటనే జవాబు చూడండి.</p>
 
     <div id="loadBox" class="callout sqlp-loading" role="status" aria-live="polite">
       <span class="sqlp-spinner" id="loadSpin" aria-hidden="true"></span>
-      <span id="loadMsg" data-i18n="loading_engine"></span>
+      <span id="loadMsg" data-i18n="loading_engine">SQL ఇంజిన్ లోడ్ అవుతోంది… (మొదటిసారి ఇంటర్నెట్ అవసరం)</span>
       <button class="btn btn-sm" id="retryBtn" type="button" data-i18n="try_again" hidden></button>
     </div>
 
@@ -158,7 +158,7 @@
         <div class="card">
           <div class="sqlp-toolbar no-print">
             <div class="sqlp-actions">
-              <button class="btn btn-primary btn-lg sqlp-run" id="runBtn" type="button" disabled><span aria-hidden="true">▶</span> <span data-i18n="run"></span></button>
+              <button class="btn btn-primary btn-lg sqlp-run" id="runBtn" type="button" disabled><span aria-hidden="true">▶</span> <span data-i18n="run">రన్ చేయండి</span></button>
               <button class="btn" id="clearBtn" type="button" data-i18n="clear"></button>
               <button class="edu-iconbtn sqlp-iconbtn" id="sizeBtn" type="button" data-i18n-title="text_size" data-i18n-aria-label="text_size">A+</button>
               <button class="edu-iconbtn" id="fsBtn" type="button" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen">⛶</button>
@@ -176,36 +176,36 @@
             </div>
             <p id="taskText"></p>
             <div class="row">
-              <button class="btn btn-accent" id="checkBtn" type="button" data-i18n="check" disabled></button>
-              <button class="btn" id="answerBtn" type="button" data-i18n="show_answer"></button>
+              <button class="btn btn-accent" id="checkBtn" type="button" data-i18n="check" disabled>నా జవాబు సరిచూడు</button>
+              <button class="btn" id="answerBtn" type="button" data-i18n="show_answer">జవాబు చూపించు</button>
             </div>
             <pre id="answerCode" class="sqlp-answer no-i18n" hidden></pre>
             <p id="checkMsg" aria-live="polite" class="mb0"></p>
           </div>
 
-          <label for="editor" class="sqlp-label" data-i18n="editor_label"></label>
+          <label for="editor" class="sqlp-label" data-i18n="editor_label">మీ SQL ఇక్కడ రాయండి</label>
           <textarea id="editor" class="sqlp-editor no-i18n" dir="ltr" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" rows="7"></textarea>
           <pre id="printSql" class="sqlp-code no-i18n" hidden></pre>
-          <p class="muted small sqlp-hint-line" data-i18n="run_hint"></p>
+          <p class="muted small sqlp-hint-line" data-i18n="run_hint">రన్ చేయడానికి Ctrl + Enter నొక్కండి. కోడ్‌లో కొంత భాగాన్ని ఎంచుకుంటే అది మాత్రమే రన్ అవుతుంది.</p>
         </div>
 
         <div class="card">
-          <h2 data-i18n="results"></h2>
+          <h2 data-i18n="results">ఫలితాలు</h2>
           <div id="results" aria-live="polite"></div>
         </div>
       </section>
 
       <aside class="card sqlp-side no-print">
         <div class="tabs" role="tablist">
-          <button type="button" role="tab" id="tabTables" aria-controls="paneTables" aria-selected="true" data-i18n="tables"></button>
-          <button type="button" role="tab" id="tabPractice" aria-controls="panePractice" aria-selected="false" data-i18n="practice"></button>
+          <button type="button" role="tab" id="tabTables" aria-controls="paneTables" aria-selected="true" data-i18n="tables">టేబుల్స్</button>
+          <button type="button" role="tab" id="tabPractice" aria-controls="panePractice" aria-selected="false" data-i18n="practice">సాధన</button>
         </div>
         <div id="paneTables" role="tabpanel" aria-labelledby="tabTables">
-          <p class="muted small" data-i18n="tap_to_insert"></p>
+          <p class="muted small" data-i18n="tap_to_insert">ఏదైనా పేరుపై తాకితే అది ఎడిటర్‌లో చేరుతుంది.</p>
           <div id="schema"></div>
         </div>
         <div id="panePractice" role="tabpanel" aria-labelledby="tabPractice" hidden>
-          <p class="muted small" data-i18n="practice_intro"></p>
+          <p class="muted small" data-i18n="practice_intro">ఒక ప్రశ్న ఎంచుకుని, ఎడిటర్‌లో క్వెరీ రాసి, సరిచూడు నొక్కండి. మీ క్వెరీని స్కూల్ డేటాబేస్ కొత్త కాపీపై సరిచూస్తాం.</p>
           <div class="progress" aria-hidden="true"><span id="solvedBar" style="width:0"></span></div>
           <p class="small mb0" id="solvedTxt" style="margin-top:6px"></p>
           <ol class="sqlp-tasks" id="taskList"></ol>
@@ -214,24 +214,24 @@
     </div>
 
     <div class="card row sqlp-more no-print">
-      <h2 data-i18n="more_tools"></h2>
-      <button class="btn" id="printBtn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_sheet"></span></button>
-      <button class="btn" id="dumpBtn" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="download_sql"></span></button>
-      <button class="btn" id="csvImportBtn" type="button"><span aria-hidden="true">⬆</span> <span data-i18n="import_csv"></span></button>
-      <button class="btn btn-danger" id="resetBtn" type="button"><span aria-hidden="true">↺</span> <span data-i18n="reset_db"></span></button>
+      <h2 data-i18n="more_tools">మరిన్ని టూల్స్</h2>
+      <button class="btn" id="printBtn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_sheet">వర్క్‌షీట్ ప్రింట్ చేయండి</span></button>
+      <button class="btn" id="dumpBtn" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="download_sql">SQL డౌన్‌లోడ్ చేయండి</span></button>
+      <button class="btn" id="csvImportBtn" type="button"><span aria-hidden="true">⬆</span> <span data-i18n="import_csv">CSVను టేబుల్‌గా తెండి</span></button>
+      <button class="btn btn-danger" id="resetBtn" type="button"><span aria-hidden="true">↺</span> <span data-i18n="reset_db">డేటాబేస్ రీసెట్ చేయండి</span></button>
       <span class="muted small" data-i18n="saved_local"></span>
     </div>
 
     <details class="card" id="helpBox">
       <summary data-i18n="help"></summary>
       <ul id="tipsList"></ul>
-      <h3 data-i18n="about_inside"></h3>
-      <p class="mb0" data-i18n="inside_text"></p>
+      <h3 data-i18n="about_inside">లోపల ఏం జరుగుతుంది?</h3>
+      <p class="mb0" data-i18n="inside_text">SQLite డేటాబేస్ ఇంజిన్ (sql.js) చిన్న రూపం మీ బ్రౌజర్ లోపలే నడుస్తుంది. మీ క్వెరీలు, టేబుల్స్ ఈ పరికరం దాటి బయటికి వెళ్ళవు.</p>
     </details>
 
     <details class="card" id="mysqlBox">
-      <summary data-i18n="mysql_title"></summary>
-      <p data-i18n="mysql_intro"></p>
+      <summary data-i18n="mysql_title">SQLite మరియు MySQL: చిన్న తేడాలు</summary>
+      <p data-i18n="mysql_intro">ఈ ప్లేగ్రౌండ్ SQLiteపై నడుస్తుంది. CBSE ప్రాక్టికల్స్‌లో MySQL వాడతారు. దాదాపు అన్నీ ఒకేలా ఉంటాయి. తేడాలు ఇవి:</p>
       <ul id="mysqlList" class="mb0"></ul>
     </details>
 

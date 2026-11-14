@@ -126,18 +126,18 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">কোনো তারিখে আপনার সঠিক বয়স জানুন, পরীক্ষা ও চাকরির বয়সসীমা যাচাই করুন, দুই তারিখের মধ্যের দিন গুনুন, কর্মদিবস যোগ করুন, শেষ কর্মদিবস বের করুন আর বিশেষ দিনের কাউন্টডাউন দেখুন। কিছুই আপনার ডিভাইসের বাইরে যায় না।</p>
     <div class="ad-top no-print">
-      <span class="badge success"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></span>
+      <span class="badge success"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">আপনার তারিখগুলি এই ডিভাইসেই থাকে</span></span>
       <span class="badge"><span aria-hidden="true">📅</span> <span id="todayBadge"></span></span>
     </div>
 
     <div class="ad-tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-age" data-tab="age" aria-controls="p-age"><span class="ic" aria-hidden="true">🎂</span><span data-i18n="tab_age"></span></button>
-      <button type="button" role="tab" id="tab-diff" data-tab="diff" aria-controls="p-diff"><span class="ic" aria-hidden="true">↔️</span><span data-i18n="tab_diff"></span></button>
-      <button type="button" role="tab" id="tab-add" data-tab="add" aria-controls="p-add"><span class="ic" aria-hidden="true">➕</span><span data-i18n="tab_add"></span></button>
-      <button type="button" role="tab" id="tab-notice" data-tab="notice" aria-controls="p-notice"><span class="ic" aria-hidden="true">💼</span><span data-i18n="tab_notice"></span></button>
-      <button type="button" role="tab" id="tab-count" data-tab="count" aria-controls="p-count"><span class="ic" aria-hidden="true">⏳</span><span data-i18n="tab_count"></span></button>
+      <button type="button" role="tab" id="tab-age" data-tab="age" aria-controls="p-age"><span class="ic" aria-hidden="true">🎂</span><span data-i18n="tab_age">বয়স</span></button>
+      <button type="button" role="tab" id="tab-diff" data-tab="diff" aria-controls="p-diff"><span class="ic" aria-hidden="true">↔️</span><span data-i18n="tab_diff">ব্যবধান</span></button>
+      <button type="button" role="tab" id="tab-add" data-tab="add" aria-controls="p-add"><span class="ic" aria-hidden="true">➕</span><span data-i18n="tab_add">যোগ / বিয়োগ</span></button>
+      <button type="button" role="tab" id="tab-notice" data-tab="notice" aria-controls="p-notice"><span class="ic" aria-hidden="true">💼</span><span data-i18n="tab_notice">নোটিস পিরিয়ড</span></button>
+      <button type="button" role="tab" id="tab-count" data-tab="count" aria-controls="p-count"><span class="ic" aria-hidden="true">⏳</span><span data-i18n="tab_count">কাউন্টডাউন</span></button>
     </div>
 
     <!-- ============================================================ AGE -->
@@ -145,43 +145,43 @@
       <div class="ad-split ad-flow">
         <div class="ad-col">
           <div class="card ad-form o1">
-            <h2 data-i18n="age_title"></h2>
+            <h2 data-i18n="age_title">বয়স ক্যালকুলেটর</h2>
             <div class="field">
-              <label for="dob" data-i18n="dob"></label>
+              <label for="dob" data-i18n="dob">জন্মতারিখ</label>
               <input type="date" id="dob" min="0001-01-01" max="9999-12-31">
               <span class="ad-hint" id="dobHint"></span>
             </div>
             <div class="field">
-              <span class="ad-lbl" id="asonLbl" data-i18n="ason_label"></span>
+              <span class="ad-lbl" id="asonLbl" data-i18n="ason_label">কোন তারিখে বয়স</span>
               <div class="seg ad-seg-full" id="asonMode" role="group" aria-labelledby="asonLbl">
-                <button type="button" data-v="today" data-i18n="ason_today"></button>
-                <button type="button" data-v="custom" data-i18n="ason_custom"></button>
+                <button type="button" data-v="today" data-i18n="ason_today">আজ</button>
+                <button type="button" data-v="custom" data-i18n="ason_custom">অন্য তারিখ</button>
               </div>
             </div>
             <div class="field" id="asonBox">
-              <label for="ason" data-i18n="ason_date"></label>
+              <label for="ason" data-i18n="ason_date">এই তারিখে (পরীক্ষা বা চাকরির কাট-অফ)</label>
               <input type="date" id="ason" min="0001-01-01" max="9999-12-31">
               <span class="ad-hint" id="asonHint"></span>
             </div>
             <div class="field">
-              <label for="pName" data-i18n="p_name"></label>
+              <label for="pName" data-i18n="p_name">নাম (তালিকায় সেভ করতে)</label>
               <div class="row nowrap">
                 <input type="text" id="pName" class="grow no-i18n" maxlength="40" data-i18n-placeholder="p_name_ph" autocomplete="off">
-                <button type="button" class="btn btn-primary ad-nowrap" id="pAdd" data-i18n="p_add"></button>
+                <button type="button" class="btn btn-primary ad-nowrap" id="pAdd" data-i18n="p_add">সেভ করুন</button>
               </div>
             </div>
           </div>
 
           <div class="card ad-form o3">
-            <h2 data-i18n="elig_title"></h2>
-            <p class="muted small mb0" data-i18n="elig_help"></p>
+            <h2 data-i18n="elig_title">যোগ্যতা যাচাই</h2>
+            <p class="muted small mb0" data-i18n="elig_help">পরীক্ষা, চাকরি, ভর্তি, খেলা ও ভোটের জন্য: বিজ্ঞপ্তি থেকে বয়সসীমা ও কাট-অফ তারিখ লিখুন।</p>
             <div class="ad-trio">
-              <div class="field"><label for="eligMin" data-i18n="min_age"></label><input type="number" class="ad-num" id="eligMin" min="0" max="150" step="1" inputmode="numeric"></div>
-              <div class="field"><label for="eligMax" data-i18n="max_age"></label><input type="number" class="ad-num" id="eligMax" min="0" max="150" step="1" inputmode="numeric"></div>
-              <div class="field"><label for="eligRelax" data-i18n="relax"></label><input type="number" class="ad-num" id="eligRelax" min="0" max="50" step="1" inputmode="numeric"></div>
+              <div class="field"><label for="eligMin" data-i18n="min_age">সর্বনিম্ন বয়স (বছর)</label><input type="number" class="ad-num" id="eligMin" min="0" max="150" step="1" inputmode="numeric"></div>
+              <div class="field"><label for="eligMax" data-i18n="max_age">সর্বোচ্চ বয়স (বছর)</label><input type="number" class="ad-num" id="eligMax" min="0" max="150" step="1" inputmode="numeric"></div>
+              <div class="field"><label for="eligRelax" data-i18n="relax">বয়সে ছাড় (বছর)</label><input type="number" class="ad-num" id="eligRelax" min="0" max="50" step="1" inputmode="numeric"></div>
             </div>
             <div class="field">
-              <label for="cutoff" data-i18n="cutoff"></label>
+              <label for="cutoff" data-i18n="cutoff">কাট-অফ তারিখ (এই দিনে বয়স)</label>
               <input type="date" id="cutoff" min="0001-01-01" max="9999-12-31">
               <span class="ad-hint" id="cutoffHint"></span>
             </div>
@@ -191,8 +191,8 @@
         <div class="ad-col">
           <div class="card o2" id="ageRes" aria-live="polite"></div>
           <div class="card o4">
-            <h2 data-i18n="people_title"></h2>
-            <p class="muted small" data-i18n="people_help"></p>
+            <h2 data-i18n="people_title">লোকের তালিকা</h2>
+            <p class="muted small" data-i18n="people_help">বয়স উপরে বেছে নেওয়া তারিখ অনুযায়ী দেখানো হয়। শুধু এই ডিভাইসেই সেভ থাকে।</p>
             <ul class="ad-list no-i18n" id="pList"></ul>
           </div>
         </div>
@@ -203,18 +203,18 @@
     <section id="p-diff" class="ad-panel" role="tabpanel" aria-labelledby="tab-diff" hidden>
       <div class="ad-split">
         <div class="card ad-form">
-          <h2 data-i18n="diff_title"></h2>
+          <h2 data-i18n="diff_title">দুই তারিখের মধ্যে দিন</h2>
           <div class="field">
-            <label for="d1" data-i18n="d_from"></label>
+            <label for="d1" data-i18n="d_from">কোন তারিখ থেকে</label>
             <input type="date" id="d1" min="0001-01-01" max="9999-12-31">
             <span class="ad-hint" id="d1Hint"></span>
           </div>
           <div class="field">
-            <label for="d2" data-i18n="d_to"></label>
+            <label for="d2" data-i18n="d_to">কোন তারিখ পর্যন্ত</label>
             <input type="date" id="d2" min="0001-01-01" max="9999-12-31">
             <span class="ad-hint" id="d2Hint"></span>
           </div>
-          <label class="check"><input type="checkbox" id="dIncl"> <span data-i18n="d_incl"></span></label>
+          <label class="check"><input type="checkbox" id="dIncl"> <span data-i18n="d_incl">প্রথম ও শেষ দিন দুটোই গুনুন</span></label>
         </div>
         <div class="card" id="diffRes" aria-live="polite"></div>
       </div>
@@ -224,29 +224,29 @@
     <section id="p-add" class="ad-panel" role="tabpanel" aria-labelledby="tab-add" hidden>
       <div class="ad-split">
         <div class="card ad-form">
-          <h2 data-i18n="add_title"></h2>
+          <h2 data-i18n="add_title">তারিখে যোগ বা বিয়োগ</h2>
           <div class="field">
-            <label for="aStart" data-i18n="a_start"></label>
+            <label for="aStart" data-i18n="a_start">শুরুর তারিখ</label>
             <input type="date" id="aStart" min="0001-01-01" max="9999-12-31">
             <span class="ad-hint" id="aStartHint"></span>
           </div>
           <div class="field">
-            <span class="ad-lbl" id="aOpLbl" data-i18n="a_op"></span>
+            <span class="ad-lbl" id="aOpLbl" data-i18n="a_op">কী করবেন</span>
             <div class="seg ad-seg-full" id="aOp" role="group" aria-labelledby="aOpLbl">
-              <button type="button" data-v="add" data-i18n="a_op_add"></button>
-              <button type="button" data-v="sub" data-i18n="a_op_sub"></button>
+              <button type="button" data-v="add" data-i18n="a_op_add">যোগ</button>
+              <button type="button" data-v="sub" data-i18n="a_op_sub">বিয়োগ</button>
             </div>
           </div>
           <div class="ad-pair">
-            <div class="field"><label for="aN" data-i18n="a_n"></label><input type="number" class="ad-num" id="aN" min="0" max="100000" step="1" inputmode="numeric"></div>
+            <div class="field"><label for="aN" data-i18n="a_n">কত</label><input type="number" class="ad-num" id="aN" min="0" max="100000" step="1" inputmode="numeric"></div>
             <div class="field">
-              <label for="aUnit" data-i18n="a_unit"></label>
+              <label for="aUnit" data-i18n="a_unit">একক</label>
               <select id="aUnit">
-                <option value="days" data-i18n="unit_days"></option>
-                <option value="weeks" data-i18n="unit_weeks"></option>
-                <option value="months" data-i18n="unit_months"></option>
-                <option value="years" data-i18n="unit_years"></option>
-                <option value="work" data-i18n="unit_work"></option>
+                <option value="days" data-i18n="unit_days">দিন</option>
+                <option value="weeks" data-i18n="unit_weeks">সপ্তাহ</option>
+                <option value="months" data-i18n="unit_months">মাস</option>
+                <option value="years" data-i18n="unit_years">বছর</option>
+                <option value="work" data-i18n="unit_work">কর্মদিবস</option>
               </select>
             </div>
           </div>
@@ -258,7 +258,7 @@
             <button type="button" class="chip" data-n="90" data-u="days">90</button>
             <button type="button" class="chip" data-n="180" data-u="days">180</button>
           </div>
-          <p class="tiny muted mb0" data-i18n="month_end_note"></p>
+          <p class="tiny muted mb0" data-i18n="month_end_note">সেই দিনটি ওই মাসে না থাকলে মাসের শেষ দিন ধরা হয় (31 জানুয়ারি + 1 মাস = 28 ফেব্রুয়ারি)।</p>
         </div>
         <div class="card" id="addRes" aria-live="polite"></div>
       </div>
@@ -268,14 +268,14 @@
     <section id="p-notice" class="ad-panel" role="tabpanel" aria-labelledby="tab-notice" hidden>
       <div class="ad-split">
         <div class="card ad-form">
-          <h2 data-i18n="notice_title"></h2>
+          <h2 data-i18n="notice_title">নোটিস পিরিয়ড / শেষ কর্মদিবস</h2>
           <div class="field">
-            <label for="nStart" data-i18n="n_start"></label>
+            <label for="nStart" data-i18n="n_start">পদত্যাগের তারিখ</label>
             <input type="date" id="nStart" min="0001-01-01" max="9999-12-31">
             <span class="ad-hint" id="nStartHint"></span>
           </div>
           <div class="field">
-            <label for="nDays" data-i18n="n_days"></label>
+            <label for="nDays" data-i18n="n_days">নোটিস পিরিয়ড (দিন)</label>
             <input type="number" class="ad-num" id="nDays" min="0" max="1000" step="1" inputmode="numeric">
           </div>
           <div class="ad-chips" id="nChips" role="group" data-i18n-aria-label="quick_pick">
@@ -286,14 +286,14 @@
             <button type="button" class="chip" data-n="90">90</button>
           </div>
           <div class="field">
-            <span class="ad-lbl" id="nModeLbl" data-i18n="n_mode"></span>
+            <span class="ad-lbl" id="nModeLbl" data-i18n="n_mode">গণনা</span>
             <div class="seg ad-seg-full" id="nMode" role="group" aria-labelledby="nModeLbl">
-              <button type="button" data-v="cal" data-i18n="n_mode_cal"></button>
-              <button type="button" data-v="work" data-i18n="n_mode_work"></button>
+              <button type="button" data-v="cal" data-i18n="n_mode_cal">ক্যালেন্ডারের দিন</button>
+              <button type="button" data-v="work" data-i18n="n_mode_work">কর্মদিবস</button>
             </div>
           </div>
-          <label class="check"><input type="checkbox" id="nDay1"> <span data-i18n="n_day1"></span></label>
-          <p class="tiny muted mb0" data-i18n="n_help"></p>
+          <label class="check"><input type="checkbox" id="nDay1"> <span data-i18n="n_day1">পদত্যাগের দিনকে প্রথম দিন ধরুন</span></label>
+          <p class="tiny muted mb0" data-i18n="n_help">প্রতিটি কোম্পানি নোটিস পিরিয়ড আলাদা ভাবে গোনে। অফার লেটার বা HR নীতি দেখুন এবং তারিখটি HR-এর কাছ থেকে লিখিত ভাবে নিশ্চিত করুন।</p>
         </div>
         <div class="card" id="noticeRes" aria-live="polite"></div>
       </div>
@@ -304,20 +304,20 @@
       <div class="ad-split ad-flow">
         <div class="ad-col">
           <div class="card ad-form o1">
-            <h2 data-i18n="count_title"></h2>
+            <h2 data-i18n="count_title">একটি তারিখের কাউন্টডাউন</h2>
             <div class="field">
-              <label for="cName" data-i18n="c_name"></label>
+              <label for="cName" data-i18n="c_name">অনুষ্ঠান (ঐচ্ছিক)</label>
               <input type="text" id="cName" class="no-i18n" maxlength="60" data-i18n-placeholder="c_name_ph" autocomplete="off">
             </div>
             <div class="field">
-              <label for="cDate" data-i18n="c_date"></label>
+              <label for="cDate" data-i18n="c_date">তারিখ</label>
               <input type="date" id="cDate" min="0001-01-01" max="9999-12-31">
               <span class="ad-hint" id="cDateHint"></span>
             </div>
-            <button type="button" class="btn btn-primary" id="cAdd" data-i18n="c_add"></button>
+            <button type="button" class="btn btn-primary" id="cAdd" data-i18n="c_add">তালিকায় সেভ করুন</button>
           </div>
           <div class="card o3">
-            <h2 data-i18n="c_list"></h2>
+            <h2 data-i18n="c_list">সেভ করা কাউন্টডাউন</h2>
             <ul class="ad-list no-i18n" id="cList"></ul>
           </div>
         </div>
@@ -327,33 +327,33 @@
 
     <!-- shared working-day settings (difference, add/subtract, notice) -->
     <div class="card ad-form" id="workCard">
-      <h2 data-i18n="w_title"></h2>
+      <h2 data-i18n="w_title">কর্মদিবস সেটিংস</h2>
       <div class="field">
-        <span class="ad-lbl" id="wkLbl" data-i18n="wk_label"></span>
+        <span class="ad-lbl" id="wkLbl" data-i18n="wk_label">সাপ্তাহিক ছুটি</span>
         <div class="seg ad-seg-full" id="wkMode" role="group" aria-labelledby="wkLbl">
-          <button type="button" data-v="satsun" data-i18n="wk_satsun"></button>
-          <button type="button" data-v="sun" data-i18n="wk_sun"></button>
-          <button type="button" data-v="bank" data-i18n="wk_bank"></button>
+          <button type="button" data-v="satsun" data-i18n="wk_satsun">শনিবার + রবিবার</button>
+          <button type="button" data-v="sun" data-i18n="wk_sun">শুধু রবিবার</button>
+          <button type="button" data-v="bank" data-i18n="wk_bank">রবিবার + দ্বিতীয় ও চতুর্থ শনিবার</button>
         </div>
       </div>
       <div class="field">
-        <label for="holidays" data-i18n="hol_label"></label>
+        <label for="holidays" data-i18n="hol_label">ছুটির দিন (প্রতি লাইনে একটি তারিখ, DD-MM-YYYY)</label>
         <textarea id="holidays" class="ad-hol no-i18n" data-i18n-placeholder="hol_ph" spellcheck="false"></textarea>
         <span class="ad-hint" id="holHint"></span>
       </div>
     </div>
 
     <details class="card no-print" id="helpBox" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">কীভাবে ব্যবহার করবেন / আইডিয়া</summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">বয়স: জন্মতারিখ লিখুন; আজকের বয়স সঙ্গে সঙ্গে দেখা যাবে। &quot;অন্য তারিখ&quot; বেছে পরীক্ষা বা চাকরির কাট-অফ তারিখে (যেমন 01-01-2027) বয়স দেখুন।</li>
+        <li data-i18n="tip2">যোগ্যতা: বিজ্ঞপ্তি থেকে সর্বনিম্ন বয়স, সর্বোচ্চ বয়স, ছাড় ও কাট-অফ তারিখ লিখুন। অ্যাপ বলে দেয় ব্যক্তি যোগ্য কি না এবং কোন জন্মতারিখগুলি যোগ্য, তাই পুরো পরিবার বা ক্লাস দ্রুত যাচাই করা যায়।</li>
+        <li data-i18n="tip3">ব্যবধান ও যোগ/বিয়োগ: ছুটি বা প্রজেক্টের দিন গুনুন, চেক, ওয়ারান্টি বা পাসপোর্টের জন্য 45 বা 90 দিন পরের তারিখ বের করুন, বা ডেলিভারির প্রতিশ্রুতির জন্য কর্মদিবস যোগ করুন।</li>
+        <li data-i18n="tip4">নোটিস পিরিয়ড: পদত্যাগের তারিখ ও নোটিসের দিন লিখুন। শেষ দিন ছুটিতে পড়লে অ্যাপ আগের কর্মদিবস দেখায়। কোম্পানি পদত্যাগের দিনটিও গুনলে &quot;প্রথম দিন&quot; টিক দিন।</li>
+        <li data-i18n="tip5">কাউন্টডাউন: পরীক্ষার তারিখ, উৎসব, EMI-র তারিখ বা জন্মদিন তালিকায় সেভ করুন এবং এক নজরে দেখুন কত দিন বাকি।</li>
+        <li data-i18n="tip6">কোনো ফলাফল &quot;ফলাফল কপি করুন&quot; বা &quot;WhatsApp&quot; দিয়ে সাধারণ টেক্সট হিসেবে অভিভাবক, ছাত্রছাত্রী বা সহকর্মীদের পাঠান।</li>
       </ul>
-      <p class="small muted" style="margin-top:12px" data-i18n="feb29_note"></p>
+      <p class="small muted" style="margin-top:12px" data-i18n="feb29_note">29 ফেব্রুয়ারির জন্মদিন: যে বছরে 29 ফেব্রুয়ারি নেই, সে বছরে জন্মদিন 28 ফেব্রুয়ারি ধরা হয়। মাস যোগ করার নিয়মও একই: 31 জানুয়ারি + 1 মাস = 28 ফেব্রুয়ারি।</p>
       <div class="row spread" style="margin-top:12px">
         <span class="small muted" data-i18n="saved_local"></span>
         <button class="btn btn-sm btn-danger" id="resetAll" type="button" data-i18n="reset"></button>

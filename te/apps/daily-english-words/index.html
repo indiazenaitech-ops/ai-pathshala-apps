@@ -206,7 +206,7 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">రోజూ 10 ఉపయోగకరమైన ఇంగ్లీష్ పదాలు నేర్చుకోండి: మీ భాషలో అర్థం, ఉచ్చారణ, ఉదాహరణ వాక్యం, ఆడియో, సాధన ఆటలు మరియు తెలివైన పునశ్చరణ. 60 రోజులు, 600 పదాలు, ఉచితం, ఆఫ్‌లైన్.</p>
 
     <!-- ================= TODAY ================= -->
     <section class="card dew-today" id="todayCard" aria-labelledby="listTitle">
@@ -220,16 +220,16 @@
           <p class="muted small mb0" id="listSub"></p>
         </div>
         <div class="dew-stats" aria-live="polite">
-          <div class="dew-stat"><b id="statStreak"></b><span data-i18n="streak"></span></div>
-          <div class="dew-stat"><b id="statLearned"></b><span data-i18n="learned_total"></span></div>
-          <div class="dew-stat"><b id="statDue"></b><span data-i18n="due_today"></span></div>
+          <div class="dew-stat"><b id="statStreak"></b><span data-i18n="streak">రోజుల వరుస</span></div>
+          <div class="dew-stat"><b id="statLearned"></b><span data-i18n="learned_total">నేర్చుకున్న పదాలు</span></div>
+          <div class="dew-stat"><b id="statDue"></b><span data-i18n="due_today">ఈరోజు పునశ్చరణ</span></div>
         </div>
       </div>
       <div class="dew-goal" id="goalWrap">
         <div class="dew-goal-row">
           <span id="goalText" class="small"></span>
           <div class="row" style="gap:8px">
-            <span class="tiny muted" data-i18n="goal_label"></span>
+            <span class="tiny muted" data-i18n="goal_label">రోజువారీ లక్ష్యం</span>
             <div class="seg" id="goalSeg" role="group" data-i18n-aria-label="goal_label">
               <button type="button" data-v="5">5</button><button type="button" data-v="10">10</button><button type="button" data-v="20">20</button>
             </div>
@@ -238,17 +238,17 @@
         <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="goalProg"><span id="goalBar" style="width:0%"></span></div>
       </div>
       <div class="dew-actions">
-        <button type="button" class="btn btn-primary btn-lg" id="goLearn"><span aria-hidden="true">📖 </span><span data-i18n="go_learn"></span></button>
-        <button type="button" class="btn" id="goPractice"><span aria-hidden="true">✍️ </span><span data-i18n="go_practice"></span></button>
+        <button type="button" class="btn btn-primary btn-lg" id="goLearn"><span aria-hidden="true">📖 </span><span data-i18n="go_learn">ఈరోజు పదాలు నేర్చుకోండి</span></button>
+        <button type="button" class="btn" id="goPractice"><span aria-hidden="true">✍️ </span><span data-i18n="go_practice">సాధన</span></button>
         <button type="button" class="btn" id="goReview"><span aria-hidden="true">🔁 </span><span id="goReviewTxt"></span></button>
       </div>
     </section>
 
     <div class="tabs dew-tabs no-print" role="tablist" data-i18n-aria-label="modes">
-      <button type="button" role="tab" id="tab-learn" aria-controls="p-learn"><span class="ic" aria-hidden="true">📖</span><span data-i18n="tab_learn"></span></button>
-      <button type="button" role="tab" id="tab-practice" aria-controls="p-practice"><span class="ic" aria-hidden="true">✍️</span><span data-i18n="tab_practice"></span></button>
-      <button type="button" role="tab" id="tab-review" aria-controls="p-review"><span class="ic" aria-hidden="true">🔁</span><span data-i18n="tab_review"></span> <span class="badge accent cnt" id="dueBadge" hidden></span></button>
-      <button type="button" role="tab" id="tab-lists" aria-controls="p-lists"><span class="ic" aria-hidden="true">📚</span><span data-i18n="tab_lists"></span></button>
+      <button type="button" role="tab" id="tab-learn" aria-controls="p-learn"><span class="ic" aria-hidden="true">📖</span><span data-i18n="tab_learn">నేర్చుకోండి</span></button>
+      <button type="button" role="tab" id="tab-practice" aria-controls="p-practice"><span class="ic" aria-hidden="true">✍️</span><span data-i18n="tab_practice">సాధన</span></button>
+      <button type="button" role="tab" id="tab-review" aria-controls="p-review"><span class="ic" aria-hidden="true">🔁</span><span data-i18n="tab_review">పునశ్చరణ</span> <span class="badge accent cnt" id="dueBadge" hidden></span></button>
+      <button type="button" role="tab" id="tab-lists" aria-controls="p-lists"><span class="ic" aria-hidden="true">📚</span><span data-i18n="tab_lists">అన్ని జాబితాలు</span></button>
     </div>
 
     <!-- ================= LEARN ================= -->
@@ -260,15 +260,15 @@
             <button type="button" class="btn btn-sm" id="nextList"><span data-i18n="next"></span> <span aria-hidden="true" class="arr">→</span></button>
           </div>
           <div class="row">
-            <label class="check small"><input type="checkbox" id="hideChk"> <span data-i18n="hide_meanings"></span></label>
-            <button type="button" class="btn btn-sm" id="playAll"><span aria-hidden="true">🔊 </span><span data-i18n="play_all"></span></button>
-            <button type="button" class="btn btn-sm" id="printBtn"><span aria-hidden="true">🖨 </span><span data-i18n="worksheet"></span></button>
+            <label class="check small"><input type="checkbox" id="hideChk"> <span data-i18n="hide_meanings">అర్థాలు దాచు (మీరే పరీక్షించుకోండి)</span></label>
+            <button type="button" class="btn btn-sm" id="playAll"><span aria-hidden="true">🔊 </span><span data-i18n="play_all">అన్నీ వినండి</span></button>
+            <button type="button" class="btn btn-sm" id="printBtn"><span aria-hidden="true">🖨 </span><span data-i18n="worksheet">వర్క్‌షీట్ ప్రింట్</span></button>
             <button type="button" class="edu-iconbtn" id="fsBtn" data-i18n-aria-label="fullscreen" data-i18n-title="fullscreen">⛶</button>
           </div>
         </div>
         <ol class="dew-words" id="wordList"></ol>
         <div class="dew-foot">
-          <p class="muted small" id="learnHint" data-i18n="learn_hint"></p>
+          <p class="muted small" id="learnHint" data-i18n="learn_hint">ప్రతి పదాన్ని చదవండి, వినండి, గట్టిగా చెప్పండి, మీ సొంత వాక్యం చేయండి. తర్వాత జాబితాను పునశ్చరణ వరుసలో చేర్చండి.</p>
           <button type="button" class="btn btn-primary btn-lg" id="markLearned"><span aria-hidden="true">✓ </span><span id="markTxt"></span></button>
         </div>
       </div>
@@ -277,25 +277,25 @@
     <!-- ================= PRACTICE ================= -->
     <section id="p-practice" role="tabpanel" aria-labelledby="tab-practice" hidden>
       <div id="pracSetup" class="card stack">
-        <h2 class="mb0" data-i18n="practice_title"></h2>
+        <h2 class="mb0" data-i18n="practice_title">సాధన</h2>
         <p class="muted mb0" id="pracHelp"></p>
         <div class="row" style="gap:16px 28px">
-          <div class="field"><span id="modeLbl" data-i18n="mode_label"></span>
+          <div class="field"><span id="modeLbl" data-i18n="mode_label">విధానం</span>
             <div class="seg" id="modeSeg" role="group" aria-labelledby="modeLbl">
-              <button type="button" data-v="mcq"><span aria-hidden="true">🅰 </span><span data-i18n="mode_mcq"></span></button>
-              <button type="button" data-v="type"><span aria-hidden="true">⌨ </span><span data-i18n="mode_type"></span></button>
-              <button type="button" data-v="listen"><span aria-hidden="true">🔊 </span><span data-i18n="mode_listen"></span></button>
+              <button type="button" data-v="mcq"><span aria-hidden="true">🅰 </span><span data-i18n="mode_mcq">అర్థం ఎంచుకోండి</span></button>
+              <button type="button" data-v="type"><span aria-hidden="true">⌨ </span><span data-i18n="mode_type">పదం టైప్ చేయండి</span></button>
+              <button type="button" data-v="listen"><span aria-hidden="true">🔊 </span><span data-i18n="mode_listen">విని ఎంచుకోండి</span></button>
             </div>
           </div>
-          <div class="field"><span id="poolLbl" data-i18n="pool_label"></span>
+          <div class="field"><span id="poolLbl" data-i18n="pool_label">పదాలు</span>
             <div class="seg" id="poolSeg" role="group" aria-labelledby="poolLbl">
-              <button type="button" data-v="list" data-i18n="pool_list"></button>
-              <button type="button" data-v="learned" data-i18n="pool_learned"></button>
+              <button type="button" data-v="list" data-i18n="pool_list">ఈరోజు జాబితా</button>
+              <button type="button" data-v="learned" data-i18n="pool_learned">నేర్చుకున్న పదాలు</button>
             </div>
           </div>
         </div>
-        <p class="callout warning" id="poolWarn" hidden data-i18n="pool_need"></p>
-        <div><button type="button" class="btn btn-primary btn-lg" id="startPractice"><span aria-hidden="true">▶ </span><span data-i18n="start_practice"></span></button></div>
+        <p class="callout warning" id="poolWarn" hidden data-i18n="pool_need">ముందుగా కనీసం 4 పదాలు నేర్చుకోండి (ఒక జాబితా తెరిచి &quot;ఇవి నేర్చుకున్నాను&quot; నొక్కండి).</p>
+        <div><button type="button" class="btn btn-primary btn-lg" id="startPractice"><span aria-hidden="true">▶ </span><span data-i18n="start_practice">సాధన మొదలుపెట్టు</span></button></div>
       </div>
 
       <div id="pracRun" class="card stack" hidden>
@@ -308,31 +308,31 @@
         <div class="dew-prompt" id="pracPrompt"></div>
         <div id="pracOptions" class="dew-options" role="group"></div>
         <div id="pracTypeWrap" class="stack" hidden>
-          <label class="field"><span data-i18n="your_answer"></span>
+          <label class="field"><span data-i18n="your_answer">మీ జవాబు</span>
             <input type="text" id="pracInput" class="no-i18n" autocomplete="off" autocapitalize="off" spellcheck="false" lang="en" data-i18n-placeholder="type_ph">
           </label>
           <div class="row" id="pracAskRow">
-            <button type="button" class="btn btn-primary" id="pracCheck" data-i18n="check"></button>
-            <button type="button" class="btn" id="pracSkip" data-i18n="dont_know"></button>
+            <button type="button" class="btn btn-primary" id="pracCheck" data-i18n="check">సరిచూడు</button>
+            <button type="button" class="btn" id="pracSkip" data-i18n="dont_know">తెలియదు</button>
           </div>
         </div>
         <div id="pracFeedback" aria-live="polite"></div>
         <div class="row" id="pracNextRow" hidden>
           <button type="button" class="btn btn-primary" id="pracNext"><span data-i18n="next"></span> <span aria-hidden="true" class="arr">→</span></button>
         </div>
-        <div class="row" style="justify-content:flex-end"><button type="button" class="btn btn-sm" id="pracEnd" data-i18n="end_practice"></button></div>
+        <div class="row" style="justify-content:flex-end"><button type="button" class="btn btn-sm" id="pracEnd" data-i18n="end_practice">సాధన ముగించు</button></div>
       </div>
 
       <div id="pracResult" class="card stack dew-result" hidden>
-        <h2 class="mb0" data-i18n="practice_done"></h2>
+        <h2 class="mb0" data-i18n="practice_done">సాధన పూర్తయింది!</h2>
         <div class="big-number" id="pracFinal" aria-live="polite"></div>
         <p id="pracMsg" class="mb0"></p>
-        <h3 id="mistHead" class="mb0" data-i18n="mistakes" style="text-align:start"></h3>
+        <h3 id="mistHead" class="mb0" data-i18n="mistakes" style="text-align:start">మళ్ళీ చూడాల్సిన పదాలు</h3>
         <ul class="dew-mist" id="pracMist"></ul>
         <div class="row" style="justify-content:center">
-          <button type="button" class="btn btn-accent" id="pracRetry"><span aria-hidden="true">🔁 </span><span data-i18n="retry_mistakes"></span></button>
-          <button type="button" class="btn btn-primary" id="pracNew" data-i18n="new_practice"></button>
-          <button type="button" class="btn" id="pracToReview" data-i18n="go_review_now"></button>
+          <button type="button" class="btn btn-accent" id="pracRetry"><span aria-hidden="true">🔁 </span><span data-i18n="retry_mistakes">తప్పులు మళ్ళీ</span></button>
+          <button type="button" class="btn btn-primary" id="pracNew" data-i18n="new_practice">మళ్ళీ సాధన</button>
+          <button type="button" class="btn" id="pracToReview" data-i18n="go_review_now">పునశ్చరణకు వెళ్ళు</button>
         </div>
       </div>
     </section>
@@ -342,14 +342,14 @@
       <div id="revStart" class="card stack center">
         <div class="dew-due">
           <span class="big-number" id="dueCount" aria-live="polite"></span>
-          <span class="muted" data-i18n="due_count_label"></span>
+          <span class="muted" data-i18n="due_count_label">పదాలు ఈరోజు పునశ్చరణ చేయాలి</span>
         </div>
-        <p id="revEmpty" class="empty mb0" hidden data-i18n="review_empty"></p>
-        <p id="revAllDone" class="mb0" style="font-weight:800;color:var(--success);font-size:1.2rem" hidden data-i18n="all_reviewed"></p>
+        <p id="revEmpty" class="empty mb0" hidden data-i18n="review_empty">మీ పునశ్చరణ వరుస ఖాళీగా ఉంది. ఈరోజు జాబితా నేర్చుకుని &quot;ఇవి నేర్చుకున్నాను&quot; నొక్కండి.</p>
+        <p id="revAllDone" class="mb0" style="font-weight:800;color:var(--success);font-size:1.2rem" hidden data-i18n="all_reviewed">ఈరోజు పని పూర్తి!</p>
         <p id="revNext" class="muted mb0" hidden></p>
         <div class="row" style="justify-content:center">
-          <button type="button" class="btn btn-primary btn-lg" id="startReview"><span aria-hidden="true">▶ </span><span data-i18n="start_review"></span></button>
-          <button type="button" class="btn" id="revGoLearn" hidden><span aria-hidden="true">📖 </span><span data-i18n="go_learn"></span></button>
+          <button type="button" class="btn btn-primary btn-lg" id="startReview"><span aria-hidden="true">▶ </span><span data-i18n="start_review">పునశ్చరణ మొదలుపెట్టు</span></button>
+          <button type="button" class="btn" id="revGoLearn" hidden><span aria-hidden="true">📖 </span><span data-i18n="go_learn">ఈరోజు పదాలు నేర్చుకోండి</span></button>
         </div>
       </div>
 
@@ -361,26 +361,26 @@
         </div>
         <button type="button" class="dew-card" id="revCard"></button>
         <div id="revFlipRow" class="stack center">
-          <button type="button" class="btn btn-primary btn-lg" id="revShow"><span data-i18n="show_answer"></span> <kbd class="dew-kbd no-i18n">Space</kbd></button>
+          <button type="button" class="btn btn-primary btn-lg" id="revShow"><span data-i18n="show_answer">జవాబు చూపించు</span> <kbd class="dew-kbd no-i18n">Space</kbd></button>
         </div>
         <div class="dew-rate" id="revRate" hidden>
-          <button type="button" class="btn r-again" id="rateAgain"><span data-i18n="rate_again"></span><small id="ivAgain"></small></button>
-          <button type="button" class="btn r-hard" id="rateHard"><span data-i18n="rate_hard"></span><small id="ivHard"></small></button>
-          <button type="button" class="btn r-good" id="rateGood"><span data-i18n="rate_good"></span><small id="ivGood"></small></button>
-          <button type="button" class="btn r-easy" id="rateEasy"><span data-i18n="rate_easy"></span><small id="ivEasy"></small></button>
+          <button type="button" class="btn r-again" id="rateAgain"><span data-i18n="rate_again">మళ్ళీ</span><small id="ivAgain"></small></button>
+          <button type="button" class="btn r-hard" id="rateHard"><span data-i18n="rate_hard">కష్టం</span><small id="ivHard"></small></button>
+          <button type="button" class="btn r-good" id="rateGood"><span data-i18n="rate_good">సరే</span><small id="ivGood"></small></button>
+          <button type="button" class="btn r-easy" id="rateEasy"><span data-i18n="rate_easy">సులభం</span><small id="ivEasy"></small></button>
         </div>
         <div class="row spread">
-          <span class="tiny muted dew-kbd" data-i18n="kbd_hint"></span>
-          <button type="button" class="btn btn-sm" id="revEnd" data-i18n="end_review"></button>
+          <span class="tiny muted dew-kbd" data-i18n="kbd_hint">కీబోర్డ్: Space = జవాబు చూపించు, 1–4 = రేటింగ్</span>
+          <button type="button" class="btn btn-sm" id="revEnd" data-i18n="end_review">ముగించు</button>
         </div>
       </div>
 
       <div id="revDone" class="card stack" hidden>
-        <h2 class="mb0"><span aria-hidden="true">🎉 </span><span data-i18n="review_done"></span></h2>
+        <h2 class="mb0"><span aria-hidden="true">🎉 </span><span data-i18n="review_done">పునశ్చరణ పూర్తి</span></h2>
         <div class="dew-sum" aria-live="polite">
-          <div><b id="sumReviewed"></b><span data-i18n="sum_reviewed"></span></div>
-          <div><b id="sumAgain"></b><span data-i18n="sum_again"></span></div>
-          <div><b id="sumStreak"></b><span data-i18n="streak"></span></div>
+          <div><b id="sumReviewed"></b><span data-i18n="sum_reviewed">పదాలు పునశ్చరణ అయ్యాయి</span></div>
+          <div><b id="sumAgain"></b><span data-i18n="sum_again">మళ్ళీ చూడాలి</span></div>
+          <div><b id="sumStreak"></b><span data-i18n="streak">రోజుల వరుస</span></div>
         </div>
         <p id="sumNext" class="muted mb0"></p>
         <div class="row"><button type="button" class="btn btn-primary" id="revDoneBtn" data-i18n="done"></button></div>
@@ -390,44 +390,44 @@
     <!-- ================= LISTS ================= -->
     <section id="p-lists" role="tabpanel" aria-labelledby="tab-lists" hidden>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="lists_title"></h2>
+        <h2 class="mb0" data-i18n="lists_title">అన్ని 60 జాబితాలు</h2>
         <div class="dew-chips" id="packChips" role="group" data-i18n-aria-label="packs_label"></div>
         <p class="muted small mb0" id="packInfo"></p>
         <ol class="dew-lists" id="listGrid"></ol>
       </div>
 
       <div class="card stack mt">
-        <h3 class="mb0" data-i18n="progress_title"></h3>
+        <h3 class="mb0" data-i18n="progress_title">మీ పురోగతి</h3>
         <div class="dew-pstats" aria-live="polite">
-          <div><b id="psWords"></b><span data-i18n="ps_words"></span></div>
-          <div><b id="psLists"></b><span data-i18n="ps_lists"></span></div>
-          <div><b id="psBest"></b><span data-i18n="ps_best"></span></div>
-          <div><b id="psReviews"></b><span data-i18n="ps_reviews"></span></div>
+          <div><b id="psWords"></b><span data-i18n="ps_words">పదాలు నేర్చుకున్నారు</span></div>
+          <div><b id="psLists"></b><span data-i18n="ps_lists">జాబితాలు పూర్తి</span></div>
+          <div><b id="psBest"></b><span data-i18n="ps_best">ఉత్తమ వరుస (రోజులు)</span></div>
+          <div><b id="psReviews"></b><span data-i18n="ps_reviews">పునశ్చరణలు చేశారు</span></div>
         </div>
         <div class="dew-btns">
-          <a class="btn btn-wa" id="waShare" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬 </span><span data-i18n="share_progress"></span></a>
+          <a class="btn btn-wa" id="waShare" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬 </span><span data-i18n="share_progress">పురోగతిని షేర్ చేయండి</span></a>
           <button type="button" class="btn" id="copyShare"><span aria-hidden="true">📋 </span><span data-i18n="copy"></span></button>
           <button type="button" class="btn" id="nativeShare" hidden><span aria-hidden="true">↗ </span><span data-i18n="share"></span></button>
-          <button type="button" class="btn" id="backupBtn"><span aria-hidden="true">💾 </span><span data-i18n="backup"></span></button>
-          <button type="button" class="btn" id="restoreBtn"><span aria-hidden="true">📂 </span><span data-i18n="restore"></span></button>
-          <button type="button" class="btn btn-danger" id="resetBtn"><span aria-hidden="true">↺ </span><span data-i18n="reset_progress"></span></button>
+          <button type="button" class="btn" id="backupBtn"><span aria-hidden="true">💾 </span><span data-i18n="backup">బ్యాకప్</span></button>
+          <button type="button" class="btn" id="restoreBtn"><span aria-hidden="true">📂 </span><span data-i18n="restore">తిరిగి తెచ్చు</span></button>
+          <button type="button" class="btn btn-danger" id="resetBtn"><span aria-hidden="true">↺ </span><span data-i18n="reset_progress">పురోగతి తొలగించు</span></button>
         </div>
-        <p class="tiny muted mb0"><span aria-hidden="true">🔒 </span><span data-i18n="privacy_line"></span></p>
+        <p class="tiny muted mb0"><span aria-hidden="true">🔒 </span><span data-i18n="privacy_line">మీ పురోగతి ఈ పరికరంలో మాత్రమే సేవ్ అవుతుంది. ఏదీ ఎక్కడికీ పంపబడదు.</span></p>
       </div>
     </section>
 
     <details class="card dew-help mt" id="help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">ఎలా ఉపయోగించాలి / ఆలోచనలు</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">రోజూ యాప్ తెరవండి: ఈరోజు 10 పదాల జాబితా సిద్ధంగా ఉంటుంది. చదవండి, వినండి (🔊), ప్రతి పదాన్ని గట్టిగా చెప్పండి.</li>
+        <li data-i18n="help_2">&quot;ఇవి నేర్చుకున్నాను&quot; నొక్కి పదాలను పునశ్చరణ వరుసలో చేర్చండి, తర్వాత చిన్న సాధన ఆడండి: అర్థం ఎంచుకోండి, పదం టైప్ చేయండి లేదా విని ఎంచుకోండి.</li>
+        <li data-i18n="help_3">పునశ్చరణ: ప్రతి పదానికి మళ్ళీ, కష్టం, సరే లేదా సులభం అని రేటింగ్ ఇవ్వండి. తెలిసిన పదాలు ఎక్కువ రోజుల తర్వాత వస్తాయి; కష్టమైనవి త్వరగా వస్తాయి. రోజుకు ఐదు నిమిషాలు సరిపోతాయి.</li>
+        <li data-i18n="help_4">ప్యాక్‌లు: ఇంటర్వ్యూకు సిద్ధమవుతున్నారా? అన్ని జాబితాల్లో ఇంటర్వ్యూ ప్యాక్ ఎంచుకోండి. దుకాణదారులు: షాపు ప్యాక్. WhatsAppలో చాట్: WhatsApp ప్యాక్.</li>
+        <li data-i18n="help_5">తరగతి లేదా కుటుంబం కోసం: వర్క్‌షీట్ ప్రింట్ చేయండి, 10 పదాలు కలిసి నేర్చుకోండి, తర్వాత పెద్ద తెరపై &quot;విని ఎంచుకోండి&quot; ఆడండి; ముందుగా అర్థం చెప్పినవారు గెలుస్తారు.</li>
+        <li data-i18n="help_6">సాధనకు ముందు &quot;అర్థాలు దాచు&quot;తో మిమ్మల్ని పరీక్షించుకోండి, వరుస కొనసాగించడానికి 5, 10 లేదా 20 పదాల రోజువారీ లక్ష్యం పెట్టుకోండి.</li>
       </ul>
-      <h3 data-i18n="inside_title"></h3>
-      <p class="mb0" data-i18n="inside_text"></p>
+      <h3 data-i18n="inside_title">స్పేస్డ్ రిపిటిషన్ (పునశ్చరణ) అంటే ఏమిటి?</h3>
+      <p class="mb0" data-i18n="inside_text">మరచిపోయే ముందు మళ్ళీ చూడకపోతే కొత్త పదాన్ని మెదడు ఒకటి రెండు రోజుల్లో మరచిపోతుంది. స్పేస్డ్ రిపిటిషన్ ప్రతి పదాన్ని ఈరోజు, తర్వాత 1 రోజు, 3 రోజులు, ఒక వారం, ఇంకా ఎక్కువ కాలం తర్వాత, సరిగ్గా అవసరమైనప్పుడు చూపిస్తుంది. నిజాయితీగా రేటింగ్ ఇవ్వడం (మళ్ళీ / కష్టం / సరే / సులభం) పదాన్ని ఎప్పుడు తిరిగి తేవాలో యాప్‌కు చెబుతుంది.</p>
     </details>
 
     <div id="printArea" class="print-only"></div>

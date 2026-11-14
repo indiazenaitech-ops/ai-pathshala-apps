@@ -222,26 +222,26 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">24 रोज़मर्रा की चीज़ों का pH देखें, उन्हें लिटमस, हल्दी और दूसरे सूचकों से जाँचें, बूँद-बूँद अम्ल को उदासीन करें, जानें कौन-सा लवण अम्लीय है और कौन-सा क्षारीय, और क्विज़ खेलें। कक्षा 7 से 10।</p>
 
     <div class="tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-scale" data-panel="panel-scale" aria-controls="panel-scale" aria-selected="true">🌈 <span data-i18n="tab_scale"></span></button>
-      <button type="button" role="tab" id="tab-ind" data-panel="panel-ind" aria-controls="panel-ind" aria-selected="false">🧪 <span data-i18n="tab_ind"></span></button>
-      <button type="button" role="tab" id="tab-titr" data-panel="panel-titr" aria-controls="panel-titr" aria-selected="false">⚗️ <span data-i18n="tab_titr"></span></button>
-      <button type="button" role="tab" id="tab-salts" data-panel="panel-salts" aria-controls="panel-salts" aria-selected="false">🧂 <span data-i18n="tab_salts"></span></button>
-      <button type="button" role="tab" id="tab-life" data-panel="panel-life" aria-controls="panel-life" aria-selected="false">🌍 <span data-i18n="tab_life"></span></button>
-      <button type="button" role="tab" id="tab-quiz" data-panel="panel-quiz" aria-controls="panel-quiz" aria-selected="false">📝 <span data-i18n="tab_quiz"></span></button>
+      <button type="button" role="tab" id="tab-scale" data-panel="panel-scale" aria-controls="panel-scale" aria-selected="true">🌈 <span data-i18n="tab_scale">pH पैमाना</span></button>
+      <button type="button" role="tab" id="tab-ind" data-panel="panel-ind" aria-controls="panel-ind" aria-selected="false">🧪 <span data-i18n="tab_ind">सूचक</span></button>
+      <button type="button" role="tab" id="tab-titr" data-panel="panel-titr" aria-controls="panel-titr" aria-selected="false">⚗️ <span data-i18n="tab_titr">उदासीनीकरण</span></button>
+      <button type="button" role="tab" id="tab-salts" data-panel="panel-salts" aria-controls="panel-salts" aria-selected="false">🧂 <span data-i18n="tab_salts">लवण</span></button>
+      <button type="button" role="tab" id="tab-life" data-panel="panel-life" aria-controls="panel-life" aria-selected="false">🌍 <span data-i18n="tab_life">रोज़ की ज़िंदगी</span></button>
+      <button type="button" role="tab" id="tab-quiz" data-panel="panel-quiz" aria-controls="panel-quiz" aria-selected="false">📝 <span data-i18n="tab_quiz">क्विज़</span></button>
     </div>
 
     <!-- ===================== pH SCALE ===================== -->
     <section id="panel-scale" role="tabpanel" aria-labelledby="tab-scale" class="stack">
       <div class="card">
-        <h2 data-i18n="scale_title"></h2>
-        <p class="muted small" data-i18n="scale_hint"></p>
+        <h2 data-i18n="scale_title">pH पैमाना: 0 से 14</h2>
+        <p class="muted small" data-i18n="scale_hint">किसी चीज़ पर टैप करें: उसका pH, H⁺ आयनों की सांद्रता, दूसरी चीज़ों से तुलना और हर सूचक क्या दिखाता है, सब देखें।</p>
         <div class="ph-wrap">
           <div class="ph-marks" id="ph-marks"></div>
           <div class="ph-bar" id="ph-bar" role="img" data-i18n-aria-label="bar_aria"></div>
-          <div class="ph-ends"><span>← <span data-i18n="scale_acid_end"></span></span><span class="mid" data-i18n="scale_neutral"></span><span><span data-i18n="scale_base_end"></span> →</span></div>
+          <div class="ph-ends"><span>← <span data-i18n="scale_acid_end">ज़्यादा अम्लीय</span></span><span class="mid" data-i18n="scale_neutral">उदासीन (7)</span><span><span data-i18n="scale_base_end">ज़्यादा क्षारीय</span> →</span></div>
         </div>
         <div id="sub-list"></div>
       </div>
@@ -251,19 +251,19 @@
     <!-- ===================== INDICATORS ===================== -->
     <section id="panel-ind" role="tabpanel" aria-labelledby="tab-ind" class="stack" hidden>
       <div class="card">
-        <h2 data-i18n="ind_title"></h2>
+        <h2 data-i18n="ind_title">सूचक लैब: डुबाओ और देखो</h2>
         <div class="lab-grid">
           <div class="stack">
             <div class="field">
-              <label for="ind-sub" data-i18n="ind_pick_sub"></label>
+              <label for="ind-sub" data-i18n="ind_pick_sub">एक चीज़ चुनें</label>
               <select id="ind-sub"></select>
             </div>
             <div>
-              <span class="lbl" id="ind-pick-lbl" data-i18n="ind_pick_ind"></span>
+              <span class="lbl" id="ind-pick-lbl" data-i18n="ind_pick_ind">एक सूचक चुनें</span>
               <div class="ind-chips" role="group" aria-labelledby="ind-pick-lbl" id="ind-chips" style="margin-top:6px"></div>
             </div>
             <div class="callout" id="ind-why-box">
-              <p class="lbl mb0" data-i18n="ind_why_label"></p>
+              <p class="lbl mb0" data-i18n="ind_why_label">क्यों?</p>
               <p class="ind-why mb0" id="ind-why"></p>
             </div>
           </div>
@@ -280,34 +280,34 @@
     <!-- ===================== TITRATION ===================== -->
     <section id="panel-titr" role="tabpanel" aria-labelledby="tab-titr" class="stack" hidden>
       <div class="card">
-        <h2 data-i18n="titr_title"></h2>
-        <p class="muted small" data-i18n="titr_intro"></p>
+        <h2 data-i18n="titr_title">उदासीनीकरण: अम्ल + क्षार, बूँद-बूँद</h2>
+        <p class="muted small" data-i18n="titr_intro">फ्लास्क में हाइड्रोक्लोरिक अम्ल (HCl) है। ब्यूरेट से थोड़ा-थोड़ा सोडियम हाइड्रॉक्साइड (NaOH) डालें, pH को बढ़ते देखें और अंत बिंदु पर सूचक का रंग बदलते देखें।</p>
         <div class="titr-grid">
           <div class="stack">
             <div class="titr-params">
-              <label class="field"><span data-i18n="titr_va"></span><input type="number" id="t-va" min="1" max="100" step="1" inputmode="decimal" dir="ltr"></label>
-              <label class="field"><span data-i18n="titr_ca"></span><input type="number" id="t-ca" min="0.01" max="2" step="0.01" inputmode="decimal" dir="ltr"></label>
-              <label class="field"><span data-i18n="titr_cb"></span><input type="number" id="t-cb" min="0.01" max="2" step="0.01" inputmode="decimal" dir="ltr"></label>
+              <label class="field"><span data-i18n="titr_va">फ्लास्क में अम्ल (mL)</span><input type="number" id="t-va" min="1" max="100" step="1" inputmode="decimal" dir="ltr"></label>
+              <label class="field"><span data-i18n="titr_ca">अम्ल की सांद्रता (mol/L)</span><input type="number" id="t-ca" min="0.01" max="2" step="0.01" inputmode="decimal" dir="ltr"></label>
+              <label class="field"><span data-i18n="titr_cb">क्षार की सांद्रता (mol/L)</span><input type="number" id="t-cb" min="0.01" max="2" step="0.01" inputmode="decimal" dir="ltr"></label>
             </div>
             <div class="field">
-              <label for="t-ind" data-i18n="titr_ind"></label>
+              <label for="t-ind" data-i18n="titr_ind">फ्लास्क में सूचक</label>
               <select id="t-ind"></select>
             </div>
             <div>
-              <label for="t-vb" class="lbl" data-i18n="titr_vb"></label>
+              <label for="t-vb" class="lbl" data-i18n="titr_vb">डाला गया NaOH (mL)</label>
               <div class="titr-vb">
                 <input type="range" id="t-vb" min="0" max="50" step="0.05" value="0">
                 <input type="number" id="t-vb-num" min="0" max="50" step="0.05" inputmode="decimal" dir="ltr" data-i18n-aria-label="titr_vb">
               </div>
             </div>
             <div class="titr-btns">
-              <button type="button" class="btn" id="t-drop" data-i18n="btn_drop"></button>
-              <button type="button" class="btn" id="t-1ml" data-i18n="btn_1ml"></button>
-              <button type="button" class="btn" id="t-5ml" data-i18n="btn_5ml"></button>
+              <button type="button" class="btn" id="t-drop" data-i18n="btn_drop">+1 बूँद (0.05 mL)</button>
+              <button type="button" class="btn" id="t-1ml" data-i18n="btn_1ml">+1 mL</button>
+              <button type="button" class="btn" id="t-5ml" data-i18n="btn_5ml">+5 mL</button>
             </div>
             <div class="titr-btns">
-              <button type="button" class="btn btn-primary" id="t-auto">▶ <span data-i18n="btn_auto"></span></button>
-              <button type="button" class="btn btn-ghost" id="t-empty">↺ <span data-i18n="btn_empty"></span></button>
+              <button type="button" class="btn btn-primary" id="t-auto">▶ <span data-i18n="btn_auto">रंग बदलने तक डालें</span></button>
+              <button type="button" class="btn btn-ghost" id="t-empty">↺ <span data-i18n="btn_empty">फिर से शुरू</span></button>
             </div>
             <p class="callout small mb0" id="t-veq"></p>
           </div>
@@ -315,24 +315,24 @@
             <div class="flask-row">
               <div id="flask"></div>
               <div aria-live="polite">
-                <div class="muted small" data-i18n="titr_ph_now"></div>
+                <div class="muted small" data-i18n="titr_ph_now">फ्लास्क में अभी pH</div>
                 <div class="ph-now" id="t-ph"></div>
                 <p class="ph-state" id="t-state"></p>
                 <p class="small mb0" id="t-hint"></p>
               </div>
             </div>
             <div class="curve-wrap stage"><canvas id="curve" width="600" height="300"></canvas></div>
-            <div class="eq"><span class="formula no-i18n">HCl + NaOH → NaCl + H₂O</span><small data-i18n="eq_words"></small></div>
+            <div class="eq"><span class="formula no-i18n">HCl + NaOH → NaCl + H₂O</span><small data-i18n="eq_words">अम्ल + क्षार → लवण + पानी</small></div>
           </div>
         </div>
       </div>
       <div class="card">
-        <h2 data-i18n="titr_work_title"></h2>
+        <h2 data-i18n="titr_work_title">pH के पीछे का गणित</h2>
         <div class="scroll-x"><table class="table work-tbl" id="work"><tbody></tbody></table></div>
         <p class="small muted mb0" id="work-note"></p>
       </div>
       <div class="card">
-        <h2 data-i18n="stories_title"></h2>
+        <h2 data-i18n="stories_title">हमारे आसपास उदासीनीकरण</h2>
         <div class="stories" id="stories"></div>
       </div>
     </section>
@@ -340,16 +340,16 @@
     <!-- ===================== SALTS ===================== -->
     <section id="panel-salts" role="tabpanel" aria-labelledby="tab-salts" class="stack" hidden>
       <div class="card">
-        <h2 data-i18n="salts_title"></h2>
-        <p class="callout" data-i18n="salts_rule"></p>
+        <h2 data-i18n="salts_title">कौन-सा लवण अम्लीय, क्षारीय या उदासीन है?</h2>
+        <p class="callout" data-i18n="salts_rule">नियम: प्रबल माता-पिता जीतता है। प्रबल अम्ल + प्रबल क्षार → उदासीन लवण। प्रबल अम्ल + दुर्बल क्षार → अम्लीय लवण। दुर्बल अम्ल + प्रबल क्षार → क्षारीय लवण।</p>
         <div class="salts-grid" id="salts-list"></div>
         <div class="row" style="margin-top:10px">
           <span class="pill" id="salts-score"></span>
-          <button type="button" class="btn btn-sm" id="salts-show" data-i18n="salts_show"></button>
+          <button type="button" class="btn btn-sm" id="salts-show" data-i18n="salts_show">सभी उत्तर दिखाएँ</button>
         </div>
       </div>
       <div class="card">
-        <h2 data-i18n="uses_title"></h2>
+        <h2 data-i18n="uses_title">उपयोगी लवण और वे किससे बनते हैं (कक्षा 10)</h2>
         <div class="uses-grid" id="uses"></div>
       </div>
     </section>
@@ -357,8 +357,8 @@
     <!-- ===================== DAILY LIFE ===================== -->
     <section id="panel-life" role="tabpanel" aria-labelledby="tab-life" class="stack" hidden>
       <div class="row spread no-print">
-        <h2 class="mb0" data-i18n="life_title"></h2>
-        <button type="button" class="btn btn-primary" id="print-summary">🖨️ <span data-i18n="print_summary"></span></button>
+        <h2 class="mb0" data-i18n="life_title">रोज़ की ज़िंदगी में pH</h2>
+        <button type="button" class="btn btn-primary" id="print-summary">🖨️ <span data-i18n="print_summary">एक पन्ने का सार प्रिंट करें</span></button>
       </div>
       <div class="life-grid" id="life"></div>
     </section>
@@ -371,30 +371,30 @@
     <section id="summary" aria-hidden="true"></section>
 
     <details class="card" id="inside" style="margin-top:18px">
-      <summary><strong data-i18n="inside_title"></strong></summary>
+      <summary><strong data-i18n="inside_title">अंदर क्या हो रहा है?</strong></summary>
       <ol style="padding-inline-start:20px;margin:12px 0 0">
-        <li data-i18n="inside_1"></li>
-        <li data-i18n="inside_2"></li>
-        <li data-i18n="inside_3"></li>
-        <li data-i18n="inside_4"></li>
+        <li data-i18n="inside_1">pH H⁺ आयनों को गिनता है। pH = −log₁₀[H⁺]: pH 2 का मतलब 0.01 मोल H⁺ प्रति लीटर, pH 3 का मतलब 0.001। इसलिए pH 2, pH 3 से 10 गुना ज़्यादा अम्लीय है।</li>
+        <li data-i18n="inside_2">सूचक ऐसे रंग हैं जिनका अम्ल में एक रंग और क्षार में दूसरा रंग होता है। हर सूचक अपनी pH सीमा में रंग बदलता है: लिटमस लगभग 5 से 8 के बीच, फ़िनॉल्फ़्थेलिन 8.2 से, मिथाइल ऑरेंज 4.4 से नीचे।</li>
+        <li data-i18n="inside_3">उदासीनीकरण लैब में ऐप मोल गिनता है: n = सांद्रता × आयतन। बचे हुए H⁺ (या बचे हुए OH⁻) को कुल आयतन में फैलाया जाता है, और उसी से pH मिलता है। जब दोनों बराबर हों, सिर्फ़ पानी और लवण बचते हैं: pH 7।</li>
+        <li data-i18n="inside_4">सभी मान 25 °C पर किताबी, लगभग मान हैं। असली नींबू के रस या साबुन में ये संख्याएँ थोड़ी अलग हो सकती हैं।</li>
       </ol>
     </details>
     <details class="card" id="words" style="margin-top:12px">
-      <summary><strong data-i18n="words_title"></strong></summary>
+      <summary><strong data-i18n="words_title">जानने लायक शब्द</strong></summary>
       <dl id="words-list" style="margin:12px 0 0"></dl>
     </details>
     <details class="card" id="howto" style="margin-top:12px">
-      <summary><strong data-i18n="howto_title"></strong></summary>
+      <summary><strong data-i18n="howto_title">कैसे इस्तेमाल करें / कक्षा के लिए सुझाव</strong></summary>
       <ul style="margin:12px 0 0">
-        <li data-i18n="how1"></li>
-        <li data-i18n="how2"></li>
-        <li data-i18n="how3"></li>
-        <li data-i18n="how4"></li>
-        <li data-i18n="how5"></li>
+        <li data-i18n="how1">pH पैमाने से शुरू करें: नींबू के रस पर टैप करें, फिर साबुन पर, और देखें वे कितने गुना ज़्यादा अम्लीय या क्षारीय हैं।</li>
+        <li data-i18n="how2">सूचक लैब: सूचक पर टैप करने से पहले रंग का अनुमान लगाएँ। फिर जोड़ी में रंग वाला खेल खेलें और स्कोर मिलाएँ।</li>
+        <li data-i18n="how3">उदासीनीकरण: 20 mL तक 5-5 mL डालें, फिर एक-एक बूँद। देखें कि 25 mL के पास pH कितनी तेज़ी से उछलता है। अम्ल की सांद्रता बदलें और पहले नए अंत बिंदु का अनुमान लगाएँ।</li>
+        <li data-i18n="how4">कक्षा गतिविधि: गुड़हल की पंखुड़ियों या लाल पत्तागोभी को गर्म पानी में भिगोकर अपना सूचक बनाएँ। नींबू का रस, साबुन, बेकिंग सोडा, दूध और नमक का पानी जाँचें और ऐप से मिलाएँ।</li>
+        <li data-i18n="how5">परीक्षा से पहले: एक पन्ने का सार प्रिंट करें और तब तक क्विज़ दें जब तक 15 में से 15 न आ जाएँ।</li>
       </ul>
     </details>
     <div class="row no-print" style="margin-top:14px">
-      <button type="button" class="btn" id="print-summary-2">🖨️ <span data-i18n="print_summary"></span></button>
+      <button type="button" class="btn" id="print-summary-2">🖨️ <span data-i18n="print_summary">एक पन्ने का सार प्रिंट करें</span></button>
       <button type="button" class="btn btn-danger" id="reset">↺ <span data-i18n="reset"></span></button>
       <span class="muted small" data-i18n="saved_local"></span>
     </div>

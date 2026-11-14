@@ -213,14 +213,14 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="gc-privacy no-print"><span aria-hidden="true">🔒</span><span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">GST جوڑیں یا گھٹائیں، CGST، SGST اور IGST کی تقسیم دیکھیں، فوری بل بنائیں، فروخت کی قیمت طے کریں اور GSTIN جانچیں۔</p>
+    <p class="gc-privacy no-print"><span aria-hidden="true">🔒</span><span data-i18n="privacy">انٹرنیٹ کے بغیر چلتا ہے۔ آپ کی رقمیں، بل اور GSTIN کبھی اس ڈیوائس سے باہر نہیں جاتے۔</span></p>
 
     <nav class="gc-tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-calc" data-tab="calc" aria-controls="p-calc"><span class="ic" aria-hidden="true">🧮</span><span data-i18n="tab_calc"></span></button>
-      <button type="button" role="tab" id="tab-bill" data-tab="bill" aria-controls="p-bill"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_bill"></span></button>
-      <button type="button" role="tab" id="tab-price" data-tab="price" aria-controls="p-price"><span class="ic" aria-hidden="true">🎯</span><span data-i18n="tab_price"></span></button>
-      <button type="button" role="tab" id="tab-gstin" data-tab="gstin" aria-controls="p-gstin"><span class="ic" aria-hidden="true">🔍</span><span data-i18n="tab_gstin"></span></button>
+      <button type="button" role="tab" id="tab-calc" data-tab="calc" aria-controls="p-calc"><span class="ic" aria-hidden="true">🧮</span><span data-i18n="tab_calc">GST کیلکولیٹر</span></button>
+      <button type="button" role="tab" id="tab-bill" data-tab="bill" aria-controls="p-bill"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_bill">فوری بل</span></button>
+      <button type="button" role="tab" id="tab-price" data-tab="price" aria-controls="p-price"><span class="ic" aria-hidden="true">🎯</span><span data-i18n="tab_price">قیمت کی منصوبہ بندی</span></button>
+      <button type="button" role="tab" id="tab-gstin" data-tab="gstin" aria-controls="p-gstin"><span class="ic" aria-hidden="true">🔍</span><span data-i18n="tab_gstin">GSTIN جانچ</span></button>
     </nav>
 
     <!-- 1. GST calculator -->
@@ -228,36 +228,36 @@
       <div class="gc-two">
         <div class="card stack">
           <div class="field">
-            <label for="amt" data-i18n="amt_label"></label>
+            <label for="amt" data-i18n="amt_label">رقم (₹)</label>
             <div class="gc-amt-wrap"><span class="gc-rupee" aria-hidden="true">₹</span><input id="amt" class="gc-num" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" data-i18n-placeholder="amt_ph" aria-describedby="amt-err"></div>
             <p class="gc-err" id="amt-err" role="alert"></p>
           </div>
           <div class="field">
             <div class="seg gc-seg" id="mode" role="group" data-i18n-aria-label="mode_label">
-              <button type="button" data-mode="add" data-i18n="mode_add"></button>
-              <button type="button" data-mode="remove" data-i18n="mode_remove"></button>
+              <button type="button" data-mode="add" data-i18n="mode_add">GST جوڑیں</button>
+              <button type="button" data-mode="remove" data-i18n="mode_remove">GST گھٹائیں</button>
             </div>
             <span class="hint" id="mode-hint"></span>
           </div>
           <div class="field">
-            <span class="gc-lbl" id="calc-rate-lbl" data-i18n="rate_label"></span>
+            <span class="gc-lbl" id="calc-rate-lbl" data-i18n="rate_label">GST شرح</span>
             <div class="gc-rates" id="calc-rates" role="group" aria-labelledby="calc-rate-lbl"></div>
           </div>
           <div class="field">
-            <span class="gc-lbl" id="supply-lbl" data-i18n="supply_label"></span>
+            <span class="gc-lbl" id="supply-lbl" data-i18n="supply_label">خریدار کہاں ہے؟</span>
             <div class="seg gc-seg" id="supply" role="group" aria-labelledby="supply-lbl">
-              <button type="button" data-supply="intra" data-i18n="supply_intra"></button>
-              <button type="button" data-supply="inter" data-i18n="supply_inter"></button>
+              <button type="button" data-supply="intra" data-i18n="supply_intra">اسی ریاست میں: CGST + SGST</button>
+              <button type="button" data-supply="inter" data-i18n="supply_inter">دوسری ریاست میں: IGST</button>
             </div>
           </div>
           <div class="gc-opts">
-            <label class="check"><input type="checkbox" id="cess-on"><span data-i18n="cess_label"></span></label>
+            <label class="check"><input type="checkbox" id="cess-on"><span data-i18n="cess_label">سیس جوڑیں</span></label>
             <div class="gc-cess" id="cess-box" hidden>
-              <label for="cess-rate" data-i18n="cess_rate_label"></label>
+              <label for="cess-rate" data-i18n="cess_rate_label">سیس کی شرح (%)</label>
               <input id="cess-rate" class="gc-num" type="text" inputmode="decimal" autocomplete="off" placeholder="0">
-              <p class="muted tiny" data-i18n="cess_hint"></p>
+              <p class="muted tiny" data-i18n="cess_hint">GST معاوضہ سیس 1 فروری 2026 سے ختم ہو چکا ہے۔ اسے صرف پرانے بلوں یا کسی دوسرے سیس کے لیے استعمال کریں۔</p>
             </div>
-            <label class="check" id="round-wrap"><input type="checkbox" id="round-on"><span data-i18n="round_label"></span></label>
+            <label class="check" id="round-wrap"><input type="checkbox" id="round-on"><span data-i18n="round_label">کل رقم کو قریبی ایک روپے تک پورا کریں</span></label>
           </div>
         </div>
         <div class="card gc-result" id="calc-result" aria-live="polite"></div>
@@ -265,72 +265,72 @@
 
       <section class="card">
         <div class="row spread">
-          <h2 class="mb0" data-i18n="hist_title"></h2>
+          <h2 class="mb0" data-i18n="hist_title">پچھلے 20 حساب</h2>
           <div class="row">
-            <button type="button" class="btn btn-sm" id="hist-csv">⬇ <span data-i18n="bill_csv"></span></button>
+            <button type="button" class="btn btn-sm" id="hist-csv">⬇ <span data-i18n="bill_csv">CSV ڈاؤن لوڈ کریں</span></button>
             <button type="button" class="btn btn-sm btn-danger" id="hist-clear" data-i18n="clear"></button>
           </div>
         </div>
-        <p class="muted small" data-i18n="enter_hint" style="margin-top:8px"></p>
+        <p class="muted small" data-i18n="enter_hint" style="margin-top:8px">ہر حساب تھوڑا رکنے پر یہاں محفوظ ہو جاتا ہے۔ فوراً محفوظ کرنے کے لیے Enter دبائیں۔</p>
         <ol class="gc-hist-list" id="hist-list"></ol>
-        <p class="muted mb0" id="hist-empty" data-i18n="hist_empty"></p>
+        <p class="muted mb0" id="hist-empty" data-i18n="hist_empty">آپ کے حساب یہاں دکھیں گے۔ دوبارہ کھولنے کے لیے کسی پر ٹیپ کریں۔</p>
       </section>
     </section>
 
     <!-- 2. Quick bill -->
     <section id="p-bill" role="tabpanel" aria-labelledby="tab-bill" class="gc-panel" hidden>
       <section class="card stack">
-        <h2 class="mb0" data-i18n="bill_details"></h2>
+        <h2 class="mb0" data-i18n="bill_details">بل کی تفصیل</h2>
         <div class="gc-bill-head">
-          <div class="field"><label for="b-seller" data-i18n="bill_seller"></label><input id="b-seller" type="text" autocomplete="organization" data-i18n-placeholder="bill_seller_ph" data-bf="seller"></div>
-          <div class="field"><label for="b-sgstin" data-i18n="bill_seller_gstin"></label><input id="b-sgstin" class="gc-num" type="text" autocomplete="off" spellcheck="false" maxlength="20" data-i18n-placeholder="gstin_ph" data-bf="sgstin"><p class="gc-note bad" id="b-sgstin-note"></p></div>
-          <div class="field"><label for="b-buyer" data-i18n="bill_buyer"></label><input id="b-buyer" type="text" autocomplete="off" data-i18n-placeholder="bill_buyer_ph" data-bf="buyer"></div>
-          <div class="field"><label for="b-bgstin" data-i18n="bill_buyer_gstin"></label><input id="b-bgstin" class="gc-num" type="text" autocomplete="off" spellcheck="false" maxlength="20" data-i18n-placeholder="gstin_ph" data-bf="bgstin"><p class="gc-note bad" id="b-bgstin-note"></p></div>
-          <div class="field"><label for="b-no" data-i18n="bill_no"></label><input id="b-no" type="text" autocomplete="off" data-bf="no"></div>
-          <div class="field"><label for="b-date" data-i18n="bill_date"></label><input id="b-date" type="date" data-bf="date"></div>
+          <div class="field"><label for="b-seller" data-i18n="bill_seller">آپ کے کاروبار کا نام</label><input id="b-seller" type="text" autocomplete="organization" data-i18n-placeholder="bill_seller_ph" data-bf="seller"></div>
+          <div class="field"><label for="b-sgstin" data-i18n="bill_seller_gstin">آپ کا GSTIN</label><input id="b-sgstin" class="gc-num" type="text" autocomplete="off" spellcheck="false" maxlength="20" data-i18n-placeholder="gstin_ph" data-bf="sgstin"><p class="gc-note bad" id="b-sgstin-note"></p></div>
+          <div class="field"><label for="b-buyer" data-i18n="bill_buyer">گاہک کا نام</label><input id="b-buyer" type="text" autocomplete="off" data-i18n-placeholder="bill_buyer_ph" data-bf="buyer"></div>
+          <div class="field"><label for="b-bgstin" data-i18n="bill_buyer_gstin">گاہک کا GSTIN (اختیاری)</label><input id="b-bgstin" class="gc-num" type="text" autocomplete="off" spellcheck="false" maxlength="20" data-i18n-placeholder="gstin_ph" data-bf="bgstin"><p class="gc-note bad" id="b-bgstin-note"></p></div>
+          <div class="field"><label for="b-no" data-i18n="bill_no">بل نمبر</label><input id="b-no" type="text" autocomplete="off" data-bf="no"></div>
+          <div class="field"><label for="b-date" data-i18n="bill_date">تاریخ</label><input id="b-date" type="date" data-bf="date"></div>
         </div>
         <div class="field">
-          <span class="gc-lbl" id="b-supply-lbl" data-i18n="supply_label"></span>
+          <span class="gc-lbl" id="b-supply-lbl" data-i18n="supply_label">خریدار کہاں ہے؟</span>
           <div class="seg gc-seg" id="b-supply" role="group" aria-labelledby="b-supply-lbl">
-            <button type="button" data-supply="intra" data-i18n="supply_intra"></button>
-            <button type="button" data-supply="inter" data-i18n="supply_inter"></button>
+            <button type="button" data-supply="intra" data-i18n="supply_intra">اسی ریاست میں: CGST + SGST</button>
+            <button type="button" data-supply="inter" data-i18n="supply_inter">دوسری ریاست میں: IGST</button>
           </div>
           <p class="gc-note muted" id="b-auto"></p>
         </div>
         <div class="row">
-          <label class="check"><input type="checkbox" id="b-incl"><span data-i18n="bill_incl"></span></label>
-          <label class="check"><input type="checkbox" id="b-round"><span data-i18n="round_label"></span></label>
+          <label class="check"><input type="checkbox" id="b-incl"><span data-i18n="bill_incl">شرحوں میں GST شامل ہے</span></label>
+          <label class="check"><input type="checkbox" id="b-round"><span data-i18n="round_label">کل رقم کو قریبی ایک روپے تک پورا کریں</span></label>
         </div>
       </section>
 
       <section class="card">
-        <h2 data-i18n="bill_items"></h2>
+        <h2 data-i18n="bill_items">اشیا</h2>
         <div class="bl-head" aria-hidden="true">
-          <span>#</span><span data-i18n="col_item"></span><span data-i18n="col_hsn"></span><span data-i18n="col_qty"></span>
-          <span data-i18n="col_rate"></span><span data-i18n="col_gst"></span><span class="v" data-i18n="col_amount"></span><span></span>
+          <span>#</span><span data-i18n="col_item">چیز</span><span data-i18n="col_hsn">HSN/SAC کوڈ</span><span data-i18n="col_qty">مقدار</span>
+          <span data-i18n="col_rate">ریٹ (₹)</span><span data-i18n="col_gst">GST فیصد</span><span class="v" data-i18n="col_amount">رقم (₹)</span><span></span>
         </div>
         <div class="bl-rows" id="bill-rows"></div>
         <div class="row" style="margin-top:12px">
-          <button type="button" class="btn btn-primary" id="bill-add">＋ <span data-i18n="bill_add_line"></span></button>
-          <button type="button" class="btn" id="bill-sample" data-i18n="bill_sample"></button>
-          <button type="button" class="btn btn-danger" id="bill-new" data-i18n="bill_new"></button>
+          <button type="button" class="btn btn-primary" id="bill-add">＋ <span data-i18n="bill_add_line">چیز شامل کریں</span></button>
+          <button type="button" class="btn" id="bill-sample" data-i18n="bill_sample">مثال بھریں</button>
+          <button type="button" class="btn btn-danger" id="bill-new" data-i18n="bill_new">نیا بل</button>
         </div>
       </section>
 
       <section class="card" aria-live="polite">
         <div class="gc-totals">
           <div>
-            <h2 data-i18n="bill_summary"></h2>
+            <h2 data-i18n="bill_summary">شرح کے حساب سے GST</h2>
             <div class="scroll-x" id="bill-summary"></div>
           </div>
           <div id="bill-totals"></div>
         </div>
         <div class="row gc-actions">
-          <button type="button" class="btn btn-primary" id="bill-print">🖨 <span data-i18n="bill_print"></span></button>
-          <button type="button" class="btn" id="bill-csv">⬇ <span data-i18n="bill_csv"></span></button>
+          <button type="button" class="btn btn-primary" id="bill-print">🖨 <span data-i18n="bill_print">پرنٹ / PDF محفوظ کریں</span></button>
+          <button type="button" class="btn" id="bill-csv">⬇ <span data-i18n="bill_csv">CSV ڈاؤن لوڈ کریں</span></button>
           <button type="button" class="btn" id="bill-copy">📋 <span data-i18n="copy"></span></button>
         </div>
-        <p class="muted small" style="margin:12px 0 0" data-i18n="bill_note"></p>
+        <p class="muted small" style="margin:12px 0 0" data-i18n="bill_note">یہ فوری بل یا تخمینہ ہے۔ مکمل GST ٹیکس انوائس میں GST قواعد (قاعدہ 46) کی مانگی ہوئی ہر تفصیل ہونی چاہیے، جیسے سپلائی کی جگہ اور دستخط۔</p>
       </section>
     </section>
 
@@ -338,30 +338,30 @@
     <section id="p-price" role="tabpanel" aria-labelledby="tab-price" class="gc-panel" hidden>
       <div class="gc-two">
         <section class="card stack">
-          <h2 class="mb0" data-i18n="pq_title"></h2>
-          <p class="muted small mb0" data-i18n="pq_intro"></p>
+          <h2 class="mb0" data-i18n="pq_title">میں کیا قیمت بتاؤں؟</h2>
+          <p class="muted small mb0" data-i18n="pq_intro">آپ اپنے پاس کتنا رکھنا چاہتے ہیں، وہ لکھیں۔ اس میں GST جوڑ کر بتایا جائے گا کہ گاہک کو کون سی قیمت بتائیں۔</p>
           <div class="gc-in-row">
-            <div class="field"><label for="pq-amt" data-i18n="pq_want"></label><input id="pq-amt" class="gc-num" type="text" inputmode="decimal" autocomplete="off" data-i18n-placeholder="amt_ph"></div>
-            <div class="field"><label for="pq-round" data-i18n="pq_round"></label><select id="pq-round"></select></div>
+            <div class="field"><label for="pq-amt" data-i18n="pq_want">آپ کتنا رکھنا چاہتے ہیں، GST سے پہلے (₹)</label><input id="pq-amt" class="gc-num" type="text" inputmode="decimal" autocomplete="off" data-i18n-placeholder="amt_ph"></div>
+            <div class="field"><label for="pq-round" data-i18n="pq_round">قیمت کو اوپر پورا کریں</label><select id="pq-round"></select></div>
           </div>
-          <div class="field"><span class="gc-lbl" id="pq-rate-lbl" data-i18n="rate_label"></span><div class="gc-rates" id="pq-rates" role="group" aria-labelledby="pq-rate-lbl"></div></div>
+          <div class="field"><span class="gc-lbl" id="pq-rate-lbl" data-i18n="rate_label">GST شرح</span><div class="gc-rates" id="pq-rates" role="group" aria-labelledby="pq-rate-lbl"></div></div>
           <div aria-live="polite" id="pq-out"></div>
         </section>
 
         <section class="card stack">
-          <h2 class="mb0" data-i18n="sp_title"></h2>
-          <p class="muted small mb0" data-i18n="sp_intro"></p>
+          <h2 class="mb0" data-i18n="sp_title">لاگت سے فروخت کی قیمت</h2>
+          <p class="muted small mb0" data-i18n="sp_intro">اپنی لاگت سے شروع کریں، منافع اور GST جوڑیں، اور MRP سے موازنہ کریں۔</p>
           <div class="gc-in-row">
-            <div class="field"><label for="sp-cost" data-i18n="sp_cost"></label><input id="sp-cost" class="gc-num" type="text" inputmode="decimal" autocomplete="off" aria-describedby="sp-cost-hint"></div>
-            <div class="field"><label for="sp-profit" data-i18n="sp_profit"></label><input id="sp-profit" class="gc-num" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label for="sp-cost" data-i18n="sp_cost">فی نگ لاگت، GST سے پہلے (₹)</label><input id="sp-cost" class="gc-num" type="text" inputmode="decimal" autocomplete="off" aria-describedby="sp-cost-hint"></div>
+            <div class="field"><label for="sp-profit" data-i18n="sp_profit">منافع (%)</label><input id="sp-profit" class="gc-num" type="text" inputmode="decimal" autocomplete="off"></div>
           </div>
-          <p class="muted tiny mb0" id="sp-cost-hint" data-i18n="sp_cost_hint"></p>
+          <p class="muted tiny mb0" id="sp-cost-hint" data-i18n="sp_cost_hint">GST کے بغیر لاگت لکھیں۔ آپ کے ادا کیے GST کا ان پٹ ٹیکس کریڈٹ عام طور پر مل جاتا ہے۔</p>
           <div class="seg gc-seg" id="sp-kind" role="group" data-i18n-aria-label="sp_profit">
-            <button type="button" data-kind="markup" data-i18n="sp_markup"></button>
-            <button type="button" data-kind="margin" data-i18n="sp_margin"></button>
+            <button type="button" data-kind="markup" data-i18n="sp_markup">لاگت پر مارک اپ</button>
+            <button type="button" data-kind="margin" data-i18n="sp_margin">فروخت کی قیمت پر مارجن</button>
           </div>
-          <div class="field"><span class="gc-lbl" id="sp-rate-lbl" data-i18n="rate_label"></span><div class="gc-rates" id="sp-rates" role="group" aria-labelledby="sp-rate-lbl"></div></div>
-          <div class="field"><label for="sp-mrp" data-i18n="sp_mrp"></label><input id="sp-mrp" class="gc-num gc-small-in" style="width:100%" type="text" inputmode="decimal" autocomplete="off"></div>
+          <div class="field"><span class="gc-lbl" id="sp-rate-lbl" data-i18n="rate_label">GST شرح</span><div class="gc-rates" id="sp-rates" role="group" aria-labelledby="sp-rate-lbl"></div></div>
+          <div class="field"><label for="sp-mrp" data-i18n="sp_mrp">MRP (اختیاری، ₹)</label><input id="sp-mrp" class="gc-num gc-small-in" style="width:100%" type="text" inputmode="decimal" autocomplete="off"></div>
           <div aria-live="polite" id="sp-out"></div>
         </section>
       </div>
@@ -371,7 +371,7 @@
     <section id="p-gstin" role="tabpanel" aria-labelledby="tab-gstin" class="gc-panel" hidden>
       <section class="card">
         <div class="field">
-          <label for="gstin" data-i18n="g_label"></label>
+          <label for="gstin" data-i18n="g_label">جانچنے کے لیے GSTIN</label>
           <input id="gstin" class="gc-num" type="text" autocomplete="off" spellcheck="false" autocapitalize="characters" maxlength="24" data-i18n-placeholder="g_ph">
         </div>
         <div class="gx-boxes" id="gx-boxes" aria-hidden="true"></div>
@@ -383,22 +383,22 @@
           <dl class="gc-kv" id="gx-info"></dl>
         </div>
         <div class="row gc-actions">
-          <button type="button" class="btn" id="g-sample" data-i18n="g_sample"></button>
+          <button type="button" class="btn" id="g-sample" data-i18n="g_sample">مثال آزمائیں</button>
           <button type="button" class="btn" id="g-copy">📋 <span data-i18n="copy"></span></button>
           <button type="button" class="btn btn-ghost" id="g-clear" data-i18n="clear"></button>
         </div>
         <div class="callout warning" style="margin-top:14px">
-          <p class="mb0"><span data-i18n="g_disclaimer"></span> <a class="no-i18n gc-ltr" href="https://services.gst.gov.in/services/searchtp" target="_blank" rel="noopener noreferrer">services.gst.gov.in</a></p>
+          <p class="mb0"><span data-i18n="g_disclaimer">یہ صرف فارمیٹ جانچتا ہے۔ کوئی GSTIN درست دکھ کر بھی منسوخ، جعلی یا کسی اور کا ہو سکتا ہے۔ ادائیگی کرنے یا ان پٹ ٹیکس کریڈٹ لینے سے پہلے سرکاری GST پورٹل پر “Search Taxpayer” سے تصدیق کریں:</span> <a class="no-i18n gc-ltr" href="https://services.gst.gov.in/services/searchtp" target="_blank" rel="noopener noreferrer">services.gst.gov.in</a></p>
         </div>
       </section>
 
       <section class="card stack">
-        <h2 class="mb0" data-i18n="g_batch_title"></h2>
-        <label for="batch-in" class="muted small" data-i18n="g_batch_hint"></label>
+        <h2 class="mb0" data-i18n="g_batch_title">ایک ساتھ کئی GSTIN جانچیں</h2>
+        <label for="batch-in" class="muted small" data-i18n="g_batch_hint">ہر سطر میں ایک GSTIN پیسٹ کریں، مثلاً اپنے سپلائرز کی فہرست۔</label>
         <textarea id="batch-in" class="no-i18n" spellcheck="false" autocapitalize="characters"></textarea>
         <div class="row">
-          <button type="button" class="btn btn-primary" id="batch-run" data-i18n="g_batch_run"></button>
-          <button type="button" class="btn" id="batch-csv" disabled>⬇ <span data-i18n="bill_csv"></span></button>
+          <button type="button" class="btn btn-primary" id="batch-run" data-i18n="g_batch_run">سب جانچیں</button>
+          <button type="button" class="btn" id="batch-csv" disabled>⬇ <span data-i18n="bill_csv">CSV ڈاؤن لوڈ کریں</span></button>
           <strong id="batch-sum" aria-live="polite"></strong>
         </div>
         <div class="scroll-x" id="batch-out"></div>
@@ -406,28 +406,28 @@
     </section>
 
     <section class="card no-print" style="margin-top:16px">
-      <h2 data-i18n="rates_title"></h2>
+      <h2 data-i18n="rates_title">GST 2.0 کے بعد کی شرحیں (22 ستمبر 2025 سے)</h2>
       <ul class="gc-rate-list">
-        <li><b>0%</b><span data-i18n="rate_0"></span></li>
-        <li><b>5%</b><span data-i18n="rate_5"></span></li>
-        <li><b>18%</b><span data-i18n="rate_18"></span></li>
-        <li><b>40%</b><span data-i18n="rate_40"></span></li>
-        <li><b>3%</b><span data-i18n="rate_3"></span></li>
-        <li><b>0.25%</b><span data-i18n="rate_025"></span></li>
+        <li><b>0%</b><span data-i18n="rate_0">صفر یا چھوٹ: مثلاً تازہ پھل اور سبزیاں، دودھ، ذاتی صحت اور زندگی کا بیمہ۔</span></li>
+        <li><b>5%</b><span data-i18n="rate_5">کم شرح: مثلاً کئی پیک شدہ کھانے، صابن، شیمپو، ٹوتھ پیسٹ، زیادہ تر دوائیں۔</span></li>
+        <li><b>18%</b><span data-i18n="rate_18">معیاری شرح: زیادہ تر سامان اور خدمات، مثلاً الیکٹرانکس، چھوٹی کاریں، سیمنٹ۔</span></li>
+        <li><b>40%</b><span data-i18n="rate_40">عیش و عشرت اور نقصان دہ چیزیں: مثلاً میٹھے کولڈ ڈرنک، بڑی کاریں، سگریٹ۔</span></li>
+        <li><b>3%</b><span data-i18n="rate_3">سونا، چاندی اور زیورات۔</span></li>
+        <li><b>0.25%</b><span data-i18n="rate_025">بغیر تراشے ہیرے اور قیمتی پتھر۔</span></li>
       </ul>
-      <p class="small" style="margin:12px 0 4px" data-i18n="rate_old"></p>
+      <p class="small" style="margin:12px 0 4px" data-i18n="rate_old">12 اور 28 فیصد کی شرحیں 22 ستمبر 2025 کو ختم ہو گئیں، اور GST معاوضہ سیس 1 فروری 2026 کو ختم ہوا۔ پرانے بلوں کے لیے “اپنی شرح” چنیں۔</p>
       <p class="muted small mb0" id="rates-checked"></p>
     </section>
 
     <details class="card no-print" style="margin-top:16px">
-      <summary data-i18n="how_title"></summary>
+      <summary data-i18n="how_title">استعمال کا طریقہ · کام کے لیے مشورے</summary>
       <ul>
-        <li data-i18n="how_1"></li>
-        <li data-i18n="how_2"></li>
-        <li data-i18n="how_3"></li>
-        <li data-i18n="how_4"></li>
-        <li data-i18n="how_5"></li>
-        <li data-i18n="how_6"></li>
+        <li data-i18n="how_1">رقم لکھیں، “GST جوڑیں” یا “GST گھٹائیں” چنیں اور شرح چنیں۔ لکھتے لکھتے پورا حساب بدلتا رہتا ہے۔</li>
+        <li data-i18n="how_2">خریدار دوسری ریاست میں ہے؟ IGST چنیں۔ اپنی ریاست کے اندر GST آدھا آدھا CGST اور SGST میں بٹتا ہے (کچھ مرکز کے زیرِ انتظام علاقوں میں UTGST)۔</li>
+        <li data-i18n="how_3">فوری بل: ہر چیز اس کی اپنی GST شرح کے ساتھ جوڑیں، پھر پرنٹ کریں، PDF محفوظ کریں یا اپنے اکاؤنٹنٹ کے لیے CSV ڈاؤن لوڈ کریں۔</li>
+        <li data-i18n="how_4">قیمت کی منصوبہ بندی: جانیں کہ کون سی قیمت بتائیں تاکہ آپ کے پاس مطلوبہ رقم بچے، یا لاگت اور مارجن سے فروخت کی قیمت بنا کر MRP سے ملائیں۔</li>
+        <li data-i18n="how_5">نیا سپلائر؟ یہاں اس کا GSTIN جانچیں، پھر ادائیگی کرنے یا ان پٹ ٹیکس کریڈٹ لینے سے پہلے GST پورٹل پر تصدیق کریں۔</li>
+        <li data-i18n="how_6">کوئی بھی نتیجہ سیدھا WhatsApp یا ای میل میں کاپی کریں۔ کچھ بھی اپ لوڈ نہیں ہوتا، اور پچھلے 20 حساب صرف اسی ڈیوائس پر رہتے ہیں۔</li>
       </ul>
     </details>
 

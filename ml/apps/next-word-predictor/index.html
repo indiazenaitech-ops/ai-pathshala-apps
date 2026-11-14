@@ -123,7 +123,7 @@
 <body>
   <main id="app">
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">AI ചാറ്റ്ബോട്ടുകൾ എങ്ങനെ എഴുതുന്നു എന്ന് കണ്ടെത്തൂ: ഒരു കഥ കൊണ്ട് ചെറിയൊരു ഭാഷാ മോഡലിനെ പഠിപ്പിക്കൂ, എന്നിട്ട് അത് അടുത്ത വാക്ക് എങ്ങനെ ഊഹിക്കുന്നു, സ്വയം എങ്ങനെ എഴുതുന്നു എന്ന് കാണൂ.</p>
       <div class="row no-print">
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm" id="fs-btn" data-i18n="fullscreen"></button>
@@ -133,19 +133,19 @@
 
     <!-- 1. Train -->
     <section class="card stack" id="train-card">
-      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1"></span></h2>
+      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1">മോഡലിനെ പഠിപ്പിക്കൂ</span></h2>
       <div class="split train-split">
         <div class="stack">
           <div class="no-print">
-            <span class="lbl" id="src-lbl" data-i18n="src_label"></span>
+            <span class="lbl" id="src-lbl" data-i18n="src_label">പഠിപ്പിക്കാനുള്ള എഴുത്ത്</span>
             <div class="seg big" role="group" aria-labelledby="src-lbl">
-              <button type="button" id="src-sample" data-i18n="src_sample"></button>
-              <button type="button" id="src-custom" data-i18n="src_custom"></button>
+              <button type="button" id="src-sample" data-i18n="src_sample">മാതൃകാ കഥ</button>
+              <button type="button" id="src-custom" data-i18n="src_custom">ഞങ്ങളുടെ സ്വന്തം എഴുത്ത്</button>
             </div>
             <p class="muted small mb0" id="src-note" style="margin-top:6px"></p>
           </div>
           <div>
-            <span class="lbl" id="mem-lbl" data-i18n="mem_label"></span>
+            <span class="lbl" id="mem-lbl" data-i18n="mem_label">ഓർമ: മോഡൽ മുമ്പുള്ള എത്ര വാക്കുകൾ നോക്കുന്നു?</span>
             <div class="seg num no-print" role="group" aria-labelledby="mem-lbl">
               <button type="button" id="n-0">0</button>
               <button type="button" id="n-1">1</button>
@@ -155,21 +155,21 @@
             <p class="muted small mb0" id="n-hint" style="margin-top:6px"></p>
           </div>
           <div class="stats" aria-live="polite">
-            <div class="stat"><b id="stat-words">0</b><span data-i18n="stat_words"></span></div>
-            <div class="stat"><b id="stat-vocab">0</b><span data-i18n="stat_vocab"></span></div>
-            <div class="stat"><b id="stat-ngrams">0</b><span data-i18n="stat_ngrams"></span><span class="tiny" id="stat-ngrams-sub"></span></div>
+            <div class="stat"><b id="stat-words">0</b><span data-i18n="stat_words">വായിച്ച വാക്കുകൾ</span></div>
+            <div class="stat"><b id="stat-vocab">0</b><span data-i18n="stat_vocab">വ്യത്യസ്ത വാക്കുകൾ</span></div>
+            <div class="stat"><b id="stat-ngrams">0</b><span data-i18n="stat_ngrams">പഠിച്ച പാറ്റേണുകൾ</span><span class="tiny" id="stat-ngrams-sub"></span></div>
           </div>
           <p class="callout warning small mb0" id="need-text" hidden></p>
           <p class="callout small mb0" id="lines-note" hidden></p>
         </div>
         <div class="stack">
-          <label for="train-text" class="lbl" data-i18n="train_label"></label>
+          <label for="train-text" class="lbl" data-i18n="train_label">മോഡൽ ഈ എഴുത്തിൽ നിന്ന് മാത്രമേ പഠിക്കൂ</label>
           <textarea id="train-text" class="no-i18n no-print" rows="9" spellcheck="false" data-i18n-placeholder="train_ph"></textarea>
           <div id="train-print" class="print-only no-i18n"></div>
           <p class="callout warning small mb0 no-print" id="cut-note" hidden></p>
           <div class="row no-print">
-            <button type="button" class="btn btn-primary" id="train-btn" data-i18n="train_btn"></button>
-            <button type="button" class="btn" id="open-btn" data-i18n="open_txt"></button>
+            <button type="button" class="btn btn-primary" id="train-btn" data-i18n="train_btn">മോഡലിനെ പരിശീലിപ്പിക്കൂ</button>
+            <button type="button" class="btn" id="open-btn" data-i18n="open_txt">.txt ഫയൽ തുറക്കുക</button>
             <button type="button" class="btn btn-ghost" id="clear-text" data-i18n="clear"></button>
           </div>
         </div>
@@ -179,35 +179,35 @@
     <div class="grid-2 main-grid">
       <!-- 2. Predict -->
       <section class="card stack" id="predict-card">
-        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2">അടുത്ത വാക്ക് ഊഹിക്കൂ</span></h2>
         <div>
-          <label for="start-input" class="lbl" data-i18n="start_label"></label>
+          <label for="start-input" class="lbl" data-i18n="start_label">വാക്യത്തിന്റെ തുടക്കം</label>
           <div class="start-row">
             <input type="text" id="start-input" class="no-i18n" autocomplete="off" spellcheck="false" data-i18n-placeholder="start_ph">
             <span class="start-btns no-print">
-              <button type="button" class="btn" id="undo-btn" data-i18n="undo"></button>
+              <button type="button" class="btn" id="undo-btn" data-i18n="undo">തിരികെ</button>
               <button type="button" class="btn icon-btn" id="clear-start" data-i18n-aria-label="clear" data-i18n-title="clear">✕</button>
             </span>
           </div>
         </div>
         <div class="row">
-          <span class="small muted" data-i18n="looks_at"></span>
+          <span class="small muted" data-i18n="looks_at">മോഡൽ നോക്കുന്നത്:</span>
           <div class="chips no-i18n" id="ctx-chips"></div>
         </div>
         <p class="small mb0" id="ctx-note" aria-live="polite"></p>
         <div class="row spread">
-          <h3 class="mb0" data-i18n="top5"></h3>
-          <button type="button" class="btn btn-accent btn-sm no-print" id="pick-btn" data-i18n="ai_pick"></button>
+          <h3 class="mb0" data-i18n="top5">മികച്ച 5 ഊഹങ്ങൾ</h3>
+          <button type="button" class="btn btn-accent btn-sm no-print" id="pick-btn" data-i18n="ai_pick">AI തിരഞ്ഞെടുക്കട്ടെ</button>
         </div>
-        <p class="muted small mb0 no-print" data-i18n="tap_hint"></p>
+        <p class="muted small mb0 no-print" data-i18n="tap_hint">ഒരു ഊഹത്തിൽ തൊട്ടാൽ അത് നിങ്ങളുടെ വാക്യത്തിൽ ചേരും.</p>
         <div class="cands no-i18n" id="cands" aria-live="polite"></div>
         <p class="muted small mb0" id="explain"></p>
       </section>
 
       <!-- 3. Auto-write -->
       <section class="card stack" id="write-card">
-        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3"></span></h2>
-        <p class="muted small mb0" data-i18n="cont_hint"></p>
+        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3">അത് സ്വയം എഴുതട്ടെ</span></h2>
+        <p class="muted small mb0" data-i18n="cont_hint">ഇത് ഘട്ടം 2-ലെ നിങ്ങളുടെ വാക്യം ഓരോ വാക്കായി തുടരുന്നു, സാധ്യതകൾ അനുസരിച്ച് പകിട എറിയുന്നതുപോലെ.</p>
         <div class="no-print">
           <div class="range-head"><label for="len" id="len-label"></label></div>
           <input type="range" id="len" min="5" max="80" step="1">
@@ -215,21 +215,21 @@
         <div class="no-print">
           <div class="range-head"><label for="temp" id="temp-label"></label></div>
           <input type="range" id="temp" min="0" max="2" step="0.1">
-          <div class="range-ends small muted"><span data-i18n="temp_safe"></span><span data-i18n="temp_wild"></span></div>
+          <div class="range-ends small muted"><span data-i18n="temp_safe">സുരക്ഷിതം: എപ്പോഴും ആദ്യത്തെ ഊഹം</span><span data-i18n="temp_wild">വിചിത്രം: അമ്പരപ്പിക്കുന്ന വാക്കുകൾ</span></div>
         </div>
         <div class="row no-print">
-          <button type="button" class="btn btn-primary btn-lg" id="write-btn" data-i18n="write_btn"></button>
-          <button type="button" class="btn" id="speak-btn" data-i18n="speak_btn"></button>
+          <button type="button" class="btn btn-primary btn-lg" id="write-btn" data-i18n="write_btn">എഴുതൂ</button>
+          <button type="button" class="btn" id="speak-btn" data-i18n="speak_btn">ഉറക്കെ വായിക്കൂ</button>
           <button type="button" class="btn" id="copy-btn" data-i18n="copy"></button>
         </div>
         <div class="output no-i18n" id="output" aria-live="polite"></div>
         <div class="legend">
-          <span class="muted" data-i18n="legend"></span>
-          <span class="w p-high" data-i18n="p_high"></span>
-          <span class="w p-mid" data-i18n="p_mid"></span>
-          <span class="w p-low" data-i18n="p_low"></span>
-          <span class="w p-rare" data-i18n="p_rare"></span>
-          <span class="sent-new" data-i18n="sent_new"></span>
+          <span class="muted" data-i18n="legend">ഓരോ വാക്കിനും സാധ്യത എത്രയായിരുന്നു?</span>
+          <span class="w p-high" data-i18n="p_high">വളരെ സാധ്യത (50%+)</span>
+          <span class="w p-mid" data-i18n="p_mid">സാധ്യത (20–50%)</span>
+          <span class="w p-low" data-i18n="p_low">കുറഞ്ഞ സാധ്യത (5–20%)</span>
+          <span class="w p-rare" data-i18n="p_rare">അമ്പരപ്പ് (5%-ൽ താഴെ)</span>
+          <span class="sent-new" data-i18n="sent_new">പുതിയ വാക്യം, എഴുത്തിൽ ഇല്ലായിരുന്നു</span>
         </div>
         <p class="callout small mb0" id="sent-summary" hidden></p>
         <p class="muted small mb0" id="top-rate"></p>
@@ -238,34 +238,34 @@
 
     <!-- inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside"></h2>
+      <h2 data-i18n="inside">ഉള്ളിൽ എന്താണ് നടക്കുന്നത്?</h2>
       <div class="grid-3 inside-grid">
-        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="inside_1t"></span></h3><p data-i18n="inside_1"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="inside_2t"></span></h3><p data-i18n="inside_2"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🧠</span><span data-i18n="inside_3t"></span></h3><p data-i18n="inside_3"></p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="inside_1t">പഠനം = എണ്ണൽ</span></h3><p data-i18n="inside_1">മോഡൽ എഴുത്ത് വായിച്ച്, ഏതു വാക്കുകൾക്ക് ശേഷം ഏതു വാക്ക് എത്ര തവണ വന്നു എന്ന് എണ്ണുന്നു. ഈ എണ്ണപ്പട്ടികയാണ് മുഴുവൻ മോഡൽ.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="inside_2t">ഊഹം = സാധ്യത</span></h3><p data-i18n="inside_2">ചില വാക്കുകൾക്ക് ശേഷം “അ” 3 തവണയും “ആ” 1 തവണയും വന്നാൽ, അ-ക്ക് 3 ÷ 4 = 75%, ആ-ക്ക് 25% സാധ്യത. ആ-യെ എത്ര തവണ ധൈര്യത്തോടെ തിരഞ്ഞെടുക്കണം എന്ന് സർഗാത്മകത തീരുമാനിക്കുന്നു.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧠</span><span data-i18n="inside_3t">ഓർമ പ്രധാനം</span></h3><p data-i18n="inside_3">0 അല്ലെങ്കിൽ 1 വാക്കിന്റെ ഓർമയിൽ വാക്യങ്ങൾ കുഴഞ്ഞുമറിയും. 3 വാക്കുകളിൽ സ്വാഭാവികമായി തോന്നും, പക്ഷേ മിക്കതും എഴുത്തിന്റെ പകർപ്പായിരിക്കും.</p></div>
       </div>
       <div class="grid-2">
-        <div class="callout"><h3 data-i18n="llm_t"></h3><p class="mb0" data-i18n="llm_1"></p></div>
-        <div class="callout warning"><h3 data-i18n="hallu_t"></h3><p class="mb0" id="hallu-text"></p></div>
+        <div class="callout"><h3 data-i18n="llm_t">ChatGPT എങ്ങനെ വ്യത്യസ്തമാണ്?</h3><p class="mb0" data-i18n="llm_1">ChatGPT, Gemini, Claude എന്നിവയും അടുത്ത ടോക്കൺ (ഒരു വാക്കോ വാക്കിന്റെ ഭാഗമോ) ഊഹിച്ച് ഓരോ കഷണമായി എഴുതുന്നു. പക്ഷേ അവ ലക്ഷം കോടി വാക്കുകളിൽ നിന്ന് പഠിക്കുന്നു, എണ്ണപ്പട്ടികയ്ക്ക് പകരം നൂറുകണക്കിന് കോടി സംഖ്യകളുള്ള ഒരു വലിയ ന്യൂറൽ നെറ്റ്‌വർക്ക് ഉപയോഗിക്കുന്നു. അതുകൊണ്ട് അവസാനത്തെ 3 വാക്കുകൾ മാത്രമല്ല, മുഴുവൻ പേജുകളുടെയും അർഥം മനസ്സിലാക്കി എഴുതാൻ അവയ്ക്ക് കഴിയും.</p></div>
+        <div class="callout warning"><h3 data-i18n="hallu_t">ശരിയെന്ന് തോന്നിയാലും തെറ്റാകുന്നത് എന്തുകൊണ്ട്?</h3><p class="mb0" id="hallu-text"></p></div>
       </div>
-      <h3 class="mb0 peek-h" data-i18n="peek_t"></h3>
+      <h3 class="mb0 peek-h" data-i18n="peek_t">മോഡലിന്റെ ഉള്ളിലേക്ക് എത്തിനോക്കൂ: കൂടുതൽ വരുന്ന പാറ്റേണുകൾ</h3>
       <div class="scroll-x">
         <table class="table peek">
-          <thead><tr><th data-i18n="peek_after"></th><th aria-hidden="true"></th><th data-i18n="peek_next"></th><th data-i18n="peek_times"></th></tr></thead>
+          <thead><tr><th data-i18n="peek_after">ഈ വാക്കുകൾക്ക് ശേഷം</th><th aria-hidden="true"></th><th data-i18n="peek_next">അടുത്ത വാക്ക്</th><th data-i18n="peek_times">തവണ</th></tr></thead>
           <tbody id="peek-body" class="no-i18n"></tbody>
         </table>
       </div>
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">എങ്ങനെ ഉപയോഗിക്കാം · ക്ലാസ്സിനുള്ള ആശയങ്ങൾ</summary>
       <ul>
-        <li data-i18n="tip_1"></li>
-        <li data-i18n="tip_2"></li>
-        <li data-i18n="tip_3"></li>
-        <li data-i18n="tip_4"></li>
-        <li data-i18n="tip_5"></li>
-        <li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">മാതൃകാ കഥയിൽ തുടങ്ങൂ. ഘട്ടം 2-ൽ ഒന്നോ രണ്ടോ വാക്കുകൾ ടൈപ്പ് ചെയ്ത്, ഊഹങ്ങളിൽ തൊട്ട് വാക്യം ഉണ്ടാക്കൂ.</li>
+        <li data-i18n="tip_2">ഓർമ 0 മുതൽ 3 വരെ മാറ്റി ഓരോ തവണയും “എഴുതൂ” അമർത്തൂ. ഏതാണ് യഥാർഥ ഭാഷ പോലെ തോന്നുന്നത്? ഏതാണ് കൂടുതൽ പകർത്തുന്നത്?</li>
+        <li data-i18n="tip_3">സർഗാത്മകതയുടെ സ്ലൈഡർ നീക്കൂ. 0-ൽ മോഡൽ എപ്പോഴും ആദ്യത്തെ വാക്ക് തിരഞ്ഞെടുക്കുകയും പലപ്പോഴും പറഞ്ഞത് തന്നെ ആവർത്തിക്കുകയും ചെയ്യും; 2-ൽ വിചിത്രവും അമ്പരപ്പിക്കുന്നതുമായ വാക്യങ്ങൾ എഴുതും.</li>
+        <li data-i18n="tip_4">ക്ലാസ് പ്രവർത്തനം: ഓരോ ഗ്രൂപ്പും പാഠപുസ്തകത്തിലെയോ സ്വന്തമായി എഴുതിയതോ ആയ 3–4 കവിതകൾ “ഞങ്ങളുടെ സ്വന്തം എഴുത്ത്” എന്നതിൽ ടൈപ്പ് ചെയ്യട്ടെ. മോഡലിനെ പഠിപ്പിച്ച് ഒരു പുതിയ കവിത എഴുതിക്കൂ. അത് ഉറക്കെ വായിച്ച് മെനഞ്ഞെടുത്ത വരികൾ കണ്ടെത്തൂ: അവ സത്യമാണോ? അർഥമുണ്ടോ?</li>
+        <li data-i18n="tip_5">ഊഹക്കളി: തൊടുന്നതിന് മുമ്പ് അടുത്ത വാക്ക് ഊഹിക്കാൻ ക്ലാസിനോട് പറയൂ. ക്ലാസ് മോഡലിനെ തോൽപ്പിച്ചോ?</li>
+        <li data-i18n="tip_6">എല്ലാം ഈ ഉപകരണത്തിൽ തന്നെ പ്രവർത്തിക്കുന്നു. നിങ്ങളുടെ എഴുത്ത് ഇവിടെ മാത്രം സേവ് ചെയ്യപ്പെടുന്നു, എവിടേക്കും അയയ്ക്കുന്നില്ല, അതിനാൽ ഇന്റർനെറ്റ് ഇല്ലാതെയും പ്രവർത്തിക്കും.</li>
       </ul>
     </details>
   </main>

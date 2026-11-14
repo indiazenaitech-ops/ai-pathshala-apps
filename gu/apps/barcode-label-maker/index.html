@@ -117,147 +117,147 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="privacy muted"><span class="lock" aria-hidden="true">🔒</span><span data-i18n="privacy_line"></span></p>
+    <p class="edu-intro" data-i18n="intro">તમારી દુકાન કે નાની બ્રાન્ડ માટે બારકોડવાળા ભાવના લેબલ બનાવો: EAN-13 (ચેક ડિજિટ આપોઆપ ઉમેરાય) કે Code 128, સાથે MRP, ચોખ્ખું વજન, બેચ, FSSAI અને ઉત્પાદકનું સરનામું. A4 લેબલ શીટ કે લેબલ રોલ પર પ્રિન્ટ કરો, અથવા PNG સેવ કરો.</p>
+    <p class="privacy muted"><span class="lock" aria-hidden="true">🔒</span><span data-i18n="privacy_line">ઇન્ટરનેટ વગર ચાલે છે. તમારી પ્રોડક્ટ અને CSV ફાઇલો આ જ બ્રાઉઝરમાં રહે છે; કંઈ અપલોડ થતું નથી.</span></p>
 
     <div class="layout">
       <div class="stack" style="margin:0">
         <section class="card" id="productCard">
-          <h2>📦 <span data-i18n="h_product"></span></h2>
+          <h2>📦 <span data-i18n="h_product">1. પ્રોડક્ટ</span></h2>
           <div class="field">
-            <span data-i18n="type_label"></span>
+            <span data-i18n="type_label">બારકોડનો પ્રકાર</span>
             <div class="seg" role="group" data-i18n-aria-label="type_label">
-              <button type="button" id="type-auto" data-type="auto" data-i18n="type_auto"></button>
+              <button type="button" id="type-auto" data-type="auto" data-i18n="type_auto">આપોઆપ</button>
               <button type="button" id="type-ean13" data-type="ean13">EAN-13</button>
               <button type="button" id="type-code128" data-type="code128">Code 128</button>
             </div>
           </div>
           <div class="fgrid" style="margin-top:12px">
-            <label class="field wide"><span data-i18n="code_label"></span>
+            <label class="field wide"><span data-i18n="code_label">બારકોડ નંબર કે લખાણ</span>
               <input id="f-code" class="code-input no-i18n" type="text" inputmode="text" autocomplete="off" spellcheck="false" maxlength="60" dir="ltr" data-i18n-placeholder="code_ph"></label>
           </div>
           <div id="codeStatus" aria-live="polite"></div>
           <div class="fgrid" style="margin-top:12px">
-            <label class="field wide"><span data-i18n="name_label"></span><input id="f-name" class="no-i18n" dir="auto" type="text" maxlength="80" data-i18n-placeholder="name_ph"></label>
-            <label class="field"><span data-i18n="mrp_label"></span><input id="f-mrp" class="no-i18n" type="text" inputmode="decimal" maxlength="12" placeholder="120"></label>
-            <label class="field"><span data-i18n="qty_label"></span><input id="f-qty" class="no-i18n" dir="auto" type="text" maxlength="24" data-i18n-placeholder="qty_ph"></label>
-            <label class="field"><span data-i18n="batch_label"></span><input id="f-batch" class="no-i18n" dir="auto" type="text" maxlength="24" placeholder="B-2610"></label>
-            <label class="field"><span data-i18n="copies_label"></span><input id="f-copies" type="number" min="1" max="2000" step="1" value="1"></label>
+            <label class="field wide"><span data-i18n="name_label">પ્રોડક્ટનું નામ</span><input id="f-name" class="no-i18n" dir="auto" type="text" maxlength="80" data-i18n-placeholder="name_ph"></label>
+            <label class="field"><span data-i18n="mrp_label">MRP (₹)</span><input id="f-mrp" class="no-i18n" type="text" inputmode="decimal" maxlength="12" placeholder="120"></label>
+            <label class="field"><span data-i18n="qty_label">ચોખ્ખું વજન / જથ્થો</span><input id="f-qty" class="no-i18n" dir="auto" type="text" maxlength="24" data-i18n-placeholder="qty_ph"></label>
+            <label class="field"><span data-i18n="batch_label">બેચ નંબર</span><input id="f-batch" class="no-i18n" dir="auto" type="text" maxlength="24" placeholder="B-2610"></label>
+            <label class="field"><span data-i18n="copies_label">કેટલા લેબલ</span><input id="f-copies" type="number" min="1" max="2000" step="1" value="1"></label>
           </div>
           <div class="row" style="margin-top:14px">
-            <button type="button" class="btn btn-primary" id="btnAdd">➕ <span data-i18n="add_to_sheet"></span></button>
-            <button type="button" class="btn" id="btnFill">🧾 <span data-i18n="fill_sheet"></span></button>
-            <button type="button" class="btn btn-primary" id="btnUpdate" hidden>💾 <span data-i18n="update_item"></span></button>
+            <button type="button" class="btn btn-primary" id="btnAdd">➕ <span data-i18n="add_to_sheet">શીટમાં ઉમેરો</span></button>
+            <button type="button" class="btn" id="btnFill">🧾 <span data-i18n="fill_sheet">બાકીની શીટ ભરી દો</span></button>
+            <button type="button" class="btn btn-primary" id="btnUpdate" hidden>💾 <span data-i18n="update_item">ફેરફાર સેવ કરો</span></button>
             <button type="button" class="btn btn-ghost" id="btnCancelEdit" hidden><span data-i18n="cancel"></span></button>
           </div>
           <p class="small muted mb0" id="editNote" hidden style="margin-top:8px"></p>
         </section>
 
         <section class="card" id="commonCard">
-          <h2>🏷️ <span data-i18n="h_common"></span></h2>
-          <p class="small muted" data-i18n="common_hint"></p>
+          <h2>🏷️ <span data-i18n="h_common">2. દરેક લેબલ પર સરખું</span></h2>
+          <p class="small muted" data-i18n="common_hint">જે લાઇન લેબલ પર ન જોઈએ, તેનું બોક્સ ખાલી રાખો.</p>
           <div class="fgrid">
-            <label class="field"><span data-i18n="pkd_label"></span><input id="f-pkd" type="month"></label>
-            <label class="field"><span data-i18n="bb_label"></span><input id="f-bb" class="no-i18n" dir="auto" type="text" maxlength="40" data-i18n-placeholder="bb_ph"></label>
-            <label class="field"><span data-i18n="fssai_label"></span><input id="f-fssai" class="no-i18n" type="text" inputmode="numeric" maxlength="20" dir="ltr" placeholder="10012345678901"></label>
-            <label class="field wide"><span data-i18n="mfd_label"></span><input id="f-mfd" class="no-i18n" dir="auto" type="text" maxlength="120" data-i18n-placeholder="mfd_ph"></label>
-            <label class="field wide"><span data-i18n="qr_label"></span><input id="f-qr" class="no-i18n" type="text" maxlength="300" dir="ltr" data-i18n-placeholder="qr_ph"></label>
+            <label class="field"><span data-i18n="pkd_label">પેકિંગનો મહિનો</span><input id="f-pkd" type="month"></label>
+            <label class="field"><span data-i18n="bb_label">આ પહેલાં વાપરો</span><input id="f-bb" class="no-i18n" dir="auto" type="text" maxlength="40" data-i18n-placeholder="bb_ph"></label>
+            <label class="field"><span data-i18n="fssai_label">FSSAI લાઇસન્સ નંબર</span><input id="f-fssai" class="no-i18n" type="text" inputmode="numeric" maxlength="20" dir="ltr" placeholder="10012345678901"></label>
+            <label class="field wide"><span data-i18n="mfd_label">ઉત્પાદક / વેચનાર</span><input id="f-mfd" class="no-i18n" dir="auto" type="text" maxlength="120" data-i18n-placeholder="mfd_ph"></label>
+            <label class="field wide"><span data-i18n="qr_label">લેબલ પર QR કોડ (જોઈએ તો)</span><input id="f-qr" class="no-i18n" type="text" maxlength="300" dir="ltr" data-i18n-placeholder="qr_ph"></label>
           </div>
-          <p class="small callout warning" id="fssaiWarn" hidden data-i18n="fssai_warn" style="margin-top:10px"></p>
+          <p class="small callout warning" id="fssaiWarn" hidden data-i18n="fssai_warn" style="margin-top:10px">FSSAI લાઇસન્સ કે રજિસ્ટ્રેશન નંબર 14 અંકનો હોય છે. કૃપા કરી ચકાસો.</p>
           <div class="row" style="margin-top:12px">
-            <label class="check"><input type="checkbox" id="f-incl"> <span data-i18n="incl_label"></span></label>
+            <label class="check"><input type="checkbox" id="f-incl"> <span data-i18n="incl_label">MRP પછી &quot;(બધા કર સહિત)&quot; બતાવો</span></label>
           </div>
           <div class="field" style="margin-top:12px">
-            <span data-i18n="labellang_label"></span>
+            <span data-i18n="labellang_label">લેબલ પરના શબ્દો</span>
             <div class="seg" role="group" data-i18n-aria-label="labellang_label">
               <button type="button" id="ll-en" data-ll="en">English</button>
-              <button type="button" id="ll-ui" data-ll="ui" data-i18n="labellang_ui"></button>
+              <button type="button" id="ll-ui" data-ll="ui" data-i18n="labellang_ui">આ પેજની ભાષા</button>
             </div>
           </div>
         </section>
       </div>
 
       <section class="card stick" id="previewCard">
-        <h2>👀 <span data-i18n="h_preview"></span></h2>
+        <h2>👀 <span data-i18n="h_preview">લેબલની ઝલક</span></h2>
         <div class="lp-wrap"><div class="lp-box" id="labelPreview" aria-live="polite"></div></div>
         <p class="small muted" id="labelSize" style="margin:8px 0 0;text-align:center"></p>
         <div id="labelWarn" class="stack" style="margin-top:10px"></div>
         <div class="row" style="margin-top:12px">
-          <button type="button" class="btn" id="btnPng">🖼️ <span data-i18n="png_btn"></span></button>
+          <button type="button" class="btn" id="btnPng">🖼️ <span data-i18n="png_btn">PNG ડાઉનલોડ કરો</span></button>
         </div>
       </section>
     </div>
 
     <section class="card" id="sheetCard" style="margin-top:16px">
-      <h2>🖨️ <span data-i18n="h_sheet"></span></h2>
+      <h2>🖨️ <span data-i18n="h_sheet">3. લેબલ શીટ અને પ્રિન્ટ</span></h2>
       <div class="field">
-        <span data-i18n="preset_label"></span>
+        <span data-i18n="preset_label">લેબલ પેપર</span>
         <div class="seg preset-seg" role="group" data-i18n-aria-label="preset_label">
-          <button type="button" id="preset-a4_65" data-preset="a4_65" data-i18n="preset_65"></button>
-          <button type="button" id="preset-a4_24" data-preset="a4_24" data-i18n="preset_24"></button>
-          <button type="button" id="preset-roll" data-preset="roll" data-i18n="preset_roll"></button>
-          <button type="button" id="preset-custom" data-preset="custom" data-i18n="preset_custom"></button>
+          <button type="button" id="preset-a4_65" data-preset="a4_65" data-i18n="preset_65">A4 · 65 લેબલ (38 × 21 mm)</button>
+          <button type="button" id="preset-a4_24" data-preset="a4_24" data-i18n="preset_24">A4 · 24 લેબલ (70 × 37 mm)</button>
+          <button type="button" id="preset-roll" data-preset="roll" data-i18n="preset_roll">રોલ · એક હરોળમાં 2 (50 × 25 mm)</button>
+          <button type="button" id="preset-custom" data-preset="custom" data-i18n="preset_custom">પોતાનું માપ</button>
         </div>
       </div>
       <div id="customBox" hidden style="margin-top:12px">
         <div class="fgrid">
-          <label class="field"><span data-i18n="c_page"></span><select id="c-page"><option value="a4" data-i18n="c_page_a4"></option><option value="roll" data-i18n="c_page_roll"></option></select></label>
-          <label class="field"><span data-i18n="c_w"></span><input id="c-w" type="number" min="10" max="200" step="0.1"></label>
-          <label class="field"><span data-i18n="c_h"></span><input id="c-h" type="number" min="8" max="280" step="0.1"></label>
-          <label class="field"><span data-i18n="c_cols"></span><input id="c-cols" type="number" min="1" max="12" step="1"></label>
-          <label class="field"><span data-i18n="c_rows"></span><input id="c-rows" type="number" min="1" max="40" step="1"></label>
-          <label class="field"><span data-i18n="c_top"></span><input id="c-top" type="number" min="0" max="60" step="0.1"></label>
-          <label class="field"><span data-i18n="c_left"></span><input id="c-left" type="number" min="0" max="60" step="0.1"></label>
-          <label class="field"><span data-i18n="c_gx"></span><input id="c-gx" type="number" min="0" max="30" step="0.1"></label>
-          <label class="field"><span data-i18n="c_gy"></span><input id="c-gy" type="number" min="0" max="30" step="0.1"></label>
+          <label class="field"><span data-i18n="c_page">કાગળ</span><select id="c-page"><option value="a4" data-i18n="c_page_a4">A4 શીટ</option><option value="roll" data-i18n="c_page_roll">લેબલ રોલ (દરેક પેજ પર એક હરોળ)</option></select></label>
+          <label class="field"><span data-i18n="c_w">લેબલની પહોળાઈ (mm)</span><input id="c-w" type="number" min="10" max="200" step="0.1"></label>
+          <label class="field"><span data-i18n="c_h">લેબલની ઊંચાઈ (mm)</span><input id="c-h" type="number" min="8" max="280" step="0.1"></label>
+          <label class="field"><span data-i18n="c_cols">એક હરોળમાં લેબલ</span><input id="c-cols" type="number" min="1" max="12" step="1"></label>
+          <label class="field"><span data-i18n="c_rows">શીટમાં હરોળ</span><input id="c-rows" type="number" min="1" max="40" step="1"></label>
+          <label class="field"><span data-i18n="c_top">ઉપરનો માર્જિન (mm)</span><input id="c-top" type="number" min="0" max="60" step="0.1"></label>
+          <label class="field"><span data-i18n="c_left">ડાબો માર્જિન (mm)</span><input id="c-left" type="number" min="0" max="60" step="0.1"></label>
+          <label class="field"><span data-i18n="c_gx">લેબલ વચ્ચે જગ્યા (mm)</span><input id="c-gx" type="number" min="0" max="30" step="0.1"></label>
+          <label class="field"><span data-i18n="c_gy">હરોળ વચ્ચે જગ્યા (mm)</span><input id="c-gy" type="number" min="0" max="30" step="0.1"></label>
         </div>
       </div>
       <p class="callout warning small" id="fitWarn" hidden style="margin-top:10px"></p>
       <details id="adjustBox" style="margin-top:12px">
-        <summary data-i18n="adjust_title"></summary>
+        <summary data-i18n="adjust_title">પ્રિન્ટર ગોઠવણ અને અડધી વપરાયેલી શીટ</summary>
         <div class="fgrid" style="margin-top:10px">
-          <label class="field"><span data-i18n="off_x"></span><input id="o-x" type="number" min="-15" max="15" step="0.5" value="0"></label>
-          <label class="field"><span data-i18n="off_y"></span><input id="o-y" type="number" min="-15" max="15" step="0.5" value="0"></label>
-          <label class="field"><span data-i18n="skip_label"></span><input id="o-skip" type="number" min="0" max="500" step="1" value="0"></label>
+          <label class="field"><span data-i18n="off_x">જમણે ખસેડો (mm, માઇનસ = ડાબે)</span><input id="o-x" type="number" min="-15" max="15" step="0.5" value="0"></label>
+          <label class="field"><span data-i18n="off_y">નીચે ખસેડો (mm, માઇનસ = ઉપર)</span><input id="o-y" type="number" min="-15" max="15" step="0.5" value="0"></label>
+          <label class="field"><span data-i18n="skip_label">પહેલેથી વપરાયેલા લેબલ છોડો</span><input id="o-skip" type="number" min="0" max="500" step="1" value="0"></label>
         </div>
-        <label class="check" style="margin-top:10px"><input type="checkbox" id="o-border"> <span data-i18n="border_label"></span></label>
+        <label class="check" style="margin-top:10px"><input type="checkbox" id="o-border"> <span data-i18n="border_label">લેબલની આસપાસ પાતળી કટિંગ લાઇન પ્રિન્ટ કરો</span></label>
       </details>
 
-      <h3 style="margin:16px 0 8px" data-i18n="items_title"></h3>
+      <h3 style="margin:16px 0 8px" data-i18n="items_title">શીટ પરના લેબલ</h3>
       <div class="scroll-x">
         <table class="table items-table">
-          <thead><tr><th data-i18n="col_name"></th><th data-i18n="col_code"></th><th data-i18n="col_mrp"></th><th data-i18n="col_copies"></th><th><span class="sr-only" data-i18n="col_actions"></span></th></tr></thead>
+          <thead><tr><th data-i18n="col_name">પ્રોડક્ટ</th><th data-i18n="col_code">બારકોડ</th><th data-i18n="col_mrp">MRP</th><th data-i18n="col_copies">લેબલ</th><th><span class="sr-only" data-i18n="col_actions">બદલો કે કાઢો</span></th></tr></thead>
           <tbody id="itemsBody"></tbody>
         </table>
       </div>
-      <p class="muted small" id="itemsEmpty" hidden data-i18n="items_empty"></p>
+      <p class="muted small" id="itemsEmpty" hidden data-i18n="items_empty">હજુ કોઈ પ્રોડક્ટ નથી. ઉપરથી ઉમેરો કે CSV ફાઇલ ઇમ્પોર્ટ કરો.</p>
       <p class="callout danger small" id="itemsErr" hidden></p>
       <div class="row" style="margin-top:12px">
-        <button type="button" class="btn" id="btnImport">📥 <span data-i18n="import_csv"></span></button>
-        <button type="button" class="btn btn-ghost" id="btnSampleCsv">📄 <span data-i18n="sample_csv"></span></button>
-        <button type="button" class="btn btn-ghost" id="btnClear">🗑️ <span data-i18n="clear_list"></span></button>
+        <button type="button" class="btn" id="btnImport">📥 <span data-i18n="import_csv">CSV ઇમ્પોર્ટ કરો</span></button>
+        <button type="button" class="btn btn-ghost" id="btnSampleCsv">📄 <span data-i18n="sample_csv">નમૂનો CSV</span></button>
+        <button type="button" class="btn btn-ghost" id="btnClear">🗑️ <span data-i18n="clear_list">યાદી ખાલી કરો</span></button>
       </div>
-      <p class="small muted" data-i18n="csv_hint" style="margin-top:8px"></p>
+      <p class="small muted" data-i18n="csv_hint" style="margin-top:8px">CSV ના કૉલમ: name, code, mrp, qty (અને જોઈએ તો batch, copies). Excel માં: File → Save As → CSV.</p>
 
       <div class="callout accent" style="margin-top:14px">
-        <p class="tip100 mb0" data-i18n="tip_100"></p>
+        <p class="tip100 mb0" data-i18n="tip_100">પ્રિન્ટ કરતી વખતે Scale 100% (કે &quot;Actual size&quot;) પસંદ કરો, &quot;Fit to page&quot; અને હેડર/ફૂટર બંધ કરો. પહેલાં સાદા કાગળ પર ટેસ્ટ કરો: તેને લેબલ શીટ પાછળ રાખી પ્રકાશમાં મેળવી જુઓ.</p>
       </div>
       <div class="row spread" style="margin-top:12px">
         <p class="mb0" id="sheetInfo" aria-live="polite"></p>
-        <button type="button" class="btn btn-primary btn-lg" id="btnPrint">🖨️ <span data-i18n="print_btn"></span></button>
+        <button type="button" class="btn btn-primary btn-lg" id="btnPrint">🖨️ <span data-i18n="print_btn">લેબલ પ્રિન્ટ કરો</span></button>
       </div>
       <div class="sheet-pages" id="sheetPages" style="margin-top:12px"></div>
     </section>
 
     <details class="card" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">કેવી રીતે વાપરવું / દુકાન માટે સૂચનો</strong></summary>
       <ul class="help-list">
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">12 અંકનો નંબર લખો અને EAN-13 પસંદ કરો: એપ 13મો ચેક ડિજિટ જાતે ઉમેરે છે. પૂરા 13 અંક લખો તો એપ ચકાસીને કહે છે કે કોઈ અંક ખોટો છે કે નહીં.</li>
+        <li data-i18n="help_2">890 થી શરૂ થતા EAN-13 નંબર ભારતના છે. મોટા સ્ટોરમાં વેચવા GS1 India પાસેથી પોતાના નંબર લેવા પડે; પોતાની દુકાન માટે RICE-1KG જેવો Code 128 SKU પૂરતો છે.</li>
+        <li data-i18n="help_3">પેક કરેલા ખોરાક પર MRP, ચોખ્ખું વજન, પેકિંગનો મહિનો, બેસ્ટ બિફોર, FSSAI નંબર અને ઉત્પાદકનું નામ-સરનામું જરૂરી છે. જે લાઇન લાગુ ન પડે, તેનું બોક્સ ખાલી રાખો.</li>
+        <li data-i18n="help_4">ઘણી પ્રોડક્ટ હોય તો Excel માં CSV બનાવો (name, code, mrp, qty, copies) અને ઇમ્પોર્ટ કરો. દરેક હરોળ શીટ પર લેબલ બની જાય છે.</li>
+        <li data-i18n="help_5">અડધી વપરાયેલી શીટ? &quot;પહેલેથી વપરાયેલા લેબલ છોડો&quot; માં સંખ્યા લખો. પ્રિન્ટ થોડી ખસી ગઈ હોય તો થોડા mm ખસેડીને ફરી પ્રિન્ટ કરો.</li>
+        <li data-i18n="help_6">સેંકડો લેબલ છાપતા પહેલાં એક ટેસ્ટ લેબલને તમારી બિલિંગ એપ કે કોઈ મફત બારકોડ સ્કેનર એપથી સ્કેન કરી જુઓ.</li>
       </ul>
     </details>
   </main>

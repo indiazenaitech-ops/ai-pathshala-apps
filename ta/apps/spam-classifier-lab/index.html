@@ -229,11 +229,11 @@
 </head>
 <body>
   <main id="app">
-    <h1 class="print-title" data-i18n="app_title"></h1>
+    <h1 class="print-title" data-i18n="app_title">ஸ்பேம் கண்டறியும் AI</h1>
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">சொற்களை எண்ணுவதன் மூலம் மட்டுமே ஸ்பேமையும் உண்மையான செய்திகளையும் பிரிக்க கணினிக்குக் கற்றுக்கொடுங்கள் (Naive Bayes). கணக்கின் ஒவ்வொரு படியையும் பாருங்கள், பிறகு அதை ஏமாற்றிப் பாருங்கள்.</p>
       <div class="row no-print">
-        <button type="button" class="btn btn-sm" id="proj-btn" aria-pressed="false"><span aria-hidden="true">📽️ </span><span data-i18n="projector"></span></button>
+        <button type="button" class="btn btn-sm" id="proj-btn" aria-pressed="false"><span aria-hidden="true">📽️ </span><span data-i18n="projector">புரொஜெக்டர் முறை</span></button>
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm btn-danger" id="reset-btn" data-i18n="reset"></button>
       </div>
@@ -241,16 +241,16 @@
 
     <!-- 1. Check a message -->
     <section class="card stack" id="check-card">
-      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1"></span></h2>
+      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1">செய்தியைச் சரிபாருங்கள்</span></h2>
       <div>
-        <label for="msg" class="lbl" data-i18n="msg_label"></label>
+        <label for="msg" class="lbl" data-i18n="msg_label">செய்தியை எழுதுங்கள் அல்லது ஒட்டுங்கள்</label>
         <textarea id="msg" class="no-i18n" rows="2" maxlength="300" autocomplete="off" spellcheck="false" data-i18n-placeholder="msg_ph"></textarea>
       </div>
       <div class="tries no-print" id="tries-wrap">
-        <span class="lbl mb0" data-i18n="try_t"></span>
-        <button type="button" class="chip try-chip" data-kind="spam" data-i18n="try_spam"></button>
-        <button type="button" class="chip try-chip" data-kind="ham" data-i18n="try_ham"></button>
-        <button type="button" class="chip try-chip" data-kind="tricky" data-i18n="try_tricky"></button>
+        <span class="lbl mb0" data-i18n="try_t">அல்லது இவற்றில் ஒன்றை முயலுங்கள்:</span>
+        <button type="button" class="chip try-chip" data-kind="spam" data-i18n="try_spam">லாட்டரி செய்தி</button>
+        <button type="button" class="chip try-chip" data-kind="ham" data-i18n="try_ham">வகுப்பு ரத்து</button>
+        <button type="button" class="chip try-chip" data-kind="tricky" data-i18n="try_tricky">குழப்பும் செய்தி</button>
         <button type="button" class="chip" id="msg-clear" data-i18n="clear"></button>
       </div>
       <p class="callout small mb0" id="check-status" hidden></p>
@@ -260,69 +260,69 @@
           <div class="v-main"><div class="v-name" id="v-name"></div><div class="v-sure" id="v-sure"></div></div>
         </div>
         <div class="pbars">
-          <div class="pbar-row"><span class="pbar-lab" data-i18n="chance_spam"></span><div class="pbar spam"><span id="pbar-spam"></span></div><b class="pbar-pct num" id="p-spam"></b></div>
-          <div class="pbar-row"><span class="pbar-lab" data-i18n="chance_ham"></span><div class="pbar ham"><span id="pbar-ham"></span></div><b class="pbar-pct num" id="p-ham"></b></div>
+          <div class="pbar-row"><span class="pbar-lab" data-i18n="chance_spam">ஸ்பேம் ஆக வாய்ப்பு</span><div class="pbar spam"><span id="pbar-spam"></span></div><b class="pbar-pct num" id="p-spam"></b></div>
+          <div class="pbar-row"><span class="pbar-lab" data-i18n="chance_ham">ஸ்பேம் அல்லாத வாய்ப்பு</span><div class="pbar ham"><span id="pbar-ham"></span></div><b class="pbar-pct num" id="p-ham"></b></div>
         </div>
       </div>
       <div id="explain" class="stack">
-        <h3 class="mb0" data-i18n="evidence_t"></h3>
-        <p class="muted small mb0" data-i18n="evidence_hint"></p>
+        <h3 class="mb0" data-i18n="evidence_t">சான்று, சொல் சொல்லாக</h3>
+        <p class="muted small mb0" data-i18n="evidence_hint">சிவப்புப் பட்டை = இந்தச் சொல் ஸ்பேம் பக்கம் இழுக்கிறது. பச்சைப் பட்டை = உண்மையான செய்தி பக்கம். நீளம் = அதிக வலிமை. சாம்பல் = வடிகட்டி இதுவரை பார்க்காத புதிய சொல், அதனால் விடப்பட்டது.</p>
         <div class="ev-list no-i18n" id="bars"></div>
         <div class="legend">
-          <span><span class="sw" style="--sc: var(--spam)"></span><span data-i18n="lbl_spam"></span></span>
-          <span><span class="sw" style="--sc: var(--ham)"></span><span data-i18n="lbl_ham"></span></span>
-          <span><span class="sw" style="--sc: var(--border)"></span><span data-i18n="new_word"></span></span>
+          <span><span class="sw" style="--sc: var(--spam)"></span><span data-i18n="lbl_spam">ஸ்பேம்</span></span>
+          <span><span class="sw" style="--sc: var(--ham)"></span><span data-i18n="lbl_ham">ஸ்பேம் இல்லை</span></span>
+          <span><span class="sw" style="--sc: var(--border)"></span><span data-i18n="new_word">புதிய சொல், விடப்பட்டது</span></span>
         </div>
         <details id="maths" open>
-          <summary data-i18n="maths_t"></summary>
+          <summary data-i18n="maths_t">படிப்படியாக: கணக்கு</summary>
           <div class="stack" id="maths-body"></div>
         </details>
       </div>
-      <p class="muted tiny mb0" data-i18n="privacy"></p>
+      <p class="muted tiny mb0" data-i18n="privacy">எல்லாமே உங்கள் உலாவியில்தான் நடக்கிறது. நீங்கள் எழுதும் செய்திகள் இந்தச் சாதனத்தை விட்டு வெளியே போவதில்லை.</p>
     </section>
 
     <!-- 2. Teach it -->
     <section class="card stack" id="data-card">
-      <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2"></span></h2>
-      <p class="muted small mb0" data-i18n="step2_hint"></p>
+      <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2">கற்றுக்கொடுங்கள்: பயிற்சிச் செய்திகள்</span></h2>
+      <p class="muted small mb0" data-i18n="step2_hint">வடிகட்டி இந்தச் செய்திகளிலிருந்து மட்டுமே கற்கிறது. உங்கள் செய்திகளைச் சேருங்கள், சிலவற்றை நீக்குங்கள், மேலே உள்ள முடிவு உடனே மாறுவதைப் பாருங்கள்.</p>
       <div class="labs">
         <div class="lab-card spam">
-          <div class="lab-head"><span class="lab-emoji" aria-hidden="true">🚫</span><span class="lab-name" data-i18n="lbl_spam"></span><span class="lab-count" id="cnt-spam" data-n="0"></span></div>
+          <div class="lab-head"><span class="lab-emoji" aria-hidden="true">🚫</span><span class="lab-name" data-i18n="lbl_spam">ஸ்பேம்</span><span class="lab-count" id="cnt-spam" data-n="0"></span></div>
           <ul class="msg-list no-i18n" id="list-spam"></ul>
         </div>
         <div class="lab-card ham">
-          <div class="lab-head"><span class="lab-emoji" aria-hidden="true">✅</span><span class="lab-name" data-i18n="lbl_ham"></span><span class="lab-count" id="cnt-ham" data-n="0"></span></div>
+          <div class="lab-head"><span class="lab-emoji" aria-hidden="true">✅</span><span class="lab-name" data-i18n="lbl_ham">ஸ்பேம் இல்லை</span><span class="lab-count" id="cnt-ham" data-n="0"></span></div>
           <ul class="msg-list no-i18n" id="list-ham"></ul>
         </div>
       </div>
       <div class="no-print">
-        <label for="add-input" class="lbl" data-i18n="add_as"></label>
+        <label for="add-input" class="lbl" data-i18n="add_as">புதிய செய்தியை இப்படிச் சேர்</label>
         <div class="add-row">
           <div class="seg" role="group" data-i18n-aria-label="add_as">
-            <button type="button" id="add-spam" aria-pressed="true" data-i18n="lbl_spam"></button>
-            <button type="button" id="add-ham" aria-pressed="false" data-i18n="lbl_ham"></button>
+            <button type="button" id="add-spam" aria-pressed="true" data-i18n="lbl_spam">ஸ்பேம்</button>
+            <button type="button" id="add-ham" aria-pressed="false" data-i18n="lbl_ham">ஸ்பேம் இல்லை</button>
           </div>
           <input type="text" id="add-input" class="no-i18n" maxlength="300" autocomplete="off" spellcheck="false" data-i18n-placeholder="add_ph">
           <button type="button" class="btn btn-primary" id="add-btn" data-i18n="add"></button>
         </div>
       </div>
       <div class="row data-tools no-print">
-        <button type="button" class="btn btn-accent" id="samples-btn" data-i18n="load_samples"></button>
+        <button type="button" class="btn btn-accent" id="samples-btn" data-i18n="load_samples">மாதிரிச் செய்திகள்</button>
         <div class="row">
-          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv"></button>
-          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv"></button>
-          <button type="button" class="btn btn-sm btn-danger" id="clear-btn" data-i18n="clear_all"></button>
+          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv">CSV ஏற்று</button>
+          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv">CSV பதிவிறக்கு</button>
+          <button type="button" class="btn btn-sm btn-danger" id="clear-btn" data-i18n="clear_all">எல்லாம் அழி</button>
         </div>
       </div>
-      <p class="muted tiny mb0 no-print" data-i18n="samples_note"></p>
-      <p class="muted tiny mb0 no-print" data-i18n="csv_hint"></p>
+      <p class="muted tiny mb0 no-print" data-i18n="samples_note">மாதிரிச் செய்திகள் செயலியின் மொழியில் தெரியும். நீங்கள் சேர்க்கும் செய்திகள் மொழிபெயர்க்கப்படுவதில்லை.</p>
+      <p class="muted tiny mb0 no-print" data-i18n="csv_hint">text, label (spam அல்லது ham) நெடுவரிசைகள் உள்ள CSV கோப்பு. இது Excel அல்லது Google Sheets-இல் திறக்கும்.</p>
       <div class="panel exp" id="exp">
-        <h3><span aria-hidden="true">🎯</span><span data-i18n="exp_t"></span></h3>
-        <p class="small" data-i18n="exp_d"></p>
+        <h3><span aria-hidden="true">🎯</span><span data-i18n="exp_t">சோதனை: “வென்றீர்கள்” எப்போதும் ஸ்பேமா?</span></h3>
+        <p class="small" data-i18n="exp_d">குழப்பும் செய்தி நண்பரின் உண்மையான செய்தி, ஆனால் அதில் “வாழ்த்துகள்”, “வென்றாய்”, “பரிசு” போன்ற சொற்கள் உள்ளன; வடிகட்டி இவற்றை ஸ்பேமில் மட்டுமே பார்த்துள்ளது. இந்தச் சொற்கள் உள்ள 3 உண்மையான செய்திகளைச் சேர்த்து என்ன நடக்கிறது என்று பாருங்கள்.</p>
         <p class="small tricky-q no-i18n" id="exp-msg"></p>
         <div class="exp-btns">
-          <button type="button" class="btn btn-accent" id="exp-btn" data-i18n="exp_btn"></button>
-          <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩ </span><span data-i18n="undo_exp"></span></button>
+          <button type="button" class="btn btn-accent" id="exp-btn" data-i18n="exp_btn">3 உண்மையான செய்திகளைச் சேர்</button>
+          <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩ </span><span data-i18n="undo_exp">சோதனையைத் திரும்பப் பெறு</span></button>
         </div>
         <div id="exp-res" aria-live="polite"></div>
       </div>
@@ -330,46 +330,46 @@
 
     <!-- 3. How good is it? -->
     <section class="card stack" id="eval-card">
-      <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3"></span></h2>
-      <label class="check no-print"><input type="checkbox" id="holdout-chk"><span data-i18n="holdout_label"></span></label>
+      <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3">இது எவ்வளவு நல்லது? நியாயமான சோதனை</span></h2>
+      <label class="check no-print"><input type="checkbox" id="holdout-chk"><span data-i18n="holdout_label">மாதிரிச் செய்திகளில் 25% ஐ சோதனைக்காகத் தனியாக வையுங்கள்; வடிகட்டி அவற்றிலிருந்து ஒருபோதும் கற்காது</span></label>
       <div class="stats">
-        <div class="stat"><b id="st-train">0</b><span data-i18n="st_train"></span></div>
-        <div class="stat"><b id="st-test">0</b><span data-i18n="st_test"></span></div>
-        <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab"></span></div>
-        <div class="stat"><b id="st-acc" data-v="">–</b><span data-i18n="st_acc"></span></div>
+        <div class="stat"><b id="st-train">0</b><span data-i18n="st_train">பயிற்சிச் செய்திகள்</span></div>
+        <div class="stat"><b id="st-test">0</b><span data-i18n="st_test">சோதனைச் செய்திகள்</span></div>
+        <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab">தெரிந்த தனிச் சொற்கள்</span></div>
+        <div class="stat"><b id="st-acc" data-v="">–</b><span data-i18n="st_acc">சோதனையில் சரி</span></div>
       </div>
-      <p class="callout warning small mb0" id="cheat-note" data-i18n="cheat_note" hidden></p>
-      <p class="callout small mb0" id="acc-none" data-i18n="acc_none" hidden></p>
+      <p class="callout warning small mb0" id="cheat-note" data-i18n="cheat_note" hidden>நியாயமான சோதனை அணைந்துள்ளது, அதனால் வடிகட்டி கற்ற அதே செய்திகளிலேயே சோதிக்கப்படுகிறது, ஒரு மாணவர் தன் வீட்டுப்பாடத்தைத் தானே திருத்துவது போல. மதிப்பெண் உண்மையை விட நன்றாகத் தெரியும்.</p>
+      <p class="callout small mb0" id="acc-none" data-i18n="acc_none" hidden>சோதனைச் செய்திகள் இல்லை. மேலே நியாயமான சோதனையை இயக்குங்கள், அல்லது மாதிரிச் செய்திகளை ஏற்றுங்கள்.</p>
       <div class="eval-grid" id="eval-grid">
         <div class="stack">
-          <h3 class="mb0" data-i18n="cm_t"></h3>
+          <h3 class="mb0" data-i18n="cm_t">குழப்ப அணி (confusion matrix)</h3>
           <table class="cm" id="cm">
             <thead>
               <tr>
                 <th></th>
-                <th><span data-i18n="cm_said"></span><span class="lbl2" data-i18n="lbl_spam"></span></th>
-                <th><span data-i18n="cm_said"></span><span class="lbl2" data-i18n="lbl_ham"></span></th>
+                <th><span data-i18n="cm_said">வடிகட்டி சொன்னது</span><span class="lbl2" data-i18n="lbl_spam">ஸ்பேம்</span></th>
+                <th><span data-i18n="cm_said">வடிகட்டி சொன்னது</span><span class="lbl2" data-i18n="lbl_ham">ஸ்பேம் இல்லை</span></th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th class="rowh"><span data-i18n="cm_real"></span><span class="lbl2" data-i18n="lbl_spam"></span></th>
-                <td class="cell good" id="cm-tp" data-n="0"><span class="abbr">TP</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_tp"></span></td>
-                <td class="cell bad" id="cm-fn" data-n="0"><span class="abbr">FN</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_fn"></span></td>
+                <th class="rowh"><span data-i18n="cm_real">உண்மையில்</span><span class="lbl2" data-i18n="lbl_spam">ஸ்பேம்</span></th>
+                <td class="cell good" id="cm-tp" data-n="0"><span class="abbr">TP</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_tp">ஸ்பேம் பிடிபட்டது</span></td>
+                <td class="cell bad" id="cm-fn" data-n="0"><span class="abbr">FN</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_fn">ஸ்பேம் தப்பியது</span></td>
               </tr>
               <tr>
-                <th class="rowh"><span data-i18n="cm_real"></span><span class="lbl2" data-i18n="lbl_ham"></span></th>
-                <td class="cell bad" id="cm-fp" data-n="0"><span class="abbr">FP</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_fp"></span></td>
-                <td class="cell good" id="cm-tn" data-n="0"><span class="abbr">TN</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_tn"></span></td>
+                <th class="rowh"><span data-i18n="cm_real">உண்மையில்</span><span class="lbl2" data-i18n="lbl_ham">ஸ்பேம் இல்லை</span></th>
+                <td class="cell bad" id="cm-fp" data-n="0"><span class="abbr">FP</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_fp">உண்மைச் செய்தி தடுக்கப்பட்டது</span></td>
+                <td class="cell good" id="cm-tn" data-n="0"><span class="abbr">TN</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_tn">உண்மைச் செய்தி சென்றது</span></td>
               </tr>
             </tbody>
           </table>
           <div class="pr-lines"><div id="pr-line"></div><div id="rc-line"></div></div>
-          <div class="row no-print"><button type="button" class="btn btn-sm" id="reshuffle-btn" data-i18n="reshuffle"></button></div>
+          <div class="row no-print"><button type="button" class="btn btn-sm" id="reshuffle-btn" data-i18n="reshuffle">வேறு சோதனைச் செய்திகளைத் தேர்</button></div>
         </div>
         <div class="stack">
           <h3 class="mb0" id="mist-sum"></h3>
-          <p class="callout success small mb0" id="no-mist" data-i18n="no_mistakes" hidden></p>
+          <p class="callout success small mb0" id="no-mist" data-i18n="no_mistakes" hidden>சோதனைச் செய்திகளில் தவறே இல்லை. கடினமான தொகுப்புக்கு “வேறு சோதனைச் செய்திகளைத் தேர்” அழுத்துங்கள்.</p>
           <ul class="mist-list" id="mist-list"></ul>
         </div>
       </div>
@@ -377,45 +377,45 @@
 
     <!-- 4. Peek inside -->
     <section class="card stack" id="peek-card">
-      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="peek_t"></span></h2>
-      <p class="muted small mb0" data-i18n="peek_note"></p>
-      <p class="formula" data-i18n="formula_word"></p>
+      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="peek_t">உள்ளே எட்டிப் பாருங்கள்: சொல் எண்ணிக்கைகளே முழு மாதிரி</span></h2>
+      <p class="muted small mb0" data-i18n="peek_note">பயிற்சி என்பது எண்ணுவது மட்டுமே. வடிகட்டிக்குத் தெரிந்த எல்லாமே இந்த அட்டவணையில் உள்ளது.</p>
+      <p class="formula" data-i18n="formula_word">P(சொல் | வகை) = (அந்த வகையில் சொல் வந்த தடவைகள் + 1) ÷ (அந்த வகையின் மொத்தச் சொற்கள் + V)</p>
       <p class="muted small mb0" id="vocab-line"></p>
       <div class="peek-tools no-print">
         <input type="search" id="peek-filter" class="no-i18n" data-i18n-placeholder="peek_filter" data-i18n-aria-label="peek_filter" autocomplete="off">
         <div class="seg" role="group" data-i18n-aria-label="sort_by">
-          <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common"></button>
-          <button type="button" id="sort-spam" aria-pressed="false" data-i18n="sort_spam"></button>
-          <button type="button" id="sort-ham" aria-pressed="false" data-i18n="sort_ham"></button>
+          <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common">அதிகம் வருபவை</button>
+          <button type="button" id="sort-spam" aria-pressed="false" data-i18n="sort_spam">ஸ்பேம் அடையாளங்கள்</button>
+          <button type="button" id="sort-ham" aria-pressed="false" data-i18n="sort_ham">உண்மைச் செய்தி அடையாளங்கள்</button>
         </div>
       </div>
       <p class="muted small mb0" id="peek-count"></p>
       <div class="scroll-x"><table class="table peek no-i18n" id="peek-table"></table></div>
-      <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more"></button>
+      <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more">மேலும் சொற்களைக் காட்டு</button>
     </section>
 
     <!-- 5. What is happening inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside_t"></h2>
+      <h2 data-i18n="inside_t">உள்ளே என்ன நடக்கிறது?</h2>
       <div class="grid-3 inside-grid">
-        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t"></span></h3><p data-i18n="in1"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t"></span></h3><p data-i18n="in2"></p><p class="formula" data-i18n="formula"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">➕</span><span data-i18n="in3_t"></span></h3><p data-i18n="in3"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">📉</span><span data-i18n="in4_t"></span></h3><p data-i18n="in4"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in5_t"></span></h3><p data-i18n="in5"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">📬</span><span data-i18n="in6_t"></span></h3><p data-i18n="in6"></p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t">இது சொற்களை மட்டுமே எண்ணுகிறது</span></h3><p data-i18n="in1">பயிற்சி என்பது எண்ணுவதுதான்: ஒவ்வொரு சொல்லும் ஸ்பேம் செய்திகளில் எத்தனை முறை, உண்மையானவற்றில் எத்தனை முறை? “லாட்டரி” ஸ்பேமில் குவிகிறது, “வீட்டுப்பாடம்” உண்மையில்.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t">Bayes விதி</span></h3><p data-i18n="in2">புதிய செய்திக்கு, ஒவ்வொரு வகையின் தொடக்க வாய்ப்பை அந்த வகையில் ஒவ்வொரு சொல்லின் வாய்ப்பால் பெருக்குகிறது. பெரிய விடை உள்ள வகை வெல்லும். இதுவே Naive Bayes, முதல் மின்னஞ்சல் ஸ்பேம் வடிகட்டிகளின் முறை.</p><p class="formula" data-i18n="formula">P(ஸ்பேம் | செய்தி) ∝ P(ஸ்பேம்) × P(சொல்₁ | ஸ்பேம்) × P(சொல்₂ | ஸ்பேம்) × …</p></div>
+        <div class="panel"><h3><span aria-hidden="true">➕</span><span data-i18n="in3_t">Laplace smoothing: +1 உத்தி</span></h3><p data-i18n="in3">ஒரு சொல் ஒரு வகையில் ஒருமுறையும் வரவில்லை என்றால் அதன் வாய்ப்பு 0 ஆகி முழுப் பெருக்கலும் 0 ஆகிவிடும். ஒவ்வொரு எண்ணிக்கையுடனும் 1 கூட்டினால் (பின்னத்தின் கீழே V கூட்டினால்) ஒவ்வொரு வாய்ப்பும் பூஜ்ஜியத்துக்குச் சற்று மேலே இருக்கும்.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">📉</span><span data-i18n="in4_t">மடக்கை (log) ஏன்?</span></h3><p data-i18n="in4">0.003 போன்ற இருபது எண்களைப் பெருக்கினால் 0.000000000000000000000000000001 போன்ற ஒன்று கிடைக்கும். கணினிகள் இவ்வளவு சிறிய எண்களை இழந்துவிடும், அதனால் உண்மையான வடிகட்டிகள் log மதிப்புகளைக் கூட்டுகின்றன. வெற்றியாளர் மாறுவதில்லை.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in5_t">“Naive” (அப்பாவி) ஏன்?</span></h3><p data-i18n="in5">இது ஒவ்வொரு சொல்லையும் தனியாகக் கருதுகிறது, வரிசையையும் பொருளையும் பார்ப்பதில்லை. “போட்டியில் வென்றேன்”, “லாட்டரியில் வென்றேன்” இரண்டிலும் “வென்” மட்டுமே. அதனால்தான் குழப்பும் செய்தி இதை ஏமாற்றுகிறது, பலவிதமான எடுத்துக்காட்டுகள் உதவுகின்றன.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">📬</span><span data-i18n="in6_t">உண்மையான ஸ்பேம் வடிகட்டிகள்</span></h3><p data-i18n="in6">Gmail, WhatsApp இதே யோசனையுடன் இன்னும் பலவற்றையும் பயன்படுத்துகின்றன: அனுப்புநர் வரலாறு, இணைப்புகள், படங்கள், பெரிய நரம்பியல் வலைப்பின்னல்கள். ஆனால் பாடம் ஒன்றுதான்: வடிகட்டி அது கற்ற எடுத்துக்காட்டுகள் அளவுக்குத்தான் நல்லது.</p></div>
       </div>
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">பயன்படுத்துவது எப்படி · வகுப்புக்கான யோசனைகள்</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">“செய்தியைச் சரிபாருங்கள்” பகுதியில் எந்தச் செய்தியையும் எழுதுங்கள். முடிவு, சொல் பட்டைகள், படிப்படியான கணக்கு எல்லாம் எழுதும்போதே மாறும்.</li>
+        <li data-i18n="tip2">“படிப்படியாக: கணக்கு” திறந்து, “உள்ளே எட்டிப் பாருங்கள்” எண்ணிக்கைகளைக் கொண்டு ஒரு பின்னத்தைக் கையால் சரிபாருங்கள். இது CBSE 10ஆம் வகுப்பு AI evaluation பகுதிக்கும் 11–12 Naive Bayes பாடத்துக்கும் பொருந்தும்.</li>
+        <li data-i18n="tip3">வகுப்புச் செயல்பாடு: இரண்டு அணிகள். அணி A வடிகட்டி ஸ்பேம் என்று சொல்லும் 5 உண்மையான செய்திகளை எழுதட்டும்; அணி B தப்பிச் செல்லும் 5 ஸ்பேம்களை எழுதட்டும். அவற்றைப் பயிற்சிச் செய்திகளில் சேர்த்து எந்த அணியின் உத்தி வேலை செய்வதை நிறுத்துகிறது என்று பாருங்கள்.</li>
+        <li data-i18n="tip4">நியாயமான சோதனையை அணைத்து இயக்குங்கள். பயிற்சிச் செய்திகளிலேயே சோதித்தால் மதிப்பெண் ஏன் அதிகமாக வருகிறது என்று விவாதியுங்கள்.</li>
+        <li data-i18n="tip5">செய்திகளை CSV ஆகப் பதிவிறக்குங்கள், மாணவர்கள் வீட்டில் 20 புதிய செய்திகளுக்கு லேபிள் இடட்டும், அடுத்த வகுப்பில் ஏற்றுங்கள். எதுவும் பதிவேற்றப்படுவதில்லை: எல்லாம் இந்தச் சாதனத்திலேயே இருக்கும்.</li>
+        <li data-i18n="tip6">விவாதியுங்கள்: “வாழ்த்துகள், நீ வினாடி வினாவில் வென்றாய்!” போன்ற உண்மையான செய்திக்கு என்ன ஆகும்? தவறாகத் தடுக்கப்பட்ட செய்தியின் (false positive) விலை என்ன? தப்பிய ஸ்பேமின் (false negative) விலை என்ன?</li>
       </ul>
     </details>
   </main>

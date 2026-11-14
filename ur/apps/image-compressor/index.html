@@ -176,23 +176,23 @@
 </head>
 <body>
   <main id="app" data-busy="0">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ایک ساتھ 100 تصویروں کا سائز بدلیں، انہیں ہلکا کریں، واٹر مارک لگائیں اور نام بدلیں: Instagram، WhatsApp اسٹیٹس، YouTube، Amazon، Flipkart اور آپ کی ویب سائٹ کے لیے۔</p>
 
     <div class="callout success ic-privacy" role="note">
       <span class="ic-lock" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">آپ کی فائلیں اس ڈیوائس سے باہر نہیں جاتیں۔</strong> <span data-i18n="privacy_body">تصویریں اسی براؤزر کے اندر بنتی ہیں، کچھ بھی اپ لوڈ نہیں ہوتا۔ اس لیے نئے پروڈکٹ کی تصویریں، کلائنٹ کا کام اور گھر والوں کی تصویریں محفوظ رہتی ہیں۔ GPS لوکیشن جیسی چھپی معلومات ہٹا دی جاتی ہیں۔</span></p>
     </div>
 
     <section class="card ic-drop" id="drop" tabindex="0" aria-labelledby="dropTitle">
       <div class="ic-drop-ico" aria-hidden="true">🖼️</div>
       <div class="ic-drop-txt">
-        <strong id="dropTitle" data-i18n="drop_title"></strong>
-        <span class="small muted" data-i18n="drop_hint"></span>
+        <strong id="dropTitle" data-i18n="drop_title">تصویریں یہاں چھوڑیں</strong>
+        <span class="small muted" data-i18n="drop_hint">JPG, PNG, WebP, HEIC (iPhone), GIF, AVIF. ایک بار میں 100 تک۔</span>
         <div class="tiny muted ic-kbd" data-i18n-html="drop_keys"></div>
       </div>
       <div class="ic-drop-btns">
-        <button class="btn btn-primary btn-lg" id="pickBtn" type="button"><span aria-hidden="true">＋</span> <span data-i18n="pick_photos"></span></button>
-        <button class="btn" id="sampleBtn" type="button" data-i18n="try_samples"></button>
+        <button class="btn btn-primary btn-lg" id="pickBtn" type="button"><span aria-hidden="true">＋</span> <span data-i18n="pick_photos">تصویریں چنیں</span></button>
+        <button class="btn" id="sampleBtn" type="button" data-i18n="try_samples">نمونہ تصویریں آزمائیں</button>
       </div>
       <input type="file" id="fileInput" multiple accept="image/*,.heic,.heif,.avif,.webp" hidden>
     </section>
@@ -206,52 +206,52 @@
       <!-- ============ settings ============ -->
       <section class="card ic-settings" aria-label="settings" data-i18n-aria-label="settings_aria">
         <div class="ic-sec">
-          <h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_size"></span></h2>
+          <h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_size">سائز</span></h2>
           <div id="presetGrid"></div>
           <div id="customBox" hidden>
             <div class="ic-two">
-              <label class="field"><span data-i18n="custom_w"></span><input type="number" id="customW" min="1" max="20000" inputmode="numeric"></label>
-              <label class="field"><span data-i18n="custom_h"></span><input type="number" id="customH" min="1" max="20000" inputmode="numeric"></label>
+              <label class="field"><span data-i18n="custom_w">چوڑائی (px)</span><input type="number" id="customW" min="1" max="20000" inputmode="numeric"></label>
+              <label class="field"><span data-i18n="custom_h">اونچائی (px)</span><input type="number" id="customH" min="1" max="20000" inputmode="numeric"></label>
             </div>
-            <p class="tiny muted mb0" data-i18n="custom_hint"></p>
+            <p class="tiny muted mb0" data-i18n="custom_hint">ہر تصویر کی شکل ویسی ہی رکھنے کے لیے ایک خانہ خالی چھوڑ دیں۔</p>
           </div>
           <p class="callout ic-note mb0" id="presetNote"></p>
         </div>
 
         <div class="ic-sec" id="modeSec">
-          <h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_fit"></span></h2>
+          <h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_fit">شکل</span></h2>
           <div class="seg ic-seg" role="group" data-i18n-aria-label="h_fit" aria-label="fit">
-            <button type="button" id="mode-fit" data-mode="fit" data-i18n="mode_fit"></button>
-            <button type="button" id="mode-fill" data-mode="fill" data-i18n="mode_fill"></button>
-            <button type="button" id="mode-exact" data-mode="exact" data-i18n="mode_exact"></button>
+            <button type="button" id="mode-fit" data-mode="fit" data-i18n="mode_fit">پوری تصویر</button>
+            <button type="button" id="mode-fill" data-mode="fill" data-i18n="mode_fill">بھریں (کاٹیں)</button>
+            <button type="button" id="mode-exact" data-mode="exact" data-i18n="mode_exact">کھینچیں</button>
           </div>
           <p class="small muted mb0" id="modeHint"></p>
           <div id="fitOpts" class="stack">
             <div class="field">
-              <span data-i18n="bg_label"></span>
+              <span data-i18n="bg_label">بیک گراؤنڈ</span>
               <div class="seg ic-seg" role="group" data-i18n-aria-label="bg_label" aria-label="background">
-                <button type="button" id="bg-color" data-bg="color" data-i18n="bg_color"></button>
-                <button type="button" id="bg-blur" data-bg="blur" data-i18n="bg_blur"></button>
-                <button type="button" id="bg-transparent" data-bg="transparent" data-i18n="bg_transparent"></button>
+                <button type="button" id="bg-color" data-bg="color" data-i18n="bg_color">رنگ</button>
+                <button type="button" id="bg-blur" data-bg="blur" data-i18n="bg_blur">دھندلی تصویر</button>
+                <button type="button" id="bg-transparent" data-bg="transparent" data-i18n="bg_transparent">شفاف</button>
               </div>
             </div>
             <div class="ic-colorrow" id="colorRow">
-              <label class="check" for="bgColor"><span data-i18n="bg_pick"></span></label>
+              <label class="check" for="bgColor"><span data-i18n="bg_pick">بیک گراؤنڈ کا رنگ</span></label>
               <input type="color" id="bgColor" value="#ffffff">
-              <button type="button" class="chip" data-color="#ffffff" data-i18n="c_white"></button>
-              <button type="button" class="chip" data-color="#000000" data-i18n="c_black"></button>
+              <button type="button" class="chip" data-color="#ffffff" data-i18n="c_white">سفید</button>
+              <button type="button" class="chip" data-color="#000000" data-i18n="c_black">کالا</button>
             </div>
-            <label class="field"><span><span data-i18n="margin_label"></span></span>
+            <label class="field"><span><span data-i18n="margin_label">تصویر کے چاروں طرف خالی جگہ</span></span>
               <span class="ic-rangerow"><input type="range" id="margin" min="0" max="30" step="1"><output id="marginOut" for="margin"></output></span>
             </label>
           </div>
         </div>
         <div class="ic-sec" id="enlargeSec" hidden>
-          <label class="check"><input type="checkbox" id="noEnlarge"> <span data-i18n="no_enlarge"></span></label>
+          <label class="check"><input type="checkbox" id="noEnlarge"> <span data-i18n="no_enlarge">چھوٹی تصویروں کو بڑا نہ کریں</span></label>
         </div>
 
         <div class="ic-sec">
-          <h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_format"></span></h2>
+          <h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_format">فائل کی قسم اور کوالٹی</span></h2>
           <div class="seg ic-seg no-i18n" role="group" id="fmtSeg" aria-label="format" data-i18n-aria-label="h_format">
             <button type="button" id="fmt-jpg" data-fmt="jpg">JPG</button>
             <button type="button" id="fmt-webp" data-fmt="webp">WebP</button>
@@ -260,16 +260,16 @@
           </div>
           <p class="small muted mb0" id="fmtHint"></p>
           <div class="seg ic-seg" role="group" data-i18n-aria-label="cm_label" aria-label="compress">
-            <button type="button" id="cm-quality" data-cm="quality" data-i18n="cm_quality"></button>
-            <button type="button" id="cm-size" data-cm="size" data-i18n="cm_size"></button>
+            <button type="button" id="cm-quality" data-cm="quality" data-i18n="cm_quality">کوالٹی سے</button>
+            <button type="button" id="cm-size" data-cm="size" data-i18n="cm_size">فائل سائز سے</button>
           </div>
           <div id="qualityBox" class="field">
-            <span data-i18n="quality_label"></span>
+            <span data-i18n="quality_label">کوالٹی</span>
             <span class="ic-rangerow"><input type="range" id="quality" min="10" max="100" step="1"><output id="qualityOut" for="quality"></output></span>
-            <span class="hint" data-i18n="quality_hint"></span>
+            <span class="hint" data-i18n="quality_hint">زیادہ تر تصویروں میں 75–85 پر فرق نظر نہیں آتا اور کافی جگہ بچتی ہے۔</span>
           </div>
           <div id="sizeBox" class="stack" hidden>
-            <label class="field"><span data-i18n="target_label"></span>
+            <label class="field"><span data-i18n="target_label">زیادہ سے زیادہ فائل سائز (KB)</span>
               <input type="number" id="targetKB" min="5" max="50000" step="1" inputmode="numeric">
             </label>
             <div class="ic-chips no-i18n" id="kbChips">
@@ -285,46 +285,46 @@
 
         <div class="ic-sec">
           <details class="ic-det" id="wmDet">
-            <summary class="ic-sum"><h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_wm"></span></h2> <span class="badge" id="wmBadge"></span></summary>
+            <summary class="ic-sum"><h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_wm">واٹر مارک</span></h2> <span class="badge" id="wmBadge"></span></summary>
             <div>
               <div class="seg ic-seg" role="group" data-i18n-aria-label="h_wm" aria-label="watermark">
-                <button type="button" id="wm-none" data-wm="none" data-i18n="wm_none"></button>
-                <button type="button" id="wm-text" data-wm="text" data-i18n="wm_text"></button>
-                <button type="button" id="wm-logo" data-wm="logo" data-i18n="wm_logo"></button>
+                <button type="button" id="wm-none" data-wm="none" data-i18n="wm_none">کوئی نہیں</button>
+                <button type="button" id="wm-text" data-wm="text" data-i18n="wm_text">تحریر</button>
+                <button type="button" id="wm-logo" data-wm="logo" data-i18n="wm_logo">لوگو</button>
               </div>
               <div id="wmTextBox" class="stack" hidden>
-                <label class="field"><span data-i18n="wm_text_label"></span>
+                <label class="field"><span data-i18n="wm_text_label">واٹر مارک کی تحریر</span>
                   <input type="text" id="wmText" class="no-i18n" maxlength="80" data-i18n-placeholder="wm_placeholder">
                 </label>
                 <div class="ic-colorrow">
-                  <label class="check" for="wmColor"><span data-i18n="wm_color"></span></label>
+                  <label class="check" for="wmColor"><span data-i18n="wm_color">تحریر کا رنگ</span></label>
                   <input type="color" id="wmColor" value="#ffffff">
                 </div>
-                <label class="field"><span data-i18n="wm_size"></span>
+                <label class="field"><span data-i18n="wm_size">تحریر کا سائز</span>
                   <span class="ic-rangerow"><input type="range" id="wmSize" min="2" max="20" step="0.5"><output id="wmSizeOut" for="wmSize"></output></span>
                 </label>
               </div>
               <div id="wmLogoBox" class="stack" hidden>
                 <div class="row">
                   <img class="ic-logo-prev" id="logoPrev" alt="" hidden>
-                  <button type="button" class="btn" id="logoPick" data-i18n="wm_logo_pick"></button>
+                  <button type="button" class="btn" id="logoPick" data-i18n="wm_logo_pick">لوگو چنیں</button>
                   <button type="button" class="btn btn-sm btn-danger" id="logoDel" data-i18n="delete" hidden></button>
                 </div>
-                <p class="tiny muted mb0" data-i18n="wm_logo_hint"></p>
-                <label class="field"><span data-i18n="wm_lsize"></span>
+                <p class="tiny muted mb0" data-i18n="wm_logo_hint">شفاف بیک گراؤنڈ والا PNG لوگو سب سے اچھا لگتا ہے۔ آپ کا لوگو اسی ڈیوائس پر یاد رکھا جاتا ہے۔</p>
+                <label class="field"><span data-i18n="wm_lsize">لوگو کا سائز</span>
                   <span class="ic-rangerow"><input type="range" id="wmLsize" min="5" max="60" step="1"><output id="wmLsizeOut" for="wmLsize"></output></span>
                 </label>
               </div>
               <div id="wmCommon" class="stack" hidden>
-                <label class="field"><span data-i18n="wm_opacity"></span>
+                <label class="field"><span data-i18n="wm_opacity">گہرا پن</span>
                   <span class="ic-rangerow"><input type="range" id="wmOpacity" min="10" max="100" step="1"><output id="wmOpacityOut" for="wmOpacity"></output></span>
                 </label>
                 <div class="field">
-                  <span data-i18n="wm_pos"></span>
+                  <span data-i18n="wm_pos">جگہ</span>
                   <div class="ic-pos" id="posGrid" role="group" data-i18n-aria-label="wm_pos" aria-label="position"></div>
                 </div>
-                <label class="check"><input type="checkbox" id="wmTile"> <span data-i18n="wm_tile"></span></label>
-                <p class="tiny muted mb0" data-i18n="wm_hint"></p>
+                <label class="check"><input type="checkbox" id="wmTile"> <span data-i18n="wm_tile">پوری تصویر پر بار بار لگائیں</span></label>
+                <p class="tiny muted mb0" data-i18n="wm_hint">Amazon اور Flipkart مین پروڈکٹ تصویر پر واٹر مارک کی اجازت نہیں دیتے۔ اسے سوشل میڈیا پوسٹ پر لگائیں۔</p>
               </div>
             </div>
           </details>
@@ -332,9 +332,9 @@
 
         <div class="ic-sec">
           <details class="ic-det" id="nameDet">
-            <summary class="ic-sum"><h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_names"></span></h2></summary>
+            <summary class="ic-sum"><h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_names">فائلوں کے نام</span></h2></summary>
             <div>
-              <label class="field"><span data-i18n="name_label"></span>
+              <label class="field"><span data-i18n="name_label">نام کا پیٹرن</span>
                 <input type="text" id="pattern" class="no-i18n" maxlength="80" spellcheck="false" autocomplete="off">
               </label>
               <div class="ic-chips no-i18n" id="tokChips">
@@ -344,35 +344,35 @@
                 <button type="button" class="chip" data-tok="{n}">{n}</button>
                 <button type="button" class="chip" data-tok="{date}">{date}</button>
               </div>
-              <p class="tiny muted mb0" data-i18n="name_hint"></p>
-              <p class="small mb0"><span data-i18n="name_example"></span> <code class="no-i18n" id="nameEx"></code></p>
+              <p class="tiny muted mb0" data-i18n="name_hint">{name} = پرانا نام، {w} اور {h} = نیا سائز، {n} = نمبر 01, 02…، {date} = آج کی تاریخ۔</p>
+              <p class="small mb0"><span data-i18n="name_example">مثال:</span> <code class="no-i18n" id="nameEx"></code></p>
             </div>
           </details>
         </div>
 
         <div class="ic-sec row spread">
-          <span class="tiny muted" data-i18n="settings_saved"></span>
-          <button type="button" class="btn btn-sm btn-danger" id="resetSettings" data-i18n="reset_settings"></button>
+          <span class="tiny muted" data-i18n="settings_saved">سیٹنگز اسی ڈیوائس پر محفوظ رہتی ہیں۔ تصویریں نہیں۔</span>
+          <button type="button" class="btn btn-sm btn-danger" id="resetSettings" data-i18n="reset_settings">سیٹنگز ری سیٹ کریں</button>
         </div>
       </section>
 
       <!-- ============ results ============ -->
       <section class="stack ic-results" aria-labelledby="hResults">
         <div class="card stack" id="summary">
-          <h2 id="hResults" class="mb0" data-i18n="h_results"></h2>
+          <h2 id="hResults" class="mb0" data-i18n="h_results">آپ کی تصویریں</h2>
           <div class="ic-stats" aria-live="polite">
-            <div><div class="tiny muted" data-i18n="st_photos"></div><div class="ic-stat" id="stCount">0</div></div>
-            <div><div class="tiny muted" data-i18n="st_before"></div><div class="ic-stat" id="stBefore">0</div></div>
-            <div><div class="tiny muted" data-i18n="st_after"></div><div class="ic-stat" id="stAfter">0</div></div>
-            <div><div class="tiny muted" data-i18n="st_saved"></div><div class="ic-stat" id="stSaved">0%</div></div>
+            <div><div class="tiny muted" data-i18n="st_photos">تصویریں</div><div class="ic-stat" id="stCount">0</div></div>
+            <div><div class="tiny muted" data-i18n="st_before">پہلے</div><div class="ic-stat" id="stBefore">0</div></div>
+            <div><div class="tiny muted" data-i18n="st_after">بعد میں</div><div class="ic-stat" id="stAfter">0</div></div>
+            <div><div class="tiny muted" data-i18n="st_saved">بچت</div><div class="ic-stat" id="stSaved">0%</div></div>
           </div>
           <div class="progress" id="prog" hidden><span style="width:0%"></span></div>
           <p class="small muted ic-status" id="status" aria-live="polite"></p>
           <div class="ic-actions">
-            <button class="btn btn-primary" id="zipBtn" type="button" disabled><span aria-hidden="true">⬇</span> <span data-i18n="dl_zip"></span></button>
-            <button class="btn" id="eachBtn" type="button" disabled data-i18n="dl_each"></button>
-            <button class="btn" id="shareBtn" type="button" hidden disabled><span aria-hidden="true">↗</span> <span data-i18n="share_files"></span></button>
-            <button class="btn btn-danger" id="clearBtn" type="button" disabled data-i18n="clear_all"></button>
+            <button class="btn btn-primary" id="zipBtn" type="button" disabled><span aria-hidden="true">⬇</span> <span data-i18n="dl_zip">سب ڈاؤن لوڈ کریں (ZIP)</span></button>
+            <button class="btn" id="eachBtn" type="button" disabled data-i18n="dl_each">ایک ایک کر کے ڈاؤن لوڈ کریں</button>
+            <button class="btn" id="shareBtn" type="button" hidden disabled><span aria-hidden="true">↗</span> <span data-i18n="share_files">شیئر کریں</span></button>
+            <button class="btn btn-danger" id="clearBtn" type="button" disabled data-i18n="clear_all">سب ہٹائیں</button>
           </div>
         </div>
 
@@ -380,8 +380,8 @@
           <div class="ic-vhead">
             <h3 class="ic-vname no-i18n" id="vName"></h3>
             <div class="seg" role="group" id="viewSeg" aria-label="view" data-i18n-aria-label="view_aria">
-              <button type="button" id="vCompare" data-view="compare" data-i18n="v_compare"></button>
-              <button type="button" id="vCrop" data-view="crop" data-i18n="v_crop"></button>
+              <button type="button" id="vCompare" data-view="compare" data-i18n="v_compare">پہلے / بعد میں</button>
+              <button type="button" id="vCrop" data-view="crop" data-i18n="v_crop">کٹائی چنیں</button>
             </div>
           </div>
           <div id="cmpPane">
@@ -390,18 +390,18 @@
                 <canvas id="cmpBefore" width="10" height="10"></canvas>
                 <img id="cmpAfter" alt="">
                 <div class="ic-line" id="cmpLine"></div>
-                <span class="ic-tag b" data-i18n="before"></span>
-                <span class="ic-tag a" data-i18n="after"></span>
+                <span class="ic-tag b" data-i18n="before">پہلے</span>
+                <span class="ic-tag a" data-i18n="after">بعد میں</span>
               </div>
             </div>
             <input type="range" id="cmpRange" min="0" max="100" value="50" data-i18n-aria-label="v_compare" aria-label="compare">
             <div class="ic-vinfo">
               <span class="small muted" id="cmpInfo"></span>
-              <label class="check small"><input type="checkbox" id="zoom1"> <span data-i18n="zoom_100"></span></label>
+              <label class="check small"><input type="checkbox" id="zoom1"> <span data-i18n="zoom_100">اصل سائز (100%)</span></label>
             </div>
           </div>
           <div id="cropPane" hidden>
-            <p class="small muted" data-i18n="crop_hint"></p>
+            <p class="small muted" data-i18n="crop_hint">چمکتا فریم کھسکائیں (یا تیر والی کلیدیں دبائیں) اور چنیں کہ تصویر کا کون سا حصہ رہے۔</p>
             <div class="ic-cropwrap">
               <div class="ic-crop" id="crop" dir="ltr">
                 <img id="cropImg" alt="">
@@ -409,44 +409,44 @@
               </div>
             </div>
             <div class="row" style="margin-top:10px">
-              <button type="button" class="btn btn-sm" id="cropCenter" data-i18n="crop_center"></button>
-              <button type="button" class="btn btn-sm" id="cropAll" data-i18n="crop_all"></button>
+              <button type="button" class="btn btn-sm" id="cropCenter" data-i18n="crop_center">بیچ میں</button>
+              <button type="button" class="btn btn-sm" id="cropAll" data-i18n="crop_all">سب تصویروں پر لگائیں</button>
             </div>
           </div>
         </div>
 
         <div class="card ic-empty" id="empty">
           <div class="ic-big" aria-hidden="true">📷</div>
-          <p class="mb0" data-i18n="empty"></p>
+          <p class="mb0" data-i18n="empty">ابھی کوئی تصویر نہیں۔ تصویریں چنیں، یہاں چھوڑیں یا نمونہ تصویریں آزمائیں۔</p>
         </div>
         <ul class="ic-list" id="list" aria-labelledby="hResults"></ul>
       </section>
     </div>
 
     <details class="card ic-help no-print" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">کیسے استعمال کریں · کام کے لیے خیالات</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">بٹن سے، تصویروں کو صفحے پر کھینچ کر یا پیسٹ کر کے (Ctrl + V) تصویریں شامل کریں۔ ایک بار میں 100 تک، فون پر بھی۔</li>
+        <li data-i18n="tip2">سائز چنیں۔ &quot;بھریں&quot; تصویر کو ٹھیک شکل میں کاٹتا ہے: تصویر کھولیں اور ضروری حصہ رکھنے کے لیے فریم کھسکائیں۔ &quot;پوری تصویر&quot; سب کچھ رکھتا ہے اور کنارہ جوڑتا ہے؛ WhatsApp اسٹیٹس کے لیے دھندلا بیک گراؤنڈ بہت اچھا لگتا ہے۔</li>
+        <li data-i18n="tip3">جب کسی ویب سائٹ کی حد ہو تو &quot;فائل سائز سے&quot; استعمال کریں، جیسے 200 KB لینے والا نوکری پورٹل یا 10 MB لینے والا مارکیٹ پلیس۔</li>
+        <li data-i18n="tip4">سوشل میڈیا تصویروں پر اپنی دکان کا نام یا لوگو لگائیں تاکہ کوئی آسانی سے کاپی نہ کرے۔ اسے ہلکا رکھیں (گہرائی 30–50%) تاکہ پروڈکٹ نمایاں رہے۔</li>
+        <li data-i18n="tip5">خیال: ایک بوتیک کی مالکن فون سے 20 کرتوں کی تصویریں لیتی ہے، &quot;Amazon / Flipkart / Meesho&quot; چنتی ہے اور سفید بیک گراؤنڈ والی، سیلر پینل کے لیے تیار ایک ZIP ڈاؤن لوڈ کرتی ہے۔</li>
+        <li data-i18n="tip6">خیال: ایک سوشل میڈیا منیجر Instagram پوسٹس کے لیے تصویریں بناتا ہے، پھر &quot;اسٹوری&quot; دبا کر وہی تصویریں چند سیکنڈ میں 9:16 میں پا لیتا ہے۔ فائلیں ترتیب سے رہیں، اس لیے نام کا پیٹرن {name}_story رکھیں۔</li>
       </ul>
     </details>
     <details class="card ic-help no-print">
-      <summary data-i18n="inside_title"></summary>
+      <summary data-i18n="inside_title">اندر کیا ہوتا ہے؟ (پرائیویسی)</summary>
       <ul>
-        <li data-i18n="inside1"></li>
-        <li data-i18n="inside2"></li>
-        <li data-i18n="inside3"></li>
-        <li data-i18n="inside4"></li>
+        <li data-i18n="inside1">آپ کا براؤزر ہر تصویر کھولتا ہے اور نئے سائز میں کینوس پر دوبارہ بناتا ہے۔ کچھ بھی کسی سرور پر نہیں جاتا۔ یہ صفحہ ایک بار کھل جائے تو انٹرنیٹ بند ہونے پر بھی چلتا ہے۔</li>
+        <li data-i18n="inside2">JPG اور WebP ان باریک تفصیلات کو ہٹا کر فائل چھوٹی کرتے ہیں جو آنکھ کو مشکل سے دکھتی ہیں۔ کم کوالٹی یعنی چھوٹی فائل، مگر زیادہ دھندلاپن اور چوکور دھبے۔ PNG ہر پکسل رکھتا ہے، اس لیے بڑا ہوتا ہے۔</li>
+        <li data-i18n="inside3">فون کی تصویروں میں چھپی معلومات (EXIF) ہوتی ہیں: فون کا ماڈل، تاریخ اور اکثر آپ کے گھر یا دکان کی ٹھیک GPS لوکیشن۔ تصویر دوبارہ بنانے سے یہ سب ہٹ جاتا ہے، اس لیے پوسٹ کرنا محفوظ ہے۔</li>
+        <li data-i18n="inside4">&quot;فائل سائز سے&quot; مختلف کوالٹی آزماتا ہے اور ہر بار فرق آدھا کرتا ہے، نمبر کا اندازہ لگانے والے کھیل کی طرح، جب تک فائل آپ کی حد میں نہ آ جائے۔</li>
       </ul>
     </details>
 
     <div class="ic-mbar" id="mbar" hidden>
       <span class="ic-mtxt" id="mbarTxt"></span>
-      <button class="btn btn-primary btn-sm" id="mbarZip" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_zip_short"></span></button>
+      <button class="btn btn-primary btn-sm" id="mbarZip" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_zip_short">ZIP</span></button>
     </div>
   </main>
   <script src="../../../apps/image-compressor/../../shared/edu.js"></script>

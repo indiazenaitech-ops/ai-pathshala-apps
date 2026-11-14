@@ -122,13 +122,13 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="callout success small tm-privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">క్లిక్ తెచ్చే YouTube థంబ్‌నెయిల్ లేదా Shorts కవర్ తయారు చేయండి: మీ ఫోటో, తెలుగు లేదా ఏ భారతీయ భాషలోనైనా పెద్ద హెడ్‌లైన్, ఒక హైలైట్ పదం, స్టిక్కర్లు మరియు ఛానల్ పేరు. 2 MB కన్నా చిన్న PNG లేదా JPG వస్తుంది.</p>
+    <p class="callout success small tm-privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">మీ ఫోటోలు, లోగో ఈ డివైస్‌లోనే ఉంటాయి. ఏదీ అప్‌లోడ్ అవదు.</span></p>
 
     <div class="tm-layout">
       <!-- templates -->
       <section class="card stack tm-tpl" aria-labelledby="tplH">
-        <h2 class="mb0" id="tplH" data-i18n="tpl_title"></h2>
+        <h2 class="mb0" id="tplH" data-i18n="tpl_title">టెంప్లేట్</h2>
         <div class="tpl-list" id="tplList" role="group" data-i18n-aria-label="tpl_title"></div>
       </section>
 
@@ -136,45 +136,45 @@
       <section class="tm-prev stack">
         <div class="card stack">
           <div class="seg size-seg" id="sizeSeg" role="group" data-i18n-aria-label="size_yt">
-            <button type="button" data-size="yt"><span data-i18n="size_yt"></span><span class="sz-d">1280 × 720</span></button>
-            <button type="button" data-size="shorts"><span data-i18n="size_shorts"></span><span class="sz-d">1080 × 1920</span></button>
+            <button type="button" data-size="yt"><span data-i18n="size_yt">YouTube థంబ్‌నెయిల్</span><span class="sz-d">1280 × 720</span></button>
+            <button type="button" data-size="shorts"><span data-i18n="size_shorts">Shorts కవర్</span><span class="sz-d">1080 × 1920</span></button>
           </div>
           <div class="stage tm-stage">
             <canvas id="thumb" width="1280" height="720" tabindex="0" role="img" data-i18n-aria-label="preview_aria" data-i18n-title="preview_aria"></canvas>
-            <div class="tm-busy" id="busy" data-i18n="making" hidden></div>
+            <div class="tm-busy" id="busy" data-i18n="making" hidden>చిత్రం తయారవుతోంది…</div>
           </div>
-          <label class="check small"><input type="checkbox" id="guide"> <span data-i18n="guide_label"></span></label>
-          <p class="tiny muted mb0" data-i18n="guide_note"></p>
+          <label class="check small"><input type="checkbox" id="guide"> <span data-i18n="guide_label">YouTube ఎక్కడ కప్పుతుందో చూపించు</span></label>
+          <p class="tiny muted mb0" data-i18n="guide_note">సమయం బ్యాడ్జ్ మరియు Shorts టైటిల్ స్థలం. ఇక్కడే కనిపిస్తుంది, ఫైల్‌లో కాదు.</p>
           <div class="tm-actions">
-            <button class="btn btn-primary" id="dlPng" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_png"></span></button>
-            <button class="btn" id="dlJpg" type="button" data-i18n="dl_jpg"></button>
-            <button class="btn btn-accent" id="varSave" type="button"><span aria-hidden="true">＋</span> <span data-i18n="variant_save"></span></button>
+            <button class="btn btn-primary" id="dlPng" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_png">PNG డౌన్‌లోడ్ చేయండి</span></button>
+            <button class="btn" id="dlJpg" type="button" data-i18n="dl_jpg">JPG డౌన్‌లోడ్ చేయండి</button>
+            <button class="btn btn-accent" id="varSave" type="button"><span aria-hidden="true">＋</span> <span data-i18n="variant_save">ఈ వెర్షన్ సేవ్ చేయండి</span></button>
           </div>
-          <p class="tiny muted mb0" data-i18n="shortcut"></p>
+          <p class="tiny muted mb0" data-i18n="shortcut">షార్ట్‌కట్: Ctrl + S నొక్కితే PNG డౌన్‌లోడ్ అవుతుంది.</p>
           <p class="small mb0" id="status" aria-live="polite"></p>
         </div>
 
         <div class="card stack">
           <div class="tm-checks">
             <div class="mini-wrap">
-              <strong class="small" data-i18n="mini_title"></strong>
+              <strong class="small" data-i18n="mini_title">చిన్న పరీక్ష (160 px వెడల్పు)</strong>
               <canvas id="mini" width="160" height="90" aria-hidden="true"></canvas>
             </div>
             <div class="stack">
               <p class="small mb0" id="contrast" aria-live="polite"></p>
               <p class="small muted mb0" id="wordsHint" aria-live="polite"></p>
-              <p class="tiny muted mb0" data-i18n="mini_hint"></p>
+              <p class="tiny muted mb0" data-i18n="mini_hint">సైడ్‌బార్‌లో, ఫోన్‌లో చాలా మంది ఇంత చిన్నగానే చూస్తారు. ఇక్కడ హెడ్‌లైన్ చదవలేకపోతే దాన్ని చిన్నదిగా లేదా పెద్దదిగా చేయండి.</p>
             </div>
           </div>
         </div>
 
         <details class="card stack" id="varCard" open>
-          <summary><strong data-i18n="variants_title"></strong></summary>
-          <p class="small muted" data-i18n="variants_help"></p>
-          <p class="small muted mb0" id="varNone" data-i18n="variant_none"></p>
+          <summary><strong data-i18n="variants_title">A/B పరీక్ష కోసం సేవ్ చేసిన వెర్షన్లు</strong></summary>
+          <p class="small muted" data-i18n="variants_help">వేరే హెడ్‌లైన్ లేదా రంగులతో 2–3 వెర్షన్లు సేవ్ చేయండి, పక్కపక్కనే పోల్చండి, ఏది త్వరగా చదవగలరో అది అప్‌లోడ్ చేయండి. అన్ని వెర్షన్లలో ప్రస్తుత ఫోటో, లోగో ఉంటాయి.</p>
+          <p class="small muted mb0" id="varNone" data-i18n="variant_none">ఇంకా వెర్షన్లు సేవ్ అవలేదు.</p>
           <div class="var-list no-i18n" id="varList" aria-live="polite"></div>
           <div class="row" id="varActs" hidden>
-            <button class="btn" id="varDlAll" type="button" data-i18n="variant_dl_all"></button>
+            <button class="btn" id="varDlAll" type="button" data-i18n="variant_dl_all">అన్ని వెర్షన్లు డౌన్‌లోడ్ చేయండి</button>
           </div>
         </details>
       </section>
@@ -182,117 +182,117 @@
       <!-- editor -->
       <div class="tm-edit stack">
         <section class="card stack" aria-labelledby="textH">
-          <h2 class="mb0" id="textH" data-i18n="text_title"></h2>
-          <label class="field"><span data-i18n="headline_label"></span><input type="text" id="headline" dir="auto" maxlength="120" class="no-i18n" autocomplete="off"></label>
-          <div class="field"><span data-i18n="hi_label"></span><div class="row hi-chips no-i18n" id="hiChips" role="group" data-i18n-aria-label="hi_label"></div></div>
+          <h2 class="mb0" id="textH" data-i18n="text_title">హెడ్‌లైన్</h2>
+          <label class="field"><span data-i18n="headline_label">పెద్ద హెడ్‌లైన్ (3–6 పదాలు)</span><input type="text" id="headline" dir="auto" maxlength="120" class="no-i18n" autocomplete="off"></label>
+          <div class="field"><span data-i18n="hi_label">ఒక పదాన్ని హైలైట్ చేయండి (దాన్ని నొక్కండి)</span><div class="row hi-chips no-i18n" id="hiChips" role="group" data-i18n-aria-label="hi_label"></div></div>
           <div class="grid-2">
-            <div class="field"><span data-i18n="hi_style"></span>
+            <div class="field"><span data-i18n="hi_style">హైలైట్ శైలి</span>
               <div class="seg" id="hiStyleSeg" role="group" data-i18n-aria-label="hi_style">
-                <button type="button" data-hi="color" data-i18n="hi_color"></button>
-                <button type="button" data-hi="box" data-i18n="hi_box"></button>
+                <button type="button" data-hi="color" data-i18n="hi_color">రంగు</button>
+                <button type="button" data-hi="box" data-i18n="hi_box">బాక్స్</button>
               </div>
             </div>
-            <label class="field"><span data-i18n="text_lang"></span><select id="textLang" class="no-i18n"></select></label>
+            <label class="field"><span data-i18n="text_lang">నమూనా టెక్స్ట్ భాష</span><select id="textLang" class="no-i18n"></select></label>
           </div>
-          <label class="field"><span data-i18n="sub_label"></span><input type="text" id="sub" dir="auto" maxlength="80" class="no-i18n" autocomplete="off"></label>
-          <div class="field"><span data-i18n="font_label"></span>
+          <label class="field"><span data-i18n="sub_label">చిన్న లైన్ (ఐచ్ఛికం)</span><input type="text" id="sub" dir="auto" maxlength="80" class="no-i18n" autocomplete="off"></label>
+          <div class="field"><span data-i18n="font_label">ఫాంట్</span>
             <div class="seg" id="fontSeg" role="group" data-i18n-aria-label="font_label">
-              <button type="button" data-font="bold" data-i18n="font_bold"></button>
-              <button type="button" data-font="round" data-i18n="font_round"></button>
-              <button type="button" data-font="tall" data-i18n="font_tall"></button>
+              <button type="button" data-font="bold" data-i18n="font_bold">బోల్డ్</button>
+              <button type="button" data-font="round" data-i18n="font_round">గుండ్రం</button>
+              <button type="button" data-font="tall" data-i18n="font_tall">పొడవు (ఇంగ్లీష్)</button>
             </div>
-            <p class="tiny muted mb0" data-i18n="font_note"></p>
+            <p class="tiny muted mb0" data-i18n="font_note">ఫాంట్లు ఒకసారి Google Fonts నుంచి డౌన్‌లోడ్ అవుతాయి. ఇంటర్నెట్ లేకపోతే డివైస్ ఫాంట్ వాడబడుతుంది.</p>
           </div>
-          <label class="field"><span data-i18n="text_size"></span><div class="range-row"><input type="range" id="textSize" min="0.7" max="1.3" step="0.05" value="1"><output for="textSize" id="textSizeOut">100%</output></div></label>
+          <label class="field"><span data-i18n="text_size">టెక్స్ట్ పరిమాణం</span><div class="range-row"><input type="range" id="textSize" min="0.7" max="1.3" step="0.05" value="1"><output for="textSize" id="textSizeOut">100%</output></div></label>
           <div class="row">
-            <label class="check"><input type="checkbox" id="outline"> <span data-i18n="outline_label"></span></label>
-            <label class="check"><input type="checkbox" id="shadow"> <span data-i18n="shadow_label"></span></label>
-            <label class="check"><input type="checkbox" id="plate"> <span data-i18n="plate_label"></span></label>
+            <label class="check"><input type="checkbox" id="outline"> <span data-i18n="outline_label">అక్షరాల చుట్టూ అవుట్‌లైన్</span></label>
+            <label class="check"><input type="checkbox" id="shadow"> <span data-i18n="shadow_label">నీడ</span></label>
+            <label class="check"><input type="checkbox" id="plate"> <span data-i18n="plate_label">టెక్స్ట్ వెనుక రంగు పట్టీ</span></label>
           </div>
-          <div class="row"><button class="btn btn-sm btn-ghost" id="textReset" type="button" hidden><span aria-hidden="true">↺</span> <span data-i18n="text_reset"></span></button></div>
+          <div class="row"><button class="btn btn-sm btn-ghost" id="textReset" type="button" hidden><span aria-hidden="true">↺</span> <span data-i18n="text_reset">నమూనా టెక్స్ట్ వాడండి</span></button></div>
         </section>
 
         <section class="card stack" aria-labelledby="photoH">
-          <h2 class="mb0" id="photoH" data-i18n="photo_title"></h2>
+          <h2 class="mb0" id="photoH" data-i18n="photo_title">ఫోటో మరియు లేఅవుట్</h2>
           <div class="img-row">
             <div class="thumb-box" id="photoThumb"></div>
             <div class="stack">
               <div class="row">
-                <button class="btn" id="photoAdd" type="button"><span aria-hidden="true">📷</span> <span id="photoAddTxt" data-i18n="photo_add"></span></button>
-                <button class="btn btn-sm btn-danger" id="photoRemove" type="button" data-i18n="img_remove" hidden></button>
+                <button class="btn" id="photoAdd" type="button"><span aria-hidden="true">📷</span> <span id="photoAddTxt" data-i18n="photo_add">ఫోటో లేదా స్క్రీన్‌షాట్ జోడించండి</span></button>
+                <button class="btn btn-sm btn-danger" id="photoRemove" type="button" data-i18n="img_remove" hidden>తీసేయండి</button>
               </div>
-              <label class="field" id="zoomField" hidden><span data-i18n="photo_zoom"></span><input type="range" id="photoZoom" min="1" max="3" step="0.05" value="1"></label>
-              <p class="tiny muted mb0" data-i18n="photo_hint"></p>
+              <label class="field" id="zoomField" hidden><span data-i18n="photo_zoom">జూమ్</span><input type="range" id="photoZoom" min="1" max="3" step="0.05" value="1"></label>
+              <p class="tiny muted mb0" data-i18n="photo_hint">థంబ్‌నెయిల్‌పై ఫోటోను లాగి కదపండి. స్పష్టమైన భావంతో దగ్గరగా తీసిన ముఖం ఎక్కువ క్లిక్‌లు తెస్తుంది.</p>
             </div>
           </div>
           <p class="callout warning small mb0" id="photoWarn" hidden></p>
-          <div class="field"><span data-i18n="layout_label"></span>
+          <div class="field"><span data-i18n="layout_label">లేఅవుట్</span>
             <div class="seg" id="layoutSeg" role="group" data-i18n-aria-label="layout_label">
-              <button type="button" data-layout="left" data-i18n="lay_left"></button>
-              <button type="button" data-layout="right" data-i18n="lay_right"></button>
-              <button type="button" data-layout="full" data-i18n="lay_full"></button>
-              <button type="button" data-layout="split" data-i18n="lay_split"></button>
+              <button type="button" data-layout="left" data-i18n="lay_left">ఫోటో ఎడమ</button>
+              <button type="button" data-layout="right" data-i18n="lay_right">ఫోటో కుడి</button>
+              <button type="button" data-layout="full" data-i18n="lay_full">పూర్తి ఫోటో</button>
+              <button type="button" data-layout="split" data-i18n="lay_split">వంపు విభజన</button>
             </div>
           </div>
-          <div class="field" id="shapeField"><span data-i18n="shape_label"></span>
+          <div class="field" id="shapeField"><span data-i18n="shape_label">ఫోటో ఆకారం</span>
             <div class="seg" id="shapeSeg" role="group" data-i18n-aria-label="shape_label">
-              <button type="button" data-shape="rect" data-i18n="shape_rect"></button>
-              <button type="button" data-shape="round" data-i18n="shape_round"></button>
-              <button type="button" data-shape="circle" data-i18n="shape_circle"></button>
+              <button type="button" data-shape="rect" data-i18n="shape_rect">సరళం</button>
+              <button type="button" data-shape="round" data-i18n="shape_round">గుండ్రని మూలలు</button>
+              <button type="button" data-shape="circle" data-i18n="shape_circle">వృత్తం</button>
             </div>
           </div>
         </section>
 
         <section class="card stack" aria-labelledby="stH">
-          <h2 class="mb0" id="stH" data-i18n="stickers_title"></h2>
+          <h2 class="mb0" id="stH" data-i18n="stickers_title">స్టిక్కర్లు</h2>
           <div class="stack" id="stickers"></div>
         </section>
 
         <section class="card stack" aria-labelledby="brandH">
-          <h2 class="mb0" id="brandH" data-i18n="brand_title"></h2>
-          <label class="check"><input type="checkbox" id="brandOn"> <span data-i18n="brand_on"></span></label>
-          <label class="field"><span data-i18n="channel_label"></span><input type="text" id="channel" dir="auto" maxlength="60" class="no-i18n" autocomplete="off"></label>
+          <h2 class="mb0" id="brandH" data-i18n="brand_title">ఛానల్ పట్టీ</h2>
+          <label class="check"><input type="checkbox" id="brandOn"> <span data-i18n="brand_on">ఛానల్ పేరు చూపించు</span></label>
+          <label class="field"><span data-i18n="channel_label">ఛానల్ పేరు</span><input type="text" id="channel" dir="auto" maxlength="60" class="no-i18n" autocomplete="off"></label>
           <div class="img-row">
             <div class="thumb-box" id="logoThumb"></div>
             <div class="stack">
-              <strong class="small" data-i18n="logo_label"></strong>
+              <strong class="small" data-i18n="logo_label">ఛానల్ లోగో</strong>
               <div class="row">
-                <button class="btn btn-sm" id="logoAdd" type="button"><span aria-hidden="true">🏷️</span> <span data-i18n="logo_add"></span></button>
-                <button class="btn btn-sm btn-danger" id="logoRemove" type="button" data-i18n="img_remove" hidden></button>
+                <button class="btn btn-sm" id="logoAdd" type="button"><span aria-hidden="true">🏷️</span> <span data-i18n="logo_add">లోగో జోడించండి</span></button>
+                <button class="btn btn-sm btn-danger" id="logoRemove" type="button" data-i18n="img_remove" hidden>తీసేయండి</button>
               </div>
             </div>
           </div>
-          <div class="field"><span data-i18n="brand_pos"></span>
+          <div class="field"><span data-i18n="brand_pos">పట్టీ స్థానం</span>
             <div class="seg" id="brandPosSeg" role="group" data-i18n-aria-label="brand_pos">
-              <button type="button" data-pos="auto" data-i18n="brand_auto"></button>
-              <button type="button" data-pos="top" data-i18n="pos_t"></button>
-              <button type="button" data-pos="bottom" data-i18n="pos_b"></button>
+              <button type="button" data-pos="auto" data-i18n="brand_auto">ఆటో</button>
+              <button type="button" data-pos="top" data-i18n="pos_t">పైన</button>
+              <button type="button" data-pos="bottom" data-i18n="pos_b">కింద</button>
             </div>
           </div>
         </section>
 
         <section class="card stack" aria-labelledby="styleH">
-          <h2 class="mb0" id="styleH" data-i18n="style_title"></h2>
+          <h2 class="mb0" id="styleH" data-i18n="style_title">రంగులు</h2>
           <div class="col-grid">
-            <label class="col-field"><input type="color" id="colBg"> <span data-i18n="col_bg"></span></label>
-            <label class="col-field"><input type="color" id="colText"> <span data-i18n="col_text"></span></label>
-            <label class="col-field"><input type="color" id="colHi"> <span data-i18n="col_hi"></span></label>
-            <label class="col-field"><input type="color" id="colOutline"> <span data-i18n="col_outline"></span></label>
+            <label class="col-field"><input type="color" id="colBg"> <span data-i18n="col_bg">బ్యాక్‌గ్రౌండ్</span></label>
+            <label class="col-field"><input type="color" id="colText"> <span data-i18n="col_text">హెడ్‌లైన్</span></label>
+            <label class="col-field"><input type="color" id="colHi"> <span data-i18n="col_hi">హైలైట్ పదం</span></label>
+            <label class="col-field"><input type="color" id="colOutline"> <span data-i18n="col_outline">అవుట్‌లైన్</span></label>
           </div>
-          <div class="row"><button class="btn btn-sm" id="colReset" type="button"><span aria-hidden="true">↺</span> <span data-i18n="col_reset"></span></button></div>
+          <div class="row"><button class="btn btn-sm" id="colReset" type="button"><span aria-hidden="true">↺</span> <span data-i18n="col_reset">టెంప్లేట్ రంగులకు తిరిగి</span></button></div>
         </section>
       </div>
     </div>
 
     <details class="card no-print" id="helpBox">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">ఎలా వాడాలి / థంబ్‌నెయిల్ చిట్కాలు</strong></summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">టెంప్లేట్ ఎంచుకోండి, మీ ఫోటో జోడించండి, 3–6 పదాల హెడ్‌లైన్ రాయండి. అతి ముఖ్యమైన ఒక పదానికి హైలైట్ రంగు ఇవ్వండి.</li>
+        <li data-i18n="tip2">స్పష్టమైన భావం (ఆశ్చర్యం, ఆనందం, ఆందోళన) ఉన్న ముఖం, కెమెరా వైపు చూసే కళ్లు ఎక్కువ క్లిక్‌లు తెస్తాయి. ముఖంపై జూమ్ చేయండి.</li>
+        <li data-i18n="tip3">వీడియో టైటిల్‌ను మళ్లీ రాయకండి. థంబ్‌నెయిల్ కొత్తగా ఏదైనా చెప్పాలి: ఫలితం, సంఖ్య, ప్రశ్న లేదా ముందు-తర్వాత పోలిక.</li>
+        <li data-i18n="tip4">160 px చిన్న ప్రివ్యూ చూడండి. చాలా మంది ఫోన్‌లో మీ థంబ్‌నెయిల్‌ను ఇంత చిన్నగానే చూస్తారు. కింద కుడి మూలను సమయం బ్యాడ్జ్ కోసం ఖాళీగా ఉంచండి.</li>
+        <li data-i18n="tip5">వేరే హెడ్‌లైన్లతో 2–3 వెర్షన్లు సేవ్ చేసి, మీ స్నేహితులు త్వరగా చదివేదాన్ని అప్‌లోడ్ చేయండి. YouTube Studio కూడా థంబ్‌నెయిల్స్ పరీక్షించగలదు.</li>
+        <li data-i18n="tip6">వీడియోలో నిజంగా ఉన్నదే వాగ్దానం చేయండి. క్లిక్‌బెయిట్ ఈరోజు క్లిక్‌లు తెస్తుంది, కానీ రేపు వాచ్ టైమ్, నమ్మకం తగ్గిస్తుంది.</li>
       </ul>
       <div class="row spread" style="margin-top:10px">
         <span class="small muted" data-i18n="saved_local"></span>

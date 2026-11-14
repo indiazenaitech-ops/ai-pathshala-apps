@@ -222,38 +222,38 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">કમ્પ્યુટર ચિત્રને સંખ્યાઓની જાળી તરીકે જુએ છે. પિક્સેલ પર ટૅપ કરીને તેની સંખ્યાઓ વાંચો, કિનારી શોધતા ફિલ્ટર અજમાવો, અને જુઓ કે CNN (ફોટો ઓળખતું AI)નું પહેલું સ્તર શું પકડે છે.</p>
 
     <!-- 1. choose a picture -->
     <section class="card no-print" id="src-card">
       <div class="src-head">
-        <h2 data-i18n="src_title"></h2>
+        <h2 data-i18n="src_title">એક ચિત્ર પસંદ કરો</h2>
         <button class="btn btn-sm btn-danger" id="reset-btn" type="button" data-i18n="reset"></button>
       </div>
       <div class="src-grid">
       <div>
       <div class="samples" id="samples" role="group" data-i18n-aria-label="samples_label"></div>
       <div class="row src-actions">
-        <button class="btn" id="upload-btn" type="button"><span aria-hidden="true">🖼️</span> <span data-i18n="upload_photo"></span></button>
+        <button class="btn" id="upload-btn" type="button"><span aria-hidden="true">🖼️</span> <span data-i18n="upload_photo">ફોટો વાપરો</span></button>
         <input type="file" id="upload-input" accept="image/*" hidden>
-        <button class="btn" id="cam-btn" type="button"><span aria-hidden="true">📷</span> <span data-i18n="camera"></span></button>
+        <button class="btn" id="cam-btn" type="button"><span aria-hidden="true">📷</span> <span data-i18n="camera">કૅમેરા</span></button>
         <span id="src-name" class="small" aria-live="polite"></span>
       </div>
-      <p class="tiny muted mb0" style="margin-top:8px" data-i18n="src_note"></p>
+      <p class="tiny muted mb0" style="margin-top:8px" data-i18n="src_note">તમારો ફોટો આ જ ડિવાઇસ પર રહે છે, ક્યાંય મોકલાતો નથી. ફોટોને ચોરસ આકારમાં કાપવામાં આવે છે.</p>
       <div class="cam-box" id="cam-box" hidden>
         <video id="cam-video" playsinline muted autoplay></video>
         <div class="row">
-          <button class="btn btn-primary" id="cam-snap" type="button" disabled><span aria-hidden="true">📸</span> <span data-i18n="cam_snap"></span></button>
+          <button class="btn btn-primary" id="cam-snap" type="button" disabled><span aria-hidden="true">📸</span> <span data-i18n="cam_snap">ફોટો પાડો</span></button>
           <button class="btn" id="cam-close" type="button" data-i18n="close"></button>
         </div>
         <p class="small mb0" id="cam-msg" aria-live="polite"></p>
       </div>
       </div>
       <div class="res-field">
-        <label for="res" data-i18n="res_label"></label>
+        <label for="res" data-i18n="res_label">એક લીટીમાં પિક્સેલ</label>
         <input type="range" id="res" min="0" max="9" step="1" value="5">
         <output id="res-out" for="res" class="no-i18n"></output>
-        <p class="hint" data-i18n="res_hint"></p>
+        <p class="hint" data-i18n="res_hint">પિક્સેલ ઓછા હોય તો ચિત્ર વધુ ચોકઠાંવાળું દેખાય. દરેક મોટો પિક્સેલ તેના ભાગના રંગોની સરેરાશ છે.</p>
       </div>
       </div>
     </section>
@@ -261,10 +261,10 @@
     <div id="workspace">
       <div class="tab-bar">
         <div class="tabs" role="tablist" id="tabs">
-          <button role="tab" id="tab-pixels" data-tab="pixels" aria-controls="panel-pixels" type="button"><span aria-hidden="true">🔍</span> <span data-i18n="tab_pixels"></span></button>
-          <button role="tab" id="tab-filters" data-tab="filters" aria-controls="panel-filters" type="button"><span aria-hidden="true">🧮</span> <span data-i18n="tab_filters"></span></button>
-          <button role="tab" id="tab-cnn" data-tab="cnn" aria-controls="panel-cnn" type="button"><span aria-hidden="true">🧠</span> <span data-i18n="tab_cnn"></span></button>
-          <button role="tab" id="tab-game" data-tab="game" aria-controls="panel-game" type="button"><span aria-hidden="true">🎯</span> <span data-i18n="tab_game"></span></button>
+          <button role="tab" id="tab-pixels" data-tab="pixels" aria-controls="panel-pixels" type="button"><span aria-hidden="true">🔍</span> <span data-i18n="tab_pixels">પિક્સેલ એટલે સંખ્યા</span></button>
+          <button role="tab" id="tab-filters" data-tab="filters" aria-controls="panel-filters" type="button"><span aria-hidden="true">🧮</span> <span data-i18n="tab_filters">ફિલ્ટર</span></button>
+          <button role="tab" id="tab-cnn" data-tab="cnn" aria-controls="panel-cnn" type="button"><span aria-hidden="true">🧠</span> <span data-i18n="tab_cnn">CNN શું જુએ છે</span></button>
+          <button role="tab" id="tab-game" data-tab="game" aria-controls="panel-game" type="button"><span aria-hidden="true">🎯</span> <span data-i18n="tab_game">ફિલ્ટર ઓળખો</span></button>
         </div>
         <button class="btn btn-sm tool" id="fs-btn" type="button" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen"><span aria-hidden="true">⛶</span> <span class="fs-lbl" data-i18n="fullscreen"></span></button>
       </div>
@@ -273,71 +273,71 @@
       <section id="panel-pixels" role="tabpanel" aria-labelledby="tab-pixels">
         <div class="panel-grid">
           <div class="card">
-            <h2 data-i18n="px_title"></h2>
+            <h2 data-i18n="px_title">કોઈ પણ પિક્સેલ પર ટૅપ કરો</h2>
             <canvas id="px-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="px_canvas_label"></canvas>
             <div class="opts">
-              <span class="small muted" data-i18n="ch_label"></span>
+              <span class="small muted" data-i18n="ch_label">બતાવો</span>
               <div class="seg" id="ch-seg" role="group" data-i18n-aria-label="ch_label">
-                <button type="button" data-ch="rgb" data-i18n="ch_rgb"></button>
-                <button type="button" data-ch="grey" data-i18n="ch_grey"></button>
-                <button type="button" data-ch="r" data-i18n="ch_r"></button>
-                <button type="button" data-ch="g" data-i18n="ch_g"></button>
-                <button type="button" data-ch="b" data-i18n="ch_b"></button>
+                <button type="button" data-ch="rgb" data-i18n="ch_rgb">રંગીન</button>
+                <button type="button" data-ch="grey" data-i18n="ch_grey">રાખોડી</button>
+                <button type="button" data-ch="r" data-i18n="ch_r">લાલ</button>
+                <button type="button" data-ch="g" data-i18n="ch_g">લીલો</button>
+                <button type="button" data-ch="b" data-i18n="ch_b">વાદળી</button>
               </div>
             </div>
             <div class="opts">
-              <label class="check"><input type="checkbox" id="opt-grid"> <span data-i18n="opt_grid"></span></label>
-              <label class="check"><input type="checkbox" id="opt-nums"> <span data-i18n="opt_nums"></span></label>
+              <label class="check"><input type="checkbox" id="opt-grid"> <span data-i18n="opt_grid">જાળીની રેખાઓ</span></label>
+              <label class="check"><input type="checkbox" id="opt-nums"> <span data-i18n="opt_nums">ચિત્ર પર સંખ્યાઓ</span></label>
             </div>
-            <p class="hint" id="nums-hint" data-i18n="nums_hint"></p>
+            <p class="hint" id="nums-hint" data-i18n="nums_hint">ચિત્ર પર સંખ્યાઓ લખવા માટે એક લીટીમાં 16 કે ઓછા પિક્સેલ પસંદ કરો.</p>
           </div>
 
           <div class="card" aria-live="polite" id="sel-card">
-            <h2 data-i18n="sel_title"></h2>
+            <h2 data-i18n="sel_title">પસંદ કરેલો પિક્સેલ</h2>
             <div class="sel-top">
               <div class="swatch" id="swatch"></div>
               <div>
                 <div class="sel-pos" id="sel-pos"></div>
-                <div class="small muted"><span data-i18n="hex_label"></span>: <span class="hex" id="hex"></span></div>
+                <div class="small muted"><span data-i18n="hex_label">રંગ કોડ</span>: <span class="hex" id="hex"></span></div>
               </div>
             </div>
             <div class="rgb-rows">
-              <div class="rgb-row"><span class="nm" data-i18n="ch_r"></span><span class="bar"><span id="bar-r" style="background:#e03131"></span></span><span class="num" id="val-r"></span></div>
-              <div class="rgb-row"><span class="nm" data-i18n="ch_g"></span><span class="bar"><span id="bar-g" style="background:#2f9e44"></span></span><span class="num" id="val-g"></span></div>
-              <div class="rgb-row"><span class="nm" data-i18n="ch_b"></span><span class="bar"><span id="bar-b" style="background:#1c7ed6"></span></span><span class="num" id="val-b"></span></div>
+              <div class="rgb-row"><span class="nm" data-i18n="ch_r">લાલ</span><span class="bar"><span id="bar-r" style="background:#e03131"></span></span><span class="num" id="val-r"></span></div>
+              <div class="rgb-row"><span class="nm" data-i18n="ch_g">લીલો</span><span class="bar"><span id="bar-g" style="background:#2f9e44"></span></span><span class="num" id="val-g"></span></div>
+              <div class="rgb-row"><span class="nm" data-i18n="ch_b">વાદળી</span><span class="bar"><span id="bar-b" style="background:#1c7ed6"></span></span><span class="num" id="val-b"></span></div>
             </div>
-            <p class="formula-lbl" data-i18n="grey_formula"></p>
+            <p class="formula-lbl" data-i18n="grey_formula">રાખોડી (તેજ) = 0.299 × લાલ + 0.587 × લીલો + 0.114 × વાદળી</p>
             <div class="formula no-i18n" id="val-grey"></div>
             <div class="nb-wrap">
-              <h3 class="mb0" data-i18n="nb_title"></h3>
+              <h3 class="mb0" data-i18n="nb_title">તેના પડોશીઓ (7 × 7)</h3>
               <p class="hint" id="nb-hint"></p>
               <div class="nb-grid no-i18n" id="nb-grid"></div>
             </div>
             <div class="tool-row">
-              <button class="btn btn-sm" id="dl-csv" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_csv"></span></button>
+              <button class="btn btn-sm" id="dl-csv" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_csv">સંખ્યાઓ ડાઉનલોડ કરો (CSV)</span></button>
             </div>
           </div>
         </div>
         <div class="callout count-box">
           <p id="count-line"></p>
-          <p class="small" data-i18n="count_fact"></p>
+          <p class="small" data-i18n="count_fact">12 મેગાપિક્સેલના એક મોબાઇલ ફોટોમાં લગભગ 3.6 કરોડ સંખ્યાઓ હોય છે!</p>
         </div>
         <details class="card inside">
-          <summary data-i18n="inside_title"></summary>
-          <p class="mt0" data-i18n="px_inside"></p>
+          <summary data-i18n="inside_title">અંદર શું થાય છે?</summary>
+          <p class="mt0" data-i18n="px_inside">સ્ક્રીન લાલ, લીલો અને વાદળી પ્રકાશ ભેળવીને દરેક રંગ બનાવે છે. 0 થી 255 સુધીની દરેક સંખ્યા કહે છે કે એ પ્રકાશ કેટલો વાપરવો: (0, 0, 0) કાળો, (255, 255, 255) સફેદ અને (255, 0, 0) પૂરો લાલ. કમ્પ્યુટર સ્માઇલી કે કેરી &quot;જોતું&quot; નથી, તેને ફક્ત સંખ્યાઓનું આ મોટું કોષ્ટક મળે છે. ચિત્રો સાથે કામ કરતું દરેક AI આ જ સંખ્યાઓથી શરૂ કરે છે.</p>
         </details>
       </section>
 
       <!-- Panel 2: filters -->
       <section id="panel-filters" role="tabpanel" aria-labelledby="tab-filters" hidden>
         <div class="card">
-          <h2 data-i18n="f_title"></h2>
+          <h2 data-i18n="f_title">એક ફિલ્ટર પસંદ કરો</h2>
           <div class="chips" id="f-chips" role="group" data-i18n-aria-label="f_title"></div>
           <div class="opts">
-            <span class="small muted" data-i18n="work_on"></span>
+            <span class="small muted" data-i18n="work_on">શેના પર લગાવવું</span>
             <div class="seg" id="mode-seg" role="group" data-i18n-aria-label="work_on">
-              <button type="button" data-mode="grey" data-i18n="ch_grey"></button>
-              <button type="button" data-mode="rgb" data-i18n="ch_rgb"></button>
+              <button type="button" data-mode="grey" data-i18n="ch_grey">રાખોડી</button>
+              <button type="button" data-mode="rgb" data-i18n="ch_rgb">રંગીન</button>
             </div>
           </div>
           <p class="callout f-desc mb0" id="f-desc"></p>
@@ -345,26 +345,26 @@
         <div class="panel-grid" style="margin-top:16px">
           <div class="card">
             <div class="pair">
-              <figure><figcaption data-i18n="in_label"></figcaption><canvas id="in-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="in_label"></canvas></figure>
-              <figure><figcaption data-i18n="out_label"></figcaption><canvas id="out-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="out_label"></canvas></figure>
+              <figure><figcaption data-i18n="in_label">ઇનપુટ</figcaption><canvas id="in-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="in_label"></canvas></figure>
+              <figure><figcaption data-i18n="out_label">આઉટપુટ</figcaption><canvas id="out-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="out_label"></canvas></figure>
             </div>
-            <p class="hint" data-i18n="tap_hint"></p>
+            <p class="hint" data-i18n="tap_hint">પિક્સેલ પસંદ કરીને તેનું ગણિત જોવા કોઈ પણ ચિત્ર પર ટૅપ કરો.</p>
             <div class="tool-row">
               <button class="btn btn-accent" id="slide-btn" type="button" aria-pressed="false"><span aria-hidden="true">▶</span> <span id="slide-lbl"></span></button>
-              <button class="btn" id="print-btn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_ws"></span></button>
-              <label class="check"><input type="checkbox" id="ws-answers"> <span data-i18n="ws_answers"></span></label>
-              <button class="btn btn-sm" id="dl-png" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_png"></span></button>
+              <button class="btn" id="print-btn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_ws">વર્કશીટ પ્રિન્ટ કરો</span></button>
+              <label class="check"><input type="checkbox" id="ws-answers"> <span data-i18n="ws_answers">જવાબો સાથે</span></label>
+              <button class="btn btn-sm" id="dl-png" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_png">આઉટપુટ ડાઉનલોડ કરો (PNG)</span></button>
             </div>
-            <p class="hint" data-i18n="slide_hint"></p>
+            <p class="hint" data-i18n="slide_hint">જુઓ કે 3 × 3ની બારી એક-એક પિક્સેલ કરીને ચિત્ર પર કેવી રીતે ચાલે છે. દરેક જગ્યાએ એ જ 9 સંખ્યાઓ વપરાય છે.</p>
           </div>
           <div class="card">
-            <h2 data-i18n="kernel_title"></h2>
+            <h2 data-i18n="kernel_title">ફિલ્ટર: 3 × 3 સંખ્યાઓ</h2>
             <div id="kernel-area"></div>
             <hr class="divider">
-            <h2 class="mb0" data-i18n="math_title"></h2>
+            <h2 class="mb0" data-i18n="math_title">પસંદ કરેલા પિક્સેલનું પગલે-પગલે ગણિત</h2>
             <p class="small muted" id="math-pos"></p>
             <div id="math-area" aria-live="polite"></div>
-            <p class="tiny muted" data-i18n="m_border"></p>
+            <p class="tiny muted" data-i18n="m_border">કિનારે જે પડોશી નથી, તે સૌથી નજીકના કિનારાના પિક્સેલની નકલ લે છે.</p>
           </div>
         </div>
       </section>
@@ -372,30 +372,30 @@
       <!-- Panel 3: what a CNN sees -->
       <section id="panel-cnn" role="tabpanel" aria-labelledby="tab-cnn" hidden>
         <div class="card">
-          <h2 data-i18n="cnn_title"></h2>
-          <p data-i18n="cnn_intro"></p>
+          <h2 data-i18n="cnn_title">ફીચર મૅપ: CNNનું પહેલું સ્તર શું શોધે છે</h2>
+          <p data-i18n="cnn_intro">CNN (કન્વોલ્યુશનલ ન્યુરલ નેટવર્ક) એ ફોટા, ચહેરા અને હસ્તાક્ષર ઓળખતું AI છે. તેનું પહેલું સ્તર ચિત્ર પર ઘણા નાના ફિલ્ટર સરકાવે છે, બરાબર ફિલ્ટર ટૅબની જેમ. દરેક ફિલ્ટર એક નવું ચિત્ર બનાવે છે, જેને ફીચર મૅપ કહે છે: જ્યાં તેની ભાત મળી ત્યાં તેજસ્વી, જ્યાં ન મળી ત્યાં અંધારું.</p>
           <div class="opts">
-            <span class="small muted" data-i18n="act_label"></span>
+            <span class="small muted" data-i18n="act_label">ફિલ્ટર પછી</span>
             <div class="seg" id="act-seg" role="group" data-i18n-aria-label="act_label">
-              <button type="button" data-act="relu" data-i18n="act_relu"></button>
-              <button type="button" data-act="abs" data-i18n="act_abs"></button>
+              <button type="button" data-act="relu" data-i18n="act_relu">ReLU (ફક્ત ધન રાખો)</button>
+              <button type="button" data-act="abs" data-i18n="act_abs">માપ (બંને દિશા)</button>
             </div>
-            <label class="check"><input type="checkbox" id="opt-pool"> <span data-i18n="pool_opt"></span></label>
+            <label class="check"><input type="checkbox" id="opt-pool"> <span data-i18n="pool_opt">મૅક્સ પૂલિંગ 2 × 2 (દર 4 માંથી સૌથી મોટી રાખો: માપ અડધું)</span></label>
           </div>
           <p class="hint" id="act-hint"></p>
           <div class="fm-grid" id="fm-grid"></div>
-          <p class="small muted" style="margin-top:10px"><span class="legend-sw" style="background:var(--c7)"></span> / <span class="legend-sw" style="background:var(--c2)"></span> <span data-i18n="kernel_legend"></span></p>
+          <p class="small muted" style="margin-top:10px"><span class="legend-sw" style="background:var(--c7)"></span> / <span class="legend-sw" style="background:var(--c2)"></span> <span data-i18n="kernel_legend">ફિલ્ટરના રંગ: વાદળી = ધન સંખ્યાઓ, નારંગી = ઋણ સંખ્યાઓ. મૅપ જેટલો તેજસ્વી, મેળ એટલો પાકો.</span></p>
         </div>
         <div class="card" style="margin-top:16px">
-          <h2 data-i18n="pipe_title"></h2>
+          <h2 data-i18n="pipe_title">પિક્સેલથી જવાબ સુધી</h2>
           <div class="pipe" id="pipe">
-            <div class="box"><span class="ico" aria-hidden="true">🔢</span><span data-i18n="pipe_1"></span></div><span class="arr" aria-hidden="true">→</span>
-            <div class="box"><span class="ico" aria-hidden="true">📐</span><span data-i18n="pipe_2"></span></div><span class="arr" aria-hidden="true">→</span>
-            <div class="box"><span class="ico" aria-hidden="true">◐</span><span data-i18n="pipe_3"></span></div><span class="arr" aria-hidden="true">→</span>
-            <div class="box"><span class="ico" aria-hidden="true">👁️</span><span data-i18n="pipe_4"></span></div><span class="arr" aria-hidden="true">→</span>
-            <div class="box last"><span class="ico" aria-hidden="true">🥭</span><span data-i18n="pipe_5"></span></div>
+            <div class="box"><span class="ico" aria-hidden="true">🔢</span><span data-i18n="pipe_1">ચિત્ર = સંખ્યાઓ</span></div><span class="arr" aria-hidden="true">→</span>
+            <div class="box"><span class="ico" aria-hidden="true">📐</span><span data-i18n="pipe_2">સ્તર 1: કિનારીઓ</span></div><span class="arr" aria-hidden="true">→</span>
+            <div class="box"><span class="ico" aria-hidden="true">◐</span><span data-i18n="pipe_3">સ્તર 2: ખૂણા અને વળાંક</span></div><span class="arr" aria-hidden="true">→</span>
+            <div class="box"><span class="ico" aria-hidden="true">👁️</span><span data-i18n="pipe_4">સ્તર 3: આંખ, પાંદડાં, પૈડાં જેવા ભાગ</span></div><span class="arr" aria-hidden="true">→</span>
+            <div class="box last"><span class="ico" aria-hidden="true">🥭</span><span data-i18n="pipe_5">જવાબ: &quot;કેરી&quot; 92%</span></div>
           </div>
-          <p class="callout accent" style="margin-top:12px" data-i18n="pipe_note"></p>
+          <p class="callout accent" style="margin-top:12px" data-i18n="pipe_note">ઊંડાં સ્તરો નાની ભાતો જોડીને મોટી ભાતો બનાવે છે. આ ફિલ્ટરની સંખ્યાઓ કોઈ ટાઇપ કરતું નથી: CNN હજારો લેબલવાળા ફોટામાંથી તે જાતે શીખે છે. નવાઈની વાત એ છે કે તેણે શીખેલાં પહેલા સ્તરનાં ફિલ્ટર આ પાનાંનાં કિનારી-ફિલ્ટર જેવાં જ દેખાય છે!</p>
         </div>
       </section>
 
@@ -403,35 +403,35 @@
       <section id="panel-game" role="tabpanel" aria-labelledby="tab-game" hidden>
         <div class="card" id="g-card">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="g_title"></h2>
+            <h2 class="mb0" data-i18n="g_title">આ કયા ફિલ્ટરથી બન્યું?</h2>
             <span class="g-score" id="g-score" aria-live="polite"></span>
           </div>
-          <p data-i18n="g_intro"></p>
+          <p data-i18n="g_intro">કમ્પ્યુટરે ચિત્ર પર એક ગુપ્ત ફિલ્ટર લગાવ્યું છે. બંને ચિત્રોની સરખામણી કરો અને ફિલ્ટર પસંદ કરો.</p>
           <div class="g-layout">
             <div class="pair">
-              <figure><figcaption data-i18n="in_label"></figcaption><canvas id="g-in" class="pic" width="512" height="512" role="img" data-i18n-aria-label="in_label"></canvas></figure>
-              <figure><figcaption data-i18n="g_mystery"></figcaption><canvas id="g-out" class="pic" width="512" height="512" role="img" data-i18n-aria-label="g_mystery"></canvas></figure>
+              <figure><figcaption data-i18n="in_label">ઇનપુટ</figcaption><canvas id="g-in" class="pic" width="512" height="512" role="img" data-i18n-aria-label="in_label"></canvas></figure>
+              <figure><figcaption data-i18n="g_mystery">રહસ્યમય આઉટપુટ</figcaption><canvas id="g-out" class="pic" width="512" height="512" role="img" data-i18n-aria-label="g_mystery"></canvas></figure>
             </div>
             <div class="g-opts" id="g-options"></div>
           </div>
           <p class="callout" id="g-feedback" aria-live="polite" style="margin-top:12px"></p>
           <div class="row" style="margin-top:12px">
             <button class="btn btn-primary" id="g-next" type="button" data-i18n="next"></button>
-            <span class="small muted" data-i18n="g_tip"></span>
+            <span class="small muted" data-i18n="g_tip">સૂચન: નવા પડકાર માટે ઉપર ચિત્ર કે પિક્સેલની સંખ્યા બદલો.</span>
           </div>
         </div>
       </section>
     </div>
 
     <details class="card help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">કેવી રીતે વાપરવું / વર્ગ માટે વિચારો</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">&quot;અંક 7&quot; એક લીટીમાં 8 કે 16 પિક્સેલ પર લો અને &quot;ચિત્ર પર સંખ્યાઓ&quot; ચાલુ કરો. વર્ગને પૂછો: શું ફક્ત સંખ્યાઓ જોઈને અંક ઓળખી શકાય? (હસ્તાક્ષરના જાણીતા ડેટાસેટ 28 × 28 પિક્સેલના હોય છે.)</li>
+        <li data-i18n="help_2">સ્માઇલીની કિનારી પરના પિક્સેલ પર ટૅપ કરો અને તેના 7 × 7 પડોશીઓ જુઓ: સંખ્યાઓમાં અચાનક મોટો કૂદકો એટલે કિનારી.</li>
+        <li data-i18n="help_3">ફિલ્ટર ટૅબમાં મોટી સ્ક્રીન પર &quot;ફિલ્ટર સરકાવો&quot; દબાવો અને બતાવો કે દરેક જગ્યાએ એ જ 9 સંખ્યાઓ વપરાય છે.</li>
+        <li data-i18n="help_4">વર્ગ પ્રવૃત્તિ &quot;કમ્પ્યુટર બનો&quot;: વર્કશીટ પ્રિન્ટ કરો (શિક્ષક માટે જવાબો સાથે), વિદ્યાર્થીઓની જોડીઓ હાથથી 5 × 5 આઉટપુટ શોધે, પછી ઍપમાં ચકાસે.</li>
+        <li data-i18n="help_5">પડકાર: &quot;મારું ફિલ્ટર&quot; એવું બનાવો કે તે ફક્ત ત્રાંસી રેખાઓ શોધે, અને તેને આકારો કે તિરંગા પર અજમાવો.</li>
+        <li data-i18n="help_6">સ્માર્ટબોર્ડ પર &quot;પૂર્ણ સ્ક્રીન&quot; વાપરો. એક વાર ખૂલ્યા પછી ઍપ ઇન્ટરનેટ વગર પણ ચાલે છે.</li>
       </ul>
     </details>
 

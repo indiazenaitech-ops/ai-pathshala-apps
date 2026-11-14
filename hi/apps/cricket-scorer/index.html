@@ -202,52 +202,52 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="callout success small privacy no-print"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">गली, स्कूल या ऑफ़िस के क्रिकेट मैच का स्कोर हर गेंद पर लिखें: लाइव स्कोर, रन रेट, टारगेट, पूरा स्कोरकार्ड और WhatsApp सारांश। बिना इंटरनेट भी चलता है।</p>
+    <p class="callout success small privacy no-print"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">मुफ़्त और ऑफ़लाइन। न साइन-अप, न विज्ञापन। मैच सिर्फ़ इसी फ़ोन या कंप्यूटर पर सेव होता है।</span></p>
 
     <!-- ============ SETUP ============ -->
     <section class="card" id="setupView" aria-labelledby="hSetup">
-      <h2 id="hSetup" data-i18n="h_setup"></h2>
+      <h2 id="hSetup" data-i18n="h_setup">मैच की तैयारी</h2>
       <form id="setupForm" novalidate>
         <div class="su-grid">
-          <div class="field"><label for="suT1" data-i18n="lbl_team1"></label><input id="suT1" type="text" class="no-i18n" maxlength="30" autocomplete="off"></div>
-          <div class="field"><label for="suT2" data-i18n="lbl_team2"></label><input id="suT2" type="text" class="no-i18n" maxlength="30" autocomplete="off"></div>
+          <div class="field"><label for="suT1" data-i18n="lbl_team1">टीम 1</label><input id="suT1" type="text" class="no-i18n" maxlength="30" autocomplete="off"></div>
+          <div class="field"><label for="suT2" data-i18n="lbl_team2">टीम 2</label><input id="suT2" type="text" class="no-i18n" maxlength="30" autocomplete="off"></div>
           <div class="field">
-            <label for="suPps" data-i18n="lbl_pps"></label>
+            <label for="suPps" data-i18n="lbl_pps">हर टीम में खिलाड़ी</label>
             <div class="su-num"><input id="suPps" type="number" min="2" max="11" step="1" inputmode="numeric"><span class="hint">2–11</span></div>
           </div>
           <div class="field">
-            <label for="suOvers" data-i18n="lbl_overs"></label>
+            <label for="suOvers" data-i18n="lbl_overs">हर पारी में ओवर</label>
             <div class="su-num"><input id="suOvers" type="number" min="1" max="50" step="1" inputmode="numeric">
-              <label class="check"><input type="checkbox" id="suUnl"> <span data-i18n="lbl_unlimited"></span></label></div>
+              <label class="check"><input type="checkbox" id="suUnl"> <span data-i18n="lbl_unlimited">ओवर की कोई सीमा नहीं</span></label></div>
           </div>
           <div class="field"><label for="suP1" id="suP1L"></label><textarea id="suP1" class="no-i18n" rows="4" aria-describedby="suPH"></textarea><span class="hint" id="suP1C"></span></div>
           <div class="field"><label for="suP2" id="suP2L"></label><textarea id="suP2" class="no-i18n" rows="4" aria-describedby="suPH"></textarea><span class="hint" id="suP2C"></span></div>
-          <p class="hint wide mb0" id="suPH" data-i18n="hint_players"></p>
-          <div class="field"><label for="suToss" data-i18n="lbl_toss"></label><select id="suToss" class="no-i18n"></select></div>
-          <div class="field"><span class="lbl" id="suDecL"><b data-i18n="lbl_decision"></b></span>
+          <p class="hint wide mb0" id="suPH" data-i18n="hint_players">खिलाड़ियों के नाम ज़रूरी नहीं: हर लाइन में एक नाम। WhatsApp से लिस्ट पेस्ट कर सकते हैं।</p>
+          <div class="field"><label for="suToss" data-i18n="lbl_toss">टॉस किसने जीता</label><select id="suToss" class="no-i18n"></select></div>
+          <div class="field"><span class="lbl" id="suDecL"><b data-i18n="lbl_decision">क्या चुना</b></span>
             <div class="seg" role="group" aria-labelledby="suDecL" id="suDec">
-              <button type="button" data-v="bat" id="decBat" data-i18n="opt_bat"></button><button type="button" data-v="bowl" id="decBowl" data-i18n="opt_bowl"></button>
+              <button type="button" data-v="bat" id="decBat" data-i18n="opt_bat">पहले बल्लेबाज़ी</button><button type="button" data-v="bowl" id="decBowl" data-i18n="opt_bowl">पहले गेंदबाज़ी</button>
             </div>
           </div>
         </div>
         <details class="su-rules" id="suRules">
-          <summary data-i18n="h_rules"></summary>
+          <summary data-i18n="h_rules">गली के नियम</summary>
           <div class="su-grid">
-            <div class="field"><label for="suWd" data-i18n="lbl_wide"></label>
-              <select id="suWd"><option value="1" data-i18n="opt_run_reball"></option><option value="0" data-i18n="opt_norun_reball"></option></select></div>
-            <div class="field"><label for="suNb" data-i18n="lbl_noball"></label>
-              <select id="suNb"><option value="1" data-i18n="opt_run_reball"></option><option value="0" data-i18n="opt_norun_reball"></option></select></div>
-            <label class="check"><input type="checkbox" id="suFh"> <span data-i18n="lbl_freehit"></span></label>
-            <label class="check"><input type="checkbox" id="suAlone"> <span data-i18n="lbl_lastalone"></span></label>
-            <div class="field"><label for="suMax" data-i18n="lbl_maxov"></label>
-              <div class="su-num"><input id="suMax" type="number" min="0" max="50" step="1" inputmode="numeric"><span class="hint" data-i18n="hint_maxov"></span></div></div>
+            <div class="field"><label for="suWd" data-i18n="lbl_wide">वाइड गेंद</label>
+              <select id="suWd"><option value="1" data-i18n="opt_run_reball">1 रन + गेंद दोबारा</option><option value="0" data-i18n="opt_norun_reball">रन नहीं, बस गेंद दोबारा</option></select></div>
+            <div class="field"><label for="suNb" data-i18n="lbl_noball">नो-बॉल</label>
+              <select id="suNb"><option value="1" data-i18n="opt_run_reball">1 रन + गेंद दोबारा</option><option value="0" data-i18n="opt_norun_reball">रन नहीं, बस गेंद दोबारा</option></select></div>
+            <label class="check"><input type="checkbox" id="suFh"> <span data-i18n="lbl_freehit">नो-बॉल के बाद फ़्री हिट</span></label>
+            <label class="check"><input type="checkbox" id="suAlone"> <span data-i18n="lbl_lastalone">आख़िरी बल्लेबाज़ अकेले खेल सकता है</span></label>
+            <div class="field"><label for="suMax" data-i18n="lbl_maxov">एक गेंदबाज़ के ज़्यादा से ज़्यादा ओवर</label>
+              <div class="su-num"><input id="suMax" type="number" min="0" max="50" step="1" inputmode="numeric"><span class="hint" data-i18n="hint_maxov">0 = कोई सीमा नहीं</span></div></div>
           </div>
-          <p class="hint mb0" style="margin-top:10px" data-i18n="rules_note"></p>
+          <p class="hint mb0" style="margin-top:10px" data-i18n="rules_note">स्कोरिंग MCC के क्रिकेट नियमों (2017 कोड, 2022 संस्करण) और यहाँ चुने गए गली नियमों के हिसाब से होती है। फ़्री हिट और सुपर ओवर ICC की शर्तों के हिसाब से हैं।</p>
         </details>
         <div class="row su-btns">
-          <button type="submit" class="btn btn-primary btn-lg" id="btnStart"><span aria-hidden="true">🏏</span> <span data-i18n="btn_start"></span></button>
-          <button type="button" class="btn" id="btnSample" data-i18n="btn_sample"></button>
+          <button type="submit" class="btn btn-primary btn-lg" id="btnStart"><span aria-hidden="true">🏏</span> <span data-i18n="btn_start">मैच शुरू करें</span></button>
+          <button type="button" class="btn" id="btnSample" data-i18n="btn_sample">नमूना मैच देखें</button>
         </div>
       </form>
     </section>
@@ -256,20 +256,20 @@
     <div class="lv" id="liveView" hidden>
       <div class="lv-col">
         <div class="board" id="board" aria-live="polite">
-          <div class="b-top"><span id="bInn"></span><span class="b-fh" id="bFh" hidden data-i18n="free_hit"></span><span class="grow"></span>
+          <div class="b-top"><span id="bInn"></span><span class="b-fh" id="bFh" hidden data-i18n="free_hit">फ़्री हिट</span><span class="grow"></span>
             <button type="button" class="b-fsbtn no-print" id="btnBoard"></button></div>
           <div class="b-team no-i18n" id="bTeam"></div>
           <div class="b-score"><span class="b-total num" id="sTotal">0/0</span>
-            <span class="b-ov"><bdi class="num" dir="ltr"><span id="sOvers">0</span><span id="sOvMax"></span></bdi> <small data-i18n="lbl_overs_word"></small></span></div>
+            <span class="b-ov"><bdi class="num" dir="ltr"><span id="sOvers">0</span><span id="sOvMax"></span></bdi> <small data-i18n="lbl_overs_word">ओवर</small></span></div>
           <div class="b-stats">
-            <div class="b-stat"><span data-i18n="lbl_crr"></span><b class="num" id="sCrr">-</b></div>
-            <div class="b-stat" id="stTarget" hidden><span data-i18n="lbl_target"></span><b class="num" id="sTarget"></b></div>
-            <div class="b-stat" id="stRrr" hidden><span data-i18n="lbl_rrr"></span><b class="num" id="sRrr"></b></div>
+            <div class="b-stat"><span data-i18n="lbl_crr">रन रेट</span><b class="num" id="sCrr">-</b></div>
+            <div class="b-stat" id="stTarget" hidden><span data-i18n="lbl_target">टारगेट</span><b class="num" id="sTarget"></b></div>
+            <div class="b-stat" id="stRrr" hidden><span data-i18n="lbl_rrr">ज़रूरी रन रेट</span><b class="num" id="sRrr"></b></div>
           </div>
           <div class="b-need" id="bNeed"></div>
           <div class="b-result" id="bResult"></div>
           <div class="b-rows no-i18n" id="bRows"></div>
-          <div class="b-over"><span data-i18n="lbl_this_over"></span><div class="chips no-i18n" id="bOver"></div></div>
+          <div class="b-over"><span data-i18n="lbl_this_over">यह ओवर</span><div class="chips no-i18n" id="bOver"></div></div>
           <div class="b-part" id="bPart"></div>
           <div class="b-toss" id="bToss"></div>
         </div>
@@ -277,74 +277,74 @@
         <div class="card prompt" id="prompt"></div>
 
         <section class="card pad" id="pad" aria-labelledby="padH">
-          <h2 class="sr-only" id="padH" data-i18n="btn_wkt"></h2>
+          <h2 class="sr-only" id="padH" data-i18n="btn_wkt">विकेट</h2>
           <div class="pad-runs" id="padRuns">
             <button type="button" class="btn key" data-run="0" id="run0">0</button><button type="button" class="btn key" data-run="1" id="run1">1</button><button type="button" class="btn key" data-run="2" id="run2">2</button><button type="button" class="btn key" data-run="3" id="run3">3</button><button type="button" class="btn key k4" data-run="4" id="run4">4</button><button type="button" class="btn key" data-run="5" id="run5">5</button><button type="button" class="btn key k6" data-run="6" id="run6">6</button>
           </div>
           <div class="pad-x">
-            <button type="button" class="btn" id="xWd" data-x="wd" aria-pressed="false" data-i18n="btn_wd"></button>
-            <button type="button" class="btn" id="xNb" data-x="nb" aria-pressed="false" data-i18n="btn_nb"></button>
-            <button type="button" class="btn" id="xB" data-x="b" aria-pressed="false" data-i18n="btn_bye"></button>
-            <button type="button" class="btn" id="xLb" data-x="lb" aria-pressed="false" data-i18n="btn_lb"></button>
-            <button type="button" class="btn btn-out" id="btnWkt" data-i18n="btn_wkt"></button>
+            <button type="button" class="btn" id="xWd" data-x="wd" aria-pressed="false" data-i18n="btn_wd">वाइड</button>
+            <button type="button" class="btn" id="xNb" data-x="nb" aria-pressed="false" data-i18n="btn_nb">नो-बॉल</button>
+            <button type="button" class="btn" id="xB" data-x="b" aria-pressed="false" data-i18n="btn_bye">बाई</button>
+            <button type="button" class="btn" id="xLb" data-x="lb" aria-pressed="false" data-i18n="btn_lb">लेग-बाई</button>
+            <button type="button" class="btn btn-out" id="btnWkt" data-i18n="btn_wkt">विकेट</button>
           </div>
           <p class="arm hint" id="armHint" aria-live="polite"></p>
           <div class="pad-tools">
-            <button type="button" class="btn" id="btnUndo"><span aria-hidden="true">↶</span> <span data-i18n="btn_undo"></span></button>
-            <button type="button" class="btn" id="btnSwap"><span aria-hidden="true">⇄</span> <span data-i18n="btn_swap"></span></button>
-            <button type="button" class="btn" id="btnChBowl" data-i18n="btn_chbowl"></button>
-            <button type="button" class="btn" id="btnRetire" data-i18n="btn_retire"></button>
-            <button type="button" class="btn btn-danger" id="btnEnd" data-i18n="btn_end"></button>
+            <button type="button" class="btn" id="btnUndo"><span aria-hidden="true">↶</span> <span data-i18n="btn_undo">पिछला हटाएँ</span></button>
+            <button type="button" class="btn" id="btnSwap"><span aria-hidden="true">⇄</span> <span data-i18n="btn_swap">स्ट्राइक बदलें</span></button>
+            <button type="button" class="btn" id="btnChBowl" data-i18n="btn_chbowl">गेंदबाज़ बदलें</button>
+            <button type="button" class="btn" id="btnRetire" data-i18n="btn_retire">बल्लेबाज़ रिटायर</button>
+            <button type="button" class="btn btn-danger" id="btnEnd" data-i18n="btn_end">पारी ख़त्म करें</button>
           </div>
-          <p class="tiny muted mb0" style="margin-top:10px" data-i18n="key_hint"></p>
+          <p class="tiny muted mb0" style="margin-top:10px" data-i18n="key_hint">कीबोर्ड: रन के लिए 0 से 6, विकेट के लिए W, पिछला हटाने के लिए U।</p>
         </section>
       </div>
 
       <div class="lv-col" id="lvTables">
         <section class="card" aria-labelledby="hBat">
-          <h2 id="hBat" data-i18n="sum_top_bat"></h2>
+          <h2 id="hBat" data-i18n="sum_top_bat">बल्लेबाज़ी</h2>
           <div class="scroll-x"><table class="table" id="tBat"></table></div>
-          <h2 style="margin-top:16px" data-i18n="sum_top_bowl"></h2>
+          <h2 style="margin-top:16px" data-i18n="sum_top_bowl">गेंदबाज़ी</h2>
           <div class="scroll-x"><table class="table" id="tBowl"></table></div>
-          <h3 style="margin-top:16px" data-i18n="lbl_fow"></h3>
+          <h3 style="margin-top:16px" data-i18n="lbl_fow">विकेट कब गिरे</h3>
           <p class="fow" id="lvFow"></p>
         </section>
         <div class="row">
-          <button type="button" class="btn" id="btnNew"><span aria-hidden="true">＋</span> <span data-i18n="btn_newmatch"></span></button>
+          <button type="button" class="btn" id="btnNew"><span aria-hidden="true">＋</span> <span data-i18n="btn_newmatch">नया मैच</span></button>
         </div>
       </div>
     </div>
 
     <!-- ============ SCORECARD ============ -->
     <section class="card" id="scCard" aria-labelledby="hSc">
-      <h2 id="hSc" data-i18n="h_scorecard"></h2>
-      <div class="callout warning small row spread" id="scSaved" hidden><span data-i18n="viewing_saved"></span><button type="button" class="btn btn-sm" id="btnCloseSaved" data-i18n="btn_back_live"></button></div>
+      <h2 id="hSc" data-i18n="h_scorecard">स्कोरकार्ड</h2>
+      <div class="callout warning small row spread" id="scSaved" hidden><span data-i18n="viewing_saved">आप एक सेव किया हुआ मैच देख रहे हैं।</span><button type="button" class="btn btn-sm" id="btnCloseSaved" data-i18n="btn_back_live">बंद करें</button></div>
       <p class="result-line" id="scResult" aria-live="polite"></p>
       <div id="scBody"></div>
       <div class="chart-box" id="chartBox">
-        <h3 data-i18n="h_chart"></h3>
+        <h3 data-i18n="h_chart">हर ओवर के रन</h3>
         <div class="chart" id="chart"></div>
         <div class="legend no-i18n" id="legend"></div>
-        <details class="chart-tbl"><summary data-i18n="show_table"></summary><div class="scroll-x"><table class="table" id="chartTbl"></table></div></details>
+        <details class="chart-tbl"><summary data-i18n="show_table">संख्याएँ दिखाएँ</summary><div class="scroll-x"><table class="table" id="chartTbl"></table></div></details>
       </div>
       <div class="actions">
-        <button type="button" class="btn" id="btnCopy"><span aria-hidden="true">⧉</span> <span data-i18n="btn_copy_sum"></span></button>
-        <a class="btn btn-wa" id="btnWa" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="btn_wa_sum"></span></a>
+        <button type="button" class="btn" id="btnCopy"><span aria-hidden="true">⧉</span> <span data-i18n="btn_copy_sum">सारांश कॉपी करें</span></button>
+        <a class="btn btn-wa" id="btnWa" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="btn_wa_sum">WhatsApp पर भेजें</span></a>
         <button type="button" class="btn" id="btnPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
       </div>
     </section>
 
     <!-- ============ HISTORY ============ -->
     <section class="card" id="histCard" aria-labelledby="hHist">
-      <h2 id="hHist" data-i18n="h_history"></h2>
+      <h2 id="hHist" data-i18n="h_history">ख़त्म हुए मैच</h2>
       <div class="hist" id="histList"></div>
     </section>
 
     <details class="card help no-print">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li><li data-i18n="tip5"></li><li data-i18n="tip6"></li>
+        <li data-i18n="tip1">टीमों के नाम और ओवर लिखें या जैसे हैं वैसे रहने दें, फिर &quot;मैच शुरू करें&quot; दबाएँ। खिलाड़ियों के नाम ज़रूरी नहीं।</li><li data-i18n="tip2">हर गेंद के बाद रन दबाएँ। वाइड या नो-बॉल हो तो पहले वाइड या नो-बॉल दबाएँ, फिर लिए गए रन (कोई नहीं तो 0)।</li><li data-i18n="tip3">ग़लती हो गई? जितनी चाहें उतनी गेंदें हटाएँ: पूरा स्कोर गेंदों की लिस्ट से फिर से गिना जाता है।</li>
+        <li data-i18n="tip4">फ़ोन को स्टैंड पर रखें या प्रोजेक्टर से जोड़ें और &quot;बड़ा स्कोरबोर्ड&quot; दबाएँ, ताकि मैदान पर सब स्कोर देख सकें।</li><li data-i18n="tip5">मैच के बाद टीम के WhatsApp ग्रुप में सारांश भेजें या पूरा स्कोरकार्ड प्रिंट करें।</li><li data-i18n="tip6">ऑफ़िस या स्कूल का टूर्नामेंट? मैच से पहले गली के नियम और एक गेंदबाज़ के ज़्यादा से ज़्यादा ओवर तय करें। हर पूरा स्कोरकार्ड &quot;ख़त्म हुए मैच&quot; में रहता है।</li>
       </ul>
     </details>
 

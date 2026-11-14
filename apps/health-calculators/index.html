@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Health Calculators · AI Pathshala</title>
+  <meta name="description" content="Free BMI calculator (WHO and Asian cut-offs), healthy weight for your height, daily calories, a rough daily water guide and waist-to-height ratio. 12 Indian languages, works offline. General information only, not medical advice.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .hc-note { font-weight: 600; margin: 0 0 16px; }
+    .hc-form h2, .hc-panel h2 { font-size: 1.15rem; margin: 0; }
+    .hc-form > * + *, .hc-panel > * + * { margin-top: 14px; }
+    .hc-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; align-items: end; }
+    .hc-fields input, .hc-fields select { width: 100%; min-height: 50px; font-size: 1.2rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .hc-fields select { font-size: 1rem; font-weight: 600; }
+    .hc-fields input[aria-invalid="true"] { border-color: var(--danger); background: var(--danger-soft); }
+    .hc-wide { grid-column: 1 / -1; }
+    .hc-seg { display: flex; width: 100%; max-width: 420px; }
+    .hc-seg button { flex: 1 1 0; min-height: 44px; white-space: normal; line-height: 1.25; }
+
+    .hc-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 16px 0; }
+    .hc-tabs button {
+      min-width: 0; font: inherit; font-weight: 700; font-size: .95rem; color: var(--text); background: var(--surface);
+      border: 1px solid var(--border); border-radius: 12px; padding: 8px 6px; min-height: 56px; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+    .hc-tabs button:hover { background: var(--surface-2); }
+    .hc-tabs button[aria-selected="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+    .hc-tabs .ic { font-size: 1.25rem; line-height: 1; }
+    @media (max-width: 640px) { .hc-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; } .hc-tabs button { font-size: .86rem; } }
+
+    .hc-out { font-size: clamp(2rem, 8vw, 3.4rem); font-weight: 800; line-height: 1.15; font-variant-numeric: tabular-nums; color: var(--primary); overflow-wrap: anywhere; }
+    :root[lang="ur"] .hc-out { line-height: 1.8; }
+    .hc-sub { font-weight: 700; font-size: 1.05rem; margin: 0; }
+    .hc-lines { display: flex; flex-wrap: wrap; gap: 8px; }
+    .hc-pill { display: inline-block; font-weight: 700; padding: 6px 12px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); line-height: 1.3; }
+    .hc-pill.ok { background: var(--success-soft); border-color: var(--success); }
+    .hc-pill.mid { background: var(--warning-soft); border-color: var(--warning); }
+    .hc-pill.bad { background: var(--danger-soft); border-color: var(--danger); }
+    .hc-exp { margin: 0; font-size: 1.02rem; }
+    .hc-err { margin: 0; font-weight: 600; }
+    .hc-small { margin: 0; color: var(--muted); font-size: .9rem; }
+
+    /* BMI scale: 15 to 40 */
+    .hc-scale { position: relative; padding-top: 16px; margin-bottom: 8px; }
+    .hc-bar { display: flex; height: 16px; border-radius: 8px; overflow: hidden; }
+    .hc-bar i { display: block; height: 100%; }
+    .hc-bar .s1 { width: 14%; background: #f5b942; } .hc-bar .s2 { width: 26%; background: #3fae6a; }
+    .hc-bar .s3 { width: 20%; background: #f08a3c; } .hc-bar .s4 { width: 40%; background: #d9534f; }
+    .hc-mark { position: absolute; top: 0; inset-inline-start: 0; width: 0; height: 36px; }
+    .hc-mark::before { content: ""; position: absolute; top: 8px; inset-inline-start: -3px; width: 6px; height: 28px; border-radius: 3px; background: var(--text); border: 1px solid var(--surface); }
+    .hc-ticks { position: relative; height: 20px; font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .hc-ticks span { position: absolute; top: 4px; transform: translateX(-50%); }
+    :root[dir="rtl"] .hc-ticks span { transform: translateX(50%); }
+    .hc-table td.now { background: var(--primary-soft); font-weight: 800; }
+    .hc-table th, .hc-table td { padding: 7px 8px; }
+    .hc-check { min-height: 44px; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="callout warning hc-note" id="disclaimer" role="note" data-i18n="disclaimer"></p>
+
+    <section class="card hc-form" aria-labelledby="detH">
+      <h2 id="detH" data-i18n="details"></h2>
+      <div class="seg hc-seg" role="group" data-i18n-aria-label="h_unit">
+        <button type="button" id="u-cm" data-unit="cm" data-i18n="h_cm_opt"></button>
+        <button type="button" id="u-ft" data-unit="ft" data-i18n="h_ft_opt"></button>
+      </div>
+      <div class="hc-fields">
+        <div class="field" id="f-hcm"><label for="h-cm" data-i18n="lbl_h_cm"></label><input type="text" id="h-cm" data-k="hcm" inputmode="decimal" autocomplete="off" maxlength="12"></div>
+        <div class="field" id="f-hft" hidden><label for="h-ft" data-i18n="lbl_ft"></label><input type="text" id="h-ft" data-k="hft" inputmode="numeric" autocomplete="off" maxlength="12"></div>
+        <div class="field" id="f-hin" hidden><label for="h-in" data-i18n="lbl_in"></label><input type="text" id="h-in" data-k="hin" inputmode="decimal" autocomplete="off" maxlength="12"></div>
+        <div class="field"><label for="w-kg" data-i18n="lbl_w"></label><input type="text" id="w-kg" data-k="w" inputmode="decimal" autocomplete="off" maxlength="12"></div>
+      </div>
+    </section>
+
+    <div class="hc-tabs" role="tablist" data-i18n-aria-label="tabs_label">
+      <button type="button" role="tab" id="tab-bmi" data-tab="bmi" aria-controls="p-bmi"><span class="ic" aria-hidden="true">⚖️</span><span data-i18n="tab_bmi"></span></button>
+      <button type="button" role="tab" id="tab-ideal" data-tab="ideal" aria-controls="p-ideal"><span class="ic" aria-hidden="true">🎯</span><span data-i18n="tab_ideal"></span></button>
+      <button type="button" role="tab" id="tab-cal" data-tab="cal" aria-controls="p-cal"><span class="ic" aria-hidden="true">🍽️</span><span data-i18n="tab_cal"></span></button>
+      <button type="button" role="tab" id="tab-water" data-tab="water" aria-controls="p-water"><span class="ic" aria-hidden="true">💧</span><span data-i18n="tab_water"></span></button>
+      <button type="button" role="tab" id="tab-waist" data-tab="waist" aria-controls="p-waist"><span class="ic" aria-hidden="true">📏</span><span data-i18n="tab_waist"></span></button>
+    </div>
+
+    <!-- BMI -->
+    <section class="card hc-panel" id="p-bmi" role="tabpanel" aria-labelledby="tab-bmi">
+      <h2 data-i18n="bmi_h"></h2>
+      <p class="callout danger hc-err" id="err-bmi" role="alert" hidden></p>
+      <div id="res-bmi" class="stack" aria-live="polite">
+        <div class="hc-out" id="out-bmi"></div>
+        <div class="hc-lines"><span class="hc-pill" id="bmi-who"></span><span class="hc-pill" id="bmi-asian"></span></div>
+        <div class="hc-scale" aria-hidden="true">
+          <div class="hc-mark" id="bmi-mark"></div>
+          <div class="hc-bar"><i class="s1"></i><i class="s2"></i><i class="s3"></i><i class="s4"></i></div>
+          <div class="hc-ticks no-i18n"><span style="inset-inline-start:14%">18.5</span><span style="inset-inline-start:40%">25</span><span style="inset-inline-start:60%">30</span></div>
+        </div>
+        <p class="hc-exp" id="bmi-exp"></p>
+      </div>
+      <div class="scroll-x">
+        <table class="table hc-table" id="bmi-table">
+          <thead><tr><th data-i18n="th_cat"></th><th data-i18n="th_who"></th><th data-i18n="th_asian"></th></tr></thead>
+          <tbody id="bmi-rows"></tbody>
+        </table>
+      </div>
+      <p class="callout" id="asian-note" data-i18n="asian_note"></p>
+      <p class="hc-small" data-i18n="bmi_limit"></p>
+    </section>
+
+    <!-- ideal weight -->
+    <section class="card hc-panel" id="p-ideal" role="tabpanel" aria-labelledby="tab-ideal" hidden>
+      <h2 data-i18n="ideal_h"></h2>
+      <p class="callout danger hc-err" id="err-ideal" role="alert" hidden></p>
+      <div id="res-ideal" class="stack" aria-live="polite">
+        <div class="hc-out" id="out-ideal"></div>
+        <p class="hc-exp" id="ideal-exp"></p>
+        <p class="callout" id="ideal-asian"></p>
+        <p class="hc-sub" id="ideal-now"></p>
+      </div>
+      <p class="hc-small" data-i18n="bmi_limit"></p>
+    </section>
+
+    <!-- calories -->
+    <section class="card hc-panel" id="p-cal" role="tabpanel" aria-labelledby="tab-cal" hidden>
+      <h2 data-i18n="cal_h"></h2>
+      <div class="hc-fields">
+        <div class="field"><label for="age" data-i18n="lbl_age"></label><input type="text" id="age" data-k="age" inputmode="numeric" autocomplete="off" maxlength="12"></div>
+        <div class="field"><span id="sexL" class="hc-lbl" style="font-weight:600;font-size:.92rem;color:var(--text)" data-i18n="lbl_sex"></span>
+          <div class="seg hc-seg" role="group" aria-labelledby="sexL">
+            <button type="button" id="sex-m" data-sex="m" data-i18n="sex_m"></button>
+            <button type="button" id="sex-f" data-sex="f" data-i18n="sex_f"></button>
+          </div>
+        </div>
+        <div class="field hc-wide"><label for="act" data-i18n="lbl_act"></label>
+          <select id="act" data-k="act">
+            <option value="1" data-i18n="act_1"></option>
+            <option value="2" data-i18n="act_2"></option>
+            <option value="3" data-i18n="act_3"></option>
+            <option value="4" data-i18n="act_4"></option>
+            <option value="5" data-i18n="act_5"></option>
+          </select>
+        </div>
+      </div>
+      <p class="callout danger hc-err" id="err-cal" role="alert" hidden></p>
+      <div id="res-cal" class="stack" aria-live="polite">
+        <div class="hc-out" id="out-tdee"></div>
+        <p class="hc-sub" id="out-bmr"></p>
+        <p class="hc-exp" id="cal-exp"></p>
+      </div>
+      <p class="hc-small" data-i18n="cal_note"></p>
+    </section>
+
+    <!-- water -->
+    <section class="card hc-panel" id="p-water" role="tabpanel" aria-labelledby="tab-water" hidden>
+      <h2 data-i18n="water_h"></h2>
+      <label class="check hc-check"><input type="checkbox" id="hot"><span data-i18n="lbl_hot"></span></label>
+      <p class="callout danger hc-err" id="err-water" role="alert" hidden></p>
+      <div id="res-water" class="stack" aria-live="polite">
+        <div class="hc-out" id="out-water"></div>
+        <p class="hc-sub" id="water-glasses"></p>
+      </div>
+      <p class="hc-exp" data-i18n="water_exp"></p>
+      <p class="callout warning" data-i18n="water_warn"></p>
+    </section>
+
+    <!-- waist to height -->
+    <section class="card hc-panel" id="p-waist" role="tabpanel" aria-labelledby="tab-waist" hidden>
+      <h2 data-i18n="whtr_h"></h2>
+      <div class="hc-fields">
+        <div class="field"><label for="waist" id="waistL"></label><input type="text" id="waist" inputmode="decimal" autocomplete="off" maxlength="12"></div>
+      </div>
+      <p class="hc-small" data-i18n="waist_how"></p>
+      <p class="callout danger hc-err" id="err-waist" role="alert" hidden></p>
+      <div id="res-waist" class="stack" aria-live="polite">
+        <div class="hc-out" id="out-whtr"></div>
+        <div class="hc-lines"><span class="hc-pill" id="whtr-cat"></span></div>
+        <p class="hc-exp" id="whtr-exp"></p>
+        <p class="callout" id="whtr-rule"></p>
+      </div>
+    </section>
+
+    <details class="card" id="helpBox" style="margin-top:16px">
+      <summary data-i18n="help"></summary>
+      <ul class="stack" style="margin-top:10px">
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+        <li data-i18n="tip5"></li>
+      </ul>
+      <div class="row spread" style="margin-top:12px">
+        <span class="small muted" data-i18n="saved_local"></span>
+        <button class="btn btn-sm btn-danger" id="resetAll" type="button" data-i18n="reset"></button>
+      </div>
+    </details>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

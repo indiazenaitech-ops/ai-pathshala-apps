@@ -175,80 +175,80 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">फ़ोटो, स्क्रीनशॉट और स्कैन की गई PDF को ऐसे टेक्स्ट में बदलें जिसे आप बदल, कॉपी और शेयर कर सकें। 12 भारतीय भाषाओं में, सीधे आपके डिवाइस पर।</p>
 
     <div class="callout success it-privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">आपकी फ़ाइलें इस डिवाइस से बाहर कभी नहीं जातीं।</strong> <span data-i18n="privacy_body">आधार कार्ड, बिल, नोटिस और कॉन्ट्रैक्ट आपके ब्राउज़र के अंदर ही पढ़े जाते हैं। कुछ भी अपलोड नहीं होता, जबकि ज़्यादातर मुफ़्त OCR वेबसाइटें फ़ाइल अपलोड करती हैं।</span></p>
     </div>
 
     <div class="it-grid">
       <div class="it-col">
         <!-- 1. add files -->
         <section class="card stack" id="addCard" aria-labelledby="hAdd">
-          <h2 class="it-step" id="hAdd" data-i18n="step_add"></h2>
+          <h2 class="it-step" id="hAdd" data-i18n="step_add">1. फ़ोटो या स्कैन जोड़ें</h2>
           <div class="it-drop" id="drop" tabindex="0" role="button" aria-describedby="dropHint">
             <span class="it-drop-ic" aria-hidden="true">🖼️</span>
-            <strong data-i18n="drop_title"></strong>
-            <span class="small muted" id="dropHint" data-i18n="drop_hint"></span>
+            <strong data-i18n="drop_title">फ़ोटो या PDF यहाँ छोड़ें</strong>
+            <span class="small muted" id="dropHint" data-i18n="drop_hint">या क्लिक करके फ़ाइलें चुनें, या Ctrl+V से स्क्रीनशॉट पेस्ट करें। JPG, PNG, WebP और PDF।</span>
           </div>
           <div class="it-add">
-            <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_files"></span></button>
-            <button class="btn" id="camBtn" type="button"><span aria-hidden="true">📷</span> <span data-i18n="take_photo"></span></button>
-            <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">🪪</span> <span data-i18n="try_sample"></span></button>
+            <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_files">फ़ाइलें चुनें</span></button>
+            <button class="btn" id="camBtn" type="button"><span aria-hidden="true">📷</span> <span data-i18n="take_photo">फ़ोटो खींचें</span></button>
+            <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">🪪</span> <span data-i18n="try_sample">नमूना आज़माएँ</span></button>
           </div>
           <input type="file" id="fileInput" class="it-hidden-input" accept="image/*,application/pdf,.pdf,.heic,.heif" multiple tabindex="-1" aria-hidden="true">
           <input type="file" id="camInput" class="it-hidden-input" accept="image/*" capture="environment" tabindex="-1" aria-hidden="true">
           <div id="pagesWrap" hidden>
             <div class="row spread">
               <strong class="small" id="pagesHead"></strong>
-              <button class="btn btn-sm btn-ghost" id="clearPages" type="button" data-i18n="clear_pages"></button>
+              <button class="btn btn-sm btn-ghost" id="clearPages" type="button" data-i18n="clear_pages">सब हटाएँ</button>
             </div>
             <ul class="it-pages" id="pages"></ul>
           </div>
           <div class="callout stack" id="pdfTextNote" hidden>
             <p class="mb0" id="pdfTextMsg"></p>
-            <div><button class="btn btn-sm btn-primary" id="usePdfText" type="button" data-i18n="use_pdf_text"></button></div>
+            <div><button class="btn btn-sm btn-primary" id="usePdfText" type="button" data-i18n="use_pdf_text">PDF का अपना टेक्स्ट लें</button></div>
           </div>
         </section>
 
         <!-- 2. check the page -->
         <section class="card it-empty" id="editEmpty" aria-labelledby="hEditEmpty">
-          <h2 class="it-step" id="hEditEmpty" data-i18n="step_check"></h2>
-          <div class="it-empty-box"><span class="it-empty-ic" aria-hidden="true">📄</span><span class="small muted" data-i18n="check_empty"></span></div>
+          <h2 class="it-step" id="hEditEmpty" data-i18n="step_check">2. पेज जाँचें</h2>
+          <div class="it-empty-box"><span class="it-empty-ic" aria-hidden="true">📄</span><span class="small muted" data-i18n="check_empty">आपका पेज यहाँ दिखेगा। फिर आप उसे घुमा सकते हैं, सिर्फ़ एक हिस्सा पढ़ सकते हैं या उसे और साफ़ बना सकते हैं।</span></div>
         </section>
         <section class="card stack" id="editCard" aria-labelledby="hEdit" hidden>
           <div class="row spread">
-            <h2 class="it-step" id="hEdit" data-i18n="step_check"></h2>
+            <h2 class="it-step" id="hEdit" data-i18n="step_check">2. पेज जाँचें</h2>
             <span class="badge primary" id="pageBadge"></span>
           </div>
           <div class="it-tools" role="toolbar" data-i18n-aria-label="step_check">
             <button class="btn btn-sm" id="rotL" type="button" data-i18n-aria-label="rotate_left" data-i18n-title="rotate_left"><span aria-hidden="true">↺</span></button>
             <button class="btn btn-sm" id="rotR" type="button" data-i18n-aria-label="rotate_right" data-i18n-title="rotate_right"><span aria-hidden="true">↻</span></button>
-            <button class="btn btn-sm" id="cropBtn" type="button" aria-pressed="false"><span aria-hidden="true">✂️</span> <span data-i18n="select_area"></span></button>
-            <button class="btn btn-sm" id="cropClear" type="button" data-i18n="whole_page"></button>
+            <button class="btn btn-sm" id="cropBtn" type="button" aria-pressed="false"><span aria-hidden="true">✂️</span> <span data-i18n="select_area">हिस्सा चुनें</span></button>
+            <button class="btn btn-sm" id="cropClear" type="button" data-i18n="whole_page">पूरा पेज</button>
             <span class="sep"></span>
             <span class="it-move">
             <button class="btn btn-sm" id="moveL" type="button" data-i18n-aria-label="move_earlier" data-i18n-title="move_earlier"><span aria-hidden="true" class="it-arr">◀</span></button>
             <button class="btn btn-sm" id="moveR" type="button" data-i18n-aria-label="move_later" data-i18n-title="move_later"><span aria-hidden="true" class="it-arr">▶</span></button>
             </span>
           </div>
-          <p class="small muted mb0" id="cropHint" data-i18n="crop_hint" hidden></p>
+          <p class="small muted mb0" id="cropHint" data-i18n="crop_hint" hidden>जितना हिस्सा पढ़ना है, तस्वीर पर उतना खींचकर चुनें।</p>
           <div class="it-stage"><canvas id="preview" width="10" height="10" role="img"></canvas></div>
           <p class="small muted mb0 no-i18n" id="imgInfo"></p>
           <div id="imgHints" class="stack"></div>
           <details class="it-adjust" id="adjustBox">
-            <summary data-i18n="improve"></summary>
-            <p class="small muted" style="margin:6px 0 0" data-i18n="improve_note"></p>
+            <summary data-i18n="improve">फ़ोटो सुधारें</summary>
+            <p class="small muted" style="margin:6px 0 0" data-i18n="improve_note">ये सेटिंग्स सभी पेजों पर लागू होती हैं।</p>
             <div class="grid-2">
-              <label class="check"><input type="checkbox" id="optLevels"> <span data-i18n="opt_levels"></span></label>
-              <label class="check"><input type="checkbox" id="optGray"> <span data-i18n="opt_gray"></span></label>
-              <label class="check"><input type="checkbox" id="optBw"> <span data-i18n="opt_bw"></span></label>
-              <label class="check"><input type="checkbox" id="optUp"> <span data-i18n="opt_up"></span></label>
-              <label class="check"><input type="checkbox" id="optDeskew"> <span data-i18n="opt_deskew"></span></label>
+              <label class="check"><input type="checkbox" id="optLevels"> <span data-i18n="opt_levels">रोशनी ठीक करें</span></label>
+              <label class="check"><input type="checkbox" id="optGray"> <span data-i18n="opt_gray">ग्रेस्केल</span></label>
+              <label class="check"><input type="checkbox" id="optBw"> <span data-i18n="opt_bw">ब्लैक एंड व्हाइट</span></label>
+              <label class="check"><input type="checkbox" id="optUp"> <span data-i18n="opt_up">2× बड़ा करें (छोटे अक्षर)</span></label>
+              <label class="check"><input type="checkbox" id="optDeskew"> <span data-i18n="opt_deskew">टेढ़ी फ़ोटो सीधी करें</span></label>
               <span></span>
-              <label class="it-range"><span data-i18n="opt_contrast"></span><input type="range" id="optContrast" min="-50" max="100" step="5"></label>
-              <label class="it-range" id="bwLevelWrap"><span data-i18n="opt_bw_level"></span><input type="range" id="optBwLevel" min="-60" max="60" step="4"></label>
+              <label class="it-range"><span data-i18n="opt_contrast">कंट्रास्ट</span><input type="range" id="optContrast" min="-50" max="100" step="5"></label>
+              <label class="it-range" id="bwLevelWrap"><span data-i18n="opt_bw_level">ब्लैक एंड व्हाइट का स्तर</span><input type="range" id="optBwLevel" min="-60" max="60" step="4"></label>
             </div>
             <div class="row" style="margin-top:10px"><button class="btn btn-sm btn-ghost" id="resetAdjust" type="button" data-i18n="reset"></button></div>
           </details>
@@ -258,25 +258,25 @@
       <div class="it-col">
         <!-- 3. languages + read -->
         <section class="card stack" id="setCard" aria-labelledby="hLang">
-          <h2 class="it-step" id="hLang" data-i18n="step_lang"></h2>
+          <h2 class="it-step" id="hLang" data-i18n="step_lang">3. पेज पर कौन-सी भाषाएँ हैं</h2>
           <div class="it-langs" id="langs" role="group" aria-labelledby="hLang"></div>
-          <p class="small muted mb0" data-i18n="lang_hint"></p>
-          <p class="callout warning small mb0" id="urduNote" data-i18n="urdu_note" hidden></p>
+          <p class="small muted mb0" data-i18n="lang_hint">पेज पर जितनी भाषाएँ हैं, सब चुनें (ज़्यादा से ज़्यादा 3)। ज़्यादातर नोटिस और फ़ॉर्म के लिए हिंदी + अंग्रेज़ी ठीक है।</p>
+          <p class="callout warning small mb0" id="urduNote" data-i18n="urdu_note" hidden>उर्दू: छपा हुआ नस्ख़ टेक्स्ट सबसे अच्छा पढ़ा जाता है। नस्तालीक़ (ज़्यादातर उर्दू अख़बारों और किताबों में) अक्सर ग़लत पढ़ा जाता है।</p>
           <label class="field">
-            <span data-i18n="doc_type"></span>
+            <span data-i18n="doc_type">पेज किस तरह का है</span>
             <select id="docType"></select>
           </label>
           <div class="stack">
-            <label class="check"><input type="checkbox" id="optJoin"> <span data-i18n="opt_join"></span></label>
-            <label class="check"><input type="checkbox" id="optMarks"> <span data-i18n="opt_marks"></span></label>
+            <label class="check"><input type="checkbox" id="optJoin"> <span data-i18n="opt_join">टूटी लाइनों को जोड़कर पैराग्राफ़ बनाएँ</span></label>
+            <label class="check"><input type="checkbox" id="optMarks"> <span data-i18n="opt_marks">दिखाएँ कि हर पेज कहाँ से शुरू होता है</span></label>
           </div>
           <div class="it-run">
             <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled>
-              <span aria-hidden="true">🔍</span> <span data-i18n="read_btn"></span> <span class="it-count" id="runCount" hidden></span>
+              <span aria-hidden="true">🔍</span> <span data-i18n="read_btn">टेक्स्ट पढ़ें</span> <span class="it-count" id="runCount" hidden></span>
             </button>
             <button class="btn btn-danger" id="stopBtn" type="button" data-i18n="stop" hidden></button>
           </div>
-          <p class="tiny muted mb0" data-i18n="kbd_hint"></p>
+          <p class="tiny muted mb0" data-i18n="kbd_hint">शॉर्टकट: Ctrl + Enter</p>
           <div class="it-status" id="statusBox" hidden>
             <span id="stText" aria-live="polite"></span>
             <div class="progress" id="stBarWrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-labelledby="stText"><span id="stBar" style="width:0%"></span></div>
@@ -285,12 +285,12 @@
             <p class="mb0" id="errText"></p>
             <div><button class="btn btn-sm" id="retryBtn" type="button" data-i18n="try_again"></button></div>
           </div>
-          <p class="small muted mb0" id="firstTime" data-i18n="first_time"></p>
+          <p class="small muted mb0" id="firstTime" data-i18n="first_time">पहली बार इंजन (1.4 MB) और हर भाषा (1–3 MB) एक बार डाउनलोड होती है। उसके बाद यह ऑफ़लाइन भी चलता है।</p>
           <div class="callout warning small">
-            <strong data-i18n="honest_title"></strong>
+            <strong data-i18n="honest_title">ध्यान रखें</strong>
             <ul class="it-honest">
-              <li><span aria-hidden="true">✅</span><span data-i18n="honest_good"></span></li>
-              <li><span aria-hidden="true">⚠️</span><span data-i18n="honest_bad"></span></li>
+              <li><span aria-hidden="true">✅</span><span data-i18n="honest_good">अच्छा चलता है: छपी हुई अंग्रेज़ी और हिंदी, साफ़ स्कैन और स्क्रीनशॉट।</span></li>
+              <li><span aria-hidden="true">⚠️</span><span data-i18n="honest_bad">ठीक से नहीं चलता: हाथ की लिखावट, सजावटी फ़ॉन्ट, उर्दू नस्तालीक़, धुंधली या अँधेरी फ़ोटो। इस्तेमाल से पहले टेक्स्ट हमेशा जाँच लें।</span></li>
             </ul>
           </div>
         </section>
@@ -300,57 +300,57 @@
     <!-- 4. result -->
     <section class="card stack" id="resultCard" aria-labelledby="hRes" style="margin-top:16px" hidden>
       <div class="it-resbar">
-        <h2 class="it-step" id="hRes" data-i18n="step_result"></h2>
+        <h2 class="it-step" id="hRes" data-i18n="step_result">4. आपका टेक्स्ट</h2>
         <div class="it-stats" id="stats"></div>
       </div>
-      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden></p>
+      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden>यह पिछली बार का टेक्स्ट है, जो इसी डिवाइस पर रखा गया था।</p>
       <div class="callout warning stack" id="suggestBox" hidden>
         <p class="mb0" id="suggestText"></p>
         <div class="row" id="suggestBtns"></div>
       </div>
       <div class="row spread" id="unsureRow">
         <label class="check"><input type="checkbox" id="optUnsure"> <span id="unsureLabel"></span></label>
-        <button class="btn btn-sm" id="nextUnsure" type="button"><span data-i18n="next_unsure"></span> <span aria-hidden="true" class="it-arr">→</span></button>
+        <button class="btn btn-sm" id="nextUnsure" type="button"><span data-i18n="next_unsure">अगला जाँचने लायक शब्द</span> <span aria-hidden="true" class="it-arr">→</span></button>
       </div>
       <div class="it-wordcheck" id="wordCheck" hidden>
-        <span class="small muted" data-i18n="wc_title"></span>
+        <span class="small muted" data-i18n="wc_title">फ़ोटो में:</span>
         <canvas id="wcCanvas" width="10" height="10"></canvas>
         <span class="grow small" id="wcInfo"></span>
         <div class="row">
-          <button class="btn btn-sm btn-primary" id="wcOk" type="button" data-i18n="wc_ok"></button>
+          <button class="btn btn-sm btn-primary" id="wcOk" type="button" data-i18n="wc_ok">सही है</button>
           <button class="btn btn-sm btn-ghost" id="wcClose" type="button" data-i18n="close"></button>
         </div>
       </div>
       <div id="result" class="it-result no-i18n" dir="auto" spellcheck="false" role="textbox" aria-multiline="true" data-i18n-aria-label="result_label" tabindex="0"></div>
       <div class="it-actions">
         <button class="btn btn-primary" id="copyBtn" type="button"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
-        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt"></span></button>
-        <a class="btn btn-wa" id="waBtn" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="wa_share"></span></a>
+        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt">.txt डाउनलोड करें</span></button>
+        <a class="btn btn-wa" id="waBtn" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="wa_share">WhatsApp</span></a>
         <button class="btn" id="printBtn" type="button"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
-        <button class="btn" id="csvBtn" type="button"><span aria-hidden="true">📊</span> <span data-i18n="to_csv"></span></button>
-        <button class="btn" id="vcfBtn" type="button"><span aria-hidden="true">📇</span> <span data-i18n="to_contact"></span></button>
-        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text"></button>
+        <button class="btn" id="csvBtn" type="button"><span aria-hidden="true">📊</span> <span data-i18n="to_csv">टेबल → CSV</span></button>
+        <button class="btn" id="vcfBtn" type="button"><span aria-hidden="true">📇</span> <span data-i18n="to_contact">कार्ड → कॉन्टैक्ट</span></button>
+        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text">टेक्स्ट मिटाएँ</button>
       </div>
-      <label class="check small"><input type="checkbox" id="optKeep"> <span data-i18n="keep_text"></span></label>
+      <label class="check small"><input type="checkbox" id="optKeep"> <span data-i18n="keep_text">बंद करने के बाद भी यह टेक्स्ट इस डिवाइस पर रखें (साझा कंप्यूटर पर इसे बंद रखें)</span></label>
     </section>
 
     <details class="card it-help no-print" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">कैसे इस्तेमाल करें / काम के लिए सुझाव</strong></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">अच्छी फ़ोटो सबसे अच्छी पढ़ी जाती है: फ़ोन को पेज के ठीक ऊपर सीधा रखें, दिन की रोशनी में, पेज पूरी स्क्रीन भरे और उस पर परछाईं न हो।</li>
+        <li data-i18n="tip2">वही भाषाएँ चुनें जो सच में पेज पर हैं। ज़्यादातर नोटिस के लिए हिंदी + अंग्रेज़ी सही है; हर नई भाषा इसे धीमा करती है।</li>
+        <li data-i18n="tip3">अक्षर छोटे या फीके हैं? &quot;हिस्सा चुनें&quot; से सिर्फ़ ज़रूरी हिस्सा पढ़ें, और &quot;2× बड़ा करें&quot; या &quot;ब्लैक एंड व्हाइट&quot; चालू करें।</li>
+        <li data-i18n="tip4">जिन शब्दों पर इंजन पक्का नहीं है, उन पर लाइन होती है। &quot;अगला जाँचने लायक शब्द&quot; दबाकर हर शब्द फ़ोटो में देखें, ठीक करें और &quot;सही है&quot; दबाएँ।</li>
+        <li data-i18n="tip5">विज़िटिंग कार्ड: &quot;विज़िटिंग कार्ड, पोस्टर या बोर्ड&quot; चुनें, पढ़ें, फिर &quot;कार्ड → कॉन्टैक्ट&quot; से .vcf फ़ाइल मिलेगी जिसे फ़ोन सेव कर सकता है।</li>
+        <li data-i18n="tip6">रेट लिस्ट, मार्कशीट और बैंक स्टेटमेंट: &quot;टेबल&quot; चुनें, पढ़ें, फिर &quot;टेबल → CSV&quot; से कॉलम Excel या Google Sheets में खोलें।</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="ideas_title"></h3>
-      <p class="mb0" data-i18n="ideas_body"></p>
-      <h3 style="margin-top:14px" data-i18n="inside_title"></h3>
-      <p class="mb0" data-i18n="inside_body"></p>
+      <h3 style="margin-top:14px" data-i18n="ideas_title">काम के लिए सुझाव</h3>
+      <p class="mb0" data-i18n="ideas_body">पुरानी चिट्ठियाँ और नोटिस मिनटों में टाइप करें, स्क्रीनशॉट और WhatsApp तस्वीरों से टेक्स्ट कॉपी करें, छपी रेट लिस्ट को Excel में बदलें, ट्रेड फ़ेयर के बाद ढेर सारे विज़िटिंग कार्ड सेव करें, या सोशल मीडिया पोस्ट के लिए किताब से उद्धरण निकालें। आधार, PAN, बिल और एग्रीमेंट जैसे निजी काग़ज़ आपके डिवाइस पर ही रहते हैं, इसलिए पहली बार के बाद आप एयरप्लेन मोड भी चालू कर सकते हैं।</p>
+      <h3 style="margin-top:14px" data-i18n="inside_title">अंदर क्या हो रहा है?</h3>
+      <p class="mb0" data-i18n="inside_body">यह Tesseract है, एक मुफ़्त ओपन-सोर्स OCR इंजन, जो WebAssembly की मदद से आपके ब्राउज़र में चलता है। पहले यह तस्वीर में टेक्स्ट की लाइनें ढूँढता है। फिर एक न्यूरल नेटवर्क (LSTM) हर लाइन को शुरू से आख़िर तक पढ़ता है और भाषा के डेटा से सबसे सही अक्षरों और शब्दों का अंदाज़ा लगाता है। % बताता है कि वह हर शब्द को लेकर कितना पक्का है।</p>
       <div class="it-storage">
         <span class="small muted" id="storageText"></span>
-        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden></button>
+        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden>सेव भाषाएँ मिटाएँ</button>
       </div>
       <div class="row spread" style="margin-top:12px">
         <span class="small muted" data-i18n="saved_local"></span>

@@ -147,21 +147,21 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="muted small st-privacy" id="st-privacy" data-i18n="privacy"></p>
+    <p class="edu-intro" data-i18n="intro">சுருதியில் பாடுங்கள், தாளத்தில் நில்லுங்கள்: தம்புரா ஒலி, உங்கள் குரலுக்கான நேரடி ஸ்வர மீட்டர், மதிப்பெண்ணுடன் சரளி அலங்காரங்கள், தபேலா போன்ற தாள மெட்ரோனோம் மற்றும் இசைக்கருவி டியூனர். ஒவ்வொரு ஒலியும் உங்கள் சாதனத்திலே உருவாகிறது.</p>
+    <p class="muted small st-privacy" id="st-privacy" data-i18n="privacy">🔒 உங்கள் குரல் இந்தச் சாதனத்திலே பகுப்பாய்வு செய்யப்படுகிறது; பதிவு செய்யப்படுவதும் இல்லை, எங்கும் அனுப்பப்படுவதும் இல்லை.</p>
 
     <!-- Quick strip: one tap for tanpura or taal -->
     <section class="card st-quick" aria-labelledby="st-quick-h">
-      <h2 class="mb0 small muted" id="st-quick-h" data-i18n="quick_title" style="margin-bottom:8px"></h2>
+      <h2 class="mb0 small muted" id="st-quick-h" data-i18n="quick_title" style="margin-bottom:8px">ஒரே தட்டலில் பயிற்சி தொடங்கு</h2>
       <div class="row">
         <label class="field">
-          <span data-i18n="sa_label"></span>
+          <span data-i18n="sa_label">உங்கள் ஸ (அடிப்படை ஸ்வரம்)</span>
           <select id="st-sa" class="no-i18n"></select>
         </label>
-        <button class="btn btn-primary btn-lg st-bigbtn" id="st-drone" aria-pressed="false"><span aria-hidden="true">▶ </span><span id="st-drone-txt" data-i18n="drone_play"></span></button>
-        <button class="btn btn-accent btn-lg st-bigbtn" id="st-taal" aria-pressed="false"><span aria-hidden="true">▶ </span><span id="st-taal-txt" data-i18n="taal_play"></span></button>
+        <button class="btn btn-primary btn-lg st-bigbtn" id="st-drone" aria-pressed="false"><span aria-hidden="true">▶ </span><span id="st-drone-txt" data-i18n="drone_play">தம்புரா இசை</span></button>
+        <button class="btn btn-accent btn-lg st-bigbtn" id="st-taal" aria-pressed="false"><span aria-hidden="true">▶ </span><span id="st-taal-txt" data-i18n="taal_play">தாளம் இசை</span></button>
         <label class="field st-vol">
-          <span data-i18n="volume"></span>
+          <span data-i18n="volume">ஒலி அளவு</span>
           <input type="range" id="st-vol" min="0" max="100" step="1" value="70">
         </label>
         <span class="st-beatpill badge" id="st-beatpill" hidden aria-live="off"><span class="st-dot"></span><span id="st-beatpill-txt"></span></span>
@@ -169,10 +169,10 @@
     </section>
 
     <div class="tabs st-tabs" role="tablist" id="st-tabs">
-      <button role="tab" id="st-tab-sur" aria-selected="true" aria-controls="st-pane-sur" data-tab="sur" data-i18n="tab_sur"></button>
-      <button role="tab" id="st-tab-sargam" aria-selected="false" aria-controls="st-pane-sargam" data-tab="sargam" tabindex="-1" data-i18n="tab_sargam"></button>
-      <button role="tab" id="st-tab-taal" aria-selected="false" aria-controls="st-pane-taal" data-tab="taal" tabindex="-1" data-i18n="tab_taal"></button>
-      <button role="tab" id="st-tab-tuner" aria-selected="false" aria-controls="st-pane-tuner" data-tab="tuner" tabindex="-1" data-i18n="tab_tuner"></button>
+      <button role="tab" id="st-tab-sur" aria-selected="true" aria-controls="st-pane-sur" data-tab="sur" data-i18n="tab_sur">சுர மீட்டர்</button>
+      <button role="tab" id="st-tab-sargam" aria-selected="false" aria-controls="st-pane-sargam" data-tab="sargam" tabindex="-1" data-i18n="tab_sargam">சரளி பயிற்சி</button>
+      <button role="tab" id="st-tab-taal" aria-selected="false" aria-controls="st-pane-taal" data-tab="taal" tabindex="-1" data-i18n="tab_taal">தாளம்</button>
+      <button role="tab" id="st-tab-tuner" aria-selected="false" aria-controls="st-pane-tuner" data-tab="tuner" tabindex="-1" data-i18n="tab_tuner">டியூனர்</button>
     </div>
 
     <!-- ============ SUR METER ============ -->
@@ -180,38 +180,38 @@
       <div class="card st-stage" id="st-stage" data-zone="">
         <div class="st-swar no-i18n" id="st-swar" aria-live="polite" data-empty="1"></div>
         <div class="st-swar-tags" id="st-swar-tags"></div>
-        <svg class="st-meter" id="st-meter" viewBox="0 0 520 110" role="img" aria-labelledby="st-meter-title"><title id="st-meter-title" data-i18n="cents_meter"></title></svg>
+        <svg class="st-meter" id="st-meter" viewBox="0 0 520 110" role="img" aria-labelledby="st-meter-title"><title id="st-meter-title" data-i18n="cents_meter">சென்ட் மீட்டர்: இடது தாழ்வு (ஃபிளாட்), வலது உயர்வு (ஷார்ப்)</title></svg>
         <div class="st-judge" id="st-judge" data-zone="" aria-live="polite"></div>
         <div class="st-sub muted small">
-          <span><span data-i18n="western_note"></span>: <b class="no-i18n" id="st-note">—</b></span>
+          <span><span data-i18n="western_note">மேற்கத்திய நோட்</span>: <b class="no-i18n" id="st-note">—</b></span>
           <span><b class="no-i18n" id="st-hz">—</b></span>
-          <span><span data-i18n="cents_label"></span>: <b class="no-i18n" id="st-cents">—</b></span>
+          <span><span data-i18n="cents_label">சென்ட்</span>: <b class="no-i18n" id="st-cents">—</b></span>
         </div>
       </div>
       <div class="stack">
         <div class="card st-mic-wrap">
-          <button class="btn btn-primary btn-lg st-mic" data-mic="idle"><span class="st-mic-txt" data-i18n="mic_start"></span></button>
-          <p class="muted small mb0" id="st-perm-hint" data-i18n="perm_hint"></p>
-          <p class="muted small mb0" data-i18n="sing_hint"></p>
+          <button class="btn btn-primary btn-lg st-mic" data-mic="idle"><span class="st-mic-txt" data-i18n="mic_start">கேட்கத் தொடங்கு</span></button>
+          <p class="muted small mb0" id="st-perm-hint" data-i18n="perm_hint">உலாவி மைக்ரோஃபோன் அனுமதி கேட்கும். &quot;Allow&quot; என்பதைத் தேர்வு செய்யுங்கள்.</p>
+          <p class="muted small mb0" data-i18n="sing_hint">ஒரு ஸ்வரத்தைப் பாடுங்கள் அல்லது ஹம் செய்யுங்கள். நீங்கள் எந்த ஸ்வரத்தில் இருக்கிறீர்கள், தாழ்வாகவோ உயர்வாகவோ இருக்கிறீர்களா என்பதை மீட்டர் காட்டுகிறது.</p>
           <div class="callout danger small st-msg" id="st-msg" role="alert"></div>
-          <div class="callout warning small st-tip" id="st-tip-head" data-i18n="headphone_tip"></div>
-          <p class="muted small mb0" data-i18n="privacy"></p>
+          <div class="callout warning small st-tip" id="st-tip-head" data-i18n="headphone_tip">குறிப்பு: தம்புரா அல்லது தாளம் ஒலிக்கும்போது ஹெட்ஃபோன் அணியுங்கள்; அப்போது மைக்ரோஃபோன் உங்கள் குரலை மட்டும் கேட்கும்.</div>
+          <p class="muted small mb0" data-i18n="privacy">🔒 உங்கள் குரல் இந்தச் சாதனத்திலே பகுப்பாய்வு செய்யப்படுகிறது; பதிவு செய்யப்படுவதும் இல்லை, எங்கும் அனுப்பப்படுவதும் இல்லை.</p>
         </div>
         <div class="card stack">
           <div class="field">
-            <span data-i18n="noise_label"></span>
+            <span data-i18n="noise_label">அறை</span>
             <div class="seg" id="st-noise" role="group">
-              <button type="button" data-v="quiet" aria-pressed="false" data-i18n="noise_quiet"></button>
-              <button type="button" data-v="normal" aria-pressed="true" data-i18n="noise_normal"></button>
-              <button type="button" data-v="noisy" aria-pressed="false" data-i18n="noise_noisy"></button>
+              <button type="button" data-v="quiet" aria-pressed="false" data-i18n="noise_quiet">அமைதியான அறை</button>
+              <button type="button" data-v="normal" aria-pressed="true" data-i18n="noise_normal">சாதாரணம்</button>
+              <button type="button" data-v="noisy" aria-pressed="false" data-i18n="noise_noisy">சத்தமான அறை</button>
             </div>
-            <span class="hint muted small" data-i18n="noise_hint"></span>
+            <span class="hint muted small" data-i18n="noise_hint">சத்தமான அறையில், முழு உறுதி இருக்கும்போது மட்டுமே ஆப் ஸ்வரத்தைக் காட்டும்.</span>
           </div>
           <div class="field">
-            <span data-i18n="drone_type"></span>
+            <span data-i18n="drone_type">தம்புரா தந்திகள்</span>
             <div class="seg" id="st-dtype" role="group">
-              <button type="button" data-v="pa" aria-pressed="true" data-i18n="drone_pa"></button>
-              <button type="button" data-v="ma" aria-pressed="false" data-i18n="drone_ma"></button>
+              <button type="button" data-v="pa" aria-pressed="true" data-i18n="drone_pa">ப ஸ ஸ ஸ</button>
+              <button type="button" data-v="ma" aria-pressed="false" data-i18n="drone_ma">ம ஸ ஸ ஸ</button>
             </div>
           </div>
         </div>
@@ -221,48 +221,48 @@
     <!-- ============ SARGAM RIYAZ ============ -->
     <section class="st-pane st-two" id="st-pane-sargam" role="tabpanel" aria-labelledby="st-tab-sargam" hidden>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="alk_title"></h2>
-        <p class="muted small mb0" data-i18n="alk_desc"></p>
+        <h2 class="mb0" data-i18n="alk_title">அலங்கார பயிற்சி</h2>
+        <p class="muted small mb0" data-i18n="alk_desc">அலங்காரத்தைக் கேளுங்கள், பிறகு நகரும் ஸ்வரத்துடன் சேர்ந்து திருப்பிப் பாடுங்கள். ஒவ்வொரு ஸ்வரத்திற்கும் மதிப்பெண் கிடைக்கும்.</p>
         <div class="row">
           <label class="field grow">
-            <span data-i18n="alk_pick"></span>
+            <span data-i18n="alk_pick">அலங்காரம்</span>
             <select id="st-alk"></select>
           </label>
           <div class="field">
-            <span data-i18n="alk_speed"></span>
+            <span data-i18n="alk_speed">வேகம்</span>
             <div class="seg" id="st-speed" role="group">
-              <button type="button" data-v="slow" aria-pressed="false" data-i18n="speed_slow"></button>
-              <button type="button" data-v="medium" aria-pressed="true" data-i18n="speed_medium"></button>
-              <button type="button" data-v="fast" aria-pressed="false" data-i18n="speed_fast"></button>
+              <button type="button" data-v="slow" aria-pressed="false" data-i18n="speed_slow">மெதுவாக</button>
+              <button type="button" data-v="medium" aria-pressed="true" data-i18n="speed_medium">நடுத்தரம்</button>
+              <button type="button" data-v="fast" aria-pressed="false" data-i18n="speed_fast">வேகமாக</button>
             </div>
           </div>
         </div>
         <div class="st-seq" id="st-seq" aria-live="off"></div>
         <p class="st-judge mb0" id="st-alk-phase" aria-live="polite" style="text-align:center"></p>
         <div class="row" style="justify-content:center">
-          <button class="btn btn-primary btn-lg" id="st-alk-go"><span aria-hidden="true">▶ </span><span id="st-alk-go-txt" data-i18n="alk_listen"></span></button>
+          <button class="btn btn-primary btn-lg" id="st-alk-go"><span aria-hidden="true">▶ </span><span id="st-alk-go-txt" data-i18n="alk_listen">கேள்</span></button>
           <button class="btn btn-lg" id="st-alk-stop" data-i18n="stop"></button>
         </div>
-        <label class="check"><input type="checkbox" id="st-alk-guide" checked> <span data-i18n="alk_guide"></span></label>
+        <label class="check"><input type="checkbox" id="st-alk-guide" checked> <span data-i18n="alk_guide">நான் பாடும்போது ஸ்வரங்களை மெல்ல ஒலிக்கவும்</span></label>
         <div class="st-score" id="st-alk-result" aria-live="polite">
           <span class="big-number no-i18n" id="st-alk-score">—</span>
           <span id="st-alk-verdict" class="st-judge"></span>
           <span class="badge" id="st-alk-best"></span>
         </div>
         <div class="st-mic-wrap">
-          <button class="btn st-mic" data-mic="idle"><span class="st-mic-txt" data-i18n="mic_start"></span></button>
+          <button class="btn st-mic" data-mic="idle"><span class="st-mic-txt" data-i18n="mic_start">கேட்கத் தொடங்கு</span></button>
           <div class="callout danger small st-msg st-msg2" role="alert"></div>
         </div>
       </div>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="hold_title"></h2>
-        <p class="muted small mb0" data-i18n="hold_desc"></p>
+        <h2 class="mb0" data-i18n="hold_title">ஸ்வரத்தை நிலைநிறுத்து</h2>
+        <p class="muted small mb0" data-i18n="hold_desc">ஒரு ஸ்வரத்தைத் தேர்ந்து, ±20 சென்ட் உள்ளே, 3 வினாடிகள் நிலையாக வைத்திருங்கள். இடையில் மூச்சு விடுவது சரி.</p>
         <div class="row">
           <label class="field grow">
-            <span data-i18n="hold_target"></span>
+            <span data-i18n="hold_target">எந்த ஸ்வரம்</span>
             <select id="st-hold-sel" class="no-i18n"></select>
           </label>
-          <button class="btn" id="st-hold-hear" data-i18n="hold_play"></button>
+          <button class="btn" id="st-hold-hear" data-i18n="hold_play">கேள்</button>
         </div>
         <div class="progress st-hold-bar" id="st-hold-bar" data-done="0" aria-hidden="true"><span></span></div>
         <p class="st-judge mb0" id="st-hold-status" aria-live="polite"></p>
@@ -273,27 +273,27 @@
     <!-- ============ TAAL ============ -->
     <section class="st-pane st-two" id="st-pane-taal" role="tabpanel" aria-labelledby="st-tab-taal" hidden>
       <div class="card stack" style="text-align:center">
-        <svg class="st-circle" id="st-circle" viewBox="0 0 360 360" role="img" aria-labelledby="st-circle-title" data-beat="0" data-cycle="0"><title id="st-circle-title" data-i18n="beat_circle"></title></svg>
+        <svg class="st-circle" id="st-circle" viewBox="0 0 360 360" role="img" aria-labelledby="st-circle-title" data-beat="0" data-cycle="0"><title id="st-circle-title" data-i18n="beat_circle">மாத்திரை வட்டம்</title></svg>
         <div class="st-bols" id="st-bols"></div>
         <p class="muted small mb0" id="st-beat-txt" aria-live="off"></p>
         <div class="row" style="justify-content:center">
-          <button class="btn btn-accent btn-lg st-bigbtn" id="st-taal2" aria-pressed="false"><span aria-hidden="true">▶ </span><span id="st-taal2-txt" data-i18n="taal_play"></span></button>
+          <button class="btn btn-accent btn-lg st-bigbtn" id="st-taal2" aria-pressed="false"><span aria-hidden="true">▶ </span><span id="st-taal2-txt" data-i18n="taal_play">தாளம் இசை</span></button>
         </div>
       </div>
       <div class="card stack">
         <label class="field">
-          <span data-i18n="taal_label"></span>
+          <span data-i18n="taal_label">தாளம்</span>
           <select id="st-taalsel">
-            <option value="teentaal" data-i18n="taal_teentaal"></option>
-            <option value="keherwa" data-i18n="taal_keherwa"></option>
-            <option value="dadra" data-i18n="taal_dadra"></option>
-            <option value="rupak" data-i18n="taal_rupak"></option>
-            <option value="jhaptaal" data-i18n="taal_jhaptaal"></option>
-            <option value="ektaal" data-i18n="taal_ektaal"></option>
+            <option value="teentaal" data-i18n="taal_teentaal">தீன்தால் (16 மாத்திரை)</option>
+            <option value="keherwa" data-i18n="taal_keherwa">கெஹர்வா (8 மாத்திரை)</option>
+            <option value="dadra" data-i18n="taal_dadra">தாத்ரா (6 மாத்திரை)</option>
+            <option value="rupak" data-i18n="taal_rupak">ரூபக் (7 மாத்திரை)</option>
+            <option value="jhaptaal" data-i18n="taal_jhaptaal">ஜப்தால் (10 மாத்திரை)</option>
+            <option value="ektaal" data-i18n="taal_ektaal">ஏக்தால் (12 மாத்திரை)</option>
           </select>
         </label>
         <div class="field">
-          <span><span data-i18n="tempo"></span>: <b class="no-i18n" id="st-bpm-val"></b> <span class="muted small" id="st-laya"></span></span>
+          <span><span data-i18n="tempo">லயம் (வேகம்)</span>: <b class="no-i18n" id="st-bpm-val"></b> <span class="muted small" id="st-laya"></span></span>
           <div class="st-tempo">
             <button class="btn" id="st-bpm-minus" aria-label="−5" data-i18n-aria-label="tempo_down">−</button>
             <input type="range" id="st-bpm" min="40" max="200" step="1" value="80" data-i18n-aria-label="tempo">
@@ -301,11 +301,11 @@
           </div>
         </div>
         <div class="st-legend small">
-          <span><b class="no-i18n">×</b> <span data-i18n="legend_sam"></span></span>
-          <span><b class="no-i18n">2 3 4</b> <span data-i18n="legend_tali"></span></span>
-          <span><b class="no-i18n">0</b> <span data-i18n="legend_khali"></span></span>
+          <span><b class="no-i18n">×</b> <span data-i18n="legend_sam">ஸம், முதல் மாத்திரை (கை தட்டு)</span></span>
+          <span><b class="no-i18n">2 3 4</b> <span data-i18n="legend_tali">தாளி (கை தட்டு)</span></span>
+          <span><b class="no-i18n">0</b> <span data-i18n="legend_khali">காலி (கையை அசை)</span></span>
         </div>
-        <p class="muted small mb0" data-i18n="taal_hint"></p>
+        <p class="muted small mb0" data-i18n="taal_hint">× மற்றும் எண்களில் கை தட்டுங்கள், 0-இல் கையை அசைக்குங்கள், போல்களை உரக்கச் சொல்லுங்கள். போல்கள் உங்கள் மொழியில் எழுதப்பட்டுள்ளன.</p>
       </div>
     </section>
 
@@ -313,62 +313,62 @@
     <section class="st-pane st-two" id="st-pane-tuner" role="tabpanel" aria-labelledby="st-tab-tuner" hidden>
       <div class="card st-stage" id="st-tstage" data-zone="">
         <div class="st-swar no-i18n" id="st-tnote" aria-live="polite" data-empty="1">—</div>
-        <svg class="st-meter" id="st-tmeter" viewBox="0 0 520 110" role="img" aria-labelledby="st-tmeter-title"><title id="st-tmeter-title" data-i18n="cents_meter"></title></svg>
+        <svg class="st-meter" id="st-tmeter" viewBox="0 0 520 110" role="img" aria-labelledby="st-tmeter-title"><title id="st-tmeter-title" data-i18n="cents_meter">சென்ட் மீட்டர்: இடது தாழ்வு (ஃபிளாட்), வலது உயர்வு (ஷார்ப்)</title></svg>
         <div class="st-judge" id="st-tjudge" data-zone="" aria-live="polite"></div>
         <div class="st-sub muted small">
           <span><b class="no-i18n" id="st-thz">—</b></span>
-          <span><span data-i18n="cents_label"></span>: <b class="no-i18n" id="st-tcents">—</b></span>
-          <span><span data-i18n="nearest"></span>: <b class="no-i18n" id="st-tnear">—</b></span>
+          <span><span data-i18n="cents_label">சென்ட்</span>: <b class="no-i18n" id="st-tcents">—</b></span>
+          <span><span data-i18n="nearest">அருகில்</span>: <b class="no-i18n" id="st-tnear">—</b></span>
         </div>
       </div>
       <div class="stack">
         <div class="card stack">
           <div class="field">
-            <span data-i18n="instrument"></span>
+            <span data-i18n="instrument">இசைக்கருவி</span>
             <div class="seg" id="st-inst" role="group">
-              <button type="button" data-v="guitar" aria-pressed="true" data-i18n="inst_guitar"></button>
-              <button type="button" data-v="ukulele" aria-pressed="false" data-i18n="inst_ukulele"></button>
-              <button type="button" data-v="violin" aria-pressed="false" data-i18n="inst_violin"></button>
-              <button type="button" data-v="any" aria-pressed="false" data-i18n="inst_any"></button>
+              <button type="button" data-v="guitar" aria-pressed="true" data-i18n="inst_guitar">கிட்டார்</button>
+              <button type="button" data-v="ukulele" aria-pressed="false" data-i18n="inst_ukulele">உக்குலேலே</button>
+              <button type="button" data-v="violin" aria-pressed="false" data-i18n="inst_violin">வயலின்</button>
+              <button type="button" data-v="any" aria-pressed="false" data-i18n="inst_any">எந்த நோட்டும்</button>
             </div>
           </div>
           <div class="st-strings" id="st-strings"></div>
-          <p class="muted small mb0" data-i18n="tuner_hint"></p>
+          <p class="muted small mb0" data-i18n="tuner_hint">ஒரு தந்தியை இசையுங்கள். அருகிலுள்ள தந்தி ஒளிரும்; ஊசி பச்சை நடுவிற்கு வரும் வரை முறுக்காணியை மெதுவாகத் திருப்புங்கள். ஒரு தந்தியைத் தட்டி அதன் ஒலியைக் கேளுங்கள்.</p>
           <label class="field">
-            <span data-i18n="a4_label"></span>
+            <span data-i18n="a4_label">A4 குறிப்பு (வழக்கமாக 440)</span>
             <div class="row nowrap"><input type="number" id="st-a4" class="st-a4" min="415" max="466" step="1" value="440"> <span class="muted small">Hz</span></div>
           </label>
         </div>
         <div class="card st-mic-wrap">
-          <button class="btn btn-primary btn-lg st-mic" data-mic="idle"><span class="st-mic-txt" data-i18n="mic_start"></span></button>
+          <button class="btn btn-primary btn-lg st-mic" data-mic="idle"><span class="st-mic-txt" data-i18n="mic_start">கேட்கத் தொடங்கு</span></button>
           <div class="callout danger small st-msg st-msg2" role="alert"></div>
-          <p class="muted small mb0" data-i18n="privacy"></p>
+          <p class="muted small mb0" data-i18n="privacy">🔒 உங்கள் குரல் இந்தச் சாதனத்திலே பகுப்பாய்வு செய்யப்படுகிறது; பதிவு செய்யப்படுவதும் இல்லை, எங்கும் அனுப்பப்படுவதும் இல்லை.</p>
         </div>
       </div>
     </section>
 
     <!-- ============ HELP ============ -->
     <details class="card st-help">
-      <summary data-i18n="how_title"></summary>
+      <summary data-i18n="how_title">கணினி சுருதியை எப்படிக் கேட்கிறது?</summary>
       <ol>
-        <li data-i18n="how_1"></li>
-        <li data-i18n="how_2"></li>
-        <li data-i18n="how_3"></li>
-        <li data-i18n="how_4"></li>
+        <li data-i18n="how_1">உங்கள் குரல் காற்றை ஒவ்வொரு வினாடியும் பல முறை அதிரவைக்கிறது. மைக்ரோஃபோன் இதை ஒவ்வொரு வினாடியும் ஆயிரக்கணக்கான எண்களாக மாற்றுகிறது.</li>
+        <li data-i18n="how_2">இந்த எண்களில் திரும்பத் திரும்ப வரும் அமைப்பை ஆப் தேடுகிறது. அது வினாடிக்கு 262 முறை வந்தால், சுருதி 262 Hz: அது C4 நோட், பல ஹார்மோனியங்களின் ஸ.</li>
+        <li data-i18n="how_3">பிறகு அந்த அதிர்வெண்ணை உங்கள் ஸ-வுடன் ஒப்பிடுகிறது. 100 சென்ட் = ஒரு செமிடோன்; எனவே ±10 சென்ட் உள்ளே இருந்தால் நீங்கள் நல்ல சுருதியில் இருக்கிறீர்கள்.</li>
+        <li data-i18n="how_4">சத்தம் அல்லது ஒரே நேரத்தில் இரண்டு குரல்கள் அமைப்பை மறைக்கின்றன. உறுதி இல்லாதபோது ஆப் ஊகிக்காமல் எதையும் காட்டாது.</li>
       </ol>
     </details>
     <details class="card st-help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">பயன்படுத்துவது எப்படி / பயிற்சி யோசனைகள்</summary>
       <ul>
-        <li data-i18n="tip_1"></li>
-        <li data-i18n="tip_2"></li>
-        <li data-i18n="tip_3"></li>
-        <li data-i18n="tip_4"></li>
-        <li data-i18n="tip_5"></li>
-        <li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">முதலில் உங்கள் ஸ-வைத் தேர்வு செய்யுங்கள். பெரும்பாலான ஆண்களுக்கு வெள்ளை 1 முதல் கருப்பு 2 (C–D#) வரை, பெரும்பாலான பெண்கள் மற்றும் குழந்தைகளுக்கு கருப்பு 4 முதல் வெள்ளை 7 (G#–B) வரை வசதி. தம்புராவை இசைத்து, எளிதாகத் தோன்றும் வரை ஹம் செய்யுங்கள்.</li>
+        <li data-i18n="tip_2">தினமும் 10 நிமிடம்: ஸ-வை 3 வினாடி நிறுத்துங்கள், பிறகு ப, பிறகு மேல் ஸ. அதன் பின் அலங்காரம் 1-ஐ தம்புராவுடன் மெதுவாகப் பாடுங்கள், பிறகு வேகமாக.</li>
+        <li data-i18n="tip_3">தம்புரா அல்லது தாளம் ஒலிக்கும்போது ஹெட்ஃபோன் அணியுங்கள்; மைக்ரோஃபோன் உங்களை மட்டும் கேட்கும்.</li>
+        <li data-i18n="tip_4">தாளப் பயிற்சி: கெஹர்வாவை 60 மாத்திரை/நிமிடத்தில் தொடங்குங்கள், × மற்றும் எண்களில் கை தட்டுங்கள், 0-இல் கையை அசைக்குங்கள், போல்களைச் சொல்லுங்கள். ஸம் தவறாதபோது மட்டும் 10 கூட்டுங்கள்.</li>
+        <li data-i18n="tip_5">டியூனிங்: உங்கள் கருவியைத் தேர்ந்து, ஒவ்வொரு தந்தியாக இசைத்து, ஊசி பச்சை நடுவில் நிற்கும் வரை முறுக்காணியை மெதுவாகத் திருப்புங்கள்.</li>
+        <li data-i18n="tip_6">வகுப்பு அல்லது குழு: ஸ்பீக்கரில் தாளத்தை ஒலிக்கவிட்டு எல்லோரும் கை தட்டுங்கள்; ஒரு மாணவர் அலங்காரம் பாட, மற்றவர்கள் மீட்டரைப் பார்க்கும் முன் &quot;தாழ்வு&quot; அல்லது &quot;உயர்வு&quot; எனச் சொல்லுங்கள்.</li>
       </ul>
       <p class="small muted st-kbd" data-i18n-html="kbd_hint"></p>
-      <p><button class="btn btn-sm btn-ghost" id="st-reset" data-i18n="reset_all"></button></p>
+      <p><button class="btn btn-sm btn-ghost" id="st-reset" data-i18n="reset_all">அமைப்புகளை மீட்டமை</button></p>
     </details>
   </main>
   <script src="../../../apps/sur-taal-trainer/../../shared/edu.js"></script>

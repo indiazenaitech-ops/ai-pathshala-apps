@@ -269,12 +269,12 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">श्रेणीक्रम और पार्श्वक्रम परिपथ बनाइए, विद्युत धारा को बहते देखिए और लाइव मीटर, V–I ग्राफ़ तथा अभ्यास प्रश्नों से ओम का नियम (V = IR) सीखिए।</p>
 
     <div class="tabs cl-tabs" role="tablist">
-      <button type="button" role="tab" id="tab-lab" data-tab="lab" aria-controls="pane-lab" data-i18n="tab_lab"></button>
-      <button type="button" role="tab" id="tab-exp" data-tab="exp" aria-controls="pane-exp" data-i18n="tab_exp"></button>
-      <button type="button" role="tab" id="tab-prac" data-tab="prac" aria-controls="pane-prac" data-i18n="tab_prac"></button>
+      <button type="button" role="tab" id="tab-lab" data-tab="lab" aria-controls="pane-lab" data-i18n="tab_lab">परिपथ लैब</button>
+      <button type="button" role="tab" id="tab-exp" data-tab="exp" aria-controls="pane-exp" data-i18n="tab_exp">V–I प्रयोग</button>
+      <button type="button" role="tab" id="tab-prac" data-tab="prac" aria-controls="pane-prac" data-i18n="tab_prac">अभ्यास</button>
     </div>
 
     <!-- ===================== circuit lab ===================== -->
@@ -282,29 +282,29 @@
       <div class="cl-lab">
         <div class="card cl-diag" id="diag-card">
           <div class="row spread cl-head">
-            <h2 class="mb0" data-i18n="diagram"></h2>
+            <h2 class="mb0" data-i18n="diagram">परिपथ आरेख</h2>
             <button type="button" class="btn btn-sm" id="btn-fs" data-i18n="fullscreen"></button>
           </div>
           <div class="cl-stats" aria-live="polite">
-            <div class="cl-stat" id="st-req"><span class="k" data-i18n="req"></span><span class="v" id="out-req"></span></div>
-            <div class="cl-stat" id="st-i"><span class="k" data-i18n="itotal"></span><span class="v" id="out-i"></span></div>
-            <div class="cl-stat" id="st-p"><span class="k" data-i18n="ptotal"></span><span class="v" id="out-p"></span></div>
+            <div class="cl-stat" id="st-req"><span class="k" data-i18n="req">तुल्य प्रतिरोध</span><span class="v" id="out-req"></span></div>
+            <div class="cl-stat" id="st-i"><span class="k" data-i18n="itotal">कुल धारा</span><span class="v" id="out-i"></span></div>
+            <div class="cl-stat" id="st-p"><span class="k" data-i18n="ptotal">कुल शक्ति</span><span class="v" id="out-p"></span></div>
           </div>
           <div class="cl-svgwrap"><svg id="cv-lab" class="cv" viewBox="0 0 640 400" role="group"></svg></div>
-          <div class="callout warning" id="warn-open" hidden data-i18n="warn_open"></div>
-          <div class="callout danger" id="warn-short" role="alert" hidden data-i18n="warn_short"></div>
+          <div class="callout warning" id="warn-open" hidden data-i18n="warn_open">स्विच खुला है, इसलिए परिपथ टूटा हुआ है। कोई धारा नहीं बहती: ऐमीटर 0 दिखाता है और बल्ब नहीं जलते।</div>
+          <div class="callout danger" id="warn-short" role="alert" hidden data-i18n="warn_short">शॉर्ट सर्किट (लघुपथन)! एक सादे तार ने लोड के दोनों सिरों को जोड़ दिया है, इसलिए प्रतिरोध लगभग 0 Ω हो गया है। I = V / R से धारा बहुत अधिक हो जाती है: तार गर्म होते हैं और सेल जल्दी खत्म होता है। घर में आग से बचाने के लिए फ़्यूज़ या MCB बिजली काट देता है।</div>
           <div class="callout warning" id="warn-low" hidden></div>
           <p class="callout accent small cl-note" id="bright-note" hidden></p>
           <p class="tiny muted cl-note cl-dots-line"><span class="cl-dotkey" id="dot-key"></span><span id="dots-note"></span></p>
         </div>
 
         <div class="card cl-ctrl" id="ctrl-card">
-          <h2 data-i18n="ctrl_title"></h2>
-          <span class="lbl-t" id="type-lbl" data-i18n="circuit_type"></span>
+          <h2 data-i18n="ctrl_title">परिपथ बनाइए</h2>
+          <span class="lbl-t" id="type-lbl" data-i18n="circuit_type">परिपथ का प्रकार</span>
           <div class="cl-presets" role="group" aria-labelledby="type-lbl" id="presets"></div>
 
           <div class="cl-sl">
-            <label class="lbl-t" for="v-range" data-i18n="battery_v"></label>
+            <label class="lbl-t" for="v-range" data-i18n="battery_v">बैटरी वोल्टता (V)</label>
             <div class="cl-sl-row">
               <input type="range" id="v-range" min="1.5" max="12" step="0.5">
               <input type="number" class="cl-num" id="v-num" min="1.5" max="12" step="0.5" inputmode="decimal" data-i18n-aria-label="battery_v">
@@ -313,11 +313,11 @@
           </div>
 
           <div class="cl-sl">
-            <span class="lbl-t" data-i18n="switch_lbl"></span>
+            <span class="lbl-t" data-i18n="switch_lbl">स्विच (कुंजी)</span>
             <button type="button" class="btn" id="btn-switch" aria-pressed="true"><span class="sw-ico" aria-hidden="true"></span><span id="sw-text"></span></button>
           </div>
 
-          <h3 class="cl-sub" data-i18n="resistances"></h3>
+          <h3 class="cl-sub" data-i18n="resistances">प्रतिरोध (Ω)</h3>
           <div id="r-rows">
             <div class="cl-rrow" id="r-row-1">
               <label class="cl-rname" for="r1-range">R₁</label>
@@ -341,29 +341,29 @@
 
           <div class="cl-opts">
             <div>
-              <span class="lbl-t" id="as-lbl" data-i18n="show_as"></span>
+              <span class="lbl-t" id="as-lbl" data-i18n="show_as">किस रूप में दिखाएँ</span>
               <div class="seg" role="group" aria-labelledby="as-lbl">
-                <button type="button" id="as-res" data-i18n="as_resistors"></button><button type="button" id="as-bulb" data-i18n="as_bulbs"></button>
+                <button type="button" id="as-res" data-i18n="as_resistors">प्रतिरोधक</button><button type="button" id="as-bulb" data-i18n="as_bulbs">बल्ब</button>
               </div>
             </div>
             <div>
-              <span class="lbl-t" id="flow-lbl" data-i18n="dots_show"></span>
+              <span class="lbl-t" id="flow-lbl" data-i18n="dots_show">चलते बिंदु दिखाते हैं</span>
               <div class="seg" role="group" aria-labelledby="flow-lbl">
-                <button type="button" id="flow-conv" data-i18n="flow_conv"></button><button type="button" id="flow-elec" data-i18n="flow_elec"></button>
+                <button type="button" id="flow-conv" data-i18n="flow_conv">धारा (+ → −)</button><button type="button" id="flow-elec" data-i18n="flow_elec">इलेक्ट्रॉन (− → +)</button>
               </div>
             </div>
-            <label class="field" for="vm-sel"><span class="lbl-t mb0" data-i18n="vm_across"></span>
+            <label class="field" for="vm-sel"><span class="lbl-t mb0" data-i18n="vm_across">वोल्टमीटर किसके सिरों पर जोड़ें</span>
               <select id="vm-sel"></select></label>
           </div>
 
           <div class="cl-btns">
             <button type="button" class="btn btn-danger" id="btn-short" aria-pressed="false"></button>
-            <button type="button" class="btn" id="btn-reset" data-i18n="reset_circuit"></button>
+            <button type="button" class="btn" id="btn-reset" data-i18n="reset_circuit">परिपथ रीसेट करें</button>
           </div>
         </div>
 
         <div class="card cl-calc" id="calc-card">
-          <h2 data-i18n="calc_title"></h2>
+          <h2 data-i18n="calc_title">चरण-दर-चरण गणना</h2>
           <div class="cl-steps" id="calc-steps"></div>
           <div class="scroll-x" style="margin-top:14px"><table class="table cl-table" id="calc-table"></table></div>
           <div class="callout success cl-check" id="calc-check" hidden></div>
@@ -372,29 +372,29 @@
 
       <div class="grid-2 cl-ref">
         <div class="card" id="legend-card">
-          <h2 data-i18n="legend_title"></h2>
+          <h2 data-i18n="legend_title">परिपथ के प्रतीक</h2>
           <div class="cl-syms">
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H27M37 16H62"/><path d="M27 4V28"/><path class="thick" d="M37 10V22"/></svg><span data-i18n="sym_cell"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H15M22 16H36M43 16H62"/><path d="M15 4V28M36 4V28"/><path class="thick" d="M22 10V22M43 10V22"/></svg><span data-i18n="sym_battery"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 20H18M46 20H62"/><path d="M20 20L42 6"/><circle class="bg" cx="20" cy="20" r="3.5"/><circle class="bg" cx="44" cy="20" r="3.5"/></svg><span data-i18n="sym_switch_open"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 20H62"/><circle class="bg" cx="20" cy="20" r="3.5"/><circle class="bg" cx="44" cy="20" r="3.5"/></svg><span data-i18n="sym_switch_closed"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H14L17 8L23 24L29 8L35 24L41 8L47 24L50 16H62"/></svg><span data-i18n="sym_resistor"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H19M45 16H62"/><circle cx="32" cy="16" r="13"/><path d="M23 7L41 25M23 25L41 7"/></svg><span data-i18n="sym_bulb"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H18M46 16H62"/><circle cx="32" cy="16" r="14"/><text x="32" y="22" text-anchor="middle">A</text></svg><span data-i18n="sym_ammeter"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H18M46 16H62"/><circle cx="32" cy="16" r="14"/><text x="32" y="22" text-anchor="middle">V</text></svg><span data-i18n="sym_voltmeter"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H62M32 2V30"/><circle class="f" cx="32" cy="16" r="5"/></svg><span data-i18n="sym_joint"></span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H27M37 16H62"/><path d="M27 4V28"/><path class="thick" d="M37 10V22"/></svg><span data-i18n="sym_cell">सेल (लंबी रेखा = +)</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H15M22 16H36M43 16H62"/><path d="M15 4V28M36 4V28"/><path class="thick" d="M22 10V22M43 10V22"/></svg><span data-i18n="sym_battery">बैटरी (जुड़े हुए सेल)</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 20H18M46 20H62"/><path d="M20 20L42 6"/><circle class="bg" cx="20" cy="20" r="3.5"/><circle class="bg" cx="44" cy="20" r="3.5"/></svg><span data-i18n="sym_switch_open">स्विच / कुंजी खुली</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 20H62"/><circle class="bg" cx="20" cy="20" r="3.5"/><circle class="bg" cx="44" cy="20" r="3.5"/></svg><span data-i18n="sym_switch_closed">स्विच / कुंजी बंद</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H14L17 8L23 24L29 8L35 24L41 8L47 24L50 16H62"/></svg><span data-i18n="sym_resistor">प्रतिरोधक</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H19M45 16H62"/><circle cx="32" cy="16" r="13"/><path d="M23 7L41 25M23 25L41 7"/></svg><span data-i18n="sym_bulb">विद्युत बल्ब</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H18M46 16H62"/><circle cx="32" cy="16" r="14"/><text x="32" y="22" text-anchor="middle">A</text></svg><span data-i18n="sym_ammeter">ऐमीटर (श्रेणीक्रम में जुड़ता है)</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H18M46 16H62"/><circle cx="32" cy="16" r="14"/><text x="32" y="22" text-anchor="middle">V</text></svg><span data-i18n="sym_voltmeter">वोल्टमीटर (पार्श्वक्रम में जुड़ता है)</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H62M32 2V30"/><circle class="f" cx="32" cy="16" r="5"/></svg><span data-i18n="sym_joint">तारों का जोड़</span></div>
           </div>
         </div>
         <div class="card" id="formula-card">
-          <h2 data-i18n="formula_title"></h2>
+          <h2 data-i18n="formula_title">सूत्र सूची</h2>
           <dl class="cl-forms">
-            <div><dt data-i18n="f_ohm"></dt><dd class="math no-i18n">V = I × R &nbsp;·&nbsp; I = V / R &nbsp;·&nbsp; R = V / I</dd></div>
-            <div><dt data-i18n="f_series"></dt><dd class="math no-i18n">R = R₁ + R₂ + R₃</dd></div>
-            <div><dt data-i18n="f_parallel"></dt><dd class="math no-i18n">1/R = 1/R₁ + 1/R₂ + 1/R₃</dd></div>
-            <div><dt data-i18n="f_power"></dt><dd class="math no-i18n">P = V × I = I² × R = V² / R</dd></div>
-            <div><dt data-i18n="f_heat"></dt><dd class="math no-i18n">H = I² × R × t</dd></div>
-            <div><dt data-i18n="f_energy"></dt><dd class="math no-i18n">E = P × t &nbsp;·&nbsp; 1 kWh = 3.6 × 10⁶ J</dd></div>
-            <div><dt data-i18n="f_units"></dt><dd data-i18n="units_line"></dd></div>
+            <div><dt data-i18n="f_ohm">ओम का नियम</dt><dd class="math no-i18n">V = I × R &nbsp;·&nbsp; I = V / R &nbsp;·&nbsp; R = V / I</dd></div>
+            <div><dt data-i18n="f_series">श्रेणीक्रम में प्रतिरोधक</dt><dd class="math no-i18n">R = R₁ + R₂ + R₃</dd></div>
+            <div><dt data-i18n="f_parallel">पार्श्वक्रम में प्रतिरोधक</dt><dd class="math no-i18n">1/R = 1/R₁ + 1/R₂ + 1/R₃</dd></div>
+            <div><dt data-i18n="f_power">विद्युत शक्ति</dt><dd class="math no-i18n">P = V × I = I² × R = V² / R</dd></div>
+            <div><dt data-i18n="f_heat">उत्पन्न ऊष्मा (जूल का नियम)</dt><dd class="math no-i18n">H = I² × R × t</dd></div>
+            <div><dt data-i18n="f_energy">विद्युत ऊर्जा</dt><dd class="math no-i18n">E = P × t &nbsp;·&nbsp; 1 kWh = 3.6 × 10⁶ J</dd></div>
+            <div><dt data-i18n="f_units">SI मात्रक</dt><dd data-i18n="units_line">V वोल्ट (V) में · I ऐम्पियर (A) में · R ओम (Ω) में · P वाट (W) में</dd></div>
           </dl>
         </div>
       </div>
@@ -404,17 +404,17 @@
     <section id="pane-exp" class="cl-pane" role="tabpanel" aria-labelledby="tab-exp" hidden>
       <div class="cl-exp">
         <div class="card" id="exp-card">
-          <h2 data-i18n="exp_title"></h2>
-          <p class="muted small" data-i18n="exp_how"></p>
+          <h2 data-i18n="exp_title">क्रियाकलाप: वोल्टता बदलने पर धारा कैसे बदलती है?</h2>
+          <p class="muted small" data-i18n="exp_how">1 सेल लगाकर वोल्टमीटर (V) और ऐमीटर (I) के पाठ्यांक लिखें। 2, 3 और 4 सेल के साथ दोहराएँ। फिर V और I का ग्राफ़ खींचें और उसका ढाल निकालें।</p>
           <div class="cl-svgwrap"><svg id="cv-exp" class="cv" viewBox="0 0 640 400" role="group"></svg></div>
           <div class="cl-meters" aria-live="polite">
-            <div class="cl-mbox"><span class="k" data-i18n="voltmeter"></span><span class="v ltr" id="exp-v"></span></div>
-            <div class="cl-mbox am"><span class="k" data-i18n="ammeter"></span><span class="v ltr" id="exp-i"></span></div>
+            <div class="cl-mbox"><span class="k" data-i18n="voltmeter">वोल्टमीटर</span><span class="v ltr" id="exp-v"></span></div>
+            <div class="cl-mbox am"><span class="k" data-i18n="ammeter">ऐमीटर</span><span class="v ltr" id="exp-i"></span></div>
           </div>
           <div class="cl-exp-ctrl">
-            <span class="lbl-t" id="exp-r-lbl" data-i18n="exp_resistor"></span>
+            <span class="lbl-t" id="exp-r-lbl" data-i18n="exp_resistor">जाँचा जा रहा तार या प्रतिरोधक</span>
             <div class="seg" role="group" aria-labelledby="exp-r-lbl">
-              <button type="button" id="exp-known" data-i18n="exp_known"></button><button type="button" id="exp-mystery" data-i18n="exp_mystery"></button>
+              <button type="button" id="exp-known" data-i18n="exp_known">ज्ञात प्रतिरोधक</button><button type="button" id="exp-mystery" data-i18n="exp_mystery">रहस्यमय तार</button>
             </div>
             <div class="cl-rrow" id="exp-r-row" style="margin-top:10px">
               <label class="cl-rname" for="exp-r-range">R</label>
@@ -423,34 +423,34 @@
               <span class="cl-unit">Ω</span>
             </div>
             <div class="row" id="exp-myst-row" style="margin-top:10px">
-              <button type="button" class="btn btn-sm" id="exp-new" data-i18n="exp_new_mystery"></button>
-              <button type="button" class="btn btn-sm" id="exp-reveal" data-i18n="exp_reveal"></button>
+              <button type="button" class="btn btn-sm" id="exp-new" data-i18n="exp_new_mystery">नया रहस्यमय तार</button>
+              <button type="button" class="btn btn-sm" id="exp-reveal" data-i18n="exp_reveal">R दिखाएँ</button>
             </div>
             <p class="small muted" id="exp-lock" style="margin:8px 0 0"></p>
             <div class="cl-sl">
-              <label class="lbl-t" for="exp-cells" data-i18n="exp_cells"></label>
+              <label class="lbl-t" for="exp-cells" data-i18n="exp_cells">सेलों की संख्या (हर सेल 1.5 V)</label>
               <div class="cl-sl-row" style="grid-template-columns:minmax(0,1fr) auto">
                 <input type="range" id="exp-cells" min="1" max="8" step="1">
                 <span class="cl-cellsv ltr numf" id="exp-cells-v"></span>
               </div>
             </div>
-            <label class="check" style="margin-top:12px"><input type="checkbox" id="exp-noise"> <span data-i18n="exp_noise"></span></label>
+            <label class="check" style="margin-top:12px"><input type="checkbox" id="exp-noise"> <span data-i18n="exp_noise">असली लैब की तरह मीटर में छोटी त्रुटियाँ जोड़ें</span></label>
             <div class="cl-btns">
-              <button type="button" class="btn btn-primary" id="exp-record" data-i18n="exp_record"></button>
-              <button type="button" class="btn" id="exp-quick" data-i18n="exp_quick"></button>
+              <button type="button" class="btn btn-primary" id="exp-record" data-i18n="exp_record">यह पाठ्यांक लिखें</button>
+              <button type="button" class="btn" id="exp-quick" data-i18n="exp_quick">4 पाठ्यांक लें (1 से 4 सेल)</button>
             </div>
           </div>
         </div>
 
         <div class="card" id="exp-res-card">
-          <h2 data-i18n="exp_table"></h2>
+          <h2 data-i18n="exp_table">प्रेक्षण तालिका</h2>
           <div class="scroll-x"><table class="table cl-table" id="exp-table"></table></div>
           <div class="cl-tbl-tools">
             <button type="button" class="btn btn-sm" id="exp-csv" data-i18n="download"></button>
             <button type="button" class="btn btn-sm" id="exp-print" data-i18n="print"></button>
-            <button type="button" class="btn btn-sm btn-danger" id="exp-clear" data-i18n="clear_table"></button>
+            <button type="button" class="btn btn-sm btn-danger" id="exp-clear" data-i18n="clear_table">तालिका खाली करें</button>
           </div>
-          <h3 class="cl-sub" data-i18n="graph_title"></h3>
+          <h3 class="cl-sub" data-i18n="graph_title">V–I ग्राफ़</h3>
           <svg id="exp-graph" class="graph" viewBox="0 0 560 380" role="img"></svg>
           <div class="cl-result" id="exp-result" aria-live="polite"></div>
         </div>
@@ -462,41 +462,41 @@
       <div class="cl-prac">
         <div class="card" id="prac-card">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="prac_title"></h2>
+            <h2 class="mb0" data-i18n="prac_title">अभ्यास प्रश्न</h2>
             <div class="cl-score" aria-live="polite">
               <span class="badge success" id="score"></span>
               <span class="badge accent" id="streak"></span>
             </div>
           </div>
           <div class="cl-topics" role="group" data-i18n-aria-label="topic">
-            <button type="button" class="chip" id="topic-all" data-topic="all" data-i18n="topic_all"></button>
-            <button type="button" class="chip" id="topic-ohm" data-topic="ohm" data-i18n="topic_ohm"></button>
-            <button type="button" class="chip" id="topic-combo" data-topic="combo" data-i18n="topic_combo"></button>
-            <button type="button" class="chip" id="topic-power" data-topic="power" data-i18n="topic_power"></button>
+            <button type="button" class="chip" id="topic-all" data-topic="all" data-i18n="topic_all">सभी</button>
+            <button type="button" class="chip" id="topic-ohm" data-topic="ohm" data-i18n="topic_ohm">ओम का नियम</button>
+            <button type="button" class="chip" id="topic-combo" data-topic="combo" data-i18n="topic_combo">श्रेणीक्रम व पार्श्वक्रम</button>
+            <button type="button" class="chip" id="topic-power" data-topic="power" data-i18n="topic_power">शक्ति व ऊर्जा</button>
           </div>
           <p class="cl-q" id="q-text"></p>
           <p class="small muted mb0" id="q-unit-hint"></p>
           <div class="cl-ans">
-            <label class="field" for="q-ans"><span data-i18n="your_answer"></span>
+            <label class="field" for="q-ans"><span data-i18n="your_answer">आपका उत्तर</span>
               <span class="inwrap"><input type="text" id="q-ans" inputmode="decimal" autocomplete="off"><span class="u" id="q-unit"></span></span></label>
-            <button type="button" class="btn btn-primary" id="q-check" data-i18n="check_btn"></button>
-            <button type="button" class="btn btn-accent" id="q-new" data-i18n="new_problem"></button>
+            <button type="button" class="btn btn-primary" id="q-check" data-i18n="check_btn">जाँचें</button>
+            <button type="button" class="btn btn-accent" id="q-new" data-i18n="new_problem">नया प्रश्न</button>
           </div>
           <div class="callout" id="q-feedback" aria-live="polite"></div>
           <div class="cl-step" id="q-solution" hidden></div>
           <div class="row" style="margin-top:12px">
-            <button type="button" class="btn btn-sm" id="q-lab" data-i18n="try_lab" hidden></button>
-            <button type="button" class="btn btn-sm btn-danger" id="score-reset" data-i18n="reset_score"></button>
+            <button type="button" class="btn btn-sm" id="q-lab" data-i18n="try_lab" hidden>यह परिपथ लैब में बनाइए</button>
+            <button type="button" class="btn btn-sm btn-danger" id="score-reset" data-i18n="reset_score">अंक रीसेट करें</button>
           </div>
         </div>
 
         <div class="card" id="ws-card">
-          <h2 data-i18n="ws_title"></h2>
-          <p class="muted small" data-i18n="ws_note"></p>
+          <h2 data-i18n="ws_title">छापने योग्य वर्कशीट</h2>
+          <p class="muted small" data-i18n="ws_note">चुने गए विषय से 10 नए प्रश्न, उत्तर कुंजी के साथ।</p>
           <div class="row ws-tools">
-            <button type="button" class="btn btn-primary" id="ws-make" data-i18n="ws_make"></button>
-            <button type="button" class="btn" id="ws-print" data-i18n="ws_print" disabled></button>
-            <label class="check"><input type="checkbox" id="ws-ans"> <span data-i18n="ws_answers"></span></label>
+            <button type="button" class="btn btn-primary" id="ws-make" data-i18n="ws_make">वर्कशीट बनाइए</button>
+            <button type="button" class="btn" id="ws-print" data-i18n="ws_print" disabled>वर्कशीट छापें</button>
+            <label class="check"><input type="checkbox" id="ws-ans"> <span data-i18n="ws_answers">उत्तर कुंजी भी छापें</span></label>
           </div>
           <div id="ws-out"></div>
         </div>
@@ -504,14 +504,14 @@
     </section>
 
     <details class="card cl-help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">कैसे उपयोग करें / कक्षा के लिए सुझाव</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">परिपथ का प्रकार चुनें और स्लाइडर खिसकाएँ। मीटर, चरण-दर-चरण हल और चलते बिंदुओं की रफ़्तार तुरंत बदलती है।</li>
+        <li data-i18n="tip2">“किस रूप में दिखाएँ” में बल्ब चुनें और तुलना करें: श्रेणीक्रम के बल्ब पार्श्वक्रम के उन्हीं बल्बों से कम चमकते हैं। इसीलिए हमारे घरों की वायरिंग पार्श्वक्रम में होती है।</li>
+        <li data-i18n="tip3">आरेख में स्विच पर टैप करके उसे खोलें या बंद करें। वोल्टमीटर को अलग-अलग भागों पर लगाएँ: वोल्टमीटर हमेशा पार्श्वक्रम में और ऐमीटर हमेशा श्रेणीक्रम में जोड़ा जाता है।</li>
+        <li data-i18n="tip4">कक्षा क्रियाकलाप (NCERT कक्षा 10): V–I प्रयोग में 1, 2, 3 और 4 सेल से पाठ्यांक लें, ग्राफ़ खींचें और ढाल से R निकालें। हर समूह को एक रहस्यमय तार दें और देखें किसका उत्तर सबसे पास है।</li>
+        <li data-i18n="tip5">“लोड को शॉर्ट सर्किट करें” दबाकर चर्चा करें कि शॉर्ट सर्किट खतरनाक क्यों है और फ़्यूज़ व MCB हमारे घरों को कैसे सुरक्षित रखते हैं।</li>
+        <li data-i18n="tip6">बिंदु केवल दिशा दिखाते हैं और धाराओं की तुलना करते हैं। असली इलेक्ट्रॉन बहुत धीरे खिसकते हैं (एक सेकंड में एक मिलीमीटर से भी कम)। स्मार्टबोर्ड पर फ़ुल स्क्रीन बटन का उपयोग करें।</li>
       </ul>
     </details>
   </main>

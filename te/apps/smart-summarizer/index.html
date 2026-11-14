@@ -136,30 +136,30 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <div class="ss-privacy callout success small"><span class="ic" aria-hidden="true">🔒</span><p data-i18n="privacy"></p></div>
+    <p class="edu-intro" data-i18n="intro">నోట్స్, ఒక పాఠం, వార్తా వ్యాసం లేదా ఆఫీసు సర్క్యులర్ పేస్ట్ చేయండి లేదా PDF తెరవండి, కొన్ని సెకన్లలో ముఖ్యాంశాలు, కీవర్డ్‌లు, అత్యంత ముఖ్యమైన వాక్యాలు పొందండి.</p>
+    <div class="ss-privacy callout success small"><span class="ic" aria-hidden="true">🔒</span><p data-i18n="privacy">మీ టెక్స్ట్ ఎక్కడికీ అప్‌లోడ్ కాదు. సారాంశం ఈ పరికరంలోనే తయారవుతుంది, ఇంటర్నెట్ లేకపోయినా పనిచేస్తుంది. PDF తెరవడానికి మాత్రమే మొదటిసారి ఇంటర్నెట్ కావాలి.</p></div>
 
     <h1 class="print-only" id="printTitle"></h1>
     <div class="ss-layout">
       <section class="card stack" id="inCard" aria-labelledby="inH">
         <div class="ss-head">
-          <h2 id="inH" data-i18n="input_h"></h2>
+          <h2 id="inH" data-i18n="input_h">మీ టెక్స్ట్</h2>
           <span class="muted small" id="inStats" aria-live="polite"></span>
         </div>
         <div class="ss-tools">
-          <button class="btn" type="button" id="sampleBtn"><span class="ic" aria-hidden="true">📄</span><span data-i18n="btn_sample"></span></button>
-          <label class="btn" for="fileIn" id="openBtn"><span class="ic" aria-hidden="true">📂</span><span data-i18n="btn_open"></span></label>
+          <button class="btn" type="button" id="sampleBtn"><span class="ic" aria-hidden="true">📄</span><span data-i18n="btn_sample">నమూనా టెక్స్ట్</span></button>
+          <label class="btn" for="fileIn" id="openBtn"><span class="ic" aria-hidden="true">📂</span><span data-i18n="btn_open">.txt లేదా PDF తెరవండి</span></label>
           <input type="file" id="fileIn" class="sr-only" accept=".txt,.text,.md,.csv,.srt,.vtt,.pdf,text/plain,application/pdf" data-i18n-aria-label="btn_open">
           <button class="btn btn-ghost" type="button" id="clearBtn"><span class="ic" aria-hidden="true">🧹</span><span data-i18n="clear"></span></button>
         </div>
-        <label for="text" class="sr-only" data-i18n="aria_input"></label>
+        <label for="text" class="sr-only" data-i18n="aria_input">సారాంశం చేయాల్సిన టెక్స్ట్</label>
         <textarea id="text" class="no-i18n" dir="auto" spellcheck="false" data-i18n-placeholder="input_ph"></textarea>
-        <p class="tiny muted ss-hint" data-i18n="drop_hint"></p>
+        <p class="tiny muted ss-hint" data-i18n="drop_hint">చిట్కా: .txt లేదా PDF ఫైల్‌ను ఈ పెట్టెలోకి లాగి వదలవచ్చు కూడా.</p>
         <div id="fileBox" class="callout small ss-file" role="status" hidden>
           <span class="ss-spin" id="fileSpin" aria-hidden="true"></span>
           <span class="msg" id="fileMsg"></span>
           <button class="btn" type="button" id="fileRetry" data-i18n="try_again" hidden></button>
-          <a class="btn" id="fileOcr" href="../../../apps/smart-summarizer/../image-to-text/index.html" data-i18n="link_ocr" hidden></a>
+          <a class="btn" id="fileOcr" href="../../../apps/smart-summarizer/../image-to-text/index.html" data-i18n="link_ocr" hidden>చిత్రం నుండి టెక్స్ట్ యాప్ తెరవండి</a>
           <div class="progress" id="fileProg" hidden><span id="fileBar"></span></div>
         </div>
       </section>
@@ -167,10 +167,10 @@
       <section class="card stack" id="outCard" aria-labelledby="outH">
         <div class="ss-opts">
           <div class="ss-opt">
-            <span class="lbl" id="lenLbl" data-i18n="len_label"></span>
+            <span class="lbl" id="lenLbl" data-i18n="len_label">పొడవు</span>
             <div class="seg" id="modeSeg" role="group" aria-labelledby="lenLbl">
-              <button type="button" data-mode="points" data-i18n="mode_points"></button>
-              <button type="button" data-mode="pct" data-i18n="mode_pct"></button>
+              <button type="button" data-mode="points" data-i18n="mode_points">అంశాలు</button>
+              <button type="button" data-mode="pct" data-i18n="mode_pct">టెక్స్ట్‌లో %</button>
             </div>
             <div class="ss-range">
               <input type="range" id="lenRange" min="3" max="10" step="1" value="5" data-i18n-aria-label="len_label">
@@ -178,18 +178,18 @@
             </div>
           </div>
           <div class="ss-opt" id="engRow" hidden>
-            <span class="lbl" id="engLbl" data-i18n="engine_label"></span>
+            <span class="lbl" id="engLbl" data-i18n="engine_label">పద్ధతి</span>
             <div class="seg" id="engSeg" role="group" aria-labelledby="engLbl">
-              <button type="button" data-eng="quick" data-i18n="eng_quick"></button>
-              <button type="button" data-eng="chrome" data-i18n="eng_chrome"></button>
+              <button type="button" data-eng="quick" data-i18n="eng_quick">వేగం (ఆఫ్‌లైన్)</button>
+              <button type="button" data-eng="chrome" data-i18n="eng_chrome">Chrome AI</button>
             </div>
             <div class="ss-ai" id="aiOpts" hidden>
-              <p class="small" data-i18n="eng_chrome_note"></p>
+              <p class="small" data-i18n="eng_chrome_note">Chrome పరికరంలోనే నడిచే AI (Gemini Nano): ఏదీ పంపబడదు. ఇది కొత్త వాక్యాలు రాస్తుంది, ప్రస్తుతం ఇంగ్లీష్ టెక్స్ట్‌కు మాత్రమే పనిచేస్తుంది.</p>
               <div class="seg" id="typeSeg" role="group" data-i18n-aria-label="ai_type_label">
-                <button type="button" data-type="key-points" data-i18n="type_points"></button>
-                <button type="button" data-type="tldr" data-i18n="type_tldr"></button>
+                <button type="button" data-type="key-points" data-i18n="type_points">ముఖ్యాంశాలు</button>
+                <button type="button" data-type="tldr" data-i18n="type_tldr">చిన్న పేరా</button>
               </div>
-              <p class="tiny muted" id="aiFirst" data-i18n="ai_first_dl"></p>
+              <p class="tiny muted" id="aiFirst" data-i18n="ai_first_dl">మొదటిసారి Chrome తన AI మోడల్‌ను ఒకసారి డౌన్‌లోడ్ చేస్తుంది. అది పెద్దది, కాబట్టి Wi-Fi మంచిది.</p>
             </div>
           </div>
           <button class="btn btn-primary btn-lg" type="button" id="goBtn"></button>
@@ -202,14 +202,14 @@
         </div>
 
         <div class="ss-outhead" id="outHead">
-          <h2 id="outH" data-i18n="out_h"></h2>
+          <h2 id="outH" data-i18n="out_h">సారాంశం</h2>
           <span class="badge primary" id="engBadge" hidden></span>
         </div>
         <p class="ss-empty" id="outEmpty"></p>
         <div id="outBody" hidden>
           <div class="tabs" id="outTabs" role="tablist">
-            <button type="button" role="tab" data-tab="points" aria-controls="pane-points" data-i18n="tab_points"></button>
-            <button type="button" role="tab" data-tab="hl" aria-controls="pane-hl" data-i18n="tab_highlight"></button>
+            <button type="button" role="tab" data-tab="points" aria-controls="pane-points" data-i18n="tab_points">ముఖ్యాంశాలు</button>
+            <button type="button" role="tab" data-tab="hl" aria-controls="pane-hl" data-i18n="tab_highlight">పూర్తి టెక్స్ట్‌లో చూడండి</button>
           </div>
           <div id="pane-points" role="tabpanel">
             <p class="muted small" id="outNote"></p>
@@ -221,13 +221,13 @@
           </div>
           <div class="ss-stats" id="stats" aria-live="polite"></div>
           <div class="ss-kw">
-            <h3 data-i18n="keywords_h"></h3>
+            <h3 data-i18n="keywords_h">కీవర్డ్‌లు</h3>
             <div id="kw" class="no-i18n"></div>
           </div>
         </div>
         <div class="ss-actions">
           <button class="btn" type="button" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
-          <button class="btn" type="button" id="dlBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="btn_download_txt"></span></button>
+          <button class="btn" type="button" id="dlBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="btn_download_txt">.txt డౌన్‌లోడ్</span></button>
           <button class="btn" type="button" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
           <span class="sp"></span>
           <button class="btn btn-danger" type="button" id="resetBtn" data-i18n="reset"></button>
@@ -236,26 +236,26 @@
     </div>
 
     <details class="card">
-      <summary data-i18n="help_h"></summary>
+      <summary data-i18n="help_h">ఎలా వాడాలి / ఆలోచనలు</summary>
       <ul>
         <li data-i18n-html="help1"></li>
-        <li data-i18n="help2"></li>
-        <li data-i18n="help3"></li>
-        <li data-i18n="help4"></li>
-        <li data-i18n="help5"></li>
+        <li data-i18n="help2">పొడవు ఎంచుకోండి: అంశాల సంఖ్య (3 నుంచి 10) లేదా టెక్స్ట్‌లో భాగం (10% నుంచి 60%). అంశాలు మీ టెక్స్ట్‌లోని క్రమంలోనే ఉంటాయి.</li>
+        <li data-i18n="help3">ఒక ముఖ్యాంశాన్ని నొక్కితే అది పూర్తి టెక్స్ట్‌లో హైలైట్ అయి కనిపిస్తుంది, దాని ముందు వెనుక ఉన్నది కూడా చదవచ్చు.</li>
+        <li data-i18n="help4">చదువు కోసం: ఒక పాఠాన్ని సారాంశం చేసి, ప్రతి అంశాన్ని మీ సొంత మాటల్లో వివరించండి. తరగతిలో విద్యార్థులు ముందు తామే 5 ముఖ్య వాక్యాలను ఎంచుకుని, తర్వాత యాప్‌తో సరిచూడవచ్చు.</li>
+        <li data-i18n="help5">పని కోసం: మీటింగ్‌కు ముందు పొడవైన సర్క్యులర్, రిపోర్ట్ లేదా నోటీసులోని ముఖ్యాంశాలు తీసి, WhatsAppలో కాపీ చేయండి లేదా .txt ఫైల్‌గా డౌన్‌లోడ్ చేయండి.</li>
       </ul>
     </details>
     <details class="card">
-      <summary data-i18n="inside_h"></summary>
+      <summary data-i18n="inside_h">లోపల ఏం జరుగుతోంది?</summary>
       <ol>
-        <li data-i18n="inside1"></li>
-        <li data-i18n="inside2"></li>
-        <li data-i18n="inside3"></li>
-        <li data-i18n="inside4"></li>
+        <li data-i18n="inside1">ఫుల్‌స్టాప్, ప్రశ్నార్థకం, (।) గుర్తు, కొత్త లైన్ దగ్గర టెక్స్ట్‌ను వాక్యాలుగా విడదీస్తారు.</li>
+        <li data-i18n="inside2">ప్రతి వాక్యం దానిలోని ముఖ్య పదాల జాబితాగా మారుతుంది. &quot;మరియు&quot;, &quot;ఒక&quot;, &quot;ఈ&quot; వంటి చిన్న పదాలను వదిలేస్తారు. కొన్ని వాక్యాల్లో వచ్చి, అన్నింటిలో రాని పదానికి ఎక్కువ బరువు ఉంటుంది (దీన్ని TF-IDF అంటారు).</li>
+        <li data-i18n="inside3">ఒకే ముఖ్య పదాలు ఉన్న వాక్యాలు వలలా కలుస్తాయి. చాలా వాక్యాలతో కలిసిన వాక్యం &quot;కేంద్రమైనది&quot;: మొత్తం టెక్స్ట్ దేని గురించో అది చెబుతుంది. దీన్ని TextRank అంటారు. ఇది Google వెబ్ పేజీలకు ర్యాంక్ ఇచ్చిన PageRank ఆలోచనపై ఆధారపడింది.</li>
+        <li data-i18n="inside4">అత్యంత కేంద్రమైన వాక్యాలను ఎంచుకుని (దాదాపు ఒకేలా ఉన్నవి వదిలి), అసలు క్రమంలో చూపిస్తారు. ఏదీ డౌన్‌లోడ్ కాదు, అందుకే ఇది ఆఫ్‌లైన్‌లో, ప్రతి భాషలో పనిచేస్తుంది.</li>
       </ol>
       <p class="small" data-i18n-html="inside_gen"></p>
       <p class="small" data-i18n-html="inside_chrome"></p>
-      <p class="small muted" data-i18n="inside_limits"></p>
+      <p class="small muted" data-i18n="inside_limits">పరిమితులు: టెక్స్ట్ ఎంత బాగుంటే సారాంశం అంతే బాగుంటుంది. జాబితాలు, పట్టికలు, చాలా చిన్న టెక్స్ట్‌ల సారాంశం సరిగా రాదు, స్కాన్ చేసిన PDFలో చదవడానికి టెక్స్ట్ ఉండదు.</p>
     </details>
   </main>
   <script src="../../../apps/smart-summarizer/../../shared/edu.js"></script>

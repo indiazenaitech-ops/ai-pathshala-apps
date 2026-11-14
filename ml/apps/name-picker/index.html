@@ -186,18 +186,18 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">വിദ്യാർത്ഥികളെ നീതിയോടെ റാൻഡമായി തിരഞ്ഞെടുക്കൂ, നിമിഷങ്ങൾക്കുള്ളിൽ തുല്യ ഗ്രൂപ്പുകൾ ഉണ്ടാക്കൂ — ചോദ്യങ്ങൾക്കും ഊഴങ്ങൾക്കും ടീം വർക്കിനും.</p>
 
     <div class="topline">
       <div class="classbox">
-        <label for="classSel" data-i18n="class_label"></label>
+        <label for="classSel" data-i18n="class_label">ക്ലാസ്</label>
         <select id="classSel" class="no-i18n"></select>
         <span class="badge primary" id="classInfo"></span>
       </div>
       <div class="tabs" role="tablist" id="tabs">
-        <button type="button" role="tab" id="tab-pick" data-tab="pick" aria-controls="panel-pick" aria-selected="true"><span aria-hidden="true">🎡</span><span data-i18n="tab_pick"></span></button>
-        <button type="button" role="tab" id="tab-groups" data-tab="groups" aria-controls="panel-groups" aria-selected="false" tabindex="-1"><span aria-hidden="true">👥</span><span data-i18n="tab_groups"></span></button>
-        <button type="button" role="tab" id="tab-list" data-tab="list" aria-controls="panel-list" aria-selected="false" tabindex="-1"><span aria-hidden="true">📋</span><span data-i18n="tab_list"></span></button>
+        <button type="button" role="tab" id="tab-pick" data-tab="pick" aria-controls="panel-pick" aria-selected="true"><span aria-hidden="true">🎡</span><span data-i18n="tab_pick">പേര് തിരഞ്ഞെടുക്കുക</span></button>
+        <button type="button" role="tab" id="tab-groups" data-tab="groups" aria-controls="panel-groups" aria-selected="false" tabindex="-1"><span aria-hidden="true">👥</span><span data-i18n="tab_groups">ഗ്രൂപ്പ് ഉണ്ടാക്കുക</span></button>
+        <button type="button" role="tab" id="tab-list" data-tab="list" aria-controls="panel-list" aria-selected="false" tabindex="-1"><span aria-hidden="true">📋</span><span data-i18n="tab_list">ക്ലാസ് ലിസ്റ്റ്</span></button>
       </div>
     </div>
 
@@ -208,7 +208,7 @@
           <div class="pick-stage">
             <div class="wheel-wrap" id="wheelWrap">
               <canvas id="wheel" width="560" height="560" role="img"></canvas>
-              <button type="button" class="hub" id="hubBtn" tabindex="-1" data-i18n="spin"></button>
+              <button type="button" class="hub" id="hubBtn" tabindex="-1" data-i18n="spin">കറക്കുക!</button>
             </div>
             <div class="cards one" id="cardsWrap" hidden></div>
           </div>
@@ -218,7 +218,7 @@
               <button type="button" class="btn btn-sm" id="soundBtn" aria-pressed="true">
                 <svg class="ic-on" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
                 <svg class="ic-off" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m16 9 6 6"/><path d="m22 9-6 6"/></svg>
-                <span data-i18n="sound"></span>
+                <span data-i18n="sound">ശബ്ദം</span>
               </button>
               <button type="button" class="btn btn-sm" id="fsBtn" data-i18n-title="fullscreen">
                 <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg>
@@ -228,39 +228,39 @@
 
             <div class="winner" id="winner" aria-live="polite" aria-atomic="true"></div>
 
-            <button type="button" class="btn btn-primary btn-lg spin-btn" id="spinBtn"><span aria-hidden="true" id="spinIc">🎡</span><span id="spinLbl" data-i18n="spin"></span></button>
-            <p class="muted tiny mb0 center" id="wheelTip" data-i18n="wheel_tip"></p>
+            <button type="button" class="btn btn-primary btn-lg spin-btn" id="spinBtn"><span aria-hidden="true" id="spinIc">🎡</span><span id="spinLbl" data-i18n="spin">കറക്കുക!</span></button>
+            <p class="muted tiny mb0 center" id="wheelTip" data-i18n="wheel_tip">സൂചന: കറക്കാൻ ചക്രത്തിൽ ടാപ്പ് ചെയ്യുക അല്ലെങ്കിൽ Space ബട്ടൺ അമർത്തുക.</p>
 
             <div class="remain">
               <div class="small" id="remaining" aria-live="polite"></div>
               <div class="progress" id="remainBar"><span style="width:100%"></span></div>
-              <div><button type="button" class="btn btn-sm" id="restoreBtn"><span aria-hidden="true">↺</span><span id="restoreLbl" data-i18n="restore"></span></button></div>
+              <div><button type="button" class="btn btn-sm" id="restoreBtn"><span aria-hidden="true">↺</span><span id="restoreLbl" data-i18n="restore">എല്ലാ പേരുകളും തിരികെ കൊണ്ടുവരിക</span></button></div>
             </div>
 
             <div class="pick-settings">
               <div class="field">
-                <span class="lbl" id="modeLbl" data-i18n="mode_label"></span>
+                <span class="lbl" id="modeLbl" data-i18n="mode_label">തിരഞ്ഞെടുക്കുന്ന രീതി</span>
                 <div class="seg" role="group" aria-labelledby="modeLbl" id="modeSeg">
-                  <button type="button" data-mode="wheel" aria-pressed="true"><span aria-hidden="true">🎡 </span><span data-i18n="mode_wheel"></span></button>
-                  <button type="button" data-mode="cards" aria-pressed="false"><span aria-hidden="true">🃏 </span><span data-i18n="mode_cards"></span></button>
+                  <button type="button" data-mode="wheel" aria-pressed="true"><span aria-hidden="true">🎡 </span><span data-i18n="mode_wheel">ചക്രം</span></button>
+                  <button type="button" data-mode="cards" aria-pressed="false"><span aria-hidden="true">🃏 </span><span data-i18n="mode_cards">കാർഡ് മറിക്കൽ</span></button>
                 </div>
               </div>
               <div class="field">
-                <label for="pickN" data-i18n="how_many"></label>
+                <label for="pickN" data-i18n="how_many">ഒരേ സമയം എത്ര പേർ</label>
                 <div class="stepper">
                   <button type="button" class="btn" data-step="-1" data-for="pickN" aria-label="−">−</button>
                   <input type="number" id="pickN" min="1" max="20" step="1" value="1" inputmode="numeric">
                   <button type="button" class="btn" data-step="1" data-for="pickN" aria-label="+">+</button>
                 </div>
               </div>
-              <label class="check"><input type="checkbox" id="noRepeat" checked> <span data-i18n="no_repeat"></span></label>
+              <label class="check"><input type="checkbox" id="noRepeat" checked> <span data-i18n="no_repeat">തിരഞ്ഞെടുത്ത പേരുകൾ മാറ്റുക (ആവർത്തിക്കില്ല)</span></label>
             </div>
           </div>
         </div>
       </div>
 
       <div class="card">
-        <h2 class="h-sm" data-i18n="picked_so_far"></h2>
+        <h2 class="h-sm" data-i18n="picked_so_far">ഇതുവരെ തിരഞ്ഞെടുത്തവർ</h2>
         <div class="chips" id="history"></div>
       </div>
     </section>
@@ -270,10 +270,10 @@
       <div class="split">
         <div class="card stack" id="groupSettings">
           <div class="field">
-            <span class="lbl" id="groupByLbl" data-i18n="group_by"></span>
+            <span class="lbl" id="groupByLbl" data-i18n="group_by">ഗ്രൂപ്പ് ഉണ്ടാക്കുന്ന രീതി</span>
             <div class="seg" role="group" aria-labelledby="groupByLbl" id="groupBySeg">
-              <button type="button" data-by="count" aria-pressed="true" data-i18n="by_count"></button>
-              <button type="button" data-by="size" aria-pressed="false" data-i18n="by_size"></button>
+              <button type="button" data-by="count" aria-pressed="true" data-i18n="by_count">ഗ്രൂപ്പുകളുടെ എണ്ണം</button>
+              <button type="button" data-by="size" aria-pressed="false" data-i18n="by_size">ഗ്രൂപ്പിന്റെ വലുപ്പം</button>
             </div>
           </div>
           <div class="field">
@@ -283,21 +283,21 @@
               <input type="number" id="groupVal" min="2" max="60" step="1" value="4" inputmode="numeric">
               <button type="button" class="btn" data-step="1" data-for="groupVal" aria-label="+">+</button>
             </div>
-            <span class="hint" data-i18n="size_hint"></span>
+            <span class="hint" data-i18n="size_hint">ഗ്രൂപ്പുകൾ തുല്യമായിരിക്കും: ഏത് രണ്ട് ഗ്രൂപ്പുകൾ തമ്മിലും പരമാവധി ഒരാളുടെ വ്യത്യാസം മാത്രം.</span>
           </div>
           <div class="field">
-            <label for="groupTheme" data-i18n="group_names"></label>
+            <label for="groupTheme" data-i18n="group_names">ഗ്രൂപ്പുകളുടെ പേരുകൾ</label>
             <select id="groupTheme"></select>
           </div>
-          <button type="button" class="btn btn-primary btn-lg w100" id="makeGroups"><span aria-hidden="true">👥</span><span data-i18n="make_groups"></span></button>
+          <button type="button" class="btn btn-primary btn-lg w100" id="makeGroups"><span aria-hidden="true">👥</span><span data-i18n="make_groups">ഗ്രൂപ്പ് ഉണ്ടാക്കുക</span></button>
 
           <details class="apart" id="apartBox">
-            <summary data-i18n="apart_title"></summary>
+            <summary data-i18n="apart_title">വേർതിരിച്ച് നിർത്തുക (ഐച്ഛികം)</summary>
             <div class="stack">
-              <p class="muted small mb0" data-i18n="apart_hint"></p>
-              <div class="field"><label for="apartA" data-i18n="student_a"></label><select id="apartA" class="no-i18n"></select></div>
-              <div class="field"><label for="apartB" data-i18n="student_b"></label><select id="apartB" class="no-i18n"></select></div>
-              <button type="button" class="btn" id="addPair"><span aria-hidden="true">＋</span><span data-i18n="add_pair"></span></button>
+              <p class="muted small mb0" data-i18n="apart_hint">ഒരേ ഗ്രൂപ്പിൽ വരാൻ പാടില്ലാത്ത രണ്ട് വിദ്യാർത്ഥികളെ തിരഞ്ഞെടുക്കുക.</p>
+              <div class="field"><label for="apartA" data-i18n="student_a">ഒന്നാമത്തെ വിദ്യാർത്ഥി</label><select id="apartA" class="no-i18n"></select></div>
+              <div class="field"><label for="apartB" data-i18n="student_b">രണ്ടാമത്തെ വിദ്യാർത്ഥി</label><select id="apartB" class="no-i18n"></select></div>
+              <button type="button" class="btn" id="addPair"><span aria-hidden="true">＋</span><span data-i18n="add_pair">ജോഡി ചേർക്കുക</span></button>
               <ul class="pairs" id="pairs"></ul>
             </div>
           </details>
@@ -308,15 +308,15 @@
           <div class="row spread no-print">
             <strong id="groupsSummary" aria-live="polite"></strong>
             <div class="group-actions" id="groupActions">
-              <button type="button" class="btn btn-sm" id="reshuffleBtn"><span aria-hidden="true">🔀</span><span data-i18n="reshuffle"></span></button>
+              <button type="button" class="btn btn-sm" id="reshuffleBtn"><span aria-hidden="true">🔀</span><span data-i18n="reshuffle">വീണ്ടും കലർത്തുക</span></button>
               <button type="button" class="btn btn-sm" id="copyGroups"><span aria-hidden="true">📋</span><span data-i18n="copy"></span></button>
               <button type="button" class="btn btn-sm" id="printGroups"><span aria-hidden="true">🖨</span><span data-i18n="print"></span></button>
-              <button type="button" class="btn btn-sm" id="csvGroups"><span aria-hidden="true">⬇</span><span data-i18n="download_csv"></span></button>
+              <button type="button" class="btn btn-sm" id="csvGroups"><span aria-hidden="true">⬇</span><span data-i18n="download_csv">CSV ഡൗൺലോഡ്</span></button>
               <button type="button" class="btn btn-sm" id="fsGroups"><span data-i18n="fullscreen"></span></button>
             </div>
           </div>
-          <div class="callout warning no-print" id="apartWarn" hidden data-i18n="apart_failed"></div>
-          <p class="muted" id="groupsEmpty" data-i18n="groups_empty"></p>
+          <div class="callout warning no-print" id="apartWarn" hidden data-i18n="apart_failed">എല്ലാ ജോഡികളെയും വേർതിരിക്കാനായില്ല. കൂടുതൽ ഗ്രൂപ്പുകൾ ഉണ്ടാക്കുക അല്ലെങ്കിൽ ജോഡികൾ കുറയ്ക്കുക.</div>
+          <p class="muted" id="groupsEmpty" data-i18n="groups_empty">ക്രമീകരണങ്ങൾ തിരഞ്ഞെടുത്ത് &quot;ഗ്രൂപ്പ് ഉണ്ടാക്കുക&quot; അമർത്തുക.</p>
           <div class="groups" id="groups"></div>
         </div>
       </div>
@@ -327,56 +327,56 @@
       <div class="grid-2">
         <div class="card stack">
           <div class="row">
-            <button type="button" class="btn" id="newClass"><span aria-hidden="true">＋</span><span data-i18n="new_class"></span></button>
-            <button type="button" class="btn btn-danger" id="delClass"><span aria-hidden="true">🗑</span><span data-i18n="delete_class"></span></button>
+            <button type="button" class="btn" id="newClass"><span aria-hidden="true">＋</span><span data-i18n="new_class">പുതിയ ക്ലാസ്</span></button>
+            <button type="button" class="btn btn-danger" id="delClass"><span aria-hidden="true">🗑</span><span data-i18n="delete_class">ക്ലാസ് ഇല്ലാതാക്കുക</span></button>
           </div>
           <div class="field">
-            <label for="className" data-i18n="class_name"></label>
+            <label for="className" data-i18n="class_name">ക്ലാസിന്റെ പേര്</label>
             <input type="text" id="className" maxlength="40" data-i18n-placeholder="class_name_ph" autocomplete="off">
           </div>
           <div class="field">
-            <label for="namesInput" data-i18n="names_label"></label>
+            <label for="namesInput" data-i18n="names_label">വിദ്യാർത്ഥികളുടെ പേരുകൾ (ഓരോ വരിയിലും ഒന്ന്)</label>
             <textarea id="namesInput" rows="12" data-i18n-placeholder="names_ph" spellcheck="false"></textarea>
           </div>
           <div class="row">
-            <button type="button" class="btn btn-primary" id="saveList"><span aria-hidden="true">💾</span><span data-i18n="save_list"></span></button>
-            <button type="button" class="btn" id="importBtn"><span aria-hidden="true">📄</span><span data-i18n="import_csv"></span></button>
-            <button type="button" class="btn btn-ghost" id="sampleBtn" data-i18n="load_sample"></button>
+            <button type="button" class="btn btn-primary" id="saveList"><span aria-hidden="true">💾</span><span data-i18n="save_list">ലിസ്റ്റ് സേവ് ചെയ്യുക</span></button>
+            <button type="button" class="btn" id="importBtn"><span aria-hidden="true">📄</span><span data-i18n="import_csv">CSV ഇമ്പോർട്ട്</span></button>
+            <button type="button" class="btn btn-ghost" id="sampleBtn" data-i18n="load_sample">മാതൃകാ പേരുകൾ ഉപയോഗിക്കുക</button>
           </div>
           <p class="small muted mb0" id="listStatus" aria-live="polite"></p>
           <div class="roll">
             <div class="field">
-              <label for="rollN" data-i18n="roll_label"></label>
+              <label for="rollN" data-i18n="roll_label">അല്ലെങ്കിൽ റോൾ നമ്പറുകൾ ഉപയോഗിക്കുക: എത്ര വിദ്യാർത്ഥികൾ?</label>
               <div class="stepper">
                 <button type="button" class="btn" data-step="-1" data-for="rollN" aria-label="−">−</button>
                 <input type="number" id="rollN" min="1" max="500" step="1" value="40" inputmode="numeric">
                 <button type="button" class="btn" data-step="1" data-for="rollN" aria-label="+">+</button>
               </div>
             </div>
-            <button type="button" class="btn" id="rollFill" data-i18n="roll_fill"></button>
+            <button type="button" class="btn" id="rollFill" data-i18n="roll_fill">റോൾ നമ്പറുകൾ നിറയ്ക്കുക</button>
           </div>
-          <p class="small muted mb0" data-i18n="import_hint"></p>
+          <p class="small muted mb0" data-i18n="import_hint">Excel അല്ലെങ്കിൽ Google Sheets-ൽ നിന്ന് ക്ലാസ് രജിസ്റ്റർ CSV ഫയലായി സേവ് ചെയ്ത് ഇമ്പോർട്ട് ചെയ്യുക. &quot;Name&quot; എന്ന കോളം, അല്ലെങ്കിൽ പേരുകളുള്ള ആദ്യ കോളം എടുക്കും.</p>
           <p class="tiny muted mb0"><span aria-hidden="true">🔒 </span><span data-i18n="saved_local"></span></p>
         </div>
 
         <div class="card stack">
-          <h2 data-i18n="attendance_title"></h2>
-          <p class="muted small" data-i18n="attendance_hint"></p>
+          <h2 data-i18n="attendance_title">ഇന്ന് ആരൊക്കെ വന്നു?</h2>
+          <p class="muted small" data-i18n="attendance_hint">ഒരു വിദ്യാർത്ഥിയെ ഹാജരില്ലെന്ന് അടയാളപ്പെടുത്താൻ പേരിൽ ടാപ്പ് ചെയ്യുക. ഹാജരില്ലാത്തവരെ തിരഞ്ഞെടുപ്പിലും ഗ്രൂപ്പിലും ഉൾപ്പെടുത്തില്ല. ഇത് ദിവസവും സ്വയം റീസെറ്റ് ആകും.</p>
           <div class="chips" id="attendance"></div>
-          <div><button type="button" class="btn btn-sm" id="allPresent"><span aria-hidden="true">✓</span><span data-i18n="all_present"></span></button></div>
+          <div><button type="button" class="btn btn-sm" id="allPresent"><span aria-hidden="true">✓</span><span data-i18n="all_present">എല്ലാവരും ഹാജർ</span></button></div>
         </div>
       </div>
     </section>
 
     <details class="card help no-print" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">എങ്ങനെ ഉപയോഗിക്കാം / ക്ലാസ്‌റൂം ആശയങ്ങൾ</strong></summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">&quot;ക്ലാസ് ലിസ്റ്റ്&quot; ടാബ് തുറന്ന് വിദ്യാർത്ഥികളുടെ പേരുകൾ പേസ്റ്റ് ചെയ്യുക (ഓരോ വരിയിലും ഒന്ന്) അല്ലെങ്കിൽ CSV ഫയൽ ഇമ്പോർട്ട് ചെയ്യുക, തുടർന്ന് &quot;ലിസ്റ്റ് സേവ് ചെയ്യുക&quot; അമർത്തുക. നിരവധി ക്ലാസുകൾ സേവ് ചെയ്യാം.</li>
+        <li data-i18n="help_2">പീരിയഡ് തുടങ്ങുമ്പോൾ ഹാജരില്ലാത്തവരുടെ പേരുകളിൽ ടാപ്പ് ചെയ്യുക, അപ്പോൾ അവരെ തിരഞ്ഞെടുക്കില്ല.</li>
+        <li data-i18n="help_3">&quot;തിരഞ്ഞെടുത്ത പേരുകൾ മാറ്റുക&quot; ഓണാക്കി വെക്കുക; അപ്പോൾ ആർക്കെങ്കിലും രണ്ടാം ഊഴം വരുന്നതിന് മുമ്പ് എല്ലാവർക്കും ഒരു ഊഴം കിട്ടും.</li>
+        <li data-i18n="help_4">സ്മാർട്ട്ബോർഡിൽ &quot;പൂർണ്ണ സ്ക്രീൻ&quot; ഉപയോഗിക്കുക. വേഗത്തിൽ കാണിക്കാൻ &quot;കാർഡ് മറിക്കൽ&quot; തിരഞ്ഞെടുക്കുക, അല്ലെങ്കിൽ ജോഡി പ്രവർത്തനത്തിന് ഒരേ സമയം 2–4 പേരുകൾ തിരഞ്ഞെടുക്കുക.</li>
+        <li data-i18n="help_5">ക്ലാസ് പ്രവർത്തനം: &quot;ഇന്നത്തെ ചോദ്യം&quot; ചോദിക്കാൻ ചക്രം കറക്കുക. തിരഞ്ഞെടുക്കപ്പെട്ടയാൾ ഉത്തരം പറഞ്ഞ്, അടുത്ത ചോദ്യത്തിനായി ചക്രം കറക്കും.</li>
+        <li data-i18n="help_6">എല്ലാവർക്കും തുല്യ അവസരം: ഈ ആപ്പ് നിങ്ങളുടെ ഉപകരണത്തിലെ സുരക്ഷിത റാൻഡം നമ്പറുകൾ ഉപയോഗിക്കുന്നു, അതിനാൽ ഓരോ പേരിനും കൃത്യമായി തുല്യ അവസരം. പേരുകൾ ഈ ഉപകരണം വിട്ട് പുറത്തുപോകില്ല.</li>
       </ul>
     </details>
   </main>

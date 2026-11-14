@@ -260,82 +260,82 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">પોતાનાં ફ્લેશકાર્ડ બનાવો અને સ્પેસ્ડ રિપિટિશન, ટાઇપિંગ ક્વિઝ અને જોડી મેળવો રમતથી તેમને લાંબો સમય યાદ રાખો.</p>
 
-    <div id="badLink" class="callout danger" role="alert" hidden style="margin-bottom:14px"><span data-i18n="bad_link"></span></div>
+    <div id="badLink" class="callout danger" role="alert" hidden style="margin-bottom:14px"><span data-i18n="bad_link">આ લિંક તૂટેલી કે અધૂરી છે. શિક્ષકને ફરી મોકલવા કહો.</span></div>
 
     <section id="importPreview" class="card stack" hidden aria-labelledby="impTitle" style="margin-bottom:16px">
-      <h2 id="impTitle" class="mb0"><span aria-hidden="true">📥 </span><span data-i18n="import_title"></span></h2>
+      <h2 id="impTitle" class="mb0"><span aria-hidden="true">📥 </span><span data-i18n="import_title">ડેક ઇમ્પોર્ટ કરો</span></h2>
       <div>
         <h3 id="impName" class="no-i18n mb0" dir="auto"></h3>
         <p id="impCount" class="muted mb0"></p>
       </div>
       <div id="impDup" class="callout warning row spread" hidden>
-        <span data-i18n="import_dup"></span>
-        <button type="button" class="btn btn-sm" id="openCopy" data-i18n="open_copy"></button>
+        <span data-i18n="import_dup">આ ડેક તમારી પાસે પહેલેથી છે.</span>
+        <button type="button" class="btn btn-sm" id="openCopy" data-i18n="open_copy">મારી નકલ ખોલો</button>
       </div>
       <div class="scroll-x"><table class="table" id="impTable"></table></div>
       <p id="impMore" class="small muted mb0"></p>
       <div class="row">
-        <button type="button" class="btn btn-primary" id="importSave" data-i18n="import_save"></button>
-        <button type="button" class="btn" id="importMerge" data-i18n="import_merge"></button>
+        <button type="button" class="btn btn-primary" id="importSave" data-i18n="import_save">નવા ડેક તરીકે સેવ કરો</button>
+        <button type="button" class="btn" id="importMerge" data-i18n="import_merge">ખુલ્લા ડેકમાં ઉમેરો</button>
         <button type="button" class="btn btn-ghost" id="importCancel" data-i18n="cancel"></button>
       </div>
     </section>
 
     <section class="card fc-deckbar" id="deckBar">
       <div class="fc-deckrow">
-        <label class="field"><span data-i18n="deck"></span><select id="deckSel" class="no-i18n"></select></label>
-        <button type="button" class="btn" id="newDeck"><span aria-hidden="true">＋</span> <span data-i18n="new_deck"></span></button>
+        <label class="field"><span data-i18n="deck">ડેક</span><select id="deckSel" class="no-i18n"></select></label>
+        <button type="button" class="btn" id="newDeck"><span aria-hidden="true">＋</span> <span data-i18n="new_deck">નવો ડેક</span></button>
       </div>
       <div class="fc-dash">
         <div class="fc-stats" id="deckStats" aria-live="polite"></div>
         <div class="fc-boxwrap">
           <div class="fc-boxes" id="boxes"></div>
-          <p class="tiny muted fc-cap" data-i18n="boxes_caption"></p>
+          <p class="tiny muted fc-cap" data-i18n="boxes_caption">લાઇટનર બૉક્સ: કાર્ડ યાદ રહે ત્યારે તે એક બૉક્સ ઉપર જાય છે અને મોડું પાછું આવે છે.</p>
         </div>
       </div>
     </section>
 
     <div class="fc-tabs no-print" role="tablist" data-i18n-aria-label="modes">
-      <button type="button" role="tab" id="tab-study" aria-controls="p-study"><span class="ic" aria-hidden="true">🧠</span><span data-i18n="tab_study"></span></button>
-      <button type="button" role="tab" id="tab-quiz" aria-controls="p-quiz"><span class="ic" aria-hidden="true">✍️</span><span data-i18n="tab_quiz"></span></button>
-      <button type="button" role="tab" id="tab-match" aria-controls="p-match"><span class="ic" aria-hidden="true">🧩</span><span data-i18n="tab_match"></span></button>
-      <button type="button" role="tab" id="tab-edit" aria-controls="p-edit"><span class="ic" aria-hidden="true">🛠️</span><span data-i18n="tab_edit"></span></button>
+      <button type="button" role="tab" id="tab-study" aria-controls="p-study"><span class="ic" aria-hidden="true">🧠</span><span data-i18n="tab_study">અભ્યાસ</span></button>
+      <button type="button" role="tab" id="tab-quiz" aria-controls="p-quiz"><span class="ic" aria-hidden="true">✍️</span><span data-i18n="tab_quiz">ક્વિઝ</span></button>
+      <button type="button" role="tab" id="tab-match" aria-controls="p-match"><span class="ic" aria-hidden="true">🧩</span><span data-i18n="tab_match">જોડી મેળવો</span></button>
+      <button type="button" role="tab" id="tab-edit" aria-controls="p-edit"><span class="ic" aria-hidden="true">🛠️</span><span data-i18n="tab_edit">કાર્ડ બદલો</span></button>
     </div>
 
     <!-- ================= STUDY ================= -->
     <section id="p-study" role="tabpanel" aria-labelledby="tab-study">
       <div id="studyStart" class="card stack fc-start">
         <div id="studyEmpty" class="stack" hidden>
-          <p class="mb0" data-i18n="no_cards"></p>
-          <div><button type="button" class="btn btn-primary btn-lg" id="goEdit"><span aria-hidden="true">＋ </span><span data-i18n="go_edit"></span></button></div>
+          <p class="mb0" data-i18n="no_cards">આ ડેકમાં હજી કોઈ કાર્ડ નથી.</p>
+          <div><button type="button" class="btn btn-primary btn-lg" id="goEdit"><span aria-hidden="true">＋ </span><span data-i18n="go_edit">કાર્ડ ઉમેરો</span></button></div>
         </div>
         <div id="studyReady" class="stack">
           <div class="fc-due">
             <span class="big-number" id="dueCount" aria-live="polite"></span>
-            <span class="muted" data-i18n="due_label"></span>
+            <span class="muted" data-i18n="due_label">કાર્ડ આજે દોહરાવવાનાં છે</span>
           </div>
-          <p id="allDone" class="fc-alldone" data-i18n="all_done" hidden></p>
+          <p id="allDone" class="fc-alldone" data-i18n="all_done" hidden>આજનું કામ પૂરું! 🎉</p>
           <p id="nextDue" class="muted mb0" hidden></p>
           <div class="fc-opts">
-            <div class="field"><span data-i18n="session_size"></span>
+            <div class="field"><span data-i18n="session_size">એક વારમાં કેટલાં કાર્ડ</span>
               <div class="seg" id="sizeSeg">
-                <button type="button" data-v="10">10</button><button type="button" data-v="20">20</button><button type="button" data-v="50">50</button><button type="button" data-v="0" data-i18n="all"></button>
+                <button type="button" data-v="10">10</button><button type="button" data-v="20">20</button><button type="button" data-v="50">50</button><button type="button" data-v="0" data-i18n="all">બધાં</button>
               </div>
             </div>
-            <label class="check"><input type="checkbox" id="reverseChk"> <span data-i18n="reverse"></span></label>
+            <label class="check"><input type="checkbox" id="reverseChk"> <span data-i18n="reverse">પહેલાં પાછળની બાજુ બતાવો</span></label>
           </div>
           <div class="fc-go">
-            <button type="button" class="btn btn-primary btn-lg" id="startStudy"><span aria-hidden="true">▶ </span><span data-i18n="start_study"></span></button>
-            <button type="button" class="btn" id="cramBtn"><span aria-hidden="true">🔁 </span><span data-i18n="cram"></span></button>
+            <button type="button" class="btn btn-primary btn-lg" id="startStudy"><span aria-hidden="true">▶ </span><span data-i18n="start_study">અભ્યાસ શરૂ કરો</span></button>
+            <button type="button" class="btn" id="cramBtn"><span aria-hidden="true">🔁 </span><span data-i18n="cram">બધાં કાર્ડનો અભ્યાસ કરો</span></button>
           </div>
         </div>
       </div>
 
       <div id="studySession" class="card stack" hidden>
         <div class="fc-sesshead">
-          <span class="badge accent" id="cramBadge" hidden data-i18n="cram_badge"></span>
+          <span class="badge accent" id="cramBadge" hidden data-i18n="cram_badge">અભ્યાસ રાઉન્ડ: બૉક્સ નહીં બદલાય</span>
           <span class="fc-count" id="sessCount"></span>
           <div class="progress" id="sessProg" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="sessBar" style="width:0%"></span></div>
           <button type="button" class="edu-iconbtn" id="speakBtn" data-i18n-aria-label="read_aloud" data-i18n-title="read_aloud">🔊</button>
@@ -349,31 +349,31 @@
             </span>
           </button>
           <div id="flipRow" class="stack center">
-            <p class="fc-hint muted small" data-i18n="flip_hint"></p>
-            <button type="button" class="btn btn-primary btn-lg" id="flipBtn"><span data-i18n="show_answer"></span> <kbd class="fc-kbd no-i18n">Space</kbd></button>
+            <p class="fc-hint muted small" data-i18n="flip_hint">પહેલાં જવાબ વિચારો, પછી કાર્ડ પર ટૅપ કરીને તેને ફેરવો.</p>
+            <button type="button" class="btn btn-primary btn-lg" id="flipBtn"><span data-i18n="show_answer">જવાબ બતાવો</span> <kbd class="fc-kbd no-i18n">Space</kbd></button>
           </div>
           <div class="fc-rate" id="rateRow" hidden>
-            <button type="button" class="btn fc-knew" id="knewBtn"><span aria-hidden="true">✓</span> <span data-i18n="knew"></span> <kbd class="fc-kbd no-i18n">1</kbd></button>
-            <button type="button" class="btn fc-again" id="againBtn"><span aria-hidden="true">↻</span> <span data-i18n="again"></span> <kbd class="fc-kbd no-i18n">2</kbd></button>
+            <button type="button" class="btn fc-knew" id="knewBtn"><span aria-hidden="true">✓</span> <span data-i18n="knew">મને યાદ હતું</span> <kbd class="fc-kbd no-i18n">1</kbd></button>
+            <button type="button" class="btn fc-again" id="againBtn"><span aria-hidden="true">↻</span> <span data-i18n="again">હજી શીખવાનું છે</span> <kbd class="fc-kbd no-i18n">2</kbd></button>
           </div>
         </div>
         <div class="fc-sessfoot">
           <span id="boxInfo" class="small muted"></span>
-          <button type="button" class="btn btn-sm" id="endStudy" data-i18n="end_session"></button>
+          <button type="button" class="btn btn-sm" id="endStudy" data-i18n="end_session">સત્ર પૂરું કરો</button>
         </div>
       </div>
 
       <div id="studySummary" class="card stack" hidden>
-        <h2 class="mb0"><span aria-hidden="true">🎉 </span><span data-i18n="sum_title"></span></h2>
+        <h2 class="mb0"><span aria-hidden="true">🎉 </span><span data-i18n="sum_title">સત્ર પૂરું!</span></h2>
         <div class="fc-sum" aria-live="polite">
-          <div class="s-ok"><b id="sumKnew"></b><span data-i18n="sum_knew"></span></div>
-          <div class="s-again"><b id="sumAgain"></b><span data-i18n="sum_again"></span></div>
-          <div class="s-score"><b id="sumScore"></b><span data-i18n="sum_score"></span></div>
+          <div class="s-ok"><b id="sumKnew"></b><span data-i18n="sum_knew">પહેલી વારમાં યાદ હતું</span></div>
+          <div class="s-again"><b id="sumAgain"></b><span data-i18n="sum_again">હજી શીખવાનું છે</span></div>
+          <div class="s-score"><b id="sumScore"></b><span data-i18n="sum_score">સ્કોર</span></div>
         </div>
         <p id="sumMoved" class="mb0"></p>
         <p id="sumNext" class="muted mb0"></p>
         <div class="row">
-          <button type="button" class="btn btn-accent" id="studyAgain"><span aria-hidden="true">🔁 </span><span data-i18n="study_again"></span></button>
+          <button type="button" class="btn btn-accent" id="studyAgain"><span aria-hidden="true">🔁 </span><span data-i18n="study_again">અઘરાં કાર્ડનો ફરી અભ્યાસ કરો</span></button>
           <button type="button" class="btn btn-primary" id="studyDone" data-i18n="done"></button>
         </div>
       </div>
@@ -382,18 +382,18 @@
     <!-- ================= QUIZ ================= -->
     <section id="p-quiz" role="tabpanel" aria-labelledby="tab-quiz" hidden>
       <div id="quizStart" class="card stack">
-        <h2 class="mb0" data-i18n="quiz_title"></h2>
-        <p class="muted mb0" data-i18n="quiz_help"></p>
+        <h2 class="mb0" data-i18n="quiz_title">જવાબ ટાઇપ કરો ક્વિઝ</h2>
+        <p class="muted mb0" data-i18n="quiz_help">સંકેત વાંચો અને જવાબ ટાઇપ કરો. નાની જોડણી ભૂલ ચાલશે.</p>
         <div class="row" style="gap:16px 24px">
-          <div class="field"><span data-i18n="answer_side"></span>
-            <div class="seg" id="sideSeg"><button type="button" data-side="b" data-i18n="side_back"></button><button type="button" data-side="f" data-i18n="side_front"></button></div>
+          <div class="field"><span data-i18n="answer_side">તમે શું ટાઇપ કરશો?</span>
+            <div class="seg" id="sideSeg"><button type="button" data-side="b" data-i18n="side_back">પાછળની બાજુ</button><button type="button" data-side="f" data-i18n="side_front">આગળની બાજુ</button></div>
           </div>
-          <div class="field"><span data-i18n="questions"></span>
-            <div class="seg" id="qcountSeg"><button type="button" data-v="10">10</button><button type="button" data-v="20">20</button><button type="button" data-v="0" data-i18n="all"></button></div>
+          <div class="field"><span data-i18n="questions">પ્રશ્નો</span>
+            <div class="seg" id="qcountSeg"><button type="button" data-v="10">10</button><button type="button" data-v="20">20</button><button type="button" data-v="0" data-i18n="all">બધાં</button></div>
           </div>
         </div>
         <p class="callout" id="quizEmpty" hidden></p>
-        <div><button type="button" class="btn btn-primary btn-lg" id="startQuiz"><span aria-hidden="true">▶ </span><span data-i18n="start_quiz"></span></button></div>
+        <div><button type="button" class="btn btn-primary btn-lg" id="startQuiz"><span aria-hidden="true">▶ </span><span data-i18n="start_quiz">ક્વિઝ શરૂ કરો</span></button></div>
       </div>
 
       <div id="quizRun" class="card stack" hidden>
@@ -411,26 +411,26 @@
           <input type="text" id="quizInput" class="no-i18n" dir="auto" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-placeholder="your_answer">
         </label>
         <div class="row" id="askRow">
-          <button type="button" class="btn btn-primary" id="quizCheck" data-i18n="check"></button>
-          <button type="button" class="btn" id="quizSkip" data-i18n="dont_know"></button>
+          <button type="button" class="btn btn-primary" id="quizCheck" data-i18n="check">તપાસો</button>
+          <button type="button" class="btn" id="quizSkip" data-i18n="dont_know">મને ખબર નથી</button>
         </div>
         <div id="quizFeedback" aria-live="polite"></div>
         <div class="row" id="nextRow" hidden>
           <button type="button" class="btn btn-primary" id="quizNext"><span data-i18n="next"></span> <span aria-hidden="true" class="arr">→</span></button>
-          <button type="button" class="btn btn-ghost" id="quizOverride"><span aria-hidden="true">✓ </span><span data-i18n="override"></span></button>
+          <button type="button" class="btn btn-ghost" id="quizOverride"><span aria-hidden="true">✓ </span><span data-i18n="override">મારો જવાબ સાચો હતો</span></button>
         </div>
-        <div class="row" style="justify-content:flex-end"><button type="button" class="btn btn-sm" id="quizEnd" data-i18n="quiz_end"></button></div>
+        <div class="row" style="justify-content:flex-end"><button type="button" class="btn btn-sm" id="quizEnd" data-i18n="quiz_end">ક્વિઝ પૂરી કરો</button></div>
       </div>
 
       <div id="quizResult" class="card stack fc-result" hidden>
-        <h2 class="mb0" data-i18n="quiz_done"></h2>
+        <h2 class="mb0" data-i18n="quiz_done">ક્વિઝ પૂરી</h2>
         <div class="big-number" id="quizFinal" aria-live="polite"></div>
         <p id="quizMsg" class="mb0"></p>
-        <h3 id="reviewHead" class="mb0" data-i18n="mistakes" style="text-align:start"></h3>
+        <h3 id="reviewHead" class="mb0" data-i18n="mistakes" style="text-align:start">ફરી જોવાના પ્રશ્નો</h3>
         <ul class="fc-review-list" id="quizReview" style="text-align:start"></ul>
         <div class="row" style="justify-content:center">
-          <button type="button" class="btn btn-accent" id="quizRetry"><span aria-hidden="true">🔁 </span><span data-i18n="retry_mistakes"></span></button>
-          <button type="button" class="btn btn-primary" id="quizNew" data-i18n="new_quiz"></button>
+          <button type="button" class="btn btn-accent" id="quizRetry"><span aria-hidden="true">🔁 </span><span data-i18n="retry_mistakes">ખોટા પ્રશ્નો ફરી કરો</span></button>
+          <button type="button" class="btn btn-primary" id="quizNew" data-i18n="new_quiz">નવી ક્વિઝ</button>
         </div>
       </div>
     </section>
@@ -439,7 +439,7 @@
     <section id="p-match" role="tabpanel" aria-labelledby="tab-match" hidden>
       <div id="matchWrap" class="card stack">
         <div class="fc-matchbar">
-          <div class="field"><span data-i18n="pairs"></span>
+          <div class="field"><span data-i18n="pairs">જોડી</span>
             <div class="seg" id="pairsSeg"><button type="button" data-v="4">4</button><button type="button" data-v="6">6</button><button type="button" data-v="8">8</button></div>
           </div>
           <div class="fc-matchstats" id="matchStats" aria-live="off">
@@ -448,11 +448,11 @@
             <span class="badge success" id="matchBest" hidden></span>
           </div>
           <div class="row">
-            <button type="button" class="btn btn-primary" id="startMatch"><span aria-hidden="true">🔀 </span><span data-i18n="new_game"></span></button>
+            <button type="button" class="btn btn-primary" id="startMatch"><span aria-hidden="true">🔀 </span><span data-i18n="new_game">નવી રમત</span></button>
             <button type="button" class="edu-iconbtn" id="fsMatch" data-i18n-aria-label="fullscreen" data-i18n-title="fullscreen">⛶</button>
           </div>
         </div>
-        <p class="muted small mb0" data-i18n="match_help"></p>
+        <p class="muted small mb0" data-i18n="match_help">એક કાર્ડ પર ટૅપ કરો, પછી તેની જોડી પર. બધી જોડી બને એટલી ઝડપથી મેળવો.</p>
         <p class="callout" id="matchEmpty" hidden></p>
         <div id="matchDone" class="callout success" hidden role="status"></div>
         <div class="fc-tiles" id="tiles"></div>
@@ -463,29 +463,29 @@
     <section id="p-edit" role="tabpanel" aria-labelledby="tab-edit" hidden>
       <div class="grid-2">
         <div class="card stack" id="cardForm">
-          <label class="field"><span data-i18n="deck_name"></span><input type="text" id="deckName" class="no-i18n" dir="auto" maxlength="80"></label>
+          <label class="field"><span data-i18n="deck_name">ડેકનું નામ</span><input type="text" id="deckName" class="no-i18n" dir="auto" maxlength="80"></label>
           <hr class="divider">
           <h3 id="formTitle" class="mb0"></h3>
-          <label class="field"><span data-i18n="front"></span><input type="text" id="cardFront" class="no-i18n" dir="auto" maxlength="400" data-i18n-placeholder="front_ph"></label>
-          <label class="field"><span data-i18n="back"></span><textarea id="cardBack" class="no-i18n" dir="auto" rows="2" maxlength="400" data-i18n-placeholder="back_ph"></textarea></label>
+          <label class="field"><span data-i18n="front">આગળની બાજુ</span><input type="text" id="cardFront" class="no-i18n" dir="auto" maxlength="400" data-i18n-placeholder="front_ph"></label>
+          <label class="field"><span data-i18n="back">પાછળની બાજુ</span><textarea id="cardBack" class="no-i18n" dir="auto" rows="2" maxlength="400" data-i18n-placeholder="back_ph"></textarea></label>
           <div class="fc-imgrow">
-            <button type="button" class="btn btn-sm" id="cardImgBtn"><span aria-hidden="true">🖼️ </span><span data-i18n="add_picture"></span></button>
+            <button type="button" class="btn btn-sm" id="cardImgBtn"><span aria-hidden="true">🖼️ </span><span data-i18n="add_picture">ચિત્ર ઉમેરો</span></button>
             <img id="cardImgPrev" alt="" hidden>
-            <button type="button" class="btn btn-sm btn-ghost" id="cardImgDel" hidden data-i18n="remove_picture"></button>
+            <button type="button" class="btn btn-sm btn-ghost" id="cardImgDel" hidden data-i18n="remove_picture">ચિત્ર કાઢો</button>
           </div>
-          <p class="tiny muted mb0" data-i18n="img_note"></p>
+          <p class="tiny muted mb0" data-i18n="img_note">ચિત્રો નાનાં કરીને ફક્ત આ ડિવાઇસ પર સેવ થાય છે.</p>
           <div class="row">
-            <button type="button" class="btn btn-primary" id="addCard"><span aria-hidden="true">＋ </span><span id="addCardTxt" data-i18n="add_card"></span></button>
+            <button type="button" class="btn btn-primary" id="addCard"><span aria-hidden="true">＋ </span><span id="addCardTxt" data-i18n="add_card">કાર્ડ ઉમેરો</span></button>
             <button type="button" class="btn" id="cancelEdit" hidden data-i18n="cancel"></button>
           </div>
         </div>
         <div class="card stack">
-          <h3 class="mb0" data-i18n="bulk_title"></h3>
-          <p class="small muted mb0" data-i18n="bulk_help"></p>
+          <h3 class="mb0" data-i18n="bulk_title">એકસાથે ઘણાં કાર્ડ ઉમેરો</h3>
+          <p class="small muted mb0" data-i18n="bulk_help">દરેક લીટીમાં એક કાર્ડ, જેમ કે “આગળ - પાછળ”. Excel કે Google Sheets માંથી બે કૉલમ પણ પેસ્ટ કરી શકો.</p>
           <textarea id="bulkText" class="no-i18n" dir="auto" rows="6" data-i18n-placeholder="bulk_ph" data-i18n-aria-label="bulk_title"></textarea>
           <div class="row spread">
             <span id="bulkCount" class="small muted" aria-live="polite"></span>
-            <button type="button" class="btn btn-primary" id="bulkAdd" data-i18n="bulk_add"></button>
+            <button type="button" class="btn btn-primary" id="bulkAdd" data-i18n="bulk_add">બધાં ઉમેરો</button>
           </div>
         </div>
       </div>
@@ -496,8 +496,8 @@
           <input type="search" id="cardSearch" class="no-i18n" data-i18n-placeholder="search_cards" data-i18n-aria-label="search_cards">
         </div>
         <div id="undoBar" class="callout warning" hidden role="status">
-          <span data-i18n="card_deleted"></span>
-          <button type="button" class="btn btn-sm" id="undoBtn"><span aria-hidden="true">↶ </span><span data-i18n="undo"></span></button>
+          <span data-i18n="card_deleted">કાર્ડ કાઢી નાખ્યું.</span>
+          <button type="button" class="btn btn-sm" id="undoBtn"><span aria-hidden="true">↶ </span><span data-i18n="undo">પાછું લાવો</span></button>
         </div>
         <ol class="fc-list" id="cardList"></ol>
         <p id="listEmpty" class="empty mb0" hidden></p>
@@ -505,31 +505,31 @@
 
       <div class="grid-2 mt">
         <div class="card stack">
-          <h3 class="mb0" data-i18n="share_title"></h3>
+          <h3 class="mb0" data-i18n="share_title">શેર, ઇમ્પોર્ટ અને પ્રિન્ટ</h3>
           <div class="fc-actions">
-            <button type="button" class="btn btn-primary" id="shareBtn"><span aria-hidden="true">🔗 </span><span data-i18n="make_link"></span></button>
-            <button type="button" class="btn" id="exportCsv"><span aria-hidden="true">⬇ </span><span data-i18n="export_csv"></span></button>
-            <button type="button" class="btn" id="importBtn"><span aria-hidden="true">⬆ </span><span data-i18n="import_file"></span></button>
-            <button type="button" class="btn" id="printBtn"><span aria-hidden="true">🖨 </span><span data-i18n="print_sheet"></span></button>
+            <button type="button" class="btn btn-primary" id="shareBtn"><span aria-hidden="true">🔗 </span><span data-i18n="make_link">શેર લિંક બનાવો</span></button>
+            <button type="button" class="btn" id="exportCsv"><span aria-hidden="true">⬇ </span><span data-i18n="export_csv">CSV એક્સપોર્ટ કરો</span></button>
+            <button type="button" class="btn" id="importBtn"><span aria-hidden="true">⬆ </span><span data-i18n="import_file">CSV ઇમ્પોર્ટ કરો</span></button>
+            <button type="button" class="btn" id="printBtn"><span aria-hidden="true">🖨 </span><span data-i18n="print_sheet">વાળવાની શીટ પ્રિન્ટ કરો</span></button>
           </div>
           <div id="shareBox" class="stack" hidden>
             <input type="text" id="shareUrl" class="no-i18n" readonly data-i18n-aria-label="make_link">
             <div class="fc-actions">
               <button type="button" class="btn btn-sm" id="copyShare" data-i18n="copy"></button>
-              <a class="btn btn-sm" id="waLink" href="#" target="_blank" rel="noopener" data-i18n="whatsapp"></a>
+              <a class="btn btn-sm" id="waLink" href="#" target="_blank" rel="noopener" data-i18n="whatsapp">WhatsApp</a>
               <button type="button" class="btn btn-sm" id="nativeShare" data-i18n="share" hidden></button>
             </div>
             <ul class="fc-notes" id="shareNotes"></ul>
           </div>
-          <p class="tiny muted mb0" data-i18n="csv_note"></p>
+          <p class="tiny muted mb0" data-i18n="csv_note">CSV ફાઇલમાં બે કૉલમ હોય છે: આગળ અને પાછળ. તે Excel અને Google Sheets માં ખૂલે છે.</p>
         </div>
         <div class="card stack">
-          <h3 class="mb0" data-i18n="more_title"></h3>
+          <h3 class="mb0" data-i18n="more_title">વધુ વિકલ્પો</h3>
           <div class="fc-actions">
-            <button type="button" class="btn" id="backupBtn"><span aria-hidden="true">💾 </span><span data-i18n="backup"></span></button>
-            <button type="button" class="btn" id="addSamples"><span aria-hidden="true">📚 </span><span data-i18n="add_samples"></span></button>
-            <button type="button" class="btn btn-danger" id="resetProgress"><span aria-hidden="true">↺ </span><span data-i18n="reset_progress"></span></button>
-            <button type="button" class="btn btn-danger" id="deleteDeck"><span aria-hidden="true">🗑 </span><span data-i18n="delete_deck"></span></button>
+            <button type="button" class="btn" id="backupBtn"><span aria-hidden="true">💾 </span><span data-i18n="backup">બધા ડેકનો બૅકઅપ</span></button>
+            <button type="button" class="btn" id="addSamples"><span aria-hidden="true">📚 </span><span data-i18n="add_samples">નમૂના ડેક ઉમેરો</span></button>
+            <button type="button" class="btn btn-danger" id="resetProgress"><span aria-hidden="true">↺ </span><span data-i18n="reset_progress">પ્રગતિ રીસેટ કરો</span></button>
+            <button type="button" class="btn btn-danger" id="deleteDeck"><span aria-hidden="true">🗑 </span><span data-i18n="delete_deck">ડેક કાઢી નાખો</span></button>
           </div>
           <p class="tiny muted mb0"><span aria-hidden="true">🔒 </span><span data-i18n="saved_local"></span></p>
         </div>
@@ -537,17 +537,17 @@
     </section>
 
     <details class="card fc-help mt" id="help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">કેવી રીતે વાપરવું · વર્ગ માટે આઇડિયા</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">એક ડેક પસંદ કરો અને “અભ્યાસ શરૂ કરો” દબાવો. જવાબ વિચારો, પછી કાર્ડ ફેરવો.</li>
+        <li data-i18n="help_2">પ્રામાણિક રહો: ખરેખર યાદ હોય ત્યારે જ “મને યાદ હતું” દબાવો. સહેલાં કાર્ડ મોડાં પાછાં આવે, અઘરાં કાર્ડ કાલે જ આવે. રોજ થોડું થોડું વાંચો!</li>
+        <li data-i18n="help_3">“કાર્ડ બદલો” માં પોતાનો ડેક બનાવો, અથવા “આસામ - દિસપુર” જેવી યાદી પેસ્ટ કરો. પછી તેને વર્ગને WhatsApp લિંકથી મોકલો.</li>
+        <li data-i18n="help_4">વર્ગ પ્રવૃત્તિ: સ્માર્ટબોર્ડ પર “જોડી મેળવો” ખોલો, 8 જોડી પસંદ કરો અને બે ટીમને વારાફરતી રમવા દો. ઓછા પ્રયાસવાળી ટીમ જીતશે!</li>
+        <li data-i18n="help_5">ગૃહકાર્ય માટે વાળવાની શીટ પ્રિન્ટ કરો: વિદ્યાર્થીઓ પાનું વાળીને જાતે ચકાસશે. પરીક્ષા પહેલાં ઝડપી પુનરાવર્તન માટે ક્વિઝ ચલાવો.</li>
+        <li data-i18n="help_6">કીબોર્ડ: Space થી કાર્ડ ફેરવો, 1 = મને યાદ હતું, 2 = હજી શીખવાનું છે.</li>
       </ul>
-      <h3 data-i18n="inside_title"></h3>
-      <p class="mb0" data-i18n="inside_text"></p>
+      <h3 data-i18n="inside_title">અંદર શું થાય છે? (સ્પેસ્ડ રિપિટિશન)</h3>
+      <p class="mb0" data-i18n="inside_text">દરેક કાર્ડ 5 માંથી કોઈ એક બૉક્સમાં રહે છે. નવાં અને ભૂલાયેલાં કાર્ડ બૉક્સ 1 માં રહે છે અને રોજ આવે છે. દર વખતે યાદ રહે ત્યારે કાર્ડ એક બૉક્સ ઉપર જાય છે અને વધુ દિવસે પાછું આવે છે: 2 દિવસ, 4 દિવસ, એક અઠવાડિયું, પછી 2 અઠવાડિયાં. એટલે તમારો સમય જે હજી નથી આવડતું તેના પર જાય છે, અને ભૂલી જવાની બરાબર પહેલાં યાદ કરવાથી યાદશક્તિ ખૂબ પાકી થાય છે.</p>
     </details>
 
     <div id="printArea" class="print-only"></div>

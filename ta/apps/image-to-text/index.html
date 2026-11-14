@@ -175,80 +175,80 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">புகைப்படங்கள், ஸ்கிரீன்ஷாட்கள், ஸ்கேன் செய்த PDF-களைத் திருத்த, நகலெடுக்க, பகிரக்கூடிய உரையாக மாற்றுங்கள். 12 இந்திய மொழிகளில், உங்கள் சாதனத்திலேயே.</p>
 
     <div class="callout success it-privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">உங்கள் கோப்புகள் இந்தச் சாதனத்தை விட்டு ஒருபோதும் வெளியே செல்லாது.</strong> <span data-i18n="privacy_body">ஆதார் அட்டை, பில்கள், அறிவிப்புகள், ஒப்பந்தங்கள் உங்கள் உலாவிக்குள்ளேயே படிக்கப்படுகின்றன. எதுவும் பதிவேற்றப்படாது; பெரும்பாலான இலவச OCR இணையதளங்களோ கோப்பைப் பதிவேற்றுகின்றன.</span></p>
     </div>
 
     <div class="it-grid">
       <div class="it-col">
         <!-- 1. add files -->
         <section class="card stack" id="addCard" aria-labelledby="hAdd">
-          <h2 class="it-step" id="hAdd" data-i18n="step_add"></h2>
+          <h2 class="it-step" id="hAdd" data-i18n="step_add">1. புகைப்படம் அல்லது ஸ்கேன் சேர்க்கவும்</h2>
           <div class="it-drop" id="drop" tabindex="0" role="button" aria-describedby="dropHint">
             <span class="it-drop-ic" aria-hidden="true">🖼️</span>
-            <strong data-i18n="drop_title"></strong>
-            <span class="small muted" id="dropHint" data-i18n="drop_hint"></span>
+            <strong data-i18n="drop_title">புகைப்படங்களையோ PDF-ஐயோ இங்கே விடுங்கள்</strong>
+            <span class="small muted" id="dropHint" data-i18n="drop_hint">அல்லது கிளிக் செய்து கோப்புகளைத் தேர்ந்தெடுங்கள், அல்லது Ctrl+V மூலம் ஸ்கிரீன்ஷாட்டை ஒட்டுங்கள். JPG, PNG, WebP, PDF.</span>
           </div>
           <div class="it-add">
-            <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_files"></span></button>
-            <button class="btn" id="camBtn" type="button"><span aria-hidden="true">📷</span> <span data-i18n="take_photo"></span></button>
-            <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">🪪</span> <span data-i18n="try_sample"></span></button>
+            <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_files">கோப்புகளைத் தேர்ந்தெடு</span></button>
+            <button class="btn" id="camBtn" type="button"><span aria-hidden="true">📷</span> <span data-i18n="take_photo">புகைப்படம் எடு</span></button>
+            <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">🪪</span> <span data-i18n="try_sample">மாதிரியை முயல்க</span></button>
           </div>
           <input type="file" id="fileInput" class="it-hidden-input" accept="image/*,application/pdf,.pdf,.heic,.heif" multiple tabindex="-1" aria-hidden="true">
           <input type="file" id="camInput" class="it-hidden-input" accept="image/*" capture="environment" tabindex="-1" aria-hidden="true">
           <div id="pagesWrap" hidden>
             <div class="row spread">
               <strong class="small" id="pagesHead"></strong>
-              <button class="btn btn-sm btn-ghost" id="clearPages" type="button" data-i18n="clear_pages"></button>
+              <button class="btn btn-sm btn-ghost" id="clearPages" type="button" data-i18n="clear_pages">அனைத்தையும் நீக்கு</button>
             </div>
             <ul class="it-pages" id="pages"></ul>
           </div>
           <div class="callout stack" id="pdfTextNote" hidden>
             <p class="mb0" id="pdfTextMsg"></p>
-            <div><button class="btn btn-sm btn-primary" id="usePdfText" type="button" data-i18n="use_pdf_text"></button></div>
+            <div><button class="btn btn-sm btn-primary" id="usePdfText" type="button" data-i18n="use_pdf_text">PDF-இன் சொந்த உரையைப் பயன்படுத்து</button></div>
           </div>
         </section>
 
         <!-- 2. check the page -->
         <section class="card it-empty" id="editEmpty" aria-labelledby="hEditEmpty">
-          <h2 class="it-step" id="hEditEmpty" data-i18n="step_check"></h2>
-          <div class="it-empty-box"><span class="it-empty-ic" aria-hidden="true">📄</span><span class="small muted" data-i18n="check_empty"></span></div>
+          <h2 class="it-step" id="hEditEmpty" data-i18n="step_check">2. பக்கத்தைச் சரிபார்க்கவும்</h2>
+          <div class="it-empty-box"><span class="it-empty-ic" aria-hidden="true">📄</span><span class="small muted" data-i18n="check_empty">உங்கள் பக்கம் இங்கே தோன்றும். பிறகு அதைச் சுழற்றலாம், ஒரு பகுதியை மட்டும் படிக்கலாம், அல்லது இன்னும் தெளிவாக்கலாம்.</span></div>
         </section>
         <section class="card stack" id="editCard" aria-labelledby="hEdit" hidden>
           <div class="row spread">
-            <h2 class="it-step" id="hEdit" data-i18n="step_check"></h2>
+            <h2 class="it-step" id="hEdit" data-i18n="step_check">2. பக்கத்தைச் சரிபார்க்கவும்</h2>
             <span class="badge primary" id="pageBadge"></span>
           </div>
           <div class="it-tools" role="toolbar" data-i18n-aria-label="step_check">
             <button class="btn btn-sm" id="rotL" type="button" data-i18n-aria-label="rotate_left" data-i18n-title="rotate_left"><span aria-hidden="true">↺</span></button>
             <button class="btn btn-sm" id="rotR" type="button" data-i18n-aria-label="rotate_right" data-i18n-title="rotate_right"><span aria-hidden="true">↻</span></button>
-            <button class="btn btn-sm" id="cropBtn" type="button" aria-pressed="false"><span aria-hidden="true">✂️</span> <span data-i18n="select_area"></span></button>
-            <button class="btn btn-sm" id="cropClear" type="button" data-i18n="whole_page"></button>
+            <button class="btn btn-sm" id="cropBtn" type="button" aria-pressed="false"><span aria-hidden="true">✂️</span> <span data-i18n="select_area">பகுதியைத் தேர்ந்தெடு</span></button>
+            <button class="btn btn-sm" id="cropClear" type="button" data-i18n="whole_page">முழுப் பக்கம்</button>
             <span class="sep"></span>
             <span class="it-move">
             <button class="btn btn-sm" id="moveL" type="button" data-i18n-aria-label="move_earlier" data-i18n-title="move_earlier"><span aria-hidden="true" class="it-arr">◀</span></button>
             <button class="btn btn-sm" id="moveR" type="button" data-i18n-aria-label="move_later" data-i18n-title="move_later"><span aria-hidden="true" class="it-arr">▶</span></button>
             </span>
           </div>
-          <p class="small muted mb0" id="cropHint" data-i18n="crop_hint" hidden></p>
+          <p class="small muted mb0" id="cropHint" data-i18n="crop_hint" hidden>படிக்க வேண்டிய பகுதியை மட்டும் படத்தின் மேல் இழுத்துத் தேர்ந்தெடுங்கள்.</p>
           <div class="it-stage"><canvas id="preview" width="10" height="10" role="img"></canvas></div>
           <p class="small muted mb0 no-i18n" id="imgInfo"></p>
           <div id="imgHints" class="stack"></div>
           <details class="it-adjust" id="adjustBox">
-            <summary data-i18n="improve"></summary>
-            <p class="small muted" style="margin:6px 0 0" data-i18n="improve_note"></p>
+            <summary data-i18n="improve">புகைப்படத்தை மேம்படுத்து</summary>
+            <p class="small muted" style="margin:6px 0 0" data-i18n="improve_note">இந்த அமைப்புகள் எல்லாப் பக்கங்களுக்கும் பொருந்தும்.</p>
             <div class="grid-2">
-              <label class="check"><input type="checkbox" id="optLevels"> <span data-i18n="opt_levels"></span></label>
-              <label class="check"><input type="checkbox" id="optGray"> <span data-i18n="opt_gray"></span></label>
-              <label class="check"><input type="checkbox" id="optBw"> <span data-i18n="opt_bw"></span></label>
-              <label class="check"><input type="checkbox" id="optUp"> <span data-i18n="opt_up"></span></label>
-              <label class="check"><input type="checkbox" id="optDeskew"> <span data-i18n="opt_deskew"></span></label>
+              <label class="check"><input type="checkbox" id="optLevels"> <span data-i18n="opt_levels">ஒளியைச் சரிசெய்</span></label>
+              <label class="check"><input type="checkbox" id="optGray"> <span data-i18n="opt_gray">சாம்பல் நிறம்</span></label>
+              <label class="check"><input type="checkbox" id="optBw"> <span data-i18n="opt_bw">கருப்பு-வெள்ளை</span></label>
+              <label class="check"><input type="checkbox" id="optUp"> <span data-i18n="opt_up">2× பெரிதாக்கு (சிறிய எழுத்து)</span></label>
+              <label class="check"><input type="checkbox" id="optDeskew"> <span data-i18n="opt_deskew">சாய்ந்த புகைப்படங்களை நேராக்கு</span></label>
               <span></span>
-              <label class="it-range"><span data-i18n="opt_contrast"></span><input type="range" id="optContrast" min="-50" max="100" step="5"></label>
-              <label class="it-range" id="bwLevelWrap"><span data-i18n="opt_bw_level"></span><input type="range" id="optBwLevel" min="-60" max="60" step="4"></label>
+              <label class="it-range"><span data-i18n="opt_contrast">கான்ட்ராஸ்ட்</span><input type="range" id="optContrast" min="-50" max="100" step="5"></label>
+              <label class="it-range" id="bwLevelWrap"><span data-i18n="opt_bw_level">கருப்பு-வெள்ளை அளவு</span><input type="range" id="optBwLevel" min="-60" max="60" step="4"></label>
             </div>
             <div class="row" style="margin-top:10px"><button class="btn btn-sm btn-ghost" id="resetAdjust" type="button" data-i18n="reset"></button></div>
           </details>
@@ -258,25 +258,25 @@
       <div class="it-col">
         <!-- 3. languages + read -->
         <section class="card stack" id="setCard" aria-labelledby="hLang">
-          <h2 class="it-step" id="hLang" data-i18n="step_lang"></h2>
+          <h2 class="it-step" id="hLang" data-i18n="step_lang">3. பக்கத்தில் உள்ள மொழிகள்</h2>
           <div class="it-langs" id="langs" role="group" aria-labelledby="hLang"></div>
-          <p class="small muted mb0" data-i18n="lang_hint"></p>
-          <p class="callout warning small mb0" id="urduNote" data-i18n="urdu_note" hidden></p>
+          <p class="small muted mb0" data-i18n="lang_hint">பக்கத்தில் உள்ள எல்லா மொழிகளையும் தேர்ந்தெடுங்கள், அதிகபட்சம் 3. பெரும்பாலான அறிவிப்புகள், படிவங்களுக்குத் தமிழ் + ஆங்கிலம் பொருத்தம்.</p>
+          <p class="callout warning small mb0" id="urduNote" data-i18n="urdu_note" hidden>உருது: அச்சிட்ட நஸ்க் எழுத்து மிக நன்றாகப் படிக்கப்படும். நஸ்தாலிக் (பெரும்பாலான உருது செய்தித்தாள்கள், நூல்களில் உள்ளது) அடிக்கடி தவறாகப் படிக்கப்படும்.</p>
           <label class="field">
-            <span data-i18n="doc_type"></span>
+            <span data-i18n="doc_type">பக்கத்தின் வகை</span>
             <select id="docType"></select>
           </label>
           <div class="stack">
-            <label class="check"><input type="checkbox" id="optJoin"> <span data-i18n="opt_join"></span></label>
-            <label class="check"><input type="checkbox" id="optMarks"> <span data-i18n="opt_marks"></span></label>
+            <label class="check"><input type="checkbox" id="optJoin"> <span data-i18n="opt_join">உடைந்த வரிகளை இணைத்துப் பத்திகளாக்கு</span></label>
+            <label class="check"><input type="checkbox" id="optMarks"> <span data-i18n="opt_marks">ஒவ்வொரு பக்கமும் எங்கே தொடங்குகிறது எனக் காட்டு</span></label>
           </div>
           <div class="it-run">
             <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled>
-              <span aria-hidden="true">🔍</span> <span data-i18n="read_btn"></span> <span class="it-count" id="runCount" hidden></span>
+              <span aria-hidden="true">🔍</span> <span data-i18n="read_btn">உரையைப் படி</span> <span class="it-count" id="runCount" hidden></span>
             </button>
             <button class="btn btn-danger" id="stopBtn" type="button" data-i18n="stop" hidden></button>
           </div>
-          <p class="tiny muted mb0" data-i18n="kbd_hint"></p>
+          <p class="tiny muted mb0" data-i18n="kbd_hint">குறுக்குவழி: Ctrl + Enter</p>
           <div class="it-status" id="statusBox" hidden>
             <span id="stText" aria-live="polite"></span>
             <div class="progress" id="stBarWrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-labelledby="stText"><span id="stBar" style="width:0%"></span></div>
@@ -285,12 +285,12 @@
             <p class="mb0" id="errText"></p>
             <div><button class="btn btn-sm" id="retryBtn" type="button" data-i18n="try_again"></button></div>
           </div>
-          <p class="small muted mb0" id="firstTime" data-i18n="first_time"></p>
+          <p class="small muted mb0" id="firstTime" data-i18n="first_time">முதல் முறை எஞ்சின் (1.4 MB), ஒவ்வொரு மொழியும் (1–3 MB) ஒரு முறை பதிவிறக்கப்படும். அதன் பிறகு இது ஆஃப்லைனிலும் இயங்கும்.</p>
           <div class="callout warning small">
-            <strong data-i18n="honest_title"></strong>
+            <strong data-i18n="honest_title">தெரிந்துகொள்ளுங்கள்</strong>
             <ul class="it-honest">
-              <li><span aria-hidden="true">✅</span><span data-i18n="honest_good"></span></li>
-              <li><span aria-hidden="true">⚠️</span><span data-i18n="honest_bad"></span></li>
+              <li><span aria-hidden="true">✅</span><span data-i18n="honest_good">நன்றாக வேலை செய்யும்: அச்சிட்ட ஆங்கிலம், இந்தி, தெளிவான ஸ்கேன்கள், ஸ்கிரீன்ஷாட்கள்.</span></li>
+              <li><span aria-hidden="true">⚠️</span><span data-i18n="honest_bad">சரியாக வேலை செய்யாது: கையெழுத்து, அலங்கார எழுத்துருக்கள், உருது நஸ்தாலிக், மங்கலான அல்லது இருட்டான புகைப்படங்கள். பயன்படுத்தும் முன் எப்போதும் உரையைச் சரிபாருங்கள்.</span></li>
             </ul>
           </div>
         </section>
@@ -300,57 +300,57 @@
     <!-- 4. result -->
     <section class="card stack" id="resultCard" aria-labelledby="hRes" style="margin-top:16px" hidden>
       <div class="it-resbar">
-        <h2 class="it-step" id="hRes" data-i18n="step_result"></h2>
+        <h2 class="it-step" id="hRes" data-i18n="step_result">4. உங்கள் உரை</h2>
         <div class="it-stats" id="stats"></div>
       </div>
-      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden></p>
+      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden>இது கடந்த முறையின் உரை, இந்தச் சாதனத்திலேயே வைக்கப்பட்டது.</p>
       <div class="callout warning stack" id="suggestBox" hidden>
         <p class="mb0" id="suggestText"></p>
         <div class="row" id="suggestBtns"></div>
       </div>
       <div class="row spread" id="unsureRow">
         <label class="check"><input type="checkbox" id="optUnsure"> <span id="unsureLabel"></span></label>
-        <button class="btn btn-sm" id="nextUnsure" type="button"><span data-i18n="next_unsure"></span> <span aria-hidden="true" class="it-arr">→</span></button>
+        <button class="btn btn-sm" id="nextUnsure" type="button"><span data-i18n="next_unsure">சரிபார்க்க அடுத்த சொல்</span> <span aria-hidden="true" class="it-arr">→</span></button>
       </div>
       <div class="it-wordcheck" id="wordCheck" hidden>
-        <span class="small muted" data-i18n="wc_title"></span>
+        <span class="small muted" data-i18n="wc_title">புகைப்படத்தில்:</span>
         <canvas id="wcCanvas" width="10" height="10"></canvas>
         <span class="grow small" id="wcInfo"></span>
         <div class="row">
-          <button class="btn btn-sm btn-primary" id="wcOk" type="button" data-i18n="wc_ok"></button>
+          <button class="btn btn-sm btn-primary" id="wcOk" type="button" data-i18n="wc_ok">சரியாக உள்ளது</button>
           <button class="btn btn-sm btn-ghost" id="wcClose" type="button" data-i18n="close"></button>
         </div>
       </div>
       <div id="result" class="it-result no-i18n" dir="auto" spellcheck="false" role="textbox" aria-multiline="true" data-i18n-aria-label="result_label" tabindex="0"></div>
       <div class="it-actions">
         <button class="btn btn-primary" id="copyBtn" type="button"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
-        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt"></span></button>
-        <a class="btn btn-wa" id="waBtn" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="wa_share"></span></a>
+        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt">.txt பதிவிறக்கு</span></button>
+        <a class="btn btn-wa" id="waBtn" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="wa_share">WhatsApp</span></a>
         <button class="btn" id="printBtn" type="button"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
-        <button class="btn" id="csvBtn" type="button"><span aria-hidden="true">📊</span> <span data-i18n="to_csv"></span></button>
-        <button class="btn" id="vcfBtn" type="button"><span aria-hidden="true">📇</span> <span data-i18n="to_contact"></span></button>
-        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text"></button>
+        <button class="btn" id="csvBtn" type="button"><span aria-hidden="true">📊</span> <span data-i18n="to_csv">அட்டவணை → CSV</span></button>
+        <button class="btn" id="vcfBtn" type="button"><span aria-hidden="true">📇</span> <span data-i18n="to_contact">கார்டு → தொடர்பு</span></button>
+        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text">உரையை அழி</button>
       </div>
-      <label class="check small"><input type="checkbox" id="optKeep"> <span data-i18n="keep_text"></span></label>
+      <label class="check small"><input type="checkbox" id="optKeep"> <span data-i18n="keep_text">மூடிய பிறகும் இந்த உரையை இந்தச் சாதனத்தில் வை (பகிர்ந்த கணினிகளில் இதை அணைத்தே வையுங்கள்)</span></label>
     </section>
 
     <details class="card it-help no-print" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">எப்படிப் பயன்படுத்துவது / வேலைக்கான யோசனைகள்</strong></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">நல்ல புகைப்படம் மிக நன்றாகப் படிக்கப்படும்: போனைப் பக்கத்துக்கு நேர் மேலே பிடியுங்கள், பகல் வெளிச்சத்தில், பக்கம் திரை முழுவதும் நிரம்பி, அதன் மேல் நிழல் விழாமல்.</li>
+        <li data-i18n="tip2">பக்கத்தில் உண்மையில் உள்ள மொழிகளை மட்டும் தேர்ந்தெடுங்கள். பெரும்பாலான அறிவிப்புகளுக்குத் தமிழ் + ஆங்கிலம் சரி; ஒவ்வொரு கூடுதல் மொழியும் வேகத்தைக் குறைக்கும்.</li>
+        <li data-i18n="tip3">எழுத்துகள் சிறியதா, மங்கலா? &quot;பகுதியைத் தேர்ந்தெடு&quot; மூலம் தேவையான பகுதியை மட்டும் படியுங்கள், &quot;2× பெரிதாக்கு&quot; அல்லது &quot;கருப்பு-வெள்ளை&quot;யை இயக்குங்கள்.</li>
+        <li data-i18n="tip4">எஞ்சினுக்கு உறுதியில்லாத சொற்களுக்குக் கீழ்க்கோடு இருக்கும். &quot;சரிபார்க்க அடுத்த சொல்&quot; அழுத்தி ஒவ்வொன்றையும் புகைப்படத்தில் பாருங்கள், திருத்துங்கள், &quot;சரியாக உள்ளது&quot; அழுத்துங்கள்.</li>
+        <li data-i18n="tip5">விசிட்டிங் கார்டுகள்: &quot;விசிட்டிங் கார்டு, சுவரொட்டி அல்லது பலகை&quot; தேர்ந்தெடுத்துப் படியுங்கள்; பிறகு &quot;கார்டு → தொடர்பு&quot; போனில் சேமிக்கக்கூடிய .vcf கோப்பைத் தரும்.</li>
+        <li data-i18n="tip6">விலைப் பட்டியல்கள், மதிப்பெண் பட்டியல்கள், வங்கி ஸ்டேட்மென்ட்கள்: &quot;அட்டவணை&quot; தேர்ந்தெடுத்துப் படியுங்கள்; பிறகு &quot;அட்டவணை → CSV&quot; மூலம் நெடுவரிசைகளை Excel அல்லது Google Sheets-இல் திறங்கள்.</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="ideas_title"></h3>
-      <p class="mb0" data-i18n="ideas_body"></p>
-      <h3 style="margin-top:14px" data-i18n="inside_title"></h3>
-      <p class="mb0" data-i18n="inside_body"></p>
+      <h3 style="margin-top:14px" data-i18n="ideas_title">வேலைக்கான யோசனைகள்</h3>
+      <p class="mb0" data-i18n="ideas_body">பழைய கடிதங்கள், அறிவிப்புகளைச் சில நிமிடங்களில் தட்டச்சு செய்யுங்கள், ஸ்கிரீன்ஷாட்கள், WhatsApp படங்களிலிருந்து உரையை நகலெடுங்கள், அச்சிட்ட விலைப் பட்டியலை Excel ஆக மாற்றுங்கள், வர்த்தகக் கண்காட்சிக்குப் பின் குவிந்த விசிட்டிங் கார்டுகளைச் சேமியுங்கள், சமூக ஊடகப் பதிவுக்காக நூலிலிருந்து மேற்கோள்களை எடுங்கள். ஆதார், PAN, பில்கள், ஒப்பந்தங்கள் போன்ற தனிப்பட்ட ஆவணங்கள் உங்கள் சாதனத்திலேயே இருக்கும்; எனவே முதல் பயன்பாட்டுக்குப் பிறகு ஏரோப்ளேன் மோடை இயக்கியும் பயன்படுத்தலாம்.</p>
+      <h3 style="margin-top:14px" data-i18n="inside_title">உள்ளே என்ன நடக்கிறது?</h3>
+      <p class="mb0" data-i18n="inside_body">இது Tesseract, ஒரு இலவச ஓப்பன்-சோர்ஸ் OCR எஞ்சின்; WebAssembly மூலம் உங்கள் உலாவியில் இயங்குகிறது. முதலில் படத்தில் உள்ள உரை வரிகளைக் கண்டுபிடிக்கிறது. பிறகு ஒரு நியூரல் நெட்வொர்க் (LSTM) ஒவ்வொரு வரியையும் தொடக்கம் முதல் இறுதி வரை படித்து, மொழித் தரவைக் கொண்டு மிகப் பொருத்தமான எழுத்துகளையும் சொற்களையும் ஊகிக்கிறது. % என்பது ஒவ்வொரு சொல்லைப் பற்றியும் அது எவ்வளவு உறுதியாக உள்ளது என்பதைக் காட்டுகிறது.</p>
       <div class="it-storage">
         <span class="small muted" id="storageText"></span>
-        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden></button>
+        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden>சேமித்த மொழிகளை நீக்கு</button>
       </div>
       <div class="row spread" style="margin-top:12px">
         <span class="small muted" data-i18n="saved_local"></span>

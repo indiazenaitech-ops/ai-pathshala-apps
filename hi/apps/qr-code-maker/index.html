@@ -178,131 +178,131 @@
 </head>
 <body class="pm-single">
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">लिंक, होमवर्क, Wi-Fi और संपर्क के लिए QR कोड बनाएँ, कई कोड वाली शीट प्रिंट करें, और जानें कि QR कोड में जानकारी कैसे रखी जाती है।</p>
 
     <div class="qr-layout">
       <section class="card qr-input stack" aria-labelledby="hType">
-        <h2 id="hType" data-i18n="h_type"></h2>
+        <h2 id="hType" data-i18n="h_type">कोड में क्या रखना है?</h2>
         <div class="qr-types" id="types" role="group" data-i18n-aria-label="types_aria"></div>
         <div id="fields" class="qr-fields"></div>
         <div class="field">
-          <label for="f-caption" data-i18n="f_caption"></label>
+          <label for="f-caption" data-i18n="f_caption">कोड के नीचे का कैप्शन</label>
           <input id="f-caption" type="text" dir="auto" maxlength="80" autocomplete="off">
-          <span class="hint" data-i18n="f_caption_hint"></span>
+          <span class="hint" data-i18n="f_caption_hint">यह कोड के नीचे छपता है, ताकि लोग जानें कि कोड क्या खोलेगा। कैप्शन न चाहिए तो खाली छोड़ दें।</span>
         </div>
         <details class="qr-inside" id="insideBox" open>
-          <summary data-i18n="payload_title"></summary>
+          <summary data-i18n="payload_title">कोड के अंदर क्या रखा है?</summary>
           <pre id="payload" dir="auto"></pre>
-          <p class="small muted" data-i18n="payload_hint"></p>
-          <button type="button" class="btn btn-sm" id="btnCopyText" data-i18n="btn_copy_text"></button>
+          <p class="small muted" data-i18n="payload_hint">फ़ोन ठीक यही टेक्स्ट पढ़ता है। शुरुआत से उसे पता चलता है कि क्या करना है: https:// वेबसाइट खोलता है, tel: कॉल करता है, WIFI: नेटवर्क से जोड़ता है, mailto: ईमेल लिखता है, BEGIN:VCARD संपर्क सेव करता है।</p>
+          <button type="button" class="btn btn-sm" id="btnCopyText" data-i18n="btn_copy_text">टेक्स्ट कॉपी करें</button>
         </details>
-        <p class="tiny muted qr-privacy">🔒 <span data-i18n="privacy_note"></span></p>
+        <p class="tiny muted qr-privacy">🔒 <span data-i18n="privacy_note">कोड इसी डिवाइस पर बनते हैं। आप जो भी लिखते हैं, वह कहीं नहीं भेजा जाता।</span></p>
       </section>
 
       <section class="card qr-preview" aria-labelledby="hPreview">
-        <h2 id="hPreview" data-i18n="h_preview"></h2>
+        <h2 id="hPreview" data-i18n="h_preview">आपका QR कोड</h2>
         <div class="qr-canvas-wrap"><canvas id="qrCanvas" class="no-i18n" role="img" width="300" height="300"></canvas></div>
         <div class="qr-status" id="qrStatus" aria-live="polite"></div>
         <div class="qr-info" id="qrInfo"></div>
         <div class="qr-actions">
-          <button type="button" class="btn btn-primary wide" id="btnPng"><span aria-hidden="true">⬇</span> <span data-i18n="btn_png"></span></button>
-          <button type="button" class="btn" id="btnCopyImg"><span aria-hidden="true">⧉</span> <span data-i18n="btn_copy_img"></span></button>
+          <button type="button" class="btn btn-primary wide" id="btnPng"><span aria-hidden="true">⬇</span> <span data-i18n="btn_png">PNG डाउनलोड करें</span></button>
+          <button type="button" class="btn" id="btnCopyImg"><span aria-hidden="true">⧉</span> <span data-i18n="btn_copy_img">इमेज कॉपी करें</span></button>
           <button type="button" class="btn" id="btnPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
-          <button type="button" class="btn" id="btnBig"><span aria-hidden="true">⛶</span> <span data-i18n="btn_big"></span></button>
-          <button type="button" class="btn" id="btnSvg"><span aria-hidden="true">⬇</span> <span data-i18n="btn_svg"></span></button>
-          <button type="button" class="btn btn-accent wide" id="btnAdd"><span aria-hidden="true">＋</span> <span data-i18n="btn_add"></span></button>
+          <button type="button" class="btn" id="btnBig"><span aria-hidden="true">⛶</span> <span data-i18n="btn_big">बड़ी स्क्रीन पर दिखाएँ</span></button>
+          <button type="button" class="btn" id="btnSvg"><span aria-hidden="true">⬇</span> <span data-i18n="btn_svg">SVG डाउनलोड करें</span></button>
+          <button type="button" class="btn btn-accent wide" id="btnAdd"><span aria-hidden="true">＋</span> <span data-i18n="btn_add">पोस्टर शीट में जोड़ें</span></button>
         </div>
       </section>
 
       <section class="card qr-options stack" aria-labelledby="hOptions">
-        <h2 id="hOptions" data-i18n="h_options"></h2>
+        <h2 id="hOptions" data-i18n="h_options">रूप और आकार</h2>
         <div class="field">
-          <label class="qr-range-lbl" for="o-size"><span data-i18n="o_size"></span> <output id="o-size-out" class="badge" for="o-size"></output></label>
+          <label class="qr-range-lbl" for="o-size"><span data-i18n="o_size">इमेज का आकार</span> <output id="o-size-out" class="badge" for="o-size"></output></label>
           <input type="range" id="o-size" min="200" max="1200" step="50">
         </div>
         <div class="field">
-          <div class="qr-lbl" id="eclLbl" data-i18n="o_ecl"></div>
+          <div class="qr-lbl" id="eclLbl" data-i18n="o_ecl">एरर करेक्शन (गलती सुधार)</div>
           <div class="seg" id="eclSeg" role="group" aria-labelledby="eclLbl"></div>
-          <span class="hint" data-i18n="o_ecl_hint"></span>
+          <span class="hint" data-i18n="o_ecl_hint">ऊँचा लेवल होने पर कोड थोड़ा फटा, गंदा या ढका हो, तब भी स्कैन हो जाता है, पर उसमें खाने बढ़ जाते हैं। ज़्यादातर कामों के लिए M ठीक है; जो पोस्टर महीनों दीवार पर रहें, उनके लिए H चुनें।</span>
         </div>
         <div class="qr-colors">
-          <label class="qr-color" for="o-fg"><input type="color" id="o-fg"> <span data-i18n="o_fg"></span></label>
-          <label class="qr-color" for="o-bg"><input type="color" id="o-bg"> <span data-i18n="o_bg"></span></label>
-          <button type="button" class="btn btn-sm" id="o-swap"><span aria-hidden="true">⇄</span> <span data-i18n="o_swap"></span></button>
-          <button type="button" class="btn btn-sm" id="o-bw" data-i18n="o_bw"></button>
+          <label class="qr-color" for="o-fg"><input type="color" id="o-fg"> <span data-i18n="o_fg">कोड का रंग</span></label>
+          <label class="qr-color" for="o-bg"><input type="color" id="o-bg"> <span data-i18n="o_bg">पृष्ठभूमि</span></label>
+          <button type="button" class="btn btn-sm" id="o-swap"><span aria-hidden="true">⇄</span> <span data-i18n="o_swap">रंग अदला-बदली करें</span></button>
+          <button type="button" class="btn btn-sm" id="o-bw" data-i18n="o_bw">सफ़ेद पर काला</button>
         </div>
         <div class="callout warning small" id="colorWarn" role="status" hidden></div>
         <div class="field">
-          <label class="qr-range-lbl" for="o-margin"><span data-i18n="o_margin"></span> <output id="o-margin-out" class="badge" for="o-margin"></output></label>
+          <label class="qr-range-lbl" for="o-margin"><span data-i18n="o_margin">हाशिया (खाली किनारा)</span> <output id="o-margin-out" class="badge" for="o-margin"></output></label>
           <input type="range" id="o-margin" min="0" max="10" step="1">
-          <span class="hint" data-i18n="o_margin_hint"></span>
+          <span class="hint" data-i18n="o_margin_hint">खाली किनारा कैमरे को कोड ढूँढने में मदद करता है। नियम के हिसाब से यह 4 खाने का होता है।</span>
         </div>
-        <label class="check"><input type="checkbox" id="o-parts"> <span data-i18n="o_parts"></span></label>
+        <label class="check"><input type="checkbox" id="o-parts"> <span data-i18n="o_parts">QR कोड के हिस्से दिखाएँ (सीखने वाले रंग)</span></label>
         <ul class="parts-legend" id="partsLegend" hidden>
-          <li><span class="sw" style="background:#d9480f"></span><span data-i18n="part_finder"></span></li>
-          <li><span class="sw" style="background:#2b8a3e"></span><span data-i18n="part_timing"></span></li>
-          <li><span class="sw" style="background:#6741d9"></span><span data-i18n="part_align"></span></li>
-          <li><span class="sw" style="background:#c2255c"></span><span data-i18n="part_format"></span></li>
-          <li><span class="sw" style="background:#1971c2"></span><span data-i18n="part_version"></span></li>
-          <li><span class="sw" style="background:#111111"></span><span data-i18n="part_data"></span></li>
-          <li><span class="sw" style="background:#fff3bf"></span><span data-i18n="part_quiet"></span></li>
+          <li><span class="sw" style="background:#d9480f"></span><span data-i18n="part_finder">फ़ाइंडर पैटर्न — 3 बड़े चौकोर, जो कैमरे को बताते हैं कि कोड कहाँ है और कौन-सी तरफ़ ऊपर है।</span></li>
+          <li><span class="sw" style="background:#2b8a3e"></span><span data-i18n="part_timing">टाइमिंग लाइनें — बिंदुओं जैसी लाइनें, जो पंक्तियाँ और स्तंभ गिनने में मदद करती हैं।</span></li>
+          <li><span class="sw" style="background:#6741d9"></span><span data-i18n="part_align">अलाइनमेंट निशान — छोटे चौकोर, जो कागज़ मुड़ा या तिरछा हो, तब भी कोड ठीक से पढ़ने में मदद करते हैं।</span></li>
+          <li><span class="sw" style="background:#c2255c"></span><span data-i18n="part_format">फ़ॉर्मैट जानकारी — एरर करेक्शन लेवल और मास्क, सुरक्षा के लिए दो बार रखे जाते हैं।</span></li>
+          <li><span class="sw" style="background:#1971c2"></span><span data-i18n="part_version">वर्ज़न जानकारी — कोड का आकार (सिर्फ़ बड़े कोड में, वर्ज़न 7 और उससे ऊपर)।</span></li>
+          <li><span class="sw" style="background:#111111"></span><span data-i18n="part_data">डेटा — आपका संदेश गहरे (1) और हल्के (0) खानों के रूप में, साथ में मरम्मत के लिए अतिरिक्त बाइट।</span></li>
+          <li><span class="sw" style="background:#fff3bf"></span><span data-i18n="part_quiet">क्वाइट ज़ोन — कोड के चारों ओर का खाली किनारा।</span></li>
         </ul>
       </section>
     </div>
 
     <section class="card stack" id="sheetCard" aria-labelledby="hSheet">
       <div class="row spread no-print">
-        <h2 id="hSheet" class="mb0" data-i18n="h_sheet"></h2>
+        <h2 id="hSheet" class="mb0" data-i18n="h_sheet">पोस्टर शीट</h2>
         <span class="badge primary" id="sheetCount"></span>
       </div>
-      <p class="muted no-print mb0" data-i18n="sheet_intro"></p>
+      <p class="muted no-print mb0" data-i18n="sheet_intro">एक ही पेज पर कई QR कोड रखें — लैब के स्टेशन, ख़ज़ाने की खोज, विज्ञान मेला — फिर प्रिंट करके काट लें।</p>
       <div class="sheet-controls no-print">
         <div class="field grow">
-          <label for="sheetHeading" data-i18n="sheet_heading"></label>
+          <label for="sheetHeading" data-i18n="sheet_heading">शीट का शीर्षक</label>
           <input id="sheetHeading" type="text" dir="auto" maxlength="90" autocomplete="off" data-i18n-placeholder="sheet_heading_ph">
         </div>
         <div class="field">
-          <div class="qr-lbl" id="colsLbl" data-i18n="sheet_cols"></div>
+          <div class="qr-lbl" id="colsLbl" data-i18n="sheet_cols">एक पंक्ति में कोड</div>
           <div class="seg" id="colsSeg" role="group" aria-labelledby="colsLbl">
             <button type="button" data-cols="2" id="cols-2">2</button><button type="button" data-cols="3" id="cols-3">3</button><button type="button" data-cols="4" id="cols-4">4</button>
           </div>
         </div>
       </div>
       <div class="sheet-checks no-print">
-        <label class="check"><input type="checkbox" id="sheetShowText"> <span data-i18n="sheet_show_text"></span></label>
-        <label class="check"><input type="checkbox" id="sheetNumbers"> <span data-i18n="sheet_numbers"></span></label>
+        <label class="check"><input type="checkbox" id="sheetShowText"> <span data-i18n="sheet_show_text">हर कोड के नीचे उसकी जानकारी दिखाएँ</span></label>
+        <label class="check"><input type="checkbox" id="sheetNumbers"> <span data-i18n="sheet_numbers">कोड पर नंबर लगाएँ</span></label>
       </div>
-      <p class="callout small no-print mb0" id="sheetSecret" data-i18n="secret_note" hidden></p>
+      <p class="callout small no-print mb0" id="sheetSecret" data-i18n="secret_note" hidden>ख़ज़ाने की खोज के सुराग (🔒) कोड के नीचे नहीं छपते, ताकि खिलाड़ियों को उन्हें स्कैन करना पड़े।</p>
       <div class="row no-print">
-        <button type="button" class="btn btn-primary" id="btnSheetPrint"><span aria-hidden="true">🖨</span> <span data-i18n="sheet_print"></span></button>
-        <button type="button" class="btn" id="btnSheetSample"><span aria-hidden="true">🗺</span> <span data-i18n="sheet_sample"></span></button>
-        <button type="button" class="btn btn-danger" id="btnSheetClear" data-i18n="sheet_clear"></button>
+        <button type="button" class="btn btn-primary" id="btnSheetPrint"><span aria-hidden="true">🖨</span> <span data-i18n="sheet_print">शीट प्रिंट करें</span></button>
+        <button type="button" class="btn" id="btnSheetSample"><span aria-hidden="true">🗺</span> <span data-i18n="sheet_sample">ख़ज़ाने की खोज का नमूना जोड़ें</span></button>
+        <button type="button" class="btn btn-danger" id="btnSheetClear" data-i18n="sheet_clear">शीट खाली करें</button>
       </div>
       <h2 class="sheet-h print-only no-i18n" id="sheetH" dir="auto"></h2>
-      <p class="panel muted no-print" id="sheetEmpty" data-i18n="sheet_empty"></p>
+      <p class="panel muted no-print" id="sheetEmpty" data-i18n="sheet_empty">अभी कोई कोड नहीं है। ऊपर कोड बनाकर &quot;पोस्टर शीट में जोड़ें&quot; दबाएँ, या ख़ज़ाने की खोज वाला नमूना आज़माएँ।</p>
       <div class="sheet-grid" id="sheetGrid"></div>
-      <p class="print-only tiny sheet-foot" data-i18n="made_with"></p>
+      <p class="print-only tiny sheet-foot" data-i18n="made_with">AI की पाठशाला के QR कोड मेकर से मुफ़्त में बनाया गया</p>
     </section>
 
     <details class="card qr-help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">कैसे इस्तेमाल करें · कक्षा के लिए आइडिया</summary>
       <ul>
-        <li data-i18n="tip_1"></li>
-        <li data-i18n="tip_2"></li>
-        <li data-i18n="tip_3"></li>
-        <li data-i18n="tip_4"></li>
-        <li data-i18n="tip_5"></li>
-        <li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">प्रकार चुनें, खाने भरें — कोड तुरंत बदल जाता है। प्रिंट करने से पहले फ़ोन के कैमरे या Google Lens से जाँच लें।</li>
+        <li data-i18n="tip_2">आकार का नियम: कोड को उसकी चौड़ाई से लगभग 10 गुना दूरी से स्कैन किया जा सकता है। 5 सेमी का कोड लगभग 50 सेमी से पढ़ा जाता है। कक्षा की दीवार के लिए इसे 15–20 सेमी चौड़ा छापें, या स्मार्टबोर्ड पर &quot;बड़ी स्क्रीन पर दिखाएँ&quot; दबाएँ।</li>
+        <li data-i18n="tip_3">कक्षा गतिविधि, QR ख़ज़ाने की खोज: नमूना जोड़कर प्रिंट करें। स्टेशन 1 टीमों को दें, स्टेशन 2 पीने के पानी के पास, स्टेशन 3 लाइब्रेरी में और स्टेशन 4 सबसे बड़े पेड़ के पास चिपकाएँ। टीमें हर कोड स्कैन करके अगली जगह ढूँढती हैं।</li>
+        <li data-i18n="tip_4">वर्कशीट या नोटिस पर ऐसा कोड लगाएँ जो NCERT का अध्याय, दोहराने का वीडियो या Google Form क्विज़ खोले।</li>
+        <li data-i18n="tip_5">टेक्स्ट, Wi-Fi और संपर्क वाले कोड बिना इंटरनेट के चलते हैं, क्योंकि सारी जानकारी कोड में ही होती है। हिंदी, तमिल, उर्दू और दूसरी लिपियाँ UTF-8 में रखी जाती हैं।</li>
+        <li data-i18n="tip_6">सुरक्षा का पाठ: QR कोड के पीछे कोई भी लिंक छिपा हो सकता है। खोलने से पहले फ़ोन पर दिखा लिंक पढ़ें। पैसे पाने के लिए कभी QR कोड स्कैन करने या UPI PIN डालने की ज़रूरत नहीं होती; स्कैन सिर्फ़ पैसे देने के लिए होता है।</li>
       </ul>
     </details>
     <details class="card qr-help">
-      <summary data-i18n="learn_title"></summary>
+      <summary data-i18n="learn_title">QR कोड काम कैसे करता है?</summary>
       <ol>
-        <li data-i18n="learn_1"></li>
-        <li data-i18n="learn_2"></li>
-        <li data-i18n="learn_3"></li>
-        <li data-i18n="learn_4"></li>
-        <li data-i18n="learn_5"></li>
+        <li data-i18n="learn_1">QR का मतलब है &quot;Quick Response&quot; (तुरंत जवाब)। इसे 1994 में जापान में कार के पुर्ज़ों का हिसाब रखने के लिए बनाया गया था।</li>
+        <li data-i18n="learn_2">आपका टेक्स्ट बाइट में, यानी 0 और 1 में बदला जाता है। डेटा वाले हिस्से में गहरा खाना 1 है और हल्का खाना 0।</li>
+        <li data-i18n="learn_3">Reed–Solomon गणित से कुछ अतिरिक्त एरर करेक्शन बाइट जोड़े जाते हैं। इनकी वजह से कोड का कुछ हिस्सा न भी हो, तब भी फ़ोन उसे पढ़ लेता है।</li>
+        <li data-i18n="learn_4">मास्क पैटर्न कुछ खानों को उलट देता है, ताकि कहीं बहुत बड़ा खाली या काला हिस्सा न बने। यह ऐप सभी 8 मास्क आज़माकर वही रखता है जो सबसे आसानी से स्कैन हो।</li>
+        <li data-i18n="learn_5">बड़े संदेश के लिए बड़ा वर्ज़न चाहिए: वर्ज़न 1 में 21×21 खाने होते हैं और वर्ज़न 40 में 177×177।</li>
       </ol>
     </details>
 
@@ -315,7 +315,7 @@
   <div class="qr-big" id="bigView" role="dialog" aria-modal="true" aria-labelledby="bigHint" hidden>
     <button type="button" class="btn big-close" id="bigClose"><span aria-hidden="true">✕</span> <span data-i18n="close"></span></button>
     <canvas id="bigCanvas" class="no-i18n" width="10" height="10"></canvas>
-    <p class="big-hint" id="bigHint" data-i18n="big_hint"></p>
+    <p class="big-hint" id="bigHint" data-i18n="big_hint">फ़ोन के कैमरे या Google Lens से स्कैन करें</p>
   </div>
 
   <script src="../../../apps/qr-code-maker/../../shared/edu.js"></script>

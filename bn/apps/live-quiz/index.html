@@ -209,9 +209,9 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" id="intro" data-i18n="intro"></p>
-    <div class="callout warning lq-banner" id="demoBanner" hidden><span aria-hidden="true">🧪 </span><span data-i18n="demo_banner"></span></div>
-    <div class="callout danger lq-banner" id="offlineBanner" role="status" hidden><span data-i18n="offline_banner"></span></div>
+    <p class="edu-intro" id="intro" data-i18n="intro">প্রজেক্টরে লাইভ কুইজ চালান। অনলাইনে চালাতে Google দিয়ে সাইন ইন করুন। শিক্ষার্থীরা ফোনে কোড আর ডাকনাম দিয়ে যোগ দেয় (সাইন-আপ লাগে না), প্রতিটি প্রশ্নের উত্তর দেয় আর দেখে কে সবার আগে।</p>
+    <div class="callout warning lq-banner" id="demoBanner" hidden><span aria-hidden="true">🧪 </span><span data-i18n="demo_banner">ডেমো মোড: এটি শুধু এই একটি ডিভাইসে চলে। চেষ্টা করতে অন্য ট্যাবে শিক্ষার্থীদের পেজটি খুলুন। শিক্ষার্থীদের ফোনে খেলতে apnipathshala.ai/teacher খুলে Google দিয়ে সাইন ইন করুন।</span></div>
+    <div class="callout danger lq-banner" id="offlineBanner" role="status" hidden><span data-i18n="offline_banner">ইন্টারনেট সংযোগ নেই। শিক্ষার্থীদের উত্তর হয়তো পৌঁছাবে না।</span></div>
 
     <section id="v-loading" class="card center muted" aria-busy="true"><span data-i18n="loading"></span></section>
 
@@ -219,12 +219,12 @@
     <section id="v-signin" hidden>
       <div class="card signin">
         <div class="signin-icon" aria-hidden="true">📡</div>
-        <h2 data-i18n="signin_title"></h2>
-        <p class="muted" data-i18n="signin_text"></p>
+        <h2 data-i18n="signin_title">Google দিয়ে সাইন ইন করুন — শিক্ষকদের জন্য বিনামূল্যে</h2>
+        <p class="muted" data-i18n="signin_text">আপনার কুইজ অনলাইনে সেভ থাকে, তাই যেকোনো কম্পিউটারে ব্যবহার করতে পারবেন। শিক্ষার্থীদের কখনো সাইন ইন করতে হয় না: তারা কোড আর ডাকনাম দিয়ে যোগ দেয়।</p>
         <button class="btn btn-lg signin-btn" id="signIn" type="button"></button>
-        <p class="callout warning" id="inappHint" hidden data-i18n="inapp_hint"></p>
+        <p class="callout warning" id="inappHint" hidden data-i18n="inapp_hint">WhatsApp-এর মতো অ্যাপের ভেতরে Google সাইন-ইন কাজ করে না। পেজটি Chrome-এ খুলুন।</p>
         <div class="callout danger" id="signinErr" role="alert" hidden></div>
-        <p class="small muted legal-links"><a class="lnk-privacy" href="../../../apps/live-quiz/../../legal/privacy.html" data-i18n="privacy"></a> · <a class="lnk-terms" href="../../../apps/live-quiz/../../legal/terms.html" data-i18n="terms"></a></p>
+        <p class="small muted legal-links"><a class="lnk-privacy" href="../../../apps/live-quiz/../../legal/privacy.html" data-i18n="privacy">গোপনীয়তা নীতি</a> · <a class="lnk-terms" href="../../../apps/live-quiz/../../legal/terms.html" data-i18n="terms">ব্যবহারের শর্তাবলি</a></p>
       </div>
     </section>
 
@@ -233,39 +233,39 @@
       <div class="dash-top">
         <div class="who"><span class="avatar" id="avatar" aria-hidden="true"></span><h2 id="hello"></h2></div>
         <div class="dash-acts">
-          <button class="btn btn-primary" id="newQuiz" type="button"><span aria-hidden="true">+</span><span data-i18n="new_quiz"></span></button>
-          <button class="btn" id="importQm" type="button"><span aria-hidden="true">❓</span><span data-i18n="import_qm"></span></button>
-          <button class="btn" id="importFile" type="button"><span aria-hidden="true">📄</span><span data-i18n="import_file"></span></button>
+          <button class="btn btn-primary" id="newQuiz" type="button"><span aria-hidden="true">+</span><span data-i18n="new_quiz">নতুন কুইজ</span></button>
+          <button class="btn" id="importQm" type="button"><span aria-hidden="true">❓</span><span data-i18n="import_qm">এই ডিভাইসের কুইজ মেকার থেকে আনুন</span></button>
+          <button class="btn" id="importFile" type="button"><span aria-hidden="true">📄</span><span data-i18n="import_file">JSON / CSV ইমপোর্ট করুন</span></button>
         </div>
       </div>
-      <p class="tiny muted import-hint" data-i18n="import_hint"></p>
+      <p class="tiny muted import-hint" data-i18n="import_hint">CSV-এর কলাম: প্রশ্ন, বিকল্প 1 থেকে বিকল্প 6, সঠিক উত্তর (1–6 বা A–F), ব্যাখ্যা।</p>
       <div class="dash-grid">
         <section class="card stack" id="quizCard">
-          <h2 data-i18n="my_quizzes"></h2>
+          <h2 data-i18n="my_quizzes">আমার কুইজ</h2>
           <div id="quizList" aria-live="polite"></div>
         </section>
         <div>
           <section class="card stack dash-card" id="settingsCard">
-            <h3 data-i18n="settings_title"></h3>
-            <div class="field"><span data-i18n="time_per_q"></span><div class="seg" id="timeSeg" role="group"></div></div>
-            <label class="check"><input type="checkbox" id="shufQ"><span data-i18n="shuffle_q"></span></label>
-            <label class="check"><input type="checkbox" id="shufO"><span data-i18n="shuffle_o"></span></label>
+            <h3 data-i18n="settings_title">লাইভ কুইজের সেটিংস</h3>
+            <div class="field"><span data-i18n="time_per_q">প্রতিটি প্রশ্নের সময়</span><div class="seg" id="timeSeg" role="group"></div></div>
+            <label class="check"><input type="checkbox" id="shufQ"><span data-i18n="shuffle_q">প্রশ্নের ক্রম এলোমেলো করুন</span></label>
+            <label class="check"><input type="checkbox" id="shufO"><span data-i18n="shuffle_o">বিকল্পের ক্রম এলোমেলো করুন</span></label>
           </section>
           <section class="card stack dash-card" id="accountCard">
-            <h3 data-i18n="account"></h3>
+            <h3 data-i18n="account">আপনার অ্যাকাউন্ট</h3>
             <div class="acc-row"><span class="avatar" id="avatar2" aria-hidden="true"></span><div><b id="accName"></b><div class="small muted no-i18n" id="accEmail"></div></div></div>
             <p class="small muted mb0" id="dataNote"></p>
             <div class="row">
-              <button class="btn" id="signOut" type="button" data-i18n="sign_out"></button>
-              <button class="btn btn-danger" id="deleteAccount" type="button" data-i18n="delete_account"></button>
+              <button class="btn" id="signOut" type="button" data-i18n="sign_out">সাইন আউট</button>
+              <button class="btn btn-danger" id="deleteAccount" type="button" data-i18n="delete_account">আমার অ্যাকাউন্ট আর ডেটা মুছুন</button>
             </div>
-            <p class="small mb0 legal-links"><a class="lnk-privacy" href="../../../apps/live-quiz/../../legal/privacy.html" data-i18n="privacy"></a> · <a class="lnk-terms" href="../../../apps/live-quiz/../../legal/terms.html" data-i18n="terms"></a></p>
+            <p class="small mb0 legal-links"><a class="lnk-privacy" href="../../../apps/live-quiz/../../legal/privacy.html" data-i18n="privacy">গোপনীয়তা নীতি</a> · <a class="lnk-terms" href="../../../apps/live-quiz/../../legal/terms.html" data-i18n="terms">ব্যবহারের শর্তাবলি</a></p>
           </section>
         </div>
       </div>
       <section class="card stack" id="sessCard">
-        <h2 data-i18n="past_sessions"></h2>
-        <p class="small muted mb0" data-i18n="keep_note"></p>
+        <h2 data-i18n="past_sessions">আগের সেশন</h2>
+        <p class="small muted mb0" data-i18n="keep_note">ফলাফল 30 দিন পরে মুছে যায়। রাখতে চাইলে CSV ডাউনলোড করে নিন।</p>
         <div id="sessList" aria-live="polite"></div>
       </section>
     </section>
@@ -281,15 +281,15 @@
           <span class="badge primary hcode" id="hCode"></span>
           <span class="grow"></span>
           <button class="btn btn-sm" id="fsBtn" type="button"><span aria-hidden="true">⛶</span><span data-i18n="fullscreen"></span></button>
-          <button class="btn btn-sm" id="hBack" type="button" data-i18n="back_dash"></button>
+          <button class="btn btn-sm" id="hBack" type="button" data-i18n="back_dash">আমার কুইজে ফিরে যান</button>
         </div>
         <div class="callout danger" id="hMsg" role="alert" hidden></div>
         <div class="hstage" id="hStage" aria-live="polite"></div>
         <div class="hctrl">
-          <span class="small muted" id="hKeys" data-i18n="keys_hint"></span>
+          <span class="small muted" id="hKeys" data-i18n="keys_hint">কিবোর্ড: পরের জন্য Space বা →</span>
           <span class="grow"></span>
-          <button class="btn btn-danger" id="endBtn" type="button" data-i18n="end_quiz" hidden></button>
-          <button class="btn" id="skipBtn" type="button" data-i18n="skip_q" hidden></button>
+          <button class="btn btn-danger" id="endBtn" type="button" data-i18n="end_quiz" hidden>কুইজ শেষ করুন</button>
+          <button class="btn" id="skipBtn" type="button" data-i18n="skip_q" hidden>প্রশ্ন বাদ দিন</button>
           <button class="btn btn-primary btn-lg" id="nextBtn" type="button"></button>
         </div>
       </div>
@@ -299,14 +299,14 @@
     <section id="v-results" hidden></section>
 
     <details class="card" id="howto">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">কীভাবে ব্যবহার করবেন · ক্লাসের জন্য আইডিয়া</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">সাইন ইন করে নমুনা কুইজে &quot;লাইভ চালান&quot; টিপুন, 10 সেকেন্ডেই বুঝে যাবেন কীভাবে চলে।</li>
+        <li data-i18n="help_2">স্ক্রিনটি প্রজেক্টরে দেখান। শিক্ষার্থীরা ফোনে apnipathshala.ai/join খুলে কোড আর ডাকনাম লেখে।</li>
+        <li data-i18n="help_3">শিক্ষার্থীদের পুরো নাম নয়, ডাকনাম লিখতে বলুন। ✕ দিয়ে যে কাউকে সরাতে পারেন, আর সবাই এলে লক টিপুন।</li>
+        <li data-i18n="help_4">সঠিক উত্তরে 500 থেকে 1000 পয়েন্ট: যত তাড়াতাড়ি, তত বেশি। ভুল উত্তরে 0।</li>
+        <li data-i18n="help_5">ক্লাসের আইডিয়া: অধ্যায়ের শেষে 3 জনের দল একটি ফোনে আলোচনা করে উত্তর দিক।</li>
+        <li data-i18n="help_6">কুইজ মেকারে কুইজ বানিয়ে এখানে ইমপোর্ট করুন, বা নতুন কুইজ লিখুন। রেকর্ডের জন্য ফলাফল CSV-তে এক্সপোর্ট করুন।</li>
       </ul>
     </details>
   </main>

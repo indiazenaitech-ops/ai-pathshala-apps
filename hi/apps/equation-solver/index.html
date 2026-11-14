@@ -185,31 +185,31 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">समीकरण टाइप कीजिए और हर स्टेप वैसे ही देखिए जैसे NCERT की किताब में लिखा जाता है: एक चर वाले रैखिक समीकरण, रैखिक समीकरणों के युग्म और द्विघात समीकरण, अंत में जाँच के साथ।</p>
 
     <div class="tabs" role="tablist" id="tabs">
-      <button type="button" role="tab" id="tab-linear" data-panel="panel-linear" aria-controls="panel-linear" aria-selected="true">🟰 <span data-i18n="tab_linear"></span></button>
-      <button type="button" role="tab" id="tab-pair" data-panel="panel-pair" aria-controls="panel-pair" aria-selected="false">📈 <span data-i18n="tab_pair"></span></button>
-      <button type="button" role="tab" id="tab-quad" data-panel="panel-quad" aria-controls="panel-quad" aria-selected="false">📐 <span data-i18n="tab_quad"></span></button>
-      <button type="button" role="tab" id="tab-word" data-panel="panel-word" aria-controls="panel-word" aria-selected="false">📖 <span data-i18n="tab_word"></span></button>
-      <button type="button" role="tab" id="tab-practice" data-panel="panel-practice" aria-controls="panel-practice" aria-selected="false">✏️ <span data-i18n="tab_practice"></span></button>
+      <button type="button" role="tab" id="tab-linear" data-panel="panel-linear" aria-controls="panel-linear" aria-selected="true">🟰 <span data-i18n="tab_linear">रैखिक</span></button>
+      <button type="button" role="tab" id="tab-pair" data-panel="panel-pair" aria-controls="panel-pair" aria-selected="false">📈 <span data-i18n="tab_pair">समीकरण युग्म</span></button>
+      <button type="button" role="tab" id="tab-quad" data-panel="panel-quad" aria-controls="panel-quad" aria-selected="false">📐 <span data-i18n="tab_quad">द्विघात</span></button>
+      <button type="button" role="tab" id="tab-word" data-panel="panel-word" aria-controls="panel-word" aria-selected="false">📖 <span data-i18n="tab_word">शब्द समस्याएँ</span></button>
+      <button type="button" role="tab" id="tab-practice" data-panel="panel-practice" aria-controls="panel-practice" aria-selected="false">✏️ <span data-i18n="tab_practice">अभ्यास</span></button>
     </div>
 
     <!-- ===================== LINEAR ===================== -->
     <section id="panel-linear" role="tabpanel" aria-labelledby="tab-linear">
       <div class="solve-grid">
         <div class="card stack no-print">
-          <label for="lin-eq" class="lbl" data-i18n="lin_label"></label>
+          <label for="lin-eq" class="lbl" data-i18n="lin_label">एक चर (x) वाला समीकरण</label>
           <div class="eq-row">
             <input id="lin-eq" class="eq-input no-i18n" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120" data-i18n-placeholder="lin_ph">
             <button type="button" class="btn btn-ghost" id="lin-clear" data-i18n-aria-label="clear_aria" data-i18n-title="clear_aria">✕</button>
           </div>
-          <p class="syntax" data-i18n="syntax_hint"></p>
+          <p class="syntax" data-i18n="syntax_hint">आप भिन्न (x/2), कोष्ठक 2(x − 3) और दशमलव लिख सकते हैं। गुणा के लिए * लिखें या कुछ नहीं: 3x का मतलब 3 × x।</p>
           <div class="keys no-i18n" data-target="lin-eq"></div>
-          <p class="muted small mb0" data-i18n="examples"></p>
+          <p class="muted small mb0" data-i18n="examples">एक उदाहरण आज़माइए:</p>
           <div class="examples no-i18n" id="lin-examples"></div>
           <div class="row">
-            <button type="button" class="btn btn-primary btn-lg solve-btn" id="lin-solve">🧮 <span data-i18n="solve"></span></button>
+            <button type="button" class="btn btn-primary btn-lg solve-btn" id="lin-solve">🧮 <span data-i18n="solve">स्टेप के साथ हल करें</span></button>
           </div>
         </div>
         <div class="card stack result-card" id="lin-result" aria-live="polite" data-status="none-yet"></div>
@@ -221,21 +221,21 @@
       <div class="solve-grid">
         <div class="card stack no-print">
           <div class="method-block">
-            <span class="lbl" id="lbl-pim" data-i18n="pair_input_label"></span>
+            <span class="lbl" id="lbl-pim" data-i18n="pair_input_label">युग्म कैसे लिखना चाहेंगे?</span>
             <div class="seg" role="group" aria-labelledby="lbl-pim" id="pair-input-mode">
-              <button type="button" data-v="type" id="pim-type" data-i18n="pim_type"></button>
-              <button type="button" data-v="boxes" id="pim-boxes" data-i18n="pim_boxes"></button>
+              <button type="button" data-v="type" id="pim-type" data-i18n="pim_type">दो समीकरण टाइप करें</button>
+              <button type="button" data-v="boxes" id="pim-boxes" data-i18n="pim_boxes">a₁x + b₁y = c₁ के बॉक्स भरें</button>
             </div>
           </div>
           <div id="pair-typed" class="stack">
-            <label for="pair-eq1" class="lbl" data-i18n="pair_eq1"></label>
+            <label for="pair-eq1" class="lbl" data-i18n="pair_eq1">समीकरण (1)</label>
             <input id="pair-eq1" class="eq-input no-i18n w100" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120" data-i18n-placeholder="pair_ph1">
-            <label for="pair-eq2" class="lbl" data-i18n="pair_eq2"></label>
+            <label for="pair-eq2" class="lbl" data-i18n="pair_eq2">समीकरण (2)</label>
             <input id="pair-eq2" class="eq-input no-i18n w100" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120" data-i18n-placeholder="pair_ph2">
             <div class="keys no-i18n" data-target="pair-eq1"></div>
           </div>
           <div id="pair-boxes" class="stack" hidden>
-            <span class="lbl" data-i18n="pair_boxes_label"></span>
+            <span class="lbl" data-i18n="pair_boxes_label">दोनों समीकरणों के गुणांक</span>
             <div class="boxes no-i18n" dir="ltr">
               <input id="p-a1" type="text" inputmode="text" aria-label="a1" value="2"><span class="m">x +</span>
               <input id="p-b1" type="text" inputmode="text" aria-label="b1" value="3"><span class="m">y =</span>
@@ -244,26 +244,26 @@
               <input id="p-b2" type="text" inputmode="text" aria-label="b2" value="-1"><span class="m">y =</span>
               <input id="p-c2" type="text" inputmode="text" aria-label="c2" value="1">
             </div>
-            <p class="syntax" data-i18n="boxes_hint"></p>
+            <p class="syntax" data-i18n="boxes_hint">पूर्ण संख्या, दशमलव या 3/2 जैसी भिन्न। ऋणात्मक संख्या के लिए माइनस लगाएँ।</p>
           </div>
-          <p class="muted small mb0" data-i18n="examples"></p>
+          <p class="muted small mb0" data-i18n="examples">एक उदाहरण आज़माइए:</p>
           <div class="examples no-i18n" id="pair-examples"></div>
           <div class="method-block">
-            <span class="lbl" id="lbl-pm" data-i18n="method_label"></span>
+            <span class="lbl" id="lbl-pm" data-i18n="method_label">विधि</span>
             <div class="seg" role="group" aria-labelledby="lbl-pm" id="pair-method">
-              <button type="button" data-v="substitution" id="pm-substitution" data-i18n="m_substitution"></button>
-              <button type="button" data-v="elimination" id="pm-elimination" data-i18n="m_elimination"></button>
-              <button type="button" data-v="cross" id="pm-cross" data-i18n="m_cross"></button>
+              <button type="button" data-v="substitution" id="pm-substitution" data-i18n="m_substitution">प्रतिस्थापन</button>
+              <button type="button" data-v="elimination" id="pm-elimination" data-i18n="m_elimination">विलोपन</button>
+              <button type="button" data-v="cross" id="pm-cross" data-i18n="m_cross">वज्र-गुणन</button>
             </div>
           </div>
           <div class="row">
-            <button type="button" class="btn btn-primary btn-lg solve-btn" id="pair-solve">🧮 <span data-i18n="solve"></span></button>
+            <button type="button" class="btn btn-primary btn-lg solve-btn" id="pair-solve">🧮 <span data-i18n="solve">स्टेप के साथ हल करें</span></button>
           </div>
         </div>
         <div class="stack">
           <div class="card stack result-card" id="pair-result" aria-live="polite" data-status="none-yet"></div>
           <div class="card" id="pair-graph-card" hidden>
-            <h3 data-i18n="graph_title"></h3>
+            <h3 data-i18n="graph_title">दोनों रेखाओं का ग्राफ</h3>
             <div class="graph-wrap" id="pair-graph"></div>
             <div class="legend" id="pair-legend"></div>
           </div>
@@ -275,31 +275,31 @@
     <section id="panel-quad" role="tabpanel" aria-labelledby="tab-quad" hidden>
       <div class="solve-grid">
         <div class="card stack no-print">
-          <label for="quad-eq" class="lbl" data-i18n="quad_label"></label>
+          <label for="quad-eq" class="lbl" data-i18n="quad_label">x में द्विघात समीकरण</label>
           <div class="eq-row">
             <input id="quad-eq" class="eq-input no-i18n" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120" data-i18n-placeholder="quad_ph">
             <button type="button" class="btn btn-ghost" id="quad-clear" data-i18n-aria-label="clear_aria" data-i18n-title="clear_aria">✕</button>
           </div>
-          <p class="syntax" data-i18n="syntax_hint_quad"></p>
+          <p class="syntax" data-i18n="syntax_hint_quad">x² को x^2 या x² लिखें। समीकरण किसी भी क्रम में हो सकता है, जैसे 6 = x^2 + 5x।</p>
           <div class="keys no-i18n" data-target="quad-eq"></div>
-          <p class="muted small mb0" data-i18n="examples"></p>
+          <p class="muted small mb0" data-i18n="examples">एक उदाहरण आज़माइए:</p>
           <div class="examples no-i18n" id="quad-examples"></div>
           <div class="method-block">
-            <span class="lbl" id="lbl-qm" data-i18n="method_label"></span>
+            <span class="lbl" id="lbl-qm" data-i18n="method_label">विधि</span>
             <div class="seg" role="group" aria-labelledby="lbl-qm" id="quad-method">
-              <button type="button" data-v="factor" id="qm-factor" data-i18n="m_factor"></button>
-              <button type="button" data-v="square" id="qm-square" data-i18n="m_square"></button>
-              <button type="button" data-v="formula" id="qm-formula" data-i18n="m_formula"></button>
+              <button type="button" data-v="factor" id="qm-factor" data-i18n="m_factor">गुणनखंड</button>
+              <button type="button" data-v="square" id="qm-square" data-i18n="m_square">पूर्ण वर्ग बनाना</button>
+              <button type="button" data-v="formula" id="qm-formula" data-i18n="m_formula">द्विघात सूत्र</button>
             </div>
           </div>
           <div class="row">
-            <button type="button" class="btn btn-primary btn-lg solve-btn" id="quad-solve">🧮 <span data-i18n="solve"></span></button>
+            <button type="button" class="btn btn-primary btn-lg solve-btn" id="quad-solve">🧮 <span data-i18n="solve">स्टेप के साथ हल करें</span></button>
           </div>
         </div>
         <div class="stack">
           <div class="card stack result-card" id="quad-result" aria-live="polite" data-status="none-yet"></div>
           <div class="card" id="quad-graph-card" hidden>
-            <h3 data-i18n="parabola_title"></h3>
+            <h3 data-i18n="parabola_title">परवलय का ग्राफ</h3>
             <div class="graph-wrap" id="quad-graph"></div>
             <div class="legend" id="quad-legend"></div>
           </div>
@@ -312,16 +312,16 @@
       <div class="card stack">
         <div class="row spread">
           <div class="method-block">
-            <span class="lbl" id="lbl-wm" data-i18n="word_pick"></span>
+            <span class="lbl" id="lbl-wm" data-i18n="word_pick">समीकरण का प्रकार</span>
             <div class="seg" role="group" aria-labelledby="lbl-wm" id="word-mode">
-              <button type="button" data-v="linear" id="wm-linear" data-i18n="mode_linear"></button>
-              <button type="button" data-v="pair" id="wm-pair" data-i18n="mode_pair"></button>
-              <button type="button" data-v="quad" id="wm-quad" data-i18n="mode_quad"></button>
+              <button type="button" data-v="linear" id="wm-linear" data-i18n="mode_linear">रैखिक (एक चर)</button>
+              <button type="button" data-v="pair" id="wm-pair" data-i18n="mode_pair">रैखिक समीकरण युग्म</button>
+              <button type="button" data-v="quad" id="wm-quad" data-i18n="mode_quad">द्विघात</button>
             </div>
           </div>
           <button type="button" class="btn no-print" id="word-print">🖨️ <span data-i18n="print"></span></button>
         </div>
-        <p class="muted small" data-i18n="word_intro"></p>
+        <p class="muted small" data-i18n="word_intro">समस्या पढ़िए, खुद समीकरण बनाने की कोशिश कीजिए, फिर संकेत खोलकर स्टेप के साथ हल कीजिए।</p>
         <div class="wp-list" id="word-list"></div>
       </div>
     </section>
@@ -333,33 +333,33 @@
           <div class="pr-problem no-i18n" id="pr-problem" dir="ltr"></div>
           <div class="ans-row no-print" id="pr-answers"></div>
           <div class="row no-print">
-            <button type="button" class="btn btn-primary" id="pr-check">✔ <span data-i18n="check_answer"></span></button>
-            <button type="button" class="btn" id="pr-steps">🧮 <span data-i18n="show_steps"></span></button>
-            <button type="button" class="btn btn-accent" id="pr-new">🎲 <span data-i18n="new_problem"></span></button>
+            <button type="button" class="btn btn-primary" id="pr-check">✔ <span data-i18n="check_answer">जाँचें</span></button>
+            <button type="button" class="btn" id="pr-steps">🧮 <span data-i18n="show_steps">स्टेप दिखाएँ</span></button>
+            <button type="button" class="btn btn-accent" id="pr-new">🎲 <span data-i18n="new_problem">नया प्रश्न</span></button>
           </div>
           <p class="pr-fb" id="pr-feedback" aria-live="polite" data-ok=""></p>
           <div class="pr-stats" id="pr-stats"></div>
         </div>
         <div class="card stack no-print">
           <div class="method-block">
-            <span class="lbl" id="lbl-prm" data-i18n="word_pick"></span>
+            <span class="lbl" id="lbl-prm" data-i18n="word_pick">समीकरण का प्रकार</span>
             <div class="seg" role="group" aria-labelledby="lbl-prm" id="pr-mode">
-              <button type="button" data-v="linear" id="prm-linear" data-i18n="mode_linear"></button>
-              <button type="button" data-v="pair" id="prm-pair" data-i18n="mode_pair"></button>
-              <button type="button" data-v="quad" id="prm-quad" data-i18n="mode_quad"></button>
+              <button type="button" data-v="linear" id="prm-linear" data-i18n="mode_linear">रैखिक (एक चर)</button>
+              <button type="button" data-v="pair" id="prm-pair" data-i18n="mode_pair">रैखिक समीकरण युग्म</button>
+              <button type="button" data-v="quad" id="prm-quad" data-i18n="mode_quad">द्विघात</button>
             </div>
           </div>
           <div class="method-block">
-            <span class="lbl" id="lbl-prl" data-i18n="level_label"></span>
+            <span class="lbl" id="lbl-prl" data-i18n="level_label">स्तर</span>
             <div class="seg" role="group" aria-labelledby="lbl-prl" id="pr-level">
-              <button type="button" data-v="easy" id="lv-easy" data-i18n="lv_easy"></button>
-              <button type="button" data-v="medium" id="lv-medium" data-i18n="lv_medium"></button>
-              <button type="button" data-v="hard" id="lv-hard" data-i18n="lv_hard"></button>
+              <button type="button" data-v="easy" id="lv-easy" data-i18n="lv_easy">आसान</button>
+              <button type="button" data-v="medium" id="lv-medium" data-i18n="lv_medium">मध्यम</button>
+              <button type="button" data-v="hard" id="lv-hard" data-i18n="lv_hard">कठिन</button>
             </div>
           </div>
-          <p class="muted small mb0" data-i18n="worksheet_hint"></p>
-          <button type="button" class="btn" id="pr-worksheet">🖨️ <span data-i18n="print_worksheet"></span></button>
-          <p class="callout small mb0" data-i18n="practice_tip"></p>
+          <p class="muted small mb0" data-i18n="worksheet_hint">इस प्रकार और स्तर के 10 प्रश्न छापें, दूसरे पन्ने पर उत्तर-कुंजी के साथ।</p>
+          <button type="button" class="btn" id="pr-worksheet">🖨️ <span data-i18n="print_worksheet">वर्कशीट छापें</span></button>
+          <p class="callout small mb0" data-i18n="practice_tip">सुझाव: भिन्न 3/2 की तरह और ऋणात्मक संख्या −4 की तरह लिखें। द्विघात में दोनों मूल किसी भी क्रम में लिखें।</p>
         </div>
       </div>
     </section>
@@ -367,28 +367,28 @@
     <section id="worksheet" aria-hidden="true"></section>
 
     <details class="card words" id="words" style="margin-top:18px">
-      <summary><strong data-i18n="words_title"></strong></summary>
+      <summary><strong data-i18n="words_title">जानने योग्य शब्द</strong></summary>
       <dl>
-        <dt data-i18n="w1_t"></dt><dd data-i18n="w1_d"></dd>
-        <dt data-i18n="w2_t"></dt><dd data-i18n="w2_d"></dd>
-        <dt data-i18n="w3_t"></dt><dd data-i18n="w3_d"></dd>
-        <dt data-i18n="w4_t"></dt><dd data-i18n="w4_d"></dd>
-        <dt data-i18n="w5_t"></dt><dd data-i18n="w5_d"></dd>
-        <dt data-i18n="w6_t"></dt><dd data-i18n="w6_d"></dd>
-        <dt data-i18n="w7_t"></dt><dd data-i18n="w7_d"></dd>
-        <dt data-i18n="w8_t"></dt><dd data-i18n="w8_d"></dd>
+        <dt data-i18n="w1_t">चर</dt><dd data-i18n="w1_d">x या y जैसा अक्षर जो किसी ऐसी संख्या की जगह है जो हमें अभी पता नहीं।</dd>
+        <dt data-i18n="w2_t">रैखिक समीकरण</dt><dd data-i18n="w2_d">ऐसा समीकरण जिसमें चर की घात 1 हो, जैसे 3x + 5 = 20। इसका ग्राफ सीधी रेखा होता है।</dd>
+        <dt data-i18n="w3_t">पक्षांतरण</dt><dd data-i18n="w3_d">किसी पद को = के एक ओर से दूसरी ओर ले जाना। उसका चिह्न बदल जाता है: + से − और × से ÷।</dd>
+        <dt data-i18n="w4_t">संगत / असंगत युग्म</dt><dd data-i18n="w4_d">जिस युग्म का कम से कम एक हल हो वह संगत है; जिसका कोई हल न हो वह असंगत है।</dd>
+        <dt data-i18n="w5_t">द्विघात समीकरण</dt><dd data-i18n="w5_d">ax² + bx + c = 0 रूप का समीकरण जिसमें a ≠ 0। इसका ग्राफ परवलय होता है।</dd>
+        <dt data-i18n="w6_t">विविक्तकर</dt><dd data-i18n="w6_d">D = b² − 4ac। D &gt; 0 हो तो दो वास्तविक मूल, D = 0 हो तो दो बराबर मूल, D &lt; 0 हो तो कोई वास्तविक मूल नहीं।</dd>
+        <dt data-i18n="w7_t">मूल</dt><dd data-i18n="w7_d">x के वे मान जो समीकरण को सत्य बनाते हैं। द्विघात के अधिकतम दो मूल होते हैं।</dd>
+        <dt data-i18n="w8_t">करणी</dt><dd data-i18n="w8_d">ऐसा वर्गमूल जो पूर्ण संख्या नहीं, जैसे √10। √50 को सरल करके 5√2 लिखते हैं।</dd>
       </dl>
     </details>
 
     <details class="card" id="howto" style="margin-top:12px">
-      <summary><strong data-i18n="howto_title"></strong></summary>
+      <summary><strong data-i18n="howto_title">कैसे इस्तेमाल करें / कक्षा के लिए विचार</strong></summary>
       <ul>
-        <li data-i18n="how1"></li>
-        <li data-i18n="how2"></li>
-        <li data-i18n="how3"></li>
-        <li data-i18n="how4"></li>
-        <li data-i18n="how5"></li>
-        <li data-i18n="how6"></li>
+        <li data-i18n="how1">समीकरण ठीक वैसे ही टाइप करें जैसे किताब में है, जैसे 2(x − 3) = 4x + 1। Enter या &quot;स्टेप के साथ हल करें&quot; दबाएँ।</li>
+        <li data-i18n="how2">समीकरण युग्म में एक ही युग्म पर तीनों विधियाँ आज़माएँ और देखें कौन सी छोटी है।</li>
+        <li data-i18n="how3">द्विघात टैब में पहले विविक्तकर देखें: हल करने से पहले ही पता चल जाता है कि कितने मूल होंगे।</li>
+        <li data-i18n="how4">शब्द समस्याएँ: पढ़ें, &quot;समीकरण बनाइए&quot; खोलें, फिर हल करें। समीकरण लिखना ही असली कौशल है।</li>
+        <li data-i18n="how5">कक्षा गतिविधि: हर समूह को एक ही युग्म के लिए अलग विधि दें। हर समूह बोर्ड पर अपने स्टेप लिखे और कक्षा जाँचे कि उत्तर मिलते हैं।</li>
+        <li data-i18n="how6">शिक्षक: अभ्यास टैब से वर्कशीट छापें (10 प्रश्न + उत्तर-कुंजी)। सब कुछ ऑफ़लाइन चलता है, कुछ भी अपलोड नहीं होता।</li>
       </ul>
     </details>
 

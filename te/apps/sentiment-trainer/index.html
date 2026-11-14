@@ -209,9 +209,9 @@
 </head>
 <body>
   <main id="app">
-    <h1 class="print-title" data-i18n="app_title"></h1>
+    <h1 class="print-title" data-i18n="app_title">మూడ్ గుర్తించే AIకి నేర్పండి</h1>
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">కేవలం పదాలను లెక్కించడం ద్వారా సంతోషం, బాధ, కోపం ఉన్న వాక్యాలను వేరు చేయడం కంప్యూటర్‌కు నేర్పండి; తర్వాత దాన్ని ఎంత సులువుగా మోసం చేయవచ్చో చూడండి.</p>
       <div class="row no-print">
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm" id="fs-btn" data-i18n="fullscreen"></button>
@@ -221,89 +221,89 @@
 
     <!-- 1. Teach -->
     <section class="card stack" id="data-card">
-      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1"></span></h2>
-      <p class="muted small mb0 no-print" data-i18n="step1_hint"></p>
+      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1">ఉదాహరణలతో నేర్పండి</span></h2>
+      <p class="muted small mb0 no-print" data-i18n="step1_hint">ప్రతి పెట్టె ఒక లేబుల్ (ఒక మూడ్). ఆ మూడ్‌ను చూపే చిన్న వాక్యాలు జోడించండి. ఎక్కువ, రకరకాల ఉదాహరణలు ఉంటే మోడల్ అంత తెలివిగా ఉంటుంది.</p>
       <p class="callout warning small mb0 no-print" id="lang-note" hidden></p>
       <div class="labs" id="labs"></div>
       <div class="row data-tools no-print">
-        <button type="button" class="btn btn-accent" id="add-label-btn" data-i18n="add_label"></button>
+        <button type="button" class="btn btn-accent" id="add-label-btn" data-i18n="add_label">+ కొత్త లేబుల్ జోడించండి</button>
         <div class="row">
-          <button type="button" class="btn btn-sm" id="samples-btn" data-i18n="load_samples"></button>
-          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv"></button>
-          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv"></button>
-          <button type="button" class="btn btn-sm btn-danger" id="clear-all-btn" data-i18n="clear_all"></button>
+          <button type="button" class="btn btn-sm" id="samples-btn" data-i18n="load_samples">నమూనా వాక్యాలు</button>
+          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv">CSV ఇంపోర్ట్</button>
+          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv">CSV ఎక్స్‌పోర్ట్</button>
+          <button type="button" class="btn btn-sm btn-danger" id="clear-all-btn" data-i18n="clear_all">అన్ని వాక్యాలు తుడిచేయండి</button>
         </div>
       </div>
-      <p class="muted tiny mb0 no-print" data-i18n="csv_hint"></p>
+      <p class="muted tiny mb0 no-print" data-i18n="csv_hint">CSV ఫైల్‌లో రెండు కాలమ్‌లు ఉంటాయి: text మరియు label. ఇది Excel లేదా Google Sheetsలో తెరుచుకుంటుంది.</p>
     </section>
 
     <div class="grid-2 main-grid">
       <!-- 2. Train -->
       <section class="card stack" id="train-card">
-        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2">మోడల్‌కు శిక్షణ ఇవ్వండి</span></h2>
         <div class="row train-row no-print">
-          <button type="button" class="btn btn-primary btn-lg" id="train-btn"><span aria-hidden="true">🧠</span><span data-i18n="train_btn"></span></button>
-          <label class="check"><input type="checkbox" id="pairs-chk"><span data-i18n="pairs_label"></span></label>
+          <button type="button" class="btn btn-primary btn-lg" id="train-btn"><span aria-hidden="true">🧠</span><span data-i18n="train_btn">శిక్షణ ఇవ్వు</span></button>
+          <label class="check"><input type="checkbox" id="pairs-chk"><span data-i18n="pairs_label">పదాల జంటలను కూడా లెక్కించు (“సంతోషంగా లేను” లాంటి వాక్యాలకు సహాయం)</span></label>
         </div>
         <p class="callout small mb0" id="train-status" aria-live="polite"></p>
         <div id="model-view" class="stack" hidden>
           <div class="stats">
-            <div class="stat"><b id="st-sentences">0</b><span data-i18n="st_sentences"></span></div>
-            <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab"></span></div>
-            <div class="stat"><b id="st-train-acc">0</b><span data-i18n="st_train_acc"></span></div>
-            <div class="stat"><b id="st-fair-acc">0</b><span data-i18n="st_fair_acc"></span></div>
+            <div class="stat"><b id="st-sentences">0</b><span data-i18n="st_sentences">వాక్యాలు</span></div>
+            <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab">దీనికి తెలిసిన వేర్వేరు పదాలు</span></div>
+            <div class="stat"><b id="st-train-acc">0</b><span data-i18n="st_train_acc">సొంత ఉదాహరణలపై సరైనవి</span></div>
+            <div class="stat"><b id="st-fair-acc">0</b><span data-i18n="st_fair_acc">న్యాయమైన పరీక్షలో సరైనవి</span></div>
           </div>
-          <p class="muted tiny mb0" data-i18n="fair_hint"></p>
+          <p class="muted tiny mb0" data-i18n="fair_hint">న్యాయమైన పరీక్ష: ఒక వాక్యాన్ని దాచి, మిగతా వాటి నుంచి నేర్చుకుని, దాచిన దాన్ని ఊహించండి. ప్రతి వాక్యానికీ ఇలాగే చేయండి.</p>
           <div class="lab-stats" id="lab-stats"></div>
           <details class="sub" id="mistakes">
             <summary id="mist-sum"></summary>
             <ul class="mist-list no-i18n" id="mist-list"></ul>
           </details>
           <div class="stack" id="peek">
-            <h3 class="mb0" data-i18n="peek_t"></h3>
-            <p class="muted small mb0" data-i18n="peek_note"></p>
+            <h3 class="mb0" data-i18n="peek_t">లోపలికి చూడండి: మోడల్ పదాల లెక్క</h3>
+            <p class="muted small mb0" data-i18n="peek_note">ఈ పట్టికే మొత్తం మోడల్! శిక్షణలో ప్రతి పదం ఏ లేబుల్‌లో ఎన్నిసార్లు వచ్చిందో మాత్రమే లెక్కించారు.</p>
             <div class="peek-tools no-print">
               <input type="search" id="peek-filter" class="no-i18n" data-i18n-placeholder="peek_filter" data-i18n-aria-label="peek_filter" autocomplete="off">
               <div class="seg" role="group" data-i18n-aria-label="sort_by">
-                <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common"></button>
-                <button type="button" id="sort-clue" aria-pressed="false" data-i18n="sort_clue"></button>
+                <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common">ఎక్కువగా వచ్చినవి</button>
+                <button type="button" id="sort-clue" aria-pressed="false" data-i18n="sort_clue">బలమైన క్లూలు</button>
               </div>
             </div>
             <div class="peek-tools">
               <span class="muted small" id="peek-count"></span>
             </div>
             <div class="scroll-x"><table class="table peek" id="peek-table"></table></div>
-            <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more"></button>
+            <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more">మరిన్ని పదాలు చూపించు</button>
           </div>
         </div>
       </section>
 
       <!-- 3. Test -->
       <section class="card stack" id="test-card">
-        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3">పరీక్షించండి</span></h2>
         <div>
-          <label for="test-input" class="lbl" data-i18n="test_label"></label>
+          <label for="test-input" class="lbl" data-i18n="test_label">ఏదైనా వాక్యం రాయండి</label>
           <div class="test-row">
             <input type="text" id="test-input" class="no-i18n" maxlength="300" autocomplete="off" spellcheck="false" data-i18n-placeholder="test_ph">
             <button type="button" class="btn no-print" id="test-clear" data-i18n-aria-label="clear" data-i18n-title="clear">✕</button>
           </div>
         </div>
         <div class="no-print" id="tries-wrap">
-          <span class="lbl" data-i18n="try_t"></span>
+          <span class="lbl" data-i18n="try_t">లేదా వీటిలో ఒకటి ప్రయత్నించండి:</span>
           <div class="tries no-i18n" id="tries"></div>
         </div>
         <div id="result" class="stack" aria-live="polite"></div>
         <div id="explain" class="stack" hidden>
-          <h3 class="mb0" data-i18n="words_t"></h3>
-          <p class="muted small mb0" data-i18n="words_hint"></p>
+          <h3 class="mb0" data-i18n="words_t">ప్రతి పదం ఊహను ఏ వైపు నెట్టింది</h3>
+          <p class="muted small mb0" data-i18n="words_hint">రంగు = పదం సూచించే లేబుల్. ముదురు రంగు = ఎక్కువ బలం. సంఖ్యలు చూడటానికి పదంపై నొక్కండి.</p>
           <div class="words no-i18n" id="words"></div>
           <div class="legend" id="legend"></div>
           <div class="pairs-used no-i18n" id="pairs-used" hidden></div>
           <div class="panel wd" id="word-detail" aria-live="polite"></div>
           <details class="sub" id="maths">
-            <summary data-i18n="maths_t"></summary>
+            <summary data-i18n="maths_t">లెక్క చూపించు</summary>
             <div class="scroll-x"><table class="table maths no-i18n" id="maths-table"></table></div>
-            <p class="muted small" data-i18n="maths_note" style="margin-top:8px"></p>
+            <p class="muted small" data-i18n="maths_note" style="margin-top:8px">ప్రతి భిన్నం = (పదం వచ్చిన సార్లు + 1) ÷ (ఆ లేబుల్‌లోని మొత్తం పదాలు + వేర్వేరు పదాల సంఖ్య). ఈ “+1 ఉపాయం” చూడని పదం మొత్తం లబ్ధాన్ని సున్నా చేయకుండా ఆపుతుంది.</p>
           </details>
         </div>
       </section>
@@ -311,14 +311,14 @@
 
     <!-- 4. Experiments -->
     <section class="card stack" id="exp-card">
-      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="step4"></span></h2>
-      <p class="muted small mb0" data-i18n="step4_hint"></p>
+      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="step4">ప్రయోగాలు: దీన్ని మోసం చేసి చూడండి</span></h2>
+      <p class="muted small mb0" data-i18n="step4_hint">ప్రతి ప్రయోగం ఉదాహరణలను మారుస్తుంది, మళ్ళీ శిక్షణ ఇస్తుంది, ముందు-తర్వాత ఊహను చూపిస్తుంది. వెనక్కి వెళ్ళడానికి “ప్రయోగం రద్దు” నొక్కండి.</p>
       <div class="grid-3 exps">
         <div class="panel exp" id="exp1">
-          <h3><span aria-hidden="true">✂️</span><span data-i18n="exp1_t"></span></h3>
-          <p class="small" data-i18n="exp1_d"></p>
+          <h3><span aria-hidden="true">✂️</span><span data-i18n="exp1_t">ఒక పదాన్ని తీసేయండి</span></h3>
+          <p class="small" data-i18n="exp1_d">ఒక పదం ఉన్న అన్ని ఉదాహరణ వాక్యాలను తీసేయండి. మీ పరీక్ష వాక్యం ఊహ ఎంత మారుతుంది?</p>
           <div>
-            <label for="exp1-word" class="lbl" data-i18n="exp1_word"></label>
+            <label for="exp1-word" class="lbl" data-i18n="exp1_word">తీసేయాల్సిన పదం</label>
             <div class="exp-word-row">
               <input type="text" id="exp1-word" class="no-i18n" maxlength="60" autocomplete="off" spellcheck="false">
             </div>
@@ -329,53 +329,53 @@
           <div id="exp1-res" aria-live="polite"></div>
         </div>
         <div class="panel exp" id="exp2">
-          <h3><span aria-hidden="true">⚖️</span><span data-i18n="exp2_t"></span></h3>
+          <h3><span aria-hidden="true">⚖️</span><span data-i18n="exp2_t">పక్షపాత డేటా జోడించండి</span></h3>
           <p class="small" id="exp2-d"></p>
           <ul class="small no-i18n mb0" id="exp2-list" style="margin:0;padding-inline-start:1.2em"></ul>
           <p class="callout warning small exp-need" hidden></p>
           <div class="grow-space"></div>
-          <div class="exp-btns"><button type="button" class="btn btn-accent" id="exp2-btn" data-i18n="exp2_btn"></button></div>
+          <div class="exp-btns"><button type="button" class="btn btn-accent" id="exp2-btn" data-i18n="exp2_btn">పక్షపాత వాక్యాలు జోడించు</button></div>
           <div id="exp2-res" aria-live="polite"></div>
         </div>
         <div class="panel exp" id="exp3">
-          <h3><span aria-hidden="true">🚫</span><span data-i18n="exp3_t"></span></h3>
+          <h3><span aria-hidden="true">🚫</span><span data-i18n="exp3_t">“లేను” సమస్య</span></h3>
           <p class="small" id="exp3-d"></p>
           <p class="callout warning small exp-need" hidden></p>
           <div class="grow-space"></div>
           <div class="exp-btns">
-            <button type="button" class="btn" id="exp3-try" data-i18n="exp3_try"></button>
+            <button type="button" class="btn" id="exp3-try" data-i18n="exp3_try">వాక్యాన్ని పరీక్షించు</button>
             <button type="button" class="btn btn-accent" id="exp3-btn"></button>
           </div>
           <div id="exp3-res" aria-live="polite"></div>
         </div>
       </div>
       <div class="row">
-        <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩</span><span data-i18n="undo_exp"></span></button>
+        <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩</span><span data-i18n="undo_exp">ప్రయోగం రద్దు</span></button>
       </div>
     </section>
 
     <!-- inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside_t"></h2>
+      <h2 data-i18n="inside_t">లోపల ఏం జరుగుతోంది?</h2>
       <div class="grid-3 inside-grid">
-        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t"></span></h3><p data-i18n="in1"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t"></span></h3><p data-i18n="in2"></p><p class="formula" data-i18n="formula"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in3_t"></span></h3><p data-i18n="in3"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🙃</span><span data-i18n="in4_t"></span></h3><p data-i18n="in4"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">⚖️</span><span data-i18n="in5_t"></span></h3><p data-i18n="in5"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🔤</span><span data-i18n="in6_t"></span></h3><p data-i18n="in6"></p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t">ఇది పదాలను లెక్కిస్తుంది</span></h3><p data-i18n="in1">శిక్షణ అంటే కేవలం లెక్కించడం: ప్రతి పదం ప్రతి లేబుల్ వాక్యాలలో ఎన్నిసార్లు వచ్చింది. “గెలిచాం” సంతోషంలో కనిపిస్తుంది, “ఓడిపోయాం” బాధలో.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t">ఇది అవకాశాలను గుణిస్తుంది</span></h3><p data-i18n="in2">కొత్త వాక్యానికి, ప్రతి లేబుల్ ప్రారంభ అవకాశాన్ని ప్రతి పదం అవకాశంతో గుణిస్తుంది. ఏది పెద్ద ఫలితమో అదే గెలుస్తుంది. ఈ పద్ధతి పేరు Naive Bayes.</p><p class="formula" data-i18n="formula">P(సంతోషం | వాక్యం) ∝ P(సంతోషం) × P(పదం₁ | సంతోషం) × P(పదం₂ | సంతోషం) × …</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in3_t">“Naive” అంటే అమాయకం ఎందుకు?</span></h3><p data-i18n="in3">ఇది ప్రతి పదాన్నీ విడిగా చూస్తుంది, పదాల క్రమాన్ని పట్టించుకోదు. కాబట్టి “సంతోషంగా లేను” దీనికి కేవలం “సంతోషంగా” + “లేను”; చాలాసార్లు “సంతోషంగా” గెలుస్తుంది.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🙃</span><span data-i18n="in4_t">వ్యంగ్యానికి మోసపోతుంది</span></h3><p data-i18n="in4">“ఆహా, అద్భుతం! సరిగ్గా నా పుట్టినరోజు పార్టీ రోజే వాన పడింది!” లో సంతోషకరమైన పదాలు ఉన్నాయి, కానీ అర్థం చిరాకు. పదాలు లెక్కిస్తే మాట్లాడే తీరు తెలియదు.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">⚖️</span><span data-i18n="in5_t">అన్నిటినీ డేటానే నిర్ణయిస్తుంది</span></h3><p data-i18n="in5">తక్కువ, ఒకవైపు లేదా పక్షపాతంతో ఉన్న ఉదాహరణలు తప్పు పాఠం నేర్పుతాయి. ఉద్యోగాలు, రుణాలు, వార్తల కోసం వాడే AI కూడా ఇలాగే అన్యాయం చేయవచ్చు, అందుకే మనుషులు డేటాను పరిశీలించాలి.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🔤</span><span data-i18n="in6_t">ఒకే పదం, ఎన్నో రూపాలు</span></h3><p data-i18n="in6">మోడల్‌కు “సంతోషం”, “సంతోషంగా” పూర్తిగా వేర్వేరు పదాలు. పెద్ద AI మోడల్స్ పదాలను చిన్న ముక్కలుగా విడగొట్టి మొత్తం వాక్యాన్ని చదువుతాయి, అందుకే “సంతోషంగా లేను”ని చాలా బాగా అర్థం చేసుకుంటాయి.</p></div>
       </div>
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">ఎలా ఉపయోగించాలి · తరగతి కోసం ఆలోచనలు</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">నమూనా వాక్యాలతో మొదలుపెట్టండి, “శిక్షణ ఇవ్వు” నొక్కండి, తర్వాత “పరీక్షించండి”లో మీ సొంత వాక్యాలు రాయండి.</li>
+        <li data-i18n="tip2">రంగు పదంపై నొక్కి దాని వెనుక ఉన్న లెక్కను చూడండి. తరగతిని అడగండి: ఈ పదం బాధ వైపు ఎందుకు చూపిస్తోంది?</li>
+        <li data-i18n="tip3">తరగతి కార్యకలాపం: ప్రతి బృందం ఒక కొత్త లేబుల్ (ఉదా. భయం 😨), 8–10 వాక్యాలు జోడించి, వేరే బృందాన్ని తమ మోడల్‌ను మోసం చేయమని సవాలు చేయాలి.</li>
+        <li data-i18n="tip4">పదాల లెక్క పట్టికను ప్రింట్ చేసి, 3 పదాల వాక్యం అవకాశాలను విద్యార్థులతో చేత్తో గుణించించండి; తర్వాత “లెక్క చూపించు”తో సరిచూడండి.</li>
+        <li data-i18n="tip5">వాక్యాలను CSVగా ఎక్స్‌పోర్ట్ చేసి సేవ్ చేయండి లేదా వేరే తరగతితో షేర్ చేయండి. ఏదీ అప్‌లోడ్ కాదు: అన్నీ ఈ పరికరంలోనే ఉంటాయి.</li>
+        <li data-i18n="tip6">చర్చించండి: మూడ్ గుర్తింపు ఎక్కడ ఉపయోగపడుతుంది (ప్రొడక్ట్ రివ్యూలు, ఫీడ్‌బ్యాక్ ఫారాలు)? ఎక్కడ అది తప్పుగా లేదా అన్యాయంగా ఉండొచ్చు?</li>
       </ul>
     </details>
   </main>

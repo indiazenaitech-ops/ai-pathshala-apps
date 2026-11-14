@@ -190,25 +190,25 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ദീപാവലി, കല്യാണം, കിറ്റി പാർട്ടി, സ്കൂൾ പരിപാടികൾ എന്നിവയ്ക്ക് ഡംബ് ഷറാഡ്സ്, അന്താക്ഷരി, വരച്ച് കണ്ടുപിടിക്കൽ, പരിചയപ്പെടൽ ചോദ്യങ്ങൾ: 12 ഭാഷകളിൽ വാക്ക് കാർഡുകൾ, റൗണ്ട് ടൈമർ, എല്ലാ ടീമുകൾക്കും ഒരൊറ്റ സ്കോർബോർഡ്.</p>
 
     <div id="party">
       <!-- ============ shared scoreboard ============ -->
       <section class="card board" id="board" aria-labelledby="boardTitle">
         <div class="board-head">
-          <h2 id="boardTitle" data-i18n="board_title"></h2>
+          <h2 id="boardTitle" data-i18n="board_title">സ്കോർബോർഡ്</h2>
           <div class="board-tools">
-            <button type="button" class="btn btn-sm" id="soundBtn" aria-pressed="false"><span aria-hidden="true" id="soundIc">🔇</span><span data-i18n="sound"></span></button>
-            <button type="button" class="btn btn-sm fs-hide" id="teamsBtn" aria-expanded="false" aria-controls="teamEdit"><span aria-hidden="true">👥</span><span data-i18n="teams_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="soundBtn" aria-pressed="false"><span aria-hidden="true" id="soundIc">🔇</span><span data-i18n="sound">ശബ്ദം</span></button>
+            <button type="button" class="btn btn-sm fs-hide" id="teamsBtn" aria-expanded="false" aria-controls="teamEdit"><span aria-hidden="true">👥</span><span data-i18n="teams_btn">ടീമുകൾ</span></button>
             <button type="button" class="btn btn-sm" id="fsBtn"><span aria-hidden="true">⛶</span><span id="fsLbl" data-i18n="fullscreen"></span></button>
-            <button type="button" class="btn btn-sm btn-danger fs-hide" id="newGame"><span aria-hidden="true">↺</span><span data-i18n="new_game"></span></button>
+            <button type="button" class="btn btn-sm btn-danger fs-hide" id="newGame"><span aria-hidden="true">↺</span><span data-i18n="new_game">പുതിയ കളി</span></button>
           </div>
         </div>
         <div class="scores" id="scores"></div>
         <p class="small muted mb0 leader" id="leader" aria-live="polite"></p>
         <div class="team-edit fs-hide" id="teamEdit" hidden>
           <div class="row">
-            <span class="lbl" id="teamCountLbl" data-i18n="team_count"></span>
+            <span class="lbl" id="teamCountLbl" data-i18n="team_count">എത്ര ടീമുകൾ</span>
             <div class="stepper" role="group" aria-labelledby="teamCountLbl">
               <button type="button" class="btn" id="teamMinus" aria-label="−">−</button>
               <output id="teamCount" class="num" aria-live="polite">2</output>
@@ -220,10 +220,10 @@
       </section>
 
       <div class="pg-tabs" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-        <button type="button" role="tab" id="tab-ch" data-tab="ch" aria-controls="panel-ch" aria-selected="true"><span class="ico" aria-hidden="true">🎭</span><span data-i18n="tab_ch"></span></button>
-        <button type="button" role="tab" id="tab-ak" data-tab="ak" aria-controls="panel-ak" aria-selected="false" tabindex="-1"><span class="ico" aria-hidden="true">🎵</span><span data-i18n="tab_ak"></span></button>
-        <button type="button" role="tab" id="tab-dw" data-tab="dw" aria-controls="panel-dw" aria-selected="false" tabindex="-1"><span class="ico" aria-hidden="true">✏️</span><span data-i18n="tab_dw"></span></button>
-        <button type="button" role="tab" id="tab-ice" data-tab="ice" aria-controls="panel-ice" aria-selected="false" tabindex="-1"><span class="ico" aria-hidden="true">💬</span><span data-i18n="tab_ice"></span></button>
+        <button type="button" role="tab" id="tab-ch" data-tab="ch" aria-controls="panel-ch" aria-selected="true"><span class="ico" aria-hidden="true">🎭</span><span data-i18n="tab_ch">ഡംബ് ഷറാഡ്സ്</span></button>
+        <button type="button" role="tab" id="tab-ak" data-tab="ak" aria-controls="panel-ak" aria-selected="false" tabindex="-1"><span class="ico" aria-hidden="true">🎵</span><span data-i18n="tab_ak">അന്താക്ഷരി</span></button>
+        <button type="button" role="tab" id="tab-dw" data-tab="dw" aria-controls="panel-dw" aria-selected="false" tabindex="-1"><span class="ico" aria-hidden="true">✏️</span><span data-i18n="tab_dw">വരച്ച് കണ്ടുപിടിക്കൽ</span></button>
+        <button type="button" role="tab" id="tab-ice" data-tab="ice" aria-controls="panel-ice" aria-selected="false" tabindex="-1"><span class="ico" aria-hidden="true">💬</span><span data-i18n="tab_ice">പരിചയപ്പെടൽ ചോദ്യങ്ങൾ</span></button>
       </div>
 
       <!-- ============ DUMB CHARADES ============ -->
@@ -238,37 +238,37 @@
             <button type="button" class="wordcard" id="ch-card"><span class="wc-hint" id="ch-hint"></span><span class="wc-word no-i18n" id="ch-word"></span><span class="wc-cat" id="ch-cat"></span></button>
             <div class="round-stats" id="ch-stats" aria-live="polite"></div>
             <div class="controls idle" id="ch-controls">
-              <button type="button" class="btn btn-lg ctl-skip" id="ch-skip"><span aria-hidden="true">⏭</span><span data-i18n="skip_btn"></span></button>
+              <button type="button" class="btn btn-lg ctl-skip" id="ch-skip"><span aria-hidden="true">⏭</span><span data-i18n="skip_btn">ഒഴിവാക്കുക</span></button>
               <button type="button" class="btn btn-primary btn-lg ctl-main" id="ch-start"></button>
-              <button type="button" class="btn btn-lg ctl-ok" id="ch-correct"><span aria-hidden="true">✓</span><span data-i18n="got_it"></span></button>
+              <button type="button" class="btn btn-lg ctl-ok" id="ch-correct"><span aria-hidden="true">✓</span><span data-i18n="got_it">ശരി</span></button>
             </div>
             <div class="summary" id="ch-summary" hidden aria-live="polite"></div>
             <div class="stage-foot">
-              <button type="button" class="btn btn-sm btn-ghost" id="ch-end" data-i18n="end_round"></button>
+              <button type="button" class="btn btn-sm btn-ghost" id="ch-end" data-i18n="end_round">റൗണ്ട് ഇപ്പോൾ നിർത്തുക</button>
             </div>
-            <p class="keys tiny muted" data-i18n="keys_hint"></p>
+            <p class="keys tiny muted" data-i18n="keys_hint">അവതാരകന്റെ കീകൾ: Space തുടങ്ങുക / നിർത്തുക · → ശരി · ← ഒഴിവാക്കുക · F പൂർണ്ണ സ്ക്രീൻ</p>
           </div>
 
           <div class="card setup stack fs-hide" id="ch-setup">
             <div class="field">
-              <span class="lbl" id="ch-cat-lbl" data-i18n="category"></span>
+              <span class="lbl" id="ch-cat-lbl" data-i18n="category">വിഭാഗം</span>
               <div class="cats" id="ch-cats" role="group" aria-labelledby="ch-cat-lbl"></div>
             </div>
             <div class="field" id="ch-customBox" hidden>
-              <label for="ch-custom" data-i18n="custom_label"></label>
+              <label for="ch-custom" data-i18n="custom_label">നിങ്ങളുടെ വാക്കുകൾ (ഓരോ വരിയിലും ഒന്ന്)</label>
               <textarea id="ch-custom" rows="6" spellcheck="false" data-i18n-placeholder="custom_ph"></textarea>
-              <span class="hint" data-i18n="custom_hint"></span>
+              <span class="hint" data-i18n="custom_hint">ക്ലാസിന് നല്ലത്: ഈ ആഴ്ചയിലെ പുതിയ വാക്കുകൾ എഴുതി അഭിനയിപ്പിക്കൂ.</span>
             </div>
             <div class="field">
-              <span class="lbl" id="ch-time-lbl" data-i18n="round_time"></span>
+              <span class="lbl" id="ch-time-lbl" data-i18n="round_time">ഓരോ റൗണ്ടിന്റെയും സമയം</span>
               <div class="seg" id="ch-time" role="group" aria-labelledby="ch-time-lbl"></div>
             </div>
             <div class="field">
-              <label for="ch-skips" data-i18n="skip_limit"></label>
+              <label for="ch-skips" data-i18n="skip_limit">ഒരു റൗണ്ടിൽ സ്കിപ്പ്</label>
               <select id="ch-skips"></select>
             </div>
-            <label class="check"><input type="checkbox" id="ch-autohide" checked> <span data-i18n="autohide"></span></label>
-            <div class="used"><span id="ch-used"></span><button type="button" class="btn btn-sm" id="ch-reuse" data-i18n="reset_deck"></button></div>
+            <label class="check"><input type="checkbox" id="ch-autohide" checked> <span data-i18n="autohide">അഭിനയിക്കുന്നയാൾ തൊടുംവരെ ഓരോ പുതിയ കാർഡും മറച്ചുവയ്ക്കുക</span></label>
+            <div class="used"><span id="ch-used"></span><button type="button" class="btn btn-sm" id="ch-reuse" data-i18n="reset_deck">എല്ലാ കാർഡുകളും വീണ്ടും എടുക്കുക</button></div>
           </div>
         </div>
       </section>
@@ -283,41 +283,41 @@
             </div>
             <div class="progress timebar" id="ak-barbox"><span id="ak-bar" style="width:100%"></span></div>
             <div class="ak-box">
-              <div class="ak-lbl" data-i18n="ak_letter_label"></div>
+              <div class="ak-lbl" data-i18n="ak_letter_label">ഈ അക്ഷരത്തിൽ തുടങ്ങുന്ന പാട്ട് പാടൂ</div>
               <div class="ak-letter no-i18n" id="ak-letter" aria-live="polite"></div>
             </div>
             <div class="ak-msg" id="ak-msg" aria-live="polite"></div>
             <div class="controls" id="ak-controls">
-              <button type="button" class="btn btn-lg ctl-skip" id="ak-pass"><span aria-hidden="true">⏭</span><span data-i18n="ak_pass"></span></button>
+              <button type="button" class="btn btn-lg ctl-skip" id="ak-pass"><span aria-hidden="true">⏭</span><span data-i18n="ak_pass">പാസ്</span></button>
               <button type="button" class="btn btn-primary btn-lg ctl-main" id="ak-start"></button>
-              <button type="button" class="btn btn-lg ctl-ok" id="ak-point"><span aria-hidden="true">✓</span><span data-i18n="ak_point"></span></button>
+              <button type="button" class="btn btn-lg ctl-ok" id="ak-point"><span aria-hidden="true">✓</span><span data-i18n="ak_point">പാടി! +1</span></button>
             </div>
             <div class="stage-foot">
-              <button type="button" class="btn" id="ak-next"><span aria-hidden="true">🎲</span><span data-i18n="ak_next"></span></button>
+              <button type="button" class="btn" id="ak-next"><span aria-hidden="true">🎲</span><span data-i18n="ak_next">ഏതെങ്കിലും അക്ഷരം</span></button>
             </div>
-            <p class="keys tiny muted" data-i18n="ak_keys"></p>
+            <p class="keys tiny muted" data-i18n="ak_keys">അവതാരകന്റെ കീകൾ: Space ടൈമർ · → പോയിന്റ് · ← പാസ് · N പുതിയ അക്ഷരം · F പൂർണ്ണ സ്ക്രീൻ</p>
           </div>
 
           <div class="card setup stack fs-hide">
             <div class="field">
-              <span class="lbl" id="ak-time-lbl" data-i18n="ak_turn_time"></span>
+              <span class="lbl" id="ak-time-lbl" data-i18n="ak_turn_time">ഓരോ ഊഴത്തിന്റെയും സമയം</span>
               <div class="seg" id="ak-time" role="group" aria-labelledby="ak-time-lbl"></div>
             </div>
             <div class="field">
-              <span class="lbl" id="ak-grid-lbl" data-i18n="ak_pick"></span>
+              <span class="lbl" id="ak-grid-lbl" data-i18n="ak_pick">ഇപ്പോൾ പാടിയ പാട്ടിന്റെ അവസാന അക്ഷരം തൊടൂ</span>
               <div class="ak-grid" id="ak-grid" role="group" aria-labelledby="ak-grid-lbl"></div>
             </div>
           </div>
         </div>
         <details class="card rules fs-hide" id="ak-rules" style="margin-top:14px">
-          <summary data-i18n="ak_rules_title"></summary>
+          <summary data-i18n="ak_rules_title">അന്താക്ഷരി എങ്ങനെ കളിക്കാം</summary>
           <ol>
-            <li data-i18n="ak_rule_1"></li>
-            <li data-i18n="ak_rule_2"></li>
-            <li data-i18n="ak_rule_3"></li>
-            <li data-i18n="ak_rule_4"></li>
-            <li data-i18n="ak_rule_5"></li>
-            <li data-i18n="ak_rule_6"></li>
+            <li data-i18n="ak_rule_1">രണ്ടോ അതിലധികമോ ടീമുകൾ ഉണ്ടാക്കൂ. അവതാരകൻ തുടക്ക അക്ഷരം കാണിക്കും (ആദ്യം &quot;ഏതെങ്കിലും അക്ഷരം&quot; അമർത്തൂ).</li>
+            <li data-i18n="ak_rule_2">ആരുടെ ഊഴമാണോ ആ ടീം, ടൈമർ തീരുംമുമ്പ് ആ അക്ഷരത്തിൽ തുടങ്ങുന്ന ഏതെങ്കിലും പാട്ടിന്റെ കുറച്ചു വരികൾ പാടണം.</li>
+            <li data-i18n="ak_rule_3">പാടിയ വരികളുടെ അവസാന അക്ഷരം (ശബ്ദം) അടുത്ത ടീമിന്റെ തുടക്ക അക്ഷരമാകും. അവതാരകൻ അത് അക്ഷരപ്പട്ടികയിൽ തൊടും.</li>
+            <li data-i18n="ak_rule_4">ഒരു കളിയിൽ ഒരു പാട്ട് വീണ്ടും പാടരുത്. സമയത്തിനുള്ളിൽ പാട്ട് ഓർമ വന്നില്ലെങ്കിൽ ടീം പാസ് അമർത്തും, അടുത്ത ടീം അതേ അക്ഷരത്തിൽ ശ്രമിക്കും.</li>
+            <li data-i18n="ak_rule_5">വീട്ടിലെ നിയമങ്ങൾ: ഏതു ഭാഷയിലെ പാട്ടും ആകാമോ, ഭക്തിഗാനം, കവിത, കുട്ടിപ്പാട്ട് ആകാമോ, പ്രയാസമുള്ള അക്ഷരത്തിനു പകരം വേറെ അക്ഷരം എടുക്കാമോ എന്ന് എല്ലാവരും ചേർന്ന് തീരുമാനിക്കൂ.</li>
+            <li data-i18n="ak_rule_6">കുട്ടികൾക്കായി: കുട്ടിപ്പാട്ടുകളും സ്കൂൾ പാട്ടുകളും സ്വീകരിക്കൂ, 45–60 സെക്കൻഡ് നൽകൂ, ടീം മുഴുവൻ ഒന്നിച്ച് പാടട്ടെ.</li>
           </ol>
         </details>
       </section>
@@ -334,43 +334,43 @@
             <button type="button" class="wordcard" id="dw-card"><span class="wc-hint" id="dw-hint"></span><span class="wc-word no-i18n" id="dw-word"></span><span class="wc-cat" id="dw-cat"></span></button>
             <div class="round-stats" id="dw-stats" aria-live="polite"></div>
             <div class="controls idle" id="dw-controls">
-              <button type="button" class="btn btn-lg ctl-skip" id="dw-skip"><span aria-hidden="true">⏭</span><span data-i18n="skip_btn"></span></button>
+              <button type="button" class="btn btn-lg ctl-skip" id="dw-skip"><span aria-hidden="true">⏭</span><span data-i18n="skip_btn">ഒഴിവാക്കുക</span></button>
               <button type="button" class="btn btn-primary btn-lg ctl-main" id="dw-start"></button>
-              <button type="button" class="btn btn-lg ctl-ok" id="dw-correct"><span aria-hidden="true">✓</span><span data-i18n="got_it"></span></button>
+              <button type="button" class="btn btn-lg ctl-ok" id="dw-correct"><span aria-hidden="true">✓</span><span data-i18n="got_it">ശരി</span></button>
             </div>
             <div class="summary" id="dw-summary" hidden aria-live="polite"></div>
             <div class="stage-foot">
-              <button type="button" class="btn btn-sm btn-ghost" id="dw-end" data-i18n="end_round"></button>
+              <button type="button" class="btn btn-sm btn-ghost" id="dw-end" data-i18n="end_round">റൗണ്ട് ഇപ്പോൾ നിർത്തുക</button>
             </div>
-            <p class="keys tiny muted" data-i18n="keys_hint"></p>
+            <p class="keys tiny muted" data-i18n="keys_hint">അവതാരകന്റെ കീകൾ: Space തുടങ്ങുക / നിർത്തുക · → ശരി · ← ഒഴിവാക്കുക · F പൂർണ്ണ സ്ക്രീൻ</p>
           </div>
 
           <div class="card setup stack fs-hide" id="dw-setup">
             <div class="field">
-              <span class="lbl" id="dw-time-lbl" data-i18n="round_time"></span>
+              <span class="lbl" id="dw-time-lbl" data-i18n="round_time">ഓരോ റൗണ്ടിന്റെയും സമയം</span>
               <div class="seg" id="dw-time" role="group" aria-labelledby="dw-time-lbl"></div>
             </div>
             <div class="field">
-              <label for="dw-skips" data-i18n="skip_limit"></label>
+              <label for="dw-skips" data-i18n="skip_limit">ഒരു റൗണ്ടിൽ സ്കിപ്പ്</label>
               <select id="dw-skips"></select>
             </div>
-            <label class="check"><input type="checkbox" id="dw-autohide" checked> <span data-i18n="autohide"></span></label>
-            <div class="used"><span id="dw-used"></span><button type="button" class="btn btn-sm" id="dw-reuse" data-i18n="reset_deck"></button></div>
-            <p class="small muted mb0" data-i18n="dw_hint"></p>
+            <label class="check"><input type="checkbox" id="dw-autohide" checked> <span data-i18n="autohide">അഭിനയിക്കുന്നയാൾ തൊടുംവരെ ഓരോ പുതിയ കാർഡും മറച്ചുവയ്ക്കുക</span></label>
+            <div class="used"><span id="dw-used"></span><button type="button" class="btn btn-sm" id="dw-reuse" data-i18n="reset_deck">എല്ലാ കാർഡുകളും വീണ്ടും എടുക്കുക</button></div>
+            <p class="small muted mb0" data-i18n="dw_hint">ചിത്രകാരൻ കടലാസിലോ താഴെയുള്ള പാഡിലോ വരയ്ക്കട്ടെ: അക്ഷരമോ അക്കമോ സംസാരമോ പാടില്ല. ടീമംഗങ്ങൾ ഉറക്കെ ഊഹിക്കട്ടെ.</p>
           </div>
         </div>
 
         <div class="card stack pad-card" style="margin-top:14px">
           <div class="row spread">
-            <h2 data-i18n="pad_title"></h2>
+            <h2 data-i18n="pad_title">വരപ്പാഡ്</h2>
             <div class="pad-tools">
               <div class="swatches" id="dw-pens" role="group" data-i18n-aria-label="pen_color"></div>
               <div class="seg" id="dw-size" role="group" data-i18n-aria-label="pen_size">
-                <button type="button" data-size="4" aria-pressed="true" data-i18n="pen_thin"></button>
-                <button type="button" data-size="12" aria-pressed="false" data-i18n="pen_thick"></button>
+                <button type="button" data-size="4" aria-pressed="true" data-i18n="pen_thin">നേർത്തത്</button>
+                <button type="button" data-size="12" aria-pressed="false" data-i18n="pen_thick">കട്ടിയുള്ളത്</button>
               </div>
-              <button type="button" class="btn btn-sm" id="dw-undo"><span aria-hidden="true">↶</span><span data-i18n="pad_undo"></span></button>
-              <button type="button" class="btn btn-sm btn-danger" id="dw-clear"><span aria-hidden="true">🧽</span><span data-i18n="pad_clear"></span></button>
+              <button type="button" class="btn btn-sm" id="dw-undo"><span aria-hidden="true">↶</span><span data-i18n="pad_undo">പിന്നോട്ട്</span></button>
+              <button type="button" class="btn btn-sm btn-danger" id="dw-clear"><span aria-hidden="true">🧽</span><span data-i18n="pad_clear">മായ്ക്കുക</span></button>
             </div>
           </div>
           <div class="pad-wrap"><canvas id="dw-pad" role="img" data-i18n-aria-label="pad_aria"></canvas></div>
@@ -382,30 +382,30 @@
         <div class="card stage" id="ice-stage">
           <div class="stage-top">
             <div class="seg fs-hide" id="ice-filter" role="group" data-i18n-aria-label="ice_kind">
-              <button type="button" data-kind="all" aria-pressed="true" data-i18n="ice_all"></button>
-              <button type="button" data-kind="wyr" aria-pressed="false" data-i18n="ice_wyr"></button>
-              <button type="button" data-kind="tell" aria-pressed="false" data-i18n="ice_tell"></button>
+              <button type="button" data-kind="all" aria-pressed="true" data-i18n="ice_all">എല്ലാം</button>
+              <button type="button" data-kind="wyr" aria-pressed="false" data-i18n="ice_wyr">നിങ്ങൾ ഏതു തിരഞ്ഞെടുക്കും…?</button>
+              <button type="button" data-kind="tell" aria-pressed="false" data-i18n="ice_tell">ഞങ്ങളോട് പറയൂ…</button>
             </div>
             <span class="badge primary" id="ice-left"></span>
           </div>
           <p class="ice-text" id="ice-text" aria-live="polite"></p>
           <div class="ice-actions">
-            <button type="button" class="btn btn-primary btn-lg" id="ice-next"><span data-i18n="ice_next"></span><span aria-hidden="true">→</span></button>
+            <button type="button" class="btn btn-primary btn-lg" id="ice-next"><span data-i18n="ice_next">അടുത്ത ചോദ്യം</span><span aria-hidden="true">→</span></button>
           </div>
-          <p class="small muted mb0" data-i18n="ice_hint"></p>
+          <p class="small muted mb0" data-i18n="ice_hint">വട്ടത്തിലിരുന്ന് ഊഴമനുസരിച്ച്: എല്ലാവരും ഒന്നോ രണ്ടോ വാക്യത്തിൽ മറുപടി പറയട്ടെ. ആർക്കും &quot;പാസ്&quot; പറയാം, കാരണം പറയേണ്ട.</p>
         </div>
       </section>
     </div>
 
     <details class="card help no-print" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">എങ്ങനെ ഉപയോഗിക്കാം / പാർട്ടിക്കും ക്ലാസിനും ആശയങ്ങൾ</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">&quot;ടീമുകൾ&quot; വഴി ടീമുകൾ ഉണ്ടാക്കൂ: പേരും നിറവും നൽകൂ. ഒരൊറ്റ സ്കോർബോർഡ് എല്ലാ കളികളുടെയും പോയിന്റ് സൂക്ഷിക്കും, ഈ ഉപകരണത്തിൽത്തന്നെ സേവ് ആകും.</li>
+        <li data-i18n="help_2">ഡംബ് ഷറാഡ്സ്: വിഭാഗം തിരഞ്ഞെടുത്ത്, &quot;റൗണ്ട് തുടങ്ങുക&quot; അമർത്തി, ഫോൺ അഭിനയിക്കുന്നയാൾക്ക് നൽകൂ. അവർ കാർഡ് തൊട്ട് വാക്ക് കണ്ട്, മിണ്ടാതെ അഭിനയിച്ച്, ശരി (→) അല്ലെങ്കിൽ ഒഴിവാക്കുക (←) അമർത്തും.</li>
+        <li data-i18n="help_3">ടിവിയിലോ പ്രൊജക്ടറിലോ: &quot;പൂർണ്ണ സ്ക്രീൻ&quot; (F) അമർത്തൂ. ഊഹിക്കുന്നവർ ടൈമറും സ്കോറും കാണും; &quot;പുതിയ കാർഡ് മറച്ചുവയ്ക്കുക&quot; ഓണാണെങ്കിൽ അഭിനയിക്കുന്നയാൾ തൊടുംവരെ വാക്ക് മറഞ്ഞിരിക്കും.</li>
+        <li data-i18n="help_4">കുടുംബ പാർട്ടിക്ക്: ഓരോ ടീമിലും എല്ലാ പ്രായക്കാരെയും ചേർക്കൂ, ചെറിയ കുട്ടികൾക്ക് &quot;കുട്ടികൾക്ക് എളുപ്പം&quot; തിരഞ്ഞെടുക്കൂ, റൗണ്ട് 60 സെക്കൻഡ് ആക്കിയാൽ ഭക്ഷണത്തിനു മുമ്പ് എല്ലാവർക്കും ഊഴം കിട്ടും.</li>
+        <li data-i18n="help_5">ക്ലാസിന്: &quot;നിങ്ങളുടെ വാക്കുകൾ&quot; തിരഞ്ഞെടുത്ത്, ഈ ആഴ്ചയിലെ വാക്കുകൾ (ശാസ്ത്ര പദങ്ങൾ, ഇംഗ്ലീഷ് വാക്കുകൾ, ചരിത്രത്തിലെ പേരുകൾ) എഴുതി, ഗ്രൂപ്പുകളെക്കൊണ്ട് അഭിനയിപ്പിക്കുകയോ വരപ്പിക്കുകയോ ചെയ്യൂ. ചുറുചുറുക്കുള്ള വേഗത്തിലുള്ള ആവർത്തനം.</li>
+        <li data-i18n="help_6">അന്താക്ഷരിയിലും വരച്ച് കണ്ടുപിടിക്കലിലും ഇതേ ടീമുകൾ. സ്കോറും ഉപയോഗിച്ച കാർഡുകളും മായ്ക്കാൻ &quot;പുതിയ കളി&quot; അമർത്തൂ; ടീമുകളുടെ പേര് നിലനിൽക്കും.</li>
       </ul>
       <p class="tiny muted mb0"><span aria-hidden="true">🔒 </span><span data-i18n="saved_local"></span></p>
     </details>

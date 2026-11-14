@@ -127,35 +127,35 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ಗೊಂದಲದ ಪಟ್ಟಿಯನ್ನು ಹಂತ ಹಂತವಾಗಿ ಸ್ವಚ್ಛಗೊಳಿಸಿ: ಹೆಚ್ಚುವರಿ ಸ್ಪೇಸ್, ಎರಡು ಬಾರಿ ಬಂದ ಸಾಲುಗಳು, ಬೇರೆ ಬೇರೆ ದಿನಾಂಕಗಳು, ಮೊಬೈಲ್ ಸಂಖ್ಯೆಗಳು ಮತ್ತು ₹ ಮೊತ್ತಗಳು. ಹಂತಗಳನ್ನು ರೆಸಿಪಿಯಾಗಿ ಉಳಿಸಿ, ಮುಂದಿನ ತಿಂಗಳ ಫೈಲ್ ಮೇಲೆ ಮತ್ತೆ ನಡೆಸಿ.</p>
 
     <section class="card" aria-labelledby="h-load">
-      <h2 class="dc-h" id="h-load" data-i18n="h_load"></h2>
+      <h2 class="dc-h" id="h-load" data-i18n="h_load">1. ನಿಮ್ಮ ಡೇಟಾ ತೆರೆಯಿರಿ</h2>
       <div class="row">
-        <button class="btn" id="load-sample" type="button" data-i18n="load_sample"></button>
-        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file"></button>
+        <button class="btn" id="load-sample" type="button" data-i18n="load_sample">ಗೊಂದಲದ ಮಾದರಿ</button>
+        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file">CSV ಫೈಲ್ ತೆರೆಯಿರಿ</button>
         <button class="btn btn-danger" id="reset" type="button" data-i18n="reset"></button>
       </div>
       <details id="paste-box">
-        <summary data-i18n="paste_data"></summary>
+        <summary data-i18n="paste_data">ಡೇಟಾ ಪೇಸ್ಟ್ ಮಾಡಿ</summary>
         <textarea id="paste" class="no-i18n" data-i18n-placeholder="paste_ph" aria-label="CSV" data-i18n-aria-label="paste_data"></textarea>
-        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste"></button>
+        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste">ಪೇಸ್ಟ್ ಮಾಡಿದ ಡೇಟಾ ಬಳಸಿ</button>
       </details>
-      <p class="dc-drop small muted" data-i18n="drop_hint"></p>
+      <p class="dc-drop small muted" data-i18n="drop_hint">CSV ಫೈಲ್ ಅನ್ನು ಈ ಪುಟದ ಮೇಲೆ ಎಳೆದು ಬಿಡಬಹುದು. Excel ನಲ್ಲಿ: File → Save as → CSV. ನಿಮ್ಮ ಫೈಲ್ ಈ ಸಾಧನದಲ್ಲೇ ಇರುತ್ತದೆ.</p>
       <p id="data-info" class="no-i18n" aria-live="polite"></p>
       <p id="busy" class="muted" hidden data-i18n="loading"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-quality">
-      <h2 class="dc-h" id="h-quality" data-i18n="h_quality"></h2>
+      <h2 class="dc-h" id="h-quality" data-i18n="h_quality">2. ಡೇಟಾ ಗುಣಮಟ್ಟ</h2>
       <div class="dc-scores" aria-live="polite">
         <div class="dc-score">
-          <span class="lbl" data-i18n="score_before"></span>
+          <span class="lbl" data-i18n="score_before">ಸ್ವಚ್ಛತೆಗೆ ಮೊದಲು ಸ್ಕೋರ್</span>
           <span class="big"><span id="score-before"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-before"></span></div>
         </div>
         <div class="dc-score after">
-          <span class="lbl" data-i18n="score_after"></span>
+          <span class="lbl" data-i18n="score_after">ಸ್ವಚ್ಛತೆಯ ನಂತರ ಸ್ಕೋರ್</span>
           <span class="big"><span id="score-after"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-after"></span></div>
         </div>
@@ -164,56 +164,56 @@
       <div class="scroll-x">
         <table class="table dc-qt">
           <thead><tr>
-            <th scope="col" data-i18n="th_column"></th><th scope="col" data-i18n="th_type"></th>
-            <th scope="col" data-i18n="q_missing"></th><th scope="col" data-i18n="q_invalid"></th><th scope="col" data-i18n="q_spaces"></th>
+            <th scope="col" data-i18n="th_column">ಕಾಲಂ</th><th scope="col" data-i18n="th_type">ಹೇಗೆ ಕಾಣುತ್ತದೆ</th>
+            <th scope="col" data-i18n="q_missing">ಖಾಲಿ</th><th scope="col" data-i18n="q_invalid">ಸರಿಯಾದ ರೂಪದಲ್ಲಿಲ್ಲ</th><th scope="col" data-i18n="q_spaces">ಹೆಚ್ಚುವರಿ ಸ್ಪೇಸ್</th>
           </tr></thead>
           <tbody id="q-body"></tbody>
         </table>
       </div>
-      <p class="tiny muted" data-i18n="quality_note"></p>
+      <p class="tiny muted" data-i18n="quality_note">ಸ್ಕೋರ್ = ಯಾವ ಸಮಸ್ಯೆಯೂ ಇಲ್ಲದ ಕೋಶಗಳ ಪಾಲು. ಸಮಸ್ಯೆ ಎಂದರೆ ಖಾಲಿ ಮೌಲ್ಯ, ಹೆಚ್ಚುವರಿ ಸ್ಪೇಸ್, ಸರಿಯಾದ ರೂಪದಲ್ಲಿಲ್ಲದ ಮೌಲ್ಯ, ಅಥವಾ ಪೂರ್ತಿ ಎರಡು ಬಾರಿ ಬಂದ ಸಾಲು.</p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-steps">
-      <h2 class="dc-h" id="h-steps" data-i18n="h_steps"></h2>
+      <h2 class="dc-h" id="h-steps" data-i18n="h_steps">3. ಸ್ವಚ್ಛತೆಯ ಹಂತಗಳು (ನಿಮ್ಮ ರೆಸಿಪಿ)</h2>
       <div class="panel stack">
         <div class="dc-add">
-          <label class="field"><span data-i18n="step_type"></span><select id="step-type"></select></label>
+          <label class="field"><span data-i18n="step_type">ಹಂತ ಸೇರಿಸಿ</span><select id="step-type"></select></label>
         </div>
         <div id="step-form"></div>
         <div class="dc-actions">
-          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step"></button>
-          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest"></button>
+          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step">ಹಂತ ಸೇರಿಸಿ</button>
+          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest">ಹಂತಗಳನ್ನು ಸೂಚಿಸಿ</button>
         </div>
       </div>
       <ol id="recipe" aria-live="polite"></ol>
-      <p id="recipe-empty" class="muted" data-i18n="recipe_empty"></p>
+      <p id="recipe-empty" class="muted" data-i18n="recipe_empty">ಇನ್ನೂ ಯಾವ ಹಂತವೂ ಇಲ್ಲ. ಮೇಲೆ ಒಂದು ಹಂತ ಆಯ್ಕೆ ಮಾಡಿ &quot;ಹಂತ ಸೇರಿಸಿ&quot; ಒತ್ತಿ, ಅಥವಾ &quot;ಹಂತಗಳನ್ನು ಸೂಚಿಸಿ&quot; ಒತ್ತಿ.</p>
       <div class="dc-actions" style="margin-top:12px">
-        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo"></button>
-        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe"></button>
-        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe"></button>
-        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps"></button>
+        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo">ರದ್ದುಮಾಡಿ</button>
+        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe">ರೆಸಿಪಿ ರಫ್ತು</button>
+        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe">ರೆಸಿಪಿ ಆಮದು</button>
+        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps">ಎಲ್ಲ ಹಂತಗಳನ್ನು ತೆಗೆಯಿರಿ</button>
       </div>
       <p class="callout small" style="margin-top:12px" data-i18n-html="pipeline_note"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-preview">
-      <h2 class="dc-h" id="h-preview" data-i18n="h_preview"></h2>
+      <h2 class="dc-h" id="h-preview" data-i18n="h_preview">4. ಸ್ವಚ್ಛ ಡೇಟಾ</h2>
       <div class="dc-bar">
         <div class="seg" id="view-seg" role="group">
-          <button type="button" data-v="clean" data-i18n="view_clean"></button>
-          <button type="button" data-v="orig" data-i18n="view_orig"></button>
+          <button type="button" data-v="clean" data-i18n="view_clean">ಸ್ವಚ್ಛ</button>
+          <button type="button" data-v="orig" data-i18n="view_orig">ಮೂಲ</button>
         </div>
-        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show"></span>
+        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show">ತೋರಿಸಿ</span>
           <select id="filter">
-            <option value="all" data-i18n="show_all"></option>
-            <option value="changed" data-i18n="show_changed"></option>
-            <option value="problems" data-i18n="show_problems"></option>
+            <option value="all" data-i18n="show_all">ಎಲ್ಲ ಸಾಲುಗಳು</option>
+            <option value="changed" data-i18n="show_changed">ಬದಲಾದ ಸಾಲುಗಳು</option>
+            <option value="problems" data-i18n="show_problems">ಸಮಸ್ಯೆ ಇರುವ ಸಾಲುಗಳು</option>
           </select>
         </label>
       </div>
-      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed"></span><span class="lg-bad" data-i18n="legend_bad"></span></div>
+      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed">ಯಾವುದೋ ಹಂತ ಬದಲಿಸಿದೆ</span><span class="lg-bad" data-i18n="legend_bad">ಖಾಲಿ ಅಥವಾ ಸರಿಯಾದ ರೂಪದಲ್ಲಿಲ್ಲ</span></div>
       <div class="dc-gridwrap no-i18n"><table class="table" id="grid"></table></div>
-      <p id="no-rows" class="muted" hidden data-i18n="no_rows"></p>
+      <p id="no-rows" class="muted" hidden data-i18n="no_rows">ತೋರಿಸಲು ಸಾಲುಗಳಿಲ್ಲ.</p>
       <div class="dc-pager" id="pager">
         <button class="btn btn-sm" id="pg-prev" type="button" data-i18n="previous"></button>
         <span id="page-info" class="small"></span>
@@ -221,23 +221,23 @@
       </div>
       <div class="dc-foot">
         <span id="out-count" class="small muted"></span>
-        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv"></button>
+        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv">ಸ್ವಚ್ಛ CSV ಡೌನ್‌ಲೋಡ್</button>
       </div>
     </section>
 
     <details class="card dc-sec">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">ಗೊಂದಲದ ಮಾದರಿಯಿಂದ ಶುರು ಮಾಡಿ: &quot;ಹಂತಗಳನ್ನು ಸೂಚಿಸಿ&quot; ಒತ್ತಿ, ನಂತರ ಕೋಷ್ಟಕದಲ್ಲಿ ಹಸಿರು (ಬದಲಾದ) ಮತ್ತು ಕೆಂಪು (ಸಮಸ್ಯೆಯ) ಕೋಶಗಳನ್ನು ನೋಡಿ.</li>
+        <li data-i18n="tip2">ಕಚೇರಿ ಕೆಲಸಕ್ಕೆ: ಪ್ರತಿ ತಿಂಗಳ ಗ್ರಾಹಕ ಅಥವಾ ಸಿಬ್ಬಂದಿ ಪಟ್ಟಿಗೆ ಒಮ್ಮೆ ರೆಸಿಪಿ ಮಾಡಿ ರಫ್ತು ಮಾಡಿ. ಮುಂದಿನ ತಿಂಗಳು ಹೊಸ ಫೈಲ್ ತೆರೆದು, ರೆಸಿಪಿ ಆಮದು ಮಾಡಿ, ಒಂದು ನಿಮಿಷದಲ್ಲಿ ಸ್ವಚ್ಛ CSV ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ.</li>
+        <li data-i18n="tip3">ಕ್ರಮ ಮುಖ್ಯ: ಎರಡು ಬಾರಿ ಬಂದ ಸಾಲು ತೆಗೆಯುವ ಮೊದಲು ಸ್ಪೇಸ್ ಮತ್ತು ದೊಡ್ಡ-ಸಣ್ಣ ಅಕ್ಷರ ಸರಿಪಡಿಸಿ; ಆಗ &quot;ಪ್ರಿಯಾ  ಶರ್ಮಾ&quot; ಮತ್ತು &quot;ಪ್ರಿಯಾ ಶರ್ಮಾ&quot; ಒಬ್ಬರೇ ಎಂದು ಗೊತ್ತಾಗುತ್ತದೆ.</li>
+        <li data-i18n="tip4">ತರಗತಿ ಚಟುವಟಿಕೆ: ಪ್ರತಿ ಗುಂಪಿಗೂ ಒಂದೇ ಗೊಂದಲದ ಪಟ್ಟಿ ಕೊಡಿ. ಗುಂಪುಗಳು ಮೊದಲು ಕಾಗದದಲ್ಲಿ ಸ್ವಚ್ಛತೆಯ ಹಂತಗಳನ್ನು ಬರೆದು, ನಂತರ ಇಲ್ಲಿ ಪ್ರಯತ್ನಿಸಲಿ. ಕಡಿಮೆ ಹಂತಗಳಲ್ಲಿ ಹೆಚ್ಚು ಸ್ಕೋರ್ ಯಾರದು?</li>
+        <li data-i18n="tip5">ಒಂದು ಹಂತವನ್ನು ಆಫ್ ಮಾಡಿ ಅದು ಏನು ಮಾಡುತ್ತಿತ್ತು ನೋಡಿ. ↑ ↓ ಮೂಲಕ ಕ್ರಮ ಬದಲಿಸಿ; ತಪ್ಪಾದರೆ &quot;ರದ್ದುಮಾಡಿ&quot; ಒತ್ತಿ.</li>
+        <li data-i18n="tip6">ಸ್ವಚ್ಛತೆಯ ನಂತರ ಉಳಿದ ಕೆಂಪು ಕೋಶಗಳನ್ನು ನೋಡಿ: ಕೆಲವು ಮೌಲ್ಯಗಳನ್ನು (5 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯಂತೆ) ಕಂಪ್ಯೂಟರ್ ಸರಿಪಡಿಸಲಾರದು. ಯಾರಾದರೂ ಅವನ್ನು ಪರಿಶೀಲಿಸಬೇಕು.</li>
       </ul>
     </details>
     <details class="card dc-sec">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">ತಿಳಿಯಬೇಕಾದ ಪದಗಳು: ಒಳಗೆ ಏನಾಗುತ್ತಿದೆ</summary>
       <ul>
         <li data-i18n-html="w_dataset"></li>
         <li data-i18n-html="w_missing"></li>

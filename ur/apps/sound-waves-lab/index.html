@@ -123,31 +123,31 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ایک آواز بنا کر اس کی لہر دیکھیں، بیٹس اور گونج سنیں، اپنی سننے کی حد جانیں اور سمجھیں کہ سُر کی اونچائی، بلندی اور طولِ موج کیسے کام کرتے ہیں (NCERT جماعت 8–9 آواز)۔</p>
 
     <div class="callout warning swl-warn">
-      <p>🎧 <span data-i18n="headphones_warn"></span></p>
-      <p class="small">🔒 <span data-i18n="privacy"></span></p>
+      <p>🎧 <span data-i18n="headphones_warn">کم آواز سے شروع کریں۔ ہیڈ فون ہوں تو آواز دھیمی رکھیں، اور کوئی آواز چبھے تو اتار دیں۔</span></p>
+      <p class="small">🔒 <span data-i18n="privacy">کچھ بھی ریکارڈ یا کہیں بھیجا نہیں جاتا۔ مائیکروفون صرف تب چلتا ہے جب آپ اسے چالو کرتے ہیں۔</span></p>
     </div>
 
     <div class="tabs swl-tabs" role="tablist" aria-label="Sound lab sections" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-tone" data-tab="tone" aria-controls="pane-tone" aria-selected="true" data-i18n="tab_tone"></button>
-      <button type="button" role="tab" id="tab-beats" data-tab="beats" aria-controls="pane-beats" aria-selected="false" data-i18n="tab_beats"></button>
-      <button type="button" role="tab" id="tab-echo" data-tab="echo" aria-controls="pane-echo" aria-selected="false" data-i18n="tab_echo"></button>
-      <button type="button" role="tab" id="tab-harm" data-tab="harm" aria-controls="pane-harm" aria-selected="false" data-i18n="tab_harm"></button>
-      <button type="button" role="tab" id="tab-hear" data-tab="hear" aria-controls="pane-hear" aria-selected="false" data-i18n="tab_hear"></button>
-      <button type="button" role="tab" id="tab-mic" data-tab="mic" aria-controls="pane-mic" aria-selected="false" data-i18n="tab_mic"></button>
-      <button type="button" role="tab" id="tab-quiz" data-tab="quiz" aria-controls="pane-quiz" aria-selected="false" data-i18n="tab_quiz"></button>
+      <button type="button" role="tab" id="tab-tone" data-tab="tone" aria-controls="pane-tone" aria-selected="true" data-i18n="tab_tone">آواز</button>
+      <button type="button" role="tab" id="tab-beats" data-tab="beats" aria-controls="pane-beats" aria-selected="false" data-i18n="tab_beats">بیٹس</button>
+      <button type="button" role="tab" id="tab-echo" data-tab="echo" aria-controls="pane-echo" aria-selected="false" data-i18n="tab_echo">گونج</button>
+      <button type="button" role="tab" id="tab-harm" data-tab="harm" aria-controls="pane-harm" aria-selected="false" data-i18n="tab_harm">ہارمونک</button>
+      <button type="button" role="tab" id="tab-hear" data-tab="hear" aria-controls="pane-hear" aria-selected="false" data-i18n="tab_hear">سننے کی جانچ</button>
+      <button type="button" role="tab" id="tab-mic" data-tab="mic" aria-controls="pane-mic" aria-selected="false" data-i18n="tab_mic">میری آواز</button>
+      <button type="button" role="tab" id="tab-quiz" data-tab="quiz" aria-controls="pane-quiz" aria-selected="false" data-i18n="tab_quiz">کوئز</button>
     </div>
 
     <!-- ===================== Tone generator ===================== -->
     <section id="pane-tone" class="swl-pane" role="tabpanel" aria-labelledby="tab-tone">
       <div class="swl-lab">
         <div class="card" id="tone-ctrl">
-          <h2 data-i18n="tone_title"></h2>
+          <h2 data-i18n="tone_title">آواز جنریٹر</h2>
           <button type="button" class="btn btn-primary swl-play" id="tone-play" aria-pressed="false">▶ <span id="tone-play-txt"></span></button>
           <div class="swl-sl">
-            <label class="lbl-t" for="freq-range" data-i18n="frequency"></label>
+            <label class="lbl-t" for="freq-range" data-i18n="frequency">تعدد (سُر کی اونچائی)</label>
             <div class="swl-sl-row">
               <input type="range" id="freq-range" min="0" max="1000" step="1" value="440">
               <input type="number" class="swl-num" id="freq-num" min="20" max="20000" step="1" inputmode="numeric" aria-label="Frequency in hertz" data-i18n-aria-label="frequency">
@@ -155,55 +155,55 @@
             </div>
           </div>
           <div class="swl-sl">
-            <label class="lbl-t" for="amp-range" data-i18n="amplitude"></label>
+            <label class="lbl-t" for="amp-range" data-i18n="amplitude">حیطہ (بلندی)</label>
             <div class="swl-sl-row two">
               <input type="range" id="amp-range" min="0" max="100" step="1" value="60">
               <span class="swl-val num" id="amp-val"></span>
             </div>
           </div>
           <div class="swl-sl">
-            <span class="lbl-t" id="wave-lbl" data-i18n="waveform"></span>
+            <span class="lbl-t" id="wave-lbl" data-i18n="waveform">لہر کی شکل</span>
             <div class="seg" id="wave-seg" role="group" aria-labelledby="wave-lbl">
-              <button type="button" data-wave="sine" aria-pressed="true" data-i18n="wave_sine"></button>
-              <button type="button" data-wave="square" aria-pressed="false" data-i18n="wave_square"></button>
-              <button type="button" data-wave="triangle" aria-pressed="false" data-i18n="wave_triangle"></button>
-              <button type="button" data-wave="sawtooth" aria-pressed="false" data-i18n="wave_saw"></button>
+              <button type="button" data-wave="sine" aria-pressed="true" data-i18n="wave_sine">سائن</button>
+              <button type="button" data-wave="square" aria-pressed="false" data-i18n="wave_square">مربع</button>
+              <button type="button" data-wave="triangle" aria-pressed="false" data-i18n="wave_triangle">تکونی</button>
+              <button type="button" data-wave="sawtooth" aria-pressed="false" data-i18n="wave_saw">آری جیسی</button>
             </div>
           </div>
           <div class="swl-sl">
-            <span class="lbl-t" data-i18n="quick_picks"></span>
+            <span class="lbl-t" data-i18n="quick_picks">جلدی چنیں</span>
             <div class="row" id="tone-presets">
-              <button type="button" class="chip" data-f="100" data-i18n="preset_low"></button>
-              <button type="button" class="chip" data-f="440" data-i18n="preset_a4"></button>
-              <button type="button" class="chip" data-f="1000" data-i18n="preset_mid"></button>
-              <button type="button" class="chip" data-f="4000" data-i18n="preset_high"></button>
+              <button type="button" class="chip" data-f="100" data-i18n="preset_low">نیچی 100 Hz</button>
+              <button type="button" class="chip" data-f="440" data-i18n="preset_a4">سُر A 440 Hz</button>
+              <button type="button" class="chip" data-f="1000" data-i18n="preset_mid">1000 Hz</button>
+              <button type="button" class="chip" data-f="4000" data-i18n="preset_high">اونچی 4000 Hz</button>
             </div>
           </div>
           <div class="swl-sl">
-            <label class="lbl-t" for="medium" data-i18n="medium"></label>
+            <label class="lbl-t" for="medium" data-i18n="medium">آواز کس میں سفر کر رہی ہے</label>
             <select id="medium" class="swl-num" style="text-align:start">
-              <option value="343" data-i18n="medium_air"></option>
-              <option value="1498" data-i18n="medium_water"></option>
-              <option value="5960" data-i18n="medium_steel"></option>
+              <option value="343" data-i18n="medium_air">ہوا (343 m/s)</option>
+              <option value="1498" data-i18n="medium_water">پانی (1498 m/s)</option>
+              <option value="5960" data-i18n="medium_steel">فولاد (5960 m/s)</option>
             </select>
           </div>
           <div class="swl-stats" aria-live="polite">
-            <div class="swl-stat"><span class="k" data-i18n="wavelength"></span><span class="v num" id="r-wavelength"></span></div>
-            <div class="swl-stat"><span class="k" data-i18n="period"></span><span class="v num" id="r-period"></span></div>
-            <div class="swl-stat"><span class="k" data-i18n="nearest_note"></span><span class="v num" id="r-note"></span></div>
+            <div class="swl-stat"><span class="k" data-i18n="wavelength">طولِ موج λ = v / f</span><span class="v num" id="r-wavelength"></span></div>
+            <div class="swl-stat"><span class="k" data-i18n="period">دوری وقت T = 1 / f</span><span class="v num" id="r-period"></span></div>
+            <div class="swl-stat"><span class="k" data-i18n="nearest_note">قریب ترین موسیقی کا سُر</span><span class="v num" id="r-note"></span></div>
           </div>
-          <p class="small muted" style="margin:10px 0 0" data-i18n="pitch_hint"></p>
+          <p class="small muted" style="margin:10px 0 0" data-i18n="pitch_hint">تعدد بڑھائیں: سُر اونچا ہوتا ہے اور لہریں پاس پاس آتی ہیں۔ حیطہ بڑھائیں: لہر اونچی اور آواز تیز ہوتی ہے، مگر سُر وہی رہتا ہے۔</p>
         </div>
         <div class="card swl-stage" id="tone-stage">
           <div class="swl-row-top">
             <span class="badge" id="tone-status"></span>
             <button type="button" class="btn btn-sm btn-ghost" id="tone-fs" data-i18n="fullscreen"></button>
           </div>
-          <p class="cap"><b data-i18n="scope_title"></b><span class="muted small" id="scope-note"></span></p>
+          <p class="cap"><b data-i18n="scope_title">آسیلوسکوپ (لہر)</b><span class="muted small" id="scope-note"></span></p>
           <canvas id="cv-scope" width="800" height="300" role="img" aria-label="Oscilloscope" data-i18n-aria-label="scope_title"></canvas>
-          <p class="cap"><b data-i18n="spectrum_title"></b><span class="muted small" data-i18n="spectrum_note"></span></p>
+          <p class="cap"><b data-i18n="spectrum_title">طیف (کون سے تعدد)</b><span class="muted small" data-i18n="spectrum_note">20 Hz → 20 kHz</span></p>
           <canvas id="cv-spec" width="800" height="220" role="img" aria-label="Spectrum" data-i18n-aria-label="spectrum_title"></canvas>
-          <div class="callout" style="margin-top:12px"><p class="small" style="margin:0" data-i18n="wave_facts"></p></div>
+          <div class="callout" style="margin-top:12px"><p class="small" style="margin:0" data-i18n="wave_facts">سُر کی اونچائی تعدد پر منحصر ہے: ہر سیکنڈ زیادہ ارتعاش یعنی اونچا سُر۔ بلندی حیطے پر منحصر ہے۔ رفتار = تعدد × طولِ موج۔</p></div>
         </div>
       </div>
     </section>
@@ -212,10 +212,10 @@
     <section id="pane-beats" class="swl-pane" role="tabpanel" aria-labelledby="tab-beats" hidden>
       <div class="swl-lab">
         <div class="card">
-          <h2 data-i18n="beats_title"></h2>
+          <h2 data-i18n="beats_title">دو آوازوں سے بیٹس</h2>
           <button type="button" class="btn btn-primary swl-play" id="beats-play" aria-pressed="false">▶ <span id="beats-play-txt"></span></button>
           <div class="swl-sl">
-            <label class="lbl-t" for="b1-range" data-i18n="tone1"></label>
+            <label class="lbl-t" for="b1-range" data-i18n="tone1">آواز 1</label>
             <div class="swl-sl-row">
               <input type="range" id="b1-range" min="100" max="1000" step="1" value="440">
               <input type="number" class="swl-num" id="b1-num" min="20" max="5000" step="1" inputmode="numeric" aria-label="Tone 1" data-i18n-aria-label="tone1">
@@ -223,7 +223,7 @@
             </div>
           </div>
           <div class="swl-sl">
-            <label class="lbl-t" for="b2-range" data-i18n="tone2"></label>
+            <label class="lbl-t" for="b2-range" data-i18n="tone2">آواز 2</label>
             <div class="swl-sl-row">
               <input type="range" id="b2-range" min="100" max="1000" step="1" value="444">
               <input type="number" class="swl-num" id="b2-num" min="20" max="5000" step="1" inputmode="numeric" aria-label="Tone 2" data-i18n-aria-label="tone2">
@@ -232,14 +232,14 @@
           </div>
           <div class="swl-big" aria-live="polite">
             <span class="big-number num" id="beats-val"></span>
-            <span data-i18n="beats_per_sec"></span>
+            <span data-i18n="beats_per_sec">بیٹس فی سیکنڈ</span>
           </div>
           <p class="small muted" style="margin:6px 0 0"><span class="no-i18n" dir="ltr">f<sub>beat</sub> = |f₁ − f₂|</span></p>
           <p class="small" id="beats-msg" style="margin:8px 0 0"></p>
-          <p class="small muted" style="margin:10px 0 0" data-i18n="beats_hint"></p>
+          <p class="small muted" style="margin:10px 0 0" data-i18n="beats_hint">موسیقار ستار یا گٹار ایسے ہی ملاتے ہیں: جب بیٹس دھیمی ہو کر رک جائیں تو دونوں سُر مل گئے۔</p>
         </div>
         <div class="card swl-stage">
-          <p class="cap"><b data-i18n="beats_canvas"></b><span class="muted small" data-i18n="beats_canvas_note"></span></p>
+          <p class="cap"><b data-i18n="beats_canvas">ایک سیکنڈ میں بلندی</b><span class="muted small" data-i18n="beats_canvas_note">ہر ابھار ایک بیٹ ہے</span></p>
           <canvas id="cv-beats" width="800" height="320" role="img" aria-label="Beats" data-i18n-aria-label="beats_canvas"></canvas>
         </div>
       </div>
@@ -249,9 +249,9 @@
     <section id="pane-echo" class="swl-pane" role="tabpanel" aria-labelledby="tab-echo" hidden>
       <div class="swl-lab">
         <div class="card">
-          <h2 data-i18n="echo_title"></h2>
+          <h2 data-i18n="echo_title">گونج: دیوار کتنی دور ہے؟</h2>
           <div class="swl-sl">
-            <label class="lbl-t" for="echo-range" data-i18n="distance"></label>
+            <label class="lbl-t" for="echo-range" data-i18n="distance">دیوار کا فاصلہ</label>
             <div class="swl-sl-row">
               <input type="range" id="echo-range" min="1" max="500" step="1" value="50">
               <input type="number" class="swl-num" id="echo-num" min="1" max="5000" step="1" inputmode="numeric" aria-label="Distance" data-i18n-aria-label="distance">
@@ -260,17 +260,17 @@
           </div>
           <div class="swl-big" aria-live="polite">
             <span class="big-number num" id="echo-time"></span>
-            <span data-i18n="echo_after"></span>
+            <span data-i18n="echo_after">سیکنڈ بعد گونج سنائی دے گی</span>
           </div>
           <p class="small muted" style="margin:6px 0 0"><span class="no-i18n" dir="ltr">t = 2d / v,&nbsp; v = 343 m/s</span></p>
           <p class="small" id="echo-msg" style="margin:8px 0 0"></p>
-          <button type="button" class="btn btn-accent swl-play" id="echo-clap" style="margin-top:12px">👏 <span data-i18n="clap"></span></button>
-          <p class="small muted" style="margin:10px 0 0" data-i18n="echo_hint"></p>
+          <button type="button" class="btn btn-accent swl-play" id="echo-clap" style="margin-top:12px">👏 <span data-i18n="clap">تالی بجائیں اور سنیں</span></button>
+          <p class="small muted" style="margin:10px 0 0" data-i18n="echo_hint">آواز دیوار تک جا کر لوٹتی ہے، اس لیے 2 × فاصلہ طے کرتی ہے۔ وقت = 2 × فاصلہ ÷ 343 m/s۔</p>
         </div>
         <div class="card swl-stage">
-          <p class="cap"><b data-i18n="echo_canvas"></b><span class="muted small" id="echo-slow"></span></p>
+          <p class="cap"><b data-i18n="echo_canvas">جاتی اور لوٹتی آواز کی لہر</b><span class="muted small" id="echo-slow"></span></p>
           <canvas id="cv-echo" width="800" height="300" role="img" aria-label="Echo" data-i18n-aria-label="echo_canvas"></canvas>
-          <div class="callout accent" style="margin-top:12px"><p class="small" style="margin:0" data-i18n="echo_facts"></p></div>
+          <div class="callout accent" style="margin-top:12px"><p class="small" style="margin:0" data-i18n="echo_facts">چمگادڑ، ڈولفن اور جہاز (SONAR) آواز بھیج کر گونج کا وقت ناپتے ہیں اور فاصلہ جانتے ہیں۔ ڈاکٹر الٹراساؤنڈ کی گونج سے جسم کے اندر دیکھتے ہیں۔</p></div>
         </div>
       </div>
     </section>
@@ -279,15 +279,15 @@
     <section id="pane-harm" class="swl-pane" role="tabpanel" aria-labelledby="tab-harm" hidden>
       <div class="swl-lab">
         <div class="card">
-          <h2 data-i18n="harm_title"></h2>
-          <span class="lbl-t" id="harm-type-lbl" data-i18n="harm_type"></span>
+          <h2 data-i18n="harm_title">تار اور نلیاں</h2>
+          <span class="lbl-t" id="harm-type-lbl" data-i18n="harm_type">کیا تھرتھرا رہا ہے؟</span>
           <div class="seg" id="harm-seg" role="group" aria-labelledby="harm-type-lbl">
-            <button type="button" data-type="string" aria-pressed="true" data-i18n="type_string"></button>
-            <button type="button" data-type="open" aria-pressed="false" data-i18n="type_open"></button>
-            <button type="button" data-type="closed" aria-pressed="false" data-i18n="type_closed"></button>
+            <button type="button" data-type="string" aria-pressed="true" data-i18n="type_string">تار (ستار، گٹار)</button>
+            <button type="button" data-type="open" aria-pressed="false" data-i18n="type_open">دونوں سروں سے کھلی نلی (بانسری)</button>
+            <button type="button" data-type="closed" aria-pressed="false" data-i18n="type_closed">ایک سرے سے بند نلی</button>
           </div>
           <div class="swl-sl">
-            <label class="lbl-t" for="f0-range" data-i18n="fundamental"></label>
+            <label class="lbl-t" for="f0-range" data-i18n="fundamental">سب سے کم تعدد f₁ (بنیادی)</label>
             <div class="swl-sl-row">
               <input type="range" id="f0-range" min="60" max="600" step="1" value="220">
               <input type="number" class="swl-num" id="f0-num" min="20" max="2000" step="1" inputmode="numeric" aria-label="Fundamental" data-i18n-aria-label="fundamental">
@@ -295,14 +295,14 @@
             </div>
           </div>
           <p class="small muted" id="harm-hint" style="margin:10px 0 0"></p>
-          <span class="lbl-t" style="margin-top:12px" data-i18n="harm_pick"></span>
+          <span class="lbl-t" style="margin-top:12px" data-i18n="harm_pick">کسی ہارمونک کو چھو کر دیکھیں اور سنیں</span>
           <div class="swl-harm" id="harm-list" role="group" aria-label="Harmonics" data-i18n-aria-label="harm_pick"></div>
           <button type="button" class="btn btn-danger" id="harm-stop" style="margin-top:10px" data-i18n="stop"></button>
         </div>
         <div class="card swl-stage">
-          <p class="cap"><b data-i18n="harm_canvas"></b><span class="muted small" id="harm-canvas-note"></span></p>
+          <p class="cap"><b data-i18n="harm_canvas">ساکن لہر</b><span class="muted small" id="harm-canvas-note"></span></p>
           <canvas id="cv-harm" width="800" height="300" role="img" aria-label="Standing wave" data-i18n-aria-label="harm_canvas"></canvas>
-          <div class="callout" style="margin-top:12px"><p class="small" style="margin:0" data-i18n="harm_facts"></p></div>
+          <div class="callout" style="margin-top:12px"><p class="small" style="margin:0" data-i18n="harm_facts">ساز بنیادی سُر اور کچھ ہارمونک ایک ساتھ بجاتا ہے۔ اسی میل کی وجہ سے ایک ہی سُر پر بانسری اور ستار الگ سنائی دیتے ہیں۔</p></div>
         </div>
       </div>
     </section>
@@ -311,18 +311,18 @@
     <section id="pane-hear" class="swl-pane" role="tabpanel" aria-labelledby="tab-hear" hidden>
       <div class="swl-lab">
         <div class="card">
-          <h2 data-i18n="hear_title"></h2>
-          <p class="small" data-i18n="hear_intro"></p>
-          <div class="callout warning" style="margin:10px 0"><p class="small" style="margin:0" data-i18n="hear_safety"></p></div>
+          <h2 data-i18n="hear_title">سننے کی حد کی جانچ</h2>
+          <p class="small" data-i18n="hear_intro">آپ کو چھوٹی چھوٹی آوازیں سنائی دیں گی۔ &quot;سنائی دے رہا ہے&quot; یا &quot;سنائی نہیں دے رہا&quot; دبائیں۔ پہلے ہم اونچے اونچے جائیں گے، پھر نیچے نیچے۔</p>
+          <div class="callout warning" style="margin:10px 0"><p class="small" style="margin:0" data-i18n="hear_safety">محفوظ آواز: آوازیں جان بوجھ کر دھیمی رکھی گئی ہیں۔ شروع کرنے سے پہلے ڈیوائس کی آواز درمیانی رکھیں۔ کچھ چبھے تو روک دیں۔</p></div>
           <div id="hear-idle">
-            <button type="button" class="btn btn-primary swl-play" id="hear-start">▶ <span data-i18n="hear_start"></span></button>
+            <button type="button" class="btn btn-primary swl-play" id="hear-start">▶ <span data-i18n="hear_start">جانچ شروع کریں</span></button>
           </div>
           <div id="hear-run" hidden>
             <p class="muted small" id="hear-step" style="margin:0"></p>
             <p class="swl-hear-now num" id="hear-now" aria-live="polite"></p>
             <div class="swl-hear-btns">
-              <button type="button" class="btn btn-primary" id="hear-yes">✅ <span data-i18n="hear_yes"></span></button>
-              <button type="button" class="btn" id="hear-no">🙉 <span data-i18n="hear_no"></span></button>
+              <button type="button" class="btn btn-primary" id="hear-yes">✅ <span data-i18n="hear_yes">سنائی دے رہا ہے</span></button>
+              <button type="button" class="btn" id="hear-no">🙉 <span data-i18n="hear_no">سنائی نہیں دے رہا</span></button>
             </div>
             <button type="button" class="btn btn-ghost btn-sm" id="hear-stop" style="margin-top:10px" data-i18n="stop"></button>
           </div>
@@ -332,15 +332,15 @@
             <div class="swl-scale-lbl no-i18n"><span>20 Hz</span><span>200</span><span>2 kHz</span><span>20 kHz</span></div>
             <button type="button" class="btn" id="hear-again" style="margin-top:12px" data-i18n="try_again"></button>
           </div>
-          <p class="small muted" style="margin:12px 0 0" data-i18n="hear_note"></p>
+          <p class="small muted" style="margin:12px 0 0" data-i18n="hear_note">یہ کلاس کا ایک مزے دار تجربہ ہے، طبی جانچ نہیں۔ فون اور لیپ ٹاپ کے اسپیکر بہت نیچی آواز نہیں بجا سکتے، اس لیے نیچے کی حد اسپیکر پر منحصر ہے۔</p>
         </div>
         <div class="card">
-          <h2 data-i18n="hear_facts_title"></h2>
+          <h2 data-i18n="hear_facts_title">کیا آپ جانتے ہیں؟</h2>
           <ul class="small" style="margin:0; padding-inline-start:20px">
-            <li data-i18n="hear_fact1"></li>
-            <li data-i18n="hear_fact2"></li>
-            <li data-i18n="hear_fact3"></li>
-            <li data-i18n="hear_fact4"></li>
+            <li data-i18n="hear_fact1">انسان تقریباً 20 Hz سے 20,000 Hz (20 kHz) تک سنتے ہیں۔ عمر بڑھنے کے ساتھ سب سے اونچی سنائی دینے والی حد گھٹتی ہے۔</li>
+            <li data-i18n="hear_fact2">20 Hz سے نیچی آواز انفراساؤنڈ ہے۔ ہاتھی اور وہیل اسے استعمال کرتے ہیں، زلزلے بھی اسے پیدا کرتے ہیں۔</li>
+            <li data-i18n="hear_fact3">20 kHz سے اونچی آواز الٹراساؤنڈ ہے۔ کتے، چمگادڑ اور ڈولفن اسے سنتے ہیں، ڈاکٹر اس سے اسکین کرتے ہیں۔</li>
+            <li data-i18n="hear_fact4">تقریباً 80 dB سے زیادہ شور کانوں کو نقصان پہنچا سکتا ہے۔ ایئر فون کی آواز دھیمی رکھیں۔</li>
           </ul>
         </div>
       </div>
@@ -350,22 +350,22 @@
     <section id="pane-mic" class="swl-pane" role="tabpanel" aria-labelledby="tab-mic" hidden>
       <div class="swl-lab">
         <div class="card">
-          <h2 data-i18n="mic_title"></h2>
-          <p class="small" data-i18n="mic_intro"></p>
+          <h2 data-i18n="mic_title">اپنی آواز دیکھیں</h2>
+          <p class="small" data-i18n="mic_intro">مائیکروفون چالو کریں اور گنگنائیں، سیٹی بجائیں یا گائیں۔ آپ کو اپنی آواز کی لہر اور اس کا خاص تعدد دکھائی دے گا۔</p>
           <button type="button" class="btn btn-primary swl-play" id="mic-btn" aria-pressed="false">🎤 <span id="mic-txt"></span></button>
           <p class="small" id="mic-msg" style="margin:8px 0 0" aria-live="polite"></p>
           <div class="swl-stats" aria-live="polite">
-            <div class="swl-stat"><span class="k" data-i18n="mic_peak"></span><span class="v num" id="mic-peak">—</span></div>
-            <div class="swl-stat"><span class="k" data-i18n="mic_level"></span><span class="v num" id="mic-level">—</span></div>
-            <div class="swl-stat"><span class="k" data-i18n="nearest_note"></span><span class="v num" id="mic-note">—</span></div>
+            <div class="swl-stat"><span class="k" data-i18n="mic_peak">خاص تعدد</span><span class="v num" id="mic-peak">—</span></div>
+            <div class="swl-stat"><span class="k" data-i18n="mic_level">بلندی کی سطح</span><span class="v num" id="mic-level">—</span></div>
+            <div class="swl-stat"><span class="k" data-i18n="nearest_note">قریب ترین موسیقی کا سُر</span><span class="v num" id="mic-note">—</span></div>
           </div>
-          <p class="small muted" style="margin:10px 0 0" data-i18n="mic_hint"></p>
-          <p class="small muted" style="margin:6px 0 0">🔒 <span data-i18n="privacy"></span></p>
+          <p class="small muted" style="margin:10px 0 0" data-i18n="mic_hint">آزمائیں: نیچا گنگنائیں، پھر اونچا۔ ایک جیسی سیٹی بجائیں۔ &quot;سسس&quot; اور &quot;ممم&quot; بول کر طیف کا موازنہ کریں۔</p>
+          <p class="small muted" style="margin:6px 0 0">🔒 <span data-i18n="privacy">کچھ بھی ریکارڈ یا کہیں بھیجا نہیں جاتا۔ مائیکروفون صرف تب چلتا ہے جب آپ اسے چالو کرتے ہیں۔</span></p>
         </div>
         <div class="card swl-stage" id="mic-stage">
-          <p class="cap"><b data-i18n="scope_title"></b><span class="badge" id="mic-status"></span></p>
+          <p class="cap"><b data-i18n="scope_title">آسیلوسکوپ (لہر)</b><span class="badge" id="mic-status"></span></p>
           <canvas id="cv-mic-scope" width="800" height="260" role="img" aria-label="Oscilloscope" data-i18n-aria-label="scope_title"></canvas>
-          <p class="cap"><b data-i18n="spectrum_title"></b></p>
+          <p class="cap"><b data-i18n="spectrum_title">طیف (کون سے تعدد)</b></p>
           <canvas id="cv-mic-spec" width="800" height="220" role="img" aria-label="Spectrum" data-i18n-aria-label="spectrum_title"></canvas>
         </div>
       </div>
@@ -375,7 +375,7 @@
     <section id="pane-quiz" class="swl-pane" role="tabpanel" aria-labelledby="tab-quiz" hidden>
       <div class="card" id="quiz-box" style="max-width:760px">
         <div class="swl-row-top">
-          <h2 style="margin:0" data-i18n="quiz_title"></h2>
+          <h2 style="margin:0" data-i18n="quiz_title">آواز کوئز (NCERT جماعت 8–9)</h2>
           <span class="badge primary" id="quiz-best"></span>
         </div>
         <div id="quiz-run">
@@ -394,14 +394,14 @@
     </section>
 
     <details class="card swl-help" style="margin-top:16px">
-      <summary data-i18n="how_title"></summary>
+      <summary data-i18n="how_title">استعمال کا طریقہ / کلاس کے لیے تجاویز</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">آواز کم کرنے کے بعد ہی چلائیں دبائیں۔ ہر آواز تبھی شروع ہوتی ہے جب آپ بٹن دباتے ہیں۔</li>
+        <li data-i18n="tip2">آواز کا حصہ: حیطہ وہی رکھ کر تعدد بدلیں، پھر الٹا کریں۔ پوچھیں: سُر کس سے بدلتا ہے؟ بلندی کس سے؟</li>
+        <li data-i18n="tip3">بیٹس کا حصہ: 440 Hz اور 444 Hz رکھیں اور 5 سیکنڈ تک &quot;واہ-واہ&quot; گنیں۔ طلبہ کو تقریباً 20 گننے چاہییں۔</li>
+        <li data-i18n="tip4">کلاس کی سرگرمی: اسکول کے میدان میں کوئی بڑی دیوار ڈھونڈیں، فیتے سے فاصلہ ناپیں اور دیکھیں کہ تالی کی گونج سنائی دیتی ہے یا نہیں۔ گونج کے حصے سے موازنہ کریں۔</li>
+        <li data-i18n="tip5">سننے کی جانچ: پوری کلاس کھڑی ہو؛ جسے آواز سنائی دینا بند ہو وہ بیٹھ جائے۔ اکثر استاد سب سے پہلے بیٹھتے ہیں!</li>
+        <li data-i18n="tip6">NCERT آواز کے باب کے آخر میں کوئز کرائیں۔ اسمارٹ بورڈ پر لہریں دکھانے کے لیے فل اسکرین استعمال کریں۔</li>
       </ul>
     </details>
 

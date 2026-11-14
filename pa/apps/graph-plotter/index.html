@@ -139,34 +139,34 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">x ਦਾ ਕੋਈ ਵੀ ਫਲਨ ਲਿਖੋ ਅਤੇ ਝੱਟ ਉਸਦਾ ਗ੍ਰਾਫ਼ ਦੇਖੋ। ਸਲਾਈਡਰ ਖਿਸਕਾਓ, ਜ਼ੂਮ ਕਰੋ, ਅਤੇ ਐਪ ਤੋਂ ਸਿਫ਼ਰ, ਕਾਟ ਬਿੰਦੂ ਤੇ ਮੋੜ ਬਿੰਦੂ ਲਭਵਾਓ।</p>
 
     <div class="gp" id="gp">
       <div class="gp-col gp-col-a">
         <!-- functions -->
         <section class="card gp-fns" aria-labelledby="fns-h">
           <div class="gp-head">
-            <h2 id="fns-h" data-i18n="functions_h"></h2>
+            <h2 id="fns-h" data-i18n="functions_h">ਫਲਨ</h2>
             <div class="row" style="gap:6px">
-              <button class="btn btn-sm btn-primary" id="add-fn" type="button">+ <span data-i18n="add_fn"></span></button>
+              <button class="btn btn-sm btn-primary" id="add-fn" type="button">+ <span data-i18n="add_fn">ਫਲਨ ਜੋੜੋ</span></button>
               <button class="btn btn-sm btn-danger" id="reset-all" type="button" data-i18n="reset"></button>
             </div>
           </div>
           <div id="fn-list"></div>
           <div class="gp-keys no-i18n" id="keys" role="group" data-i18n-aria-label="keypad_label"></div>
-          <p class="tiny muted mb0" style="margin-top:10px" data-i18n="syntax_hint"></p>
+          <p class="tiny muted mb0" style="margin-top:10px" data-i18n="syntax_hint">2 × x ਲਈ 2x, x² ਲਈ x^2, √x ਲਈ sqrt(x) ਅਤੇ ਨਿਰਪੇਖ ਮੁੱਲ ਲਈ |x| ਲਿਖੋ। ਇਹ ਵੀ ਚੱਲਦੇ ਹਨ: sin, cos, tan, log (ਅਧਾਰ 10), ln, exp, pi, e।</p>
         </section>
 
         <!-- sliders -->
         <section class="card gp-params" aria-labelledby="params-h">
-          <h2 id="params-h" data-i18n="params_h" style="margin-bottom:6px"></h2>
-          <p class="small muted" data-i18n="params_hint"></p>
+          <h2 id="params-h" data-i18n="params_h" style="margin-bottom:6px">ਸਲਾਈਡਰ a, b, c</h2>
+          <p class="small muted" data-i18n="params_hint">ਫਲਨ ਵਿੱਚ a, b ਜਾਂ c ਲਿਖੋ, ਫਿਰ ਸਲਾਈਡਰ ਖਿਸਕਾ ਕੇ ਗ੍ਰਾਫ਼ ਬਦਲਦਾ ਦੇਖੋ।</p>
           <div id="params"></div>
         </section>
 
         <!-- ready examples -->
         <section class="card gp-presets" aria-labelledby="presets-h">
-          <h2 id="presets-h" data-i18n="presets_h" style="margin-bottom:10px"></h2>
+          <h2 id="presets-h" data-i18n="presets_h" style="margin-bottom:10px">ਤਿਆਰ ਉਦਾਹਰਨਾਂ</h2>
           <div class="chips" id="presets"></div>
           <div class="callout gp-note" id="note" aria-live="polite" hidden></div>
         </section>
@@ -178,38 +178,38 @@
           <div class="gp-toolbar">
             <button class="btn gp-icon" id="zoom-in" type="button" data-i18n-title="zoom_in" data-i18n-aria-label="zoom_in">+</button>
             <button class="btn gp-icon" id="zoom-out" type="button" data-i18n-title="zoom_out" data-i18n-aria-label="zoom_out">−</button>
-            <button class="btn" id="reset-view" type="button" data-i18n="reset_view"></button>
+            <button class="btn" id="reset-view" type="button" data-i18n="reset_view">ਸ਼ੁਰੂਆਤੀ ਦ੍ਰਿਸ਼</button>
             <span class="grow"></span>
             <button class="btn gp-icon" id="fs-btn" type="button" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen">⛶</button>
-            <button class="btn" id="save-png" type="button" data-i18n="save_png"></button>
-            <button class="btn" id="share-btn" type="button" data-i18n="share_link"></button>
+            <button class="btn" id="save-png" type="button" data-i18n="save_png">ਤਸਵੀਰ ਸੇਵ ਕਰੋ</button>
+            <button class="btn" id="share-btn" type="button" data-i18n="share_link">ਲਿੰਕ ਸਾਂਝਾ ਕਰੋ</button>
           </div>
           <div class="stage gp-stage" id="stage">
             <canvas id="plot" dir="ltr" tabindex="0" role="img" data-i18n-aria-label="graph_aria"></canvas>
           </div>
           <div class="gp-under">
-            <span class="lbl" id="angle-lbl" data-i18n="angle_label"></span>
+            <span class="lbl" id="angle-lbl" data-i18n="angle_label">ਕੋਣ ਦੀ ਇਕਾਈ</span>
             <div class="seg" role="group" aria-labelledby="angle-lbl">
-              <button type="button" id="mode-rad" aria-pressed="true" data-i18n="radians"></button>
-              <button type="button" id="mode-deg" aria-pressed="false" data-i18n="degrees"></button>
+              <button type="button" id="mode-rad" aria-pressed="true" data-i18n="radians">ਰੇਡੀਅਨ</button>
+              <button type="button" id="mode-deg" aria-pressed="false" data-i18n="degrees">ਡਿਗਰੀ</button>
             </div>
-            <label class="check"><input type="checkbox" id="pi-axis"> <span data-i18n="pi_axis"></span></label>
+            <label class="check"><input type="checkbox" id="pi-axis"> <span data-i18n="pi_axis">x-ਧੁਰੇ ਉੱਤੇ π ਵਿੱਚ ਨਿਸ਼ਾਨ</span></label>
           </div>
           <p class="gp-readout" id="readout" aria-live="polite"></p>
         </section>
 
         <!-- special points -->
         <section class="card gp-points" aria-labelledby="points-h">
-          <h2 id="points-h" data-i18n="points_h" style="margin-bottom:6px"></h2>
-          <p class="small muted" data-i18n="points_hint"></p>
+          <h2 id="points-h" data-i18n="points_h" style="margin-bottom:6px">ਖ਼ਾਸ ਬਿੰਦੂ</h2>
+          <p class="small muted" data-i18n="points_hint">ਗ੍ਰਾਫ਼ ਦੇ ਦਿਸਦੇ ਹਿੱਸੇ ਵਿੱਚ ਐਪ ਇਹ ਬਿੰਦੂ ਕਦਮ-ਦਰ-ਕਦਮ (ਸੰਖਿਆਤਮਕ ਤਰੀਕੇ ਨਾਲ) ਲੱਭਦੀ ਹੈ।</p>
           <div class="gp-checks">
-            <label class="check"><input type="checkbox" id="show-roots"> <span class="gp-dot" style="--col:var(--text)"></span><span data-i18n="show_roots"></span></label>
-            <label class="check"><input type="checkbox" id="show-inter"> <span class="gp-dot ring" style="--col:var(--text)"></span><span data-i18n="show_inter"></span></label>
-            <label class="check"><input type="checkbox" id="show-turn"> <span class="gp-dot diamond" style="--col:var(--text)"></span><span data-i18n="show_turn"></span></label>
+            <label class="check"><input type="checkbox" id="show-roots"> <span class="gp-dot" style="--col:var(--text)"></span><span data-i18n="show_roots">ਧੁਰਿਆਂ ਉੱਤੇ ਕਾਟ</span></label>
+            <label class="check"><input type="checkbox" id="show-inter"> <span class="gp-dot ring" style="--col:var(--text)"></span><span data-i18n="show_inter">ਕਾਟ ਬਿੰਦੂ</span></label>
+            <label class="check"><input type="checkbox" id="show-turn"> <span class="gp-dot diamond" style="--col:var(--text)"></span><span data-i18n="show_turn">ਮੋੜ ਬਿੰਦੂ</span></label>
           </div>
           <div class="scroll-x">
             <table class="table" id="points-table">
-              <thead><tr><th data-i18n="col_point"></th><th class="num">x</th><th class="num">y</th></tr></thead>
+              <thead><tr><th data-i18n="col_point">ਬਿੰਦੂ</th><th class="num">x</th><th class="num">y</th></tr></thead>
               <tbody id="points-body"></tbody>
             </table>
           </div>
@@ -221,17 +221,17 @@
     <!-- table of values -->
     <section class="card gp-table below" aria-labelledby="tv-h">
       <div class="gp-head">
-        <h2 id="tv-h" data-i18n="table_h"></h2>
+        <h2 id="tv-h" data-i18n="table_h">ਮੁੱਲਾਂ ਦੀ ਸਾਰਣੀ</h2>
         <div class="row no-print" style="gap:6px">
-          <button class="btn btn-sm" id="tv-csv" type="button" data-i18n="tv_csv"></button>
+          <button class="btn btn-sm" id="tv-csv" type="button" data-i18n="tv_csv">CSV ਡਾਊਨਲੋਡ ਕਰੋ</button>
           <button class="btn btn-sm" id="tv-print" type="button" data-i18n="print"></button>
         </div>
       </div>
       <div class="gp-tv-form">
-        <label class="field field-fn"><span data-i18n="tv_fn"></span><select id="tv-fn" class="no-i18n"></select></label>
-        <label class="field"><span data-i18n="tv_from"></span><input type="number" id="tv-from" dir="ltr" step="any" inputmode="decimal"></label>
-        <label class="field"><span data-i18n="tv_to"></span><input type="number" id="tv-to" dir="ltr" step="any" inputmode="decimal"></label>
-        <label class="field"><span data-i18n="tv_step"></span><input type="number" id="tv-step" dir="ltr" step="any" min="0" inputmode="decimal"></label>
+        <label class="field field-fn"><span data-i18n="tv_fn">ਫਲਨ</span><select id="tv-fn" class="no-i18n"></select></label>
+        <label class="field"><span data-i18n="tv_from">x = ਤੋਂ</span><input type="number" id="tv-from" dir="ltr" step="any" inputmode="decimal"></label>
+        <label class="field"><span data-i18n="tv_to">x = ਤੱਕ</span><input type="number" id="tv-to" dir="ltr" step="any" inputmode="decimal"></label>
+        <label class="field"><span data-i18n="tv_step">ਫ਼ਰਕ</span><input type="number" id="tv-step" dir="ltr" step="any" min="0" inputmode="decimal"></label>
       </div>
       <div class="gp-tv-wrap" id="tv-wrap">
         <table class="table" id="tv-table">
@@ -244,19 +244,19 @@
 
     <!-- syllabus links -->
     <section class="card gp-learn below" aria-labelledby="learn-h">
-      <h2 id="learn-h" data-i18n="learn_h"></h2>
+      <h2 id="learn-h" data-i18n="learn_h">ਤੁਹਾਡੇ ਸਿਲੇਬਸ ਨਾਲ ਜੋੜ</h2>
       <div class="gp-learn-list" id="learn"></div>
     </section>
 
     <details class="card below">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">ਕਿਵੇਂ ਵਰਤਣਾ ਹੈ · ਜਮਾਤ ਲਈ ਸੁਝਾਅ</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">ਡੱਬੇ ਵਿੱਚ x ਦਾ ਫਲਨ ਲਿਖੋ, ਜਿਵੇਂ 2x + 1, x^2 − 4 ਜਾਂ sin(x)। 8 ਫਲਨਾਂ ਤੱਕ ਬਣਾ ਸਕਦੇ ਹੋ। ਕਿਸੇ ਨੂੰ ਲੁਕਾਉਣ ਜਾਂ ਦਿਖਾਉਣ ਲਈ ਰੰਗੀਨ ਬਿੰਦੀ ਉੱਤੇ ਟੈਪ ਕਰੋ।</li>
+        <li data-i18n="tip2">ਗ੍ਰਾਫ਼ ਨੂੰ ਖਿੱਚ ਕੇ ਖਿਸਕਾਓ। ਮਾਊਸ ਵ੍ਹੀਲ, ਦੋ ਉਂਗਲਾਂ ਦੇ ਪਿੰਚ ਜਾਂ + ਅਤੇ − ਬਟਨਾਂ ਨਾਲ ਜ਼ੂਮ ਕਰੋ। ਵਕਰ ਉੱਤੇ ਟੈਪ ਕਰਕੇ ਉਸਦੇ (x, y) ਮੁੱਲ ਪੜ੍ਹੋ।</li>
+        <li data-i18n="tip3">ਸੂਤਰ ਵਿੱਚ a, b ਜਾਂ c ਪਾਓ, ਜਿਵੇਂ ax^2 + bx + c, ਫਿਰ ਸਲਾਈਡਰ ਖਿਸਕਾਓ ਅਤੇ ਗ੍ਰਾਫ਼ ਦਾ ਆਕਾਰ ਬਦਲਦਾ ਦੇਖੋ।</li>
+        <li data-i18n="tip4">ਐਪ ਸਿਫ਼ਰਾਂ, ਕਾਟ ਬਿੰਦੂਆਂ ਅਤੇ ਮੋੜ ਬਿੰਦੂਆਂ ਉੱਤੇ ਨਿਸ਼ਾਨ ਲਾਉਂਦੀ ਹੈ ਅਤੇ ਗ੍ਰਾਫ਼ ਹੇਠਾਂ ਉਹਨਾਂ ਦੀ ਸੂਚੀ ਦਿੰਦੀ ਹੈ। ਮੁੱਲਾਂ ਦੀ ਸਾਰਣੀ ਨਾਲ ਆਪ ਜਾਂਚੋ।</li>
+        <li data-i18n="tip5">ਜਮਾਤ ਗਤੀਵਿਧੀ: y = x² ਦਿਖਾਓ। ਵਿਦਿਆਰਥੀਆਂ ਨੂੰ ਪਹਿਲਾਂ ਕਾਪੀ ਵਿੱਚ y = x² + 2, y = (x − 3)² ਅਤੇ y = −x² ਦੇ ਅੰਦਾਜ਼ਨ ਗ੍ਰਾਫ਼ ਬਣਾਉਣ ਲਈ ਕਹੋ, ਫਿਰ ਟਾਈਪ ਕਰਕੇ ਮਿਲਾਨ ਕਰੋ।</li>
+        <li data-i18n="tip6">ਸਮਾਰਟਬੋਰਡ ਉੱਤੇ ਪੂਰੀ ਸਕ੍ਰੀਨ ਵਰਤੋ। &quot;ਤਸਵੀਰ ਸੇਵ ਕਰੋ&quot; ਨਾਲ ਗ੍ਰਾਫ਼ ਵਰਕਸ਼ੀਟ ਵਿੱਚ ਲਾਓ, ਅਤੇ &quot;ਲਿੰਕ ਸਾਂਝਾ ਕਰੋ&quot; ਨਾਲ ਉਹੀ ਗ੍ਰਾਫ਼ WhatsApp ਉੱਤੇ ਵਿਦਿਆਰਥੀਆਂ ਨੂੰ ਭੇਜੋ।</li>
       </ul>
       <p class="tiny muted mb0" style="margin-top:10px" data-i18n="saved_local"></p>
     </details>

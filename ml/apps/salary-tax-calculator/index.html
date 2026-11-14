@@ -147,68 +147,68 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">നിങ്ങളുടെ CTC-യിൽ നിന്ന് ഓരോ മാസവും കൈയിൽ കിട്ടുന്ന ശമ്പളം കണക്കാക്കുക, പഴയതും പുതിയതുമായ നികുതി രീതികൾ താരതമ്യം ചെയ്യുക, ശമ്പള വർധനയിൽ ശരിക്കും എത്ര കിട്ടുമെന്ന് നോക്കുക, അല്ലെങ്കിൽ ആഗ്രഹിക്കുന്ന കൈശമ്പളത്തിന് എത്ര CTC ചോദിക്കണമെന്ന് കണ്ടെത്തുക.</p>
 
     <div class="callout stx-head" role="note" id="hdr">
       <p class="yr" id="hdrYear"></p>
       <p id="hdrNote"></p>
     </div>
-    <p class="stx-priv"><span class="badge success" data-i18n="privacy"></span> <span class="muted" data-i18n="scope"></span></p>
+    <p class="stx-priv"><span class="badge success" data-i18n="privacy">🔒 നിങ്ങളുടെ ശമ്പളവും ഫയലുകളും ഈ ഉപകരണം വിട്ട് പുറത്തുപോകില്ല. ലോഗിൻ വേണ്ട, ഫോൺ നമ്പർ വേണ്ട.</span> <span class="muted" data-i18n="scope">ശമ്പള വരുമാനത്തിന് മാത്രം (മൂലധന നേട്ടം, വാടക, ബിസിനസ് വരുമാനം എന്നിവ ഇല്ല).</span></p>
 
     <div class="stx-tabs no-print" role="tablist" data-i18n-aria-label="modes_label" id="tabs">
-      <button type="button" role="tab" id="tab-salary" data-mode="salary" aria-controls="results"><span class="ic" aria-hidden="true">💰</span><span data-i18n="mode_salary"></span></button>
-      <button type="button" role="tab" id="tab-compare" data-mode="compare" aria-controls="results"><span class="ic" aria-hidden="true">⚖️</span><span data-i18n="mode_compare"></span></button>
-      <button type="button" role="tab" id="tab-hike" data-mode="hike" aria-controls="results"><span class="ic" aria-hidden="true">📈</span><span data-i18n="mode_hike"></span></button>
-      <button type="button" role="tab" id="tab-reverse" data-mode="reverse" aria-controls="results"><span class="ic" aria-hidden="true">🎯</span><span data-i18n="mode_reverse"></span></button>
+      <button type="button" role="tab" id="tab-salary" data-mode="salary" aria-controls="results"><span class="ic" aria-hidden="true">💰</span><span data-i18n="mode_salary">CTC → കൈശമ്പളം</span></button>
+      <button type="button" role="tab" id="tab-compare" data-mode="compare" aria-controls="results"><span class="ic" aria-hidden="true">⚖️</span><span data-i18n="mode_compare">പഴയ vs പുതിയ രീതി</span></button>
+      <button type="button" role="tab" id="tab-hike" data-mode="hike" aria-controls="results"><span class="ic" aria-hidden="true">📈</span><span data-i18n="mode_hike">ശമ്പള വർധന</span></button>
+      <button type="button" role="tab" id="tab-reverse" data-mode="reverse" aria-controls="results"><span class="ic" aria-hidden="true">🎯</span><span data-i18n="mode_reverse">കൈശമ്പളം → CTC</span></button>
     </div>
 
     <div class="stx-split">
       <section class="card stx-in" id="inputs" aria-labelledby="h-your">
         <div class="grp">
-          <h2 id="h-your" data-i18n="sec_salary"></h2>
+          <h2 id="h-your" data-i18n="sec_salary">നിങ്ങളുടെ ശമ്പളം</h2>
           <label class="stx-f" id="fCtc">
-            <span class="lbl" id="ctcLbl" data-i18n="ctc"></span>
+            <span class="lbl" id="ctcLbl" data-i18n="ctc">വാർഷിക CTC (കമ്പനിയുടെ ആകെ ചെലവ്)</span>
             <input type="text" id="ctc" class="big" data-k="ctc" inputmode="decimal" autocomplete="off" data-i18n-placeholder="ctc_ph">
             <span class="prev" id="ctcPrev" aria-live="polite"></span>
           </label>
           <label class="stx-f" id="fHike" hidden>
-            <span class="lbl" data-i18n="hike_pct"></span>
+            <span class="lbl" data-i18n="hike_pct">വർധന (%)</span>
             <input type="number" id="hike" class="big" data-k="hike" min="-90" max="1000" step="0.5" inputmode="decimal">
             <span class="prev" id="hikePrev" aria-live="polite"></span>
           </label>
           <label class="stx-f" id="fTarget" hidden>
-            <span class="lbl" data-i18n="target"></span>
+            <span class="lbl" data-i18n="target">മാസം കൈയിൽ എത്ര ശമ്പളം വേണം</span>
             <input type="text" id="target" class="big" data-k="target" inputmode="decimal" autocomplete="off" data-i18n-placeholder="target_ph">
             <span class="prev" id="targetPrev" aria-live="polite"></span>
           </label>
           <label class="stx-f">
-            <span class="lbl" data-i18n="bonus"></span>
+            <span class="lbl" data-i18n="bonus">വാർഷിക ബോണസ് / വേരിയബിൾ പേ (CTC-ക്കുള്ളിൽ)</span>
             <input type="text" id="bonus" data-k="bonus" inputmode="decimal" autocomplete="off" data-i18n-placeholder="bonus_ph">
-            <span class="hint" data-i18n="bonus_hint"></span>
+            <span class="hint" data-i18n="bonus_hint">ഇത് വർഷത്തിൽ ഒരിക്കൽ കിട്ടുന്നതിനാൽ മാസശമ്പളത്തിൽ ചേർത്തിട്ടില്ല.</span>
             <span class="prev" id="bonusPrev" aria-live="polite"></span>
           </label>
           <div class="stx-f" id="fRegime">
-            <span class="lbl" id="regLbl" data-i18n="regime"></span>
+            <span class="lbl" id="regLbl" data-i18n="regime">നികുതി രീതി</span>
             <div class="seg full" role="group" aria-labelledby="regLbl">
-              <button type="button" id="regNew" data-regime="new" data-i18n="reg_new"></button>
-              <button type="button" id="regOld" data-regime="old" data-i18n="reg_old"></button>
+              <button type="button" id="regNew" data-regime="new" data-i18n="reg_new">പുതിയ രീതി</button>
+              <button type="button" id="regOld" data-regime="old" data-i18n="reg_old">പഴയ രീതി</button>
             </div>
-            <span class="hint" data-i18n="regime_hint"></span>
+            <span class="hint" data-i18n="regime_hint">പുതിയ രീതി (വകുപ്പ് 202, മുമ്പ് 115BAC) സ്വയം ബാധകമാണ്. ശമ്പളക്കാർക്ക് എല്ലാ വർഷവും പഴയ രീതി തിരഞ്ഞെടുക്കാം.</span>
           </div>
           <label class="stx-f">
-            <span class="lbl" data-i18n="age"></span>
+            <span class="lbl" data-i18n="age">നിങ്ങളുടെ പ്രായം</span>
             <select id="age" data-k="age">
-              <option value="below60" data-i18n="age_lt60"></option>
-              <option value="age60" data-i18n="age_60"></option>
-              <option value="age80" data-i18n="age_80"></option>
+              <option value="below60" data-i18n="age_lt60">60-ൽ താഴെ</option>
+              <option value="age60" data-i18n="age_60">60 മുതൽ 79 വരെ</option>
+              <option value="age80" data-i18n="age_80">80 അല്ലെങ്കിൽ കൂടുതൽ</option>
             </select>
           </label>
         </div>
 
         <div class="grp">
-          <h2 data-i18n="sec_breakup"></h2>
+          <h2 data-i18n="sec_breakup">CTC വിഭജനം</h2>
           <div class="stx-f">
-            <label class="lbl" for="basicPct" data-i18n="basic_pct"></label>
+            <label class="lbl" for="basicPct" data-i18n="basic_pct">അടിസ്ഥാന ശമ്പളം (ഫിക്സഡ് CTC-യുടെ %)</label>
             <div class="with-seg">
               <input type="number" id="basicPct" data-k="basicPct" min="10" max="100" step="1" inputmode="decimal">
               <div class="seg" role="group" data-i18n-aria-label="basic_pct">
@@ -216,74 +216,74 @@
                 <button type="button" data-basic="50">50%</button>
               </div>
             </div>
-            <span class="hint" data-i18n="basic_hint"></span>
+            <span class="hint" data-i18n="basic_hint">ഫിക്സഡ് CTC എന്നാൽ CTC-യിൽ നിന്ന് ബോണസ് കുറച്ചത്. മിക്ക കമ്പനികളും 40% അല്ലെങ്കിൽ 50% വെക്കുന്നു.</span>
           </div>
           <div class="stx-f">
-            <span class="lbl" id="cityLbl" data-i18n="city"></span>
+            <span class="lbl" id="cityLbl" data-i18n="city">നിങ്ങൾ താമസിക്കുന്ന നഗരം</span>
             <div class="seg full" role="group" aria-labelledby="cityLbl">
-              <button type="button" id="cityMetro" data-city="metro" data-i18n="city_metro"></button>
-              <button type="button" id="cityOther" data-city="other" data-i18n="city_other"></button>
+              <button type="button" id="cityMetro" data-city="metro" data-i18n="city_metro">മെട്രോ നഗരം</button>
+              <button type="button" id="cityOther" data-city="other" data-i18n="city_other">മറ്റ് നഗരം</button>
             </div>
             <span class="hint" data-rk="metro_list"></span>
           </div>
           <div class="two">
             <label class="stx-f">
-              <span class="lbl" data-i18n="hra_pct"></span>
+              <span class="lbl" data-i18n="hra_pct">HRA (അടിസ്ഥാനത്തിന്റെ %)</span>
               <input type="number" id="hraPct" data-k="hraPct" min="0" max="100" step="1" inputmode="decimal">
             </label>
             <label class="stx-f">
-              <span class="lbl" data-i18n="nps"></span>
+              <span class="lbl" data-i18n="nps">കമ്പനിയുടെ NPS (അടിസ്ഥാനത്തിന്റെ %)</span>
               <input type="number" id="nps" data-k="nps" min="0" max="14" step="1" inputmode="decimal">
             </label>
           </div>
           <p class="hint" data-rk="nps_hint"></p>
           <label class="stx-f">
-            <span class="lbl" data-i18n="pf"></span>
+            <span class="lbl" data-i18n="pf">പ്രോവിഡന്റ് ഫണ്ട് (PF)</span>
             <select id="pf" data-k="pf">
-              <option value="full" data-i18n="pf_full"></option>
+              <option value="full" data-i18n="pf_full">മുഴുവൻ അടിസ്ഥാനത്തിന്റെ 12%</option>
               <option value="cap" data-rk="pf_cap"></option>
-              <option value="none" data-i18n="pf_none"></option>
+              <option value="none" data-i18n="pf_none">PF ഇല്ല</option>
             </select>
           </label>
           <label class="check"><input type="checkbox" id="grat" data-k="grat"> <span data-rk="grat"></span></label>
           <div class="two">
             <label class="stx-f">
-              <span class="lbl" data-i18n="state"></span>
+              <span class="lbl" data-i18n="state">സംസ്ഥാനം (തൊഴിൽ നികുതിക്കായി)</span>
               <select id="state" data-k="state"></select>
             </label>
             <label class="stx-f">
-              <span class="lbl" data-i18n="pt"></span>
+              <span class="lbl" data-i18n="pt">വാർഷിക തൊഴിൽ നികുതി (₹)</span>
               <input type="text" id="pt" data-k="pt" inputmode="numeric" autocomplete="off">
             </label>
           </div>
-          <p class="hint" id="ptHint" data-i18n="pt_hint"></p>
+          <p class="hint" id="ptHint" data-i18n="pt_hint">നിങ്ങളുടെ സംസ്ഥാനവും ശമ്പളവും നോക്കി പൂരിപ്പിച്ചതാണ്. പേ സ്ലിപ്പിൽ വേറെ തുകയാണെങ്കിൽ നിങ്ങളുടെ തുക എഴുതുക.</p>
         </div>
 
         <div class="grp">
           <details id="dedBox">
-            <summary data-i18n="sec_ded"></summary>
+            <summary data-i18n="sec_ded">പഴയ രീതിയിലെ കിഴിവുകൾ</summary>
             <div class="inner">
-              <p class="hint muted small mb0" data-i18n="ded_hint"></p>
+              <p class="hint muted small mb0" data-i18n="ded_hint">ഇവ പഴയ രീതിയിൽ മാത്രമേ ഉപയോഗിക്കൂ. ഇല്ലെങ്കിൽ ഒഴിച്ചിടുക.</p>
               <label class="stx-f">
-                <span class="lbl" data-i18n="rent"></span>
+                <span class="lbl" data-i18n="rent">മാസം നിങ്ങൾ നൽകുന്ന വീട്ടുവാടക</span>
                 <input type="text" id="rent" data-k="rent" inputmode="decimal" autocomplete="off">
               </label>
               <label class="stx-f">
-                <span class="lbl" data-i18n="c80"></span>
+                <span class="lbl" data-i18n="c80">PF കൂടാതെയുള്ള 80C സമ്പാദ്യം (PPF, ELSS, LIC, സ്കൂൾ ഫീസ്, ഭവന വായ്പയുടെ മുതൽ)</span>
                 <input type="text" id="c80" data-k="c80" inputmode="decimal" autocomplete="off">
                 <span class="hint" id="c80Hint"></span>
               </label>
               <div class="two">
                 <label class="stx-f">
-                  <span class="lbl" data-i18n="d80s"></span>
+                  <span class="lbl" data-i18n="d80s">80D ആരോഗ്യ ഇൻഷുറൻസ്: നിങ്ങളും കുടുംബവും</span>
                   <input type="text" id="d80s" data-k="d80s" inputmode="decimal" autocomplete="off">
                 </label>
                 <label class="stx-f">
-                  <span class="lbl" data-i18n="d80p"></span>
+                  <span class="lbl" data-i18n="d80p">80D ആരോഗ്യ ഇൻഷുറൻസ്: മാതാപിതാക്കൾ</span>
                   <input type="text" id="d80p" data-k="d80p" inputmode="decimal" autocomplete="off">
                 </label>
               </div>
-              <label class="check"><input type="checkbox" id="par60" data-k="par60"> <span data-i18n="par60"></span></label>
+              <label class="check"><input type="checkbox" id="par60" data-k="par60"> <span data-i18n="par60">എന്റെ മാതാപിതാക്കൾക്ക് 60 വയസ്സോ അതിലധികമോ ഉണ്ട്</span></label>
               <label class="stx-f">
                 <span class="lbl" data-rk="ccd"></span>
                 <input type="text" id="ccd" data-k="ccd" inputmode="decimal" autocomplete="off">
@@ -298,13 +298,13 @@
 
         <div class="grp stx-act no-print">
           <button type="button" class="btn btn-primary" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
-          <button type="button" class="btn" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy_sum"></span></button>
-          <button type="button" class="btn" id="csvBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="csv"></span></button>
+          <button type="button" class="btn" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy_sum">സംഗ്രഹം കോപ്പി ചെയ്യുക</span></button>
+          <button type="button" class="btn" id="csvBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="csv">CSV ഡൗൺലോഡ് ചെയ്യുക</span></button>
           <button type="button" class="btn btn-danger" id="resetBtn" data-i18n="reset"></button>
         </div>
         <div class="quick no-print" id="quick" hidden>
           <span class="q-txt" id="quickTxt"></span>
-          <a href="#results" class="btn btn-sm btn-primary" id="quickGo" data-i18n="see_details"></a>
+          <a href="#results" class="btn btn-sm btn-primary" id="quickGo" data-i18n="see_details">വിശദമായി കാണുക ↓</a>
         </div>
       </section>
 
@@ -312,13 +312,13 @@
     </div>
 
     <details class="card" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">എങ്ങനെ ഉപയോഗിക്കാം / ജോലിക്കുള്ള നുറുങ്ങുകൾ</strong></summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">തുക പറയുന്നതുപോലെ തന്നെ എഴുതുക: 12L, 12.5 ലക്ഷം, 1.2 cr, 85k അല്ലെങ്കിൽ 12,00,000. ബോക്സിനു താഴെയുള്ള വരി ആപ്പ് എന്താണ് മനസ്സിലാക്കിയതെന്ന് കാണിക്കും.</li>
+        <li data-i18n="tip2">ഓഫർ ലെറ്റർ തുറന്ന് അടിസ്ഥാന %, HRA, PF, ബോണസ് എന്നിവ &quot;CTC വിഭജനം&quot; എന്നതിൽ പൂരിപ്പിക്കുക. അപ്പോൾ കൈശമ്പളം നിങ്ങളുടെ പേ സ്ലിപ്പുമായി ഏകദേശം ഒത്തുവരും.</li>
+        <li data-i18n="tip3">ഓഫീസിൽ രീതി തിരഞ്ഞെടുക്കുന്നതിന് മുമ്പ് പഴയ രീതിയിലെ കിഴിവുകൾ (വാടക, 80C, 80D, ഭവന വായ്പ) പൂരിപ്പിച്ച് &quot;പഴയ vs പുതിയ രീതി&quot; തുറക്കുക. പഴയ രീതി ലാഭകരമാകാൻ ഇനി എത്ര നിക്ഷേപം വേണമെന്ന് ബ്രേക്ക്-ഈവൻ വരി പറയും.</li>
+        <li data-i18n="tip4">ജോലി ഓഫറിൽ വിലപേശുകയാണോ? എത്ര CTC ചോദിക്കണമെന്ന് &quot;കൈശമ്പളം → CTC&quot;-യിലും വർധനയുടെ എത്ര ഭാഗം ബാങ്കിലെത്തുമെന്ന് &quot;ശമ്പള വർധന&quot;-യിലും നോക്കുക.</li>
+        <li data-i18n="tip5">HR ടീമുകൾക്കും സ്ഥാപകർക്കും: പുതിയ ജീവനക്കാരന് ശമ്പള ഘടന വിശദീകരിക്കാൻ സംഗ്രഹം പ്രിന്റ് ചെയ്യുക അല്ലെങ്കിൽ CSV ഡൗൺലോഡ് ചെയ്യുക. ഒന്നും എവിടേക്കും അപ്‌ലോഡ് ചെയ്യപ്പെടില്ല.</li>
       </ul>
     </details>
 

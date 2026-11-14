@@ -232,13 +232,13 @@
 <body>
   <main id="app">
     <div class="no-print">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">روزمرہ کی چیزوں کو “AI ہے” اور “AI نہیں” میں چھانٹیں، اور جانیں کہ مشین کو اسمارٹ کیا بناتا ہے: ڈیٹا سے سیکھنا اور اندازہ لگانا۔</p>
 
       <div class="topline">
         <div class="tabs" role="tablist">
-          <button type="button" role="tab" id="tab-play" data-tab="play" aria-controls="panel-play"><span aria-hidden="true">🎮 </span><span data-i18n="tab_play"></span></button>
-          <button type="button" role="tab" id="tab-class" data-tab="class" aria-controls="panel-class"><span aria-hidden="true">🙋 </span><span data-i18n="tab_class"></span></button>
-          <button type="button" role="tab" id="tab-cards" data-tab="cards" aria-controls="panel-cards"><span aria-hidden="true">🗂️ </span><span data-i18n="tab_cards"></span></button>
+          <button type="button" role="tab" id="tab-play" data-tab="play" aria-controls="panel-play"><span aria-hidden="true">🎮 </span><span data-i18n="tab_play">کھیلیں</span></button>
+          <button type="button" role="tab" id="tab-class" data-tab="class" aria-controls="panel-class"><span aria-hidden="true">🙋 </span><span data-i18n="tab_class">کلاس ووٹ</span></button>
+          <button type="button" role="tab" id="tab-cards" data-tab="cards" aria-controls="panel-cards"><span aria-hidden="true">🗂️ </span><span data-i18n="tab_cards">تمام کارڈ</span></button>
         </div>
         <div class="statbar">
           <span class="badge primary" id="best"></span>
@@ -248,25 +248,25 @@
 
       <!-- PLAY -->
       <section class="card stack" id="panel-play" role="tabpanel" aria-labelledby="tab-play">
-        <p class="hint muted"><span aria-hidden="true">👆</span><span data-i18n="play_hint"></span></p>
+        <p class="hint muted"><span aria-hidden="true">👆</span><span data-i18n="play_hint">ہر کارڈ کو کھینچ کر کسی ڈبے میں ڈالیں، یا کارڈ پر ٹیپ کر کے پھر ڈبے پر ٹیپ کریں۔</span></p>
         <div class="tray-wrap" id="tray-wrap">
-          <p class="tray-label" data-i18n="tray_label"></p>
+          <p class="tray-label" data-i18n="tray_label">چھانٹنے کے لیے کارڈ</p>
           <div class="tray" id="tray"></div>
         </div>
         <div class="bins">
           <div class="bin ai" id="bin-ai" data-bin="ai">
-            <button type="button" class="bin-head" id="bin-ai-btn" data-bin="ai"><span class="emo" aria-hidden="true">🤖</span><span class="bin-label" data-i18n="bin_ai"></span><span class="cnt" id="cnt-ai">0</span></button>
+            <button type="button" class="bin-head" id="bin-ai-btn" data-bin="ai"><span class="emo" aria-hidden="true">🤖</span><span class="bin-label" data-i18n="bin_ai">AI ہے</span><span class="cnt" id="cnt-ai">0</span></button>
             <div class="bin-body" data-bin="ai"></div>
           </div>
           <div class="bin no" id="bin-no" data-bin="no">
-            <button type="button" class="bin-head" id="bin-no-btn" data-bin="no"><span class="emo" aria-hidden="true">⚙️</span><span class="bin-label" data-i18n="bin_no"></span><span class="cnt" id="cnt-no">0</span></button>
+            <button type="button" class="bin-head" id="bin-no-btn" data-bin="no"><span class="emo" aria-hidden="true">⚙️</span><span class="bin-label" data-i18n="bin_no">AI نہیں</span><span class="cnt" id="cnt-no">0</span></button>
             <div class="bin-body" data-bin="no"></div>
           </div>
         </div>
         <div class="play-actions">
           <p class="status grow" id="play-status" aria-live="polite"></p>
-          <button type="button" class="btn btn-primary btn-lg" id="check" data-i18n="check"></button>
-          <button type="button" class="btn btn-lg" id="new-round"><span aria-hidden="true">🔀</span><span data-i18n="new_round"></span></button>
+          <button type="button" class="btn btn-primary btn-lg" id="check" data-i18n="check">جواب جانچیں</button>
+          <button type="button" class="btn btn-lg" id="new-round"><span aria-hidden="true">🔀</span><span data-i18n="new_round">نیا راؤنڈ</span></button>
           <button type="button" class="btn btn-danger btn-sm" id="reset" data-i18n="reset"></button>
         </div>
         <div id="results" class="stack" aria-live="polite" hidden></div>
@@ -274,7 +274,7 @@
 
       <!-- CLASS VOTE -->
       <section class="card stack" id="panel-class" role="tabpanel" aria-labelledby="tab-class" hidden>
-        <p class="callout mt0 small"><span aria-hidden="true">🙋 </span><span data-i18n="class_hint"></span></p>
+        <p class="callout mt0 small"><span aria-hidden="true">🙋 </span><span data-i18n="class_hint">پروجیکٹر پر ایک کارڈ دکھائیں۔ طلبہ “AI ہے” یا “AI نہیں” کے لیے ہاتھ اٹھائیں۔ ہاتھ گنیں، پھر جواب دکھا کر بات چیت کریں۔</span></p>
         <div class="class-stage" id="class-stage" tabindex="-1"></div>
       </section>
 
@@ -282,37 +282,37 @@
       <section class="card stack" id="panel-cards" role="tabpanel" aria-labelledby="tab-cards" hidden>
         <div class="row spread">
           <div class="seg" role="group" id="filters">
-            <button type="button" id="f-all" data-f="all" data-i18n="filter_all"></button>
-            <button type="button" id="f-ai" data-f="ai"><span aria-hidden="true">🤖 </span><span data-i18n="bin_ai"></span></button>
-            <button type="button" id="f-no" data-f="no"><span aria-hidden="true">⚙️ </span><span data-i18n="bin_no"></span></button>
+            <button type="button" id="f-all" data-f="all" data-i18n="filter_all">سب</button>
+            <button type="button" id="f-ai" data-f="ai"><span aria-hidden="true">🤖 </span><span data-i18n="bin_ai">AI ہے</span></button>
+            <button type="button" id="f-no" data-f="no"><span aria-hidden="true">⚙️ </span><span data-i18n="bin_no">AI نہیں</span></button>
           </div>
-          <button type="button" class="btn" id="print-btn"><span aria-hidden="true">🖨️</span><span data-i18n="print_sheet"></span></button>
+          <button type="button" class="btn" id="print-btn"><span aria-hidden="true">🖨️</span><span data-i18n="print_sheet">ورک شیٹ پرنٹ کریں</span></button>
         </div>
         <div class="grid" id="gallery"></div>
       </section>
 
       <!-- SUMMARY -->
       <section class="card stack" id="summary" style="margin-top:16px">
-        <h2 data-i18n="sum_title"></h2>
+        <h2 data-i18n="sum_title">کسی چیز کو AI کیا بناتا ہے؟</h2>
         <div class="sum-grid">
-          <div class="sum-pt"><div class="emo" aria-hidden="true">📚</div><h3 data-i18n="tag_learn"></h3><p data-i18n="sum_learn"></p></div>
-          <div class="sum-pt"><div class="emo" aria-hidden="true">🔍</div><h3 data-i18n="tag_pattern"></h3><p data-i18n="sum_pattern"></p></div>
-          <div class="sum-pt"><div class="emo" aria-hidden="true">🔮</div><h3 data-i18n="sum_predict_h"></h3><p data-i18n="sum_predict"></p></div>
+          <div class="sum-pt"><div class="emo" aria-hidden="true">📚</div><h3 data-i18n="tag_learn">ڈیٹا سے سیکھتا ہے</h3><p data-i18n="sum_learn">بہت سی مثالیں دیکھ کر یہ بہتر ہوتا ہے: تصویریں، آوازیں، کلک یا پیغامات۔</p></div>
+          <div class="sum-pt"><div class="emo" aria-hidden="true">🔍</div><h3 data-i18n="tag_pattern">پیٹرن ڈھونڈتا ہے</h3><p data-i18n="sum_pattern">یہ مثالوں میں ملتی جلتی باتیں پہچانتا ہے، جیسے چہرے کی شکل یا اسپیم پیغامات کے الفاظ۔</p></div>
+          <div class="sum-pt"><div class="emo" aria-hidden="true">🔮</div><h3 data-i18n="sum_predict_h">اندازہ لگاتا ہے یا فیصلہ کرتا ہے</h3><p data-i18n="sum_predict">یہ کسی نئی چیز کا جواب اندازے سے بتاتا ہے: اگلا لفظ، آگے کا ٹریفک، یہ کس کا چہرہ ہے۔</p></div>
         </div>
-        <p class="callout warning mb0"><span aria-hidden="true">⚙️ </span><span data-i18n="sum_not"></span></p>
+        <p class="callout warning mb0"><span aria-hidden="true">⚙️ </span><span data-i18n="sum_not">AI نہیں: وہ مشینیں جو صرف انسانوں کے لکھے طے شدہ اصول مانتی ہیں اور ہر بار ایک ہی کام کرتی ہیں۔ بجلی سے چلنا یا سینسر ہونا کسی چیز کو AI نہیں بناتا۔</span></p>
       </section>
 
       <details class="card" style="margin-top:16px">
-        <summary data-i18n="help_summary"></summary>
+        <summary data-i18n="help_summary">استعمال کیسے کریں · کلاس کے لیے خیالات</summary>
         <ul>
-          <li data-i18n="tip1"></li>
-          <li data-i18n="tip2"></li>
-          <li data-i18n="tip3"></li>
-          <li data-i18n="tip4"></li>
-          <li data-i18n="tip5"></li>
+          <li data-i18n="tip1">کھیلیں: کوئی بھی 10 کارڈ چھانٹیں، “جواب جانچیں” دبائیں اور ہر وجہ پڑھیں۔ “نیا راؤنڈ” سے نئے کارڈ ملتے ہیں۔</li>
+          <li data-i18n="tip2">فون پر کارڈ پر ٹیپ کریں، پھر “AI ہے” یا “AI نہیں” پر ٹیپ کریں۔ کمپیوٹر یا اسمارٹ بورڈ پر کارڈ کھینچ کر بھی ڈال سکتے ہیں۔</li>
+          <li data-i18n="tip3">کلاس ووٹ: پروجیکٹر پر کھولیں، کارڈ پڑھ کر سنائیں، اٹھے ہاتھ گنیں، جواب دکھائیں اور پوچھیں “کیا یہ ڈیٹا سے سیکھتا ہے؟”</li>
+          <li data-i18n="tip4">سرگرمی: گروپوں میں گھر یا اسکول کی 3 ایسی چیزیں لکھیں جن میں AI ہے اور 3 جن میں نہیں۔ ہر گروپ نیچے دی گئی تین نشانیوں سے ایک چیز سمجھائے۔</li>
+          <li data-i18n="tip5">ہوم ورک یا چھوٹے ٹیسٹ کے لیے ورک شیٹ پرنٹ کریں۔ جوابات آخری صفحے پر ہیں۔</li>
         </ul>
-        <h3 data-i18n="inside_title"></h3>
-        <p class="mb0" data-i18n="inside"></p>
+        <h3 data-i18n="inside_title">اندر کیا ہو رہا ہے؟</h3>
+        <p class="mb0" data-i18n="inside">عام مشین انسان کے لکھے اصول مانتی ہے، جیسے “بٹن دبے تو چالو ہو جاؤ”۔ AI کو ہر اصول نہیں بتایا جاتا۔ اسے بہت سی مثالیں (ڈیٹا) دکھائی جاتی ہیں، وہ ان میں پیٹرن ڈھونڈتا ہے اور پھر نئے معاملات میں جواب کا اندازہ لگاتا ہے۔ اسی لیے AI کبھی کبھی غلط بھی ہو سکتا ہے، اور زیادہ ڈیٹا ملنے سے بہتر ہوتا جاتا ہے۔</p>
       </details>
     </div>
 
@@ -321,8 +321,8 @@
     <div class="choose-bar no-print" id="choose-bar" hidden>
       <p id="choose-text"></p>
       <div class="row nowrap">
-        <button type="button" class="btn btn-primary" id="choose-ai"><span aria-hidden="true">🤖</span><span data-i18n="bin_ai"></span></button>
-        <button type="button" class="btn" id="choose-no"><span aria-hidden="true">⚙️</span><span data-i18n="bin_no"></span></button>
+        <button type="button" class="btn btn-primary" id="choose-ai"><span aria-hidden="true">🤖</span><span data-i18n="bin_ai">AI ہے</span></button>
+        <button type="button" class="btn" id="choose-no"><span aria-hidden="true">⚙️</span><span data-i18n="bin_no">AI نہیں</span></button>
         <button type="button" class="btn btn-sm btn-x" id="choose-back" data-i18n-aria-label="back_to_tray" data-i18n-title="back_to_tray">↩</button>
         <button type="button" class="btn btn-sm btn-x" id="choose-x" data-i18n-aria-label="cancel" data-i18n-title="cancel">✕</button>
       </div>

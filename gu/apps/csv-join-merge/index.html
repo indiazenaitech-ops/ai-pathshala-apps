@@ -103,71 +103,71 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">બે CSV ફાઇલોને એક મળતા કૉલમથી જોડો (VLOOKUP ની જેમ), અથવા ઘણા મહિનાની ફાઇલો એકની નીચે એક મૂકો. શું મળ્યું, શું ન મળ્યું તે જુઓ અને પરિણામ ડાઉનલોડ કરો.</p>
     <div class="tabs" id="mode-tabs" role="tablist">
-      <button type="button" role="tab" data-mode="join" data-i18n="mode_join"></button>
-      <button type="button" role="tab" data-mode="stack" data-i18n="mode_stack"></button>
+      <button type="button" role="tab" data-mode="join" data-i18n="mode_join">બે ફાઇલો જોડો</button>
+      <button type="button" role="tab" data-mode="stack" data-i18n="mode_stack">ઘણી ફાઇલો એકની નીચે એક</button>
     </div>
 
     <!-- ============ JOIN ============ -->
     <div id="join-panel">
       <section class="card" aria-labelledby="h-files">
-        <h2 class="cj-h" id="h-files" data-i18n="h_files"></h2>
+        <h2 class="cj-h" id="h-files" data-i18n="h_files">1. તમારી બે ફાઇલો</h2>
         <div class="cj-samples">
-          <span class="small muted" data-i18n="try_sample"></span>
+          <span class="small muted" data-i18n="try_sample">નમૂનો અજમાવો:</span>
           <div class="seg" id="sample-seg" role="group">
-            <button type="button" data-s="students" data-i18n="sample_students"></button>
-            <button type="button" data-s="orders" data-i18n="sample_orders"></button>
+            <button type="button" data-s="students" data-i18n="sample_students">વિદ્યાર્થીઓ + ગુણ</button>
+            <button type="button" data-s="orders" data-i18n="sample_orders">ઓર્ડર + ગ્રાહકો</button>
           </div>
           <button class="btn btn-sm btn-danger" id="reset" type="button" data-i18n="reset"></button>
         </div>
         <div class="cj-files">
           <div class="cj-file fa" id="file-a">
-            <h3 data-i18n="file_a"></h3>
+            <h3 data-i18n="file_a">ફાઇલ A (ડાબી)</h3>
             <div class="cj-fname no-i18n"></div>
             <div class="cj-finfo small muted"></div>
             <div class="cj-fcols no-i18n"></div>
-            <div class="row"><button class="btn btn-sm btn-primary cj-open" type="button" data-i18n="open_csv"></button></div>
-            <details><summary data-i18n="paste_data"></summary>
+            <div class="row"><button class="btn btn-sm btn-primary cj-open" type="button" data-i18n="open_csv">CSV ખોલો</button></div>
+            <details><summary data-i18n="paste_data">ડેટા પેસ્ટ કરો</summary>
               <textarea class="no-i18n" data-i18n-placeholder="paste_ph" data-i18n-aria-label="paste_data"></textarea>
-              <button class="btn btn-sm cj-use" type="button" data-i18n="use_paste"></button></details>
+              <button class="btn btn-sm cj-use" type="button" data-i18n="use_paste">પેસ્ટ કરેલો ડેટા વાપરો</button></details>
           </div>
           <div class="cj-file fb" id="file-b">
-            <h3 data-i18n="file_b"></h3>
+            <h3 data-i18n="file_b">ફાઇલ B (જમણી)</h3>
             <div class="cj-fname no-i18n"></div>
             <div class="cj-finfo small muted"></div>
             <div class="cj-fcols no-i18n"></div>
-            <div class="row"><button class="btn btn-sm btn-primary cj-open" type="button" data-i18n="open_csv"></button></div>
-            <details><summary data-i18n="paste_data"></summary>
+            <div class="row"><button class="btn btn-sm btn-primary cj-open" type="button" data-i18n="open_csv">CSV ખોલો</button></div>
+            <details><summary data-i18n="paste_data">ડેટા પેસ્ટ કરો</summary>
               <textarea class="no-i18n" data-i18n-placeholder="paste_ph" data-i18n-aria-label="paste_data"></textarea>
-              <button class="btn btn-sm cj-use" type="button" data-i18n="use_paste"></button></details>
+              <button class="btn btn-sm cj-use" type="button" data-i18n="use_paste">પેસ્ટ કરેલો ડેટા વાપરો</button></details>
           </div>
         </div>
-        <p class="small muted" data-i18n="drop_hint"></p>
+        <p class="small muted" data-i18n="drop_hint">CSV ફાઇલો અહીં ખેંચીને પણ મૂકી શકો. Excel માં: File → Save as → CSV. તમારી ફાઇલો આ ડિવાઇસ પર જ રહે છે.</p>
       </section>
 
       <section class="card cj-sec" aria-labelledby="h-match">
-        <h2 class="cj-h" id="h-match" data-i18n="h_match"></h2>
+        <h2 class="cj-h" id="h-match" data-i18n="h_match">2. હરોળ કેવી રીતે મેળવવી</h2>
         <div class="cj-match">
           <div>
             <div class="cj-keys">
-              <label class="field"><span data-i18n="key_a"></span><select id="key-a"></select></label>
-              <label class="field"><span data-i18n="key_b"></span><select id="key-b"></select></label>
+              <label class="field"><span data-i18n="key_a">A નો કી કૉલમ</span><select id="key-a"></select></label>
+              <label class="field"><span data-i18n="key_b">B નો કી કૉલમ</span><select id="key-b"></select></label>
             </div>
             <div class="cj-opts">
-              <label class="check"><input type="checkbox" id="opt-trim"> <span data-i18n="opt_trim"></span></label>
-              <label class="check"><input type="checkbox" id="opt-icase"> <span data-i18n="opt_icase"></span></label>
-              <label class="check"><input type="checkbox" id="opt-num"> <span data-i18n="opt_num"></span></label>
-              <div><button class="btn btn-sm" id="swap" type="button" data-i18n="swap"></button></div>
+              <label class="check"><input type="checkbox" id="opt-trim"> <span data-i18n="opt_trim">વધારાની જગ્યા અવગણો</span></label>
+              <label class="check"><input type="checkbox" id="opt-icase"> <span data-i18n="opt_icase">મોટા-નાના અક્ષર અવગણો</span></label>
+              <label class="check"><input type="checkbox" id="opt-num"> <span data-i18n="opt_num">&quot;007&quot; અને &quot;7&quot; ને સરખા ગણો</span></label>
+              <div><button class="btn btn-sm" id="swap" type="button" data-i18n="swap">A અને B અદલબદલ</button></div>
             </div>
           </div>
           <div>
-            <span class="small muted" data-i18n="join_type"></span>
+            <span class="small muted" data-i18n="join_type">જોડવાની રીત</span>
             <div class="seg" id="type-seg" role="group" style="margin-top:5px">
-              <button type="button" data-type="inner" data-i18n="type_inner"></button>
-              <button type="button" data-type="left" data-i18n="type_left"></button>
-              <button type="button" data-type="right" data-i18n="type_right"></button>
-              <button type="button" data-type="full" data-i18n="type_full"></button>
+              <button type="button" data-type="inner" data-i18n="type_inner">ઇનર</button>
+              <button type="button" data-type="left" data-i18n="type_left">લેફ્ટ</button>
+              <button type="button" data-type="right" data-i18n="type_right">રાઇટ</button>
+              <button type="button" data-type="full" data-i18n="type_full">ફુલ આઉટર</button>
             </div>
             <div class="cj-vennbox">
               <svg id="venn" class="cj-venn" viewBox="0 0 200 120" role="img" data-i18n-aria-label="venn_label" aria-label="Venn">
@@ -189,37 +189,37 @@
       </section>
 
       <section class="card cj-sec" aria-labelledby="h-result">
-        <h2 class="cj-h" id="h-result" data-i18n="h_result"></h2>
+        <h2 class="cj-h" id="h-result" data-i18n="h_result">3. પરિણામ</h2>
         <div class="cj-stats" aria-live="polite">
-          <div class="cj-stat"><span class="lbl" data-i18n="st_matched"></span><span class="val" id="st-matched"></span></div>
+          <div class="cj-stat"><span class="lbl" data-i18n="st_matched">A ની મળેલી હરોળ</span><span class="val" id="st-matched"></span></div>
           <div class="cj-stat"><span class="lbl no-i18n" id="lbl-onlya"></span><span class="val" id="st-onlya"></span></div>
           <div class="cj-stat"><span class="lbl no-i18n" id="lbl-onlyb"></span><span class="val" id="st-onlyb"></span></div>
-          <div class="cj-stat main"><span class="lbl" data-i18n="st_rows"></span><span class="val" id="st-rows"></span></div>
+          <div class="cj-stat main"><span class="lbl" data-i18n="st_rows">પરિણામમાં હરોળ</span><span class="val" id="st-rows"></span></div>
         </div>
         <div id="warnings"></div>
-        <span class="small muted" data-i18n="out_cols"></span>
+        <span class="small muted" data-i18n="out_cols">પરિણામના કૉલમ (છુપાવવા કે બતાવવા દબાવો):</span>
         <div class="cj-cols no-i18n" id="out-cols"></div>
         <div class="cj-gridwrap no-i18n"><table class="table cj-grid" id="out-grid"></table></div>
-        <p id="out-empty" class="muted" hidden data-i18n="no_rows"></p>
+        <p id="out-empty" class="muted" hidden data-i18n="no_rows">પરિણામમાં કોઈ હરોળ નથી.</p>
         <div class="cj-pager" id="out-pager"><button class="btn btn-sm pg-prev" type="button" data-i18n="previous"></button><span class="pg-info small"></span><button class="btn btn-sm pg-next" type="button" data-i18n="next"></button></div>
-        <div class="cj-foot"><span class="small muted" data-i18n="legend_nm"></span><button class="btn btn-primary" id="dl-out" type="button" data-i18n="download_csv"></button></div>
+        <div class="cj-foot"><span class="small muted" data-i18n="legend_nm">પટ્ટાવાળા સેલ: બીજી ફાઇલમાં મળતી હરોળ નથી.</span><button class="btn btn-primary" id="dl-out" type="button" data-i18n="download_csv">CSV ડાઉનલોડ કરો</button></div>
       </section>
 
       <section class="card cj-sec" aria-labelledby="h-um">
-        <h2 class="cj-h" id="h-um" data-i18n="h_unmatched"></h2>
-        <p class="small muted" data-i18n="um_note"></p>
+        <h2 class="cj-h" id="h-um" data-i18n="h_unmatched">4. જે હરોળ ન મળી</h2>
+        <p class="small muted" data-i18n="um_note">પરિણામ પર ભરોસો કરતાં પહેલાં આ જુઓ. કી માં જોડણીની ભૂલ કે એક વધારાનો 0 સૌથી સામાન્ય કારણ છે.</p>
         <div class="tabs no-i18n" id="um-tabs" role="tablist">
           <button type="button" role="tab" data-side="a"></button>
           <button type="button" role="tab" data-side="b"></button>
         </div>
         <div class="cj-gridwrap no-i18n"><table class="table cj-grid" id="um-grid"></table></div>
-        <p id="um-empty" class="muted" hidden data-i18n="um_none"></p>
+        <p id="um-empty" class="muted" hidden data-i18n="um_none">દરેક હરોળને મેળ મળ્યો.</p>
         <div class="cj-pager" id="um-pager"><button class="btn btn-sm pg-prev" type="button" data-i18n="previous"></button><span class="pg-info small"></span><button class="btn btn-sm pg-next" type="button" data-i18n="next"></button></div>
-        <div class="cj-foot"><span></span><button class="btn" id="dl-um" type="button" data-i18n="download_um"></button></div>
+        <div class="cj-foot"><span></span><button class="btn" id="dl-um" type="button" data-i18n="download_um">આ હરોળ ડાઉનલોડ કરો</button></div>
       </section>
 
       <section class="card cj-sec cj-lookup">
-        <h2 class="cj-h" data-i18n="h_lookup"></h2>
+        <h2 class="cj-h" data-i18n="h_lookup">આ જ છે VLOOKUP / XLOOKUP</h2>
         <p data-i18n-html="lookup_1"></p>
         <p data-i18n-html="lookup_2"></p>
       </section>
@@ -228,44 +228,44 @@
     <!-- ============ STACK ============ -->
     <div id="stack-panel" hidden>
       <section class="card" aria-labelledby="h-stack">
-        <h2 class="cj-h" id="h-stack" data-i18n="h_stack"></h2>
-        <p class="small muted" data-i18n="stack_note"></p>
+        <h2 class="cj-h" id="h-stack" data-i18n="h_stack">1. એકની નીચે એક મૂકવાની ફાઇલો</h2>
+        <p class="small muted" data-i18n="stack_note">સરખા કૉલમવાળી ફાઇલો માટે, જેમ કે જાન્યુઆરી, ફેબ્રુઆરી અને માર્ચનું વેચાણ. કૉલમ નામથી મેળવાય છે, ક્રમ જુદો હોય તો પણ.</p>
         <div id="st-drop">
           <ol id="st-files"></ol>
-          <p id="st-empty" class="muted" hidden data-i18n="st_empty"></p>
+          <p id="st-empty" class="muted" hidden data-i18n="st_empty">હજી કોઈ ફાઇલ નથી. CSV ફાઇલો ઉમેરો કે નમૂનો ખોલો.</p>
           <div class="row">
-            <button class="btn btn-primary" id="st-add" type="button" data-i18n="st_add"></button>
-            <button class="btn" id="st-sample" type="button" data-i18n="st_sample"></button>
-            <button class="btn btn-danger" id="st-clear" type="button" data-i18n="st_clear"></button>
+            <button class="btn btn-primary" id="st-add" type="button" data-i18n="st_add">CSV ફાઇલો ઉમેરો</button>
+            <button class="btn" id="st-sample" type="button" data-i18n="st_sample">નમૂનો: 3 મહિનાનું વેચાણ</button>
+            <button class="btn btn-danger" id="st-clear" type="button" data-i18n="st_clear">બધું દૂર કરો</button>
           </div>
-          <p class="small muted" style="margin-bottom:0" data-i18n="drop_hint"></p>
+          <p class="small muted" style="margin-bottom:0" data-i18n="drop_hint">CSV ફાઇલો અહીં ખેંચીને પણ મૂકી શકો. Excel માં: File → Save as → CSV. તમારી ફાઇલો આ ડિવાઇસ પર જ રહે છે.</p>
         </div>
         <div class="cj-opts">
-          <label class="check"><input type="checkbox" id="st-loose"> <span data-i18n="st_loose"></span></label>
-          <label class="check"><input type="checkbox" id="st-source"> <span data-i18n="st_source"></span></label>
+          <label class="check"><input type="checkbox" id="st-loose"> <span data-i18n="st_loose">કૉલમનાં નામ મેળવતી વખતે મોટા-નાના અક્ષર અને વધારાની જગ્યા અવગણો</span></label>
+          <label class="check"><input type="checkbox" id="st-source"> <span data-i18n="st_source">&quot;મૂળ ફાઇલ&quot; કૉલમ ઉમેરો</span></label>
         </div>
       </section>
       <section class="card cj-sec">
-        <h2 class="cj-h" data-i18n="h_stacked"></h2>
+        <h2 class="cj-h" data-i18n="h_stacked">2. ભેગું કરેલું પરિણામ</h2>
         <p id="st-total" class="no-i18n" aria-live="polite" style="font-weight:600"></p>
         <div class="cj-gridwrap no-i18n"><table class="table cj-grid" id="st-grid"></table></div>
         <div class="cj-pager" id="st-pager"><button class="btn btn-sm pg-prev" type="button" data-i18n="previous"></button><span class="pg-info small"></span><button class="btn btn-sm pg-next" type="button" data-i18n="next"></button></div>
-        <div class="cj-foot"><span class="small muted" data-i18n="legend_blank"></span><button class="btn btn-primary" id="st-dl" type="button" data-i18n="download_csv"></button></div>
+        <div class="cj-foot"><span class="small muted" data-i18n="legend_blank">પટ્ટાવાળા સેલ ખાલી છે (ઘણી વાર કારણ કે એ ફાઇલમાં એ કૉલમ નહોતો).</span><button class="btn btn-primary" id="st-dl" type="button" data-i18n="download_csv">CSV ડાઉનલોડ કરો</button></div>
       </section>
     </div>
 
     <details class="card cj-sec">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">&quot;વિદ્યાર્થીઓ + ગુણ&quot; નમૂનાથી શરૂ કરો અને ઇનર, લેફ્ટ, રાઇટ, ફુલ આઉટર બદલીને જુઓ. હરોળની સંખ્યા અને વેન આકૃતિ બદલાતી જુઓ.</li>
+        <li data-i18n="tip2">ઑફિસ: આ મહિનાના ઓર્ડરને ગ્રાહક યાદી સાથે જોડો જેથી દરેક ગ્રાહકનું શહેર અને ફોન આવી જાય, પછી ડિલિવરી માટે એક ફાઇલ ડાઉનલોડ કરો.</li>
+        <li data-i18n="tip3">વર્ગ પ્રવૃત્તિ: બંને નમૂના ફાઇલો પ્રિન્ટ કરો. વિદ્યાર્થીઓ કાગળ પર હાથથી જોડે, પછી ઍપથી તપાસે. ફક્ત 7 વિદ્યાર્થી મળ્યા, તો ઇનર જૉઇનમાં 9 હરોળ કેમ?</li>
+        <li data-i18n="tip4">કી બંને ફાઇલોમાં એક જ રીતે લખેલી હોવી જોઈએ. પહેલાં તેને સાફ કરો (જગ્યા, મોટા-નાના અક્ષર, &quot;007&quot; સામે &quot;7&quot;) અહીંના વિકલ્પોથી કે ડેટા સફાઈ લૅબ ઍપથી.</li>
+        <li data-i18n="tip5">એકની નીચે એક: 12 મહિનાની વેચાણ ફાઇલો ભેગી કરી વર્ષની એક ફાઇલ બનાવો, &quot;મૂળ ફાઇલ&quot; કૉલમ સાથે જે દરેક હરોળ ક્યાંથી આવી તે બતાવે.</li>
       </ul>
     </details>
     <details class="card cj-sec">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">જાણવા જેવા શબ્દો: અંદર શું થાય છે</summary>
       <ul>
         <li data-i18n-html="w_key"></li>
         <li data-i18n-html="w_inner"></li>

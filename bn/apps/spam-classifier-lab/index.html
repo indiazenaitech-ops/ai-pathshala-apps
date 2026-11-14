@@ -229,11 +229,11 @@
 </head>
 <body>
   <main id="app">
-    <h1 class="print-title" data-i18n="app_title"></h1>
+    <h1 class="print-title" data-i18n="app_title">স্প্যাম চেনার AI ল্যাব</h1>
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">শুধু শব্দ গুনে কম্পিউটারকে স্প্যাম আর আসল মেসেজ আলাদা করতে শেখান (Naive Bayes)। অঙ্কের প্রতিটি ধাপ দেখুন, তারপর তাকে বোকা বানানোর চেষ্টা করুন।</p>
       <div class="row no-print">
-        <button type="button" class="btn btn-sm" id="proj-btn" aria-pressed="false"><span aria-hidden="true">📽️ </span><span data-i18n="projector"></span></button>
+        <button type="button" class="btn btn-sm" id="proj-btn" aria-pressed="false"><span aria-hidden="true">📽️ </span><span data-i18n="projector">প্রজেক্টর মোড</span></button>
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm btn-danger" id="reset-btn" data-i18n="reset"></button>
       </div>
@@ -241,16 +241,16 @@
 
     <!-- 1. Check a message -->
     <section class="card stack" id="check-card">
-      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1"></span></h2>
+      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1">মেসেজ যাচাই করুন</span></h2>
       <div>
-        <label for="msg" class="lbl" data-i18n="msg_label"></label>
+        <label for="msg" class="lbl" data-i18n="msg_label">মেসেজ লিখুন বা পেস্ট করুন</label>
         <textarea id="msg" class="no-i18n" rows="2" maxlength="300" autocomplete="off" spellcheck="false" data-i18n-placeholder="msg_ph"></textarea>
       </div>
       <div class="tries no-print" id="tries-wrap">
-        <span class="lbl mb0" data-i18n="try_t"></span>
-        <button type="button" class="chip try-chip" data-kind="spam" data-i18n="try_spam"></button>
-        <button type="button" class="chip try-chip" data-kind="ham" data-i18n="try_ham"></button>
-        <button type="button" class="chip try-chip" data-kind="tricky" data-i18n="try_tricky"></button>
+        <span class="lbl mb0" data-i18n="try_t">অথবা এগুলোর একটি চেষ্টা করুন:</span>
+        <button type="button" class="chip try-chip" data-kind="spam" data-i18n="try_spam">লটারির মেসেজ</button>
+        <button type="button" class="chip try-chip" data-kind="ham" data-i18n="try_ham">ক্লাস বাতিল</button>
+        <button type="button" class="chip try-chip" data-kind="tricky" data-i18n="try_tricky">ধাঁধার মেসেজ</button>
         <button type="button" class="chip" id="msg-clear" data-i18n="clear"></button>
       </div>
       <p class="callout small mb0" id="check-status" hidden></p>
@@ -260,69 +260,69 @@
           <div class="v-main"><div class="v-name" id="v-name"></div><div class="v-sure" id="v-sure"></div></div>
         </div>
         <div class="pbars">
-          <div class="pbar-row"><span class="pbar-lab" data-i18n="chance_spam"></span><div class="pbar spam"><span id="pbar-spam"></span></div><b class="pbar-pct num" id="p-spam"></b></div>
-          <div class="pbar-row"><span class="pbar-lab" data-i18n="chance_ham"></span><div class="pbar ham"><span id="pbar-ham"></span></div><b class="pbar-pct num" id="p-ham"></b></div>
+          <div class="pbar-row"><span class="pbar-lab" data-i18n="chance_spam">স্প্যাম হওয়ার সম্ভাবনা</span><div class="pbar spam"><span id="pbar-spam"></span></div><b class="pbar-pct num" id="p-spam"></b></div>
+          <div class="pbar-row"><span class="pbar-lab" data-i18n="chance_ham">স্প্যাম না হওয়ার সম্ভাবনা</span><div class="pbar ham"><span id="pbar-ham"></span></div><b class="pbar-pct num" id="p-ham"></b></div>
         </div>
       </div>
       <div id="explain" class="stack">
-        <h3 class="mb0" data-i18n="evidence_t"></h3>
-        <p class="muted small mb0" data-i18n="evidence_hint"></p>
+        <h3 class="mb0" data-i18n="evidence_t">প্রমাণ, শব্দ ধরে ধরে</h3>
+        <p class="muted small mb0" data-i18n="evidence_hint">লাল দাগ = এই শব্দ স্প্যামের দিকে টানে। সবুজ দাগ = আসল মেসেজের দিকে। লম্বা = বেশি জোর। ধূসর = নতুন শব্দ, ফিল্টার আগে দেখেনি, তাই বাদ দেওয়া হয়েছে।</p>
         <div class="ev-list no-i18n" id="bars"></div>
         <div class="legend">
-          <span><span class="sw" style="--sc: var(--spam)"></span><span data-i18n="lbl_spam"></span></span>
-          <span><span class="sw" style="--sc: var(--ham)"></span><span data-i18n="lbl_ham"></span></span>
-          <span><span class="sw" style="--sc: var(--border)"></span><span data-i18n="new_word"></span></span>
+          <span><span class="sw" style="--sc: var(--spam)"></span><span data-i18n="lbl_spam">স্প্যাম</span></span>
+          <span><span class="sw" style="--sc: var(--ham)"></span><span data-i18n="lbl_ham">স্প্যাম নয়</span></span>
+          <span><span class="sw" style="--sc: var(--border)"></span><span data-i18n="new_word">নতুন শব্দ, বাদ</span></span>
         </div>
         <details id="maths" open>
-          <summary data-i18n="maths_t"></summary>
+          <summary data-i18n="maths_t">ধাপে ধাপে: অঙ্ক</summary>
           <div class="stack" id="maths-body"></div>
         </details>
       </div>
-      <p class="muted tiny mb0" data-i18n="privacy"></p>
+      <p class="muted tiny mb0" data-i18n="privacy">সবকিছু আপনার ব্রাউজারেই চলে। আপনার লেখা মেসেজ এই ডিভাইসের বাইরে যায় না।</p>
     </section>
 
     <!-- 2. Teach it -->
     <section class="card stack" id="data-card">
-      <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2"></span></h2>
-      <p class="muted small mb0" data-i18n="step2_hint"></p>
+      <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2">শেখান: ট্রেনিং মেসেজ</span></h2>
+      <p class="muted small mb0" data-i18n="step2_hint">ফিল্টার শুধু এই মেসেজগুলো থেকেই শেখে। নিজের মেসেজ যোগ করুন, কিছু সরান, আর ওপরের রায় সঙ্গে সঙ্গে বদলাতে দেখুন।</p>
       <div class="labs">
         <div class="lab-card spam">
-          <div class="lab-head"><span class="lab-emoji" aria-hidden="true">🚫</span><span class="lab-name" data-i18n="lbl_spam"></span><span class="lab-count" id="cnt-spam" data-n="0"></span></div>
+          <div class="lab-head"><span class="lab-emoji" aria-hidden="true">🚫</span><span class="lab-name" data-i18n="lbl_spam">স্প্যাম</span><span class="lab-count" id="cnt-spam" data-n="0"></span></div>
           <ul class="msg-list no-i18n" id="list-spam"></ul>
         </div>
         <div class="lab-card ham">
-          <div class="lab-head"><span class="lab-emoji" aria-hidden="true">✅</span><span class="lab-name" data-i18n="lbl_ham"></span><span class="lab-count" id="cnt-ham" data-n="0"></span></div>
+          <div class="lab-head"><span class="lab-emoji" aria-hidden="true">✅</span><span class="lab-name" data-i18n="lbl_ham">স্প্যাম নয়</span><span class="lab-count" id="cnt-ham" data-n="0"></span></div>
           <ul class="msg-list no-i18n" id="list-ham"></ul>
         </div>
       </div>
       <div class="no-print">
-        <label for="add-input" class="lbl" data-i18n="add_as"></label>
+        <label for="add-input" class="lbl" data-i18n="add_as">নতুন মেসেজ যোগ করুন, হিসেবে</label>
         <div class="add-row">
           <div class="seg" role="group" data-i18n-aria-label="add_as">
-            <button type="button" id="add-spam" aria-pressed="true" data-i18n="lbl_spam"></button>
-            <button type="button" id="add-ham" aria-pressed="false" data-i18n="lbl_ham"></button>
+            <button type="button" id="add-spam" aria-pressed="true" data-i18n="lbl_spam">স্প্যাম</button>
+            <button type="button" id="add-ham" aria-pressed="false" data-i18n="lbl_ham">স্প্যাম নয়</button>
           </div>
           <input type="text" id="add-input" class="no-i18n" maxlength="300" autocomplete="off" spellcheck="false" data-i18n-placeholder="add_ph">
           <button type="button" class="btn btn-primary" id="add-btn" data-i18n="add"></button>
         </div>
       </div>
       <div class="row data-tools no-print">
-        <button type="button" class="btn btn-accent" id="samples-btn" data-i18n="load_samples"></button>
+        <button type="button" class="btn btn-accent" id="samples-btn" data-i18n="load_samples">নমুনা মেসেজ</button>
         <div class="row">
-          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv"></button>
-          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv"></button>
-          <button type="button" class="btn btn-sm btn-danger" id="clear-btn" data-i18n="clear_all"></button>
+          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv">CSV আনুন</button>
+          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv">CSV ডাউনলোড</button>
+          <button type="button" class="btn btn-sm btn-danger" id="clear-btn" data-i18n="clear_all">সব মুছুন</button>
         </div>
       </div>
-      <p class="muted tiny mb0 no-print" data-i18n="samples_note"></p>
-      <p class="muted tiny mb0 no-print" data-i18n="csv_hint"></p>
+      <p class="muted tiny mb0 no-print" data-i18n="samples_note">নমুনা মেসেজ অ্যাপের ভাষায় দেখায়। আপনার যোগ করা মেসেজ অনুবাদ হয় না।</p>
+      <p class="muted tiny mb0 no-print" data-i18n="csv_hint">text আর label (spam বা ham) কলামসহ CSV ফাইল। এটি Excel বা Google Sheets-এ খোলে।</p>
       <div class="panel exp" id="exp">
-        <h3><span aria-hidden="true">🎯</span><span data-i18n="exp_t"></span></h3>
-        <p class="small" data-i18n="exp_d"></p>
+        <h3><span aria-hidden="true">🎯</span><span data-i18n="exp_t">পরীক্ষা: “জিতেছেন” কি সবসময় স্প্যাম?</span></h3>
+        <p class="small" data-i18n="exp_d">ধাঁধার মেসেজটি বন্ধুর আসল মেসেজ, কিন্তু এতে “অভিনন্দন”, “জিতেছ” আর “পুরস্কার”-এর মতো শব্দ আছে যা ফিল্টার শুধু স্প্যামে দেখেছে। এই শব্দসহ 3টি আসল মেসেজ যোগ করুন আর দেখুন কী হয়।</p>
         <p class="small tricky-q no-i18n" id="exp-msg"></p>
         <div class="exp-btns">
-          <button type="button" class="btn btn-accent" id="exp-btn" data-i18n="exp_btn"></button>
-          <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩ </span><span data-i18n="undo_exp"></span></button>
+          <button type="button" class="btn btn-accent" id="exp-btn" data-i18n="exp_btn">3টি আসল মেসেজ যোগ করুন</button>
+          <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩ </span><span data-i18n="undo_exp">পরীক্ষা ফিরিয়ে নিন</span></button>
         </div>
         <div id="exp-res" aria-live="polite"></div>
       </div>
@@ -330,46 +330,46 @@
 
     <!-- 3. How good is it? -->
     <section class="card stack" id="eval-card">
-      <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3"></span></h2>
-      <label class="check no-print"><input type="checkbox" id="holdout-chk"><span data-i18n="holdout_label"></span></label>
+      <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3">এটি কতটা ভালো? ন্যায্য টেস্ট</span></h2>
+      <label class="check no-print"><input type="checkbox" id="holdout-chk"><span data-i18n="holdout_label">নমুনা মেসেজের 25% টেস্টের জন্য আলাদা রাখুন, যা থেকে ফিল্টার কখনো শেখে না</span></label>
       <div class="stats">
-        <div class="stat"><b id="st-train">0</b><span data-i18n="st_train"></span></div>
-        <div class="stat"><b id="st-test">0</b><span data-i18n="st_test"></span></div>
-        <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab"></span></div>
-        <div class="stat"><b id="st-acc" data-v="">–</b><span data-i18n="st_acc"></span></div>
+        <div class="stat"><b id="st-train">0</b><span data-i18n="st_train">ট্রেনিং মেসেজ</span></div>
+        <div class="stat"><b id="st-test">0</b><span data-i18n="st_test">টেস্ট মেসেজ</span></div>
+        <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab">চেনা আলাদা শব্দ</span></div>
+        <div class="stat"><b id="st-acc" data-v="">–</b><span data-i18n="st_acc">টেস্টে সঠিক</span></div>
       </div>
-      <p class="callout warning small mb0" id="cheat-note" data-i18n="cheat_note" hidden></p>
-      <p class="callout small mb0" id="acc-none" data-i18n="acc_none" hidden></p>
+      <p class="callout warning small mb0" id="cheat-note" data-i18n="cheat_note" hidden>ন্যায্য টেস্ট বন্ধ, তাই ফিল্টারকে সেই মেসেজেই যাচাই করা হচ্ছে যেগুলো থেকে সে শিখেছে, যেন কোনো ছাত্র নিজের হোমওয়ার্ক নিজেই দেখছে। স্কোর আসলের চেয়ে ভালো দেখায়।</p>
+      <p class="callout small mb0" id="acc-none" data-i18n="acc_none" hidden>কোনো টেস্ট মেসেজ নেই। ওপরে ন্যায্য টেস্ট চালু করুন, বা নমুনা মেসেজ লোড করুন।</p>
       <div class="eval-grid" id="eval-grid">
         <div class="stack">
-          <h3 class="mb0" data-i18n="cm_t"></h3>
+          <h3 class="mb0" data-i18n="cm_t">কনফিউশন ম্যাট্রিক্স</h3>
           <table class="cm" id="cm">
             <thead>
               <tr>
                 <th></th>
-                <th><span data-i18n="cm_said"></span><span class="lbl2" data-i18n="lbl_spam"></span></th>
-                <th><span data-i18n="cm_said"></span><span class="lbl2" data-i18n="lbl_ham"></span></th>
+                <th><span data-i18n="cm_said">ফিল্টার বলল</span><span class="lbl2" data-i18n="lbl_spam">স্প্যাম</span></th>
+                <th><span data-i18n="cm_said">ফিল্টার বলল</span><span class="lbl2" data-i18n="lbl_ham">স্প্যাম নয়</span></th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th class="rowh"><span data-i18n="cm_real"></span><span class="lbl2" data-i18n="lbl_spam"></span></th>
-                <td class="cell good" id="cm-tp" data-n="0"><span class="abbr">TP</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_tp"></span></td>
-                <td class="cell bad" id="cm-fn" data-n="0"><span class="abbr">FN</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_fn"></span></td>
+                <th class="rowh"><span data-i18n="cm_real">আসলে</span><span class="lbl2" data-i18n="lbl_spam">স্প্যাম</span></th>
+                <td class="cell good" id="cm-tp" data-n="0"><span class="abbr">TP</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_tp">স্প্যাম ধরা পড়ল</span></td>
+                <td class="cell bad" id="cm-fn" data-n="0"><span class="abbr">FN</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_fn">স্প্যাম ফসকে গেল</span></td>
               </tr>
               <tr>
-                <th class="rowh"><span data-i18n="cm_real"></span><span class="lbl2" data-i18n="lbl_ham"></span></th>
-                <td class="cell bad" id="cm-fp" data-n="0"><span class="abbr">FP</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_fp"></span></td>
-                <td class="cell good" id="cm-tn" data-n="0"><span class="abbr">TN</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_tn"></span></td>
+                <th class="rowh"><span data-i18n="cm_real">আসলে</span><span class="lbl2" data-i18n="lbl_ham">স্প্যাম নয়</span></th>
+                <td class="cell bad" id="cm-fp" data-n="0"><span class="abbr">FP</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_fp">আসল মেসেজ আটকাল</span></td>
+                <td class="cell good" id="cm-tn" data-n="0"><span class="abbr">TN</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_tn">আসল মেসেজ পৌঁছাল</span></td>
               </tr>
             </tbody>
           </table>
           <div class="pr-lines"><div id="pr-line"></div><div id="rc-line"></div></div>
-          <div class="row no-print"><button type="button" class="btn btn-sm" id="reshuffle-btn" data-i18n="reshuffle"></button></div>
+          <div class="row no-print"><button type="button" class="btn btn-sm" id="reshuffle-btn" data-i18n="reshuffle">অন্য টেস্ট মেসেজ বাছুন</button></div>
         </div>
         <div class="stack">
           <h3 class="mb0" id="mist-sum"></h3>
-          <p class="callout success small mb0" id="no-mist" data-i18n="no_mistakes" hidden></p>
+          <p class="callout success small mb0" id="no-mist" data-i18n="no_mistakes" hidden>টেস্ট মেসেজে কোনো ভুল নেই। কঠিন সেটের জন্য “অন্য টেস্ট মেসেজ বাছুন” চাপুন।</p>
           <ul class="mist-list" id="mist-list"></ul>
         </div>
       </div>
@@ -377,45 +377,45 @@
 
     <!-- 4. Peek inside -->
     <section class="card stack" id="peek-card">
-      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="peek_t"></span></h2>
-      <p class="muted small mb0" data-i18n="peek_note"></p>
-      <p class="formula" data-i18n="formula_word"></p>
+      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="peek_t">ভেতরে উঁকি দিন: শব্দ গোনাই পুরো মডেল</span></h2>
+      <p class="muted small mb0" data-i18n="peek_note">ট্রেনিং মানে শুধু গোনা। ফিল্টার যা জানে, সব এই টেবিলে।</p>
+      <p class="formula" data-i18n="formula_word">P(শব্দ | শ্রেণি) = (ওই শ্রেণিতে শব্দটি কতবার এসেছে + 1) ÷ (ওই শ্রেণির মোট শব্দ + V)</p>
       <p class="muted small mb0" id="vocab-line"></p>
       <div class="peek-tools no-print">
         <input type="search" id="peek-filter" class="no-i18n" data-i18n-placeholder="peek_filter" data-i18n-aria-label="peek_filter" autocomplete="off">
         <div class="seg" role="group" data-i18n-aria-label="sort_by">
-          <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common"></button>
-          <button type="button" id="sort-spam" aria-pressed="false" data-i18n="sort_spam"></button>
-          <button type="button" id="sort-ham" aria-pressed="false" data-i18n="sort_ham"></button>
+          <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common">সবচেয়ে বেশি</button>
+          <button type="button" id="sort-spam" aria-pressed="false" data-i18n="sort_spam">স্প্যামের সূত্র</button>
+          <button type="button" id="sort-ham" aria-pressed="false" data-i18n="sort_ham">আসল মেসেজের সূত্র</button>
         </div>
       </div>
       <p class="muted small mb0" id="peek-count"></p>
       <div class="scroll-x"><table class="table peek no-i18n" id="peek-table"></table></div>
-      <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more"></button>
+      <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more">আরও শব্দ দেখান</button>
     </section>
 
     <!-- 5. What is happening inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside_t"></h2>
+      <h2 data-i18n="inside_t">ভেতরে কী হচ্ছে?</h2>
       <div class="grid-3 inside-grid">
-        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t"></span></h3><p data-i18n="in1"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t"></span></h3><p data-i18n="in2"></p><p class="formula" data-i18n="formula"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">➕</span><span data-i18n="in3_t"></span></h3><p data-i18n="in3"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">📉</span><span data-i18n="in4_t"></span></h3><p data-i18n="in4"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in5_t"></span></h3><p data-i18n="in5"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">📬</span><span data-i18n="in6_t"></span></h3><p data-i18n="in6"></p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t">এটি শুধু শব্দ গোনে</span></h3><p data-i18n="in1">ট্রেনিং মানে গোনা: প্রতিটি শব্দ স্প্যাম মেসেজে কতবার আসে, আর আসলে কতবার? “লটারি” জমে স্প্যামে, “হোমওয়ার্ক” আসলে।</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t">Bayes-এর নিয়ম</span></h3><p data-i18n="in2">নতুন মেসেজের জন্য এটি প্রতিটি শ্রেণির শুরুর সম্ভাবনাকে সেই শ্রেণিতে প্রতিটি শব্দের সম্ভাবনা দিয়ে গুণ করে। যার ফল বড়, সে জেতে। এটাই Naive Bayes, প্রথম ইমেল স্প্যাম ফিল্টারের পদ্ধতি।</p><p class="formula" data-i18n="formula">P(স্প্যাম | মেসেজ) ∝ P(স্প্যাম) × P(শব্দ₁ | স্প্যাম) × P(শব্দ₂ | স্প্যাম) × …</p></div>
+        <div class="panel"><h3><span aria-hidden="true">➕</span><span data-i18n="in3_t">Laplace smoothing: +1-এর কৌশল</span></h3><p data-i18n="in3">কোনো শব্দ এক শ্রেণিতে কখনো না দেখা গেলে তার সম্ভাবনা 0 হত আর পুরো গুণফলও 0 হয়ে যেত। প্রতিটি গোনায় 1 যোগ করলে (আর ভগ্নাংশের নিচে V যোগ করলে) প্রতিটি সম্ভাবনা শূন্যের একটু ওপরে থাকে।</p></div>
+        <div class="panel"><h3><span aria-hidden="true">📉</span><span data-i18n="in4_t">লগ কেন?</span></h3><p data-i18n="in4">0.003-এর মতো কুড়িটি সংখ্যা গুণ করলে 0.000000000000000000000000000001-এর মতো কিছু হয়। কম্পিউটার এত ছোট সংখ্যা হারিয়ে ফেলে, তাই আসল ফিল্টার log মান যোগ করে। বিজয়ী একই থাকে।</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in5_t">“Naive” (সরল) কেন?</span></h3><p data-i18n="in5">এটি প্রতিটি শব্দকে আলাদা ধরে, ক্রম আর অর্থ দেখে না। “ম্যাচ জিতেছি” আর “লটারি জিতেছি” দুটোতেই শুধু “জিত” আছে। তাই ধাঁধার মেসেজ একে বোকা বানায়, আর নানা রকম উদাহরণ সাহায্য করে।</p></div>
+        <div class="panel"><h3><span aria-hidden="true">📬</span><span data-i18n="in6_t">আসল স্প্যাম ফিল্টার</span></h3><p data-i18n="in6">Gmail আর WhatsApp একই ধারণা ব্যবহার করে, সঙ্গে আরও অনেক কিছু: প্রেরকের ইতিহাস, লিংক, ছবি আর বড় নিউরাল নেটওয়ার্ক। কিন্তু শিক্ষা একই: ফিল্টার ততটাই ভালো, যতটা ভালো তার শেখার উদাহরণ।</p></div>
       </div>
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">কীভাবে ব্যবহার করবেন · ক্লাসের জন্য আইডিয়া</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">“মেসেজ যাচাই করুন”-এ যেকোনো মেসেজ লিখুন। রায়, শব্দের দাগ আর ধাপে ধাপে অঙ্ক লেখার সঙ্গে সঙ্গে বদলায়।</li>
+        <li data-i18n="tip2">“ধাপে ধাপে: অঙ্ক” খুলুন আর “ভেতরে উঁকি দিন”-এর গোনা দিয়ে একটি ভগ্নাংশ হাতে মিলিয়ে দেখুন। এটি CBSE ক্লাস 10 AI-এর evaluation অধ্যায় আর ক্লাস 11–12-এর Naive Bayes বিষয়ের সঙ্গে মেলে।</li>
+        <li data-i18n="tip3">ক্লাসের কাজ: দুটি দল। দল A এমন 5টি আসল মেসেজ লিখবে যা ফিল্টার স্প্যাম বলে; দল B এমন 5টি স্প্যাম লিখবে যা ফসকে যায়। এগুলো ট্রেনিং মেসেজে যোগ করুন আর দেখুন কোন দলের কৌশল আর কাজ করে না।</li>
+        <li data-i18n="tip4">ন্যায্য টেস্ট বন্ধ আর চালু করুন। আলোচনা করুন, ট্রেনিং মেসেজেই টেস্ট করলে স্কোর কেন বেশি ভালো আসে।</li>
+        <li data-i18n="tip5">মেসেজগুলো CSV-তে ডাউনলোড করুন, ছাত্ররা বাড়িতে 20টি নতুন মেসেজে লেবেল দিক, পরের ক্লাসে সেগুলো আনুন। কিছুই আপলোড হয় না: সব এই ডিভাইসেই থাকে।</li>
+        <li data-i18n="tip6">আলোচনা: “অভিনন্দন, তুমি কুইজ জিতেছ!”-এর মতো আসল মেসেজের কী হবে? ভুল করে আটকানো (false positive)-এর দাম কী? ফসকে যাওয়া স্প্যাম (false negative)-এর দাম কী?</li>
       </ul>
     </details>
   </main>

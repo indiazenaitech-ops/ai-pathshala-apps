@@ -165,27 +165,27 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">PDF वर इथेच सही करा, भरा आणि शिक्का मारा: सही काढा किंवा टाइप करा, मजकूर, तारीख, टिक, “Self attested” नोंद किंवा स्टॅम्प जोडा आणि फॉर्मचे रकाने भरा. फाइल तुमच्या डिव्हाइसबाहेर जात नाही.</p>
 
     <div class="callout success sf-privacy" id="privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong><span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">तुमची PDF या डिव्हाइसच्या बाहेर कधीच जात नाही.</strong><span data-i18n="privacy_body">ऑफर लेटर, करार, KYC प्रती आणि फॉर्म तुमच्या ब्राउझरमध्येच सही होतात. काहीही अपलोड होत नाही, आणि हे पान बंद केल्यावर फाइल जाते.</span></p>
     </div>
 
     <div id="engine" class="sf-engine small" role="status" aria-live="polite">
       <span class="sf-spin" id="engSpin" aria-hidden="true"></span>
       <span id="engMsg"></span>
-      <button class="btn btn-sm" id="engRetry" type="button" data-i18n="retry" hidden></button>
+      <button class="btn btn-sm" id="engRetry" type="button" data-i18n="retry" hidden>पुन्हा प्रयत्न करा</button>
     </div>
 
     <div class="card sf-drop" id="drop">
       <div class="big" aria-hidden="true">✍️</div>
-      <h2 id="dropTitle" data-i18n="drop_title"></h2>
-      <p class="muted small mb0 sf-drop-hint" data-i18n="drop_hint"></p>
+      <h2 id="dropTitle" data-i18n="drop_title">PDF इथे सोडा</h2>
+      <p class="muted small mb0 sf-drop-hint" data-i18n="drop_hint">किंवा फोन/कॉम्प्युटरमधून उघडा. ऑफर लेटर, करार, अर्ज, आधार किंवा PAN ची प्रत.</p>
       <span class="sf-fname no-i18n" id="fname"><span aria-hidden="true">📄</span><span class="nm" id="fnameTxt"></span><span class="inf" id="fnameInf"></span></span>
       <div class="row">
-        <button class="btn btn-primary btn-lg" id="openBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="open_pdf"></span></button>
-        <button class="btn" id="sampleBtn" type="button" data-i18n="try_sample"></button>
+        <button class="btn btn-primary btn-lg" id="openBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="open_pdf">PDF उघडा</span></button>
+        <button class="btn" id="sampleBtn" type="button" data-i18n="try_sample">नमुना पत्र पाहा</button>
       </div>
       <input type="file" id="fileInput" accept=".pdf,application/pdf" hidden>
     </div>
@@ -198,15 +198,15 @@
         <div class="card sf-bar" id="bar">
           <div class="grp">
             <button class="tb" type="button" id="prevBtn" data-i18n-title="prev_page" data-i18n-aria-label="prev_page"><span class="i flipx" aria-hidden="true">◀</span></button>
-            <label class="sf-pageno"><span class="sr-only" data-i18n="goto_page"></span><input type="number" id="pageNo" min="1" step="1" inputmode="numeric" value="1"><span id="pageTotal" class="no-i18n"></span></label>
+            <label class="sf-pageno"><span class="sr-only" data-i18n="goto_page">पानावर जा</span><input type="number" id="pageNo" min="1" step="1" inputmode="numeric" value="1"><span id="pageTotal" class="no-i18n"></span></label>
             <button class="tb" type="button" id="nextBtn" data-i18n-title="next_page" data-i18n-aria-label="next_page"><span class="i flipx" aria-hidden="true">▶</span></button>
           </div>
           <span class="sep" aria-hidden="true"></span>
           <div class="grp">
-            <button class="tb" type="button" id="undoBtn" data-i18n-title="undo" data-i18n-aria-label="undo"><span class="i flipx" aria-hidden="true">↶</span><span class="lbl" data-i18n="undo"></span></button>
+            <button class="tb" type="button" id="undoBtn" data-i18n-title="undo" data-i18n-aria-label="undo"><span class="i flipx" aria-hidden="true">↶</span><span class="lbl" data-i18n="undo">पूर्ववत</span></button>
             <button class="tb" type="button" id="redoBtn" data-i18n-title="redo" data-i18n-aria-label="redo"><span class="i flipx" aria-hidden="true">↷</span></button>
-            <button class="tb danger" type="button" id="delBtn" data-i18n-title="it_delete" data-i18n-aria-label="it_delete"><span class="i" aria-hidden="true">🗑</span><span class="lbl" data-i18n="it_delete"></span></button>
-            <button class="tb" type="button" id="clearPageBtn" data-i18n-title="clear_page" data-i18n-aria-label="clear_page"><span class="i" aria-hidden="true">⌫</span><span class="lbl" data-i18n="clear_page"></span></button>
+            <button class="tb danger" type="button" id="delBtn" data-i18n-title="it_delete" data-i18n-aria-label="it_delete"><span class="i" aria-hidden="true">🗑</span><span class="lbl" data-i18n="it_delete">काढा</span></button>
+            <button class="tb" type="button" id="clearPageBtn" data-i18n-title="clear_page" data-i18n-aria-label="clear_page"><span class="i" aria-hidden="true">⌫</span><span class="lbl" data-i18n="clear_page">हे पान रिकामे करा</span></button>
           </div>
           <span class="sf-count" id="countTxt" aria-live="polite"></span>
         </div>
@@ -217,29 +217,29 @@
             <div id="overlay" class="sf-overlay no-i18n" data-i18n-aria-label="items_label" role="group"></div>
           </div>
         </div>
-        <p class="small muted sf-stage-hint" data-i18n="stage_hint"></p>
+        <p class="small muted sf-stage-hint" data-i18n="stage_hint">गोष्ट निवडायला टॅप करा, ओढून हलवा, निळा कोपरा ओढून आकार बदला. ॅरो कीनेही हलवता येते.</p>
         <p id="live" class="sr-only" aria-live="polite"></p>
       </section>
 
       <aside class="sf-side" id="side">
         <div class="card stack">
           <div class="sf-tools" role="tablist" data-i18n-aria-label="tools_label">
-            <button type="button" role="tab" data-tool="sign" aria-controls="pSign"><span class="i" aria-hidden="true">✍️</span><span data-i18n="tool_sign"></span></button>
-            <button type="button" role="tab" data-tool="text" aria-controls="pText"><span class="i" aria-hidden="true">🔤</span><span data-i18n="tool_text"></span></button>
-            <button type="button" role="tab" data-tool="date" aria-controls="pDate"><span class="i" aria-hidden="true">📅</span><span data-i18n="tool_date"></span></button>
-            <button type="button" role="tab" data-tool="mark" aria-controls="pMark"><span class="i" aria-hidden="true">✅</span><span data-i18n="tool_mark"></span></button>
-            <button type="button" role="tab" data-tool="self" aria-controls="pSelf"><span class="i" aria-hidden="true">🪪</span><span data-i18n="tool_self"></span></button>
-            <button type="button" role="tab" data-tool="stamp" aria-controls="pStamp"><span class="i" aria-hidden="true">📮</span><span data-i18n="tool_stamp"></span></button>
-            <button type="button" role="tab" data-tool="hide" aria-controls="pHide"><span class="i" aria-hidden="true">⬜</span><span data-i18n="tool_hide"></span></button>
-            <button type="button" role="tab" data-tool="form" aria-controls="pForm"><span class="i" aria-hidden="true">📝</span><span data-i18n="tool_form"></span></button>
+            <button type="button" role="tab" data-tool="sign" aria-controls="pSign"><span class="i" aria-hidden="true">✍️</span><span data-i18n="tool_sign">सही</span></button>
+            <button type="button" role="tab" data-tool="text" aria-controls="pText"><span class="i" aria-hidden="true">🔤</span><span data-i18n="tool_text">मजकूर</span></button>
+            <button type="button" role="tab" data-tool="date" aria-controls="pDate"><span class="i" aria-hidden="true">📅</span><span data-i18n="tool_date">तारीख</span></button>
+            <button type="button" role="tab" data-tool="mark" aria-controls="pMark"><span class="i" aria-hidden="true">✅</span><span data-i18n="tool_mark">टिक / क्रॉस</span></button>
+            <button type="button" role="tab" data-tool="self" aria-controls="pSelf"><span class="i" aria-hidden="true">🪪</span><span data-i18n="tool_self">Self attested</span></button>
+            <button type="button" role="tab" data-tool="stamp" aria-controls="pStamp"><span class="i" aria-hidden="true">📮</span><span data-i18n="tool_stamp">स्टॅम्प</span></button>
+            <button type="button" role="tab" data-tool="hide" aria-controls="pHide"><span class="i" aria-hidden="true">⬜</span><span data-i18n="tool_hide">पांढरा चौकोन</span></button>
+            <button type="button" role="tab" data-tool="form" aria-controls="pForm"><span class="i" aria-hidden="true">📝</span><span data-i18n="tool_form">फॉर्म रकाने</span></button>
           </div>
 
           <!-- Signature -->
           <div class="sf-panel" id="pSign" role="tabpanel">
             <div class="seg w100" role="group" id="sigModeSeg">
-              <button type="button" data-val="draw" data-i18n="sig_draw"></button>
-              <button type="button" data-val="type" data-i18n="sig_type"></button>
-              <button type="button" data-val="photo" data-i18n="sig_photo"></button>
+              <button type="button" data-val="draw" data-i18n="sig_draw">काढा</button>
+              <button type="button" data-val="type" data-i18n="sig_type">टाइप करा</button>
+              <button type="button" data-val="photo" data-i18n="sig_photo">फोटो</button>
             </div>
             <div id="sigDrawBox" class="stack">
               <div class="sf-pad-wrap">
@@ -247,115 +247,115 @@
                 <span class="sf-pad-line" aria-hidden="true"></span><span class="sf-pad-x" aria-hidden="true">✕</span>
               </div>
               <div class="row spread">
-                <span class="tiny muted" data-i18n="sig_pad_hint"></span>
+                <span class="tiny muted" data-i18n="sig_pad_hint">इथे बोट, स्टायलस किंवा माऊसने सही करा.</span>
                 <button class="btn btn-sm" type="button" id="sigClear" data-i18n="clear"></button>
               </div>
             </div>
             <div id="sigTypeBox" class="stack" hidden>
-              <label class="field"><span data-i18n="sig_type_label"></span><input type="text" id="sigTypeText" class="no-i18n" maxlength="60" autocomplete="name" data-i18n-placeholder="sig_type_ph"></label>
+              <label class="field"><span data-i18n="sig_type_label">तुमचे नाव</span><input type="text" id="sigTypeText" class="no-i18n" maxlength="60" autocomplete="name" data-i18n-placeholder="sig_type_ph"></label>
               <div class="sf-type-prev no-i18n" id="sigTypePrev" aria-hidden="true"></div>
             </div>
             <div id="sigPhotoBox" class="stack" hidden>
-              <button class="btn" type="button" id="sigPhotoBtn"><span aria-hidden="true">🖼</span> <span data-i18n="sig_photo_pick"></span></button>
+              <button class="btn" type="button" id="sigPhotoBtn"><span aria-hidden="true">🖼</span> <span data-i18n="sig_photo_pick">सहीचा फोटो निवडा</span></button>
               <input type="file" id="sigPhotoInput" accept="image/*" hidden>
               <img id="sigPhotoPrev" class="sf-photo-prev" alt="" hidden>
-              <p class="tiny muted mb0" data-i18n="sig_photo_hint"></p>
+              <p class="tiny muted mb0" data-i18n="sig_photo_hint">पांढऱ्या कागदावर गडद पेनने सही करा आणि स्पष्ट फोटो काढा. कागद आपोआप पारदर्शक होतो.</p>
             </div>
-            <div class="field"><span data-i18n="ink"></span>
+            <div class="field"><span data-i18n="ink">शाईचा रंग</span>
               <div class="sf-colors" role="group" id="inkColors">
-                <button type="button" data-val="#1a3fb5" aria-pressed="true"><i style="background:#1a3fb5"></i><span data-i18n="col_blue"></span></button>
-                <button type="button" data-val="#111111"><i style="background:#111"></i><span data-i18n="col_black"></span></button>
-                <button type="button" data-val="#c81e1e"><i style="background:#c81e1e"></i><span data-i18n="col_red"></span></button>
-                <button type="button" data-val="#1b7f3b"><i style="background:#1b7f3b"></i><span data-i18n="col_green"></span></button>
+                <button type="button" data-val="#1a3fb5" aria-pressed="true"><i style="background:#1a3fb5"></i><span data-i18n="col_blue">निळा</span></button>
+                <button type="button" data-val="#111111"><i style="background:#111"></i><span data-i18n="col_black">काळा</span></button>
+                <button type="button" data-val="#c81e1e"><i style="background:#c81e1e"></i><span data-i18n="col_red">लाल</span></button>
+                <button type="button" data-val="#1b7f3b"><i style="background:#1b7f3b"></i><span data-i18n="col_green">हिरवा</span></button>
               </div>
             </div>
             <div class="row">
-              <button class="btn btn-primary" type="button" id="sigUse"><span aria-hidden="true">＋</span> <span data-i18n="sig_use"></span></button>
-              <button class="btn" type="button" id="sigUseInit" data-i18n="sig_use_init"></button>
+              <button class="btn btn-primary" type="button" id="sigUse"><span aria-hidden="true">＋</span> <span data-i18n="sig_use">सही म्हणून जोडा</span></button>
+              <button class="btn" type="button" id="sigUseInit" data-i18n="sig_use_init">छोटी सही म्हणून</button>
             </div>
             <div id="savedBox" class="stack" hidden>
-              <p class="small muted mb0" data-i18n="sig_saved_title"></p>
+              <p class="small muted mb0" data-i18n="sig_saved_title">या डिव्हाइसवर सेव्ह</p>
               <div class="sf-saved" id="savedSig" hidden>
                 <img alt="" id="savedSigImg">
-                <div><strong data-i18n="sig_saved_sig"></strong>
+                <div><strong data-i18n="sig_saved_sig">सही</strong>
                   <div class="acts">
-                    <button class="btn btn-sm btn-primary" type="button" data-slot="sig" data-act="add" data-i18n="sig_add"></button>
-                    <button class="btn btn-sm" type="button" data-slot="sig" data-act="all" data-i18n="sig_add_all"></button>
-                    <button class="btn btn-sm btn-ghost" type="button" data-slot="sig" data-act="forget" data-i18n="sig_forget"></button>
+                    <button class="btn btn-sm btn-primary" type="button" data-slot="sig" data-act="add" data-i18n="sig_add">पानावर जोडा</button>
+                    <button class="btn btn-sm" type="button" data-slot="sig" data-act="all" data-i18n="sig_add_all">प्रत्येक पानावर</button>
+                    <button class="btn btn-sm btn-ghost" type="button" data-slot="sig" data-act="forget" data-i18n="sig_forget">विसरा</button>
                   </div>
                 </div>
               </div>
               <div class="sf-saved" id="savedInit" hidden>
                 <img alt="" id="savedInitImg">
-                <div><strong data-i18n="sig_saved_init"></strong>
+                <div><strong data-i18n="sig_saved_init">छोटी सही</strong>
                   <div class="acts">
-                    <button class="btn btn-sm btn-primary" type="button" data-slot="init" data-act="add" data-i18n="sig_add"></button>
-                    <button class="btn btn-sm" type="button" data-slot="init" data-act="all" data-i18n="sig_add_all"></button>
-                    <button class="btn btn-sm btn-ghost" type="button" data-slot="init" data-act="forget" data-i18n="sig_forget"></button>
+                    <button class="btn btn-sm btn-primary" type="button" data-slot="init" data-act="add" data-i18n="sig_add">पानावर जोडा</button>
+                    <button class="btn btn-sm" type="button" data-slot="init" data-act="all" data-i18n="sig_add_all">प्रत्येक पानावर</button>
+                    <button class="btn btn-sm btn-ghost" type="button" data-slot="init" data-act="forget" data-i18n="sig_forget">विसरा</button>
                   </div>
                 </div>
               </div>
-              <p class="tiny muted mb0" data-i18n="sig_saved_note"></p>
+              <p class="tiny muted mb0" data-i18n="sig_saved_note">फक्त या ब्राउझरमध्ये सेव्ह, पुन्हा वापरण्यासाठी. सामायिक कॉम्प्युटरवर काम झाल्यावर “विसरा” दाबा.</p>
             </div>
           </div>
 
           <!-- Text -->
           <div class="sf-panel" id="pText" role="tabpanel" hidden>
-            <label class="field"><span data-i18n="text_label"></span><input type="text" id="textIn" class="no-i18n" dir="auto" maxlength="200" data-i18n-placeholder="text_ph"></label>
+            <label class="field"><span data-i18n="text_label">मजकूर</span><input type="text" id="textIn" class="no-i18n" dir="auto" maxlength="200" data-i18n-placeholder="text_ph"></label>
             <div class="sf-two">
-              <label class="field"><span data-i18n="text_size"></span><input type="number" id="textSize" min="6" max="72" step="1" inputmode="numeric" value="14"></label>
-              <div class="field"><span data-i18n="text_style"></span>
+              <label class="field"><span data-i18n="text_size">आकार</span><input type="number" id="textSize" min="6" max="72" step="1" inputmode="numeric" value="14"></label>
+              <div class="field"><span data-i18n="text_style">शैली</span>
                 <div class="seg w100" role="group" id="fontSeg">
-                  <button type="button" data-val="sans" data-i18n="font_normal"></button>
-                  <button type="button" data-val="hand" data-i18n="font_hand"></button>
+                  <button type="button" data-val="sans" data-i18n="font_normal">साधी</button>
+                  <button type="button" data-val="hand" data-i18n="font_hand">हस्ताक्षर</button>
                 </div>
               </div>
             </div>
-            <p class="tiny muted mb0" data-i18n="text_ink_note"></p>
-            <button class="btn btn-primary" type="button" id="textAdd"><span aria-hidden="true">＋</span> <span data-i18n="text_add"></span></button>
+            <p class="tiny muted mb0" data-i18n="text_ink_note">सहीखाली निवडलेला शाईचा रंग वापरला जातो.</p>
+            <button class="btn btn-primary" type="button" id="textAdd"><span aria-hidden="true">＋</span> <span data-i18n="text_add">मजकूर जोडा</span></button>
           </div>
 
           <!-- Date -->
           <div class="sf-panel" id="pDate" role="tabpanel" hidden>
             <div class="sf-two">
-              <label class="field"><span data-i18n="date_label"></span><input type="date" id="dateIn"></label>
-              <label class="field"><span data-i18n="date_fmt"></span><select id="dateFmt" class="no-i18n"></select></label>
+              <label class="field"><span data-i18n="date_label">तारीख</span><input type="date" id="dateIn"></label>
+              <label class="field"><span data-i18n="date_fmt">स्वरूप</span><select id="dateFmt" class="no-i18n"></select></label>
             </div>
-            <label class="field"><span data-i18n="text_size"></span><input type="number" id="dateSize" min="6" max="72" step="1" inputmode="numeric" value="12"></label>
-            <button class="btn btn-primary" type="button" id="dateAdd"><span aria-hidden="true">＋</span> <span data-i18n="date_add"></span></button>
+            <label class="field"><span data-i18n="text_size">आकार</span><input type="number" id="dateSize" min="6" max="72" step="1" inputmode="numeric" value="12"></label>
+            <button class="btn btn-primary" type="button" id="dateAdd"><span aria-hidden="true">＋</span> <span data-i18n="date_add">तारीख जोडा</span></button>
           </div>
 
           <!-- Tick / cross -->
           <div class="sf-panel" id="pMark" role="tabpanel" hidden>
-            <p class="small muted mb0" data-i18n="mark_help"></p>
+            <p class="small muted mb0" data-i18n="mark_help">रकान्यावर टिक करा किंवा पर्याय खोडा. मोठे करायला कोपरा ओढा.</p>
             <div class="sf-marks">
-              <button class="btn btn-primary" type="button" id="tickAdd"><span aria-hidden="true">✔</span> <span data-i18n="mark_tick"></span></button>
-              <button class="btn" type="button" id="crossAdd"><span aria-hidden="true">✘</span> <span data-i18n="mark_cross"></span></button>
+              <button class="btn btn-primary" type="button" id="tickAdd"><span aria-hidden="true">✔</span> <span data-i18n="mark_tick">टिक</span></button>
+              <button class="btn" type="button" id="crossAdd"><span aria-hidden="true">✘</span> <span data-i18n="mark_cross">क्रॉस</span></button>
             </div>
           </div>
 
           <!-- Self attested -->
           <div class="sf-panel" id="pSelf" role="tabpanel" hidden>
-            <p class="small mb0" data-i18n="self_help"></p>
-            <label class="field"><span data-i18n="self_text_label"></span><input type="text" id="selfText" class="no-i18n" dir="auto" maxlength="80"></label>
-            <p class="tiny muted mb0" id="selfNeed" data-i18n="self_need_sig" hidden></p>
+            <p class="small mb0" data-i18n="self_help">कार्यालये आधार, PAN, मार्कशीट आणि प्रमाणपत्रांच्या “Self attested” प्रती मागतात: प्रत्येक प्रतीवर हे लिहा, सही करा, तारीख टाका. हे तिन्ही एकत्र जोडते.</p>
+            <label class="field"><span data-i18n="self_text_label">मजकूर</span><input type="text" id="selfText" class="no-i18n" dir="auto" maxlength="80"></label>
+            <p class="tiny muted mb0" id="selfNeed" data-i18n="self_need_sig" hidden>आधी सही बनवा (काढा, टाइप करा किंवा फोटो). ती मजकूर आणि आजच्या तारखेसह ठेवली जाते.</p>
             <div class="row">
-              <button class="btn btn-primary" type="button" id="selfAdd"><span aria-hidden="true">＋</span> <span data-i18n="self_add"></span></button>
-              <button class="btn" type="button" id="selfAddAll" data-i18n="self_add_all"></button>
+              <button class="btn btn-primary" type="button" id="selfAdd"><span aria-hidden="true">＋</span> <span data-i18n="self_add">या पानावर जोडा</span></button>
+              <button class="btn" type="button" id="selfAddAll" data-i18n="self_add_all">प्रत्येक पानावर</button>
             </div>
           </div>
 
           <!-- Stamp / seal -->
           <div class="sf-panel" id="pStamp" role="tabpanel" hidden>
-            <p class="small muted mb0" data-i18n="stamp_help"></p>
-            <button class="btn btn-primary" type="button" id="stampBtn"><span aria-hidden="true">🖼</span> <span data-i18n="stamp_pick"></span></button>
+            <p class="small muted mb0" data-i18n="stamp_help">कंपनीचा शिक्का, “PAID”, “RECEIVED”, शाळेचा शिक्का. पारदर्शक पार्श्वभूमीची PNG सर्वात चांगली दिसते.</p>
+            <button class="btn btn-primary" type="button" id="stampBtn"><span aria-hidden="true">🖼</span> <span data-i18n="stamp_pick">स्टॅम्पची इमेज निवडा</span></button>
             <input type="file" id="stampInput" accept="image/*" hidden>
             <div class="sf-saved" id="stampBox" hidden>
               <img alt="" id="stampImg">
-              <div><strong data-i18n="stamp_last"></strong>
+              <div><strong data-i18n="stamp_last">स्टॅम्प</strong>
                 <div class="acts">
-                  <button class="btn btn-sm btn-primary" type="button" id="stampAdd" data-i18n="sig_add"></button>
-                  <button class="btn btn-sm" type="button" id="stampAddAll" data-i18n="sig_add_all"></button>
+                  <button class="btn btn-sm btn-primary" type="button" id="stampAdd" data-i18n="sig_add">पानावर जोडा</button>
+                  <button class="btn btn-sm" type="button" id="stampAddAll" data-i18n="sig_add_all">प्रत्येक पानावर</button>
                 </div>
               </div>
             </div>
@@ -363,29 +363,29 @@
 
           <!-- White-out -->
           <div class="sf-panel" id="pHide" role="tabpanel" hidden>
-            <p class="small mb0" data-i18n="hide_help"></p>
-            <button class="btn btn-primary" type="button" id="hideAdd"><span aria-hidden="true">＋</span> <span data-i18n="hide_add"></span></button>
+            <p class="small mb0" data-i18n="hide_help">पानाचा भाग पांढऱ्या चौकोनाने झाकतो, उदा. जुनी तारीख किंवा चुकीची नोंद. खालचा मजकूर फाइलमध्ये राहतो, म्हणून गुपिते लपवायला हे वापरू नका.</p>
+            <button class="btn btn-primary" type="button" id="hideAdd"><span aria-hidden="true">＋</span> <span data-i18n="hide_add">पांढरा चौकोन जोडा</span></button>
           </div>
 
           <!-- Form fields -->
           <div class="sf-panel" id="pForm" role="tabpanel" hidden>
             <p class="small muted mb0" id="formHelp"></p>
             <div class="sf-form-list no-i18n" id="formList"></div>
-            <label class="check" id="flattenBox" hidden><input type="checkbox" id="flatten" checked> <span data-i18n="form_flatten"></span></label>
+            <label class="check" id="flattenBox" hidden><input type="checkbox" id="flatten" checked> <span data-i18n="form_flatten">सेव्ह केल्यावर रकाने लॉक करा (flatten)</span></label>
           </div>
         </div>
 
         <div class="card stack sf-save">
           <label class="field">
-            <span data-i18n="out_name"></span>
+            <span data-i18n="out_name">फाइलचे नाव</span>
             <input type="text" id="outName" maxlength="80" autocomplete="off" spellcheck="false">
           </label>
-          <button class="btn btn-primary btn-lg" id="saveBtn" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="save_btn"></span></button>
+          <button class="btn btn-primary btn-lg" id="saveBtn" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="save_btn">सही केलेली PDF सेव्ह करा</span></button>
           <div id="progBox" class="row" hidden><span class="sf-spin" aria-hidden="true"></span><span class="small muted" id="progMsg" aria-live="polite"></span></div>
           <div class="callout success sf-result" id="result" role="status" hidden>
             <p class="mb0" id="resultMsg"></p>
             <div class="row">
-              <button class="btn btn-sm" type="button" id="againBtn"><span aria-hidden="true">⬇</span> <span data-i18n="download_again"></span></button>
+              <button class="btn btn-sm" type="button" id="againBtn"><span aria-hidden="true">⬇</span> <span data-i18n="download_again">पुन्हा डाउनलोड</span></button>
             </div>
           </div>
         </div>
@@ -393,28 +393,28 @@
     </div>
 
     <div class="callout warning sf-legal" id="legal">
-      <p><strong data-i18n="legal_title"></strong><span data-i18n="legal_body"></span></p>
+      <p><strong data-i18n="legal_title">कृपया लक्षात घ्या</strong><span data-i18n="legal_body">हे PDF वर तुमच्या सहीचे चित्र लावते. हे IT Act खालील Digital Signature Certificate (DSC) किंवा आधार eSign नाही. रोजच्या कागदपत्रांसाठी अनेक कार्यालये हे मानतात, पण काही फायलिंग (GST, MCA, आयकर, टेंडर) साठी DSC किंवा eSign लागते. घेणाऱ्याला काय हवे ते तपासा.</span></p>
     </div>
 
     <details class="card" id="helpBox">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">कसे वापरावे · कामासाठी कल्पना</strong></summary>
       <ul class="stack">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">PDF उघडा, एकदा सही काढा आणि “सही म्हणून जोडा” दाबा. ती या डिव्हाइसवर सेव्ह राहते, पुढच्या वेळी फक्त “पानावर जोडा” दाबा.</li>
+        <li data-i18n="tip2">ऑफर लेटर किंवा करार: सही जोडा, मग “तारीख”, मग मजकूर टूलने नाव टाइप करा. सेव्ह करून नवी फाइल परत पाठवा.</li>
+        <li data-i18n="tip3">बँक, शाळा किंवा नोकरीसाठी कागदपत्रांच्या प्रती: प्रत्येक पानावर “Self attested” लावा. बँकेने मागितले तर PDF Merge ॲपने KYC वॉटरमार्क लावा.</li>
+        <li data-i18n="tip4">दुकान किंवा कार्यालय: तुमच्या रबर शिक्क्याची PNG बनवा (पांढऱ्या कागदावर फोटो, फोटो टूल) आणि बिल व पावत्यांवर “स्टॅम्प” लावा.</li>
+        <li data-i18n="tip5">रकान्यांचे फॉर्म: फॉर्म रकाने टूल त्यांची यादी दाखवते; थेट भरा आणि टिक करा. स्कॅन केलेल्या फॉर्मसाठी मजकूर, टिक आणि क्रॉस वापरा.</li>
+        <li data-i18n="tip6">कागदावर चूक झाली? स्कॅन करा, चूक पांढऱ्या चौकोनाने झाका आणि मजकूराने दुरुस्ती लिहा.</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="keys_title"></h3>
+      <h3 style="margin-top:14px" data-i18n="keys_title">कीबोर्ड</h3>
       <ul class="sf-keys small">
-        <li data-i18n="key1"></li>
-        <li data-i18n="key2"></li>
-        <li data-i18n="key3"></li>
-        <li data-i18n="key4"></li>
+        <li data-i18n="key1">Tab ने गोष्टीवर जा, मग ॅरो की ती हलवतात; Shift + ॅरो वेगाने.</li>
+        <li data-i18n="key2">+ आणि − निवडलेली गोष्ट मोठी किंवा छोटी करतात.</li>
+        <li data-i18n="key3">Delete ती काढते; Esc निवड रद्द करते.</li>
+        <li data-i18n="key4">Ctrl+Z पूर्ववत, Ctrl+Y पुन्हा.</li>
       </ul>
       <div class="row spread" style="margin-top:12px">
-        <span class="small muted" data-i18n="reset_help"></span>
+        <span class="small muted" data-i18n="reset_help">या डिव्हाइसवरील सेव्ह केलेली सही आणि सेटिंग्ज विसरा.</span>
         <button class="btn btn-sm btn-danger" id="resetAll" type="button" data-i18n="reset"></button>
       </div>
     </details>

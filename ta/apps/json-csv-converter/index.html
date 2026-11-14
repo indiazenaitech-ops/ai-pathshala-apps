@@ -81,11 +81,11 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">செயலிகள், API-களிலிருந்து வரும் JSON-ஐ Excel-க்கான CSV அட்டவணையாக மாற்றுங்கள், CSV-ஐ JSON ஆக மாற்றுங்கள், JSON பிழையைச் சரியான வரி, நெடுவரிசையுடன் கண்டுபிடியுங்கள்.</p>
     <div class="tabs" id="mode-tabs" role="tablist">
-      <button type="button" role="tab" data-mode="j2c" data-i18n="mode_j2c"></button>
-      <button type="button" role="tab" data-mode="c2j" data-i18n="mode_c2j"></button>
-      <button type="button" role="tab" data-mode="fmt" data-i18n="mode_fmt"></button>
+      <button type="button" role="tab" data-mode="j2c" data-i18n="mode_j2c">JSON → CSV</button>
+      <button type="button" role="tab" data-mode="c2j" data-i18n="mode_c2j">CSV → JSON</button>
+      <button type="button" role="tab" data-mode="fmt" data-i18n="mode_fmt">JSON சரிபார் &amp; ஒழுங்குபடுத்து</button>
     </div>
     <p class="muted small" id="mode-help"></p>
 
@@ -95,49 +95,49 @@
           <h2 class="jc-h" id="in-label"></h2>
           <div class="row" style="gap:6px">
             <button class="btn btn-sm" id="load-sample" type="button"></button>
-            <button class="btn btn-sm btn-primary" id="open-file" type="button" data-i18n="open_file"></button>
+            <button class="btn btn-sm btn-primary" id="open-file" type="button" data-i18n="open_file">கோப்பைத் திற</button>
             <button class="btn btn-sm" id="clear-in" type="button" data-i18n="clear"></button>
           </div>
         </div>
         <textarea id="input" class="jc-code no-i18n" spellcheck="false" autocomplete="off" data-i18n-aria-label="in_label" data-i18n-placeholder="in_ph"></textarea>
         <div class="jc-meta small muted">
           <span id="in-size"></span>
-          <span data-i18n="drop_hint"></span>
+          <span data-i18n="drop_hint">கோப்புகள் இந்தச் சாதனத்திலேயே இருக்கும்.</span>
           <span id="busy" hidden data-i18n="loading"></span>
-          <span id="big-note" hidden data-i18n="big_view"></span>
+          <span id="big-note" hidden data-i18n="big_view">மிகப் பெரிய கோப்பு: இங்கே தொடக்கம் மட்டுமே தெரியும், ஆனால் முழுக் கோப்பும் மாற்றப்படும்.</span>
         </div>
-        <button class="btn btn-primary" id="convert" type="button" hidden data-i18n="convert" style="margin-top:8px"></button>
+        <button class="btn btn-primary" id="convert" type="button" hidden data-i18n="convert" style="margin-top:8px">மாற்று</button>
 
         <div class="jc-opts" id="opts-j2c">
-          <label class="field"><span data-i18n="rec_path"></span><select id="rec-path" class="no-i18n"></select></label>
-          <label class="field"><span data-i18n="arr_mode"></span>
+          <label class="field"><span data-i18n="rec_path">வரிசைகள் எங்கிருந்து</span><select id="rec-path" class="no-i18n"></select></label>
+          <label class="field"><span data-i18n="arr_mode">பதிவுக்குள் உள்ள பட்டியல்கள்</span>
             <select id="arr-mode">
-              <option value="join" data-i18n="arr_join"></option>
-              <option value="explode" data-i18n="arr_explode"></option>
-              <option value="json" data-i18n="arr_json"></option>
+              <option value="join" data-i18n="arr_join">ஒரு கலத்தில் சேர் (&quot;a; b&quot;)</option>
+              <option value="explode" data-i18n="arr_explode">ஒவ்வொரு உருப்படிக்கும் ஒரு வரிசை</option>
+              <option value="json" data-i18n="arr_json">JSON உரையாகவே வை</option>
             </select></label>
         </div>
         <div class="jc-opts" id="opts-c2j" hidden>
-          <label class="check"><input type="checkbox" id="opt-text"> <span data-i18n="opt_text"></span></label>
-          <label class="check"><input type="checkbox" id="opt-nest"> <span data-i18n="opt_nest"></span></label>
-          <label class="field"><span data-i18n="out_fmt"></span>
+          <label class="check"><input type="checkbox" id="opt-text"> <span data-i18n="opt_text">ஒவ்வொரு மதிப்பையும் உரையாகவே வை</span></label>
+          <label class="check"><input type="checkbox" id="opt-nest"> <span data-i18n="opt_nest">address.city போன்ற நெடுவரிசைகளை உள்ளடங்கிய பொருளாக மாற்று</span></label>
+          <label class="field"><span data-i18n="out_fmt">வெளியீடு</span>
             <select id="out-fmt">
-              <option value="pretty" data-i18n="fmt_pretty"></option>
-              <option value="compact" data-i18n="fmt_compact"></option>
-              <option value="jsonl" data-i18n="fmt_jsonl"></option>
+              <option value="pretty" data-i18n="fmt_pretty">JSON, படிக்க எளிது</option>
+              <option value="compact" data-i18n="fmt_compact">JSON, ஒரே வரி (சிறியது)</option>
+              <option value="jsonl" data-i18n="fmt_jsonl">JSON Lines (ஒரு வரிக்கு ஒரு பொருள்)</option>
             </select></label>
         </div>
         <div class="jc-opts" id="opts-fmt" hidden>
-          <label class="field"><span data-i18n="indent"></span>
+          <label class="field"><span data-i18n="indent">உள்தள்ளல்</span>
             <select id="indent">
-              <option value="2" data-i18n="indent_2"></option>
-              <option value="4" data-i18n="indent_4"></option>
-              <option value="tab" data-i18n="indent_tab"></option>
+              <option value="2" data-i18n="indent_2">2 இடைவெளி</option>
+              <option value="4" data-i18n="indent_4">4 இடைவெளி</option>
+              <option value="tab" data-i18n="indent_tab">டேப்</option>
             </select></label>
           <div class="row" style="gap:6px">
-            <button class="btn" id="btn-pretty" type="button" data-i18n="btn_pretty"></button>
-            <button class="btn" id="btn-min" type="button" data-i18n="btn_min"></button>
-            <button class="btn btn-sm btn-ghost" id="btn-use" type="button" data-i18n="btn_use"></button>
+            <button class="btn" id="btn-pretty" type="button" data-i18n="btn_pretty">அழகாகக் காட்டு</button>
+            <button class="btn" id="btn-min" type="button" data-i18n="btn_min">சிறிதாக்கு</button>
+            <button class="btn btn-sm btn-ghost" id="btn-use" type="button" data-i18n="btn_use">முடிவை உள்ளீடாக்கு</button>
           </div>
         </div>
 
@@ -146,35 +146,35 @@
           <p class="msg" id="err-msg"></p>
           <p class="small" id="err-where" style="margin:0"></p>
           <pre id="err-code" class="no-i18n"></pre>
-          <button class="btn btn-sm" id="goto-err" type="button" data-i18n="goto_err"></button>
+          <button class="btn btn-sm" id="goto-err" type="button" data-i18n="goto_err">உள்ளீட்டில் காட்டு</button>
         </div>
         <p id="notes" class="callout warning small" hidden></p>
       </section>
 
       <section class="card" aria-labelledby="out-h">
         <div class="jc-bar-top">
-          <h2 class="jc-h" id="out-h" data-i18n="out_title"></h2>
+          <h2 class="jc-h" id="out-h" data-i18n="out_title">முடிவு</h2>
           <span class="small muted" id="timing"></span>
         </div>
         <div class="tabs" id="out-tabs" role="tablist">
-          <button type="button" role="tab" data-tab="table" data-i18n="tab_table"></button>
+          <button type="button" role="tab" data-tab="table" data-i18n="tab_table">அட்டவணை</button>
           <button type="button" role="tab" data-tab="text" id="tab-text"></button>
-          <button type="button" role="tab" data-tab="schema" data-i18n="tab_schema"></button>
+          <button type="button" role="tab" data-tab="schema" data-i18n="tab_schema">ஸ்கீமா</button>
         </div>
-        <p id="out-empty" class="muted" data-i18n="out_empty"></p>
+        <p id="out-empty" class="muted" data-i18n="out_empty">இன்னும் காட்ட எதுவும் இல்லை.</p>
         <div id="out-table" hidden>
           <div class="jc-gridwrap no-i18n"><table class="table" id="grid"></table></div>
           <div class="jc-pager" id="pager"><button class="btn btn-sm" id="pg-prev" type="button" data-i18n="previous"></button><span id="page-info" class="small"></span><button class="btn btn-sm" id="pg-next" type="button" data-i18n="next"></button></div>
         </div>
         <div id="out-text" hidden>
           <textarea id="output" class="jc-code no-i18n" readonly spellcheck="false" data-i18n-aria-label="out_title"></textarea>
-          <div class="jc-meta small muted"><span id="out-size"></span><span id="text-cut" hidden data-i18n="text_cut"></span></div>
+          <div class="jc-meta small muted"><span id="out-size"></span><span id="text-cut" hidden data-i18n="text_cut">இங்கே முதல் பகுதி மட்டுமே தெரிகிறது. பதிவிறக்கம் அல்லது நகல் முழுவதையும் தரும்.</span></div>
         </div>
         <div id="out-schema" hidden>
           <p class="small muted" id="schema-info"></p>
           <div class="scroll-x">
             <table class="table jc-schema">
-              <thead><tr><th scope="col" data-i18n="sc_field"></th><th scope="col" data-i18n="sc_type"></th><th scope="col" data-i18n="sc_present"></th><th scope="col" data-i18n="sc_example"></th></tr></thead>
+              <thead><tr><th scope="col" data-i18n="sc_field">புலம்</th><th scope="col" data-i18n="sc_type">வகை</th><th scope="col" data-i18n="sc_present">நிரம்பியது</th><th scope="col" data-i18n="sc_example">எடுத்துக்காட்டு</th></tr></thead>
               <tbody id="schema-body"></tbody>
             </table>
           </div>
@@ -190,15 +190,15 @@
     <details class="card jc-sec">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">மாதிரி API பதிலுடன் தொடங்குங்கள்: அட்டவணையைப் பாருங்கள், பிறகு &quot;பதிவுக்குள் உள்ள பட்டியல்கள்&quot; என்பதை &quot;ஒவ்வொரு உருப்படிக்கும் ஒரு வரிசை&quot; என மாற்றி 3 ஆர்டர்கள் 6 வரிசைகளாவதைப் பாருங்கள்.</li>
+        <li data-i18n="tip2">அலுவலகம்: பல செயலிகளும் இணையதளங்களும் JSON ஏற்றுமதி செய்கின்றன. அதை இங்கே CSV ஆக்கி Excel அல்லது Google Sheets-இல் திறங்கள். அல்லது தாளை CSV ஆகச் சேமித்து இணையதளம் அல்லது செயலிக்கான JSON ஆக்குங்கள்.</li>
+        <li data-i18n="tip3">09876543210 போன்ற தொலைபேசி எண்களும் 007 போன்ற குறியீடுகளும் உரையாகவே இருக்கும்; எண்ணாக்கினால் தொடக்க 0 போய்விடும்.</li>
+        <li data-i18n="tip4">வகுப்புச் செயல்பாடு: பலகையில் உங்கள் வகுப்பைப் பற்றி ஒரு சிறிய JSON எழுதுங்கள் (பெயர், வயது, பொழுதுபோக்குப் பட்டியல்), அதில் ஒரு பிழை இருக்கட்டும். மாணவர்கள் அதைக் கண்டுபிடித்து, &quot;JSON சரிபார் &amp; ஒழுங்குபடுத்து&quot; மூலம் சரிபார்க்கட்டும்.</li>
+        <li data-i18n="tip5">பெரிய கோப்புகளும் (10 MB அல்லது அதிகம்) வேலை செய்யும். உங்கள் கோப்பு இந்தச் சாதனத்திலேயே படிக்கப்படுகிறது; எதுவும் பதிவேற்றப்படாது.</li>
       </ul>
     </details>
     <details class="card jc-sec">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">தெரிந்துகொள்ள வேண்டிய சொற்கள்: உள்ளே என்ன நடக்கிறது</summary>
       <ul>
         <li data-i18n-html="w_json"></li>
         <li data-i18n-html="w_csv"></li>

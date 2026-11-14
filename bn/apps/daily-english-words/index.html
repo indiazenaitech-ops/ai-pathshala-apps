@@ -206,7 +206,7 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">প্রতিদিন 10টি দরকারি ইংরেজি শব্দ শিখুন: আপনার ভাষায় অর্থ, উচ্চারণ, উদাহরণ বাক্য, অডিও, অনুশীলনের খেলা আর বুদ্ধিমান পুনরাবৃত্তি। 60 দিন, 600 শব্দ, বিনামূল্যে ও অফলাইন।</p>
 
     <!-- ================= TODAY ================= -->
     <section class="card dew-today" id="todayCard" aria-labelledby="listTitle">
@@ -220,16 +220,16 @@
           <p class="muted small mb0" id="listSub"></p>
         </div>
         <div class="dew-stats" aria-live="polite">
-          <div class="dew-stat"><b id="statStreak"></b><span data-i18n="streak"></span></div>
-          <div class="dew-stat"><b id="statLearned"></b><span data-i18n="learned_total"></span></div>
-          <div class="dew-stat"><b id="statDue"></b><span data-i18n="due_today"></span></div>
+          <div class="dew-stat"><b id="statStreak"></b><span data-i18n="streak">দিনের ধারা</span></div>
+          <div class="dew-stat"><b id="statLearned"></b><span data-i18n="learned_total">শেখা শব্দ</span></div>
+          <div class="dew-stat"><b id="statDue"></b><span data-i18n="due_today">আজ ঝালাই করতে হবে</span></div>
         </div>
       </div>
       <div class="dew-goal" id="goalWrap">
         <div class="dew-goal-row">
           <span id="goalText" class="small"></span>
           <div class="row" style="gap:8px">
-            <span class="tiny muted" data-i18n="goal_label"></span>
+            <span class="tiny muted" data-i18n="goal_label">দৈনিক লক্ষ্য</span>
             <div class="seg" id="goalSeg" role="group" data-i18n-aria-label="goal_label">
               <button type="button" data-v="5">5</button><button type="button" data-v="10">10</button><button type="button" data-v="20">20</button>
             </div>
@@ -238,17 +238,17 @@
         <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="goalProg"><span id="goalBar" style="width:0%"></span></div>
       </div>
       <div class="dew-actions">
-        <button type="button" class="btn btn-primary btn-lg" id="goLearn"><span aria-hidden="true">📖 </span><span data-i18n="go_learn"></span></button>
-        <button type="button" class="btn" id="goPractice"><span aria-hidden="true">✍️ </span><span data-i18n="go_practice"></span></button>
+        <button type="button" class="btn btn-primary btn-lg" id="goLearn"><span aria-hidden="true">📖 </span><span data-i18n="go_learn">আজকের শব্দ শিখুন</span></button>
+        <button type="button" class="btn" id="goPractice"><span aria-hidden="true">✍️ </span><span data-i18n="go_practice">অনুশীলন</span></button>
         <button type="button" class="btn" id="goReview"><span aria-hidden="true">🔁 </span><span id="goReviewTxt"></span></button>
       </div>
     </section>
 
     <div class="tabs dew-tabs no-print" role="tablist" data-i18n-aria-label="modes">
-      <button type="button" role="tab" id="tab-learn" aria-controls="p-learn"><span class="ic" aria-hidden="true">📖</span><span data-i18n="tab_learn"></span></button>
-      <button type="button" role="tab" id="tab-practice" aria-controls="p-practice"><span class="ic" aria-hidden="true">✍️</span><span data-i18n="tab_practice"></span></button>
-      <button type="button" role="tab" id="tab-review" aria-controls="p-review"><span class="ic" aria-hidden="true">🔁</span><span data-i18n="tab_review"></span> <span class="badge accent cnt" id="dueBadge" hidden></span></button>
-      <button type="button" role="tab" id="tab-lists" aria-controls="p-lists"><span class="ic" aria-hidden="true">📚</span><span data-i18n="tab_lists"></span></button>
+      <button type="button" role="tab" id="tab-learn" aria-controls="p-learn"><span class="ic" aria-hidden="true">📖</span><span data-i18n="tab_learn">শিখুন</span></button>
+      <button type="button" role="tab" id="tab-practice" aria-controls="p-practice"><span class="ic" aria-hidden="true">✍️</span><span data-i18n="tab_practice">অনুশীলন</span></button>
+      <button type="button" role="tab" id="tab-review" aria-controls="p-review"><span class="ic" aria-hidden="true">🔁</span><span data-i18n="tab_review">ঝালাই</span> <span class="badge accent cnt" id="dueBadge" hidden></span></button>
+      <button type="button" role="tab" id="tab-lists" aria-controls="p-lists"><span class="ic" aria-hidden="true">📚</span><span data-i18n="tab_lists">সব তালিকা</span></button>
     </div>
 
     <!-- ================= LEARN ================= -->
@@ -260,15 +260,15 @@
             <button type="button" class="btn btn-sm" id="nextList"><span data-i18n="next"></span> <span aria-hidden="true" class="arr">→</span></button>
           </div>
           <div class="row">
-            <label class="check small"><input type="checkbox" id="hideChk"> <span data-i18n="hide_meanings"></span></label>
-            <button type="button" class="btn btn-sm" id="playAll"><span aria-hidden="true">🔊 </span><span data-i18n="play_all"></span></button>
-            <button type="button" class="btn btn-sm" id="printBtn"><span aria-hidden="true">🖨 </span><span data-i18n="worksheet"></span></button>
+            <label class="check small"><input type="checkbox" id="hideChk"> <span data-i18n="hide_meanings">অর্থ লুকান (নিজেকে পরীক্ষা করুন)</span></label>
+            <button type="button" class="btn btn-sm" id="playAll"><span aria-hidden="true">🔊 </span><span data-i18n="play_all">সব শুনুন</span></button>
+            <button type="button" class="btn btn-sm" id="printBtn"><span aria-hidden="true">🖨 </span><span data-i18n="worksheet">ওয়ার্কশিট প্রিন্ট</span></button>
             <button type="button" class="edu-iconbtn" id="fsBtn" data-i18n-aria-label="fullscreen" data-i18n-title="fullscreen">⛶</button>
           </div>
         </div>
         <ol class="dew-words" id="wordList"></ol>
         <div class="dew-foot">
-          <p class="muted small" id="learnHint" data-i18n="learn_hint"></p>
+          <p class="muted small" id="learnHint" data-i18n="learn_hint">প্রতিটি শব্দ পড়ুন, শুনুন, জোরে বলুন আর নিজের বাক্য বানান। তারপর তালিকাটি ঝালাইয়ের সারিতে যোগ করুন।</p>
           <button type="button" class="btn btn-primary btn-lg" id="markLearned"><span aria-hidden="true">✓ </span><span id="markTxt"></span></button>
         </div>
       </div>
@@ -277,25 +277,25 @@
     <!-- ================= PRACTICE ================= -->
     <section id="p-practice" role="tabpanel" aria-labelledby="tab-practice" hidden>
       <div id="pracSetup" class="card stack">
-        <h2 class="mb0" data-i18n="practice_title"></h2>
+        <h2 class="mb0" data-i18n="practice_title">অনুশীলন</h2>
         <p class="muted mb0" id="pracHelp"></p>
         <div class="row" style="gap:16px 28px">
-          <div class="field"><span id="modeLbl" data-i18n="mode_label"></span>
+          <div class="field"><span id="modeLbl" data-i18n="mode_label">ধরন</span>
             <div class="seg" id="modeSeg" role="group" aria-labelledby="modeLbl">
-              <button type="button" data-v="mcq"><span aria-hidden="true">🅰 </span><span data-i18n="mode_mcq"></span></button>
-              <button type="button" data-v="type"><span aria-hidden="true">⌨ </span><span data-i18n="mode_type"></span></button>
-              <button type="button" data-v="listen"><span aria-hidden="true">🔊 </span><span data-i18n="mode_listen"></span></button>
+              <button type="button" data-v="mcq"><span aria-hidden="true">🅰 </span><span data-i18n="mode_mcq">অর্থ বাছুন</span></button>
+              <button type="button" data-v="type"><span aria-hidden="true">⌨ </span><span data-i18n="mode_type">শব্দ টাইপ করুন</span></button>
+              <button type="button" data-v="listen"><span aria-hidden="true">🔊 </span><span data-i18n="mode_listen">শুনে বাছুন</span></button>
             </div>
           </div>
-          <div class="field"><span id="poolLbl" data-i18n="pool_label"></span>
+          <div class="field"><span id="poolLbl" data-i18n="pool_label">শব্দ</span>
             <div class="seg" id="poolSeg" role="group" aria-labelledby="poolLbl">
-              <button type="button" data-v="list" data-i18n="pool_list"></button>
-              <button type="button" data-v="learned" data-i18n="pool_learned"></button>
+              <button type="button" data-v="list" data-i18n="pool_list">আজকের তালিকা</button>
+              <button type="button" data-v="learned" data-i18n="pool_learned">শেখা শব্দ</button>
             </div>
           </div>
         </div>
-        <p class="callout warning" id="poolWarn" hidden data-i18n="pool_need"></p>
-        <div><button type="button" class="btn btn-primary btn-lg" id="startPractice"><span aria-hidden="true">▶ </span><span data-i18n="start_practice"></span></button></div>
+        <p class="callout warning" id="poolWarn" hidden data-i18n="pool_need">আগে অন্তত 4টি শব্দ শিখুন (একটি তালিকা খুলে &quot;এগুলো শিখেছি&quot; চাপুন)।</p>
+        <div><button type="button" class="btn btn-primary btn-lg" id="startPractice"><span aria-hidden="true">▶ </span><span data-i18n="start_practice">অনুশীলন শুরু</span></button></div>
       </div>
 
       <div id="pracRun" class="card stack" hidden>
@@ -308,31 +308,31 @@
         <div class="dew-prompt" id="pracPrompt"></div>
         <div id="pracOptions" class="dew-options" role="group"></div>
         <div id="pracTypeWrap" class="stack" hidden>
-          <label class="field"><span data-i18n="your_answer"></span>
+          <label class="field"><span data-i18n="your_answer">আপনার উত্তর</span>
             <input type="text" id="pracInput" class="no-i18n" autocomplete="off" autocapitalize="off" spellcheck="false" lang="en" data-i18n-placeholder="type_ph">
           </label>
           <div class="row" id="pracAskRow">
-            <button type="button" class="btn btn-primary" id="pracCheck" data-i18n="check"></button>
-            <button type="button" class="btn" id="pracSkip" data-i18n="dont_know"></button>
+            <button type="button" class="btn btn-primary" id="pracCheck" data-i18n="check">যাচাই</button>
+            <button type="button" class="btn" id="pracSkip" data-i18n="dont_know">জানি না</button>
           </div>
         </div>
         <div id="pracFeedback" aria-live="polite"></div>
         <div class="row" id="pracNextRow" hidden>
           <button type="button" class="btn btn-primary" id="pracNext"><span data-i18n="next"></span> <span aria-hidden="true" class="arr">→</span></button>
         </div>
-        <div class="row" style="justify-content:flex-end"><button type="button" class="btn btn-sm" id="pracEnd" data-i18n="end_practice"></button></div>
+        <div class="row" style="justify-content:flex-end"><button type="button" class="btn btn-sm" id="pracEnd" data-i18n="end_practice">অনুশীলন শেষ</button></div>
       </div>
 
       <div id="pracResult" class="card stack dew-result" hidden>
-        <h2 class="mb0" data-i18n="practice_done"></h2>
+        <h2 class="mb0" data-i18n="practice_done">অনুশীলন সম্পূর্ণ!</h2>
         <div class="big-number" id="pracFinal" aria-live="polite"></div>
         <p id="pracMsg" class="mb0"></p>
-        <h3 id="mistHead" class="mb0" data-i18n="mistakes" style="text-align:start"></h3>
+        <h3 id="mistHead" class="mb0" data-i18n="mistakes" style="text-align:start">আবার দেখার শব্দ</h3>
         <ul class="dew-mist" id="pracMist"></ul>
         <div class="row" style="justify-content:center">
-          <button type="button" class="btn btn-accent" id="pracRetry"><span aria-hidden="true">🔁 </span><span data-i18n="retry_mistakes"></span></button>
-          <button type="button" class="btn btn-primary" id="pracNew" data-i18n="new_practice"></button>
-          <button type="button" class="btn" id="pracToReview" data-i18n="go_review_now"></button>
+          <button type="button" class="btn btn-accent" id="pracRetry"><span aria-hidden="true">🔁 </span><span data-i18n="retry_mistakes">ভুলগুলো আবার</span></button>
+          <button type="button" class="btn btn-primary" id="pracNew" data-i18n="new_practice">আবার অনুশীলন</button>
+          <button type="button" class="btn" id="pracToReview" data-i18n="go_review_now">ঝালাইয়ে যান</button>
         </div>
       </div>
     </section>
@@ -342,14 +342,14 @@
       <div id="revStart" class="card stack center">
         <div class="dew-due">
           <span class="big-number" id="dueCount" aria-live="polite"></span>
-          <span class="muted" data-i18n="due_count_label"></span>
+          <span class="muted" data-i18n="due_count_label">শব্দ আজ ঝালাই করতে হবে</span>
         </div>
-        <p id="revEmpty" class="empty mb0" hidden data-i18n="review_empty"></p>
-        <p id="revAllDone" class="mb0" style="font-weight:800;color:var(--success);font-size:1.2rem" hidden data-i18n="all_reviewed"></p>
+        <p id="revEmpty" class="empty mb0" hidden data-i18n="review_empty">আপনার ঝালাইয়ের সারি খালি। আজকের তালিকা শিখে &quot;এগুলো শিখেছি&quot; চাপুন।</p>
+        <p id="revAllDone" class="mb0" style="font-weight:800;color:var(--success);font-size:1.2rem" hidden data-i18n="all_reviewed">আজকের কাজ শেষ!</p>
         <p id="revNext" class="muted mb0" hidden></p>
         <div class="row" style="justify-content:center">
-          <button type="button" class="btn btn-primary btn-lg" id="startReview"><span aria-hidden="true">▶ </span><span data-i18n="start_review"></span></button>
-          <button type="button" class="btn" id="revGoLearn" hidden><span aria-hidden="true">📖 </span><span data-i18n="go_learn"></span></button>
+          <button type="button" class="btn btn-primary btn-lg" id="startReview"><span aria-hidden="true">▶ </span><span data-i18n="start_review">ঝালাই শুরু</span></button>
+          <button type="button" class="btn" id="revGoLearn" hidden><span aria-hidden="true">📖 </span><span data-i18n="go_learn">আজকের শব্দ শিখুন</span></button>
         </div>
       </div>
 
@@ -361,26 +361,26 @@
         </div>
         <button type="button" class="dew-card" id="revCard"></button>
         <div id="revFlipRow" class="stack center">
-          <button type="button" class="btn btn-primary btn-lg" id="revShow"><span data-i18n="show_answer"></span> <kbd class="dew-kbd no-i18n">Space</kbd></button>
+          <button type="button" class="btn btn-primary btn-lg" id="revShow"><span data-i18n="show_answer">উত্তর দেখান</span> <kbd class="dew-kbd no-i18n">Space</kbd></button>
         </div>
         <div class="dew-rate" id="revRate" hidden>
-          <button type="button" class="btn r-again" id="rateAgain"><span data-i18n="rate_again"></span><small id="ivAgain"></small></button>
-          <button type="button" class="btn r-hard" id="rateHard"><span data-i18n="rate_hard"></span><small id="ivHard"></small></button>
-          <button type="button" class="btn r-good" id="rateGood"><span data-i18n="rate_good"></span><small id="ivGood"></small></button>
-          <button type="button" class="btn r-easy" id="rateEasy"><span data-i18n="rate_easy"></span><small id="ivEasy"></small></button>
+          <button type="button" class="btn r-again" id="rateAgain"><span data-i18n="rate_again">আবার</span><small id="ivAgain"></small></button>
+          <button type="button" class="btn r-hard" id="rateHard"><span data-i18n="rate_hard">কঠিন</span><small id="ivHard"></small></button>
+          <button type="button" class="btn r-good" id="rateGood"><span data-i18n="rate_good">ঠিক আছে</span><small id="ivGood"></small></button>
+          <button type="button" class="btn r-easy" id="rateEasy"><span data-i18n="rate_easy">সহজ</span><small id="ivEasy"></small></button>
         </div>
         <div class="row spread">
-          <span class="tiny muted dew-kbd" data-i18n="kbd_hint"></span>
-          <button type="button" class="btn btn-sm" id="revEnd" data-i18n="end_review"></button>
+          <span class="tiny muted dew-kbd" data-i18n="kbd_hint">কীবোর্ড: Space = উত্তর দেখান, 1–4 = রেটিং</span>
+          <button type="button" class="btn btn-sm" id="revEnd" data-i18n="end_review">শেষ</button>
         </div>
       </div>
 
       <div id="revDone" class="card stack" hidden>
-        <h2 class="mb0"><span aria-hidden="true">🎉 </span><span data-i18n="review_done"></span></h2>
+        <h2 class="mb0"><span aria-hidden="true">🎉 </span><span data-i18n="review_done">ঝালাই সম্পূর্ণ</span></h2>
         <div class="dew-sum" aria-live="polite">
-          <div><b id="sumReviewed"></b><span data-i18n="sum_reviewed"></span></div>
-          <div><b id="sumAgain"></b><span data-i18n="sum_again"></span></div>
-          <div><b id="sumStreak"></b><span data-i18n="streak"></span></div>
+          <div><b id="sumReviewed"></b><span data-i18n="sum_reviewed">শব্দ ঝালাই হলো</span></div>
+          <div><b id="sumAgain"></b><span data-i18n="sum_again">আবার দেখতে হবে</span></div>
+          <div><b id="sumStreak"></b><span data-i18n="streak">দিনের ধারা</span></div>
         </div>
         <p id="sumNext" class="muted mb0"></p>
         <div class="row"><button type="button" class="btn btn-primary" id="revDoneBtn" data-i18n="done"></button></div>
@@ -390,44 +390,44 @@
     <!-- ================= LISTS ================= -->
     <section id="p-lists" role="tabpanel" aria-labelledby="tab-lists" hidden>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="lists_title"></h2>
+        <h2 class="mb0" data-i18n="lists_title">সব 60টি তালিকা</h2>
         <div class="dew-chips" id="packChips" role="group" data-i18n-aria-label="packs_label"></div>
         <p class="muted small mb0" id="packInfo"></p>
         <ol class="dew-lists" id="listGrid"></ol>
       </div>
 
       <div class="card stack mt">
-        <h3 class="mb0" data-i18n="progress_title"></h3>
+        <h3 class="mb0" data-i18n="progress_title">আপনার অগ্রগতি</h3>
         <div class="dew-pstats" aria-live="polite">
-          <div><b id="psWords"></b><span data-i18n="ps_words"></span></div>
-          <div><b id="psLists"></b><span data-i18n="ps_lists"></span></div>
-          <div><b id="psBest"></b><span data-i18n="ps_best"></span></div>
-          <div><b id="psReviews"></b><span data-i18n="ps_reviews"></span></div>
+          <div><b id="psWords"></b><span data-i18n="ps_words">শব্দ শেখা</span></div>
+          <div><b id="psLists"></b><span data-i18n="ps_lists">তালিকা সম্পূর্ণ</span></div>
+          <div><b id="psBest"></b><span data-i18n="ps_best">সেরা ধারা (দিন)</span></div>
+          <div><b id="psReviews"></b><span data-i18n="ps_reviews">ঝালাই করা</span></div>
         </div>
         <div class="dew-btns">
-          <a class="btn btn-wa" id="waShare" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬 </span><span data-i18n="share_progress"></span></a>
+          <a class="btn btn-wa" id="waShare" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬 </span><span data-i18n="share_progress">অগ্রগতি শেয়ার করুন</span></a>
           <button type="button" class="btn" id="copyShare"><span aria-hidden="true">📋 </span><span data-i18n="copy"></span></button>
           <button type="button" class="btn" id="nativeShare" hidden><span aria-hidden="true">↗ </span><span data-i18n="share"></span></button>
-          <button type="button" class="btn" id="backupBtn"><span aria-hidden="true">💾 </span><span data-i18n="backup"></span></button>
-          <button type="button" class="btn" id="restoreBtn"><span aria-hidden="true">📂 </span><span data-i18n="restore"></span></button>
-          <button type="button" class="btn btn-danger" id="resetBtn"><span aria-hidden="true">↺ </span><span data-i18n="reset_progress"></span></button>
+          <button type="button" class="btn" id="backupBtn"><span aria-hidden="true">💾 </span><span data-i18n="backup">ব্যাকআপ</span></button>
+          <button type="button" class="btn" id="restoreBtn"><span aria-hidden="true">📂 </span><span data-i18n="restore">ফিরিয়ে আনুন</span></button>
+          <button type="button" class="btn btn-danger" id="resetBtn"><span aria-hidden="true">↺ </span><span data-i18n="reset_progress">অগ্রগতি মুছুন</span></button>
         </div>
-        <p class="tiny muted mb0"><span aria-hidden="true">🔒 </span><span data-i18n="privacy_line"></span></p>
+        <p class="tiny muted mb0"><span aria-hidden="true">🔒 </span><span data-i18n="privacy_line">আপনার অগ্রগতি শুধু এই ডিভাইসে সেভ থাকে। কিছুই কোথাও পাঠানো হয় না।</span></p>
       </div>
     </section>
 
     <details class="card dew-help mt" id="help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">কীভাবে ব্যবহার করবেন / আইডিয়া</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">প্রতিদিন অ্যাপ খুলুন: আজকের 10টি শব্দের তালিকা তৈরি থাকবে। পড়ুন, শুনুন (🔊) আর প্রতিটি শব্দ জোরে বলুন।</li>
+        <li data-i18n="help_2">&quot;এগুলো শিখেছি&quot; চেপে শব্দগুলো ঝালাইয়ের সারিতে যোগ করুন, তারপর ছোট অনুশীলন খেলুন: অর্থ বাছুন, শব্দ টাইপ করুন বা শুনে বাছুন।</li>
+        <li data-i18n="help_3">ঝালাই: প্রতিটি শব্দকে আবার, কঠিন, ঠিক আছে বা সহজ বলুন। জানা শব্দ বেশি দিন পরে ফেরে; কঠিন শব্দ তাড়াতাড়ি ফেরে। দিনে পাঁচ মিনিটই যথেষ্ট।</li>
+        <li data-i18n="help_4">প্যাক: ইন্টারভিউর প্রস্তুতি? সব তালিকায় ইন্টারভিউ প্যাক বাছুন। দোকানদার: দোকান প্যাক। WhatsApp-এ চ্যাট: WhatsApp প্যাক।</li>
+        <li data-i18n="help_5">ক্লাস বা পরিবারের জন্য: ওয়ার্কশিট প্রিন্ট করুন, 10টি শব্দ একসঙ্গে শিখুন, তারপর বড় পর্দায় &quot;শুনে বাছুন&quot; খেলুন; যে আগে অর্থ বলবে সে জিতবে।</li>
+        <li data-i18n="help_6">অনুশীলনের আগে &quot;অর্থ লুকান&quot; দিয়ে নিজেকে পরীক্ষা করুন, আর ধারা বজায় রাখতে 5, 10 বা 20 শব্দের দৈনিক লক্ষ্য ঠিক করুন।</li>
       </ul>
-      <h3 data-i18n="inside_title"></h3>
-      <p class="mb0" data-i18n="inside_text"></p>
+      <h3 data-i18n="inside_title">স্পেসড রিপিটিশন (ঝালাই) কী?</h3>
+      <p class="mb0" data-i18n="inside_text">নতুন শব্দ এক-দুই দিনে মস্তিষ্ক ভুলে যায়, যদি না ভোলার ঠিক আগে সেটি আবার সামনে আসে। স্পেসড রিপিটিশন প্রতিটি শব্দ আজ, তারপর 1 দিন, 3 দিন, এক সপ্তাহ ও আরও পরে দেখায়, ঠিক যখন দরকার। সততার সঙ্গে রেটিং দিলে (আবার / কঠিন / ঠিক আছে / সহজ) অ্যাপ বুঝে নেয় শব্দটি কখন ফেরাতে হবে।</p>
     </details>
 
     <div id="printArea" class="print-only"></div>

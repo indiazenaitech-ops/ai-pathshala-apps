@@ -146,9 +146,9 @@
 </head>
 <body>
   <main id="app">
-    <h1 class="print-only" data-i18n="app_title"></h1>
+    <h1 class="print-only" data-i18n="app_title">ٹوکن ایکسپلورر</h1>
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">ChatGPT جیسے AI ماڈل حروف یا الفاظ نہیں پڑھتے، وہ ٹوکن پڑھتے ہیں۔ کچھ بھی لکھیں، اپنا ٹوکنائزر خود سکھائیں، اور دیکھیں کہ کچھ زبانوں کو زیادہ ٹوکن کیوں لگتے ہیں۔</p>
       <div class="row no-print">
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm" id="fs-btn" data-i18n="fullscreen"></button>
@@ -160,64 +160,64 @@
       <div class="lab-left">
         <!-- 1. Text -->
         <section class="card stack" id="input-card">
-          <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="input_t"></span></h2>
-          <label for="input" class="lbl" data-i18n="input_label"></label>
+          <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="input_t">کچھ لکھیں</span></h2>
+          <label for="input" class="lbl" data-i18n="input_label">ٹوکن میں کاٹنے کے لیے متن</label>
           <textarea id="input" class="no-i18n" rows="4" spellcheck="false" data-i18n-placeholder="input_ph"></textarea>
           <div class="row no-print">
-            <button type="button" class="btn btn-sm" id="ex-lang" data-i18n="ex_lang"></button>
-            <button type="button" class="btn btn-sm" id="ex-en" data-i18n="ex_en"></button>
-            <button type="button" class="btn btn-sm" id="ex-mix" data-i18n="ex_mix"></button>
+            <button type="button" class="btn btn-sm" id="ex-lang" data-i18n="ex_lang">میری زبان میں مثال</button>
+            <button type="button" class="btn btn-sm" id="ex-en" data-i18n="ex_en">انگریزی مثال</button>
+            <button type="button" class="btn btn-sm" id="ex-mix" data-i18n="ex_mix">ملی جلی زبان کی مثال</button>
             <button type="button" class="btn btn-sm btn-ghost" id="clear-input" data-i18n="clear"></button>
           </div>
         </section>
 
         <!-- 2. Tokenizer -->
         <section class="card stack" id="mode-card">
-          <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="mode_t"></span></h2>
+          <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="mode_t">ٹوکنائزر چنیں</span></h2>
           <div class="seg big no-print" role="group" data-i18n-aria-label="mode_t">
-            <button type="button" id="mode-char" data-i18n="mode_char"></button>
-            <button type="button" id="mode-word" data-i18n="mode_word"></button>
-            <button type="button" id="mode-bpe" data-i18n="mode_bpe"></button>
+            <button type="button" id="mode-char" data-i18n="mode_char">کیریکٹر</button>
+            <button type="button" id="mode-word" data-i18n="mode_word">الفاظ</button>
+            <button type="button" id="mode-bpe" data-i18n="mode_bpe">BPE (AI جیسا)</button>
           </div>
           <p class="callout small mb0" id="mode-note"></p>
 
           <div id="train-block" class="stack">
-            <h3 class="mb0" data-i18n="train_t"></h3>
+            <h3 class="mb0" data-i18n="train_t">ٹوکنائزر کو سکھائیں</h3>
             <div class="no-print">
-              <span class="lbl" id="src-lbl" data-i18n="train_src"></span>
+              <span class="lbl" id="src-lbl" data-i18n="train_src">تربیتی متن</span>
               <div class="seg src" role="group" aria-labelledby="src-lbl">
-                <button type="button" id="src-en" data-i18n="src_en"></button>
+                <button type="button" id="src-en" data-i18n="src_en">انگریزی</button>
                 <button type="button" id="src-lang"></button>
-                <button type="button" id="src-both" data-i18n="src_both"></button>
-                <button type="button" id="src-all" data-i18n="src_all"></button>
-                <button type="button" id="src-own" data-i18n="src_own"></button>
+                <button type="button" id="src-both" data-i18n="src_both">دونوں</button>
+                <button type="button" id="src-all" data-i18n="src_all">تمام 12 زبانیں</button>
+                <button type="button" id="src-own" data-i18n="src_own">میرا اپنا متن</button>
               </div>
             </div>
             <div id="own-wrap" class="stack" hidden>
-              <label for="own-text" class="lbl" data-i18n="own_label"></label>
+              <label for="own-text" class="lbl" data-i18n="own_label">آپ کا تربیتی متن</label>
               <textarea id="own-text" class="no-i18n" rows="4" spellcheck="false" data-i18n-placeholder="own_ph"></textarea>
             </div>
-            <p class="callout warning small mb0" id="own-empty" data-i18n="own_empty" hidden></p>
+            <p class="callout warning small mb0" id="own-empty" data-i18n="own_empty" hidden>آپ کا تربیتی متن خالی ہے۔ کچھ متن پیسٹ کریں، یا کوئی اور تربیتی متن چنیں۔</p>
             <p class="muted small mb0" id="corpus-info" aria-live="polite"></p>
 
             <div id="bpe-block" class="stack">
               <div>
                 <div class="range-head">
-                  <label for="merges" data-i18n="merges_label"></label>
+                  <label for="merges" data-i18n="merges_label">جوڑ کی تعداد</label>
                   <b id="merges-val" class="no-i18n"></b>
                 </div>
                 <input type="range" id="merges" min="0" max="600" step="1" class="no-print">
-                <div class="range-ends tiny muted no-print"><span data-i18n="merges_few"></span><span data-i18n="merges_many"></span></div>
+                <div class="range-ends tiny muted no-print"><span data-i18n="merges_few">کم جوڑ، چھوٹے ٹوکن</span><span data-i18n="merges_many">زیادہ جوڑ، بڑے ٹوکن</span></div>
               </div>
               <p class="small mb0" id="vocab-size"></p>
               <p class="callout small mb0" id="merges-early" aria-live="polite" hidden></p>
               <div class="row no-print">
-                <button type="button" class="btn btn-accent" id="play" data-i18n="play"></button>
-                <span class="small muted" data-i18n="play_hint"></span>
+                <button type="button" class="btn btn-accent" id="play" data-i18n="play">▶ سیکھتے ہوئے دیکھیں</button>
+                <span class="small muted" data-i18n="play_hint">0 سے شروع ہو کر ایک ایک کر کے جوڑ شامل کرتا ہے۔</span>
               </div>
-              <h4 class="mb0" data-i18n="merge_list_t"></h4>
+              <h4 class="mb0" data-i18n="merge_list_t">جوڑ کی فہرست (سب سے نیا سب سے اوپر)</h4>
               <div class="merge-box">
-                <p class="muted small merge-empty" id="merge-empty" data-i18n="merge_empty"></p>
+                <p class="muted small merge-empty" id="merge-empty" data-i18n="merge_empty">ابھی کوئی جوڑ نہیں، اس لیے ہر ٹوکن ایک بائٹ ہے۔ سلائیڈر کو آگے بڑھائیں۔</p>
                 <ol class="merge-list no-i18n" id="merge-list"></ol>
               </div>
             </div>
@@ -227,16 +227,16 @@
 
       <!-- 3. Tokens -->
       <section class="card stack" id="result-card">
-        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="result_t"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="result_t">ٹوکن دیکھیں</span></h2>
         <div class="stats" id="stats" aria-live="polite">
-          <div class="stat main"><b id="stat-tokens">0</b><span data-i18n="stat_tokens"></span></div>
-          <div class="stat"><b id="stat-chars">0</b><span data-i18n="stat_chars"></span></div>
-          <div class="stat"><b id="stat-bytes">0</b><span data-i18n="stat_bytes"></span></div>
-          <div class="stat"><b id="stat-cpt">0</b><span data-i18n="stat_cpt"></span></div>
-          <div class="stat unk" id="stat-unk-wrap" hidden><b id="stat-unk">0</b><span data-i18n="stat_unk"></span></div>
+          <div class="stat main"><b id="stat-tokens">0</b><span data-i18n="stat_tokens">ٹوکن</span></div>
+          <div class="stat"><b id="stat-chars">0</b><span data-i18n="stat_chars">کیریکٹر</span></div>
+          <div class="stat"><b id="stat-bytes">0</b><span data-i18n="stat_bytes">UTF-8 بائٹ</span></div>
+          <div class="stat"><b id="stat-cpt">0</b><span data-i18n="stat_cpt">فی ٹوکن کیریکٹر</span></div>
+          <div class="stat unk" id="stat-unk-wrap" hidden><b id="stat-unk">0</b><span data-i18n="stat_unk">نامعلوم [UNK]</span></div>
         </div>
         <div class="row spread no-print">
-          <label class="check"><input type="checkbox" id="show-ids"> <span data-i18n="show_ids"></span></label>
+          <label class="check"><input type="checkbox" id="show-ids"> <span data-i18n="show_ids">ٹوکن ID دکھائیں</span></label>
           <span class="small muted" id="mode-badge"></span>
         </div>
         <div class="chips no-i18n" id="chips" dir="auto"></div>
@@ -245,8 +245,8 @@
         <p class="muted small mb0" id="chips-hint"></p>
         <div id="ids-wrap" class="stack">
           <div class="row spread">
-            <h3 class="mb0" data-i18n="ids_t"></h3>
-            <button type="button" class="btn btn-sm no-print" id="copy-ids" data-i18n="copy_ids"></button>
+            <h3 class="mb0" data-i18n="ids_t">AI ماڈل اصل میں یہی دیکھتا ہے</h3>
+            <button type="button" class="btn btn-sm no-print" id="copy-ids" data-i18n="copy_ids">ID کاپی کریں</button>
           </div>
           <pre class="ids-box no-i18n" id="ids-box" dir="ltr"></pre>
         </div>
@@ -255,57 +255,57 @@
 
     <!-- 4. Comparison -->
     <section class="card stack" id="cmp-card">
-      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="cmp_t"></span></h2>
+      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="cmp_t">ایک ہی مطلب، 12 زبانیں</span></h2>
       <p class="mb0" id="cmp-intro"></p>
       <div class="legend">
-        <span><span class="sw en" aria-hidden="true"></span><span data-i18n="cmp_en"></span> <span class="muted small" id="cmp-en-m"></span></span>
-        <span><span class="sw mu" aria-hidden="true"></span><span data-i18n="cmp_multi"></span> <span class="muted small" id="cmp-mu-m"></span></span>
+        <span><span class="sw en" aria-hidden="true"></span><span data-i18n="cmp_en">صرف انگریزی پر سکھایا گیا</span> <span class="muted small" id="cmp-en-m"></span></span>
+        <span><span class="sw mu" aria-hidden="true"></span><span data-i18n="cmp_multi">تمام 12 زبانوں پر سکھایا گیا</span> <span class="muted small" id="cmp-mu-m"></span></span>
       </div>
       <div class="cmp-rows no-i18n" id="cmp-rows"></div>
       <p class="callout accent mb0" id="cmp-summary" aria-live="polite"></p>
       <p class="callout mb0 small" id="cmp-budget" hidden></p>
       <div class="callout warning">
-        <h3 data-i18n="cmp_why_t"></h3>
+        <h3 data-i18n="cmp_why_t">یہ برابری کا مسئلہ کیوں ہے؟</h3>
         <ul class="mb0" style="margin:0;padding-inline-start:20px">
-          <li data-i18n="cmp_why_1"></li>
-          <li data-i18n="cmp_why_2"></li>
-          <li data-i18n="cmp_why_3"></li>
-          <li data-i18n="cmp_why_4"></li>
+          <li data-i18n="cmp_why_1">پیسے لینے والی AI سروسز ہر ٹوکن کے پیسے لیتی ہیں۔ اگر آپ کی زبان کو 3 گنا ٹوکن لگتے ہیں، تو وہی سوال جواب 3 گنا مہنگا پڑتا ہے۔</li>
+          <li data-i18n="cmp_why_2">ماڈل ایک وقت میں مقررہ تعداد میں ہی ٹوکن پڑھ سکتا ہے (اس کی کانٹیکسٹ ونڈو)۔ ہر جملے میں زیادہ ٹوکن کا مطلب ہے کہ وہ آپ کے سبق یا چیٹ کا کم حصہ سنبھال پائے گا۔</li>
+          <li data-i18n="cmp_why_3">زیادہ ٹوکن سے جواب بھی آہستہ آتے ہیں۔ اور جس زبان کا متن تربیتی ڈیٹا میں کم ہوتا ہے، اس زبان میں جواب اکثر کمزور ہوتے ہیں۔</li>
+          <li data-i18n="cmp_why_4">اس کا حل یہ ہے کہ ٹوکنائزر کو ہندوستانی زبانوں پر بھی سکھایا جائے۔ نئے ماڈل اور ہندوستانی AI ٹیمیں ایسا کر رہی ہیں، تاکہ ان کے ٹوکن ہماری زبانوں میں بہتر بیٹھیں۔</li>
         </ul>
       </div>
-      <p class="muted small mb0" data-i18n="cmp_bytes_note"></p>
-      <p class="muted small mb0" id="cmp-real" data-i18n="cmp_real"></p>
+      <p class="muted small mb0" data-i18n="cmp_bytes_note">0 جوڑ پر اتنے زیادہ ٹوکن کیوں؟ تب ہر ٹوکن ایک بائٹ ہوتا ہے۔ UTF-8 میں انگریزی کا ایک حرف 1 بائٹ، اردو کا حرف 2 بائٹ، اور ہندی، تمل یا کسی بھی ہندوستانی رسم الخط کا حرف 3 بائٹ لیتا ہے۔</p>
+      <p class="muted small mb0" id="cmp-real" data-i18n="cmp_real">یہ پڑھانے کے لیے بنائے گئے بہت چھوٹے ٹوکنائزر ہیں، اس لیے اصلی AI ماڈلز میں تعداد الگ ہوتی ہے۔ لیکن اصلی ٹوکنائزرز پر ہونے والی تحقیق میں بھی یہی رجحان ملا ہے: بہت سی ہندوستانی زبانوں کو انگریزی سے زیادہ ٹوکن لگتے ہیں، اور جب ٹوکنائزر ہندوستانی زبانوں کے زیادہ متن سے سیکھتا ہے تو یہ فرق کم ہو جاتا ہے۔</p>
     </section>
 
     <!-- Inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside_t"></h2>
+      <h2 data-i18n="inside_t">اندر کیا ہو رہا ہے؟</h2>
       <div class="grid-2 inside-grid">
         <div class="panel stack">
-          <h3><span aria-hidden="true">🧩</span><span data-i18n="in_tok_t"></span></h3>
-          <p class="mb0" data-i18n="in_tok"></p>
+          <h3><span aria-hidden="true">🧩</span><span data-i18n="in_tok_t">ٹوکن الفاظ نہیں ہیں</span></h3>
+          <p class="mb0" data-i18n="in_tok">کمپیوٹر حروف نہیں سمجھتا۔ ٹوکنائزر پہلے متن کو چھوٹے ٹکڑوں میں کاٹتا ہے، جنہیں ٹوکن کہتے ہیں، اور ہر ٹکڑے کو ایک نمبر (ID) دیتا ہے۔ AI ماڈل صرف یہی نمبر دیکھتا ہے۔ ایک ٹوکن پورا لفظ (&quot;اسکول&quot;)، لفظ کا حصہ (&quot;ing&quot;)، ایک حرف، یا حرف کا ٹکڑا بھی ہو سکتا ہے۔</p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">🔢</span><span data-i18n="in_bpe_t"></span></h3>
-          <p class="mb0" data-i18n="in_bpe"></p>
+          <h3><span aria-hidden="true">🔢</span><span data-i18n="in_bpe_t">BPE کیسے سیکھتا ہے</span></h3>
+          <p class="mb0" data-i18n="in_bpe">بائٹ سے شروع کریں۔ تربیتی متن میں ساتھ ساتھ بیٹھے ٹوکن کی ہر جوڑی گنیں۔ سب سے عام جوڑی کو جوڑ کر ایک نیا ٹوکن بنائیں اور ذخیرۂ الفاظ میں ڈالیں۔ یہی دہراتے رہیں۔ بڑے AI ماڈلز کے ٹوکنائزر تب تک چلتے ہیں جب تک ان کے پاس تقریباً 50,000 سے 2,50,000 ٹوکن نہ ہو جائیں۔</p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">💾</span><span data-i18n="in_uni_t"></span></h3>
-          <p data-i18n="in_uni"></p>
-          <label for="byte-in" class="lbl" data-i18n="byte_demo"></label>
+          <h3><span aria-hidden="true">💾</span><span data-i18n="in_uni_t">Unicode اور بائٹ</span></h3>
+          <p data-i18n="in_uni">ہر زبان کے ہر کیریکٹر کا ایک Unicode نمبر ہوتا ہے: &quot;A&quot; کا U+0041 اور &quot;ک&quot; کا U+06A9۔ کمپیوٹر متن کو UTF-8 بائٹ میں محفوظ کرتا ہے۔ انگریزی حرف کو 1 بائٹ، اردو حرف کو 2 بائٹ، ہندوستانی رسم الخط کے حرف کو 3 بائٹ اور زیادہ تر ایموجی کو 4 بائٹ لگتے ہیں۔</p>
+          <label for="byte-in" class="lbl" data-i18n="byte_demo">خود آزمائیں: کچھ کیریکٹر لکھیں</label>
           <input type="text" id="byte-in" class="byte-in no-i18n" maxlength="24" autocomplete="off" spellcheck="false">
           <div class="scroll-x">
             <table class="table byte-table">
-              <thead><tr><th data-i18n="col_char"></th><th data-i18n="col_code"></th><th data-i18n="col_bytes"></th></tr></thead>
+              <thead><tr><th data-i18n="col_char">کیریکٹر</th><th data-i18n="col_code">Unicode نمبر</th><th data-i18n="col_bytes">UTF-8 بائٹ</th></tr></thead>
               <tbody id="byte-body" class="no-i18n"></tbody>
             </table>
           </div>
           <p class="small mb0" id="byte-total" aria-live="polite"></p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">🪟</span><span data-i18n="in_ctx_t"></span></h3>
-          <p data-i18n="in_ctx"></p>
-          <label for="ctx-size" class="lbl" data-i18n="ctx_label"></label>
+          <h3><span aria-hidden="true">🪟</span><span data-i18n="in_ctx_t">کانٹیکسٹ ونڈو</span></h3>
+          <p data-i18n="in_ctx">ماڈل کی کانٹیکسٹ ونڈو کا مطلب ہے کہ وہ ایک وقت میں زیادہ سے زیادہ کتنے ٹوکن سنبھال سکتا ہے: آپ کا سوال، اب تک کی چیٹ اور اس کا جواب۔ ونڈو بھر جانے پر سب سے پرانا حصہ کٹ جاتا ہے یا بھول جاتا ہے۔</p>
+          <label for="ctx-size" class="lbl" data-i18n="ctx_label">کانٹیکسٹ ونڈو کا سائز</label>
           <select id="ctx-size"></select>
           <p class="ctx-out mb0" id="ctx-out" aria-live="polite"></p>
         </div>
@@ -313,14 +313,14 @@
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">استعمال کیسے کریں / کلاس کے لیے خیالات</summary>
       <ul>
-        <li data-i18n="tip_1"></li>
-        <li data-i18n="tip_2"></li>
-        <li data-i18n="tip_3"></li>
-        <li data-i18n="tip_4"></li>
-        <li data-i18n="tip_5"></li>
-        <li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">BPE چنیں اور &quot;جوڑ کی تعداد&quot; والے سلائیڈر کو 0 سے 600 تک لے جائیں۔ دیکھیں کہ عام الفاظ کیسے ایک ایک ٹوکن بن جاتے ہیں۔</li>
+        <li data-i18n="tip_2">اسمارٹ بورڈ پر &quot;سیکھتے ہوئے دیکھیں&quot; دبائیں اور بیچ میں روک دیں۔ کلاس سے پوچھیں: اگلی کون سی جوڑی جڑے گی، اور کیوں؟</li>
+        <li data-i18n="tip_3">کلاس کی سرگرمی: ہر گروپ کو موازنے کے چارٹ سے ایک زبان دیں۔ ہر گروپ پہلے اپنے ٹوکن کی تعداد کا اندازہ لگائے، پھر جانچے۔ پھر بات کریں: کیا یہ ٹھیک ہے کہ کچھ زبانوں کا خرچ زیادہ ہے؟</li>
+        <li data-i18n="tip_4">&quot;الفاظ&quot; چنیں اور کوئی نیا لفظ یا غلط ہجے لکھیں: وہ [UNK] بن جاتا ہے۔ اب BPE چنیں: یہ پھر بھی کام کرتا ہے، لفظ کو چھوٹے ٹکڑوں میں توڑ کر۔</li>
+        <li data-i18n="tip_5">&quot;میرا اپنا متن&quot; چنیں اور اپنی کتاب کا کوئی سبق پیسٹ کریں۔ آپ کے مضمون سے سب سے پہلے کون سے جوڑ بنتے ہیں؟</li>
+        <li data-i18n="tip_6">یہ صفحہ پرنٹ کریں: موازنے کا چارٹ کمپیوٹر لیب کے لیے ٹوکن اور برابری پر ایک اچھا پوسٹر بنتا ہے۔</li>
       </ul>
       <p class="muted small mb0" data-i18n="saved_local"></p>
     </details>

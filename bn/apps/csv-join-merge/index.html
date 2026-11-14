@@ -103,71 +103,71 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">দুটি CSV ফাইলকে একটি মিল-থাকা কলাম দিয়ে জুড়ুন (VLOOKUP-এর মতো), বা অনেক মাসের ফাইল একটার নিচে একটা রাখুন। কী মিলল, কী মিলল না দেখুন, আর ফলাফল ডাউনলোড করুন।</p>
     <div class="tabs" id="mode-tabs" role="tablist">
-      <button type="button" role="tab" data-mode="join" data-i18n="mode_join"></button>
-      <button type="button" role="tab" data-mode="stack" data-i18n="mode_stack"></button>
+      <button type="button" role="tab" data-mode="join" data-i18n="mode_join">দুটি ফাইল জুড়ুন</button>
+      <button type="button" role="tab" data-mode="stack" data-i18n="mode_stack">অনেক ফাইল একটার নিচে একটা</button>
     </div>
 
     <!-- ============ JOIN ============ -->
     <div id="join-panel">
       <section class="card" aria-labelledby="h-files">
-        <h2 class="cj-h" id="h-files" data-i18n="h_files"></h2>
+        <h2 class="cj-h" id="h-files" data-i18n="h_files">1. আপনার দুটি ফাইল</h2>
         <div class="cj-samples">
-          <span class="small muted" data-i18n="try_sample"></span>
+          <span class="small muted" data-i18n="try_sample">নমুনা দেখুন:</span>
           <div class="seg" id="sample-seg" role="group">
-            <button type="button" data-s="students" data-i18n="sample_students"></button>
-            <button type="button" data-s="orders" data-i18n="sample_orders"></button>
+            <button type="button" data-s="students" data-i18n="sample_students">ছাত্রছাত্রী + নম্বর</button>
+            <button type="button" data-s="orders" data-i18n="sample_orders">অর্ডার + গ্রাহক</button>
           </div>
           <button class="btn btn-sm btn-danger" id="reset" type="button" data-i18n="reset"></button>
         </div>
         <div class="cj-files">
           <div class="cj-file fa" id="file-a">
-            <h3 data-i18n="file_a"></h3>
+            <h3 data-i18n="file_a">ফাইল A (বাঁ)</h3>
             <div class="cj-fname no-i18n"></div>
             <div class="cj-finfo small muted"></div>
             <div class="cj-fcols no-i18n"></div>
-            <div class="row"><button class="btn btn-sm btn-primary cj-open" type="button" data-i18n="open_csv"></button></div>
-            <details><summary data-i18n="paste_data"></summary>
+            <div class="row"><button class="btn btn-sm btn-primary cj-open" type="button" data-i18n="open_csv">CSV খুলুন</button></div>
+            <details><summary data-i18n="paste_data">ডেটা পেস্ট করুন</summary>
               <textarea class="no-i18n" data-i18n-placeholder="paste_ph" data-i18n-aria-label="paste_data"></textarea>
-              <button class="btn btn-sm cj-use" type="button" data-i18n="use_paste"></button></details>
+              <button class="btn btn-sm cj-use" type="button" data-i18n="use_paste">পেস্ট করা ডেটা ব্যবহার করুন</button></details>
           </div>
           <div class="cj-file fb" id="file-b">
-            <h3 data-i18n="file_b"></h3>
+            <h3 data-i18n="file_b">ফাইল B (ডান)</h3>
             <div class="cj-fname no-i18n"></div>
             <div class="cj-finfo small muted"></div>
             <div class="cj-fcols no-i18n"></div>
-            <div class="row"><button class="btn btn-sm btn-primary cj-open" type="button" data-i18n="open_csv"></button></div>
-            <details><summary data-i18n="paste_data"></summary>
+            <div class="row"><button class="btn btn-sm btn-primary cj-open" type="button" data-i18n="open_csv">CSV খুলুন</button></div>
+            <details><summary data-i18n="paste_data">ডেটা পেস্ট করুন</summary>
               <textarea class="no-i18n" data-i18n-placeholder="paste_ph" data-i18n-aria-label="paste_data"></textarea>
-              <button class="btn btn-sm cj-use" type="button" data-i18n="use_paste"></button></details>
+              <button class="btn btn-sm cj-use" type="button" data-i18n="use_paste">পেস্ট করা ডেটা ব্যবহার করুন</button></details>
           </div>
         </div>
-        <p class="small muted" data-i18n="drop_hint"></p>
+        <p class="small muted" data-i18n="drop_hint">CSV ফাইল এখানে টেনে এনেও ছাড়তে পারেন। Excel-এ: File → Save as → CSV। আপনার ফাইল এই ডিভাইসেই থাকে।</p>
       </section>
 
       <section class="card cj-sec" aria-labelledby="h-match">
-        <h2 class="cj-h" id="h-match" data-i18n="h_match"></h2>
+        <h2 class="cj-h" id="h-match" data-i18n="h_match">2. সারি কীভাবে মেলাবেন</h2>
         <div class="cj-match">
           <div>
             <div class="cj-keys">
-              <label class="field"><span data-i18n="key_a"></span><select id="key-a"></select></label>
-              <label class="field"><span data-i18n="key_b"></span><select id="key-b"></select></label>
+              <label class="field"><span data-i18n="key_a">A-র কী কলাম</span><select id="key-a"></select></label>
+              <label class="field"><span data-i18n="key_b">B-র কী কলাম</span><select id="key-b"></select></label>
             </div>
             <div class="cj-opts">
-              <label class="check"><input type="checkbox" id="opt-trim"> <span data-i18n="opt_trim"></span></label>
-              <label class="check"><input type="checkbox" id="opt-icase"> <span data-i18n="opt_icase"></span></label>
-              <label class="check"><input type="checkbox" id="opt-num"> <span data-i18n="opt_num"></span></label>
-              <div><button class="btn btn-sm" id="swap" type="button" data-i18n="swap"></button></div>
+              <label class="check"><input type="checkbox" id="opt-trim"> <span data-i18n="opt_trim">বাড়তি স্পেস উপেক্ষা করুন</span></label>
+              <label class="check"><input type="checkbox" id="opt-icase"> <span data-i18n="opt_icase">বড়-ছোট অক্ষর উপেক্ষা করুন</span></label>
+              <label class="check"><input type="checkbox" id="opt-num"> <span data-i18n="opt_num">&quot;007&quot; আর &quot;7&quot; একই ধরুন</span></label>
+              <div><button class="btn btn-sm" id="swap" type="button" data-i18n="swap">A আর B অদলবদল</button></div>
             </div>
           </div>
           <div>
-            <span class="small muted" data-i18n="join_type"></span>
+            <span class="small muted" data-i18n="join_type">জোড়ার ধরন</span>
             <div class="seg" id="type-seg" role="group" style="margin-top:5px">
-              <button type="button" data-type="inner" data-i18n="type_inner"></button>
-              <button type="button" data-type="left" data-i18n="type_left"></button>
-              <button type="button" data-type="right" data-i18n="type_right"></button>
-              <button type="button" data-type="full" data-i18n="type_full"></button>
+              <button type="button" data-type="inner" data-i18n="type_inner">ইনার</button>
+              <button type="button" data-type="left" data-i18n="type_left">লেফট</button>
+              <button type="button" data-type="right" data-i18n="type_right">রাইট</button>
+              <button type="button" data-type="full" data-i18n="type_full">ফুল আউটার</button>
             </div>
             <div class="cj-vennbox">
               <svg id="venn" class="cj-venn" viewBox="0 0 200 120" role="img" data-i18n-aria-label="venn_label" aria-label="Venn">
@@ -189,37 +189,37 @@
       </section>
 
       <section class="card cj-sec" aria-labelledby="h-result">
-        <h2 class="cj-h" id="h-result" data-i18n="h_result"></h2>
+        <h2 class="cj-h" id="h-result" data-i18n="h_result">3. ফলাফল</h2>
         <div class="cj-stats" aria-live="polite">
-          <div class="cj-stat"><span class="lbl" data-i18n="st_matched"></span><span class="val" id="st-matched"></span></div>
+          <div class="cj-stat"><span class="lbl" data-i18n="st_matched">A-র মেলা সারি</span><span class="val" id="st-matched"></span></div>
           <div class="cj-stat"><span class="lbl no-i18n" id="lbl-onlya"></span><span class="val" id="st-onlya"></span></div>
           <div class="cj-stat"><span class="lbl no-i18n" id="lbl-onlyb"></span><span class="val" id="st-onlyb"></span></div>
-          <div class="cj-stat main"><span class="lbl" data-i18n="st_rows"></span><span class="val" id="st-rows"></span></div>
+          <div class="cj-stat main"><span class="lbl" data-i18n="st_rows">ফলাফলে সারি</span><span class="val" id="st-rows"></span></div>
         </div>
         <div id="warnings"></div>
-        <span class="small muted" data-i18n="out_cols"></span>
+        <span class="small muted" data-i18n="out_cols">ফলাফলের কলাম (লুকাতে বা দেখাতে টিপুন):</span>
         <div class="cj-cols no-i18n" id="out-cols"></div>
         <div class="cj-gridwrap no-i18n"><table class="table cj-grid" id="out-grid"></table></div>
-        <p id="out-empty" class="muted" hidden data-i18n="no_rows"></p>
+        <p id="out-empty" class="muted" hidden data-i18n="no_rows">ফলাফলে কোনো সারি নেই।</p>
         <div class="cj-pager" id="out-pager"><button class="btn btn-sm pg-prev" type="button" data-i18n="previous"></button><span class="pg-info small"></span><button class="btn btn-sm pg-next" type="button" data-i18n="next"></button></div>
-        <div class="cj-foot"><span class="small muted" data-i18n="legend_nm"></span><button class="btn btn-primary" id="dl-out" type="button" data-i18n="download_csv"></button></div>
+        <div class="cj-foot"><span class="small muted" data-i18n="legend_nm">ডোরাকাটা ঘর: অন্য ফাইলে মিল-থাকা সারি নেই।</span><button class="btn btn-primary" id="dl-out" type="button" data-i18n="download_csv">CSV ডাউনলোড</button></div>
       </section>
 
       <section class="card cj-sec" aria-labelledby="h-um">
-        <h2 class="cj-h" id="h-um" data-i18n="h_unmatched"></h2>
-        <p class="small muted" data-i18n="um_note"></p>
+        <h2 class="cj-h" id="h-um" data-i18n="h_unmatched">4. যে সারিগুলো মেলেনি</h2>
+        <p class="small muted" data-i18n="um_note">ফলাফলে ভরসা করার আগে এগুলো দেখুন। কী-তে বানান ভুল বা একটা বাড়তি 0 সবচেয়ে সাধারণ কারণ।</p>
         <div class="tabs no-i18n" id="um-tabs" role="tablist">
           <button type="button" role="tab" data-side="a"></button>
           <button type="button" role="tab" data-side="b"></button>
         </div>
         <div class="cj-gridwrap no-i18n"><table class="table cj-grid" id="um-grid"></table></div>
-        <p id="um-empty" class="muted" hidden data-i18n="um_none"></p>
+        <p id="um-empty" class="muted" hidden data-i18n="um_none">প্রতিটি সারির মিল পাওয়া গেছে।</p>
         <div class="cj-pager" id="um-pager"><button class="btn btn-sm pg-prev" type="button" data-i18n="previous"></button><span class="pg-info small"></span><button class="btn btn-sm pg-next" type="button" data-i18n="next"></button></div>
-        <div class="cj-foot"><span></span><button class="btn" id="dl-um" type="button" data-i18n="download_um"></button></div>
+        <div class="cj-foot"><span></span><button class="btn" id="dl-um" type="button" data-i18n="download_um">এই সারিগুলো ডাউনলোড</button></div>
       </section>
 
       <section class="card cj-sec cj-lookup">
-        <h2 class="cj-h" data-i18n="h_lookup"></h2>
+        <h2 class="cj-h" data-i18n="h_lookup">এটাই VLOOKUP / XLOOKUP</h2>
         <p data-i18n-html="lookup_1"></p>
         <p data-i18n-html="lookup_2"></p>
       </section>
@@ -228,44 +228,44 @@
     <!-- ============ STACK ============ -->
     <div id="stack-panel" hidden>
       <section class="card" aria-labelledby="h-stack">
-        <h2 class="cj-h" id="h-stack" data-i18n="h_stack"></h2>
-        <p class="small muted" data-i18n="stack_note"></p>
+        <h2 class="cj-h" id="h-stack" data-i18n="h_stack">1. একটার নিচে একটা রাখার ফাইল</h2>
+        <p class="small muted" data-i18n="stack_note">একই ধরনের কলামের ফাইলের জন্য, যেমন জানুয়ারি, ফেব্রুয়ারি আর মার্চের বিক্রি। কলাম নাম দিয়ে মেলানো হয়, ক্রম আলাদা হলেও।</p>
         <div id="st-drop">
           <ol id="st-files"></ol>
-          <p id="st-empty" class="muted" hidden data-i18n="st_empty"></p>
+          <p id="st-empty" class="muted" hidden data-i18n="st_empty">এখনও কোনো ফাইল নেই। CSV ফাইল যোগ করুন বা নমুনা খুলুন।</p>
           <div class="row">
-            <button class="btn btn-primary" id="st-add" type="button" data-i18n="st_add"></button>
-            <button class="btn" id="st-sample" type="button" data-i18n="st_sample"></button>
-            <button class="btn btn-danger" id="st-clear" type="button" data-i18n="st_clear"></button>
+            <button class="btn btn-primary" id="st-add" type="button" data-i18n="st_add">CSV ফাইল যোগ করুন</button>
+            <button class="btn" id="st-sample" type="button" data-i18n="st_sample">নমুনা: 3 মাসের বিক্রি</button>
+            <button class="btn btn-danger" id="st-clear" type="button" data-i18n="st_clear">সব মুছুন</button>
           </div>
-          <p class="small muted" style="margin-bottom:0" data-i18n="drop_hint"></p>
+          <p class="small muted" style="margin-bottom:0" data-i18n="drop_hint">CSV ফাইল এখানে টেনে এনেও ছাড়তে পারেন। Excel-এ: File → Save as → CSV। আপনার ফাইল এই ডিভাইসেই থাকে।</p>
         </div>
         <div class="cj-opts">
-          <label class="check"><input type="checkbox" id="st-loose"> <span data-i18n="st_loose"></span></label>
-          <label class="check"><input type="checkbox" id="st-source"> <span data-i18n="st_source"></span></label>
+          <label class="check"><input type="checkbox" id="st-loose"> <span data-i18n="st_loose">কলামের নাম মেলাতে বড়-ছোট অক্ষর আর বাড়তি স্পেস উপেক্ষা করুন</span></label>
+          <label class="check"><input type="checkbox" id="st-source"> <span data-i18n="st_source">&quot;উৎস ফাইল&quot; কলাম যোগ করুন</span></label>
         </div>
       </section>
       <section class="card cj-sec">
-        <h2 class="cj-h" data-i18n="h_stacked"></h2>
+        <h2 class="cj-h" data-i18n="h_stacked">2. একসাথে রাখা ফলাফল</h2>
         <p id="st-total" class="no-i18n" aria-live="polite" style="font-weight:600"></p>
         <div class="cj-gridwrap no-i18n"><table class="table cj-grid" id="st-grid"></table></div>
         <div class="cj-pager" id="st-pager"><button class="btn btn-sm pg-prev" type="button" data-i18n="previous"></button><span class="pg-info small"></span><button class="btn btn-sm pg-next" type="button" data-i18n="next"></button></div>
-        <div class="cj-foot"><span class="small muted" data-i18n="legend_blank"></span><button class="btn btn-primary" id="st-dl" type="button" data-i18n="download_csv"></button></div>
+        <div class="cj-foot"><span class="small muted" data-i18n="legend_blank">ডোরাকাটা ঘর ফাঁকা (প্রায়ই কারণ ওই ফাইলে কলামটি ছিল না)।</span><button class="btn btn-primary" id="st-dl" type="button" data-i18n="download_csv">CSV ডাউনলোড</button></div>
       </section>
     </div>
 
     <details class="card cj-sec">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">&quot;ছাত্রছাত্রী + নম্বর&quot; নমুনা দিয়ে শুরু করুন আর ইনার, লেফট, রাইট, ফুল আউটার বদলে দেখুন। সারির সংখ্যা আর ভেন চিত্র বদলাচ্ছে দেখুন।</li>
+        <li data-i18n="tip2">অফিস: এই মাসের অর্ডার গ্রাহক তালিকার সাথে জুড়ুন, যাতে প্রত্যেক গ্রাহকের শহর আর ফোন চলে আসে, তারপর ডেলিভারির জন্য একটি ফাইল নামান।</li>
+        <li data-i18n="tip3">ক্লাসের কাজ: দুটি নমুনা ফাইল প্রিন্ট করুন। ছাত্রছাত্রীরা কাগজে হাতে জুড়বে, তারপর অ্যাপে মিলিয়ে দেখবে। মাত্র 7 জন মিলেছে, তবু ইনার জয়েনে 9টি সারি কেন?</li>
+        <li data-i18n="tip4">দুটি ফাইলে কী একইভাবে লেখা থাকতে হবে। আগে পরিষ্কার করুন (স্পেস, বড়-ছোট অক্ষর, &quot;007&quot; বনাম &quot;7&quot;) এখানকার অপশন বা ডেটা পরিষ্কারের ল্যাব অ্যাপ দিয়ে।</li>
+        <li data-i18n="tip5">একটার নিচে একটা: 12 মাসের বিক্রির ফাইল জুড়ে এক বছরের ফাইল বানান, সাথে &quot;উৎস ফাইল&quot; কলাম যা বলে কোন সারি কোথা থেকে এল।</li>
       </ul>
     </details>
     <details class="card cj-sec">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">জরুরি শব্দ: ভেতরে কী হচ্ছে</summary>
       <ul>
         <li data-i18n-html="w_key"></li>
         <li data-i18n-html="w_inner"></li>

@@ -209,9 +209,9 @@
 </head>
 <body>
   <main id="app">
-    <h1 class="print-title" data-i18n="app_title"></h1>
+    <h1 class="print-title" data-i18n="app_title">موڈ پہچاننے والا AI سکھائیں</h1>
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">صرف الفاظ گن کر کمپیوٹر کو خوش، اداس یا غصے والے جملے الگ کرنا سکھائیں، پھر دیکھیں کہ اسے کتنی آسانی سے دھوکا دیا جا سکتا ہے۔</p>
       <div class="row no-print">
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm" id="fs-btn" data-i18n="fullscreen"></button>
@@ -221,89 +221,89 @@
 
     <!-- 1. Teach -->
     <section class="card stack" id="data-card">
-      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1"></span></h2>
-      <p class="muted small mb0 no-print" data-i18n="step1_hint"></p>
+      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1">مثالیں دے کر سکھائیں</span></h2>
+      <p class="muted small mb0 no-print" data-i18n="step1_hint">ہر خانہ ایک لیبل (ایک موڈ) ہے۔ اس موڈ والے چھوٹے چھوٹے جملے شامل کریں۔ جتنی زیادہ اور طرح طرح کی مثالیں، اتنا سمجھدار ماڈل۔</p>
       <p class="callout warning small mb0 no-print" id="lang-note" hidden></p>
       <div class="labs" id="labs"></div>
       <div class="row data-tools no-print">
-        <button type="button" class="btn btn-accent" id="add-label-btn" data-i18n="add_label"></button>
+        <button type="button" class="btn btn-accent" id="add-label-btn" data-i18n="add_label">+ نیا لیبل شامل کریں</button>
         <div class="row">
-          <button type="button" class="btn btn-sm" id="samples-btn" data-i18n="load_samples"></button>
-          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv"></button>
-          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv"></button>
-          <button type="button" class="btn btn-sm btn-danger" id="clear-all-btn" data-i18n="clear_all"></button>
+          <button type="button" class="btn btn-sm" id="samples-btn" data-i18n="load_samples">نمونے کے جملے</button>
+          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv">CSV امپورٹ کریں</button>
+          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv">CSV ایکسپورٹ کریں</button>
+          <button type="button" class="btn btn-sm btn-danger" id="clear-all-btn" data-i18n="clear_all">سارے جملے مٹائیں</button>
         </div>
       </div>
-      <p class="muted tiny mb0 no-print" data-i18n="csv_hint"></p>
+      <p class="muted tiny mb0 no-print" data-i18n="csv_hint">CSV فائل میں دو کالم ہوتے ہیں: text اور label۔ یہ Excel یا Google Sheets میں کھل جاتی ہے۔</p>
     </section>
 
     <div class="grid-2 main-grid">
       <!-- 2. Train -->
       <section class="card stack" id="train-card">
-        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2">ماڈل کو ٹرین کریں</span></h2>
         <div class="row train-row no-print">
-          <button type="button" class="btn btn-primary btn-lg" id="train-btn"><span aria-hidden="true">🧠</span><span data-i18n="train_btn"></span></button>
-          <label class="check"><input type="checkbox" id="pairs-chk"><span data-i18n="pairs_label"></span></label>
+          <button type="button" class="btn btn-primary btn-lg" id="train-btn"><span aria-hidden="true">🧠</span><span data-i18n="train_btn">ٹرین کریں</span></button>
+          <label class="check"><input type="checkbox" id="pairs-chk"><span data-i18n="pairs_label">الفاظ کے جوڑے بھی گنیں (“خوش نہیں” جیسے جملوں میں مدد ملتی ہے)</span></label>
         </div>
         <p class="callout small mb0" id="train-status" aria-live="polite"></p>
         <div id="model-view" class="stack" hidden>
           <div class="stats">
-            <div class="stat"><b id="st-sentences">0</b><span data-i18n="st_sentences"></span></div>
-            <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab"></span></div>
-            <div class="stat"><b id="st-train-acc">0</b><span data-i18n="st_train_acc"></span></div>
-            <div class="stat"><b id="st-fair-acc">0</b><span data-i18n="st_fair_acc"></span></div>
+            <div class="stat"><b id="st-sentences">0</b><span data-i18n="st_sentences">جملے</span></div>
+            <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab">الگ الگ الفاظ جو یہ جانتا ہے</span></div>
+            <div class="stat"><b id="st-train-acc">0</b><span data-i18n="st_train_acc">اپنی ہی مثالوں پر درست</span></div>
+            <div class="stat"><b id="st-fair-acc">0</b><span data-i18n="st_fair_acc">منصفانہ ٹیسٹ میں درست</span></div>
           </div>
-          <p class="muted tiny mb0" data-i18n="fair_hint"></p>
+          <p class="muted tiny mb0" data-i18n="fair_hint">منصفانہ ٹیسٹ: ایک جملہ چھپائیں، باقی سب سے سیکھیں، پھر چھپے جملے کا اندازہ لگائیں۔ یہی ہر جملے کے ساتھ دہرائیں۔</p>
           <div class="lab-stats" id="lab-stats"></div>
           <details class="sub" id="mistakes">
             <summary id="mist-sum"></summary>
             <ul class="mist-list no-i18n" id="mist-list"></ul>
           </details>
           <div class="stack" id="peek">
-            <h3 class="mb0" data-i18n="peek_t"></h3>
-            <p class="muted small mb0" data-i18n="peek_note"></p>
+            <h3 class="mb0" data-i18n="peek_t">اندر جھانکیں: ماڈل کی الفاظ گنتی</h3>
+            <p class="muted small mb0" data-i18n="peek_note">پورا ماڈل بس یہی ٹیبل ہے! ٹریننگ میں صرف یہ گنا گیا کہ ہر لفظ کس لیبل میں کتنی بار آیا۔</p>
             <div class="peek-tools no-print">
               <input type="search" id="peek-filter" class="no-i18n" data-i18n-placeholder="peek_filter" data-i18n-aria-label="peek_filter" autocomplete="off">
               <div class="seg" role="group" data-i18n-aria-label="sort_by">
-                <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common"></button>
-                <button type="button" id="sort-clue" aria-pressed="false" data-i18n="sort_clue"></button>
+                <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common">سب سے زیادہ آئے</button>
+                <button type="button" id="sort-clue" aria-pressed="false" data-i18n="sort_clue">سب سے پکے سراغ</button>
               </div>
             </div>
             <div class="peek-tools">
               <span class="muted small" id="peek-count"></span>
             </div>
             <div class="scroll-x"><table class="table peek" id="peek-table"></table></div>
-            <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more"></button>
+            <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more">مزید الفاظ دکھائیں</button>
           </div>
         </div>
       </section>
 
       <!-- 3. Test -->
       <section class="card stack" id="test-card">
-        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3">ٹیسٹ کریں</span></h2>
         <div>
-          <label for="test-input" class="lbl" data-i18n="test_label"></label>
+          <label for="test-input" class="lbl" data-i18n="test_label">کوئی بھی جملہ لکھیں</label>
           <div class="test-row">
             <input type="text" id="test-input" class="no-i18n" maxlength="300" autocomplete="off" spellcheck="false" data-i18n-placeholder="test_ph">
             <button type="button" class="btn no-print" id="test-clear" data-i18n-aria-label="clear" data-i18n-title="clear">✕</button>
           </div>
         </div>
         <div class="no-print" id="tries-wrap">
-          <span class="lbl" data-i18n="try_t"></span>
+          <span class="lbl" data-i18n="try_t">یا ان میں سے کوئی آزمائیں:</span>
           <div class="tries no-i18n" id="tries"></div>
         </div>
         <div id="result" class="stack" aria-live="polite"></div>
         <div id="explain" class="stack" hidden>
-          <h3 class="mb0" data-i18n="words_t"></h3>
-          <p class="muted small mb0" data-i18n="words_hint"></p>
+          <h3 class="mb0" data-i18n="words_t">ہر لفظ نے اندازے کو کس طرف دھکیلا</h3>
+          <p class="muted small mb0" data-i18n="words_hint">رنگ = لفظ کس لیبل کی طرف اشارہ کرتا ہے۔ گہرا رنگ = زیادہ زور۔ اعداد دیکھنے کے لیے لفظ پر ٹیپ کریں۔</p>
           <div class="words no-i18n" id="words"></div>
           <div class="legend" id="legend"></div>
           <div class="pairs-used no-i18n" id="pairs-used" hidden></div>
           <div class="panel wd" id="word-detail" aria-live="polite"></div>
           <details class="sub" id="maths">
-            <summary data-i18n="maths_t"></summary>
+            <summary data-i18n="maths_t">حساب دکھائیں</summary>
             <div class="scroll-x"><table class="table maths no-i18n" id="maths-table"></table></div>
-            <p class="muted small" data-i18n="maths_note" style="margin-top:8px"></p>
+            <p class="muted small" data-i18n="maths_note" style="margin-top:8px">ہر کسر = (لفظ کتنی بار آیا + 1) ÷ (اس لیبل کے کل الفاظ + الگ الگ الفاظ کی تعداد)۔ “+1 والی ترکیب” کبھی نہ دیکھے گئے لفظ کو پورا حاصلِ ضرب صفر نہیں کرنے دیتی۔</p>
           </details>
         </div>
       </section>
@@ -311,14 +311,14 @@
 
     <!-- 4. Experiments -->
     <section class="card stack" id="exp-card">
-      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="step4"></span></h2>
-      <p class="muted small mb0" data-i18n="step4_hint"></p>
+      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="step4">تجربات: اسے دھوکا دے کر دیکھیں</span></h2>
+      <p class="muted small mb0" data-i18n="step4_hint">ہر تجربہ مثالیں بدلتا ہے، دوبارہ ٹرین کرتا ہے اور پہلے اور بعد کا اندازہ دکھاتا ہے۔ واپس جانے کے لیے “تجربہ واپس لیں” دبائیں۔</p>
       <div class="grid-3 exps">
         <div class="panel exp" id="exp1">
-          <h3><span aria-hidden="true">✂️</span><span data-i18n="exp1_t"></span></h3>
-          <p class="small" data-i18n="exp1_d"></p>
+          <h3><span aria-hidden="true">✂️</span><span data-i18n="exp1_t">ایک لفظ ہٹائیں</span></h3>
+          <p class="small" data-i18n="exp1_d">جن مثالی جملوں میں کوئی ایک لفظ ہے، ان سب کو ہٹا دیں۔ آپ کے ٹیسٹ جملے کا اندازہ کتنا بدلتا ہے؟</p>
           <div>
-            <label for="exp1-word" class="lbl" data-i18n="exp1_word"></label>
+            <label for="exp1-word" class="lbl" data-i18n="exp1_word">ہٹانے والا لفظ</label>
             <div class="exp-word-row">
               <input type="text" id="exp1-word" class="no-i18n" maxlength="60" autocomplete="off" spellcheck="false">
             </div>
@@ -329,53 +329,53 @@
           <div id="exp1-res" aria-live="polite"></div>
         </div>
         <div class="panel exp" id="exp2">
-          <h3><span aria-hidden="true">⚖️</span><span data-i18n="exp2_t"></span></h3>
+          <h3><span aria-hidden="true">⚖️</span><span data-i18n="exp2_t">جانبدار ڈیٹا شامل کریں</span></h3>
           <p class="small" id="exp2-d"></p>
           <ul class="small no-i18n mb0" id="exp2-list" style="margin:0;padding-inline-start:1.2em"></ul>
           <p class="callout warning small exp-need" hidden></p>
           <div class="grow-space"></div>
-          <div class="exp-btns"><button type="button" class="btn btn-accent" id="exp2-btn" data-i18n="exp2_btn"></button></div>
+          <div class="exp-btns"><button type="button" class="btn btn-accent" id="exp2-btn" data-i18n="exp2_btn">جانبدار جملے شامل کریں</button></div>
           <div id="exp2-res" aria-live="polite"></div>
         </div>
         <div class="panel exp" id="exp3">
-          <h3><span aria-hidden="true">🚫</span><span data-i18n="exp3_t"></span></h3>
+          <h3><span aria-hidden="true">🚫</span><span data-i18n="exp3_t">“نہیں” والی مشکل</span></h3>
           <p class="small" id="exp3-d"></p>
           <p class="callout warning small exp-need" hidden></p>
           <div class="grow-space"></div>
           <div class="exp-btns">
-            <button type="button" class="btn" id="exp3-try" data-i18n="exp3_try"></button>
+            <button type="button" class="btn" id="exp3-try" data-i18n="exp3_try">جملہ ٹیسٹ کریں</button>
             <button type="button" class="btn btn-accent" id="exp3-btn"></button>
           </div>
           <div id="exp3-res" aria-live="polite"></div>
         </div>
       </div>
       <div class="row">
-        <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩</span><span data-i18n="undo_exp"></span></button>
+        <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩</span><span data-i18n="undo_exp">تجربہ واپس لیں</span></button>
       </div>
     </section>
 
     <!-- inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside_t"></h2>
+      <h2 data-i18n="inside_t">اندر کیا ہو رہا ہے؟</h2>
       <div class="grid-3 inside-grid">
-        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t"></span></h3><p data-i18n="in1"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t"></span></h3><p data-i18n="in2"></p><p class="formula" data-i18n="formula"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in3_t"></span></h3><p data-i18n="in3"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🙃</span><span data-i18n="in4_t"></span></h3><p data-i18n="in4"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">⚖️</span><span data-i18n="in5_t"></span></h3><p data-i18n="in5"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🔤</span><span data-i18n="in6_t"></span></h3><p data-i18n="in6"></p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t">یہ الفاظ گنتا ہے</span></h3><p data-i18n="in1">ٹریننگ کا مطلب بس گنتی ہے: ہر لفظ ہر لیبل کے جملوں میں کتنی بار آیا۔ “جیت” خوش میں نظر آتا ہے، “ہار” اداس میں۔</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t">یہ امکانات کو ضرب دیتا ہے</span></h3><p data-i18n="in2">نئے جملے کے لیے یہ ہر لیبل کے شروع کے امکان کو ہر لفظ کے امکان سے ضرب دیتا ہے۔ جس کا نتیجہ سب سے بڑا ہو، وہی جیتتا ہے۔ اس طریقے کو Naive Bayes کہتے ہیں۔</p><p class="formula" data-i18n="formula">P(⁨خوش⁩ | ⁨جملہ⁩) ∝ P(⁨خوش⁩) × P(⁨لفظ₁⁩ | ⁨خوش⁩) × P(⁨لفظ₂⁩ | ⁨خوش⁩) × …</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in3_t">“Naive” یعنی بھولا کیوں؟</span></h3><p data-i18n="in3">یہ ہر لفظ کو اکیلا دیکھتا ہے اور الفاظ کی ترتیب نہیں دیکھتا۔ اس لیے “خوش نہیں” اس کے لیے بس “خوش” + “نہیں” ہے، اور اکثر “خوش” جیت جاتا ہے۔</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🙃</span><span data-i18n="in4_t">طنز سے دھوکا کھا جاتا ہے</span></h3><p data-i18n="in4">“واہ، شاندار! میری سالگرہ کی پارٹی پر ہی بارش ہو گئی!” میں الفاظ خوشی والے ہیں، مگر مطلب ناراضگی ہے۔ الفاظ گننے والا ماڈل بولنے کا لہجہ نہیں سن سکتا۔</p></div>
+        <div class="panel"><h3><span aria-hidden="true">⚖️</span><span data-i18n="in5_t">سب کچھ ڈیٹا طے کرتا ہے</span></h3><p data-i18n="in5">کم، یک طرفہ یا جانبدار مثالیں غلط سبق سکھاتی ہیں۔ نوکری، قرض یا خبروں میں استعمال ہونے والا AI بھی اسی طرح ناانصافی کر سکتا ہے، اس لیے لوگوں کو ڈیٹا جانچنا چاہیے۔</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🔤</span><span data-i18n="in6_t">ایک لفظ، کئی شکلیں</span></h3><p data-i18n="in6">ماڈل کے لیے “خوش” اور “خوشی” بالکل الگ الفاظ ہیں۔ بڑے AI ماڈل الفاظ کو چھوٹے ٹکڑوں میں توڑتے ہیں اور پورا جملہ پڑھتے ہیں، اس لیے وہ “خوش نہیں” کو کہیں بہتر سمجھتے ہیں۔</p></div>
       </div>
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">استعمال کیسے کریں · کلاس کے لیے تجاویز</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">نمونے کے جملوں سے شروع کریں، “ٹرین کریں” دبائیں، پھر “ٹیسٹ کریں” میں اپنے جملے لکھیں۔</li>
+        <li data-i18n="tip2">کسی رنگین لفظ پر ٹیپ کر کے اس کے پیچھے کی گنتی دیکھیں۔ کلاس سے پوچھیں: یہ لفظ اداس کی طرف کیوں اشارہ کرتا ہے؟</li>
+        <li data-i18n="tip3">کلاس سرگرمی: ہر گروپ ایک نیا لیبل (جیسے ڈر 😨) بنائے اور 8–10 جملے شامل کرے، پھر دوسرے گروپ کو چیلنج دے کہ ان کے ماڈل کو دھوکا دے کر دکھائے۔</li>
+        <li data-i18n="tip4">الفاظ گنتی والا ٹیبل پرنٹ کریں اور طلبہ سے 3 الفاظ والے جملے کے امکانات ہاتھ سے ضرب کروائیں، پھر “حساب دکھائیں” سے ملائیں۔</li>
+        <li data-i18n="tip5">جملوں کو CSV میں ایکسپورٹ کر کے محفوظ کریں یا دوسری کلاس کے ساتھ شیئر کریں۔ کچھ بھی اپ لوڈ نہیں ہوتا: سب کچھ اسی آلے پر رہتا ہے۔</li>
+        <li data-i18n="tip6">بحث کریں: موڈ پہچاننا کہاں کام آتا ہے (پروڈکٹ ریویو، فیڈبیک فارم)؟ کہاں یہ غلط یا ناانصافی والا ہو سکتا ہے؟</li>
       </ul>
     </details>
   </main>

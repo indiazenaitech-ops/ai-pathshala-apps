@@ -184,17 +184,17 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">డేటా నుంచి AI ఒక సరళ రేఖను ఎలా నేర్చుకుంటుందో చూడండి: దోషం, లాస్, గ్రేడియంట్ డిసెంట్, అంచనాలు.</p>
 
     <section class="card lr-toolbar no-print" aria-labelledby="ds-label">
       <div class="ds-wrap">
         <div class="ds-list" id="ds-list" role="group" aria-labelledby="ds-label"></div>
-        <p class="ds-about"><b id="ds-label" data-i18n="data_label"></b> · <span id="ds-about"></span></p>
+        <p class="ds-about"><b id="ds-label" data-i18n="data_label">డేటా</b> · <span id="ds-about"></span></p>
       </div>
       <div class="tb-actions">
         <span class="badge primary" id="pt-count" data-value="0"></span>
-        <button class="btn btn-sm" id="restore" type="button" data-i18n="restore"></button>
-        <button class="btn btn-sm" id="paste-btn" type="button" data-i18n="paste_btn"></button>
+        <button class="btn btn-sm" id="restore" type="button" data-i18n="restore">డేటాను తిరిగి తెండి</button>
+        <button class="btn btn-sm" id="paste-btn" type="button" data-i18n="paste_btn">డేటా పేస్ట్ చేయండి</button>
         <button class="btn btn-sm" id="print-btn" type="button" data-i18n="print"></button>
         <button class="btn btn-sm" id="fs-btn" type="button" data-i18n="fullscreen"></button>
         <button class="btn btn-sm btn-danger" id="reset-all" type="button" data-i18n="reset"></button>
@@ -207,26 +207,26 @@
       <section class="card lr-graph">
         <div class="stage plot-stage"><canvas id="plot" role="img"></canvas></div>
         <div class="show-row no-print" role="group" aria-labelledby="show-lbl">
-          <span class="lbl" id="show-lbl" data-i18n="show_label"></span>
-          <button class="chip" id="show-res" type="button" aria-pressed="true"><span class="sw sw-res" aria-hidden="true"></span><span data-i18n="show_res"></span></button>
-          <button class="chip" id="show-sq" type="button" aria-pressed="false"><span class="sw sw-sq" aria-hidden="true"></span><span data-i18n="show_sq"></span></button>
-          <button class="chip" id="show-best" type="button" aria-pressed="false"><span class="sw sw-best" aria-hidden="true"></span><span data-i18n="show_best"></span></button>
+          <span class="lbl" id="show-lbl" data-i18n="show_label">చూపించు:</span>
+          <button class="chip" id="show-res" type="button" aria-pressed="true"><span class="sw sw-res" aria-hidden="true"></span><span data-i18n="show_res">దోషాలు</span></button>
+          <button class="chip" id="show-sq" type="button" aria-pressed="false"><span class="sw sw-sq" aria-hidden="true"></span><span data-i18n="show_sq">దోషాల వర్గాలు</span></button>
+          <button class="chip" id="show-best" type="button" aria-pressed="false"><span class="sw sw-best" aria-hidden="true"></span><span data-i18n="show_best">ఉత్తమ రేఖ</span></button>
           <button class="chip fs-exit" id="fs-exit" type="button" aria-pressed="true"><span aria-hidden="true">✕</span><span data-i18n="fullscreen"></span></button>
         </div>
         <p class="canvas-hint no-print" id="canvas-hint"></p>
         <div class="stats">
           <div class="stat stat-eq">
-            <div class="lbl" data-i18n="eq_label"></div>
+            <div class="lbl" data-i18n="eq_label">మోడల్ (రేఖ)</div>
             <div class="eq" id="equation" data-m="0" data-c="0"></div>
             <div class="eq-words" id="eq-words"></div>
           </div>
           <div class="stat">
-            <div class="lbl" data-i18n="loss_label"></div>
+            <div class="lbl" data-i18n="loss_label">లాస్ (MSE)</div>
             <div class="num" id="mse" data-value="0"></div>
             <div class="sub" id="miss"></div>
           </div>
           <div class="stat">
-            <div class="lbl" data-i18n="closeness"></div>
+            <div class="lbl" data-i18n="closeness">ఉత్తమానికి ఎంత దగ్గర</div>
             <div class="num" id="close" data-value="0"></div>
             <div class="progress" aria-hidden="true"><span id="close-bar" style="width:0"></span></div>
           </div>
@@ -236,32 +236,32 @@
 
       <section class="card lr-side no-print">
         <div class="tabs" role="tablist">
-          <button role="tab" id="tab-manual" aria-controls="panel-manual" aria-selected="true" type="button" data-i18n="tab_manual"></button>
-          <button role="tab" id="tab-auto" aria-controls="panel-auto" aria-selected="false" type="button" data-i18n="tab_auto"></button>
-          <button role="tab" id="tab-predict" aria-controls="panel-predict" aria-selected="false" type="button" data-i18n="tab_predict"></button>
+          <button role="tab" id="tab-manual" aria-controls="panel-manual" aria-selected="true" type="button" data-i18n="tab_manual">చేత్తో సరిపెట్టండి</button>
+          <button role="tab" id="tab-auto" aria-controls="panel-auto" aria-selected="false" type="button" data-i18n="tab_auto">AI నేర్చుకోనివ్వండి</button>
+          <button role="tab" id="tab-predict" aria-controls="panel-predict" aria-selected="false" type="button" data-i18n="tab_predict">అంచనా</button>
         </div>
 
         <!-- 1. fit by hand -->
         <div id="panel-manual" role="tabpanel" aria-labelledby="tab-manual" class="stack">
-          <p class="hint mt0" data-i18n="manual_hint"></p>
+          <p class="hint mt0" data-i18n="manual_hint">ఎరుపు దోష-గీతలు వీలైనంత చిన్నవి అయ్యేలా రేఖను జరపండి. లాస్ తగ్గడం చూడండి.</p>
           <div class="field">
-            <label for="m-range" data-i18n="slope"></label>
+            <label for="m-range" data-i18n="slope">వాలు m</label>
             <div class="sl-row">
               <input type="range" id="m-range" min="-1" max="1" step="0.001">
               <input type="number" id="m-num" step="any" data-i18n-aria-label="slope">
             </div>
-            <span class="hint" data-i18n="slope_hint"></span>
+            <span class="hint" data-i18n="slope_hint">x ఒకటి పెరిగితే y ఎంత మారుతుంది.</span>
           </div>
           <div class="field">
-            <label for="c-range" data-i18n="intercept"></label>
+            <label for="c-range" data-i18n="intercept">అంతఃఖండం c</label>
             <div class="sl-row">
               <input type="range" id="c-range" min="-1" max="1" step="0.001">
               <input type="number" id="c-num" step="any" data-i18n-aria-label="intercept">
             </div>
-            <span class="hint" data-i18n="intercept_hint"></span>
+            <span class="hint" data-i18n="intercept_hint">రేఖ x = 0 ను కలిసే చోట y విలువ.</span>
           </div>
           <div class="row">
-            <button class="btn btn-sm" id="reset-line" type="button" data-i18n="reset_line"></button>
+            <button class="btn btn-sm" id="reset-line" type="button" data-i18n="reset_line">మళ్ళీ చదునైన రేఖ</button>
           </div>
           <p class="callout coach" id="coach-manual" aria-live="polite" data-code=""><span class="ico" aria-hidden="true"></span><span class="txt"></span></p>
         </div>
@@ -269,25 +269,25 @@
         <!-- 2. let AI learn -->
         <div id="panel-auto" role="tabpanel" aria-labelledby="tab-auto" class="stack" hidden>
           <div>
-            <h3 data-i18n="exact_title"></h3>
-            <p class="hint mt0" data-i18n="exact_hint"></p>
+            <h3 data-i18n="exact_title">ఖచ్చితమైన జవాబు (కనిష్ఠ వర్గాల పద్ధతి)</h3>
+            <p class="hint mt0" data-i18n="exact_hint">సరళ రేఖకు ఒక సూత్రం ఒకేసారి ఉత్తమ m, c కనుగొంటుంది.</p>
           </div>
           <div class="row">
-            <button class="btn btn-accent" id="fit-exact" type="button" data-i18n="exact_btn"></button>
+            <button class="btn btn-accent" id="fit-exact" type="button" data-i18n="exact_btn">ఉత్తమ రేఖను కనుగొనండి</button>
           </div>
-          <label class="check"><input type="checkbox" id="follow"> <span data-i18n="follow"></span></label>
+          <label class="check"><input type="checkbox" id="follow"> <span data-i18n="follow">బిందువులు జరిపేటప్పుడు ఉత్తమ రేఖను ఉంచండి</span></label>
           <details class="math" id="math">
-            <summary data-i18n="show_math"></summary>
+            <summary data-i18n="show_math">లెక్క చూపించు</summary>
             <div class="math-body" id="math-body"></div>
           </details>
 
           <div class="block stack">
             <div>
-              <h3 data-i18n="gd_title"></h3>
-              <p class="hint mt0" data-i18n="gd_hint"></p>
+              <h3 data-i18n="gd_title">గ్రేడియంట్ డిసెంట్: AI ఎలా నేర్చుకుంటుంది</h3>
+              <p class="hint mt0" data-i18n="gd_hint">AI చదునైన రేఖతో మొదలవుతుంది. ప్రతి ఎపాక్‌లో అన్ని బిందువులనూ చూసి, m, c లను లాస్ వాలుపై కొంచెం కిందికి జరుపుతుంది.</p>
             </div>
             <div class="field">
-              <label for="lr" data-i18n="lr_label"></label>
+              <label for="lr" data-i18n="lr_label">లెర్నింగ్ రేట్ (అడుగు పరిమాణం)</label>
               <div class="sl-row">
                 <input type="range" id="lr" min="0" max="7" step="1" value="4">
                 <output class="lr-val" id="lr-out" for="lr"></output>
@@ -296,30 +296,30 @@
             </div>
             <div class="gd-opts">
               <div class="field">
-                <label for="epochs" data-i18n="epochs_label"></label>
+                <label for="epochs" data-i18n="epochs_label">ఒక్కసారికి ఎపాక్‌లు</label>
                 <select id="epochs"></select>
               </div>
               <div class="field">
-                <span class="lbl-like" id="speed-lbl" data-i18n="speed_label"></span>
+                <span class="lbl-like" id="speed-lbl" data-i18n="speed_label">వేగం</span>
                 <div class="seg" id="speed" role="group" aria-labelledby="speed-lbl">
-                  <button type="button" data-speed="slow" data-i18n="speed_slow"></button>
-                  <button type="button" data-speed="normal" data-i18n="speed_normal"></button>
-                  <button type="button" data-speed="fast" data-i18n="speed_fast"></button>
+                  <button type="button" data-speed="slow" data-i18n="speed_slow">నెమ్మది</button>
+                  <button type="button" data-speed="normal" data-i18n="speed_normal">సాధారణం</button>
+                  <button type="button" data-speed="fast" data-i18n="speed_fast">వేగంగా</button>
                 </div>
               </div>
             </div>
             <div class="gd-btns">
-              <button class="btn" id="gd-step" type="button" data-i18n="gd_step"></button>
+              <button class="btn" id="gd-step" type="button" data-i18n="gd_step">ఒక అడుగు</button>
               <button class="btn btn-primary" id="gd-run" type="button" aria-pressed="false"></button>
-              <button class="btn" id="gd-restart" type="button" data-i18n="gd_restart"></button>
+              <button class="btn" id="gd-restart" type="button" data-i18n="gd_restart">మళ్ళీ మొదలు</button>
             </div>
             <div class="gd-read" aria-live="off">
-              <span><span data-i18n="epoch_label"></span>: <b id="epoch" data-value="0">0</b></span>
-              <span><span data-i18n="loss_label"></span>: <b id="gd-loss" data-value="0"></b></span>
-              <span><span data-i18n="best_possible"></span>: <b id="gd-best" data-value="0"></b></span>
+              <span><span data-i18n="epoch_label">ఎపాక్</span>: <b id="epoch" data-value="0">0</b></span>
+              <span><span data-i18n="loss_label">లాస్ (MSE)</span>: <b id="gd-loss" data-value="0"></b></span>
+              <span><span data-i18n="best_possible">సాధ్యమైన కనిష్ఠం</span>: <b id="gd-best" data-value="0"></b></span>
             </div>
             <div>
-              <div class="small muted" data-i18n="loss_chart"></div>
+              <div class="small muted" data-i18n="loss_chart">లాస్ వక్రం: ప్రతి ఎపాక్ తర్వాత లాస్</div>
               <div class="stage loss-stage"><canvas id="loss-chart" role="img"></canvas></div>
             </div>
             <p class="callout coach" id="coach-auto" aria-live="polite" data-code=""><span class="ico" aria-hidden="true"></span><span class="txt"></span></p>
@@ -329,8 +329,8 @@
         <!-- 3. predict -->
         <div id="panel-predict" role="tabpanel" aria-labelledby="tab-predict" class="stack" hidden>
           <div>
-            <h3 data-i18n="pred_title"></h3>
-            <p class="hint mt0" data-i18n="pred_hint"></p>
+            <h3 data-i18n="pred_title">కొత్త విలువను అంచనా వేయండి</h3>
+            <p class="hint mt0" data-i18n="pred_hint">x ఎంచుకోండి లేదా గ్రాఫ్‌పై తాకండి. రేఖ ఇచ్చే అంచనా: ŷ = m × x + c</p>
           </div>
           <div class="pred-box">
             <div class="field">
@@ -340,24 +340,24 @@
           </div>
           <input type="range" id="pred-range" data-i18n-aria-label="pred_title">
           <div class="pred-out">
-            <div class="lbl" data-i18n="pred_answer"></div>
+            <div class="lbl" data-i18n="pred_answer">అంచనా ŷ</div>
             <div id="pred-y" data-value="0" aria-live="polite"></div>
           </div>
           <p class="pred-sentence" id="pred-sentence"></p>
           <p class="callout warning" id="pred-warn" hidden></p>
-          <p class="callout" id="pred-tip" hidden data-i18n="pred_tip_best"></p>
+          <p class="callout" id="pred-tip" hidden data-i18n="pred_tip_best">సూచన: ఈ రేఖ ఇంకా ఉత్తమమైనది కాదు. మంచి అంచనా కోసం &quot;AI నేర్చుకోనివ్వండి&quot; తెరిచి &quot;ఉత్తమ రేఖను కనుగొనండి&quot; నొక్కండి.</p>
         </div>
       </section>
     </div>
 
     <section class="card section no-print" id="explain-card">
-      <h2 data-i18n="explain_title"></h2>
-      <h3 class="small muted" data-i18n="exp_title"></h3>
+      <h2 data-i18n="explain_title">అర్థం చేసుకోండి</h2>
+      <h3 class="small muted" data-i18n="exp_title">ఒక ప్రయోగం చేసి చూడండి</h3>
       <div class="exp-row">
-        <button class="btn" id="exp-outlier" type="button" data-i18n="exp_outlier"></button>
-        <button class="btn" id="exp-small" type="button" data-i18n="exp_small"></button>
-        <button class="btn" id="exp-right" type="button" data-i18n="exp_right"></button>
-        <button class="btn" id="exp-big" type="button" data-i18n="exp_big"></button>
+        <button class="btn" id="exp-outlier" type="button" data-i18n="exp_outlier">📍 ఒక అవుట్‌లయర్ చేర్చండి</button>
+        <button class="btn" id="exp-small" type="button" data-i18n="exp_small">🐢 లెర్నింగ్ రేట్ చాలా చిన్నది</button>
+        <button class="btn" id="exp-right" type="button" data-i18n="exp_right">👍 లెర్నింగ్ రేట్ సరిగ్గా</button>
+        <button class="btn" id="exp-big" type="button" data-i18n="exp_big">💥 లెర్నింగ్ రేట్ చాలా పెద్దది</button>
       </div>
       <p class="callout accent" id="exp-msg" aria-live="polite" hidden style="margin-top:10px"></p>
       <div class="concepts" id="concepts"></div>
@@ -365,10 +365,10 @@
 
     <section class="card section" id="table-card">
       <div class="tbl-head">
-        <h2 data-i18n="table_title"></h2>
+        <h2 data-i18n="table_title">డేటా పట్టిక, దోషాలు</h2>
         <div class="row no-print">
-          <button class="btn btn-sm" id="add-row" type="button" data-i18n="add_row"></button>
-          <button class="btn btn-sm" id="dl-csv" type="button" data-i18n="dl_csv"></button>
+          <button class="btn btn-sm" id="add-row" type="button" data-i18n="add_row">వరుస చేర్చు</button>
+          <button class="btn btn-sm" id="dl-csv" type="button" data-i18n="dl_csv">CSV డౌన్‌లోడ్</button>
         </div>
       </div>
       <div class="tbl-wrap scroll-x">
@@ -381,26 +381,26 @@
     </section>
 
     <section class="print-only worksheet section">
-      <h2 data-i18n="ws_title"></h2>
-      <p data-i18n="ws_name"></p>
+      <h2 data-i18n="ws_title">వర్క్‌షీట్: ఉత్తమ సరిపోలిక రేఖ</h2>
+      <p data-i18n="ws_name">పేరు: ______________   తరగతి: ______   తేదీ: __________</p>
       <ol>
-        <li><span data-i18n="ws_q1"></span><div class="ws-line"></div></li>
-        <li><span data-i18n="ws_q2"></span><div class="ws-line"></div><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q1">పై గ్రాఫ్‌లోని రేఖ సమీకరణం రాయండి. ఈ డేటాకు m, c అంటే ఏమిటి?</span><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q2">ఏవైనా రెండు బిందువులు ఎంచుకోండి. ప్రతిదాని దోషం (y − ŷ), దోషం వర్గం కనుగొనండి.</span><div class="ws-line"></div><div class="ws-line"></div></li>
         <li><span id="ws-q3"></span><div class="ws-line"></div><div class="ws-line"></div></li>
-        <li><span data-i18n="ws_q4"></span><div class="ws-line"></div><div class="ws-line"></div></li>
-        <li><span data-i18n="ws_q5"></span><div class="ws-line"></div><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q4">దోషాలను నేరుగా కూడకుండా వాటి వర్గం ఎందుకు తీసుకుంటాం?</span><div class="ws-line"></div><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q5">గ్రేడియంట్ డిసెంట్‌లో లెర్నింగ్ రేట్ చాలా పెద్దదైతే ఏమవుతుంది? చాలా చిన్నదైతే?</span><div class="ws-line"></div><div class="ws-line"></div></li>
       </ol>
     </section>
 
     <details class="card section no-print">
-      <summary><b data-i18n="howto"></b></summary>
+      <summary><b data-i18n="howto">ఎలా వాడాలి / తరగతి గది ఆలోచనలు</b></summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">&quot;చేత్తో సరిపెట్టండి&quot; తో మొదలుపెట్టండి: లాస్ వీలైనంత తగ్గే వరకు రేఖను లాగండి. తర్వాత పోల్చడానికి &quot;ఉత్తమ రేఖ&quot; ఆన్ చేయండి.</li>
+        <li data-i18n="tip2">&quot;దోషాల వర్గాలు&quot; ఆన్ చేయండి: ఒక పెద్ద తప్పు చాలా చిన్న తప్పుల కంటే ఎందుకు ఎక్కువగా లెక్కకు వస్తుందో చతురస్రాలు చూపిస్తాయి.</li>
+        <li data-i18n="tip3">&quot;AI నేర్చుకోనివ్వండి&quot; తెరిచి &quot;నడుపు&quot; నొక్కండి. దిగుతున్న లాస్ వక్రమే &quot;ట్రైనింగ్&quot;. తర్వాత లెర్నింగ్ రేట్ ప్రయోగాలు చేయండి.</li>
+        <li data-i18n="tip4">తరగతి కార్యకలాపం: 10–15 మంది సహవిద్యార్థుల ఎత్తు, చేతుల వెడల్పు కొలిచి, &quot;డేటా పేస్ట్ చేయండి&quot; తో చేర్చి, కొత్త విద్యార్థి చేతుల వెడల్పును అంచనా వేయండి.</li>
+        <li data-i18n="tip5">&quot;అంచనా&quot; తో చర్చించండి: వారానికి 40 గంటలు చదివే విద్యార్థి మార్కులను రేఖ చెప్పగలదా? ఎందుకు కాదు?</li>
+        <li data-i18n="tip6">ప్రింట్ చేస్తే గ్రాఫ్, డేటా పట్టిక, 5 ప్రశ్నల వర్క్‌షీట్ వస్తాయి. స్మార్ట్‌బోర్డ్‌పై ఫుల్‌స్క్రీన్ బాగా పనిచేస్తుంది.</li>
       </ul>
     </details>
   </main>

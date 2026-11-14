@@ -139,34 +139,34 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">x નું કોઈ પણ વિધેય લખો અને તરત જ તેનો આલેખ જુઓ. સ્લાઇડર ખસેડો, ઝૂમ કરો અને ઍપ પાસે શૂન્યો, છેદબિંદુઓ અને વળાંક બિંદુઓ શોધાવો.</p>
 
     <div class="gp" id="gp">
       <div class="gp-col gp-col-a">
         <!-- functions -->
         <section class="card gp-fns" aria-labelledby="fns-h">
           <div class="gp-head">
-            <h2 id="fns-h" data-i18n="functions_h"></h2>
+            <h2 id="fns-h" data-i18n="functions_h">વિધેયો</h2>
             <div class="row" style="gap:6px">
-              <button class="btn btn-sm btn-primary" id="add-fn" type="button">+ <span data-i18n="add_fn"></span></button>
+              <button class="btn btn-sm btn-primary" id="add-fn" type="button">+ <span data-i18n="add_fn">વિધેય ઉમેરો</span></button>
               <button class="btn btn-sm btn-danger" id="reset-all" type="button" data-i18n="reset"></button>
             </div>
           </div>
           <div id="fn-list"></div>
           <div class="gp-keys no-i18n" id="keys" role="group" data-i18n-aria-label="keypad_label"></div>
-          <p class="tiny muted mb0" style="margin-top:10px" data-i18n="syntax_hint"></p>
+          <p class="tiny muted mb0" style="margin-top:10px" data-i18n="syntax_hint">2 × x માટે 2x, x² માટે x^2, √x માટે sqrt(x) અને નિરપેક્ષ મૂલ્ય માટે |x| લખો. આ પણ ચાલે: sin, cos, tan, log (આધાર 10), ln, exp, pi, e.</p>
         </section>
 
         <!-- sliders -->
         <section class="card gp-params" aria-labelledby="params-h">
-          <h2 id="params-h" data-i18n="params_h" style="margin-bottom:6px"></h2>
-          <p class="small muted" data-i18n="params_hint"></p>
+          <h2 id="params-h" data-i18n="params_h" style="margin-bottom:6px">સ્લાઇડર a, b, c</h2>
+          <p class="small muted" data-i18n="params_hint">વિધેયમાં a, b કે c લખો, પછી સ્લાઇડર ખસેડીને આલેખ બદલાતો જુઓ.</p>
           <div id="params"></div>
         </section>
 
         <!-- ready examples -->
         <section class="card gp-presets" aria-labelledby="presets-h">
-          <h2 id="presets-h" data-i18n="presets_h" style="margin-bottom:10px"></h2>
+          <h2 id="presets-h" data-i18n="presets_h" style="margin-bottom:10px">તૈયાર ઉદાહરણો</h2>
           <div class="chips" id="presets"></div>
           <div class="callout gp-note" id="note" aria-live="polite" hidden></div>
         </section>
@@ -178,38 +178,38 @@
           <div class="gp-toolbar">
             <button class="btn gp-icon" id="zoom-in" type="button" data-i18n-title="zoom_in" data-i18n-aria-label="zoom_in">+</button>
             <button class="btn gp-icon" id="zoom-out" type="button" data-i18n-title="zoom_out" data-i18n-aria-label="zoom_out">−</button>
-            <button class="btn" id="reset-view" type="button" data-i18n="reset_view"></button>
+            <button class="btn" id="reset-view" type="button" data-i18n="reset_view">શરૂઆતનું દૃશ્ય</button>
             <span class="grow"></span>
             <button class="btn gp-icon" id="fs-btn" type="button" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen">⛶</button>
-            <button class="btn" id="save-png" type="button" data-i18n="save_png"></button>
-            <button class="btn" id="share-btn" type="button" data-i18n="share_link"></button>
+            <button class="btn" id="save-png" type="button" data-i18n="save_png">ચિત્ર સેવ કરો</button>
+            <button class="btn" id="share-btn" type="button" data-i18n="share_link">લિંક શેર કરો</button>
           </div>
           <div class="stage gp-stage" id="stage">
             <canvas id="plot" dir="ltr" tabindex="0" role="img" data-i18n-aria-label="graph_aria"></canvas>
           </div>
           <div class="gp-under">
-            <span class="lbl" id="angle-lbl" data-i18n="angle_label"></span>
+            <span class="lbl" id="angle-lbl" data-i18n="angle_label">ખૂણાનો એકમ</span>
             <div class="seg" role="group" aria-labelledby="angle-lbl">
-              <button type="button" id="mode-rad" aria-pressed="true" data-i18n="radians"></button>
-              <button type="button" id="mode-deg" aria-pressed="false" data-i18n="degrees"></button>
+              <button type="button" id="mode-rad" aria-pressed="true" data-i18n="radians">રેડિયન</button>
+              <button type="button" id="mode-deg" aria-pressed="false" data-i18n="degrees">અંશ</button>
             </div>
-            <label class="check"><input type="checkbox" id="pi-axis"> <span data-i18n="pi_axis"></span></label>
+            <label class="check"><input type="checkbox" id="pi-axis"> <span data-i18n="pi_axis">x-અક્ષ પર π માં નિશાન</span></label>
           </div>
           <p class="gp-readout" id="readout" aria-live="polite"></p>
         </section>
 
         <!-- special points -->
         <section class="card gp-points" aria-labelledby="points-h">
-          <h2 id="points-h" data-i18n="points_h" style="margin-bottom:6px"></h2>
-          <p class="small muted" data-i18n="points_hint"></p>
+          <h2 id="points-h" data-i18n="points_h" style="margin-bottom:6px">ખાસ બિંદુઓ</h2>
+          <p class="small muted" data-i18n="points_hint">આલેખના દેખાતા ભાગમાં ઍપ આ બિંદુઓ પગલે-પગલે (સંખ્યાત્મક રીતે) શોધે છે.</p>
           <div class="gp-checks">
-            <label class="check"><input type="checkbox" id="show-roots"> <span class="gp-dot" style="--col:var(--text)"></span><span data-i18n="show_roots"></span></label>
-            <label class="check"><input type="checkbox" id="show-inter"> <span class="gp-dot ring" style="--col:var(--text)"></span><span data-i18n="show_inter"></span></label>
-            <label class="check"><input type="checkbox" id="show-turn"> <span class="gp-dot diamond" style="--col:var(--text)"></span><span data-i18n="show_turn"></span></label>
+            <label class="check"><input type="checkbox" id="show-roots"> <span class="gp-dot" style="--col:var(--text)"></span><span data-i18n="show_roots">અક્ષો પરના છેદ</span></label>
+            <label class="check"><input type="checkbox" id="show-inter"> <span class="gp-dot ring" style="--col:var(--text)"></span><span data-i18n="show_inter">છેદબિંદુઓ</span></label>
+            <label class="check"><input type="checkbox" id="show-turn"> <span class="gp-dot diamond" style="--col:var(--text)"></span><span data-i18n="show_turn">વળાંક બિંદુઓ</span></label>
           </div>
           <div class="scroll-x">
             <table class="table" id="points-table">
-              <thead><tr><th data-i18n="col_point"></th><th class="num">x</th><th class="num">y</th></tr></thead>
+              <thead><tr><th data-i18n="col_point">બિંદુ</th><th class="num">x</th><th class="num">y</th></tr></thead>
               <tbody id="points-body"></tbody>
             </table>
           </div>
@@ -221,17 +221,17 @@
     <!-- table of values -->
     <section class="card gp-table below" aria-labelledby="tv-h">
       <div class="gp-head">
-        <h2 id="tv-h" data-i18n="table_h"></h2>
+        <h2 id="tv-h" data-i18n="table_h">મૂલ્યોનું કોષ્ટક</h2>
         <div class="row no-print" style="gap:6px">
-          <button class="btn btn-sm" id="tv-csv" type="button" data-i18n="tv_csv"></button>
+          <button class="btn btn-sm" id="tv-csv" type="button" data-i18n="tv_csv">CSV ડાઉનલોડ કરો</button>
           <button class="btn btn-sm" id="tv-print" type="button" data-i18n="print"></button>
         </div>
       </div>
       <div class="gp-tv-form">
-        <label class="field field-fn"><span data-i18n="tv_fn"></span><select id="tv-fn" class="no-i18n"></select></label>
-        <label class="field"><span data-i18n="tv_from"></span><input type="number" id="tv-from" dir="ltr" step="any" inputmode="decimal"></label>
-        <label class="field"><span data-i18n="tv_to"></span><input type="number" id="tv-to" dir="ltr" step="any" inputmode="decimal"></label>
-        <label class="field"><span data-i18n="tv_step"></span><input type="number" id="tv-step" dir="ltr" step="any" min="0" inputmode="decimal"></label>
+        <label class="field field-fn"><span data-i18n="tv_fn">વિધેય</span><select id="tv-fn" class="no-i18n"></select></label>
+        <label class="field"><span data-i18n="tv_from">x = થી</span><input type="number" id="tv-from" dir="ltr" step="any" inputmode="decimal"></label>
+        <label class="field"><span data-i18n="tv_to">x = સુધી</span><input type="number" id="tv-to" dir="ltr" step="any" inputmode="decimal"></label>
+        <label class="field"><span data-i18n="tv_step">તફાવત</span><input type="number" id="tv-step" dir="ltr" step="any" min="0" inputmode="decimal"></label>
       </div>
       <div class="gp-tv-wrap" id="tv-wrap">
         <table class="table" id="tv-table">
@@ -244,19 +244,19 @@
 
     <!-- syllabus links -->
     <section class="card gp-learn below" aria-labelledby="learn-h">
-      <h2 id="learn-h" data-i18n="learn_h"></h2>
+      <h2 id="learn-h" data-i18n="learn_h">તમારા અભ્યાસક્રમ સાથે જોડાણ</h2>
       <div class="gp-learn-list" id="learn"></div>
     </section>
 
     <details class="card below">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">કેવી રીતે વાપરવું · વર્ગખંડ માટે વિચારો</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">ખાનામાં x નું વિધેય લખો, જેમ કે 2x + 1, x^2 − 4 કે sin(x). 8 વિધેયો સુધી દોરી શકાય. કોઈ વિધેય છુપાવવા કે બતાવવા રંગીન ટપકા પર ટૅપ કરો.</li>
+        <li data-i18n="tip2">આલેખને ખેંચીને ખસેડો. માઉસ વ્હીલ, બે આંગળીના પિંચ કે + અને − બટનથી ઝૂમ કરો. વક્ર પર ટૅપ કરીને તેના (x, y) મૂલ્યો વાંચો.</li>
+        <li data-i18n="tip3">સૂત્રમાં a, b કે c મૂકો, જેમ કે ax^2 + bx + c, પછી સ્લાઇડર ખસેડો અને આલેખનો આકાર બદલાતો જુઓ.</li>
+        <li data-i18n="tip4">ઍપ શૂન્યો, છેદબિંદુઓ અને વળાંક બિંદુઓ પર નિશાની કરે છે અને આલેખની નીચે તેની યાદી આપે છે. મૂલ્યોના કોષ્ટકથી જાતે ચકાસો.</li>
+        <li data-i18n="tip5">વર્ગ પ્રવૃત્તિ: y = x² બતાવો. વિદ્યાર્થીઓને પહેલાં નોટમાં y = x² + 2, y = (x − 3)² અને y = −x² ના અંદાજિત આલેખ દોરવા કહો, પછી ટાઇપ કરીને સરખાવો.</li>
+        <li data-i18n="tip6">સ્માર્ટબોર્ડ પર પૂર્ણ સ્ક્રીન વાપરો. &quot;ચિત્ર સેવ કરો&quot; થી આલેખ વર્કશીટમાં મૂકો અને &quot;લિંક શેર કરો&quot; થી એ જ આલેખ WhatsApp પર વિદ્યાર્થીઓને મોકલો.</li>
       </ul>
       <p class="tiny muted mb0" style="margin-top:10px" data-i18n="saved_local"></p>
     </details>

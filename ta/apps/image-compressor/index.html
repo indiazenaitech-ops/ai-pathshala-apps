@@ -176,23 +176,23 @@
 </head>
 <body>
   <main id="app" data-busy="0">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ஒரே நேரத்தில் 100 படங்களின் அளவை மாற்றி, சுருக்கி, வாட்டர்மார்க் சேர்த்து, பெயர் மாற்றலாம்: Instagram, WhatsApp ஸ்டேட்டஸ், YouTube, Amazon, Flipkart, உங்கள் இணையதளம் ஆகியவற்றுக்கு.</p>
 
     <div class="callout success ic-privacy" role="note">
       <span class="ic-lock" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">உங்கள் கோப்புகள் இந்தச் சாதனத்தை விட்டு வெளியே போகாது.</strong> <span data-i18n="privacy_body">படங்கள் இந்த உலாவிக்குள்ளேயே உருவாகின்றன, எதுவும் பதிவேற்றப்படுவதில்லை. அதனால் புதிய பொருட்களின் படங்கள், வாடிக்கையாளர் வேலை, குடும்பப் படங்கள் பாதுகாப்பாக இருக்கும். GPS இருப்பிடம் போன்ற மறைந்த தகவல்கள் நீக்கப்படும்.</span></p>
     </div>
 
     <section class="card ic-drop" id="drop" tabindex="0" aria-labelledby="dropTitle">
       <div class="ic-drop-ico" aria-hidden="true">🖼️</div>
       <div class="ic-drop-txt">
-        <strong id="dropTitle" data-i18n="drop_title"></strong>
-        <span class="small muted" data-i18n="drop_hint"></span>
+        <strong id="dropTitle" data-i18n="drop_title">படங்களை இங்கே விடுங்கள்</strong>
+        <span class="small muted" data-i18n="drop_hint">JPG, PNG, WebP, HEIC (iPhone), GIF, AVIF. ஒரே முறையில் 100 வரை.</span>
         <div class="tiny muted ic-kbd" data-i18n-html="drop_keys"></div>
       </div>
       <div class="ic-drop-btns">
-        <button class="btn btn-primary btn-lg" id="pickBtn" type="button"><span aria-hidden="true">＋</span> <span data-i18n="pick_photos"></span></button>
-        <button class="btn" id="sampleBtn" type="button" data-i18n="try_samples"></button>
+        <button class="btn btn-primary btn-lg" id="pickBtn" type="button"><span aria-hidden="true">＋</span> <span data-i18n="pick_photos">படங்களைத் தேர்ந்தெடு</span></button>
+        <button class="btn" id="sampleBtn" type="button" data-i18n="try_samples">மாதிரிப் படங்களை முயலுங்கள்</button>
       </div>
       <input type="file" id="fileInput" multiple accept="image/*,.heic,.heif,.avif,.webp" hidden>
     </section>
@@ -206,52 +206,52 @@
       <!-- ============ settings ============ -->
       <section class="card ic-settings" aria-label="settings" data-i18n-aria-label="settings_aria">
         <div class="ic-sec">
-          <h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_size"></span></h2>
+          <h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_size">அளவு</span></h2>
           <div id="presetGrid"></div>
           <div id="customBox" hidden>
             <div class="ic-two">
-              <label class="field"><span data-i18n="custom_w"></span><input type="number" id="customW" min="1" max="20000" inputmode="numeric"></label>
-              <label class="field"><span data-i18n="custom_h"></span><input type="number" id="customH" min="1" max="20000" inputmode="numeric"></label>
+              <label class="field"><span data-i18n="custom_w">அகலம் (px)</span><input type="number" id="customW" min="1" max="20000" inputmode="numeric"></label>
+              <label class="field"><span data-i18n="custom_h">உயரம் (px)</span><input type="number" id="customH" min="1" max="20000" inputmode="numeric"></label>
             </div>
-            <p class="tiny muted mb0" data-i18n="custom_hint"></p>
+            <p class="tiny muted mb0" data-i18n="custom_hint">ஒவ்வொரு படத்தின் வடிவத்தையும் அப்படியே வைக்க ஒரு பெட்டியைக் காலியாக விடுங்கள்.</p>
           </div>
           <p class="callout ic-note mb0" id="presetNote"></p>
         </div>
 
         <div class="ic-sec" id="modeSec">
-          <h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_fit"></span></h2>
+          <h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_fit">வடிவம்</span></h2>
           <div class="seg ic-seg" role="group" data-i18n-aria-label="h_fit" aria-label="fit">
-            <button type="button" id="mode-fit" data-mode="fit" data-i18n="mode_fit"></button>
-            <button type="button" id="mode-fill" data-mode="fill" data-i18n="mode_fill"></button>
-            <button type="button" id="mode-exact" data-mode="exact" data-i18n="mode_exact"></button>
+            <button type="button" id="mode-fit" data-mode="fit" data-i18n="mode_fit">முழுப் படம்</button>
+            <button type="button" id="mode-fill" data-mode="fill" data-i18n="mode_fill">நிரப்பு (வெட்டு)</button>
+            <button type="button" id="mode-exact" data-mode="exact" data-i18n="mode_exact">நீட்டு</button>
           </div>
           <p class="small muted mb0" id="modeHint"></p>
           <div id="fitOpts" class="stack">
             <div class="field">
-              <span data-i18n="bg_label"></span>
+              <span data-i18n="bg_label">பின்னணி</span>
               <div class="seg ic-seg" role="group" data-i18n-aria-label="bg_label" aria-label="background">
-                <button type="button" id="bg-color" data-bg="color" data-i18n="bg_color"></button>
-                <button type="button" id="bg-blur" data-bg="blur" data-i18n="bg_blur"></button>
-                <button type="button" id="bg-transparent" data-bg="transparent" data-i18n="bg_transparent"></button>
+                <button type="button" id="bg-color" data-bg="color" data-i18n="bg_color">நிறம்</button>
+                <button type="button" id="bg-blur" data-bg="blur" data-i18n="bg_blur">மங்கலான படம்</button>
+                <button type="button" id="bg-transparent" data-bg="transparent" data-i18n="bg_transparent">ஒளிபுகும்</button>
               </div>
             </div>
             <div class="ic-colorrow" id="colorRow">
-              <label class="check" for="bgColor"><span data-i18n="bg_pick"></span></label>
+              <label class="check" for="bgColor"><span data-i18n="bg_pick">பின்னணி நிறம்</span></label>
               <input type="color" id="bgColor" value="#ffffff">
-              <button type="button" class="chip" data-color="#ffffff" data-i18n="c_white"></button>
-              <button type="button" class="chip" data-color="#000000" data-i18n="c_black"></button>
+              <button type="button" class="chip" data-color="#ffffff" data-i18n="c_white">வெள்ளை</button>
+              <button type="button" class="chip" data-color="#000000" data-i18n="c_black">கருப்பு</button>
             </div>
-            <label class="field"><span><span data-i18n="margin_label"></span></span>
+            <label class="field"><span><span data-i18n="margin_label">படத்தைச் சுற்றி காலி இடம்</span></span>
               <span class="ic-rangerow"><input type="range" id="margin" min="0" max="30" step="1"><output id="marginOut" for="margin"></output></span>
             </label>
           </div>
         </div>
         <div class="ic-sec" id="enlargeSec" hidden>
-          <label class="check"><input type="checkbox" id="noEnlarge"> <span data-i18n="no_enlarge"></span></label>
+          <label class="check"><input type="checkbox" id="noEnlarge"> <span data-i18n="no_enlarge">சிறிய படங்களைப் பெரிதாக்க வேண்டாம்</span></label>
         </div>
 
         <div class="ic-sec">
-          <h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_format"></span></h2>
+          <h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_format">கோப்பு வகை &amp; தரம்</span></h2>
           <div class="seg ic-seg no-i18n" role="group" id="fmtSeg" aria-label="format" data-i18n-aria-label="h_format">
             <button type="button" id="fmt-jpg" data-fmt="jpg">JPG</button>
             <button type="button" id="fmt-webp" data-fmt="webp">WebP</button>
@@ -260,16 +260,16 @@
           </div>
           <p class="small muted mb0" id="fmtHint"></p>
           <div class="seg ic-seg" role="group" data-i18n-aria-label="cm_label" aria-label="compress">
-            <button type="button" id="cm-quality" data-cm="quality" data-i18n="cm_quality"></button>
-            <button type="button" id="cm-size" data-cm="size" data-i18n="cm_size"></button>
+            <button type="button" id="cm-quality" data-cm="quality" data-i18n="cm_quality">தரத்தின்படி</button>
+            <button type="button" id="cm-size" data-cm="size" data-i18n="cm_size">கோப்பு அளவின்படி</button>
           </div>
           <div id="qualityBox" class="field">
-            <span data-i18n="quality_label"></span>
+            <span data-i18n="quality_label">தரம்</span>
             <span class="ic-rangerow"><input type="range" id="quality" min="10" max="100" step="1"><output id="qualityOut" for="quality"></output></span>
-            <span class="hint" data-i18n="quality_hint"></span>
+            <span class="hint" data-i18n="quality_hint">பெரும்பாலான படங்களில் 75–85-இல் வேறுபாடு தெரியாது, நிறைய இடம் மிச்சமாகும்.</span>
           </div>
           <div id="sizeBox" class="stack" hidden>
-            <label class="field"><span data-i18n="target_label"></span>
+            <label class="field"><span data-i18n="target_label">அதிகபட்ச கோப்பு அளவு (KB)</span>
               <input type="number" id="targetKB" min="5" max="50000" step="1" inputmode="numeric">
             </label>
             <div class="ic-chips no-i18n" id="kbChips">
@@ -285,46 +285,46 @@
 
         <div class="ic-sec">
           <details class="ic-det" id="wmDet">
-            <summary class="ic-sum"><h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_wm"></span></h2> <span class="badge" id="wmBadge"></span></summary>
+            <summary class="ic-sum"><h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_wm">வாட்டர்மார்க்</span></h2> <span class="badge" id="wmBadge"></span></summary>
             <div>
               <div class="seg ic-seg" role="group" data-i18n-aria-label="h_wm" aria-label="watermark">
-                <button type="button" id="wm-none" data-wm="none" data-i18n="wm_none"></button>
-                <button type="button" id="wm-text" data-wm="text" data-i18n="wm_text"></button>
-                <button type="button" id="wm-logo" data-wm="logo" data-i18n="wm_logo"></button>
+                <button type="button" id="wm-none" data-wm="none" data-i18n="wm_none">எதுவும் இல்லை</button>
+                <button type="button" id="wm-text" data-wm="text" data-i18n="wm_text">எழுத்து</button>
+                <button type="button" id="wm-logo" data-wm="logo" data-i18n="wm_logo">லோகோ</button>
               </div>
               <div id="wmTextBox" class="stack" hidden>
-                <label class="field"><span data-i18n="wm_text_label"></span>
+                <label class="field"><span data-i18n="wm_text_label">வாட்டர்மார்க் எழுத்து</span>
                   <input type="text" id="wmText" class="no-i18n" maxlength="80" data-i18n-placeholder="wm_placeholder">
                 </label>
                 <div class="ic-colorrow">
-                  <label class="check" for="wmColor"><span data-i18n="wm_color"></span></label>
+                  <label class="check" for="wmColor"><span data-i18n="wm_color">எழுத்தின் நிறம்</span></label>
                   <input type="color" id="wmColor" value="#ffffff">
                 </div>
-                <label class="field"><span data-i18n="wm_size"></span>
+                <label class="field"><span data-i18n="wm_size">எழுத்தின் அளவு</span>
                   <span class="ic-rangerow"><input type="range" id="wmSize" min="2" max="20" step="0.5"><output id="wmSizeOut" for="wmSize"></output></span>
                 </label>
               </div>
               <div id="wmLogoBox" class="stack" hidden>
                 <div class="row">
                   <img class="ic-logo-prev" id="logoPrev" alt="" hidden>
-                  <button type="button" class="btn" id="logoPick" data-i18n="wm_logo_pick"></button>
+                  <button type="button" class="btn" id="logoPick" data-i18n="wm_logo_pick">லோகோவைத் தேர்ந்தெடு</button>
                   <button type="button" class="btn btn-sm btn-danger" id="logoDel" data-i18n="delete" hidden></button>
                 </div>
-                <p class="tiny muted mb0" data-i18n="wm_logo_hint"></p>
-                <label class="field"><span data-i18n="wm_lsize"></span>
+                <p class="tiny muted mb0" data-i18n="wm_logo_hint">ஒளிபுகும் பின்னணியுள்ள PNG லோகோ சிறப்பாகத் தெரியும். உங்கள் லோகோ இந்தச் சாதனத்திலேயே நினைவில் வைக்கப்படும்.</p>
+                <label class="field"><span data-i18n="wm_lsize">லோகோ அளவு</span>
                   <span class="ic-rangerow"><input type="range" id="wmLsize" min="5" max="60" step="1"><output id="wmLsizeOut" for="wmLsize"></output></span>
                 </label>
               </div>
               <div id="wmCommon" class="stack" hidden>
-                <label class="field"><span data-i18n="wm_opacity"></span>
+                <label class="field"><span data-i18n="wm_opacity">அடர்த்தி</span>
                   <span class="ic-rangerow"><input type="range" id="wmOpacity" min="10" max="100" step="1"><output id="wmOpacityOut" for="wmOpacity"></output></span>
                 </label>
                 <div class="field">
-                  <span data-i18n="wm_pos"></span>
+                  <span data-i18n="wm_pos">இடம்</span>
                   <div class="ic-pos" id="posGrid" role="group" data-i18n-aria-label="wm_pos" aria-label="position"></div>
                 </div>
-                <label class="check"><input type="checkbox" id="wmTile"> <span data-i18n="wm_tile"></span></label>
-                <p class="tiny muted mb0" data-i18n="wm_hint"></p>
+                <label class="check"><input type="checkbox" id="wmTile"> <span data-i18n="wm_tile">படம் முழுவதும் திரும்பத் திரும்ப வை</span></label>
+                <p class="tiny muted mb0" data-i18n="wm_hint">Amazon, Flipkart முதன்மைப் பொருள் படத்தில் வாட்டர்மார்க்கை அனுமதிப்பதில்லை. சமூக ஊடகப் பதிவுகளில் பயன்படுத்துங்கள்.</p>
               </div>
             </div>
           </details>
@@ -332,9 +332,9 @@
 
         <div class="ic-sec">
           <details class="ic-det" id="nameDet">
-            <summary class="ic-sum"><h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_names"></span></h2></summary>
+            <summary class="ic-sum"><h2><span class="ic-num" aria-hidden="true"></span> <span data-i18n="h_names">கோப்புப் பெயர்கள்</span></h2></summary>
             <div>
-              <label class="field"><span data-i18n="name_label"></span>
+              <label class="field"><span data-i18n="name_label">பெயர் வடிவம்</span>
                 <input type="text" id="pattern" class="no-i18n" maxlength="80" spellcheck="false" autocomplete="off">
               </label>
               <div class="ic-chips no-i18n" id="tokChips">
@@ -344,35 +344,35 @@
                 <button type="button" class="chip" data-tok="{n}">{n}</button>
                 <button type="button" class="chip" data-tok="{date}">{date}</button>
               </div>
-              <p class="tiny muted mb0" data-i18n="name_hint"></p>
-              <p class="small mb0"><span data-i18n="name_example"></span> <code class="no-i18n" id="nameEx"></code></p>
+              <p class="tiny muted mb0" data-i18n="name_hint">{name} = அசல் பெயர், {w}, {h} = புதிய அளவு, {n} = எண் 01, 02…, {date} = இன்றைய தேதி.</p>
+              <p class="small mb0"><span data-i18n="name_example">எடுத்துக்காட்டு:</span> <code class="no-i18n" id="nameEx"></code></p>
             </div>
           </details>
         </div>
 
         <div class="ic-sec row spread">
-          <span class="tiny muted" data-i18n="settings_saved"></span>
-          <button type="button" class="btn btn-sm btn-danger" id="resetSettings" data-i18n="reset_settings"></button>
+          <span class="tiny muted" data-i18n="settings_saved">அமைப்புகள் இந்தச் சாதனத்தில் சேமிக்கப்படும். படங்கள் அல்ல.</span>
+          <button type="button" class="btn btn-sm btn-danger" id="resetSettings" data-i18n="reset_settings">அமைப்புகளை மீட்டமை</button>
         </div>
       </section>
 
       <!-- ============ results ============ -->
       <section class="stack ic-results" aria-labelledby="hResults">
         <div class="card stack" id="summary">
-          <h2 id="hResults" class="mb0" data-i18n="h_results"></h2>
+          <h2 id="hResults" class="mb0" data-i18n="h_results">உங்கள் படங்கள்</h2>
           <div class="ic-stats" aria-live="polite">
-            <div><div class="tiny muted" data-i18n="st_photos"></div><div class="ic-stat" id="stCount">0</div></div>
-            <div><div class="tiny muted" data-i18n="st_before"></div><div class="ic-stat" id="stBefore">0</div></div>
-            <div><div class="tiny muted" data-i18n="st_after"></div><div class="ic-stat" id="stAfter">0</div></div>
-            <div><div class="tiny muted" data-i18n="st_saved"></div><div class="ic-stat" id="stSaved">0%</div></div>
+            <div><div class="tiny muted" data-i18n="st_photos">படங்கள்</div><div class="ic-stat" id="stCount">0</div></div>
+            <div><div class="tiny muted" data-i18n="st_before">முன்பு</div><div class="ic-stat" id="stBefore">0</div></div>
+            <div><div class="tiny muted" data-i18n="st_after">பின்பு</div><div class="ic-stat" id="stAfter">0</div></div>
+            <div><div class="tiny muted" data-i18n="st_saved">மிச்சம்</div><div class="ic-stat" id="stSaved">0%</div></div>
           </div>
           <div class="progress" id="prog" hidden><span style="width:0%"></span></div>
           <p class="small muted ic-status" id="status" aria-live="polite"></p>
           <div class="ic-actions">
-            <button class="btn btn-primary" id="zipBtn" type="button" disabled><span aria-hidden="true">⬇</span> <span data-i18n="dl_zip"></span></button>
-            <button class="btn" id="eachBtn" type="button" disabled data-i18n="dl_each"></button>
-            <button class="btn" id="shareBtn" type="button" hidden disabled><span aria-hidden="true">↗</span> <span data-i18n="share_files"></span></button>
-            <button class="btn btn-danger" id="clearBtn" type="button" disabled data-i18n="clear_all"></button>
+            <button class="btn btn-primary" id="zipBtn" type="button" disabled><span aria-hidden="true">⬇</span> <span data-i18n="dl_zip">அனைத்தையும் பதிவிறக்கு (ZIP)</span></button>
+            <button class="btn" id="eachBtn" type="button" disabled data-i18n="dl_each">ஒவ்வொன்றாகப் பதிவிறக்கு</button>
+            <button class="btn" id="shareBtn" type="button" hidden disabled><span aria-hidden="true">↗</span> <span data-i18n="share_files">பகிர்</span></button>
+            <button class="btn btn-danger" id="clearBtn" type="button" disabled data-i18n="clear_all">அனைத்தையும் நீக்கு</button>
           </div>
         </div>
 
@@ -380,8 +380,8 @@
           <div class="ic-vhead">
             <h3 class="ic-vname no-i18n" id="vName"></h3>
             <div class="seg" role="group" id="viewSeg" aria-label="view" data-i18n-aria-label="view_aria">
-              <button type="button" id="vCompare" data-view="compare" data-i18n="v_compare"></button>
-              <button type="button" id="vCrop" data-view="crop" data-i18n="v_crop"></button>
+              <button type="button" id="vCompare" data-view="compare" data-i18n="v_compare">முன்பு / பின்பு</button>
+              <button type="button" id="vCrop" data-view="crop" data-i18n="v_crop">வெட்டும் பகுதியைத் தேர்ந்தெடு</button>
             </div>
           </div>
           <div id="cmpPane">
@@ -390,18 +390,18 @@
                 <canvas id="cmpBefore" width="10" height="10"></canvas>
                 <img id="cmpAfter" alt="">
                 <div class="ic-line" id="cmpLine"></div>
-                <span class="ic-tag b" data-i18n="before"></span>
-                <span class="ic-tag a" data-i18n="after"></span>
+                <span class="ic-tag b" data-i18n="before">முன்பு</span>
+                <span class="ic-tag a" data-i18n="after">பின்பு</span>
               </div>
             </div>
             <input type="range" id="cmpRange" min="0" max="100" value="50" data-i18n-aria-label="v_compare" aria-label="compare">
             <div class="ic-vinfo">
               <span class="small muted" id="cmpInfo"></span>
-              <label class="check small"><input type="checkbox" id="zoom1"> <span data-i18n="zoom_100"></span></label>
+              <label class="check small"><input type="checkbox" id="zoom1"> <span data-i18n="zoom_100">உண்மை அளவு (100%)</span></label>
             </div>
           </div>
           <div id="cropPane" hidden>
-            <p class="small muted" data-i18n="crop_hint"></p>
+            <p class="small muted" data-i18n="crop_hint">பிரகாசமான சட்டகத்தை நகர்த்தி (அல்லது அம்புக்குறி விசைகளைப் பயன்படுத்தி) படத்தின் எந்தப் பகுதி இருக்க வேண்டும் எனத் தேர்ந்தெடுங்கள்.</p>
             <div class="ic-cropwrap">
               <div class="ic-crop" id="crop" dir="ltr">
                 <img id="cropImg" alt="">
@@ -409,44 +409,44 @@
               </div>
             </div>
             <div class="row" style="margin-top:10px">
-              <button type="button" class="btn btn-sm" id="cropCenter" data-i18n="crop_center"></button>
-              <button type="button" class="btn btn-sm" id="cropAll" data-i18n="crop_all"></button>
+              <button type="button" class="btn btn-sm" id="cropCenter" data-i18n="crop_center">நடுவில்</button>
+              <button type="button" class="btn btn-sm" id="cropAll" data-i18n="crop_all">எல்லாப் படங்களுக்கும் பயன்படுத்து</button>
             </div>
           </div>
         </div>
 
         <div class="card ic-empty" id="empty">
           <div class="ic-big" aria-hidden="true">📷</div>
-          <p class="mb0" data-i18n="empty"></p>
+          <p class="mb0" data-i18n="empty">இன்னும் படங்கள் இல்லை. படங்களைத் தேர்ந்தெடுங்கள், இங்கே விடுங்கள் அல்லது மாதிரிப் படங்களை முயலுங்கள்.</p>
         </div>
         <ul class="ic-list" id="list" aria-labelledby="hResults"></ul>
       </section>
     </div>
 
     <details class="card ic-help no-print" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">எப்படிப் பயன்படுத்துவது · வேலைக்கான யோசனைகள்</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">பொத்தானால், படங்களைப் பக்கத்தில் இழுத்து விட்டு அல்லது ஒட்டி (Ctrl + V) படங்களைச் சேருங்கள். ஒரே முறையில் 100 வரை, போனிலும் கூட.</li>
+        <li data-i18n="tip2">அளவைத் தேர்ந்தெடுங்கள். &quot;நிரப்பு&quot; படத்தைச் சரியான வடிவத்தில் வெட்டும்: படத்தைத் திறந்து முக்கியப் பகுதியை வைக்கச் சட்டகத்தை நகர்த்துங்கள். &quot;முழுப் படம்&quot; எல்லாவற்றையும் வைத்து ஓரம் சேர்க்கும்; WhatsApp ஸ்டேட்டஸுக்கு மங்கலான பின்னணி அழகாக இருக்கும்.</li>
+        <li data-i18n="tip3">ஒரு இணையதளத்துக்கு வரம்பு இருந்தால் &quot;கோப்பு அளவின்படி&quot; பயன்படுத்துங்கள், எ.கா. 200 KB ஏற்கும் வேலை வாய்ப்பு இணையதளம் அல்லது 10 MB ஏற்கும் சந்தைத் தளம்.</li>
+        <li data-i18n="tip4">சமூக ஊடகப் படங்களில் உங்கள் கடைப் பெயர் அல்லது லோகோவைச் சேருங்கள், அப்போது யாரும் எளிதாக நகலெடுக்க முடியாது. அதை இலேசாக வையுங்கள் (அடர்த்தி 30–50%), பொருள் பளிச்சென்று தெரியும்.</li>
+        <li data-i18n="tip5">யோசனை: ஒரு பூட்டிக் உரிமையாளர் போனில் 20 குர்த்தாக்களைப் படம் எடுத்து, &quot;Amazon / Flipkart / Meesho&quot; தேர்ந்தெடுத்து, வெள்ளைப் பின்னணியில் விற்பனையாளர் பேனலுக்குத் தயாரான ஒரே ZIP-ஐப் பதிவிறக்குகிறார்.</li>
+        <li data-i18n="tip6">யோசனை: ஒரு சமூக ஊடக மேலாளர் Instagram பதிவுகளுக்குப் படங்களை உருவாக்கி, பிறகு &quot;ஸ்டோரி&quot; அழுத்தி அதே படங்களைச் சில நொடிகளில் 9:16-இல் பெறுகிறார். கோப்புகள் ஒழுங்காக இருக்கப் பெயர் வடிவத்தை {name}_story என வையுங்கள்.</li>
       </ul>
     </details>
     <details class="card ic-help no-print">
-      <summary data-i18n="inside_title"></summary>
+      <summary data-i18n="inside_title">உள்ளே என்ன நடக்கிறது? (தனியுரிமை)</summary>
       <ul>
-        <li data-i18n="inside1"></li>
-        <li data-i18n="inside2"></li>
-        <li data-i18n="inside3"></li>
-        <li data-i18n="inside4"></li>
+        <li data-i18n="inside1">உங்கள் உலாவி ஒவ்வொரு படத்தையும் திறந்து புதிய அளவில் கேன்வாஸில் மீண்டும் வரைகிறது. எதுவும் எந்த சர்வருக்கும் போவதில்லை. இந்தப் பக்கம் ஒருமுறை திறந்துவிட்டால் இணையம் இல்லாதபோதும் வேலை செய்யும்.</li>
+        <li data-i18n="inside2">கண்ணுக்கு அரிதாகத் தெரியும் நுண்ணிய விவரங்களை நீக்கி JPG, WebP கோப்பைச் சிறியதாக்குகின்றன. குறைந்த தரம் என்றால் சிறிய கோப்பு, ஆனால் அதிக மங்கல், சதுரக் கறைகள். PNG ஒவ்வொரு பிக்சலையும் வைக்கும், அதனால் பெரியது.</li>
+        <li data-i18n="inside3">போன் படங்களில் மறைந்த தகவல்கள் (EXIF) இருக்கும்: போன் மாடல், தேதி, பல நேரம் உங்கள் வீடு அல்லது கடையின் சரியான GPS இருப்பிடம். படத்தை மீண்டும் வரைவதால் இவை எல்லாம் நீங்கும், அதனால் பதிவிடுவது பாதுகாப்பானது.</li>
+        <li data-i18n="inside4">&quot;கோப்பு அளவின்படி&quot; வெவ்வேறு தரங்களை முயன்று, ஒவ்வொரு முறையும் இடைவெளியைப் பாதியாக்குகிறது, எண் ஊகிக்கும் விளையாட்டைப் போல, கோப்பு உங்கள் வரம்புக்குள் வரும் வரை.</li>
       </ul>
     </details>
 
     <div class="ic-mbar" id="mbar" hidden>
       <span class="ic-mtxt" id="mbarTxt"></span>
-      <button class="btn btn-primary btn-sm" id="mbarZip" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_zip_short"></span></button>
+      <button class="btn btn-primary btn-sm" id="mbarZip" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_zip_short">ZIP</span></button>
     </div>
   </main>
   <script src="../../../apps/image-compressor/../../shared/edu.js"></script>

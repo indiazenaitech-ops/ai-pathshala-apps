@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ID Card Maker · AI Pathshala</title>
+  <meta name="description" content="Free ID card maker: student, staff and visitor cards with photo, logo and QR code. Make many cards from a CSV list and print them on A4 with cut marks. Nothing leaves your device.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .idl { grid-template-columns: minmax(0, 1fr) minmax(0, 400px); }
+    @media (max-width: 860px) { .idl { grid-template-columns: minmax(0, 1fr); } .id-side { order: -1; } }
+    @media (min-width: 861px) { .id-side { position: sticky; top: 70px; } }
+    .card h2 { font-size: 1.12rem; margin-bottom: 4px; }
+    .field input, .field select, .field textarea { width: 100%; }
+    .two { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; }
+    @media (max-width: 420px) { .two { grid-template-columns: minmax(0, 1fr); } }
+    .flabel { font-weight: 600; font-size: .92rem; margin: 0 0 6px; }
+    .hint { color: var(--muted); font-size: .84rem; margin: 0; }
+    .seg button { min-height: 40px; }
+    .seg.wide { display: flex; }
+    .seg.wide button { flex: 1 1 auto; }
+    .img-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .img-row .btn { white-space: normal; text-align: center; }
+    .thumb { width: 52px; height: 52px; object-fit: contain; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 2px; }
+    .thumb.ph { object-fit: cover; padding: 0; }
+    .crop { display: grid; gap: 8px; }
+    .crop label { display: grid; grid-template-columns: minmax(0, 9em) minmax(0, 1fr); gap: 10px; align-items: center; font-size: .88rem; }
+    .swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+    .sw { width: 42px; height: 42px; border-radius: 50%; border: 3px solid var(--surface); box-shadow: 0 0 0 1px var(--border); cursor: pointer; padding: 0; }
+    .sw[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--primary); }
+    #csv { min-height: 150px; font-size: .92rem; white-space: pre; overflow-x: auto; direction: ltr; text-align: left; }
+    .stage-box { background: var(--surface-2); border-radius: var(--radius-sm); padding: 14px; display: flex; justify-content: center; }
+    #card { display: block; max-width: 100%; height: auto; background: #fff; box-shadow: 0 3px 14px rgba(0, 0, 0, .22); border-radius: 6px; }
+    #card.portrait { width: 250px; }
+    #card.landscape { width: 360px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+    .actions .btn { flex: 1 1 auto; white-space: normal; }
+    .copies { flex: 0 0 5.5em; }
+    .copies input { width: 100%; }
+    .thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+    .thumbs.landscape { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+    .thumbs button { border: 2px solid var(--border); border-radius: 6px; padding: 0; background: #fff; cursor: pointer; overflow: hidden; line-height: 0; }
+    .thumbs button[aria-pressed="true"] { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-soft); }
+    .thumbs canvas { width: 100%; height: auto; display: block; }
+    .warns { margin: 0; padding-inline-start: 1.2em; }
+    .help summary { cursor: pointer; font-weight: 700; min-height: 32px; }
+    .tips { margin: 10px 0 0; padding-inline-start: 1.2em; }
+    .tips li + li { margin-top: 6px; }
+    .reset-row { margin-top: 16px; }
+    [hidden] { display: none !important; }
+
+    /* ---------- print: only the A4 sheets ---------- */
+    #printRoot { display: none; }
+    @page { size: A4 portrait; margin: 0; }
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      html, body { margin: 0 !important; padding: 0 !important; min-height: 0 !important; height: auto !important; background: #fff; }
+      #app > *:not(#printRoot) { display: none !important; }
+      #printRoot { display: block !important; }
+      html, body, #app { direction: ltr; }
+    }
+    /* the sheet is a fixed drawing in millimetres, so physical left/top are intended here */
+    .pg { position: relative; width: 210mm; height: 296.5mm; overflow: hidden; background: #fff; direction: ltr; break-after: page; page-break-after: always; }
+    .pg:last-child { break-after: auto; page-break-after: auto; }
+    .pg .slot { position: absolute; overflow: hidden; }
+    .pg .slot img { width: 100%; height: 100%; display: block; }
+    .pg .marks { position: absolute; top: 0; left: 0; width: 210mm; height: 296.5mm; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="callout accent small" id="sampleNote" data-i18n="sample_note"></p>
+
+    <div class="split idl">
+      <div class="stack">
+        <section class="card stack" aria-labelledby="hOrg">
+          <h2 id="hOrg" data-i18n="h_org"></h2>
+          <div>
+            <p class="flabel" data-i18n="type_label"></p>
+            <div class="seg wide" role="group" aria-labelledby="hOrg">
+              <button type="button" id="type-student" data-type="student" data-i18n="type_student"></button>
+              <button type="button" id="type-staff" data-type="staff" data-i18n="type_staff"></button>
+              <button type="button" id="type-visitor" data-type="visitor" data-i18n="type_visitor"></button>
+            </div>
+          </div>
+          <label class="field"><b data-i18n="f_org"></b>
+            <input type="text" id="fOrg" class="no-i18n" maxlength="120" autocomplete="off" data-i18n-placeholder="sample_org">
+          </label>
+          <div>
+            <p class="flabel" data-i18n="f_logo"></p>
+            <div class="img-row">
+              <img id="logoThumb" class="thumb" alt="" hidden>
+              <button type="button" class="btn" id="logoAdd" data-i18n="logo_add"></button>
+              <button type="button" class="btn btn-danger" id="logoRemove" data-i18n="img_remove" hidden></button>
+            </div>
+            <p class="hint" data-i18n="img_hint"></p>
+          </div>
+          <div class="two">
+            <label class="field"><b data-i18n="f_valid"></b>
+              <input type="text" id="fValid" class="no-i18n" maxlength="40" autocomplete="off" data-i18n-placeholder="sample_valid">
+            </label>
+            <label class="field"><b data-i18n="f_contact"></b>
+              <input type="text" id="fContact" class="no-i18n" maxlength="60" autocomplete="off" placeholder="00000 00000">
+            </label>
+          </div>
+          <label class="field"><b data-i18n="f_address"></b>
+            <textarea id="fAddress" class="no-i18n" rows="2" maxlength="200" data-i18n-placeholder="sample_address"></textarea>
+          </label>
+        </section>
+
+        <section class="card stack" aria-labelledby="hWho">
+          <h2 id="hWho" data-i18n="h_who"></h2>
+          <div class="seg wide" role="group" aria-labelledby="hWho">
+            <button type="button" id="mode-one" data-mode="one" data-i18n="mode_one"></button>
+            <button type="button" id="mode-many" data-mode="many" data-i18n="mode_many"></button>
+          </div>
+
+          <div id="oneBox" class="stack">
+            <label class="field"><b data-i18n="f_name"></b>
+              <input type="text" id="fName" class="no-i18n" maxlength="80" autocomplete="off" data-i18n-placeholder="sample_name">
+            </label>
+            <div class="two">
+              <label class="field"><b id="lblClass"></b>
+                <input type="text" id="fClass" class="no-i18n" maxlength="60" autocomplete="off">
+              </label>
+              <label class="field"><b data-i18n="f_id"></b>
+                <input type="text" id="fId" class="no-i18n" maxlength="40" autocomplete="off" placeholder="DEMO-001">
+              </label>
+            </div>
+            <label class="field"><b data-i18n="f_blood"></b>
+              <select id="fBlood">
+                <option value="" data-i18n="blood_none"></option>
+                <option class="no-i18n">A+</option><option class="no-i18n">A-</option>
+                <option class="no-i18n">B+</option><option class="no-i18n">B-</option>
+                <option class="no-i18n">AB+</option><option class="no-i18n">AB-</option>
+                <option class="no-i18n">O+</option><option class="no-i18n">O-</option>
+              </select>
+            </label>
+            <div>
+              <p class="flabel" data-i18n="f_photo"></p>
+              <div class="img-row">
+                <img id="photoThumb" class="thumb ph" alt="" hidden>
+                <button type="button" class="btn" id="photoAdd" data-i18n="photo_add"></button>
+                <button type="button" class="btn btn-danger" id="photoRemove" data-i18n="img_remove" hidden></button>
+              </div>
+              <div class="crop panel" id="cropBox" hidden>
+                <p class="hint" data-i18n="crop_hint"></p>
+                <label><span data-i18n="crop_zoom"></span><input type="range" id="pZoom" min="1" max="3" step="0.02" value="1"></label>
+                <label><span data-i18n="crop_x"></span><input type="range" id="pX" min="-1" max="1" step="0.02" value="0"></label>
+                <label><span data-i18n="crop_y"></span><input type="range" id="pY" min="-1" max="1" step="0.02" value="0"></label>
+              </div>
+            </div>
+          </div>
+
+          <div id="manyBox" class="stack" hidden>
+            <p class="hint" data-i18n="batch_help"></p>
+            <label class="field"><b data-i18n="batch_label"></b>
+              <textarea id="csv" class="no-i18n" spellcheck="false" autocomplete="off"></textarea>
+            </label>
+            <div class="row">
+              <button type="button" class="btn" id="csvOpen" data-i18n="batch_open"></button>
+              <button type="button" class="btn" id="csvSample" data-i18n="batch_sample"></button>
+              <button type="button" class="btn" id="photosAdd" data-i18n="batch_photos"></button>
+            </div>
+            <p class="hint" data-i18n="batch_photos_hint"></p>
+            <div class="callout small" id="batchStatus" aria-live="polite"></div>
+            <ul class="warns small" id="batchWarns" aria-live="polite" hidden></ul>
+          </div>
+        </section>
+
+        <section class="card stack" aria-labelledby="hLook">
+          <h2 id="hLook" data-i18n="h_look"></h2>
+          <div>
+            <p class="flabel" data-i18n="orient_label"></p>
+            <div class="seg wide" role="group">
+              <button type="button" id="or-portrait" data-orient="portrait" data-i18n="orient_portrait"></button>
+              <button type="button" id="or-landscape" data-orient="landscape" data-i18n="orient_landscape"></button>
+            </div>
+          </div>
+          <div>
+            <p class="flabel" data-i18n="theme_label"></p>
+            <div class="swatches" id="swatches"></div>
+          </div>
+          <label class="check"><input type="checkbox" id="qrOn"> <span data-i18n="qr_show"></span></label>
+          <p class="hint" id="qrNote" hidden></p>
+        </section>
+      </div>
+
+      <div class="stack id-side">
+        <section class="card stack" aria-labelledby="hPrev">
+          <h2 id="hPrev" data-i18n="h_preview"></h2>
+          <div class="stage-box"><canvas id="card" class="portrait" role="img"></canvas></div>
+          <div class="thumbs" id="thumbs" hidden></div>
+          <p class="hint" id="moreNote" hidden></p>
+          <div class="actions">
+            <button type="button" class="btn" id="btnPng"><span aria-hidden="true">⬇</span> <span data-i18n="btn_png"></span></button>
+            <label class="field copies" id="copiesBox"><span data-i18n="copies"></span>
+              <input type="number" id="copies" min="1" max="100" value="1" inputmode="numeric">
+            </label>
+            <button type="button" class="btn btn-primary" id="btnPrint"><span aria-hidden="true">🖨</span> <span data-i18n="btn_print"></span></button>
+          </div>
+          <p class="small muted mb0" id="sheetInfo" aria-live="polite"></p>
+          <p class="callout small mb0" data-i18n="print_tip"></p>
+        </section>
+      </div>
+    </div>
+
+    <details class="card help" style="margin-top:16px">
+      <summary data-i18n="help"></summary>
+      <ul class="tips">
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+        <li data-i18n="tip5"></li>
+      </ul>
+    </details>
+
+    <div class="reset-row no-print">
+      <button type="button" class="btn btn-danger" id="btnReset" data-i18n="reset"></button>
+      <span class="small muted" data-i18n="saved_local"></span>
+    </div>
+
+    <div id="printRoot" class="no-i18n" aria-hidden="true"></div>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="qr.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

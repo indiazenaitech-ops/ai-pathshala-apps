@@ -93,57 +93,57 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">Excel లేదా Google Sheets నుంచి కస్టమర్ జాబితాను పేస్ట్ చేయండి, మొబైల్ నంబర్లు సరిచేసి ఏ ఫోన్‌లోనైనా నేరుగా ఇంపోర్ట్ అయ్యే VCF ఫైల్ డౌన్‌లోడ్ చేయండి, లేదా Google Contacts CSV తయారు చేయండి. VCF ను తిరిగి Excel కోసం CSV గా కూడా మార్చవచ్చు.</p>
     <div class="callout success cv-privacy" role="note">
       <span class="cv-lock" aria-hidden="true">🔒</span>
-      <p data-i18n="privacy"></p>
+      <p data-i18n="privacy">మీ కస్టమర్ జాబితా ఈ పరికరం దాటి వెళ్లదు: ఏదీ అప్‌లోడ్ కాదు. భారతదేశ DPDP Act 2023 ప్రకారం కస్టమర్ల వ్యక్తిగత డేటాను కాపాడటం మీ బాధ్యత, కాబట్టి ఈ ఫైల్‌లను అవసరమైన వారితో మాత్రమే పంచుకోండి, పని అయ్యాక తొలగించండి.</p>
     </div>
 
     <div class="cv-grid">
       <div class="stack cv-left">
         <section class="card stack" aria-labelledby="h-input">
-          <h2 id="h-input" data-i18n="h_input"></h2>
-          <label class="field"><span data-i18n="paste_label"></span>
+          <h2 id="h-input" data-i18n="h_input">1. జాబితాను పేస్ట్ చేయండి లేదా తెరవండి</h2>
+          <label class="field"><span data-i18n="paste_label">Excel, Google Sheets లేదా ఏ CSV నుంచైనా ఇక్కడ పేస్ట్ చేయండి (ఒక లైన్‌లో ఒకరు)</span>
             <textarea id="paste" class="no-i18n" rows="8" spellcheck="false" dir="auto" data-i18n-placeholder="paste_ph"></textarea>
           </label>
           <div class="row">
-            <button type="button" class="btn" id="open-csv"><span aria-hidden="true">📄</span> <span data-i18n="open_csv"></span></button>
-            <button type="button" class="btn" id="open-vcf"><span aria-hidden="true">👤</span> <span data-i18n="open_vcf"></span></button>
-            <button type="button" class="btn" id="load-example" data-i18n="load_example"></button>
+            <button type="button" class="btn" id="open-csv"><span aria-hidden="true">📄</span> <span data-i18n="open_csv">CSV / TXT ఫైల్ తెరవండి</span></button>
+            <button type="button" class="btn" id="open-vcf"><span aria-hidden="true">👤</span> <span data-i18n="open_vcf">VCF ఫైల్ తెరవండి</span></button>
+            <button type="button" class="btn" id="load-example" data-i18n="load_example">ఉదాహరణ నింపండి</button>
             <button type="button" class="btn btn-ghost" id="clear" data-i18n="clear"></button>
           </div>
-          <div class="callout accent small" id="example-note" hidden><span data-i18n="example_note"></span></div>
-          <div class="callout small row" id="vcf-note" hidden><span id="vcf-note-txt"></span> <button type="button" class="btn btn-sm" id="dl-vcf-csv" data-i18n="dl_vcf_csv"></button></div>
-          <p class="muted small mb0" data-i18n="excel_tip"></p>
+          <div class="callout accent small" id="example-note" hidden><span data-i18n="example_note">ఇది కల్పిత నంబర్లతో ఉదాహరణ. దీని బదులు మీ జాబితాను పేస్ట్ చేయండి.</span></div>
+          <div class="callout small row" id="vcf-note" hidden><span id="vcf-note-txt"></span> <button type="button" class="btn btn-sm" id="dl-vcf-csv" data-i18n="dl_vcf_csv">వీటిని CSV గా డౌన్‌లోడ్ చేయండి</button></div>
+          <p class="muted small mb0" data-i18n="excel_tip">చిట్కా: Excel లేదా Google Sheets లో శీర్షిక లైన్‌తో కలిపి కాలమ్‌లను ఎంచుకుని, కాపీ చేసి ఇక్కడ పేస్ట్ చేయండి. నంబర్ 9.87654E+09 లా కనిపిస్తే, ముందు ఆ కాలమ్‌ను Text గా ఫార్మాట్ చేసి మళ్లీ కాపీ చేయండి.</p>
         </section>
 
         <section class="card stack" aria-labelledby="h-map" id="map-card" hidden>
-          <h2 id="h-map" data-i18n="h_map"></h2>
-          <p class="muted small mb0" data-i18n="map_hint"></p>
-          <label class="check"><input type="checkbox" id="has-header"> <span data-i18n="has_header"></span></label>
+          <h2 id="h-map" data-i18n="h_map">2. ఏ కాలమ్ ఏమిటి?</h2>
+          <p class="muted small mb0" data-i18n="map_hint">మీ డేటా చూసి ఊహించాం. తప్పైతే బాక్స్ మార్చండి.</p>
+          <label class="check"><input type="checkbox" id="has-header"> <span data-i18n="has_header">మొదటి లైన్ శీర్షిక</span></label>
           <div class="cv-map" id="map"></div>
         </section>
 
         <section class="card stack" aria-labelledby="h-clean">
-          <h2 id="h-clean" data-i18n="h_clean"></h2>
+          <h2 id="h-clean" data-i18n="h_clean">3. శుభ్రం చేసే ఎంపికలు</h2>
           <div class="cv-opts">
-            <label class="field cv-cc"><span data-i18n="cc_label"></span><input type="text" id="cc" class="no-i18n" inputmode="numeric" maxlength="4" autocomplete="off"><span class="hint tiny" data-i18n="cc_hint"></span></label>
-            <label class="check"><input type="checkbox" id="opt-title"> <span data-i18n="opt_title"></span></label>
-            <label class="check"><input type="checkbox" id="opt-dedupe"> <span data-i18n="opt_dedupe"></span></label>
-            <label class="check"><input type="checkbox" id="opt-landline"> <span data-i18n="opt_landline"></span></label>
-            <label class="check"><input type="checkbox" id="opt-intl"> <span data-i18n="opt_intl"></span></label>
+            <label class="field cv-cc"><span data-i18n="cc_label">దేశ కోడ్ లేని నంబర్లకు కోడ్</span><input type="text" id="cc" class="no-i18n" inputmode="numeric" maxlength="4" autocomplete="off"><span class="hint tiny" data-i18n="cc_hint">భారత్ 91 · UAE 971 · నేపాల్ 977 · బంగ్లాదేశ్ 880 · శ్రీలంక 94</span></label>
+            <label class="check"><input type="checkbox" id="opt-title"> <span data-i18n="opt_title">పేర్లలో పెద్ద-చిన్న అక్షరాలు సరిచేయండి (ramesh KUMAR → Ramesh Kumar)</span></label>
+            <label class="check"><input type="checkbox" id="opt-dedupe"> <span data-i18n="opt_dedupe">ఒకే నంబర్ ఉన్న నకలు లైన్‌లను ఒక కాంటాక్ట్‌గా కలపండి</span></label>
+            <label class="check"><input type="checkbox" id="opt-landline"> <span data-i18n="opt_landline">ల్యాండ్‌లైన్ నంబర్లు ఉంచండి (⚠ గుర్తుతో)</span></label>
+            <label class="check"><input type="checkbox" id="opt-intl"> <span data-i18n="opt_intl">విదేశీ నంబర్లు ఉంచండి (🌐 గుర్తుతో)</span></label>
           </div>
           <div class="grid-2">
-            <label class="field"><span data-i18n="prefix_label"></span><input type="text" id="prefix" class="no-i18n" maxlength="30" data-i18n-placeholder="prefix_ph"></label>
-            <label class="field"><span data-i18n="suffix_label"></span><input type="text" id="suffix" class="no-i18n" maxlength="30" data-i18n-placeholder="suffix_ph"></label>
+            <label class="field"><span data-i18n="prefix_label">ప్రతి పేరు ముందు చేర్చండి</span><input type="text" id="prefix" class="no-i18n" maxlength="30" data-i18n-placeholder="prefix_ph"></label>
+            <label class="field"><span data-i18n="suffix_label">ప్రతి పేరు తర్వాత చేర్చండి</span><input type="text" id="suffix" class="no-i18n" maxlength="30" data-i18n-placeholder="suffix_ph"></label>
           </div>
-          <p class="muted small mb0" data-i18n="prefix_hint"></p>
+          <p class="muted small mb0" data-i18n="prefix_hint">“Cust -” లాంటి ఉపసర్గ ఈ కాంటాక్ట్‌లను ఫోన్‌లో కలిపి ఉంచుతుంది, దాంతో WhatsApp బ్రాడ్‌కాస్ట్ లిస్ట్ కోసం ఎంచుకోవడం సులువు.</p>
         </section>
       </div>
 
       <div class="stack">
         <section class="card stack" aria-labelledby="h-result">
-          <h2 id="h-result" data-i18n="h_result"></h2>
+          <h2 id="h-result" data-i18n="h_result">4. ఫలితం చూడండి</h2>
           <div class="cv-tiles" id="stats" aria-live="polite"></div>
           <div class="cv-prog" id="prog" hidden><div class="progress"><span id="prog-bar" style="width:0%"></span></div><span class="small muted" id="prog-txt"></span></div>
           <div class="row spread">
@@ -156,39 +156,39 @@
         </section>
 
         <section class="card stack cv-export" aria-labelledby="h-export">
-          <h2 id="h-export" data-i18n="h_export"></h2>
-          <label class="field cv-file"><span data-i18n="file_label"></span><input type="text" id="fname" class="no-i18n" maxlength="40"></label>
+          <h2 id="h-export" data-i18n="h_export">5. డౌన్‌లోడ్</h2>
+          <label class="field cv-file"><span data-i18n="file_label">ఫైల్ పేరు</span><input type="text" id="fname" class="no-i18n" maxlength="40"></label>
           <div class="row">
-            <button type="button" class="btn btn-primary btn-lg" id="dl-vcf"><span aria-hidden="true">⬇</span> <span data-i18n="dl_vcf"></span> <span class="badge cv-count" id="vcf-count">0</span></button>
-            <button type="button" class="btn" id="dl-csv"><span aria-hidden="true">📊</span> <span data-i18n="dl_csv"></span></button>
-            <button type="button" class="btn" id="dl-google"><span aria-hidden="true">👥</span> <span data-i18n="dl_google"></span></button>
-            <button type="button" class="btn" id="copy-numbers"><span aria-hidden="true">📋</span> <span data-i18n="copy_numbers"></span></button>
+            <button type="button" class="btn btn-primary btn-lg" id="dl-vcf"><span aria-hidden="true">⬇</span> <span data-i18n="dl_vcf">VCF డౌన్‌లోడ్ (అన్ని కాంటాక్ట్‌లు)</span> <span class="badge cv-count" id="vcf-count">0</span></button>
+            <button type="button" class="btn" id="dl-csv"><span aria-hidden="true">📊</span> <span data-i18n="dl_csv">శుభ్రమైన CSV</span></button>
+            <button type="button" class="btn" id="dl-google"><span aria-hidden="true">👥</span> <span data-i18n="dl_google">Google Contacts CSV</span></button>
+            <button type="button" class="btn" id="copy-numbers"><span aria-hidden="true">📋</span> <span data-i18n="copy_numbers">అన్ని నంబర్లు కాపీ చేయండి</span></button>
           </div>
           <div class="panel stack">
             <div class="cv-split">
-              <label for="split-n" data-i18n="split_label"></label>
+              <label for="split-n" data-i18n="split_label">ఇంతమంది చొప్పున ఫైల్‌లుగా విభజించండి</label>
               <input type="number" id="split-n" class="no-i18n" min="1" max="100000" step="1" inputmode="numeric">
-              <button type="button" class="btn" id="dl-zip"><span aria-hidden="true">🗜</span> <span data-i18n="dl_parts_zip"></span></button>
+              <button type="button" class="btn" id="dl-zip"><span aria-hidden="true">🗜</span> <span data-i18n="dl_parts_zip">అన్ని భాగాలు డౌన్‌లోడ్ (ZIP)</span></button>
             </div>
-            <p class="muted small mb0" data-i18n="split_hint"></p>
+            <p class="muted small mb0" data-i18n="split_hint">WhatsApp బ్రాడ్‌కాస్ట్ లిస్ట్‌లో గరిష్ఠంగా 256 మంది ఉండవచ్చు (అక్టోబర్ 2026 లో చూశాం), కాబట్టి 256 ఫైల్ = ఒక్కో ఫైల్‌కు ఒక లిస్ట్.</p>
             <p class="small mb0" id="parts-summary"></p>
             <div class="cv-parts" id="parts"></div>
           </div>
-          <p class="muted small mb0" data-i18n="import_tip"></p>
-          <details class="cv-preview"><summary data-i18n="preview_title"></summary><pre class="no-i18n" id="preview" dir="ltr"></pre></details>
+          <p class="muted small mb0" data-i18n="import_tip">ఫోన్‌లో: .vcf ఫైల్‌ను WhatsApp లేదా ఈమెయిల్‌లో మీకే పంపి, తెరిచి “Import contacts” ఎంచుకోండి. కంప్యూటర్‌లో: contacts.google.com → Import → CSV ఎంచుకోండి.</p>
+          <details class="cv-preview"><summary data-i18n="preview_title">VCF ఫైల్ ప్రివ్యూ (మొదటి 3 కాంటాక్ట్‌లు)</summary><pre class="no-i18n" id="preview" dir="ltr"></pre></details>
         </section>
       </div>
     </div>
 
     <details class="card cv-help" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">ఎలా వాడాలి &amp; ఆలోచనలు</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">Excel లేదా Google Sheets: పేరు, మొబైల్ కాలమ్‌లను శీర్షికతో కలిపి ఎంచుకుని, కాపీ చేసి బాక్స్ 1 లో పేస్ట్ చేయండి. కాలమ్‌లు వాటంతట అవే సరిపోతాయి.</li>
+        <li data-i18n="help_2">098765-43210, +91 98765 43210 లేదా 9876543210 అన్నీ +919876543210 అవుతాయి. ఒకే సెల్‌లో రెండు నంబర్లు (98765 43210 / 91234 56789) ఒకే కాంటాక్ట్‌కు రెండు నంబర్లు అవుతాయి.</li>
+        <li data-i18n="help_3">WhatsApp బ్రాడ్‌కాస్ట్: “Diwali -” లాంటి ఉపసర్గ చేర్చి, VCF ను 256 భాగాలుగా డౌన్‌లోడ్ చేసి ఫోన్‌లో ఇంపోర్ట్ చేయండి, తర్వాత బ్రాడ్‌కాస్ట్ లిస్ట్‌లో “Diwali -” తో మొదలయ్యే అందరినీ ఎంచుకోండి.</li>
+        <li data-i18n="help_4">Google Contacts: Google Contacts CSV డౌన్‌లోడ్ చేసి contacts.google.com లో ఇంపోర్ట్ చేయండి. గ్రూప్ పేరు అక్కడ లేబుల్ అవుతుంది.</li>
+        <li data-i18n="help_5">VCF నుంచి Excel: ఫోన్ నుంచి తీసిన .vcf తెరిచి, శుభ్రమైన CSV డౌన్‌లోడ్ చేసి Excel లో తెరవండి. నంబర్లు +91 తో టెక్స్ట్‌గా ఉంటాయి, కాబట్టి Excel కుదించదు.</li>
+        <li data-i18n="help_6">ముందు అనుమతి తీసుకోండి: DPDP Act 2023, TRAI నియమాల ప్రకారం ఒప్పుకున్న కస్టమర్లకే ప్రచార సందేశాలు పంపండి, ఆపమని అడిగినవారిని జాబితా నుంచి తీసేయండి.</li>
       </ul>
     </details>
   </main>

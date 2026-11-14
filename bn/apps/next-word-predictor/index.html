@@ -123,7 +123,7 @@
 <body>
   <main id="app">
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">জেনে নিন AI চ্যাটবট কীভাবে লেখে: একটি গল্প দিয়ে ছোট্ট একটি ভাষা মডেলকে শেখান, তারপর দেখুন সে কীভাবে পরের শব্দ অনুমান করে আর নিজে নিজে লেখে।</p>
       <div class="row no-print">
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm" id="fs-btn" data-i18n="fullscreen"></button>
@@ -133,19 +133,19 @@
 
     <!-- 1. Train -->
     <section class="card stack" id="train-card">
-      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1"></span></h2>
+      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1">মডেলকে শেখান</span></h2>
       <div class="split train-split">
         <div class="stack">
           <div class="no-print">
-            <span class="lbl" id="src-lbl" data-i18n="src_label"></span>
+            <span class="lbl" id="src-lbl" data-i18n="src_label">শেখানোর লেখা</span>
             <div class="seg big" role="group" aria-labelledby="src-lbl">
-              <button type="button" id="src-sample" data-i18n="src_sample"></button>
-              <button type="button" id="src-custom" data-i18n="src_custom"></button>
+              <button type="button" id="src-sample" data-i18n="src_sample">নমুনা গল্প</button>
+              <button type="button" id="src-custom" data-i18n="src_custom">আমাদের নিজের লেখা</button>
             </div>
             <p class="muted small mb0" id="src-note" style="margin-top:6px"></p>
           </div>
           <div>
-            <span class="lbl" id="mem-lbl" data-i18n="mem_label"></span>
+            <span class="lbl" id="mem-lbl" data-i18n="mem_label">স্মৃতি: মডেল আগের কতগুলো শব্দ দেখে?</span>
             <div class="seg num no-print" role="group" aria-labelledby="mem-lbl">
               <button type="button" id="n-0">0</button>
               <button type="button" id="n-1">1</button>
@@ -155,21 +155,21 @@
             <p class="muted small mb0" id="n-hint" style="margin-top:6px"></p>
           </div>
           <div class="stats" aria-live="polite">
-            <div class="stat"><b id="stat-words">0</b><span data-i18n="stat_words"></span></div>
-            <div class="stat"><b id="stat-vocab">0</b><span data-i18n="stat_vocab"></span></div>
-            <div class="stat"><b id="stat-ngrams">0</b><span data-i18n="stat_ngrams"></span><span class="tiny" id="stat-ngrams-sub"></span></div>
+            <div class="stat"><b id="stat-words">0</b><span data-i18n="stat_words">পড়া শব্দ</span></div>
+            <div class="stat"><b id="stat-vocab">0</b><span data-i18n="stat_vocab">আলাদা শব্দ</span></div>
+            <div class="stat"><b id="stat-ngrams">0</b><span data-i18n="stat_ngrams">শেখা প্যাটার্ন</span><span class="tiny" id="stat-ngrams-sub"></span></div>
           </div>
           <p class="callout warning small mb0" id="need-text" hidden></p>
           <p class="callout small mb0" id="lines-note" hidden></p>
         </div>
         <div class="stack">
-          <label for="train-text" class="lbl" data-i18n="train_label"></label>
+          <label for="train-text" class="lbl" data-i18n="train_label">মডেল শুধু এই লেখা থেকেই শেখে</label>
           <textarea id="train-text" class="no-i18n no-print" rows="9" spellcheck="false" data-i18n-placeholder="train_ph"></textarea>
           <div id="train-print" class="print-only no-i18n"></div>
           <p class="callout warning small mb0 no-print" id="cut-note" hidden></p>
           <div class="row no-print">
-            <button type="button" class="btn btn-primary" id="train-btn" data-i18n="train_btn"></button>
-            <button type="button" class="btn" id="open-btn" data-i18n="open_txt"></button>
+            <button type="button" class="btn btn-primary" id="train-btn" data-i18n="train_btn">মডেলকে ট্রেন করুন</button>
+            <button type="button" class="btn" id="open-btn" data-i18n="open_txt">.txt ফাইল খুলুন</button>
             <button type="button" class="btn btn-ghost" id="clear-text" data-i18n="clear"></button>
           </div>
         </div>
@@ -179,35 +179,35 @@
     <div class="grid-2 main-grid">
       <!-- 2. Predict -->
       <section class="card stack" id="predict-card">
-        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2">পরের শব্দ অনুমান</span></h2>
         <div>
-          <label for="start-input" class="lbl" data-i18n="start_label"></label>
+          <label for="start-input" class="lbl" data-i18n="start_label">বাক্যের শুরু</label>
           <div class="start-row">
             <input type="text" id="start-input" class="no-i18n" autocomplete="off" spellcheck="false" data-i18n-placeholder="start_ph">
             <span class="start-btns no-print">
-              <button type="button" class="btn" id="undo-btn" data-i18n="undo"></button>
+              <button type="button" class="btn" id="undo-btn" data-i18n="undo">ফিরিয়ে নিন</button>
               <button type="button" class="btn icon-btn" id="clear-start" data-i18n-aria-label="clear" data-i18n-title="clear">✕</button>
             </span>
           </div>
         </div>
         <div class="row">
-          <span class="small muted" data-i18n="looks_at"></span>
+          <span class="small muted" data-i18n="looks_at">মডেল দেখছে:</span>
           <div class="chips no-i18n" id="ctx-chips"></div>
         </div>
         <p class="small mb0" id="ctx-note" aria-live="polite"></p>
         <div class="row spread">
-          <h3 class="mb0" data-i18n="top5"></h3>
-          <button type="button" class="btn btn-accent btn-sm no-print" id="pick-btn" data-i18n="ai_pick"></button>
+          <h3 class="mb0" data-i18n="top5">সেরা 5টি অনুমান</h3>
+          <button type="button" class="btn btn-accent btn-sm no-print" id="pick-btn" data-i18n="ai_pick">AI-কে বাছতে দিন</button>
         </div>
-        <p class="muted small mb0 no-print" data-i18n="tap_hint"></p>
+        <p class="muted small mb0 no-print" data-i18n="tap_hint">কোনো অনুমানে ট্যাপ করুন, সেটি আপনার বাক্যে যোগ হবে।</p>
         <div class="cands no-i18n" id="cands" aria-live="polite"></div>
         <p class="muted small mb0" id="explain"></p>
       </section>
 
       <!-- 3. Auto-write -->
       <section class="card stack" id="write-card">
-        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3"></span></h2>
-        <p class="muted small mb0" data-i18n="cont_hint"></p>
+        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3">নিজে নিজে লিখতে দিন</span></h2>
+        <p class="muted small mb0" data-i18n="cont_hint">এটি ধাপ 2-এর আপনার বাক্যকে একটি একটি শব্দ করে এগিয়ে নেয়, যেন সম্ভাবনা অনুযায়ী পাশা ফেলছে।</p>
         <div class="no-print">
           <div class="range-head"><label for="len" id="len-label"></label></div>
           <input type="range" id="len" min="5" max="80" step="1">
@@ -215,21 +215,21 @@
         <div class="no-print">
           <div class="range-head"><label for="temp" id="temp-label"></label></div>
           <input type="range" id="temp" min="0" max="2" step="0.1">
-          <div class="range-ends small muted"><span data-i18n="temp_safe"></span><span data-i18n="temp_wild"></span></div>
+          <div class="range-ends small muted"><span data-i18n="temp_safe">নিরাপদ: সবসময় সেরা অনুমান</span><span data-i18n="temp_wild">অদ্ভুত: চমকে দেওয়া শব্দ</span></div>
         </div>
         <div class="row no-print">
-          <button type="button" class="btn btn-primary btn-lg" id="write-btn" data-i18n="write_btn"></button>
-          <button type="button" class="btn" id="speak-btn" data-i18n="speak_btn"></button>
+          <button type="button" class="btn btn-primary btn-lg" id="write-btn" data-i18n="write_btn">লেখো</button>
+          <button type="button" class="btn" id="speak-btn" data-i18n="speak_btn">জোরে পড়ে শোনান</button>
           <button type="button" class="btn" id="copy-btn" data-i18n="copy"></button>
         </div>
         <div class="output no-i18n" id="output" aria-live="polite"></div>
         <div class="legend">
-          <span class="muted" data-i18n="legend"></span>
-          <span class="w p-high" data-i18n="p_high"></span>
-          <span class="w p-mid" data-i18n="p_mid"></span>
-          <span class="w p-low" data-i18n="p_low"></span>
-          <span class="w p-rare" data-i18n="p_rare"></span>
-          <span class="sent-new" data-i18n="sent_new"></span>
+          <span class="muted" data-i18n="legend">প্রতিটি শব্দের সম্ভাবনা কত ছিল?</span>
+          <span class="w p-high" data-i18n="p_high">খুব সম্ভব (50%+)</span>
+          <span class="w p-mid" data-i18n="p_mid">সম্ভব (20–50%)</span>
+          <span class="w p-low" data-i18n="p_low">কম সম্ভব (5–20%)</span>
+          <span class="w p-rare" data-i18n="p_rare">চমকে দেওয়া (5%-এর কম)</span>
+          <span class="sent-new" data-i18n="sent_new">নতুন বাক্য, লেখায় ছিল না</span>
         </div>
         <p class="callout small mb0" id="sent-summary" hidden></p>
         <p class="muted small mb0" id="top-rate"></p>
@@ -238,34 +238,34 @@
 
     <!-- inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside"></h2>
+      <h2 data-i18n="inside">ভেতরে কী হচ্ছে?</h2>
       <div class="grid-3 inside-grid">
-        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="inside_1t"></span></h3><p data-i18n="inside_1"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="inside_2t"></span></h3><p data-i18n="inside_2"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🧠</span><span data-i18n="inside_3t"></span></h3><p data-i18n="inside_3"></p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="inside_1t">শেখা = গোনা</span></h3><p data-i18n="inside_1">মডেল লেখাটা পড়ে গোনে, কোন শব্দগুলোর পরে কোন শব্দ এসেছে আর কত বার। গোনার এই তালিকাটাই পুরো মডেল।</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="inside_2t">অনুমান = সম্ভাবনা</span></h3><p data-i18n="inside_2">যদি কিছু শব্দের পরে “ক” 3 বার আর “খ” 1 বার আসে, তবে ক পায় 3 ÷ 4 = 75% আর খ পায় 25%। সৃজনশীলতা ঠিক করে সে কত বার খ বাছার সাহস করবে।</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧠</span><span data-i18n="inside_3t">স্মৃতি জরুরি</span></h3><p data-i18n="inside_3">0 বা 1 শব্দের স্মৃতিতে বাক্য গুলিয়ে যায়। 3 শব্দে বাক্য স্বাভাবিক শোনায়, কিন্তু বেশিরভাগই লেখা থেকে নকল।</p></div>
       </div>
       <div class="grid-2">
-        <div class="callout"><h3 data-i18n="llm_t"></h3><p class="mb0" data-i18n="llm_1"></p></div>
-        <div class="callout warning"><h3 data-i18n="hallu_t"></h3><p class="mb0" id="hallu-text"></p></div>
+        <div class="callout"><h3 data-i18n="llm_t">ChatGPT কীভাবে আলাদা?</h3><p class="mb0" data-i18n="llm_1">ChatGPT, Gemini আর Claude-ও পরের টোকেন (একটি শব্দ বা শব্দের অংশ) অনুমান করে একটু একটু করে লেখে। কিন্তু তারা লক্ষ কোটি শব্দ থেকে শেখে, আর গোনার তালিকার বদলে শত কোটি সংখ্যার এক বিশাল নিউরাল নেটওয়ার্ক ব্যবহার করে। তাই তারা শুধু শেষ 3টি শব্দ নয়, পুরো পাতার অর্থ বুঝে লিখতে পারে।</p></div>
+        <div class="callout warning"><h3 data-i18n="hallu_t">ঠিক শোনালেও ভুল হয় কেন?</h3><p class="mb0" id="hallu-text"></p></div>
       </div>
-      <h3 class="mb0 peek-h" data-i18n="peek_t"></h3>
+      <h3 class="mb0 peek-h" data-i18n="peek_t">মডেলের ভেতরে উঁকি দিন: সবচেয়ে বেশি আসা প্যাটার্ন</h3>
       <div class="scroll-x">
         <table class="table peek">
-          <thead><tr><th data-i18n="peek_after"></th><th aria-hidden="true"></th><th data-i18n="peek_next"></th><th data-i18n="peek_times"></th></tr></thead>
+          <thead><tr><th data-i18n="peek_after">এই শব্দগুলোর পরে</th><th aria-hidden="true"></th><th data-i18n="peek_next">পরের শব্দ</th><th data-i18n="peek_times">কত বার</th></tr></thead>
           <tbody id="peek-body" class="no-i18n"></tbody>
         </table>
       </div>
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">কীভাবে ব্যবহার করবেন · ক্লাসের জন্য আইডিয়া</summary>
       <ul>
-        <li data-i18n="tip_1"></li>
-        <li data-i18n="tip_2"></li>
-        <li data-i18n="tip_3"></li>
-        <li data-i18n="tip_4"></li>
-        <li data-i18n="tip_5"></li>
-        <li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">নমুনা গল্প দিয়ে শুরু করুন। ধাপ 2-এ এক-দুটি শব্দ লিখুন আর অনুমানগুলোতে ট্যাপ করে বাক্য বানান।</li>
+        <li data-i18n="tip_2">স্মৃতি 0 থেকে 3 পর্যন্ত বদলান আর প্রতিবার “লেখো” চাপুন। কোনটা আসল ভাষার মতো শোনায়? কোনটা বেশি নকল করে?</li>
+        <li data-i18n="tip_3">সৃজনশীলতার স্লাইডার সরান। 0-তে মডেল সবসময় সেরা শব্দটা বাছে আর প্রায়ই একই কথা বারবার বলে; 2-তে অদ্ভুত, চমকে দেওয়া বাক্য লেখে।</li>
+        <li data-i18n="tip_4">ক্লাসের কাজ: প্রতিটি দল পাঠ্যবই থেকে বা নিজেদের লেখা 3–4টি কবিতা “আমাদের নিজের লেখা”-তে লিখুক। মডেলকে শিখিয়ে একটি নতুন কবিতা লেখান। জোরে পড়ুন আর বানানো লাইনগুলো খুঁজুন: সেগুলো কি সত্যি? কোনো মানে হয়?</li>
+        <li data-i18n="tip_5">অনুমানের খেলা: ট্যাপ করার আগে ক্লাসকে পরের শব্দটা আন্দাজ করতে বলুন। ক্লাস কি মডেলকে হারাল?</li>
+        <li data-i18n="tip_6">সবকিছু এই ডিভাইসেই চলে। আপনার লেখা শুধু এখানেই সেভ হয়, কোথাও পাঠানো হয় না, তাই ইন্টারনেট ছাড়াও চলে।</li>
       </ul>
     </details>
   </main>

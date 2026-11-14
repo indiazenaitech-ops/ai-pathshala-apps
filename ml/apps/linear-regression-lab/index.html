@@ -184,17 +184,17 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ഡാറ്റയിൽ നിന്ന് AI ഒരു നേർരേഖ എങ്ങനെ പഠിക്കുന്നു എന്ന് കാണൂ: പിശക്, ലോസ്, ഗ്രേഡിയന്റ് ഡിസെന്റ്, പ്രവചനം.</p>
 
     <section class="card lr-toolbar no-print" aria-labelledby="ds-label">
       <div class="ds-wrap">
         <div class="ds-list" id="ds-list" role="group" aria-labelledby="ds-label"></div>
-        <p class="ds-about"><b id="ds-label" data-i18n="data_label"></b> · <span id="ds-about"></span></p>
+        <p class="ds-about"><b id="ds-label" data-i18n="data_label">ഡാറ്റ</b> · <span id="ds-about"></span></p>
       </div>
       <div class="tb-actions">
         <span class="badge primary" id="pt-count" data-value="0"></span>
-        <button class="btn btn-sm" id="restore" type="button" data-i18n="restore"></button>
-        <button class="btn btn-sm" id="paste-btn" type="button" data-i18n="paste_btn"></button>
+        <button class="btn btn-sm" id="restore" type="button" data-i18n="restore">ഡാറ്റ തിരികെ കൊണ്ടുവരിക</button>
+        <button class="btn btn-sm" id="paste-btn" type="button" data-i18n="paste_btn">ഡാറ്റ പേസ്റ്റ് ചെയ്യുക</button>
         <button class="btn btn-sm" id="print-btn" type="button" data-i18n="print"></button>
         <button class="btn btn-sm" id="fs-btn" type="button" data-i18n="fullscreen"></button>
         <button class="btn btn-sm btn-danger" id="reset-all" type="button" data-i18n="reset"></button>
@@ -207,26 +207,26 @@
       <section class="card lr-graph">
         <div class="stage plot-stage"><canvas id="plot" role="img"></canvas></div>
         <div class="show-row no-print" role="group" aria-labelledby="show-lbl">
-          <span class="lbl" id="show-lbl" data-i18n="show_label"></span>
-          <button class="chip" id="show-res" type="button" aria-pressed="true"><span class="sw sw-res" aria-hidden="true"></span><span data-i18n="show_res"></span></button>
-          <button class="chip" id="show-sq" type="button" aria-pressed="false"><span class="sw sw-sq" aria-hidden="true"></span><span data-i18n="show_sq"></span></button>
-          <button class="chip" id="show-best" type="button" aria-pressed="false"><span class="sw sw-best" aria-hidden="true"></span><span data-i18n="show_best"></span></button>
+          <span class="lbl" id="show-lbl" data-i18n="show_label">കാണിക്കുക:</span>
+          <button class="chip" id="show-res" type="button" aria-pressed="true"><span class="sw sw-res" aria-hidden="true"></span><span data-i18n="show_res">പിശകുകൾ</span></button>
+          <button class="chip" id="show-sq" type="button" aria-pressed="false"><span class="sw sw-sq" aria-hidden="true"></span><span data-i18n="show_sq">പിശകുകളുടെ വർഗം</span></button>
+          <button class="chip" id="show-best" type="button" aria-pressed="false"><span class="sw sw-best" aria-hidden="true"></span><span data-i18n="show_best">മികച്ച രേഖ</span></button>
           <button class="chip fs-exit" id="fs-exit" type="button" aria-pressed="true"><span aria-hidden="true">✕</span><span data-i18n="fullscreen"></span></button>
         </div>
         <p class="canvas-hint no-print" id="canvas-hint"></p>
         <div class="stats">
           <div class="stat stat-eq">
-            <div class="lbl" data-i18n="eq_label"></div>
+            <div class="lbl" data-i18n="eq_label">മോഡൽ (രേഖ)</div>
             <div class="eq" id="equation" data-m="0" data-c="0"></div>
             <div class="eq-words" id="eq-words"></div>
           </div>
           <div class="stat">
-            <div class="lbl" data-i18n="loss_label"></div>
+            <div class="lbl" data-i18n="loss_label">ലോസ് (MSE)</div>
             <div class="num" id="mse" data-value="0"></div>
             <div class="sub" id="miss"></div>
           </div>
           <div class="stat">
-            <div class="lbl" data-i18n="closeness"></div>
+            <div class="lbl" data-i18n="closeness">മികച്ചതിനോട് എത്ര അടുത്ത്</div>
             <div class="num" id="close" data-value="0"></div>
             <div class="progress" aria-hidden="true"><span id="close-bar" style="width:0"></span></div>
           </div>
@@ -236,32 +236,32 @@
 
       <section class="card lr-side no-print">
         <div class="tabs" role="tablist">
-          <button role="tab" id="tab-manual" aria-controls="panel-manual" aria-selected="true" type="button" data-i18n="tab_manual"></button>
-          <button role="tab" id="tab-auto" aria-controls="panel-auto" aria-selected="false" type="button" data-i18n="tab_auto"></button>
-          <button role="tab" id="tab-predict" aria-controls="panel-predict" aria-selected="false" type="button" data-i18n="tab_predict"></button>
+          <button role="tab" id="tab-manual" aria-controls="panel-manual" aria-selected="true" type="button" data-i18n="tab_manual">കൈകൊണ്ട് ചേർക്കുക</button>
+          <button role="tab" id="tab-auto" aria-controls="panel-auto" aria-selected="false" type="button" data-i18n="tab_auto">AI പഠിക്കട്ടെ</button>
+          <button role="tab" id="tab-predict" aria-controls="panel-predict" aria-selected="false" type="button" data-i18n="tab_predict">പ്രവചിക്കുക</button>
         </div>
 
         <!-- 1. fit by hand -->
         <div id="panel-manual" role="tabpanel" aria-labelledby="tab-manual" class="stack">
-          <p class="hint mt0" data-i18n="manual_hint"></p>
+          <p class="hint mt0" data-i18n="manual_hint">ചുവന്ന പിശക്-വരകൾ കഴിയുന്നത്ര ചെറുതാകുന്ന വിധം രേഖ നീക്കുക. ലോസ് കുറയുന്നത് നോക്കൂ.</p>
           <div class="field">
-            <label for="m-range" data-i18n="slope"></label>
+            <label for="m-range" data-i18n="slope">ചരിവ് m</label>
             <div class="sl-row">
               <input type="range" id="m-range" min="-1" max="1" step="0.001">
               <input type="number" id="m-num" step="any" data-i18n-aria-label="slope">
             </div>
-            <span class="hint" data-i18n="slope_hint"></span>
+            <span class="hint" data-i18n="slope_hint">x ഒന്ന് കൂടുമ്പോൾ y എത്ര മാറുന്നു.</span>
           </div>
           <div class="field">
-            <label for="c-range" data-i18n="intercept"></label>
+            <label for="c-range" data-i18n="intercept">അന്തഃഖണ്ഡം c</label>
             <div class="sl-row">
               <input type="range" id="c-range" min="-1" max="1" step="0.001">
               <input type="number" id="c-num" step="any" data-i18n-aria-label="intercept">
             </div>
-            <span class="hint" data-i18n="intercept_hint"></span>
+            <span class="hint" data-i18n="intercept_hint">രേഖ x = 0-നെ സന്ധിക്കുന്നിടത്തെ y-യുടെ വില.</span>
           </div>
           <div class="row">
-            <button class="btn btn-sm" id="reset-line" type="button" data-i18n="reset_line"></button>
+            <button class="btn btn-sm" id="reset-line" type="button" data-i18n="reset_line">വീണ്ടും പരന്ന രേഖ</button>
           </div>
           <p class="callout coach" id="coach-manual" aria-live="polite" data-code=""><span class="ico" aria-hidden="true"></span><span class="txt"></span></p>
         </div>
@@ -269,25 +269,25 @@
         <!-- 2. let AI learn -->
         <div id="panel-auto" role="tabpanel" aria-labelledby="tab-auto" class="stack" hidden>
           <div>
-            <h3 data-i18n="exact_title"></h3>
-            <p class="hint mt0" data-i18n="exact_hint"></p>
+            <h3 data-i18n="exact_title">കൃത്യമായ ഉത്തരം (ലഘുതമ വർഗ രീതി)</h3>
+            <p class="hint mt0" data-i18n="exact_hint">നേർരേഖയ്ക്ക് ഒരു സൂത്രവാക്യം ഒറ്റയടിക്ക് മികച്ച m, c കണ്ടെത്തുന്നു.</p>
           </div>
           <div class="row">
-            <button class="btn btn-accent" id="fit-exact" type="button" data-i18n="exact_btn"></button>
+            <button class="btn btn-accent" id="fit-exact" type="button" data-i18n="exact_btn">മികച്ച രേഖ കണ്ടെത്തുക</button>
           </div>
-          <label class="check"><input type="checkbox" id="follow"> <span data-i18n="follow"></span></label>
+          <label class="check"><input type="checkbox" id="follow"> <span data-i18n="follow">ബിന്ദുക്കൾ നീക്കുമ്പോൾ മികച്ച രേഖ നിലനിർത്തുക</span></label>
           <details class="math" id="math">
-            <summary data-i18n="show_math"></summary>
+            <summary data-i18n="show_math">കണക്കുകൂട്ടൽ കാണിക്കുക</summary>
             <div class="math-body" id="math-body"></div>
           </details>
 
           <div class="block stack">
             <div>
-              <h3 data-i18n="gd_title"></h3>
-              <p class="hint mt0" data-i18n="gd_hint"></p>
+              <h3 data-i18n="gd_title">ഗ്രേഡിയന്റ് ഡിസെന്റ്: AI എങ്ങനെ പഠിക്കുന്നു</h3>
+              <p class="hint mt0" data-i18n="gd_hint">AI ഒരു പരന്ന രേഖയിൽ നിന്ന് തുടങ്ങുന്നു. ഓരോ എപ്പോക്കിലും എല്ലാ ബിന്ദുക്കളും നോക്കി m, c എന്നിവയെ ലോസിന്റെ ചരിവിലൂടെ അൽപം താഴേക്ക് നീക്കുന്നു.</p>
             </div>
             <div class="field">
-              <label for="lr" data-i18n="lr_label"></label>
+              <label for="lr" data-i18n="lr_label">ലേണിംഗ് റേറ്റ് (ചുവടിന്റെ വലുപ്പം)</label>
               <div class="sl-row">
                 <input type="range" id="lr" min="0" max="7" step="1" value="4">
                 <output class="lr-val" id="lr-out" for="lr"></output>
@@ -296,30 +296,30 @@
             </div>
             <div class="gd-opts">
               <div class="field">
-                <label for="epochs" data-i18n="epochs_label"></label>
+                <label for="epochs" data-i18n="epochs_label">ഒരു തവണ എപ്പോക്കുകൾ</label>
                 <select id="epochs"></select>
               </div>
               <div class="field">
-                <span class="lbl-like" id="speed-lbl" data-i18n="speed_label"></span>
+                <span class="lbl-like" id="speed-lbl" data-i18n="speed_label">വേഗം</span>
                 <div class="seg" id="speed" role="group" aria-labelledby="speed-lbl">
-                  <button type="button" data-speed="slow" data-i18n="speed_slow"></button>
-                  <button type="button" data-speed="normal" data-i18n="speed_normal"></button>
-                  <button type="button" data-speed="fast" data-i18n="speed_fast"></button>
+                  <button type="button" data-speed="slow" data-i18n="speed_slow">പതുക്കെ</button>
+                  <button type="button" data-speed="normal" data-i18n="speed_normal">സാധാരണ</button>
+                  <button type="button" data-speed="fast" data-i18n="speed_fast">വേഗത്തിൽ</button>
                 </div>
               </div>
             </div>
             <div class="gd-btns">
-              <button class="btn" id="gd-step" type="button" data-i18n="gd_step"></button>
+              <button class="btn" id="gd-step" type="button" data-i18n="gd_step">ഒരു ചുവട്</button>
               <button class="btn btn-primary" id="gd-run" type="button" aria-pressed="false"></button>
-              <button class="btn" id="gd-restart" type="button" data-i18n="gd_restart"></button>
+              <button class="btn" id="gd-restart" type="button" data-i18n="gd_restart">വീണ്ടും തുടങ്ങുക</button>
             </div>
             <div class="gd-read" aria-live="off">
-              <span><span data-i18n="epoch_label"></span>: <b id="epoch" data-value="0">0</b></span>
-              <span><span data-i18n="loss_label"></span>: <b id="gd-loss" data-value="0"></b></span>
-              <span><span data-i18n="best_possible"></span>: <b id="gd-best" data-value="0"></b></span>
+              <span><span data-i18n="epoch_label">എപ്പോക്ക്</span>: <b id="epoch" data-value="0">0</b></span>
+              <span><span data-i18n="loss_label">ലോസ് (MSE)</span>: <b id="gd-loss" data-value="0"></b></span>
+              <span><span data-i18n="best_possible">സാധ്യമായ ഏറ്റവും കുറവ്</span>: <b id="gd-best" data-value="0"></b></span>
             </div>
             <div>
-              <div class="small muted" data-i18n="loss_chart"></div>
+              <div class="small muted" data-i18n="loss_chart">ലോസ് വക്രം: ഓരോ എപ്പോക്കിനും ശേഷമുള്ള ലോസ്</div>
               <div class="stage loss-stage"><canvas id="loss-chart" role="img"></canvas></div>
             </div>
             <p class="callout coach" id="coach-auto" aria-live="polite" data-code=""><span class="ico" aria-hidden="true"></span><span class="txt"></span></p>
@@ -329,8 +329,8 @@
         <!-- 3. predict -->
         <div id="panel-predict" role="tabpanel" aria-labelledby="tab-predict" class="stack" hidden>
           <div>
-            <h3 data-i18n="pred_title"></h3>
-            <p class="hint mt0" data-i18n="pred_hint"></p>
+            <h3 data-i18n="pred_title">പുതിയ വില പ്രവചിക്കുക</h3>
+            <p class="hint mt0" data-i18n="pred_hint">x തിരഞ്ഞെടുക്കുക, അല്ലെങ്കിൽ ഗ്രാഫിൽ ടാപ്പ് ചെയ്യുക. രേഖ നൽകുന്ന പ്രവചനം: ŷ = m × x + c</p>
           </div>
           <div class="pred-box">
             <div class="field">
@@ -340,24 +340,24 @@
           </div>
           <input type="range" id="pred-range" data-i18n-aria-label="pred_title">
           <div class="pred-out">
-            <div class="lbl" data-i18n="pred_answer"></div>
+            <div class="lbl" data-i18n="pred_answer">പ്രവചനം ŷ</div>
             <div id="pred-y" data-value="0" aria-live="polite"></div>
           </div>
           <p class="pred-sentence" id="pred-sentence"></p>
           <p class="callout warning" id="pred-warn" hidden></p>
-          <p class="callout" id="pred-tip" hidden data-i18n="pred_tip_best"></p>
+          <p class="callout" id="pred-tip" hidden data-i18n="pred_tip_best">നുറുങ്ങ്: ഈ രേഖ ഇനിയും മികച്ചതല്ല. നല്ല പ്രവചനത്തിന് &quot;AI പഠിക്കട്ടെ&quot; തുറന്ന് &quot;മികച്ച രേഖ കണ്ടെത്തുക&quot; അമർത്തുക.</p>
         </div>
       </section>
     </div>
 
     <section class="card section no-print" id="explain-card">
-      <h2 data-i18n="explain_title"></h2>
-      <h3 class="small muted" data-i18n="exp_title"></h3>
+      <h2 data-i18n="explain_title">മനസ്സിലാക്കുക</h2>
+      <h3 class="small muted" data-i18n="exp_title">ഒരു പരീക്ഷണം ചെയ്തുനോക്കൂ</h3>
       <div class="exp-row">
-        <button class="btn" id="exp-outlier" type="button" data-i18n="exp_outlier"></button>
-        <button class="btn" id="exp-small" type="button" data-i18n="exp_small"></button>
-        <button class="btn" id="exp-right" type="button" data-i18n="exp_right"></button>
-        <button class="btn" id="exp-big" type="button" data-i18n="exp_big"></button>
+        <button class="btn" id="exp-outlier" type="button" data-i18n="exp_outlier">📍 ഒരു ഔട്ട്‌ലയർ ചേർക്കുക</button>
+        <button class="btn" id="exp-small" type="button" data-i18n="exp_small">🐢 ലേണിംഗ് റേറ്റ് വളരെ ചെറുത്</button>
+        <button class="btn" id="exp-right" type="button" data-i18n="exp_right">👍 ലേണിംഗ് റേറ്റ് കൃത്യം</button>
+        <button class="btn" id="exp-big" type="button" data-i18n="exp_big">💥 ലേണിംഗ് റേറ്റ് വളരെ വലുത്</button>
       </div>
       <p class="callout accent" id="exp-msg" aria-live="polite" hidden style="margin-top:10px"></p>
       <div class="concepts" id="concepts"></div>
@@ -365,10 +365,10 @@
 
     <section class="card section" id="table-card">
       <div class="tbl-head">
-        <h2 data-i18n="table_title"></h2>
+        <h2 data-i18n="table_title">ഡാറ്റ പട്ടികയും പിശകുകളും</h2>
         <div class="row no-print">
-          <button class="btn btn-sm" id="add-row" type="button" data-i18n="add_row"></button>
-          <button class="btn btn-sm" id="dl-csv" type="button" data-i18n="dl_csv"></button>
+          <button class="btn btn-sm" id="add-row" type="button" data-i18n="add_row">വരി ചേർക്കുക</button>
+          <button class="btn btn-sm" id="dl-csv" type="button" data-i18n="dl_csv">CSV ഡൗൺലോഡ്</button>
         </div>
       </div>
       <div class="tbl-wrap scroll-x">
@@ -381,26 +381,26 @@
     </section>
 
     <section class="print-only worksheet section">
-      <h2 data-i18n="ws_title"></h2>
-      <p data-i18n="ws_name"></p>
+      <h2 data-i18n="ws_title">വർക്ക്ഷീറ്റ്: ഏറ്റവും ചേരുന്ന രേഖ</h2>
+      <p data-i18n="ws_name">പേര്: ______________   ക്ലാസ്: ______   തീയതി: __________</p>
       <ol>
-        <li><span data-i18n="ws_q1"></span><div class="ws-line"></div></li>
-        <li><span data-i18n="ws_q2"></span><div class="ws-line"></div><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q1">മുകളിലെ ഗ്രാഫിലെ രേഖയുടെ സമവാക്യം എഴുതുക. ഈ ഡാറ്റയിൽ m, c എന്നിവയുടെ അർത്ഥം എന്ത്?</span><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q2">ഏതെങ്കിലും രണ്ട് ബിന്ദുക്കൾ തിരഞ്ഞെടുക്കുക. ഓരോന്നിന്റെയും പിശകും (y − ŷ) പിശകിന്റെ വർഗവും കണ്ടെത്തുക.</span><div class="ws-line"></div><div class="ws-line"></div></li>
         <li><span id="ws-q3"></span><div class="ws-line"></div><div class="ws-line"></div></li>
-        <li><span data-i18n="ws_q4"></span><div class="ws-line"></div><div class="ws-line"></div></li>
-        <li><span data-i18n="ws_q5"></span><div class="ws-line"></div><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q4">പിശകുകൾ നേരിട്ട് കൂട്ടുന്നതിനു പകരം നാം അവയുടെ വർഗം എടുക്കുന്നത് എന്തുകൊണ്ട്?</span><div class="ws-line"></div><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q5">ഗ്രേഡിയന്റ് ഡിസെന്റിൽ ലേണിംഗ് റേറ്റ് വളരെ വലുതായാൽ എന്തു സംഭവിക്കും? വളരെ ചെറുതായാൽ?</span><div class="ws-line"></div><div class="ws-line"></div></li>
       </ol>
     </section>
 
     <details class="card section no-print">
-      <summary><b data-i18n="howto"></b></summary>
+      <summary><b data-i18n="howto">എങ്ങനെ ഉപയോഗിക്കാം / ക്ലാസ് മുറിക്കുള്ള ആശയങ്ങൾ</b></summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">&quot;കൈകൊണ്ട് ചേർക്കുക&quot; യിൽ തുടങ്ങൂ: ലോസ് കഴിയുന്നത്ര കുറയുന്നതുവരെ രേഖ വലിക്കുക. പിന്നെ താരതമ്യത്തിന് &quot;മികച്ച രേഖ&quot; ഓൺ ചെയ്യുക.</li>
+        <li data-i18n="tip2">&quot;പിശകുകളുടെ വർഗം&quot; ഓൺ ചെയ്യുക: ഒരു വലിയ പിഴവ് ഒരുപാട് ചെറിയ പിഴവുകളേക്കാൾ എന്തുകൊണ്ട് കൂടുതൽ എണ്ണപ്പെടുന്നു എന്ന് ചതുരങ്ങൾ കാണിക്കും.</li>
+        <li data-i18n="tip3">&quot;AI പഠിക്കട്ടെ&quot; തുറന്ന് &quot;ഓടിക്കുക&quot; അമർത്തുക. താഴുന്ന ലോസ് വക്രമാണ് &quot;ട്രെയിനിംഗ്&quot;. പിന്നെ ലേണിംഗ് റേറ്റ് പരീക്ഷണങ്ങൾ ചെയ്തുനോക്കൂ.</li>
+        <li data-i18n="tip4">ക്ലാസ് പ്രവർത്തനം: 10–15 സഹപാഠികളുടെ ഉയരവും കൈവിരിവും അളന്ന്, &quot;ഡാറ്റ പേസ്റ്റ് ചെയ്യുക&quot; വഴി ചേർത്ത്, പുതിയ ഒരു വിദ്യാർത്ഥിയുടെ കൈവിരിവ് പ്രവചിക്കുക.</li>
+        <li data-i18n="tip5">&quot;പ്രവചിക്കുക&quot; ഉപയോഗിച്ച് ചർച്ച ചെയ്യൂ: ആഴ്ചയിൽ 40 മണിക്കൂർ പഠിക്കുന്ന കുട്ടിയുടെ മാർക്ക് രേഖയ്ക്ക് പറയാനാകുമോ? എന്തുകൊണ്ട് ഇല്ല?</li>
+        <li data-i18n="tip6">പ്രിന്റ് ചെയ്താൽ ഗ്രാഫും ഡാറ്റ പട്ടികയും 5 ചോദ്യങ്ങളുള്ള വർക്ക്ഷീറ്റും കിട്ടും. സ്മാർട്ട്ബോർഡിൽ ഫുൾസ്ക്രീൻ നന്നായി പ്രവർത്തിക്കും.</li>
       </ul>
     </details>
   </main>

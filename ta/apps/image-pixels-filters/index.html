@@ -222,38 +222,38 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">கணினி ஒரு படத்தை எண்களின் வலையாகப் பார்க்கிறது. பிக்சல்களைத் தட்டி அவற்றின் எண்களைப் படியுங்கள், விளிம்புகளைக் கண்டறியும் வடிகட்டிகளை முயன்று பாருங்கள், CNN (படங்களை அடையாளம் காணும் AI) இன் முதல் அடுக்கு எதைப் பிடிக்கிறது என்று பாருங்கள்.</p>
 
     <!-- 1. choose a picture -->
     <section class="card no-print" id="src-card">
       <div class="src-head">
-        <h2 data-i18n="src_title"></h2>
+        <h2 data-i18n="src_title">ஒரு படத்தைத் தேர்ந்தெடுங்கள்</h2>
         <button class="btn btn-sm btn-danger" id="reset-btn" type="button" data-i18n="reset"></button>
       </div>
       <div class="src-grid">
       <div>
       <div class="samples" id="samples" role="group" data-i18n-aria-label="samples_label"></div>
       <div class="row src-actions">
-        <button class="btn" id="upload-btn" type="button"><span aria-hidden="true">🖼️</span> <span data-i18n="upload_photo"></span></button>
+        <button class="btn" id="upload-btn" type="button"><span aria-hidden="true">🖼️</span> <span data-i18n="upload_photo">புகைப்படம் பயன்படுத்து</span></button>
         <input type="file" id="upload-input" accept="image/*" hidden>
-        <button class="btn" id="cam-btn" type="button"><span aria-hidden="true">📷</span> <span data-i18n="camera"></span></button>
+        <button class="btn" id="cam-btn" type="button"><span aria-hidden="true">📷</span> <span data-i18n="camera">கேமரா</span></button>
         <span id="src-name" class="small" aria-live="polite"></span>
       </div>
-      <p class="tiny muted mb0" style="margin-top:8px" data-i18n="src_note"></p>
+      <p class="tiny muted mb0" style="margin-top:8px" data-i18n="src_note">உங்கள் புகைப்படம் இந்தச் சாதனத்திலேயே இருக்கும், எங்கும் அனுப்பப்படாது. புகைப்படம் சதுரமாக வெட்டப்படும்.</p>
       <div class="cam-box" id="cam-box" hidden>
         <video id="cam-video" playsinline muted autoplay></video>
         <div class="row">
-          <button class="btn btn-primary" id="cam-snap" type="button" disabled><span aria-hidden="true">📸</span> <span data-i18n="cam_snap"></span></button>
+          <button class="btn btn-primary" id="cam-snap" type="button" disabled><span aria-hidden="true">📸</span> <span data-i18n="cam_snap">படம் எடு</span></button>
           <button class="btn" id="cam-close" type="button" data-i18n="close"></button>
         </div>
         <p class="small mb0" id="cam-msg" aria-live="polite"></p>
       </div>
       </div>
       <div class="res-field">
-        <label for="res" data-i18n="res_label"></label>
+        <label for="res" data-i18n="res_label">ஒரு வரிசையில் பிக்சல்கள்</label>
         <input type="range" id="res" min="0" max="9" step="1" value="5">
         <output id="res-out" for="res" class="no-i18n"></output>
-        <p class="hint" data-i18n="res_hint"></p>
+        <p class="hint" data-i18n="res_hint">பிக்சல்கள் குறைந்தால் படம் அதிகக் கட்டம் கட்டமாகத் தெரியும். ஒவ்வொரு பெரிய பிக்சலும் அது மூடும் பகுதியின் சராசரி நிறம்.</p>
       </div>
       </div>
     </section>
@@ -261,10 +261,10 @@
     <div id="workspace">
       <div class="tab-bar">
         <div class="tabs" role="tablist" id="tabs">
-          <button role="tab" id="tab-pixels" data-tab="pixels" aria-controls="panel-pixels" type="button"><span aria-hidden="true">🔍</span> <span data-i18n="tab_pixels"></span></button>
-          <button role="tab" id="tab-filters" data-tab="filters" aria-controls="panel-filters" type="button"><span aria-hidden="true">🧮</span> <span data-i18n="tab_filters"></span></button>
-          <button role="tab" id="tab-cnn" data-tab="cnn" aria-controls="panel-cnn" type="button"><span aria-hidden="true">🧠</span> <span data-i18n="tab_cnn"></span></button>
-          <button role="tab" id="tab-game" data-tab="game" aria-controls="panel-game" type="button"><span aria-hidden="true">🎯</span> <span data-i18n="tab_game"></span></button>
+          <button role="tab" id="tab-pixels" data-tab="pixels" aria-controls="panel-pixels" type="button"><span aria-hidden="true">🔍</span> <span data-i18n="tab_pixels">பிக்சல் என்றால் எண்</span></button>
+          <button role="tab" id="tab-filters" data-tab="filters" aria-controls="panel-filters" type="button"><span aria-hidden="true">🧮</span> <span data-i18n="tab_filters">வடிகட்டிகள்</span></button>
+          <button role="tab" id="tab-cnn" data-tab="cnn" aria-controls="panel-cnn" type="button"><span aria-hidden="true">🧠</span> <span data-i18n="tab_cnn">CNN என்ன பார்க்கிறது</span></button>
+          <button role="tab" id="tab-game" data-tab="game" aria-controls="panel-game" type="button"><span aria-hidden="true">🎯</span> <span data-i18n="tab_game">வடிகட்டியைக் கண்டுபிடி</span></button>
         </div>
         <button class="btn btn-sm tool" id="fs-btn" type="button" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen"><span aria-hidden="true">⛶</span> <span class="fs-lbl" data-i18n="fullscreen"></span></button>
       </div>
@@ -273,71 +273,71 @@
       <section id="panel-pixels" role="tabpanel" aria-labelledby="tab-pixels">
         <div class="panel-grid">
           <div class="card">
-            <h2 data-i18n="px_title"></h2>
+            <h2 data-i18n="px_title">எந்தப் பிக்சலையும் தட்டுங்கள்</h2>
             <canvas id="px-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="px_canvas_label"></canvas>
             <div class="opts">
-              <span class="small muted" data-i18n="ch_label"></span>
+              <span class="small muted" data-i18n="ch_label">காட்டு</span>
               <div class="seg" id="ch-seg" role="group" data-i18n-aria-label="ch_label">
-                <button type="button" data-ch="rgb" data-i18n="ch_rgb"></button>
-                <button type="button" data-ch="grey" data-i18n="ch_grey"></button>
-                <button type="button" data-ch="r" data-i18n="ch_r"></button>
-                <button type="button" data-ch="g" data-i18n="ch_g"></button>
-                <button type="button" data-ch="b" data-i18n="ch_b"></button>
+                <button type="button" data-ch="rgb" data-i18n="ch_rgb">வண்ணம்</button>
+                <button type="button" data-ch="grey" data-i18n="ch_grey">சாம்பல்</button>
+                <button type="button" data-ch="r" data-i18n="ch_r">சிவப்பு</button>
+                <button type="button" data-ch="g" data-i18n="ch_g">பச்சை</button>
+                <button type="button" data-ch="b" data-i18n="ch_b">நீலம்</button>
               </div>
             </div>
             <div class="opts">
-              <label class="check"><input type="checkbox" id="opt-grid"> <span data-i18n="opt_grid"></span></label>
-              <label class="check"><input type="checkbox" id="opt-nums"> <span data-i18n="opt_nums"></span></label>
+              <label class="check"><input type="checkbox" id="opt-grid"> <span data-i18n="opt_grid">கட்டக் கோடுகள்</span></label>
+              <label class="check"><input type="checkbox" id="opt-nums"> <span data-i18n="opt_nums">படத்தின் மேல் எண்கள்</span></label>
             </div>
-            <p class="hint" id="nums-hint" data-i18n="nums_hint"></p>
+            <p class="hint" id="nums-hint" data-i18n="nums_hint">படத்தின் மேல் எண்களை எழுத, ஒரு வரிசையில் 16 அல்லது குறைவான பிக்சல்களைத் தேர்ந்தெடுங்கள்.</p>
           </div>
 
           <div class="card" aria-live="polite" id="sel-card">
-            <h2 data-i18n="sel_title"></h2>
+            <h2 data-i18n="sel_title">தேர்ந்தெடுத்த பிக்சல்</h2>
             <div class="sel-top">
               <div class="swatch" id="swatch"></div>
               <div>
                 <div class="sel-pos" id="sel-pos"></div>
-                <div class="small muted"><span data-i18n="hex_label"></span>: <span class="hex" id="hex"></span></div>
+                <div class="small muted"><span data-i18n="hex_label">வண்ணக் குறியீடு</span>: <span class="hex" id="hex"></span></div>
               </div>
             </div>
             <div class="rgb-rows">
-              <div class="rgb-row"><span class="nm" data-i18n="ch_r"></span><span class="bar"><span id="bar-r" style="background:#e03131"></span></span><span class="num" id="val-r"></span></div>
-              <div class="rgb-row"><span class="nm" data-i18n="ch_g"></span><span class="bar"><span id="bar-g" style="background:#2f9e44"></span></span><span class="num" id="val-g"></span></div>
-              <div class="rgb-row"><span class="nm" data-i18n="ch_b"></span><span class="bar"><span id="bar-b" style="background:#1c7ed6"></span></span><span class="num" id="val-b"></span></div>
+              <div class="rgb-row"><span class="nm" data-i18n="ch_r">சிவப்பு</span><span class="bar"><span id="bar-r" style="background:#e03131"></span></span><span class="num" id="val-r"></span></div>
+              <div class="rgb-row"><span class="nm" data-i18n="ch_g">பச்சை</span><span class="bar"><span id="bar-g" style="background:#2f9e44"></span></span><span class="num" id="val-g"></span></div>
+              <div class="rgb-row"><span class="nm" data-i18n="ch_b">நீலம்</span><span class="bar"><span id="bar-b" style="background:#1c7ed6"></span></span><span class="num" id="val-b"></span></div>
             </div>
-            <p class="formula-lbl" data-i18n="grey_formula"></p>
+            <p class="formula-lbl" data-i18n="grey_formula">சாம்பல் (ஒளிர்வு) = 0.299 × சிவப்பு + 0.587 × பச்சை + 0.114 × நீலம்</p>
             <div class="formula no-i18n" id="val-grey"></div>
             <div class="nb-wrap">
-              <h3 class="mb0" data-i18n="nb_title"></h3>
+              <h3 class="mb0" data-i18n="nb_title">அதன் அண்டை பிக்சல்கள் (7 × 7)</h3>
               <p class="hint" id="nb-hint"></p>
               <div class="nb-grid no-i18n" id="nb-grid"></div>
             </div>
             <div class="tool-row">
-              <button class="btn btn-sm" id="dl-csv" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_csv"></span></button>
+              <button class="btn btn-sm" id="dl-csv" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_csv">எண்களைப் பதிவிறக்கு (CSV)</span></button>
             </div>
           </div>
         </div>
         <div class="callout count-box">
           <p id="count-line"></p>
-          <p class="small" data-i18n="count_fact"></p>
+          <p class="small" data-i18n="count_fact">12 மெகாபிக்சல் கைபேசிப் புகைப்படத்தில் சுமார் 3.6 கோடி எண்கள் உள்ளன!</p>
         </div>
         <details class="card inside">
-          <summary data-i18n="inside_title"></summary>
-          <p class="mt0" data-i18n="px_inside"></p>
+          <summary data-i18n="inside_title">உள்ளே என்ன நடக்கிறது?</summary>
+          <p class="mt0" data-i18n="px_inside">திரை சிவப்பு, பச்சை, நீல ஒளிகளைக் கலந்து ஒவ்வொரு நிறத்தையும் உருவாக்குகிறது. 0 முதல் 255 வரையிலான ஒவ்வொரு எண்ணும் அந்த ஒளியை எவ்வளவு பயன்படுத்த வேண்டும் என்று சொல்கிறது: (0, 0, 0) கருப்பு, (255, 255, 255) வெள்ளை, (255, 0, 0) முழுச் சிவப்பு. கணினி ஸ்மைலியையோ மாம்பழத்தையோ &quot;பார்ப்பதில்லை&quot;, அதற்கு இந்த பெரிய எண் அட்டவணை மட்டுமே கிடைக்கிறது. படங்களுடன் வேலை செய்யும் ஒவ்வொரு AI உம் இந்த எண்களில் இருந்துதான் தொடங்குகிறது.</p>
         </details>
       </section>
 
       <!-- Panel 2: filters -->
       <section id="panel-filters" role="tabpanel" aria-labelledby="tab-filters" hidden>
         <div class="card">
-          <h2 data-i18n="f_title"></h2>
+          <h2 data-i18n="f_title">ஒரு வடிகட்டியைத் தேர்ந்தெடுங்கள்</h2>
           <div class="chips" id="f-chips" role="group" data-i18n-aria-label="f_title"></div>
           <div class="opts">
-            <span class="small muted" data-i18n="work_on"></span>
+            <span class="small muted" data-i18n="work_on">எதன் மேல்</span>
             <div class="seg" id="mode-seg" role="group" data-i18n-aria-label="work_on">
-              <button type="button" data-mode="grey" data-i18n="ch_grey"></button>
-              <button type="button" data-mode="rgb" data-i18n="ch_rgb"></button>
+              <button type="button" data-mode="grey" data-i18n="ch_grey">சாம்பல்</button>
+              <button type="button" data-mode="rgb" data-i18n="ch_rgb">வண்ணம்</button>
             </div>
           </div>
           <p class="callout f-desc mb0" id="f-desc"></p>
@@ -345,26 +345,26 @@
         <div class="panel-grid" style="margin-top:16px">
           <div class="card">
             <div class="pair">
-              <figure><figcaption data-i18n="in_label"></figcaption><canvas id="in-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="in_label"></canvas></figure>
-              <figure><figcaption data-i18n="out_label"></figcaption><canvas id="out-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="out_label"></canvas></figure>
+              <figure><figcaption data-i18n="in_label">உள்ளீடு</figcaption><canvas id="in-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="in_label"></canvas></figure>
+              <figure><figcaption data-i18n="out_label">வெளியீடு</figcaption><canvas id="out-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="out_label"></canvas></figure>
             </div>
-            <p class="hint" data-i18n="tap_hint"></p>
+            <p class="hint" data-i18n="tap_hint">பிக்சலைத் தேர்ந்தெடுத்து அதன் கணக்கைப் பார்க்க எந்தப் படத்தையும் தட்டுங்கள்.</p>
             <div class="tool-row">
               <button class="btn btn-accent" id="slide-btn" type="button" aria-pressed="false"><span aria-hidden="true">▶</span> <span id="slide-lbl"></span></button>
-              <button class="btn" id="print-btn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_ws"></span></button>
-              <label class="check"><input type="checkbox" id="ws-answers"> <span data-i18n="ws_answers"></span></label>
-              <button class="btn btn-sm" id="dl-png" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_png"></span></button>
+              <button class="btn" id="print-btn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_ws">பயிற்சித்தாளை அச்சிடு</span></button>
+              <label class="check"><input type="checkbox" id="ws-answers"> <span data-i18n="ws_answers">விடைகளுடன்</span></label>
+              <button class="btn btn-sm" id="dl-png" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_png">வெளியீட்டைப் பதிவிறக்கு (PNG)</span></button>
             </div>
-            <p class="hint" data-i18n="slide_hint"></p>
+            <p class="hint" data-i18n="slide_hint">3 × 3 சாளரம் ஒவ்வொரு பிக்சலாகப் படத்தின் மேல் எப்படி நகர்கிறது என்று பாருங்கள். எல்லா இடத்திலும் அதே 9 எண்கள் பயன்படுகின்றன.</p>
           </div>
           <div class="card">
-            <h2 data-i18n="kernel_title"></h2>
+            <h2 data-i18n="kernel_title">வடிகட்டி: 3 × 3 எண்கள்</h2>
             <div id="kernel-area"></div>
             <hr class="divider">
-            <h2 class="mb0" data-i18n="math_title"></h2>
+            <h2 class="mb0" data-i18n="math_title">தேர்ந்தெடுத்த பிக்சலின் படிப்படியான கணக்கு</h2>
             <p class="small muted" id="math-pos"></p>
             <div id="math-area" aria-live="polite"></div>
-            <p class="tiny muted" data-i18n="m_border"></p>
+            <p class="tiny muted" data-i18n="m_border">ஓரத்தில் இல்லாத அண்டைகள் அருகிலுள்ள ஓர பிக்சலின் நகலை எடுத்துக்கொள்கின்றன.</p>
           </div>
         </div>
       </section>
@@ -372,30 +372,30 @@
       <!-- Panel 3: what a CNN sees -->
       <section id="panel-cnn" role="tabpanel" aria-labelledby="tab-cnn" hidden>
         <div class="card">
-          <h2 data-i18n="cnn_title"></h2>
-          <p data-i18n="cnn_intro"></p>
+          <h2 data-i18n="cnn_title">அம்ச வரைபடங்கள்: CNN இன் முதல் அடுக்கு எதைக் கண்டறிகிறது</h2>
+          <p data-i18n="cnn_intro">CNN (கன்வல்யூஷனல் நியூரல் நெட்வொர்க்) என்பது புகைப்படங்கள், முகங்கள், கையெழுத்தை அடையாளம் காணும் AI. அதன் முதல் அடுக்கு படத்தின் மேல் பல சிறிய வடிகட்டிகளை நகர்த்துகிறது, வடிகட்டிகள் தாவலில் உள்ளது போலவே. ஒவ்வொரு வடிகட்டியும் அம்ச வரைபடம் என்ற புதிய படத்தை உருவாக்குகிறது: அதன் வடிவம் கிடைத்த இடத்தில் ஒளிர்வு, கிடைக்காத இடத்தில் இருள்.</p>
           <div class="opts">
-            <span class="small muted" data-i18n="act_label"></span>
+            <span class="small muted" data-i18n="act_label">வடிகட்டிக்குப் பிறகு</span>
             <div class="seg" id="act-seg" role="group" data-i18n-aria-label="act_label">
-              <button type="button" data-act="relu" data-i18n="act_relu"></button>
-              <button type="button" data-act="abs" data-i18n="act_abs"></button>
+              <button type="button" data-act="relu" data-i18n="act_relu">ReLU (நேர்மங்களை மட்டும் வை)</button>
+              <button type="button" data-act="abs" data-i18n="act_abs">அளவு (இரு திசைகளும்)</button>
             </div>
-            <label class="check"><input type="checkbox" id="opt-pool"> <span data-i18n="pool_opt"></span></label>
+            <label class="check"><input type="checkbox" id="opt-pool"> <span data-i18n="pool_opt">மேக்ஸ் பூலிங் 2 × 2 (ஒவ்வொரு 4 இல் மிகப் பெரியதை வை: அளவு பாதி)</span></label>
           </div>
           <p class="hint" id="act-hint"></p>
           <div class="fm-grid" id="fm-grid"></div>
-          <p class="small muted" style="margin-top:10px"><span class="legend-sw" style="background:var(--c7)"></span> / <span class="legend-sw" style="background:var(--c2)"></span> <span data-i18n="kernel_legend"></span></p>
+          <p class="small muted" style="margin-top:10px"><span class="legend-sw" style="background:var(--c7)"></span> / <span class="legend-sw" style="background:var(--c2)"></span> <span data-i18n="kernel_legend">வடிகட்டி நிறங்கள்: நீலம் = நேர்ம எண்கள், ஆரஞ்சு = எதிர்ம எண்கள். வரைபடம் எவ்வளவு ஒளிர்கிறதோ, பொருத்தம் அவ்வளவு வலுவானது.</span></p>
         </div>
         <div class="card" style="margin-top:16px">
-          <h2 data-i18n="pipe_title"></h2>
+          <h2 data-i18n="pipe_title">பிக்சல்களில் இருந்து விடை வரை</h2>
           <div class="pipe" id="pipe">
-            <div class="box"><span class="ico" aria-hidden="true">🔢</span><span data-i18n="pipe_1"></span></div><span class="arr" aria-hidden="true">→</span>
-            <div class="box"><span class="ico" aria-hidden="true">📐</span><span data-i18n="pipe_2"></span></div><span class="arr" aria-hidden="true">→</span>
-            <div class="box"><span class="ico" aria-hidden="true">◐</span><span data-i18n="pipe_3"></span></div><span class="arr" aria-hidden="true">→</span>
-            <div class="box"><span class="ico" aria-hidden="true">👁️</span><span data-i18n="pipe_4"></span></div><span class="arr" aria-hidden="true">→</span>
-            <div class="box last"><span class="ico" aria-hidden="true">🥭</span><span data-i18n="pipe_5"></span></div>
+            <div class="box"><span class="ico" aria-hidden="true">🔢</span><span data-i18n="pipe_1">படம் = எண்கள்</span></div><span class="arr" aria-hidden="true">→</span>
+            <div class="box"><span class="ico" aria-hidden="true">📐</span><span data-i18n="pipe_2">அடுக்கு 1: விளிம்புகள்</span></div><span class="arr" aria-hidden="true">→</span>
+            <div class="box"><span class="ico" aria-hidden="true">◐</span><span data-i18n="pipe_3">அடுக்கு 2: மூலைகள், வளைவுகள்</span></div><span class="arr" aria-hidden="true">→</span>
+            <div class="box"><span class="ico" aria-hidden="true">👁️</span><span data-i18n="pipe_4">அடுக்கு 3: கண், இலை, சக்கரம் போன்ற பகுதிகள்</span></div><span class="arr" aria-hidden="true">→</span>
+            <div class="box last"><span class="ico" aria-hidden="true">🥭</span><span data-i18n="pipe_5">விடை: &quot;மாம்பழம்&quot; 92%</span></div>
           </div>
-          <p class="callout accent" style="margin-top:12px" data-i18n="pipe_note"></p>
+          <p class="callout accent" style="margin-top:12px" data-i18n="pipe_note">ஆழமான அடுக்குகள் சிறிய வடிவங்களை இணைத்துப் பெரிய வடிவங்களை உருவாக்குகின்றன. இந்த வடிகட்டி எண்களை யாரும் தட்டச்சு செய்வதில்லை: ஆயிரக்கணக்கான பெயரிட்ட புகைப்படங்களில் இருந்து CNN தானே கற்றுக்கொள்கிறது. வியப்பாக, அது கற்கும் முதல் அடுக்கு வடிகட்டிகள் இந்தப் பக்கத்தில் உள்ள விளிம்பு வடிகட்டிகளைப் போலவே இருக்கின்றன!</p>
         </div>
       </section>
 
@@ -403,35 +403,35 @@
       <section id="panel-game" role="tabpanel" aria-labelledby="tab-game" hidden>
         <div class="card" id="g-card">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="g_title"></h2>
+            <h2 class="mb0" data-i18n="g_title">இது எந்த வடிகட்டியால் ஆனது?</h2>
             <span class="g-score" id="g-score" aria-live="polite"></span>
           </div>
-          <p data-i18n="g_intro"></p>
+          <p data-i18n="g_intro">கணினி படத்தின் மேல் ஒரு ரகசிய வடிகட்டியைப் பயன்படுத்தியது. இரண்டு படங்களையும் ஒப்பிட்டு வடிகட்டியைத் தேர்ந்தெடுங்கள்.</p>
           <div class="g-layout">
             <div class="pair">
-              <figure><figcaption data-i18n="in_label"></figcaption><canvas id="g-in" class="pic" width="512" height="512" role="img" data-i18n-aria-label="in_label"></canvas></figure>
-              <figure><figcaption data-i18n="g_mystery"></figcaption><canvas id="g-out" class="pic" width="512" height="512" role="img" data-i18n-aria-label="g_mystery"></canvas></figure>
+              <figure><figcaption data-i18n="in_label">உள்ளீடு</figcaption><canvas id="g-in" class="pic" width="512" height="512" role="img" data-i18n-aria-label="in_label"></canvas></figure>
+              <figure><figcaption data-i18n="g_mystery">மர்ம வெளியீடு</figcaption><canvas id="g-out" class="pic" width="512" height="512" role="img" data-i18n-aria-label="g_mystery"></canvas></figure>
             </div>
             <div class="g-opts" id="g-options"></div>
           </div>
           <p class="callout" id="g-feedback" aria-live="polite" style="margin-top:12px"></p>
           <div class="row" style="margin-top:12px">
             <button class="btn btn-primary" id="g-next" type="button" data-i18n="next"></button>
-            <span class="small muted" data-i18n="g_tip"></span>
+            <span class="small muted" data-i18n="g_tip">குறிப்பு: புதிய சவாலுக்கு மேலே படத்தையோ பிக்சல் எண்ணிக்கையையோ மாற்றுங்கள்.</span>
           </div>
         </div>
       </section>
     </div>
 
     <details class="card help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">பயன்படுத்துவது எப்படி / வகுப்பறைக்கான யோசனைகள்</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">&quot;எண் 7&quot; ஐ ஒரு வரிசையில் 8 அல்லது 16 பிக்சல்களில் எடுத்து &quot;படத்தின் மேல் எண்கள்&quot; ஐ இயக்குங்கள். வகுப்பிடம் கேளுங்கள்: எண்களை மட்டும் பார்த்து இலக்கத்தைப் படிக்க முடியுமா? (புகழ்பெற்ற கையெழுத்துத் தரவுத்தொகுப்புகள் 28 × 28 பிக்சல்கள்.)</li>
+        <li data-i18n="help_2">ஸ்மைலியின் விளிம்பில் உள்ள பிக்சலைத் தட்டி அதன் 7 × 7 அண்டைகளைப் பாருங்கள்: எண்களில் திடீர் பெரிய தாவல் என்றால் விளிம்பு.</li>
+        <li data-i18n="help_3">வடிகட்டிகள் தாவலில் பெரிய திரையில் &quot;வடிகட்டியை நகர்த்து&quot; அழுத்தி, எல்லா இடத்திலும் அதே 9 எண்கள் பயன்படுவதைக் காட்டுங்கள்.</li>
+        <li data-i18n="help_4">வகுப்புச் செயல்பாடு &quot;கணினியாக மாறு&quot;: பயிற்சித்தாளை அச்சிடுங்கள் (ஆசிரியருக்கு விடைகளுடன்), மாணவர்கள் ஜோடியாகக் கையால் 5 × 5 வெளியீட்டைக் கணக்கிடட்டும், பிறகு செயலியில் சரிபார்க்கட்டும்.</li>
+        <li data-i18n="help_5">சவால்: சாய்வுக் கோடுகளை மட்டும் கண்டறியும்படி &quot;என் வடிகட்டி&quot; ஐ உருவாக்கி, வடிவங்கள் அல்லது மூவண்ணக் கொடி படத்தில் சோதியுங்கள்.</li>
+        <li data-i18n="help_6">ஸ்மார்ட்போர்டில் &quot;முழுத் திரை&quot; பயன்படுத்துங்கள். ஒருமுறை திறந்த பிறகு செயலி இணையம் இல்லாமலும் இயங்கும்.</li>
       </ul>
     </details>
 

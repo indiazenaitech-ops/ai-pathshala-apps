@@ -231,10 +231,10 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">জানুন AI কীভাবে প্রশ্ন করে জিনিস বাছাই করে। নিজের ডিসিশন ট্রি বানান, যে নতুন উদাহরণ সে আগে কখনো দেখেনি তাতে পরীক্ষা করুন, আর Gini অশুদ্ধতা দিয়ে কম্পিউটারের বানানো ট্রির সঙ্গে তুলনা করুন।</p>
 
     <div class="topbar">
-      <span class="lbl" id="ds-lbl" data-i18n="ds_label"></span>
+      <span class="lbl" id="ds-lbl" data-i18n="ds_label">ডেটা:</span>
       <div class="seg ds-seg" role="group" aria-labelledby="ds-lbl">
         <button type="button" id="ds-animals" aria-pressed="true"><span aria-hidden="true">🐾 </span><span class="ds-name"></span></button>
         <button type="button" id="ds-cricket" aria-pressed="false"><span aria-hidden="true">🏏 </span><span class="ds-name"></span></button>
@@ -242,9 +242,9 @@
     </div>
 
     <div class="tabs" role="tablist">
-      <button type="button" role="tab" id="tab-build" aria-controls="pane-build" data-i18n="tab_build"></button>
-      <button type="button" role="tab" id="tab-data" aria-controls="pane-data" data-i18n="tab_data"></button>
-      <button type="button" role="tab" id="tab-learn" aria-controls="pane-learn" data-i18n="tab_learn"></button>
+      <button type="button" role="tab" id="tab-build" aria-controls="pane-build" data-i18n="tab_build">🌳 বানান ও পরীক্ষা</button>
+      <button type="button" role="tab" id="tab-data" aria-controls="pane-data" data-i18n="tab_data">📋 ডেটা</button>
+      <button type="button" role="tab" id="tab-learn" aria-controls="pane-learn" data-i18n="tab_learn">💡 কীভাবে কাজ করে</button>
     </div>
 
     <!-- ================= BUILD & TEST ================= -->
@@ -254,29 +254,29 @@
           <div class="b-head">
             <h2 class="target" id="target"></h2>
             <div class="seg mode-seg" role="group" id="mode-seg">
-              <button type="button" id="mode-mine" data-i18n="mode_mine"></button>
-              <button type="button" id="mode-auto" data-i18n="mode_auto"></button>
+              <button type="button" id="mode-mine" data-i18n="mode_mine">✋ আমার ট্রি</button>
+              <button type="button" id="mode-auto" data-i18n="mode_auto">🤖 কম্পিউটারের ট্রি</button>
             </div>
           </div>
           <div class="toolbar">
             <span class="ctl mine-only">
-              <button type="button" class="btn btn-sm" id="undo" data-i18n="undo"></button>
-              <button type="button" class="btn btn-sm btn-danger" id="clear-tree" data-i18n="clear_tree"></button>
-              <label class="check small"><input type="checkbox" id="hints"> <span data-i18n="hints"></span></label>
+              <button type="button" class="btn btn-sm" id="undo" data-i18n="undo">↶ আগের অবস্থা</button>
+              <button type="button" class="btn btn-sm btn-danger" id="clear-tree" data-i18n="clear_tree">আমার ট্রি মুছুন</button>
+              <label class="check small"><input type="checkbox" id="hints"> <span data-i18n="hints">Gini সংকেত দেখান</span></label>
             </span>
             <span class="ctl auto-only">
-              <span id="depth-lbl" data-i18n="max_depth"></span>
+              <span id="depth-lbl" data-i18n="max_depth">সর্বোচ্চ গভীরতা:</span>
               <span class="seg depth-seg" role="group" aria-labelledby="depth-lbl" id="depth-seg"></span>
             </span>
             <span class="ctl auto-only">
-              <button type="button" class="btn btn-sm" id="step-start" data-i18n="step_start"></button>
-              <button type="button" class="btn btn-sm btn-primary" id="step-next" data-i18n="step_next"></button>
-              <button type="button" class="btn btn-sm" id="step-all" data-i18n="step_all"></button>
+              <button type="button" class="btn btn-sm" id="step-start" data-i18n="step_start">ধাপে ধাপে বানান</button>
+              <button type="button" class="btn btn-sm btn-primary" id="step-next" data-i18n="step_next">পরের ধাপ</button>
+              <button type="button" class="btn btn-sm" id="step-all" data-i18n="step_all">পুরো ট্রি দেখান</button>
               <span class="small muted" id="step-label" aria-live="polite"></span>
             </span>
             <span class="push">
               <button type="button" class="btn btn-sm" id="fs" data-i18n="fullscreen"></button>
-              <button type="button" class="btn btn-sm" id="print-tree" data-i18n="print_tree"></button>
+              <button type="button" class="btn btn-sm" id="print-tree" data-i18n="print_tree">🖨 ট্রি প্রিন্ট করুন</button>
             </span>
           </div>
           <p class="walk" id="walk" aria-live="polite"></p>
@@ -292,10 +292,10 @@
       <div class="grid-2 below">
         <section class="card" id="testcard">
           <h2 class="h-sm" id="test-h"></h2>
-          <p class="muted small" data-i18n="test_p"></p>
+          <p class="muted small" data-i18n="test_p">এই উদাহরণগুলো আলাদা করে রাখা ছিল। ট্রি বানানোর সময় সে এগুলো কখনো দেখেনি, ঠিক সারপ্রাইজ টেস্টের মতো!</p>
           <div class="row">
-            <button type="button" class="btn btn-accent" id="run-test" data-i18n="run_test"></button>
-            <button type="button" class="btn" id="skip-test" data-i18n="skip" hidden></button>
+            <button type="button" class="btn btn-accent" id="run-test" data-i18n="run_test">▶ টেস্ট চালান</button>
+            <button type="button" class="btn" id="skip-test" data-i18n="skip" hidden>অ্যানিমেশন বাদ দিন</button>
           </div>
           <div class="scroll-x" style="margin-top:10px">
             <table class="table ttable" id="test-table"></table>
@@ -303,7 +303,7 @@
           <p class="mb0" id="test-summary" aria-live="polite" style="margin-top:10px"></p>
         </section>
         <section class="card" id="compare">
-          <h2 class="h-sm" data-i18n="cmp_h"></h2>
+          <h2 class="h-sm" data-i18n="cmp_h">আমার ট্রি বনাম কম্পিউটারের ট্রি</h2>
           <div class="scroll-x"><table class="table cmp" id="cmp-table"></table></div>
           <p class="mb0" id="cmp-note" style="margin-top:10px"></p>
         </section>
@@ -315,14 +315,14 @@
       <div class="card stack">
         <div class="row spread no-print">
           <div class="seg" role="group" id="view-seg">
-            <button type="button" id="view-table" data-i18n="view_table"></button>
-            <button type="button" id="view-cards" data-i18n="view_cards"></button>
+            <button type="button" id="view-table" data-i18n="view_table">টেবিল</button>
+            <button type="button" id="view-cards" data-i18n="view_cards">কার্ড</button>
           </div>
-          <button type="button" class="btn" id="print-sheet" data-i18n="print_sheet"></button>
+          <button type="button" class="btn" id="print-sheet" data-i18n="print_sheet">🖨 ওয়ার্কশিট প্রিন্ট করুন</button>
         </div>
         <div class="print-only">
           <h2 id="sheet-title"></h2>
-          <p data-i18n="sheet_name"></p>
+          <p data-i18n="sheet_name">নাম: ____________________   শ্রেণি: ________   তারিখ: __________</p>
           <p class="mb0"><b id="sheet-target"></b></p>
         </div>
         <div class="legend" id="legend"></div>
@@ -332,7 +332,7 @@
         <h3 class="h-sm" id="testdata-h"></h3>
         <div id="test-view"></div>
         <div class="print-only">
-          <h3 class="h-sm" data-i18n="sheet_draw"></h3>
+          <h3 class="h-sm" data-i18n="sheet_draw">এখানে আপনার ডিসিশন ট্রি আঁকুন। সবার উপরে একটি প্রশ্ন লিখুন, তারপর শাখা আঁকুন।</h3>
           <div class="sheet-box"></div>
         </div>
       </div>
@@ -342,24 +342,24 @@
     <section id="pane-learn" role="tabpanel" aria-labelledby="tab-learn" hidden>
       <div class="grid-2">
         <div class="card stack">
-          <h2 class="h-sm" data-i18n="what_h"></h2>
+          <h2 class="h-sm" data-i18n="what_h">ডিসিশন ট্রি কী?</h2>
           <p data-i18n-html="what_p"></p>
           <p class="mb0" data-i18n-html="what_p2"></p>
         </div>
         <div class="card stack">
-          <h2 class="h-sm" data-i18n="gini_h"></h2>
+          <h2 class="h-sm" data-i18n="gini_h">Gini অশুদ্ধতা: দলটা কতটা মিশ্র?</h2>
           <p data-i18n-html="gini_p"></p>
-          <p class="mb0 small"><b data-i18n="gini_ex"></b></p>
+          <p class="mb0 small"><b data-i18n="gini_ex">কষে দেখানো উদাহরণ: এই ডেটার শুরুর দল</b></p>
           <code class="formula" id="gini-ex" dir="ltr"></code>
           <p class="small mb0" data-i18n-html="split_p"></p>
         </div>
         <div class="card stack">
-          <h2 class="h-sm" data-i18n="basket_h"></h2>
+          <h2 class="h-sm" data-i18n="basket_h">নিজে করে দেখুন: ফলের ঝুড়ির Gini</h2>
           <div class="row">
-            <span class="stepper"><span data-i18n="apples"></span>
+            <span class="stepper"><span data-i18n="apples">🍎 আপেল</span>
               <button type="button" class="btn btn-sm" id="apple-minus" data-i18n-aria-label="minus_one">−</button><b id="apple-n"></b>
               <button type="button" class="btn btn-sm" id="apple-plus" data-i18n-aria-label="plus_one">+</button></span>
-            <span class="stepper"><span data-i18n="mangoes"></span>
+            <span class="stepper"><span data-i18n="mangoes">🥭 আম</span>
               <button type="button" class="btn btn-sm" id="mango-minus" data-i18n-aria-label="minus_one">−</button><b id="mango-n"></b>
               <button type="button" class="btn btn-sm" id="mango-plus" data-i18n-aria-label="plus_one">+</button></span>
           </div>
@@ -368,39 +368,39 @@
           <p class="mb0" id="basket-res" aria-live="polite"></p>
         </div>
         <div class="card stack">
-          <h2 class="h-sm" data-i18n="greedy_h"></h2>
-          <p class="mb0" data-i18n="greedy_p"></p>
+          <h2 class="h-sm" data-i18n="greedy_h">কম্পিউটার লোভী</h2>
+          <p class="mb0" data-i18n="greedy_p">প্রতিটি ধাপে কম্পিউটার সেই প্রশ্নটি বাছে যা এই মুহূর্তে সবচেয়ে ভালো মনে হয়। সে আগে থেকে পরিকল্পনা করে না, তাই সবসময় সবচেয়ে ছোট ট্রি খুঁজে পায় না। প্রাণীর ডেটায় “বাচ্চাকে দুধ খাওয়ায়?” দিয়ে শুরু করে দেখুন। আপনি কি কম্পিউটারের চেয়ে কম প্রশ্নে একটি নিখুঁত ট্রি বানাতে পারবেন?</p>
         </div>
       </div>
       <div class="card stack below">
-        <h2 class="h-sm" data-i18n="overfit_h"></h2>
+        <h2 class="h-sm" data-i18n="overfit_h">খুব বেশি প্রশ্ন: ওভারফিটিং</h2>
         <p data-i18n-html="overfit_p"></p>
         <h3 class="h-sm" id="chart-h"></h3>
-        <div class="row small"><span class="key"><i style="background:var(--c1)"></i><span data-i18n="chart_train"></span></span><span class="key"><i style="background:var(--c2)"></i><span data-i18n="chart_test"></span></span></div>
+        <div class="row small"><span class="key"><i style="background:var(--c1)"></i><span data-i18n="chart_train">ট্রেনিং নির্ভুলতা</span></span><span class="key"><i style="background:var(--c2)"></i><span data-i18n="chart_test">টেস্ট নির্ভুলতা</span></span></div>
         <div id="chart"></div>
         <p class="callout mb0" id="chart-note"></p>
       </div>
       <div class="card stack below">
-        <h2 class="h-sm" data-i18n="real_h"></h2>
+        <h2 class="h-sm" data-i18n="real_h">আসল AI-তে ডিসিশন ট্রি কোথায় কাজে লাগে</h2>
         <ul class="uses">
-          <li data-i18n="real1"></li>
-          <li data-i18n="real2"></li>
-          <li data-i18n="real3"></li>
-          <li data-i18n="real4"></li>
-          <li data-i18n="real5"></li>
+          <li data-i18n="real1">🏦 ব্যাংক: আয়, আগের কিস্তি শোধ ইত্যাদি দেখে লোন ঝুঁকিপূর্ণ কিনা বিচার করতে।</li>
+          <li data-i18n="real2">🏥 হাসপাতাল: কোন রোগীর আগে জরুরি চিকিৎসা দরকার, তা ঠিক করতে ডাক্তারদের সাহায্য করতে।</li>
+          <li data-i18n="real3">🌾 চাষবাস: মাটি আর বৃষ্টির ডেটা থেকে জমির জন্য ঠিক ফসল সুপারিশ করতে।</li>
+          <li data-i18n="real4">🛒 অনলাইন কেনাকাটা ও পেমেন্ট অ্যাপ: ভুয়া অর্ডার আর প্রতারণা ধরতে।</li>
+          <li data-i18n="real5">🌲 র‍্যান্ডম ফরেস্ট: শত শত ট্রি একসঙ্গে ভোট দেয়। টেবিলের ডেটার জন্য এটি সবচেয়ে বেশি ব্যবহৃত AI পদ্ধতিগুলোর একটি। Python-এ scikit-learn লাইব্রেরি এক লাইনে ট্রি বানাতে পারে।</li>
         </ul>
       </div>
     </section>
 
     <details class="card help no-print">
-      <summary data-i18n="help_h"></summary>
+      <summary data-i18n="help_h">কীভাবে ব্যবহার করবেন / ক্লাসের জন্য আইডিয়া</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">“আমার ট্রি” দিয়ে শুরু করুন। সবার উপরের বাক্সে ট্যাপ করুন, একটি প্রশ্ন বাছুন, আর যে দলগুলো এখনো মিশ্র সেগুলো ভাগ করতে থাকুন যতক্ষণ না প্রতিটি পাতা বিশুদ্ধ হয়।</li>
+        <li data-i18n="tip2">আটকে গেছেন? “Gini সংকেত দেখান” চালু করে দেখুন কোন প্রশ্ন সবচেয়ে বিশুদ্ধ দল বানায়।</li>
+        <li data-i18n="tip3">আপনার ট্রিতে নতুন উদাহরণ পাঠাতে “টেস্ট চালান” চাপুন। তারপর কম্পিউটারের ট্রিতে গিয়ে সেটাও পরীক্ষা করুন আর তুলনা করুন।</li>
+        <li data-i18n="tip4">ক্লাসের কাজ: ওয়ার্কশিট প্রিন্ট করুন, ছাত্রছাত্রীদের দলে ভাগ করে কাগজে ট্রি আঁকতে দিন। প্রতিটি ট্রি নতুন উদাহরণ দিয়ে পরীক্ষা করুন। কোন দল জিতল? সবচেয়ে ছোট ট্রি-ই কি সবচেয়ে ভালো?</li>
+        <li data-i18n="tip5">ক্রিকেটের ডেটায় সর্বোচ্চ গভীরতা আগে 2, তারপর “কোনো সীমা নেই” করুন। টেস্ট স্কোর কেন কমে? (সংকেত: দিন 15 দেখুন।)</li>
+        <li data-i18n="tip6">আলোচনা করুন: কম্পিউটার প্রথমে পা নিয়ে প্রশ্ন করেছে, দুধ নিয়ে নয়। এটা কি ভুল? সামুদ্রিক সাপ আমাদের হারিয়ে যাওয়া ডেটা নিয়ে কী শেখায়?</li>
       </ul>
     </details>
   </main>

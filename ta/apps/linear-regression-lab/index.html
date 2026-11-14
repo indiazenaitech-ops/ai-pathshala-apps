@@ -184,17 +184,17 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">தரவிலிருந்து AI ஒரு நேர்கோட்டை எப்படிக் கற்கிறது என்று பாருங்கள்: பிழை, இழப்பு, கிரேடியன்ட் டிசென்ட், கணிப்பு.</p>
 
     <section class="card lr-toolbar no-print" aria-labelledby="ds-label">
       <div class="ds-wrap">
         <div class="ds-list" id="ds-list" role="group" aria-labelledby="ds-label"></div>
-        <p class="ds-about"><b id="ds-label" data-i18n="data_label"></b> · <span id="ds-about"></span></p>
+        <p class="ds-about"><b id="ds-label" data-i18n="data_label">தரவு</b> · <span id="ds-about"></span></p>
       </div>
       <div class="tb-actions">
         <span class="badge primary" id="pt-count" data-value="0"></span>
-        <button class="btn btn-sm" id="restore" type="button" data-i18n="restore"></button>
-        <button class="btn btn-sm" id="paste-btn" type="button" data-i18n="paste_btn"></button>
+        <button class="btn btn-sm" id="restore" type="button" data-i18n="restore">தரவை மீட்டெடு</button>
+        <button class="btn btn-sm" id="paste-btn" type="button" data-i18n="paste_btn">தரவை ஒட்டு</button>
         <button class="btn btn-sm" id="print-btn" type="button" data-i18n="print"></button>
         <button class="btn btn-sm" id="fs-btn" type="button" data-i18n="fullscreen"></button>
         <button class="btn btn-sm btn-danger" id="reset-all" type="button" data-i18n="reset"></button>
@@ -207,26 +207,26 @@
       <section class="card lr-graph">
         <div class="stage plot-stage"><canvas id="plot" role="img"></canvas></div>
         <div class="show-row no-print" role="group" aria-labelledby="show-lbl">
-          <span class="lbl" id="show-lbl" data-i18n="show_label"></span>
-          <button class="chip" id="show-res" type="button" aria-pressed="true"><span class="sw sw-res" aria-hidden="true"></span><span data-i18n="show_res"></span></button>
-          <button class="chip" id="show-sq" type="button" aria-pressed="false"><span class="sw sw-sq" aria-hidden="true"></span><span data-i18n="show_sq"></span></button>
-          <button class="chip" id="show-best" type="button" aria-pressed="false"><span class="sw sw-best" aria-hidden="true"></span><span data-i18n="show_best"></span></button>
+          <span class="lbl" id="show-lbl" data-i18n="show_label">காட்டு:</span>
+          <button class="chip" id="show-res" type="button" aria-pressed="true"><span class="sw sw-res" aria-hidden="true"></span><span data-i18n="show_res">பிழைகள்</span></button>
+          <button class="chip" id="show-sq" type="button" aria-pressed="false"><span class="sw sw-sq" aria-hidden="true"></span><span data-i18n="show_sq">பிழைகளின் வர்க்கம்</span></button>
+          <button class="chip" id="show-best" type="button" aria-pressed="false"><span class="sw sw-best" aria-hidden="true"></span><span data-i18n="show_best">சிறந்த கோடு</span></button>
           <button class="chip fs-exit" id="fs-exit" type="button" aria-pressed="true"><span aria-hidden="true">✕</span><span data-i18n="fullscreen"></span></button>
         </div>
         <p class="canvas-hint no-print" id="canvas-hint"></p>
         <div class="stats">
           <div class="stat stat-eq">
-            <div class="lbl" data-i18n="eq_label"></div>
+            <div class="lbl" data-i18n="eq_label">மாதிரி (கோடு)</div>
             <div class="eq" id="equation" data-m="0" data-c="0"></div>
             <div class="eq-words" id="eq-words"></div>
           </div>
           <div class="stat">
-            <div class="lbl" data-i18n="loss_label"></div>
+            <div class="lbl" data-i18n="loss_label">இழப்பு (MSE)</div>
             <div class="num" id="mse" data-value="0"></div>
             <div class="sub" id="miss"></div>
           </div>
           <div class="stat">
-            <div class="lbl" data-i18n="closeness"></div>
+            <div class="lbl" data-i18n="closeness">சிறந்ததற்கு எவ்வளவு அருகில்</div>
             <div class="num" id="close" data-value="0"></div>
             <div class="progress" aria-hidden="true"><span id="close-bar" style="width:0"></span></div>
           </div>
@@ -236,32 +236,32 @@
 
       <section class="card lr-side no-print">
         <div class="tabs" role="tablist">
-          <button role="tab" id="tab-manual" aria-controls="panel-manual" aria-selected="true" type="button" data-i18n="tab_manual"></button>
-          <button role="tab" id="tab-auto" aria-controls="panel-auto" aria-selected="false" type="button" data-i18n="tab_auto"></button>
-          <button role="tab" id="tab-predict" aria-controls="panel-predict" aria-selected="false" type="button" data-i18n="tab_predict"></button>
+          <button role="tab" id="tab-manual" aria-controls="panel-manual" aria-selected="true" type="button" data-i18n="tab_manual">கையால் பொருத்து</button>
+          <button role="tab" id="tab-auto" aria-controls="panel-auto" aria-selected="false" type="button" data-i18n="tab_auto">AI கற்கட்டும்</button>
+          <button role="tab" id="tab-predict" aria-controls="panel-predict" aria-selected="false" type="button" data-i18n="tab_predict">கணி</button>
         </div>
 
         <!-- 1. fit by hand -->
         <div id="panel-manual" role="tabpanel" aria-labelledby="tab-manual" class="stack">
-          <p class="hint mt0" data-i18n="manual_hint"></p>
+          <p class="hint mt0" data-i18n="manual_hint">சிவப்புப் பிழைக் கோடுகள் முடிந்தவரை குட்டையாகும்படி கோட்டை நகர்த்துங்கள். இழப்பு குறைவதைப் பாருங்கள்.</p>
           <div class="field">
-            <label for="m-range" data-i18n="slope"></label>
+            <label for="m-range" data-i18n="slope">சாய்வு m</label>
             <div class="sl-row">
               <input type="range" id="m-range" min="-1" max="1" step="0.001">
               <input type="number" id="m-num" step="any" data-i18n-aria-label="slope">
             </div>
-            <span class="hint" data-i18n="slope_hint"></span>
+            <span class="hint" data-i18n="slope_hint">x ஒன்று கூடும்போது y எவ்வளவு மாறுகிறது.</span>
           </div>
           <div class="field">
-            <label for="c-range" data-i18n="intercept"></label>
+            <label for="c-range" data-i18n="intercept">வெட்டுத்துண்டு c</label>
             <div class="sl-row">
               <input type="range" id="c-range" min="-1" max="1" step="0.001">
               <input type="number" id="c-num" step="any" data-i18n-aria-label="intercept">
             </div>
-            <span class="hint" data-i18n="intercept_hint"></span>
+            <span class="hint" data-i18n="intercept_hint">கோடு x = 0-ஐச் சந்திக்கும் இடத்தில் y-இன் மதிப்பு.</span>
           </div>
           <div class="row">
-            <button class="btn btn-sm" id="reset-line" type="button" data-i18n="reset_line"></button>
+            <button class="btn btn-sm" id="reset-line" type="button" data-i18n="reset_line">மீண்டும் தட்டைக் கோடு</button>
           </div>
           <p class="callout coach" id="coach-manual" aria-live="polite" data-code=""><span class="ico" aria-hidden="true"></span><span class="txt"></span></p>
         </div>
@@ -269,25 +269,25 @@
         <!-- 2. let AI learn -->
         <div id="panel-auto" role="tabpanel" aria-labelledby="tab-auto" class="stack" hidden>
           <div>
-            <h3 data-i18n="exact_title"></h3>
-            <p class="hint mt0" data-i18n="exact_hint"></p>
+            <h3 data-i18n="exact_title">துல்லியமான விடை (மீச்சிறு வர்க்க முறை)</h3>
+            <p class="hint mt0" data-i18n="exact_hint">நேர்கோட்டுக்கு, ஒரு சூத்திரம் ஒரே முறையில் சிறந்த m, c-ஐக் கண்டுபிடிக்கும்.</p>
           </div>
           <div class="row">
-            <button class="btn btn-accent" id="fit-exact" type="button" data-i18n="exact_btn"></button>
+            <button class="btn btn-accent" id="fit-exact" type="button" data-i18n="exact_btn">சிறந்த கோட்டைக் கண்டுபிடி</button>
           </div>
-          <label class="check"><input type="checkbox" id="follow"> <span data-i18n="follow"></span></label>
+          <label class="check"><input type="checkbox" id="follow"> <span data-i18n="follow">புள்ளிகளை நகர்த்தும்போது சிறந்த கோட்டை வைத்திரு</span></label>
           <details class="math" id="math">
-            <summary data-i18n="show_math"></summary>
+            <summary data-i18n="show_math">கணக்கைக் காட்டு</summary>
             <div class="math-body" id="math-body"></div>
           </details>
 
           <div class="block stack">
             <div>
-              <h3 data-i18n="gd_title"></h3>
-              <p class="hint mt0" data-i18n="gd_hint"></p>
+              <h3 data-i18n="gd_title">கிரேடியன்ட் டிசென்ட்: AI எப்படிக் கற்கிறது</h3>
+              <p class="hint mt0" data-i18n="gd_hint">AI ஒரு தட்டைக் கோட்டிலிருந்து தொடங்குகிறது. ஒவ்வொரு எபாக்கிலும் எல்லாப் புள்ளிகளையும் பார்த்து, m, c-ஐ இழப்பின் சரிவில் சற்றுக் கீழே நகர்த்துகிறது.</p>
             </div>
             <div class="field">
-              <label for="lr" data-i18n="lr_label"></label>
+              <label for="lr" data-i18n="lr_label">கற்றல் வீதம் (அடியின் அளவு)</label>
               <div class="sl-row">
                 <input type="range" id="lr" min="0" max="7" step="1" value="4">
                 <output class="lr-val" id="lr-out" for="lr"></output>
@@ -296,30 +296,30 @@
             </div>
             <div class="gd-opts">
               <div class="field">
-                <label for="epochs" data-i18n="epochs_label"></label>
+                <label for="epochs" data-i18n="epochs_label">ஒரு ஓட்டத்தில் எபாக்குகள்</label>
                 <select id="epochs"></select>
               </div>
               <div class="field">
-                <span class="lbl-like" id="speed-lbl" data-i18n="speed_label"></span>
+                <span class="lbl-like" id="speed-lbl" data-i18n="speed_label">வேகம்</span>
                 <div class="seg" id="speed" role="group" aria-labelledby="speed-lbl">
-                  <button type="button" data-speed="slow" data-i18n="speed_slow"></button>
-                  <button type="button" data-speed="normal" data-i18n="speed_normal"></button>
-                  <button type="button" data-speed="fast" data-i18n="speed_fast"></button>
+                  <button type="button" data-speed="slow" data-i18n="speed_slow">மெதுவாக</button>
+                  <button type="button" data-speed="normal" data-i18n="speed_normal">சாதாரணம்</button>
+                  <button type="button" data-speed="fast" data-i18n="speed_fast">வேகமாக</button>
                 </div>
               </div>
             </div>
             <div class="gd-btns">
-              <button class="btn" id="gd-step" type="button" data-i18n="gd_step"></button>
+              <button class="btn" id="gd-step" type="button" data-i18n="gd_step">ஒரு அடி</button>
               <button class="btn btn-primary" id="gd-run" type="button" aria-pressed="false"></button>
-              <button class="btn" id="gd-restart" type="button" data-i18n="gd_restart"></button>
+              <button class="btn" id="gd-restart" type="button" data-i18n="gd_restart">மீண்டும் தொடங்கு</button>
             </div>
             <div class="gd-read" aria-live="off">
-              <span><span data-i18n="epoch_label"></span>: <b id="epoch" data-value="0">0</b></span>
-              <span><span data-i18n="loss_label"></span>: <b id="gd-loss" data-value="0"></b></span>
-              <span><span data-i18n="best_possible"></span>: <b id="gd-best" data-value="0"></b></span>
+              <span><span data-i18n="epoch_label">எபாக்</span>: <b id="epoch" data-value="0">0</b></span>
+              <span><span data-i18n="loss_label">இழப்பு (MSE)</span>: <b id="gd-loss" data-value="0"></b></span>
+              <span><span data-i18n="best_possible">சாத்தியமான குறைந்தபட்சம்</span>: <b id="gd-best" data-value="0"></b></span>
             </div>
             <div>
-              <div class="small muted" data-i18n="loss_chart"></div>
+              <div class="small muted" data-i18n="loss_chart">இழப்பு வளைவு: ஒவ்வொரு எபாக்குக்குப் பின் இழப்பு</div>
               <div class="stage loss-stage"><canvas id="loss-chart" role="img"></canvas></div>
             </div>
             <p class="callout coach" id="coach-auto" aria-live="polite" data-code=""><span class="ico" aria-hidden="true"></span><span class="txt"></span></p>
@@ -329,8 +329,8 @@
         <!-- 3. predict -->
         <div id="panel-predict" role="tabpanel" aria-labelledby="tab-predict" class="stack" hidden>
           <div>
-            <h3 data-i18n="pred_title"></h3>
-            <p class="hint mt0" data-i18n="pred_hint"></p>
+            <h3 data-i18n="pred_title">புதிய மதிப்பைக் கணி</h3>
+            <p class="hint mt0" data-i18n="pred_hint">x-ஐத் தேர்ந்தெடுங்கள் அல்லது வரைபடத்தில் தட்டுங்கள். கோடு தரும் கணிப்பு: ŷ = m × x + c</p>
           </div>
           <div class="pred-box">
             <div class="field">
@@ -340,24 +340,24 @@
           </div>
           <input type="range" id="pred-range" data-i18n-aria-label="pred_title">
           <div class="pred-out">
-            <div class="lbl" data-i18n="pred_answer"></div>
+            <div class="lbl" data-i18n="pred_answer">கணிப்பு ŷ</div>
             <div id="pred-y" data-value="0" aria-live="polite"></div>
           </div>
           <p class="pred-sentence" id="pred-sentence"></p>
           <p class="callout warning" id="pred-warn" hidden></p>
-          <p class="callout" id="pred-tip" hidden data-i18n="pred_tip_best"></p>
+          <p class="callout" id="pred-tip" hidden data-i18n="pred_tip_best">குறிப்பு: இந்தக் கோடு இன்னும் சிறந்தது அல்ல. சிறந்த கணிப்புக்கு &quot;AI கற்கட்டும்&quot; திறந்து &quot;சிறந்த கோட்டைக் கண்டுபிடி&quot; அழுத்துங்கள்.</p>
         </div>
       </section>
     </div>
 
     <section class="card section no-print" id="explain-card">
-      <h2 data-i18n="explain_title"></h2>
-      <h3 class="small muted" data-i18n="exp_title"></h3>
+      <h2 data-i18n="explain_title">புரிந்துகொள்ளுங்கள்</h2>
+      <h3 class="small muted" data-i18n="exp_title">ஒரு சோதனை செய்து பாருங்கள்</h3>
       <div class="exp-row">
-        <button class="btn" id="exp-outlier" type="button" data-i18n="exp_outlier"></button>
-        <button class="btn" id="exp-small" type="button" data-i18n="exp_small"></button>
-        <button class="btn" id="exp-right" type="button" data-i18n="exp_right"></button>
-        <button class="btn" id="exp-big" type="button" data-i18n="exp_big"></button>
+        <button class="btn" id="exp-outlier" type="button" data-i18n="exp_outlier">📍 ஒரு விலகல் புள்ளி சேர்</button>
+        <button class="btn" id="exp-small" type="button" data-i18n="exp_small">🐢 கற்றல் வீதம் மிகச் சிறியது</button>
+        <button class="btn" id="exp-right" type="button" data-i18n="exp_right">👍 கற்றல் வீதம் சரியானது</button>
+        <button class="btn" id="exp-big" type="button" data-i18n="exp_big">💥 கற்றல் வீதம் மிகப் பெரியது</button>
       </div>
       <p class="callout accent" id="exp-msg" aria-live="polite" hidden style="margin-top:10px"></p>
       <div class="concepts" id="concepts"></div>
@@ -365,10 +365,10 @@
 
     <section class="card section" id="table-card">
       <div class="tbl-head">
-        <h2 data-i18n="table_title"></h2>
+        <h2 data-i18n="table_title">தரவு அட்டவணையும் பிழைகளும்</h2>
         <div class="row no-print">
-          <button class="btn btn-sm" id="add-row" type="button" data-i18n="add_row"></button>
-          <button class="btn btn-sm" id="dl-csv" type="button" data-i18n="dl_csv"></button>
+          <button class="btn btn-sm" id="add-row" type="button" data-i18n="add_row">வரிசை சேர்</button>
+          <button class="btn btn-sm" id="dl-csv" type="button" data-i18n="dl_csv">CSV பதிவிறக்கு</button>
         </div>
       </div>
       <div class="tbl-wrap scroll-x">
@@ -381,26 +381,26 @@
     </section>
 
     <section class="print-only worksheet section">
-      <h2 data-i18n="ws_title"></h2>
-      <p data-i18n="ws_name"></p>
+      <h2 data-i18n="ws_title">பயிற்சித்தாள்: சிறந்த பொருத்தக் கோடு</h2>
+      <p data-i18n="ws_name">பெயர்: ______________   வகுப்பு: ______   தேதி: __________</p>
       <ol>
-        <li><span data-i18n="ws_q1"></span><div class="ws-line"></div></li>
-        <li><span data-i18n="ws_q2"></span><div class="ws-line"></div><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q1">மேலே உள்ள வரைபடத்தின் கோட்டுச் சமன்பாட்டை எழுதுக. இந்தத் தரவுக்கு m, c என்பவை எதைக் குறிக்கின்றன?</span><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q2">ஏதேனும் இரண்டு புள்ளிகளைத் தேர்ந்தெடு. ஒவ்வொன்றின் பிழை (y − ŷ), பிழையின் வர்க்கம் கண்டுபிடி.</span><div class="ws-line"></div><div class="ws-line"></div></li>
         <li><span id="ws-q3"></span><div class="ws-line"></div><div class="ws-line"></div></li>
-        <li><span data-i18n="ws_q4"></span><div class="ws-line"></div><div class="ws-line"></div></li>
-        <li><span data-i18n="ws_q5"></span><div class="ws-line"></div><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q4">பிழைகளை நேரடியாகக் கூட்டாமல் ஏன் வர்க்கப்படுத்துகிறோம்?</span><div class="ws-line"></div><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q5">கிரேடியன்ட் டிசென்டில் கற்றல் வீதம் மிகப் பெரியதானால் என்ன நடக்கும்? மிகச் சிறியதானால்?</span><div class="ws-line"></div><div class="ws-line"></div></li>
       </ol>
     </section>
 
     <details class="card section no-print">
-      <summary><b data-i18n="howto"></b></summary>
+      <summary><b data-i18n="howto">பயன்படுத்தும் முறை / வகுப்பறைக்கான யோசனைகள்</b></summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">&quot;கையால் பொருத்து&quot; உடன் தொடங்குங்கள்: இழப்பு முடிந்தவரை குறையும் வரை கோட்டை இழுங்கள். பிறகு ஒப்பிட &quot;சிறந்த கோடு&quot; இயக்குங்கள்.</li>
+        <li data-i18n="tip2">&quot;பிழைகளின் வர்க்கம்&quot; இயக்குங்கள்: ஒரு பெரிய தவறு பல சிறிய தவறுகளை விட ஏன் அதிகமாகக் கணக்கிடப்படுகிறது என்று சதுரங்கள் காட்டும்.</li>
+        <li data-i18n="tip3">&quot;AI கற்கட்டும்&quot; திறந்து &quot;ஓட்டு&quot; அழுத்துங்கள். இறங்கும் இழப்பு வளைவுதான் &quot;பயிற்சி&quot; (training). பிறகு கற்றல் வீதச் சோதனைகளைச் செய்யுங்கள்.</li>
+        <li data-i18n="tip4">வகுப்புச் செயல்பாடு: 10–15 வகுப்புத் தோழர்களின் உயரத்தையும் கை விரிப்பு நீளத்தையும் அளந்து, &quot;தரவை ஒட்டு&quot; மூலம் சேர்த்து, புதிய மாணவரின் கை விரிப்பைக் கணியுங்கள்.</li>
+        <li data-i18n="tip5">&quot;கணி&quot; மூலம் விவாதியுங்கள்: வாரம் 40 மணி நேரம் படிக்கும் மாணவரின் மதிப்பெண்ணைக் கோடு சொல்ல முடியுமா? ஏன் முடியாது?</li>
+        <li data-i18n="tip6">அச்சிட்டால் வரைபடம், தரவு அட்டவணை, 5 கேள்விகள் கொண்ட பயிற்சித்தாள் கிடைக்கும். ஸ்மார்ட்போர்டில் முழுத்திரை நன்றாக வேலை செய்யும்.</li>
       </ul>
     </details>
   </main>

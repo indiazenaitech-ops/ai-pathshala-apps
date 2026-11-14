@@ -123,7 +123,7 @@
 <body>
   <main id="app">
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">AI चॅटबॉट कसे लिहितात ते शोधा: एका गोष्टीवरून छोट्या भाषा मॉडेलला शिकवा, मग ते पुढच्या शब्दाचा अंदाज कसा लावते आणि स्वतः कसे लिहिते ते पाहा.</p>
       <div class="row no-print">
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm" id="fs-btn" data-i18n="fullscreen"></button>
@@ -133,19 +133,19 @@
 
     <!-- 1. Train -->
     <section class="card stack" id="train-card">
-      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1"></span></h2>
+      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1">मॉडेलला शिकवा</span></h2>
       <div class="split train-split">
         <div class="stack">
           <div class="no-print">
-            <span class="lbl" id="src-lbl" data-i18n="src_label"></span>
+            <span class="lbl" id="src-lbl" data-i18n="src_label">शिकवण्याचा मजकूर</span>
             <div class="seg big" role="group" aria-labelledby="src-lbl">
-              <button type="button" id="src-sample" data-i18n="src_sample"></button>
-              <button type="button" id="src-custom" data-i18n="src_custom"></button>
+              <button type="button" id="src-sample" data-i18n="src_sample">नमुना गोष्ट</button>
+              <button type="button" id="src-custom" data-i18n="src_custom">आमचा स्वतःचा मजकूर</button>
             </div>
             <p class="muted small mb0" id="src-note" style="margin-top:6px"></p>
           </div>
           <div>
-            <span class="lbl" id="mem-lbl" data-i18n="mem_label"></span>
+            <span class="lbl" id="mem-lbl" data-i18n="mem_label">स्मरणशक्ती: मॉडेल मागचे किती शब्द पाहते?</span>
             <div class="seg num no-print" role="group" aria-labelledby="mem-lbl">
               <button type="button" id="n-0">0</button>
               <button type="button" id="n-1">1</button>
@@ -155,21 +155,21 @@
             <p class="muted small mb0" id="n-hint" style="margin-top:6px"></p>
           </div>
           <div class="stats" aria-live="polite">
-            <div class="stat"><b id="stat-words">0</b><span data-i18n="stat_words"></span></div>
-            <div class="stat"><b id="stat-vocab">0</b><span data-i18n="stat_vocab"></span></div>
-            <div class="stat"><b id="stat-ngrams">0</b><span data-i18n="stat_ngrams"></span><span class="tiny" id="stat-ngrams-sub"></span></div>
+            <div class="stat"><b id="stat-words">0</b><span data-i18n="stat_words">वाचलेले शब्द</span></div>
+            <div class="stat"><b id="stat-vocab">0</b><span data-i18n="stat_vocab">वेगवेगळे शब्द</span></div>
+            <div class="stat"><b id="stat-ngrams">0</b><span data-i18n="stat_ngrams">शिकलेले पॅटर्न</span><span class="tiny" id="stat-ngrams-sub"></span></div>
           </div>
           <p class="callout warning small mb0" id="need-text" hidden></p>
           <p class="callout small mb0" id="lines-note" hidden></p>
         </div>
         <div class="stack">
-          <label for="train-text" class="lbl" data-i18n="train_label"></label>
+          <label for="train-text" class="lbl" data-i18n="train_label">मॉडेल फक्त याच मजकुरातून शिकते</label>
           <textarea id="train-text" class="no-i18n no-print" rows="9" spellcheck="false" data-i18n-placeholder="train_ph"></textarea>
           <div id="train-print" class="print-only no-i18n"></div>
           <p class="callout warning small mb0 no-print" id="cut-note" hidden></p>
           <div class="row no-print">
-            <button type="button" class="btn btn-primary" id="train-btn" data-i18n="train_btn"></button>
-            <button type="button" class="btn" id="open-btn" data-i18n="open_txt"></button>
+            <button type="button" class="btn btn-primary" id="train-btn" data-i18n="train_btn">मॉडेल ट्रेन करा</button>
+            <button type="button" class="btn" id="open-btn" data-i18n="open_txt">.txt फाइल उघडा</button>
             <button type="button" class="btn btn-ghost" id="clear-text" data-i18n="clear"></button>
           </div>
         </div>
@@ -179,35 +179,35 @@
     <div class="grid-2 main-grid">
       <!-- 2. Predict -->
       <section class="card stack" id="predict-card">
-        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2">पुढच्या शब्दाचा अंदाज</span></h2>
         <div>
-          <label for="start-input" class="lbl" data-i18n="start_label"></label>
+          <label for="start-input" class="lbl" data-i18n="start_label">वाक्याची सुरुवात</label>
           <div class="start-row">
             <input type="text" id="start-input" class="no-i18n" autocomplete="off" spellcheck="false" data-i18n-placeholder="start_ph">
             <span class="start-btns no-print">
-              <button type="button" class="btn" id="undo-btn" data-i18n="undo"></button>
+              <button type="button" class="btn" id="undo-btn" data-i18n="undo">मागे घ्या</button>
               <button type="button" class="btn icon-btn" id="clear-start" data-i18n-aria-label="clear" data-i18n-title="clear">✕</button>
             </span>
           </div>
         </div>
         <div class="row">
-          <span class="small muted" data-i18n="looks_at"></span>
+          <span class="small muted" data-i18n="looks_at">मॉडेल पाहत आहे:</span>
           <div class="chips no-i18n" id="ctx-chips"></div>
         </div>
         <p class="small mb0" id="ctx-note" aria-live="polite"></p>
         <div class="row spread">
-          <h3 class="mb0" data-i18n="top5"></h3>
-          <button type="button" class="btn btn-accent btn-sm no-print" id="pick-btn" data-i18n="ai_pick"></button>
+          <h3 class="mb0" data-i18n="top5">सर्वोत्तम 5 अंदाज</h3>
+          <button type="button" class="btn btn-accent btn-sm no-print" id="pick-btn" data-i18n="ai_pick">AI ला निवडू द्या</button>
         </div>
-        <p class="muted small mb0 no-print" data-i18n="tap_hint"></p>
+        <p class="muted small mb0 no-print" data-i18n="tap_hint">एखाद्या अंदाजावर टॅप करा, तो तुमच्या वाक्यात जोडला जाईल.</p>
         <div class="cands no-i18n" id="cands" aria-live="polite"></div>
         <p class="muted small mb0" id="explain"></p>
       </section>
 
       <!-- 3. Auto-write -->
       <section class="card stack" id="write-card">
-        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3"></span></h2>
-        <p class="muted small mb0" data-i18n="cont_hint"></p>
+        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3">त्याला स्वतः लिहू द्या</span></h2>
+        <p class="muted small mb0" data-i18n="cont_hint">हे पायरी 2 मधील तुमचे वाक्य एकेक शब्दाने पुढे नेते, जणू शक्यतांनुसार फासा टाकत आहे.</p>
         <div class="no-print">
           <div class="range-head"><label for="len" id="len-label"></label></div>
           <input type="range" id="len" min="5" max="80" step="1">
@@ -215,21 +215,21 @@
         <div class="no-print">
           <div class="range-head"><label for="temp" id="temp-label"></label></div>
           <input type="range" id="temp" min="0" max="2" step="0.1">
-          <div class="range-ends small muted"><span data-i18n="temp_safe"></span><span data-i18n="temp_wild"></span></div>
+          <div class="range-ends small muted"><span data-i18n="temp_safe">सुरक्षित: नेहमी सर्वात वरचा अंदाज</span><span data-i18n="temp_wild">भन्नाट: आश्चर्यकारक शब्द</span></div>
         </div>
         <div class="row no-print">
-          <button type="button" class="btn btn-primary btn-lg" id="write-btn" data-i18n="write_btn"></button>
-          <button type="button" class="btn" id="speak-btn" data-i18n="speak_btn"></button>
+          <button type="button" class="btn btn-primary btn-lg" id="write-btn" data-i18n="write_btn">लिही</button>
+          <button type="button" class="btn" id="speak-btn" data-i18n="speak_btn">मोठ्याने वाचा</button>
           <button type="button" class="btn" id="copy-btn" data-i18n="copy"></button>
         </div>
         <div class="output no-i18n" id="output" aria-live="polite"></div>
         <div class="legend">
-          <span class="muted" data-i18n="legend"></span>
-          <span class="w p-high" data-i18n="p_high"></span>
-          <span class="w p-mid" data-i18n="p_mid"></span>
-          <span class="w p-low" data-i18n="p_low"></span>
-          <span class="w p-rare" data-i18n="p_rare"></span>
-          <span class="sent-new" data-i18n="sent_new"></span>
+          <span class="muted" data-i18n="legend">प्रत्येक शब्दाची शक्यता किती होती?</span>
+          <span class="w p-high" data-i18n="p_high">खूप शक्य (50%+)</span>
+          <span class="w p-mid" data-i18n="p_mid">शक्य (20–50%)</span>
+          <span class="w p-low" data-i18n="p_low">कमी शक्य (5–20%)</span>
+          <span class="w p-rare" data-i18n="p_rare">आश्चर्यकारक (5% पेक्षा कमी)</span>
+          <span class="sent-new" data-i18n="sent_new">नवीन वाक्य, मजकुरात नव्हते</span>
         </div>
         <p class="callout small mb0" id="sent-summary" hidden></p>
         <p class="muted small mb0" id="top-rate"></p>
@@ -238,34 +238,34 @@
 
     <!-- inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside"></h2>
+      <h2 data-i18n="inside">आत काय घडत आहे?</h2>
       <div class="grid-3 inside-grid">
-        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="inside_1t"></span></h3><p data-i18n="inside_1"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="inside_2t"></span></h3><p data-i18n="inside_2"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🧠</span><span data-i18n="inside_3t"></span></h3><p data-i18n="inside_3"></p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="inside_1t">शिकणे = मोजणे</span></h3><p data-i18n="inside_1">मॉडेल मजकूर वाचून मोजते की कोणत्या शब्दांनंतर कोणता शब्द आला आणि किती वेळा. मोजणीचा हा तक्ताच संपूर्ण मॉडेल आहे.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="inside_2t">अंदाज = शक्यता</span></h3><p data-i18n="inside_2">जर काही शब्दांनंतर “क” 3 वेळा आणि “ख” 1 वेळा आला, तर क ला 3 ÷ 4 = 75% आणि ख ला 25% शक्यता मिळते. सर्जनशीलता ठरवते की ते किती वेळा ख निवडण्याचे धाडस करेल.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧠</span><span data-i18n="inside_3t">स्मरणशक्ती महत्त्वाची</span></h3><p data-i18n="inside_3">0 किंवा 1 शब्दाच्या स्मरणशक्तीने वाक्ये गोंधळतात. 3 शब्दांनी वाक्ये नैसर्गिक वाटतात, पण बहुतेक मजकुराची नक्कल असतात.</p></div>
       </div>
       <div class="grid-2">
-        <div class="callout"><h3 data-i18n="llm_t"></h3><p class="mb0" data-i18n="llm_1"></p></div>
-        <div class="callout warning"><h3 data-i18n="hallu_t"></h3><p class="mb0" id="hallu-text"></p></div>
+        <div class="callout"><h3 data-i18n="llm_t">ChatGPT यापेक्षा वेगळे कसे?</h3><p class="mb0" data-i18n="llm_1">ChatGPT, Gemini आणि Claude सुद्धा पुढच्या टोकनचा (शब्द किंवा शब्दाचा तुकडा) अंदाज लावत एकेक तुकडा लिहितात. पण ते लाखो कोटी शब्दांतून शिकतात, आणि मोजणीच्या तक्त्याऐवजी अब्जावधी संख्या असलेले प्रचंड न्यूरल नेटवर्क वापरतात. म्हणून ते फक्त शेवटचे 3 शब्द नाही, तर पूर्ण पानांचा अर्थ लक्षात घेऊन लिहू शकतात.</p></div>
+        <div class="callout warning"><h3 data-i18n="hallu_t">बरोबर वाटले तरी चुकीचे का असू शकते?</h3><p class="mb0" id="hallu-text"></p></div>
       </div>
-      <h3 class="mb0 peek-h" data-i18n="peek_t"></h3>
+      <h3 class="mb0 peek-h" data-i18n="peek_t">मॉडेलच्या आत डोकावा: सर्वात जास्त येणारे पॅटर्न</h3>
       <div class="scroll-x">
         <table class="table peek">
-          <thead><tr><th data-i18n="peek_after"></th><th aria-hidden="true"></th><th data-i18n="peek_next"></th><th data-i18n="peek_times"></th></tr></thead>
+          <thead><tr><th data-i18n="peek_after">या शब्दांनंतर</th><th aria-hidden="true"></th><th data-i18n="peek_next">पुढचा शब्द</th><th data-i18n="peek_times">किती वेळा</th></tr></thead>
           <tbody id="peek-body" class="no-i18n"></tbody>
         </table>
       </div>
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">कसे वापरायचे · वर्गासाठी कल्पना</summary>
       <ul>
-        <li data-i18n="tip_1"></li>
-        <li data-i18n="tip_2"></li>
-        <li data-i18n="tip_3"></li>
-        <li data-i18n="tip_4"></li>
-        <li data-i18n="tip_5"></li>
-        <li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">नमुना गोष्टीपासून सुरुवात करा. पायरी 2 मध्ये एक-दोन शब्द लिहा आणि अंदाजांवर टॅप करून वाक्य बनवा.</li>
+        <li data-i18n="tip_2">स्मरणशक्ती 0 ते 3 बदला आणि प्रत्येक वेळी “लिही” दाबा. कोणते खऱ्या भाषेसारखे वाटते? कोणते जास्त नक्कल करते?</li>
+        <li data-i18n="tip_3">सर्जनशीलतेचा स्लायडर हलवा. 0 वर मॉडेल नेहमी सर्वात वरचा शब्द निवडते आणि अनेकदा तेच तेच लिहिते; 2 वर विचित्र, आश्चर्यकारक वाक्ये लिहिते.</li>
+        <li data-i18n="tip_4">वर्ग उपक्रम: प्रत्येक गटाने पाठ्यपुस्तकातील किंवा स्वतः लिहिलेल्या 3–4 कविता “आमचा स्वतःचा मजकूर” मध्ये लिहाव्यात. मॉडेलला शिकवा आणि त्याच्याकडून नवीन कविता लिहून घ्या. ती मोठ्याने वाचा आणि रचलेल्या ओळी शोधा: त्या खऱ्या आहेत का? त्यांना काही अर्थ आहे का?</li>
+        <li data-i18n="tip_5">अंदाजाचा खेळ: टॅप करण्यापूर्वी वर्गाला पुढचा शब्द ओळखायला सांगा. वर्गाने मॉडेलला हरवले का?</li>
+        <li data-i18n="tip_6">सगळे याच डिव्हाइसवर चालते. तुमचा मजकूर फक्त इथेच सेव्ह होतो आणि कुठेही पाठवला जात नाही, म्हणून इंटरनेटशिवायही चालते.</li>
       </ul>
     </details>
   </main>

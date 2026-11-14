@@ -185,27 +185,27 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ब्लॉक जोड़कर प्रोग्राम बनाइए और उसे एक साथ फ़्लोचार्ट, स्यूडोकोड और Python में बदलते देखिए। फिर उसे एक-एक कदम चलाइए और ड्राई-रन टेबल भरिए, जैसे CBSE कक्षा 11 (अध्याय 4) में समस्या-समाधान सिखाया जाता है।</p>
 
-    <div id="print-head"><h2 id="print-title" class="no-i18n"></h2><p class="small muted" data-i18n="pr_by"></p></div>
+    <div id="print-head"><h2 id="print-title" class="no-i18n"></h2><p class="small muted" data-i18n="pr_by">AI Pathshala से बनाया · apnipathshala.ai</p></div>
 
     <section class="card toolbar no-print stack" id="toolbar">
       <div class="row">
         <div class="field">
-          <label for="ex-select" data-i18n="ex_label"></label>
+          <label for="ex-select" data-i18n="ex_label">उदाहरण प्रोग्राम</label>
           <select id="ex-select"></select>
         </div>
         <div class="field">
-          <label for="prog-name" data-i18n="prog_name"></label>
+          <label for="prog-name" data-i18n="prog_name">प्रोग्राम का नाम</label>
           <input id="prog-name" type="text" class="no-i18n" maxlength="60" data-i18n-placeholder="prog_name_ph">
         </div>
       </div>
       <div class="row">
-        <button type="button" class="btn" id="btn-new">✨ <span data-i18n="btn_new"></span></button>
-        <button type="button" class="btn" id="btn-save">💾 <span data-i18n="btn_save"></span></button>
-        <button type="button" class="btn" id="btn-load">📂 <span data-i18n="btn_load"></span></button>
-        <button type="button" class="btn" id="btn-share">🔗 <span data-i18n="btn_share"></span></button>
-        <button type="button" class="btn" id="btn-png">🖼️ <span data-i18n="btn_png"></span></button>
+        <button type="button" class="btn" id="btn-new">✨ <span data-i18n="btn_new">नया</span></button>
+        <button type="button" class="btn" id="btn-save">💾 <span data-i18n="btn_save">JSON सेव करें</span></button>
+        <button type="button" class="btn" id="btn-load">📂 <span data-i18n="btn_load">JSON खोलें</span></button>
+        <button type="button" class="btn" id="btn-share">🔗 <span data-i18n="btn_share">लिंक शेयर करें</span></button>
+        <button type="button" class="btn" id="btn-png">🖼️ <span data-i18n="btn_png">PNG डाउनलोड करें</span></button>
         <button type="button" class="btn" id="btn-print">🖨️ <span data-i18n="print"></span></button>
         <button type="button" class="btn btn-danger" id="btn-reset">↺ <span data-i18n="reset"></span></button>
       </div>
@@ -214,8 +214,8 @@
     <div class="fc-grid">
       <!-- ===== block editor ===== -->
       <section class="card fc-editor stack no-print" id="editor-card" aria-labelledby="ed-title">
-        <h2 class="h-sec" id="ed-title" data-i18n="ed_title"></h2>
-        <p class="muted small mb0" data-i18n="ed_hint"></p>
+        <h2 class="h-sec" id="ed-title" data-i18n="ed_title">प्रोग्राम के ब्लॉक</h2>
+        <p class="muted small mb0" data-i18n="ed_hint">Start और End अपने आप जुड़ते हैं। बदलने के लिए ब्लॉक पर टैप करें, जोड़ने के लिए + दबाएँ।</p>
         <div id="blocks" class="blk-list"></div>
       </section>
 
@@ -223,9 +223,9 @@
       <div class="fc-view-area">
       <section class="card fc-view" id="view-card">
         <div class="tabs no-print" role="tablist" id="tabs">
-          <button type="button" role="tab" id="tab-flow" data-panel="panel-flow" aria-controls="panel-flow" aria-selected="true">🔀 <span data-i18n="tab_flow"></span></button>
-          <button type="button" role="tab" id="tab-pseudo" data-panel="panel-pseudo" aria-controls="panel-pseudo" aria-selected="false">📝 <span data-i18n="tab_pseudo"></span></button>
-          <button type="button" role="tab" id="tab-python" data-panel="panel-python" aria-controls="panel-python" aria-selected="false">🐍 <span data-i18n="tab_python"></span></button>
+          <button type="button" role="tab" id="tab-flow" data-panel="panel-flow" aria-controls="panel-flow" aria-selected="true">🔀 <span data-i18n="tab_flow">फ़्लोचार्ट</span></button>
+          <button type="button" role="tab" id="tab-pseudo" data-panel="panel-pseudo" aria-controls="panel-pseudo" aria-selected="false">📝 <span data-i18n="tab_pseudo">स्यूडोकोड</span></button>
+          <button type="button" role="tab" id="tab-python" data-panel="panel-python" aria-controls="panel-python" aria-selected="false">🐍 <span data-i18n="tab_python">Python</span></button>
         </div>
         <section id="panel-flow" role="tabpanel" aria-labelledby="tab-flow">
           <div class="fc-tools">
@@ -233,22 +233,22 @@
               <button type="button" class="btn btn-sm icon-btn" id="zoom-out" data-i18n-aria-label="zoom_out" data-i18n-title="zoom_out">−</button>
               <span class="small mono ltr" id="zoom-pct" aria-live="polite">100%</span>
               <button type="button" class="btn btn-sm icon-btn" id="zoom-in" data-i18n-aria-label="zoom_in" data-i18n-title="zoom_in">+</button>
-              <button type="button" class="btn btn-sm" id="zoom-fit" data-i18n="zoom_fit"></button>
+              <button type="button" class="btn btn-sm" id="zoom-fit" data-i18n="zoom_fit">फ़िट</button>
             </div>
             <button type="button" class="btn btn-sm" id="fs">⛶ <span data-i18n="fullscreen"></span></button>
           </div>
           <div class="fc-wrap" id="fc-wrap"></div>
-          <p class="muted small" id="fc-hint" data-i18n="fc_hint" style="margin:8px 0 0"></p>
+          <p class="muted small" id="fc-hint" data-i18n="fc_hint" style="margin:8px 0 0">बदलने के लिए किसी आकृति पर टैप करें। हाइलाइट की गई आकृति वह कदम है जो अभी चल रहा है।</p>
           <div class="legend" id="legend"></div>
         </section>
         <section id="panel-pseudo" role="tabpanel" aria-labelledby="tab-pseudo" hidden>
-          <h3 class="print-h" data-i18n="pr_pseudo"></h3>
-          <div class="code-tools"><button type="button" class="btn btn-sm" id="copy-pseudo">📋 <span data-i18n="copy_code"></span></button></div>
+          <h3 class="print-h" data-i18n="pr_pseudo">स्यूडोकोड</h3>
+          <div class="code-tools"><button type="button" class="btn btn-sm" id="copy-pseudo">📋 <span data-i18n="copy_code">कोड कॉपी करें</span></button></div>
           <div class="code no-i18n" id="pseudo" dir="ltr" aria-live="off"></div>
         </section>
         <section id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
-          <h3 class="print-h" data-i18n="pr_python"></h3>
-          <div class="code-tools"><button type="button" class="btn btn-sm" id="copy-python">📋 <span data-i18n="copy_code"></span></button></div>
+          <h3 class="print-h" data-i18n="pr_python">Python</h3>
+          <div class="code-tools"><button type="button" class="btn btn-sm" id="copy-python">📋 <span data-i18n="copy_code">कोड कॉपी करें</span></button></div>
           <div class="code no-i18n" id="python" dir="ltr" aria-live="off"></div>
         </section>
       </section>
@@ -256,19 +256,19 @@
 
       <!-- ===== run / dry run ===== -->
       <section class="card fc-run stack no-print" id="run-card" aria-labelledby="run-title">
-        <h2 class="h-sec" id="run-title" data-i18n="run_title"></h2>
+        <h2 class="h-sec" id="run-title" data-i18n="run_title">चलाएँ (ड्राई रन)</h2>
         <div class="row run-btns">
-          <button type="button" class="btn btn-primary" id="btn-run">▶ <span data-i18n="btn_run"></span></button>
-          <button type="button" class="btn" id="btn-step">⏭ <span data-i18n="btn_step"></span></button>
-          <button type="button" class="btn" id="btn-pause">⏸ <span data-i18n="btn_pause"></span></button>
-          <button type="button" class="btn btn-ghost" id="btn-restart">↺ <span data-i18n="btn_restart"></span></button>
+          <button type="button" class="btn btn-primary" id="btn-run">▶ <span data-i18n="btn_run">चलाएँ</span></button>
+          <button type="button" class="btn" id="btn-step">⏭ <span data-i18n="btn_step">एक कदम</span></button>
+          <button type="button" class="btn" id="btn-pause">⏸ <span data-i18n="btn_pause">रोकें</span></button>
+          <button type="button" class="btn btn-ghost" id="btn-restart">↺ <span data-i18n="btn_restart">फिर से शुरू</span></button>
           <div class="field" style="margin-inline-start:auto">
-            <label for="speed" class="small" data-i18n="speed"></label>
+            <label for="speed" class="small" data-i18n="speed">गति</label>
             <select id="speed">
-              <option value="slow" data-i18n="sp_slow"></option>
-              <option value="normal" data-i18n="sp_normal"></option>
-              <option value="fast" data-i18n="sp_fast"></option>
-              <option value="instant" data-i18n="sp_instant"></option>
+              <option value="slow" data-i18n="sp_slow">धीमी</option>
+              <option value="normal" data-i18n="sp_normal">सामान्य</option>
+              <option value="fast" data-i18n="sp_fast">तेज़</option>
+              <option value="instant" data-i18n="sp_instant">तुरंत</option>
             </select>
           </div>
         </div>
@@ -277,23 +277,23 @@
         <div class="callout accent in-panel" id="in-panel" hidden>
           <label for="in-val" id="in-label" class="no-i18n"></label>
           <input type="text" id="in-val" class="no-i18n" dir="ltr" autocomplete="off" inputmode="text">
-          <button type="button" class="btn btn-primary" id="in-ok" data-i18n="in_ok"></button>
+          <button type="button" class="btn btn-primary" id="in-ok" data-i18n="in_ok">ठीक</button>
         </div>
         <div class="field">
-          <label for="inputs-pre" data-i18n="inputs_label"></label>
+          <label for="inputs-pre" data-i18n="inputs_label">इनपुट मान, हर पंक्ति में एक (क्रम से इस्तेमाल होंगे)</label>
           <textarea id="inputs-pre" class="no-i18n" rows="2" spellcheck="false"></textarea>
-          <span class="hint" data-i18n="inputs_hint"></span>
+          <span class="hint" data-i18n="inputs_hint">यह सूची ख़त्म होने पर प्रोग्राम आपसे पूछेगा।</span>
         </div>
         <div class="grid-2">
           <div>
-            <h3 class="h-sec" data-i18n="console_title"></h3>
+            <h3 class="h-sec" data-i18n="console_title">आउटपुट</h3>
             <div class="console no-i18n" id="console" role="log" aria-live="polite" aria-atomic="false"></div>
           </div>
           <div>
-            <h3 class="h-sec" data-i18n="vars_title"></h3>
+            <h3 class="h-sec" data-i18n="vars_title">वेरिएबल</h3>
             <div class="vars-wrap scroll-x">
               <table class="table" id="vars">
-                <thead><tr><th data-i18n="var_name"></th><th data-i18n="var_value"></th></tr></thead>
+                <thead><tr><th data-i18n="var_name">नाम</th><th data-i18n="var_value">मान</th></tr></thead>
                 <tbody></tbody>
               </table>
             </div>
@@ -303,8 +303,8 @@
 
       <section class="card fc-dry stack empty" id="dry-card" aria-labelledby="dry-title">
         <div class="dry-head">
-          <h2 class="h-sec mb0" id="dry-title" data-i18n="dr_title"></h2>
-          <button type="button" class="btn btn-sm" id="btn-csv">📊 <span data-i18n="dr_csv"></span></button>
+          <h2 class="h-sec mb0" id="dry-title" data-i18n="dr_title">ड्राई-रन टेबल</h2>
+          <button type="button" class="btn btn-sm" id="btn-csv">📊 <span data-i18n="dr_csv">CSV डाउनलोड करें</span></button>
         </div>
         <p class="muted small mb0" id="dry-note"></p>
         <div class="dry-wrap scroll-x">
@@ -314,28 +314,28 @@
     </div>
 
     <details class="card" id="words" style="margin-top:16px">
-      <summary><strong data-i18n="wk_title"></strong></summary>
+      <summary><strong data-i18n="wk_title">जानने लायक शब्द</strong></summary>
       <dl class="wk">
-        <div><dt data-i18n="wk_algorithm"></dt><dd data-i18n="wk_algorithm_d"></dd></div>
-        <div><dt data-i18n="wk_flowchart"></dt><dd data-i18n="wk_flowchart_d"></dd></div>
-        <div><dt data-i18n="wk_pseudocode"></dt><dd data-i18n="wk_pseudocode_d"></dd></div>
-        <div><dt data-i18n="wk_variable"></dt><dd data-i18n="wk_variable_d"></dd></div>
-        <div><dt data-i18n="wk_condition"></dt><dd data-i18n="wk_condition_d"></dd></div>
-        <div><dt data-i18n="wk_loop"></dt><dd data-i18n="wk_loop_d"></dd></div>
-        <div><dt data-i18n="wk_dryrun"></dt><dd data-i18n="wk_dryrun_d"></dd></div>
-        <div><dt data-i18n="wk_decomp"></dt><dd data-i18n="wk_decomp_d"></dd></div>
+        <div><dt data-i18n="wk_algorithm">एल्गोरिदम</dt><dd data-i18n="wk_algorithm_d">किसी समस्या को हल करने के कदमों की साफ़ सूची, जैसे कोई रेसिपी।</dd></div>
+        <div><dt data-i18n="wk_flowchart">फ़्लोचार्ट</dt><dd data-i18n="wk_flowchart_d">एल्गोरिदम की तस्वीर। हर आकृति एक कदम है और तीर क्रम दिखाते हैं।</dd></div>
+        <div><dt data-i18n="wk_pseudocode">स्यूडोकोड</dt><dd data-i18n="wk_pseudocode_d">असली कोड लिखने से पहले, एल्गोरिदम को सरल अंग्रेज़ी जैसी पंक्तियों में लिखना।</dd></div>
+        <div><dt data-i18n="wk_variable">वेरिएबल</dt><dd data-i18n="wk_variable_d">नाम वाला डिब्बा जिसमें मान रखा जाता है, जैसे total या marks। मान बदल सकता है।</dd></div>
+        <div><dt data-i18n="wk_condition">शर्त</dt><dd data-i18n="wk_condition_d">ऐसा सवाल जो या तो सही है या ग़लत, जैसे a &gt; b। यही रास्ता चुनता है।</dd></div>
+        <div><dt data-i18n="wk_loop">लूप</dt><dd data-i18n="wk_loop_d">कुछ कदमों को बार-बार दोहराना: जब तक शर्त सही है, या गिनती के हर मान के लिए।</dd></div>
+        <div><dt data-i18n="wk_dryrun">ड्राई रन</dt><dd data-i18n="wk_dryrun_d">एल्गोरिदम को हाथ से, एक-एक कदम चलाना और वेरिएबल के मान टेबल में लिखना।</dd></div>
+        <div><dt data-i18n="wk_decomp">विघटन (डीकंपोज़िशन)</dt><dd data-i18n="wk_decomp_d">बड़ी समस्या को छोटे-छोटे हिस्सों में बाँटना, जिन्हें हल करना आसान हो।</dd></div>
       </dl>
     </details>
 
     <details class="card" id="howto" style="margin-top:16px">
-      <summary><strong data-i18n="howto_title"></strong></summary>
+      <summary><strong data-i18n="howto_title">कैसे इस्तेमाल करें / कक्षा के लिए विचार</strong></summary>
       <ul>
-        <li data-i18n="how1"></li>
-        <li data-i18n="how2"></li>
-        <li data-i18n="how3"></li>
-        <li data-i18n="how4"></li>
-        <li data-i18n="how5"></li>
-        <li data-i18n="how6"></li>
+        <li data-i18n="how1">कोई उदाहरण चुनें, “चलाएँ” दबाएँ और देखें कि कैसे आकृति जलती है और वेरिएबल व आउटपुट बदलते हैं।</li>
+        <li data-i18n="how2">“चलाएँ” की जगह “एक कदम” दबाएँ और एक-एक आकृति चलाएँ। दबाने से पहले कक्षा से अगला मान बताने को कहें।</li>
+        <li data-i18n="how3">अपना प्रोग्राम बनाएँ: इनपुट, प्रोसेस, निर्णय और लूप ब्लॉक जोड़ें। फ़्लोचार्ट, स्यूडोकोड और Python अपने आप बदलते हैं।</li>
+        <li data-i18n="how4">कक्षा गतिविधि: हर समूह को एक समस्या दें (बस का किराया, बिजली का बिल, पास या फ़ेल)। समूह पहले काग़ज़ पर फ़्लोचार्ट बनाएँ, फिर यहाँ बनाकर ड्राई-रन टेबल मिलाएँ।</li>
+        <li data-i18n="how5">कॉपी के लिए फ़्लोचार्ट और स्यूडोकोड प्रिंट करें, या प्रेज़ेंटेशन के लिए PNG डाउनलोड करें। बाद में जारी रखने के लिए JSON सेव करें।</li>
+        <li data-i18n="how6">इसे तोड़कर देखें: ऐसा लूप बनाएँ जो कभी ख़त्म न हो, या शून्य से भाग दें, और प्रोग्राम का संदेश पढ़ें।</li>
       </ul>
     </details>
     <p class="muted tiny no-print" style="margin-top:12px">🔒 <span data-i18n="saved_local"></span></p>

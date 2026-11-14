@@ -345,30 +345,30 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro no-print" data-i18n="intro"></p>
+    <p class="edu-intro no-print" data-i18n="intro">چند منٹ میں کلاس کا ہفتہ وار ٹائم ٹیبل بنائیں: ٹیپ کر کے پیریڈ بھریں، اساتذہ کے ٹکراؤ پکڑیں، ابھی کون سا پیریڈ چل رہا ہے دیکھیں اور رنگین پرنٹ نکالیں۔ طلبہ اپنی پڑھائی کا ٹائم ٹیبل بھی بنا سکتے ہیں۔</p>
     <div id="live" class="sr-only" aria-live="polite"></div>
 
     <div class="no-print" id="ui">
       <section class="card bar">
         <div class="bar-row">
-          <label for="tt-sel" data-i18n="tt_label"></label>
+          <label for="tt-sel" data-i18n="tt_label">ٹائم ٹیبل</label>
           <select id="tt-sel" class="no-i18n"></select>
-          <button type="button" class="btn btn-primary" id="new-tt"><span aria-hidden="true">＋</span> <span data-i18n="new_tt"></span></button>
+          <button type="button" class="btn btn-primary" id="new-tt"><span aria-hidden="true">＋</span> <span data-i18n="new_tt">نیا ٹائم ٹیبل</span></button>
         </div>
         <p class="tiny muted saved-note"><span aria-hidden="true">🔒</span> <span data-i18n="saved_local"></span></p>
       </section>
 
       <div class="callout" id="sample-note" hidden>
-        <span data-i18n="sample_note"></span>
+        <span data-i18n="sample_note">یہ دو کلاسوں والا ایک نمونہ اسکول ہے، تاکہ آپ سب کچھ آزما سکیں۔ اسے بدلیں، یا “نیا ٹائم ٹیبل” سے اپنا بنائیں۔</span>
         <button type="button" class="btn btn-sm btn-ghost" id="sample-x" data-i18n-aria-label="close" data-i18n-title="close">✕</button>
       </div>
 
       <div class="tabs" role="tablist" data-i18n-aria-label="app_title">
-        <button type="button" role="tab" id="tab-grid" aria-controls="p-grid"><span class="ti" aria-hidden="true">📅</span><span data-i18n="tab_grid"></span></button>
-        <button type="button" role="tab" id="tab-setup" aria-controls="p-setup"><span class="ti" aria-hidden="true">⚙️</span><span data-i18n="tab_setup"></span></button>
-        <button type="button" role="tab" id="tab-summary" aria-controls="p-summary"><span class="ti" aria-hidden="true">📊</span><span data-i18n="tab_summary"></span></button>
-        <button type="button" role="tab" id="tab-teachers" aria-controls="p-teachers"><span class="ti" aria-hidden="true">🧑‍🏫</span><span data-i18n="tab_teachers"></span></button>
-        <button type="button" role="tab" id="tab-today" aria-controls="p-today"><span class="ti" aria-hidden="true">⏰</span><span data-i18n="tab_today"></span></button>
+        <button type="button" role="tab" id="tab-grid" aria-controls="p-grid"><span class="ti" aria-hidden="true">📅</span><span data-i18n="tab_grid">ٹائم ٹیبل</span></button>
+        <button type="button" role="tab" id="tab-setup" aria-controls="p-setup"><span class="ti" aria-hidden="true">⚙️</span><span data-i18n="tab_setup">سیٹنگ</span></button>
+        <button type="button" role="tab" id="tab-summary" aria-controls="p-summary"><span class="ti" aria-hidden="true">📊</span><span data-i18n="tab_summary">خلاصہ</span></button>
+        <button type="button" role="tab" id="tab-teachers" aria-controls="p-teachers"><span class="ti" aria-hidden="true">🧑‍🏫</span><span data-i18n="tab_teachers">اساتذہ</span></button>
+        <button type="button" role="tab" id="tab-today" aria-controls="p-today"><span class="ti" aria-hidden="true">⏰</span><span data-i18n="tab_today">آج</span></button>
       </div>
 
       <!-- TIMETABLE -->
@@ -376,12 +376,12 @@
         <div class="card stack" id="grid-card">
           <div class="toolbar">
             <div class="seg" id="mode-seg" role="group" data-i18n-aria-label="mode_label">
-              <button type="button" id="mode-paint" data-mode="paint"><span aria-hidden="true">🖌</span> <span data-i18n="mode_paint"></span></button>
-              <button type="button" id="mode-swap" data-mode="swap"><span aria-hidden="true">⇄</span> <span data-i18n="mode_swap"></span></button>
-              <button type="button" id="mode-pick" data-mode="pick"><span aria-hidden="true">☰</span> <span data-i18n="mode_pick"></span></button>
+              <button type="button" id="mode-paint" data-mode="paint"><span aria-hidden="true">🖌</span> <span data-i18n="mode_paint">بھریں</span></button>
+              <button type="button" id="mode-swap" data-mode="swap"><span aria-hidden="true">⇄</span> <span data-i18n="mode_swap">ادلا بدلی</span></button>
+              <button type="button" id="mode-pick" data-mode="pick"><span aria-hidden="true">☰</span> <span data-i18n="mode_pick">چنیں</span></button>
             </div>
             <span class="grow"></span>
-            <button type="button" class="btn" id="undo-btn" data-i18n-title="undo" data-i18n-aria-label="undo"><span aria-hidden="true">↶</span> <span class="hide-sm" data-i18n="undo"></span></button>
+            <button type="button" class="btn" id="undo-btn" data-i18n-title="undo" data-i18n-aria-label="undo"><span aria-hidden="true">↶</span> <span class="hide-sm" data-i18n="undo">واپس لیں</span></button>
             <button type="button" class="btn" id="fs-btn" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen"><span aria-hidden="true">⛶</span></button>
           </div>
           <div class="palette" id="palette" role="group" data-i18n-aria-label="subjects"></div>
@@ -391,35 +391,35 @@
           <div class="grid-foot">
             <p class="small mb0" id="grid-status" aria-live="polite"></p>
             <div class="row">
-              <button type="button" class="btn" id="autofill"><span aria-hidden="true">✨</span> <span data-i18n="autofill"></span></button>
-              <button type="button" class="btn btn-danger" id="clear-all"><span data-i18n="clear_all"></span></button>
+              <button type="button" class="btn" id="autofill"><span aria-hidden="true">✨</span> <span data-i18n="autofill">خالی پیریڈ خود بخود بھریں</span></button>
+              <button type="button" class="btn btn-danger" id="clear-all"><span data-i18n="clear_all">سارے پیریڈ خالی کریں</span></button>
             </div>
           </div>
         </div>
 
         <div class="card stack" id="subj-card">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="subjects"></h2>
-            <button type="button" class="btn" id="add-subj"><span aria-hidden="true">＋</span> <span data-i18n="add_subject"></span></button>
+            <h2 class="mb0" data-i18n="subjects">مضامین</h2>
+            <button type="button" class="btn" id="add-subj"><span aria-hidden="true">＋</span> <span data-i18n="add_subject">مضمون جوڑیں</span></button>
           </div>
-          <p class="muted small mb0" data-i18n="subj_help"></p>
+          <p class="muted small mb0" data-i18n="subj_help">نام، مختصر نام (چھوٹی اسکرین پر دکھتے ہیں)، اساتذہ اور رنگ بدلیں۔ “ہفتے میں” یعنی ہفتے میں کتنے پیریڈ چاہییں؛ خود بخود بھرنے میں یہی استعمال ہوتا ہے۔</p>
           <div id="subj-list"></div>
           <datalist id="teacher-dl" class="no-i18n"></datalist>
         </div>
 
         <div class="card stack">
-          <h2 class="mb0" data-i18n="share_title"></h2>
+          <h2 class="mb0" data-i18n="share_title">پرنٹ، محفوظ اور شیئر</h2>
           <div class="row share-row">
-            <button type="button" class="btn btn-primary" id="print-tt"><span aria-hidden="true">🖨</span> <span data-i18n="print_tt"></span></button>
-            <button type="button" class="btn" id="print-all"><span aria-hidden="true">🖨</span> <span data-i18n="print_all"></span></button>
-            <button type="button" class="btn" id="export-csv"><span aria-hidden="true">⬇</span> <span data-i18n="export_csv"></span></button>
-            <button type="button" class="btn" id="copy-text"><span aria-hidden="true">📋</span> <span data-i18n="copy_text"></span></button>
+            <button type="button" class="btn btn-primary" id="print-tt"><span aria-hidden="true">🖨</span> <span data-i18n="print_tt">یہ ٹائم ٹیبل پرنٹ کریں</span></button>
+            <button type="button" class="btn" id="print-all"><span aria-hidden="true">🖨</span> <span data-i18n="print_all">سارے ٹائم ٹیبل پرنٹ کریں</span></button>
+            <button type="button" class="btn" id="export-csv"><span aria-hidden="true">⬇</span> <span data-i18n="export_csv">CSV نکالیں</span></button>
+            <button type="button" class="btn" id="copy-text"><span aria-hidden="true">📋</span> <span data-i18n="copy_text">متن کاپی کریں</span></button>
           </div>
           <div class="row share-row">
-            <button type="button" class="btn" id="backup"><span aria-hidden="true">💾</span> <span data-i18n="backup"></span></button>
-            <button type="button" class="btn" id="restore"><span aria-hidden="true">📂</span> <span data-i18n="restore"></span></button>
+            <button type="button" class="btn" id="backup"><span aria-hidden="true">💾</span> <span data-i18n="backup">بیک اپ فائل محفوظ کریں</span></button>
+            <button type="button" class="btn" id="restore"><span aria-hidden="true">📂</span> <span data-i18n="restore">بیک اپ فائل کھولیں</span></button>
           </div>
-          <p class="muted small mb0" data-i18n="backup_help"></p>
+          <p class="muted small mb0" data-i18n="backup_help">متن کاپی کر کے WhatsApp میں پیسٹ کریں۔ بیک اپ فائل سے سارے ٹائم ٹیبل دوسرے فون یا کمپیوٹر میں لے جا سکتے ہیں۔</p>
         </div>
       </section>
 
@@ -427,69 +427,69 @@
       <section class="tabpanel" id="p-setup" role="tabpanel" aria-labelledby="tab-setup" hidden>
         <div class="grid-2">
           <div class="card stack">
-            <h2 class="mb0" data-i18n="this_tt"></h2>
-            <div class="field"><label for="tt-name" data-i18n="tt_name"></label><input type="text" id="tt-name" maxlength="60" data-i18n-placeholder="name_ph"></div>
+            <h2 class="mb0" data-i18n="this_tt">یہ ٹائم ٹیبل</h2>
+            <div class="field"><label for="tt-name" data-i18n="tt_name">نام</label><input type="text" id="tt-name" maxlength="60" data-i18n-placeholder="name_ph"></div>
             <div class="field">
-              <span class="lbl" data-i18n="tt_kind"></span>
+              <span class="lbl" data-i18n="tt_kind">قسم</span>
               <div class="seg" id="kind-seg" role="group" data-i18n-aria-label="tt_kind">
-                <button type="button" data-kind="class"><span aria-hidden="true">🏫</span> <span data-i18n="kind_class"></span></button>
-                <button type="button" data-kind="study"><span aria-hidden="true">🎒</span> <span data-i18n="kind_study"></span></button>
+                <button type="button" data-kind="class"><span aria-hidden="true">🏫</span> <span data-i18n="kind_class">کلاس (اسکول)</span></button>
+                <button type="button" data-kind="study"><span aria-hidden="true">🎒</span> <span data-i18n="kind_study">پڑھائی (طالب علم)</span></button>
               </div>
             </div>
-            <div class="field" id="ct-field"><label for="tt-ct" data-i18n="class_teacher"></label><input type="text" id="tt-ct" maxlength="60" list="teacher-dl" data-i18n-placeholder="teacher_ph"></div>
+            <div class="field" id="ct-field"><label for="tt-ct" data-i18n="class_teacher">کلاس ٹیچر</label><input type="text" id="tt-ct" maxlength="60" list="teacher-dl" data-i18n-placeholder="teacher_ph"></div>
             <div class="row">
-              <button type="button" class="btn" id="dup-tt"><span aria-hidden="true">📑</span> <span data-i18n="duplicate"></span></button>
-              <button type="button" class="btn btn-danger" id="del-tt"><span data-i18n="delete_tt"></span></button>
+              <button type="button" class="btn" id="dup-tt"><span aria-hidden="true">📑</span> <span data-i18n="duplicate">کاپی بنائیں</span></button>
+              <button type="button" class="btn btn-danger" id="del-tt"><span data-i18n="delete_tt">یہ ٹائم ٹیبل ہٹائیں</span></button>
             </div>
           </div>
           <div class="card stack">
-            <h2 class="mb0" data-i18n="days_title"></h2>
+            <h2 class="mb0" data-i18n="days_title">اسکول کے دن</h2>
             <div class="days-box" id="days-box" role="group" data-i18n-aria-label="days_title"></div>
             <hr class="divider">
-            <h2 class="mb0" data-i18n="display_title"></h2>
+            <h2 class="mb0" data-i18n="display_title">ظاہری شکل</h2>
             <div class="field">
-              <span class="lbl" data-i18n="clock_label"></span>
+              <span class="lbl" data-i18n="clock_label">گھڑی</span>
               <div class="seg" id="clock-seg" role="group" data-i18n-aria-label="clock_label">
-                <button type="button" data-h24="0" data-i18n="clock_12"></button>
-                <button type="button" data-h24="1" data-i18n="clock_24"></button>
+                <button type="button" data-h24="0" data-i18n="clock_12">12 گھنٹے</button>
+                <button type="button" data-h24="1" data-i18n="clock_24">24 گھنٹے</button>
               </div>
             </div>
             <div class="field">
-              <span class="lbl" data-i18n="layout_label"></span>
+              <span class="lbl" data-i18n="layout_label">ترتیب</span>
               <div class="seg" id="layout-seg" role="group" data-i18n-aria-label="layout_label">
-                <button type="button" data-layout="auto" data-i18n="layout_auto"></button>
-                <button type="button" data-layout="rows" data-i18n="layout_rows"></button>
-                <button type="button" data-layout="cols" data-i18n="layout_cols"></button>
+                <button type="button" data-layout="auto" data-i18n="layout_auto">خود بخود</button>
+                <button type="button" data-layout="rows" data-i18n="layout_rows">دن قطاروں میں</button>
+                <button type="button" data-layout="cols" data-i18n="layout_cols">دن کالموں میں</button>
               </div>
             </div>
-            <label class="check"><input type="checkbox" id="show-t"> <span data-i18n="show_teachers"></span></label>
-            <div class="field"><label for="school" data-i18n="school_name"></label><input type="text" id="school" maxlength="160" data-i18n-placeholder="school_ph"></div>
+            <label class="check"><input type="checkbox" id="show-t"> <span data-i18n="show_teachers">پیریڈ میں اساتذہ کے نام دکھائیں</span></label>
+            <div class="field"><label for="school" data-i18n="school_name">اسکول کا نام (پرنٹ میں سب سے اوپر)</label><input type="text" id="school" maxlength="160" data-i18n-placeholder="school_ph"></div>
           </div>
         </div>
 
         <div class="card stack">
-          <h2 class="mb0" data-i18n="times_title"></h2>
-          <p class="muted small mb0" data-i18n="times_help"></p>
+          <h2 class="mb0" data-i18n="times_title">پیریڈ اور وقفے</h2>
+          <p class="muted small mb0" data-i18n="times_help">ہر پیریڈ اور وقفے کا شروع اور ختم ہونے کا وقت بھریں۔ ↑ ↓ سے قطار کھسکانے پر بھی دن اسی وقت سے شروع ہوتا ہے۔</p>
           <div id="slots"></div>
           <datalist id="brk-dl"></datalist>
-          <p class="callout danger small mb0" id="slot-warn" hidden data-i18n="time_bad"></p>
+          <p class="callout danger small mb0" id="slot-warn" hidden data-i18n="time_bad">کچھ اوقات غلط ہیں: کوئی قطار شروع ہونے سے پہلے ختم ہو رہی ہے، یا اوپر والی قطار سے ٹکرا رہی ہے۔</p>
           <div class="row">
-            <button type="button" class="btn" id="add-period"><span aria-hidden="true">＋</span> <span data-i18n="add_period"></span></button>
-            <button type="button" class="btn" id="add-break"><span aria-hidden="true">＋</span> <span data-i18n="add_break"></span></button>
+            <button type="button" class="btn" id="add-period"><span aria-hidden="true">＋</span> <span data-i18n="add_period">پیریڈ جوڑیں</span></button>
+            <button type="button" class="btn" id="add-break"><span aria-hidden="true">＋</span> <span data-i18n="add_break">وقفہ جوڑیں</span></button>
           </div>
           <hr class="divider">
-          <h3 class="mb0" data-i18n="recalc_title"></h3>
+          <h3 class="mb0" data-i18n="recalc_title">سارے اوقات خود بخود بھریں</h3>
           <div class="form-row">
-            <div class="field"><label for="auto-start" data-i18n="start_at"></label><input type="time" id="auto-start"></div>
-            <div class="field"><label for="auto-len" data-i18n="period_len"></label><input type="number" id="auto-len" min="5" max="240" step="5" inputmode="numeric"></div>
-            <button type="button" class="btn btn-primary" id="recalc"><span data-i18n="recalc"></span></button>
+            <div class="field"><label for="auto-start" data-i18n="start_at">دن شروع ہوتا ہے</label><input type="time" id="auto-start"></div>
+            <div class="field"><label for="auto-len" data-i18n="period_len">ایک پیریڈ (منٹ)</label><input type="number" id="auto-len" min="5" max="240" step="5" inputmode="numeric"></div>
+            <button type="button" class="btn btn-primary" id="recalc"><span data-i18n="recalc">اوقات دوبارہ گنیں</span></button>
           </div>
-          <p class="muted small mb0" data-i18n="recalc_help"></p>
+          <p class="muted small mb0" data-i18n="recalc_help">ہر پیریڈ کو اتنے منٹ ملتے ہیں، ایک کے بعد ایک۔ وقفے اپنی لمبائی برقرار رکھتے ہیں۔</p>
         </div>
 
         <div class="card stack">
-          <h2 class="mb0" data-i18n="reset_title"></h2>
-          <p class="muted small mb0" data-i18n="reset_help"></p>
+          <h2 class="mb0" data-i18n="reset_title">دوبارہ شروع کریں</h2>
+          <p class="muted small mb0" data-i18n="reset_help">اس ڈیوائس کے آپ کے سارے ٹائم ٹیبل مٹ جائیں گے اور نمونہ اسکول واپس آ جائے گا۔</p>
           <div class="row"><button type="button" class="btn btn-danger" id="reset-all"><span data-i18n="reset"></span></button></div>
         </div>
       </section>
@@ -501,17 +501,17 @@
           <div class="tiles" id="sum-tiles" aria-live="polite"></div>
         </div>
         <div class="card stack">
-          <h2 class="mb0" data-i18n="sum_subjects"></h2>
+          <h2 class="mb0" data-i18n="sum_subjects">ہفتے میں ہر مضمون کے پیریڈ</h2>
           <div class="scroll-x"><table class="table" id="sum-table"></table></div>
         </div>
         <div class="grid-2">
           <div class="card stack">
-            <h2 class="mb0" data-i18n="sum_days"></h2>
+            <h2 class="mb0" data-i18n="sum_days">ہفتے بھر میں تقسیم</h2>
             <div class="scroll-x" id="spread"></div>
-            <p class="muted small mb0" data-i18n="spread_help"></p>
+            <p class="muted small mb0" data-i18n="spread_help">ہر دن کس مضمون کے کتنے پیریڈ ہیں۔ موٹا عدد یعنی ایک ہی دن میں دو یا زیادہ۔</p>
           </div>
           <div class="card stack" id="sum-teach-card">
-            <h2 class="mb0" data-i18n="sum_teachers"></h2>
+            <h2 class="mb0" data-i18n="sum_teachers">اس کلاس کے اساتذہ</h2>
             <div class="scroll-x" id="sum-teach"></div>
           </div>
         </div>
@@ -519,18 +519,18 @@
 
       <!-- TEACHERS -->
       <section class="tabpanel" id="p-teachers" role="tabpanel" aria-labelledby="tab-teachers" hidden>
-        <p class="callout" id="no-teachers" hidden data-i18n="no_teachers"></p>
+        <p class="callout" id="no-teachers" hidden data-i18n="no_teachers">ٹائم ٹیبل ٹیب میں مضامین کے اساتذہ کے نام لکھیں، پھر یہاں ہر استاد کا ٹائم ٹیبل، کام کا بوجھ اور ٹکراؤ دکھیں گے۔</p>
         <div id="teach-main" class="stack">
           <div class="card stack">
-            <h2 class="mb0" data-i18n="clashes_title"></h2>
-            <p class="muted small mb0" data-i18n="clash_help"></p>
+            <h2 class="mb0" data-i18n="clashes_title">اساتذہ کے ٹکراؤ</h2>
+            <p class="muted small mb0" data-i18n="clash_help">ٹکراؤ یعنی ایک ہی استاد کی ایک ہی وقت میں دو کلاسیں۔ ایک جیسا نام یعنی ایک ہی شخص۔</p>
             <div id="clash-list" aria-live="polite"></div>
           </div>
           <div class="card stack">
             <div class="teach-head">
-              <h2 class="mb0" data-i18n="teacher_view"></h2>
+              <h2 class="mb0" data-i18n="teacher_view">استاد کا ٹائم ٹیبل</h2>
               <div class="row">
-                <label for="teacher-sel" class="sr-only" data-i18n="pick_teacher"></label>
+                <label for="teacher-sel" class="sr-only" data-i18n="pick_teacher">استاد چنیں</label>
                 <select id="teacher-sel" class="no-i18n"></select>
                 <button type="button" class="btn" id="print-teacher"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
               </div>
@@ -540,16 +540,16 @@
           </div>
           <div class="grid-2">
             <div class="card stack">
-              <h2 class="mb0" data-i18n="teachers_title"></h2>
+              <h2 class="mb0" data-i18n="teachers_title">اساتذہ کا کام کا بوجھ (ساری کلاسیں)</h2>
               <div class="scroll-x"><table class="table" id="load-table"></table></div>
             </div>
             <div class="card stack">
-              <h2 class="mb0" data-i18n="free_title"></h2>
-              <p class="muted small mb0" data-i18n="free_help"></p>
+              <h2 class="mb0" data-i18n="free_title">کون فارغ ہے؟ (متبادل پیریڈ کے لیے)</h2>
+              <p class="muted small mb0" data-i18n="free_help">دن اور پیریڈ چنیں، دیکھیں اس وقت کن اساتذہ کی کوئی کلاس نہیں۔ اس دن کم پیریڈ والے اساتذہ پہلے دکھتے ہیں۔</p>
               <div class="free-pick">
-                <label class="sr-only" for="free-day" data-i18n="col_day"></label>
+                <label class="sr-only" for="free-day" data-i18n="col_day">دن</label>
                 <select id="free-day"></select>
-                <label class="sr-only" for="free-slot" data-i18n="col_time"></label>
+                <label class="sr-only" for="free-slot" data-i18n="col_time">وقت</label>
                 <select id="free-slot"></select>
               </div>
               <ul id="free-list" aria-live="polite"></ul>
@@ -564,7 +564,7 @@
           <div class="today-head">
             <h2><span class="no-i18n" id="today-name"></span> <span class="td-day" id="today-day"></span></h2>
             <div class="row">
-              <button type="button" class="btn" id="copy-day"><span aria-hidden="true">📋</span> <span data-i18n="copy_day"></span></button>
+              <button type="button" class="btn" id="copy-day"><span aria-hidden="true">📋</span> <span data-i18n="copy_day">یہ دن کاپی کریں</span></button>
               <button type="button" class="btn" id="today-fs" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen"><span aria-hidden="true">⛶</span></button>
             </div>
           </div>
@@ -576,14 +576,14 @@
       </section>
 
       <details class="card help">
-        <summary data-i18n="help_title"></summary>
+        <summary data-i18n="help_title">استعمال کا طریقہ / کلاس کے لیے خیالات</summary>
         <ul>
-          <li data-i18n="tip1"></li>
-          <li data-i18n="tip2"></li>
-          <li data-i18n="tip3"></li>
-          <li data-i18n="tip4"></li>
-          <li data-i18n="tip5"></li>
-          <li data-i18n="tip6"></li>
+          <li data-i18n="tip1">کوئی مضمون چنیں، پھر پیریڈ پر ٹیپ کریں۔ دو پیریڈ بدلنے کے لیے “ادلا بدلی” اور غلطی ہونے پر “واپس لیں” استعمال کریں۔</li>
+          <li data-i18n="tip2">ہر مضمون کے ہفتے کے پیریڈ لکھیں اور “خالی پیریڈ خود بخود بھریں” دبائیں۔ یہ مضامین کو الگ الگ دنوں میں بانٹتا ہے اور اساتذہ کے ٹکراؤ سے بچاتا ہے۔</li>
+          <li data-i18n="tip3">“نیا ٹائم ٹیبل ← اگلی کلاس، وہی اوقات” سے ہر کلاس کا ٹائم ٹیبل بنائیں۔ پھر اساتذہ ٹیب میں ہر استاد کا ہفتہ اور ٹکراؤ سرخ رنگ میں دکھیں گے۔</li>
+          <li data-i18n="tip4">اسمارٹ بورڈ پر “آج” ٹیب فل اسکرین میں کھولیں: ابھی کا پیریڈ اور باقی منٹ دکھتے ہیں۔</li>
+          <li data-i18n="tip5">کلاس کی سرگرمی: طلبہ سے اپنا پڑھائی ٹائم ٹیبل بنوائیں (نیا ٹائم ٹیبل ← طالب علم کا پڑھائی ٹائم ٹیبل)، پھر خلاصے میں دیکھیں کہ مضامین، کھیل اور آرام میں توازن ہے یا نہیں۔</li>
+          <li data-i18n="tip6">نوٹس بورڈ کے لیے لینڈ اسکیپ میں پرنٹ کریں، یا کلاس کے WhatsApp گروپ کے لیے متن کاپی کریں۔</li>
         </ul>
       </details>
     </div>

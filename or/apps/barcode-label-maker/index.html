@@ -117,147 +117,147 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="privacy muted"><span class="lock" aria-hidden="true">🔒</span><span data-i18n="privacy_line"></span></p>
+    <p class="edu-intro" data-i18n="intro">ଆପଣଙ୍କ ଦୋକାନ ବା ଛୋଟ ବ୍ରାଣ୍ଡ ପାଇଁ ବାରକୋଡ୍ ଥିବା ଦାମ ଲେବଲ୍ ତିଆରି କରନ୍ତୁ: EAN-13 (ଚେକ୍ ଡିଜିଟ୍ ନିଜେ ଯୋଗ ହୁଏ) ବା Code 128, ସାଙ୍ଗରେ MRP, ନିଟ୍ ପରିମାଣ, ବ୍ୟାଚ୍, FSSAI ଓ ନିର୍ମାତାଙ୍କ ଠିକଣା। A4 ଲେବଲ୍ ସିଟ୍ ବା ଲେବଲ୍ ରୋଲରେ ପ୍ରିଣ୍ଟ କରନ୍ତୁ, କିମ୍ବା PNG ସେଭ୍ କରନ୍ତୁ।</p>
+    <p class="privacy muted"><span class="lock" aria-hidden="true">🔒</span><span data-i18n="privacy_line">ଇଣ୍ଟରନେଟ୍ ବିନା ଚାଲେ। ଆପଣଙ୍କ ପ୍ରଡକ୍ଟ ଓ CSV ଫାଇଲ୍ ଏହି ବ୍ରାଉଜରରେ ହିଁ ରହେ; କିଛି ଅପଲୋଡ୍ ହୁଏ ନାହିଁ।</span></p>
 
     <div class="layout">
       <div class="stack" style="margin:0">
         <section class="card" id="productCard">
-          <h2>📦 <span data-i18n="h_product"></span></h2>
+          <h2>📦 <span data-i18n="h_product">1. ପ୍ରଡକ୍ଟ</span></h2>
           <div class="field">
-            <span data-i18n="type_label"></span>
+            <span data-i18n="type_label">ବାରକୋଡ୍ ପ୍ରକାର</span>
             <div class="seg" role="group" data-i18n-aria-label="type_label">
-              <button type="button" id="type-auto" data-type="auto" data-i18n="type_auto"></button>
+              <button type="button" id="type-auto" data-type="auto" data-i18n="type_auto">ନିଜେ ନିଜେ</button>
               <button type="button" id="type-ean13" data-type="ean13">EAN-13</button>
               <button type="button" id="type-code128" data-type="code128">Code 128</button>
             </div>
           </div>
           <div class="fgrid" style="margin-top:12px">
-            <label class="field wide"><span data-i18n="code_label"></span>
+            <label class="field wide"><span data-i18n="code_label">ବାରକୋଡ୍ ନମ୍ବର ବା ଲେଖା</span>
               <input id="f-code" class="code-input no-i18n" type="text" inputmode="text" autocomplete="off" spellcheck="false" maxlength="60" dir="ltr" data-i18n-placeholder="code_ph"></label>
           </div>
           <div id="codeStatus" aria-live="polite"></div>
           <div class="fgrid" style="margin-top:12px">
-            <label class="field wide"><span data-i18n="name_label"></span><input id="f-name" class="no-i18n" dir="auto" type="text" maxlength="80" data-i18n-placeholder="name_ph"></label>
-            <label class="field"><span data-i18n="mrp_label"></span><input id="f-mrp" class="no-i18n" type="text" inputmode="decimal" maxlength="12" placeholder="120"></label>
-            <label class="field"><span data-i18n="qty_label"></span><input id="f-qty" class="no-i18n" dir="auto" type="text" maxlength="24" data-i18n-placeholder="qty_ph"></label>
-            <label class="field"><span data-i18n="batch_label"></span><input id="f-batch" class="no-i18n" dir="auto" type="text" maxlength="24" placeholder="B-2610"></label>
-            <label class="field"><span data-i18n="copies_label"></span><input id="f-copies" type="number" min="1" max="2000" step="1" value="1"></label>
+            <label class="field wide"><span data-i18n="name_label">ପ୍ରଡକ୍ଟର ନାମ</span><input id="f-name" class="no-i18n" dir="auto" type="text" maxlength="80" data-i18n-placeholder="name_ph"></label>
+            <label class="field"><span data-i18n="mrp_label">MRP (₹)</span><input id="f-mrp" class="no-i18n" type="text" inputmode="decimal" maxlength="12" placeholder="120"></label>
+            <label class="field"><span data-i18n="qty_label">ନିଟ୍ ପରିମାଣ</span><input id="f-qty" class="no-i18n" dir="auto" type="text" maxlength="24" data-i18n-placeholder="qty_ph"></label>
+            <label class="field"><span data-i18n="batch_label">ବ୍ୟାଚ୍ ନମ୍ବର</span><input id="f-batch" class="no-i18n" dir="auto" type="text" maxlength="24" placeholder="B-2610"></label>
+            <label class="field"><span data-i18n="copies_label">କେତୋଟି ଲେବଲ୍</span><input id="f-copies" type="number" min="1" max="2000" step="1" value="1"></label>
           </div>
           <div class="row" style="margin-top:14px">
-            <button type="button" class="btn btn-primary" id="btnAdd">➕ <span data-i18n="add_to_sheet"></span></button>
-            <button type="button" class="btn" id="btnFill">🧾 <span data-i18n="fill_sheet"></span></button>
-            <button type="button" class="btn btn-primary" id="btnUpdate" hidden>💾 <span data-i18n="update_item"></span></button>
+            <button type="button" class="btn btn-primary" id="btnAdd">➕ <span data-i18n="add_to_sheet">ସିଟରେ ଯୋଗ କରନ୍ତୁ</span></button>
+            <button type="button" class="btn" id="btnFill">🧾 <span data-i18n="fill_sheet">ବାକି ସିଟ୍ ଭରି ଦିଅନ୍ତୁ</span></button>
+            <button type="button" class="btn btn-primary" id="btnUpdate" hidden>💾 <span data-i18n="update_item">ପରିବର୍ତ୍ତନ ସେଭ୍ କରନ୍ତୁ</span></button>
             <button type="button" class="btn btn-ghost" id="btnCancelEdit" hidden><span data-i18n="cancel"></span></button>
           </div>
           <p class="small muted mb0" id="editNote" hidden style="margin-top:8px"></p>
         </section>
 
         <section class="card" id="commonCard">
-          <h2>🏷️ <span data-i18n="h_common"></span></h2>
-          <p class="small muted" data-i18n="common_hint"></p>
+          <h2>🏷️ <span data-i18n="h_common">2. ପ୍ରତି ଲେବଲରେ ସମାନ</span></h2>
+          <p class="small muted" data-i18n="common_hint">ଯେଉଁ ଧାଡ଼ି ଲେବଲରେ ଦରକାର ନାହିଁ, ତାର ଘର ଖାଲି ରଖନ୍ତୁ।</p>
           <div class="fgrid">
-            <label class="field"><span data-i18n="pkd_label"></span><input id="f-pkd" type="month"></label>
-            <label class="field"><span data-i18n="bb_label"></span><input id="f-bb" class="no-i18n" dir="auto" type="text" maxlength="40" data-i18n-placeholder="bb_ph"></label>
-            <label class="field"><span data-i18n="fssai_label"></span><input id="f-fssai" class="no-i18n" type="text" inputmode="numeric" maxlength="20" dir="ltr" placeholder="10012345678901"></label>
-            <label class="field wide"><span data-i18n="mfd_label"></span><input id="f-mfd" class="no-i18n" dir="auto" type="text" maxlength="120" data-i18n-placeholder="mfd_ph"></label>
-            <label class="field wide"><span data-i18n="qr_label"></span><input id="f-qr" class="no-i18n" type="text" maxlength="300" dir="ltr" data-i18n-placeholder="qr_ph"></label>
+            <label class="field"><span data-i18n="pkd_label">ପ୍ୟାକିଂ ମାସ</span><input id="f-pkd" type="month"></label>
+            <label class="field"><span data-i18n="bb_label">ଏହା ପୂର୍ବରୁ ବ୍ୟବହାର କରନ୍ତୁ</span><input id="f-bb" class="no-i18n" dir="auto" type="text" maxlength="40" data-i18n-placeholder="bb_ph"></label>
+            <label class="field"><span data-i18n="fssai_label">FSSAI ଲାଇସେନ୍ସ ନମ୍ବର</span><input id="f-fssai" class="no-i18n" type="text" inputmode="numeric" maxlength="20" dir="ltr" placeholder="10012345678901"></label>
+            <label class="field wide"><span data-i18n="mfd_label">ନିର୍ମାତା / ବିକ୍ରେତା</span><input id="f-mfd" class="no-i18n" dir="auto" type="text" maxlength="120" data-i18n-placeholder="mfd_ph"></label>
+            <label class="field wide"><span data-i18n="qr_label">ଲେବଲରେ QR କୋଡ୍ (ଇଚ୍ଛା ହେଲେ)</span><input id="f-qr" class="no-i18n" type="text" maxlength="300" dir="ltr" data-i18n-placeholder="qr_ph"></label>
           </div>
-          <p class="small callout warning" id="fssaiWarn" hidden data-i18n="fssai_warn" style="margin-top:10px"></p>
+          <p class="small callout warning" id="fssaiWarn" hidden data-i18n="fssai_warn" style="margin-top:10px">FSSAI ଲାଇସେନ୍ସ ବା ପଞ୍ଜୀକରଣ ନମ୍ବର 14 ଅଙ୍କର ହୁଏ। ଦୟାକରି ଯାଞ୍ଚ କରନ୍ତୁ।</p>
           <div class="row" style="margin-top:12px">
-            <label class="check"><input type="checkbox" id="f-incl"> <span data-i18n="incl_label"></span></label>
+            <label class="check"><input type="checkbox" id="f-incl"> <span data-i18n="incl_label">MRP ପରେ &quot;(ସମସ୍ତ କର ସହିତ)&quot; ଦେଖାନ୍ତୁ</span></label>
           </div>
           <div class="field" style="margin-top:12px">
-            <span data-i18n="labellang_label"></span>
+            <span data-i18n="labellang_label">ଲେବଲରେ ଶବ୍ଦ</span>
             <div class="seg" role="group" data-i18n-aria-label="labellang_label">
               <button type="button" id="ll-en" data-ll="en">English</button>
-              <button type="button" id="ll-ui" data-ll="ui" data-i18n="labellang_ui"></button>
+              <button type="button" id="ll-ui" data-ll="ui" data-i18n="labellang_ui">ଏହି ପୃଷ୍ଠାର ଭାଷା</button>
             </div>
           </div>
         </section>
       </div>
 
       <section class="card stick" id="previewCard">
-        <h2>👀 <span data-i18n="h_preview"></span></h2>
+        <h2>👀 <span data-i18n="h_preview">ଲେବଲ୍ ପ୍ରିଭ୍ୟୁ</span></h2>
         <div class="lp-wrap"><div class="lp-box" id="labelPreview" aria-live="polite"></div></div>
         <p class="small muted" id="labelSize" style="margin:8px 0 0;text-align:center"></p>
         <div id="labelWarn" class="stack" style="margin-top:10px"></div>
         <div class="row" style="margin-top:12px">
-          <button type="button" class="btn" id="btnPng">🖼️ <span data-i18n="png_btn"></span></button>
+          <button type="button" class="btn" id="btnPng">🖼️ <span data-i18n="png_btn">PNG ଡାଉନଲୋଡ୍</span></button>
         </div>
       </section>
     </div>
 
     <section class="card" id="sheetCard" style="margin-top:16px">
-      <h2>🖨️ <span data-i18n="h_sheet"></span></h2>
+      <h2>🖨️ <span data-i18n="h_sheet">3. ଲେବଲ୍ ସିଟ୍ ଓ ପ୍ରିଣ୍ଟ</span></h2>
       <div class="field">
-        <span data-i18n="preset_label"></span>
+        <span data-i18n="preset_label">ଲେବଲ୍ କାଗଜ</span>
         <div class="seg preset-seg" role="group" data-i18n-aria-label="preset_label">
-          <button type="button" id="preset-a4_65" data-preset="a4_65" data-i18n="preset_65"></button>
-          <button type="button" id="preset-a4_24" data-preset="a4_24" data-i18n="preset_24"></button>
-          <button type="button" id="preset-roll" data-preset="roll" data-i18n="preset_roll"></button>
-          <button type="button" id="preset-custom" data-preset="custom" data-i18n="preset_custom"></button>
+          <button type="button" id="preset-a4_65" data-preset="a4_65" data-i18n="preset_65">A4 · 65ଟି ଲେବଲ୍ (38 × 21 mm)</button>
+          <button type="button" id="preset-a4_24" data-preset="a4_24" data-i18n="preset_24">A4 · 24ଟି ଲେବଲ୍ (70 × 37 mm)</button>
+          <button type="button" id="preset-roll" data-preset="roll" data-i18n="preset_roll">ରୋଲ୍ · ପାଖାପାଖି 2ଟି (50 × 25 mm)</button>
+          <button type="button" id="preset-custom" data-preset="custom" data-i18n="preset_custom">ନିଜ ମାପ</button>
         </div>
       </div>
       <div id="customBox" hidden style="margin-top:12px">
         <div class="fgrid">
-          <label class="field"><span data-i18n="c_page"></span><select id="c-page"><option value="a4" data-i18n="c_page_a4"></option><option value="roll" data-i18n="c_page_roll"></option></select></label>
-          <label class="field"><span data-i18n="c_w"></span><input id="c-w" type="number" min="10" max="200" step="0.1"></label>
-          <label class="field"><span data-i18n="c_h"></span><input id="c-h" type="number" min="8" max="280" step="0.1"></label>
-          <label class="field"><span data-i18n="c_cols"></span><input id="c-cols" type="number" min="1" max="12" step="1"></label>
-          <label class="field"><span data-i18n="c_rows"></span><input id="c-rows" type="number" min="1" max="40" step="1"></label>
-          <label class="field"><span data-i18n="c_top"></span><input id="c-top" type="number" min="0" max="60" step="0.1"></label>
-          <label class="field"><span data-i18n="c_left"></span><input id="c-left" type="number" min="0" max="60" step="0.1"></label>
-          <label class="field"><span data-i18n="c_gx"></span><input id="c-gx" type="number" min="0" max="30" step="0.1"></label>
-          <label class="field"><span data-i18n="c_gy"></span><input id="c-gy" type="number" min="0" max="30" step="0.1"></label>
+          <label class="field"><span data-i18n="c_page">କାଗଜ</span><select id="c-page"><option value="a4" data-i18n="c_page_a4">A4 ସିଟ୍</option><option value="roll" data-i18n="c_page_roll">ଲେବଲ୍ ରୋଲ୍ (ପ୍ରତି ପୃଷ୍ଠାରେ ଗୋଟିଏ ଧାଡ଼ି)</option></select></label>
+          <label class="field"><span data-i18n="c_w">ଲେବଲର ଓସାର (mm)</span><input id="c-w" type="number" min="10" max="200" step="0.1"></label>
+          <label class="field"><span data-i18n="c_h">ଲେବଲର ଉଚ୍ଚତା (mm)</span><input id="c-h" type="number" min="8" max="280" step="0.1"></label>
+          <label class="field"><span data-i18n="c_cols">ଗୋଟିଏ ଧାଡ଼ିରେ ଲେବଲ୍</span><input id="c-cols" type="number" min="1" max="12" step="1"></label>
+          <label class="field"><span data-i18n="c_rows">ସିଟରେ ଧାଡ଼ି</span><input id="c-rows" type="number" min="1" max="40" step="1"></label>
+          <label class="field"><span data-i18n="c_top">ଉପର ମାର୍ଜିନ୍ (mm)</span><input id="c-top" type="number" min="0" max="60" step="0.1"></label>
+          <label class="field"><span data-i18n="c_left">ବାମ ମାର୍ଜିନ୍ (mm)</span><input id="c-left" type="number" min="0" max="60" step="0.1"></label>
+          <label class="field"><span data-i18n="c_gx">ଲେବଲ୍ ମଧ୍ୟରେ ଫାଙ୍କ (mm)</span><input id="c-gx" type="number" min="0" max="30" step="0.1"></label>
+          <label class="field"><span data-i18n="c_gy">ଧାଡ଼ି ମଧ୍ୟରେ ଫାଙ୍କ (mm)</span><input id="c-gy" type="number" min="0" max="30" step="0.1"></label>
         </div>
       </div>
       <p class="callout warning small" id="fitWarn" hidden style="margin-top:10px"></p>
       <details id="adjustBox" style="margin-top:12px">
-        <summary data-i18n="adjust_title"></summary>
+        <summary data-i18n="adjust_title">ପ୍ରିଣ୍ଟର ସଜାଡ଼ିବା ଓ ଅଧା ବ୍ୟବହୃତ ସିଟ୍</summary>
         <div class="fgrid" style="margin-top:10px">
-          <label class="field"><span data-i18n="off_x"></span><input id="o-x" type="number" min="-15" max="15" step="0.5" value="0"></label>
-          <label class="field"><span data-i18n="off_y"></span><input id="o-y" type="number" min="-15" max="15" step="0.5" value="0"></label>
-          <label class="field"><span data-i18n="skip_label"></span><input id="o-skip" type="number" min="0" max="500" step="1" value="0"></label>
+          <label class="field"><span data-i18n="off_x">ଡାହାଣକୁ ଘୁଞ୍ଚାନ୍ତୁ (mm, ମାଇନସ୍ = ବାମକୁ)</span><input id="o-x" type="number" min="-15" max="15" step="0.5" value="0"></label>
+          <label class="field"><span data-i18n="off_y">ତଳକୁ ଘୁଞ୍ଚାନ୍ତୁ (mm, ମାଇନସ୍ = ଉପରକୁ)</span><input id="o-y" type="number" min="-15" max="15" step="0.5" value="0"></label>
+          <label class="field"><span data-i18n="skip_label">ପୂର୍ବରୁ ବ୍ୟବହୃତ ଲେବଲ୍ ଛାଡ଼ନ୍ତୁ</span><input id="o-skip" type="number" min="0" max="500" step="1" value="0"></label>
         </div>
-        <label class="check" style="margin-top:10px"><input type="checkbox" id="o-border"> <span data-i18n="border_label"></span></label>
+        <label class="check" style="margin-top:10px"><input type="checkbox" id="o-border"> <span data-i18n="border_label">ଲେବଲ୍ ଚାରିପଟେ ପତଳା କଟିଂ ଗାର ପ୍ରିଣ୍ଟ କରନ୍ତୁ</span></label>
       </details>
 
-      <h3 style="margin:16px 0 8px" data-i18n="items_title"></h3>
+      <h3 style="margin:16px 0 8px" data-i18n="items_title">ସିଟରେ ଲେବଲ୍</h3>
       <div class="scroll-x">
         <table class="table items-table">
-          <thead><tr><th data-i18n="col_name"></th><th data-i18n="col_code"></th><th data-i18n="col_mrp"></th><th data-i18n="col_copies"></th><th><span class="sr-only" data-i18n="col_actions"></span></th></tr></thead>
+          <thead><tr><th data-i18n="col_name">ପ୍ରଡକ୍ଟ</th><th data-i18n="col_code">ବାରକୋଡ୍</th><th data-i18n="col_mrp">MRP</th><th data-i18n="col_copies">ଲେବଲ୍</th><th><span class="sr-only" data-i18n="col_actions">ବଦଳାନ୍ତୁ ବା ହଟାନ୍ତୁ</span></th></tr></thead>
           <tbody id="itemsBody"></tbody>
         </table>
       </div>
-      <p class="muted small" id="itemsEmpty" hidden data-i18n="items_empty"></p>
+      <p class="muted small" id="itemsEmpty" hidden data-i18n="items_empty">ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ପ୍ରଡକ୍ଟ ନାହିଁ। ଉପରେ ଯୋଗ କରନ୍ତୁ ବା CSV ଫାଇଲ୍ ଇମ୍ପୋର୍ଟ କରନ୍ତୁ।</p>
       <p class="callout danger small" id="itemsErr" hidden></p>
       <div class="row" style="margin-top:12px">
-        <button type="button" class="btn" id="btnImport">📥 <span data-i18n="import_csv"></span></button>
-        <button type="button" class="btn btn-ghost" id="btnSampleCsv">📄 <span data-i18n="sample_csv"></span></button>
-        <button type="button" class="btn btn-ghost" id="btnClear">🗑️ <span data-i18n="clear_list"></span></button>
+        <button type="button" class="btn" id="btnImport">📥 <span data-i18n="import_csv">CSV ଇମ୍ପୋର୍ଟ</span></button>
+        <button type="button" class="btn btn-ghost" id="btnSampleCsv">📄 <span data-i18n="sample_csv">ନମୁନା CSV</span></button>
+        <button type="button" class="btn btn-ghost" id="btnClear">🗑️ <span data-i18n="clear_list">ତାଲିକା ଖାଲି କରନ୍ତୁ</span></button>
       </div>
-      <p class="small muted" data-i18n="csv_hint" style="margin-top:8px"></p>
+      <p class="small muted" data-i18n="csv_hint" style="margin-top:8px">CSV ସ୍ତମ୍ଭ: name, code, mrp, qty (ଆଉ ଇଚ୍ଛା ହେଲେ batch, copies)। Excel ରେ: File → Save As → CSV।</p>
 
       <div class="callout accent" style="margin-top:14px">
-        <p class="tip100 mb0" data-i18n="tip_100"></p>
+        <p class="tip100 mb0" data-i18n="tip_100">ପ୍ରିଣ୍ଟ ବେଳେ Scale 100% (ବା &quot;Actual size&quot;) ବାଛନ୍ତୁ, &quot;Fit to page&quot; ଓ ହେଡର/ଫୁଟର ବନ୍ଦ କରନ୍ତୁ। ପ୍ରଥମେ ସାଦା କାଗଜରେ ପରୀକ୍ଷା କରନ୍ତୁ: ତାକୁ ଲେବଲ୍ ସିଟ୍ ପଛରେ ରଖି ଆଲୁଅରେ ମିଳାନ୍ତୁ।</p>
       </div>
       <div class="row spread" style="margin-top:12px">
         <p class="mb0" id="sheetInfo" aria-live="polite"></p>
-        <button type="button" class="btn btn-primary btn-lg" id="btnPrint">🖨️ <span data-i18n="print_btn"></span></button>
+        <button type="button" class="btn btn-primary btn-lg" id="btnPrint">🖨️ <span data-i18n="print_btn">ଲେବଲ୍ ପ୍ରିଣ୍ଟ କରନ୍ତୁ</span></button>
       </div>
       <div class="sheet-pages" id="sheetPages" style="margin-top:12px"></div>
     </section>
 
     <details class="card" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">କିପରି ବ୍ୟବହାର କରିବେ / ଦୋକାନ ପାଇଁ ପରାମର୍ଶ</strong></summary>
       <ul class="help-list">
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">12 ଅଙ୍କର ନମ୍ବର ଲେଖି EAN-13 ବାଛନ୍ତୁ: ଆପ୍ 13ତମ ଚେକ୍ ଡିଜିଟ୍ ନିଜେ ଯୋଗ କରେ। ପୂରା 13 ଅଙ୍କ ଲେଖିଲେ ଆପ୍ ଯାଞ୍ଚ କରି କହେ କୌଣସି ଅଙ୍କ ଭୁଲ୍ କି ନାହିଁ।</li>
+        <li data-i18n="help_2">890ରୁ ଆରମ୍ଭ EAN-13 ନମ୍ବର ଭାରତର। ବଡ଼ ଷ୍ଟୋରରେ ବିକିବା ପାଇଁ GS1 India ରୁ ନିଜ ନମ୍ବର ନେବାକୁ ପଡ଼େ; ନିଜ ଦୋକାନ ପାଇଁ RICE-1KG ଭଳି Code 128 SKU ଯଥେଷ୍ଟ।</li>
+        <li data-i18n="help_3">ପ୍ୟାକେଟ୍ ଖାଦ୍ୟରେ MRP, ନିଟ୍ ପରିମାଣ, ପ୍ୟାକିଂ ମାସ, ବେଷ୍ଟ ବିଫୋର, FSSAI ନମ୍ବର ଓ ନିର୍ମାତାଙ୍କ ନାମ-ଠିକଣା ଦରକାର। ଯେଉଁ ଧାଡ଼ି ଲାଗୁ ନୁହେଁ, ତାର ଘର ଖାଲି ରଖନ୍ତୁ।</li>
+        <li data-i18n="help_4">ଅନେକ ପ୍ରଡକ୍ଟ ଥିଲେ Excel ରେ CSV ତିଆରି କରନ୍ତୁ (name, code, mrp, qty, copies) ଓ ଇମ୍ପୋର୍ଟ କରନ୍ତୁ। ପ୍ରତି ଧାଡ଼ି ସିଟରେ ଲେବଲ୍ ହୋଇଯାଏ।</li>
+        <li data-i18n="help_5">ଅଧା ବ୍ୟବହୃତ ସିଟ୍? &quot;ପୂର୍ବରୁ ବ୍ୟବହୃତ ଲେବଲ୍ ଛାଡ଼ନ୍ତୁ&quot;ରେ ସଂଖ୍ୟା ଲେଖନ୍ତୁ। ପ୍ରିଣ୍ଟ ଟିକେ ଘୁଞ୍ଚିଗଲେ କିଛି mm ଘୁଞ୍ଚାଇ ପୁଣି ପ୍ରିଣ୍ଟ କରନ୍ତୁ।</li>
+        <li data-i18n="help_6">ଶହ ଶହ ଲେବଲ୍ ଛାପିବା ଆଗରୁ ଗୋଟିଏ ପରୀକ୍ଷା ଲେବଲ୍ ଆପଣଙ୍କ ବିଲିଂ ଆପ୍ ବା କୌଣସି ମାଗଣା ବାରକୋଡ୍ ସ୍କାନର ଆପ୍‌ରେ ସ୍କାନ୍ କରି ଦେଖନ୍ତୁ।</li>
       </ul>
     </details>
   </main>

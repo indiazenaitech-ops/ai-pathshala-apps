@@ -147,68 +147,68 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">మీ CTC నుంచి ప్రతి నెలా చేతికి వచ్చే జీతాన్ని లెక్కించండి, పాత మరియు కొత్త పన్ను విధానాలను పోల్చండి, జీతం పెంపుతో నిజంగా ఎంత వస్తుందో చూడండి, లేదా కావలసిన చేతి జీతం కోసం ఎంత CTC అడగాలో తెలుసుకోండి.</p>
 
     <div class="callout stx-head" role="note" id="hdr">
       <p class="yr" id="hdrYear"></p>
       <p id="hdrNote"></p>
     </div>
-    <p class="stx-priv"><span class="badge success" data-i18n="privacy"></span> <span class="muted" data-i18n="scope"></span></p>
+    <p class="stx-priv"><span class="badge success" data-i18n="privacy">🔒 మీ జీతం, ఫైళ్లు ఈ పరికరం దాటి బయటకు వెళ్లవు. లాగిన్ లేదు, ఫోన్ నంబర్ లేదు.</span> <span class="muted" data-i18n="scope">జీతం ఆదాయానికి మాత్రమే (మూలధన లాభాలు, అద్దె లేదా వ్యాపార ఆదాయం కాదు).</span></p>
 
     <div class="stx-tabs no-print" role="tablist" data-i18n-aria-label="modes_label" id="tabs">
-      <button type="button" role="tab" id="tab-salary" data-mode="salary" aria-controls="results"><span class="ic" aria-hidden="true">💰</span><span data-i18n="mode_salary"></span></button>
-      <button type="button" role="tab" id="tab-compare" data-mode="compare" aria-controls="results"><span class="ic" aria-hidden="true">⚖️</span><span data-i18n="mode_compare"></span></button>
-      <button type="button" role="tab" id="tab-hike" data-mode="hike" aria-controls="results"><span class="ic" aria-hidden="true">📈</span><span data-i18n="mode_hike"></span></button>
-      <button type="button" role="tab" id="tab-reverse" data-mode="reverse" aria-controls="results"><span class="ic" aria-hidden="true">🎯</span><span data-i18n="mode_reverse"></span></button>
+      <button type="button" role="tab" id="tab-salary" data-mode="salary" aria-controls="results"><span class="ic" aria-hidden="true">💰</span><span data-i18n="mode_salary">CTC → చేతి జీతం</span></button>
+      <button type="button" role="tab" id="tab-compare" data-mode="compare" aria-controls="results"><span class="ic" aria-hidden="true">⚖️</span><span data-i18n="mode_compare">పాత vs కొత్త విధానం</span></button>
+      <button type="button" role="tab" id="tab-hike" data-mode="hike" aria-controls="results"><span class="ic" aria-hidden="true">📈</span><span data-i18n="mode_hike">జీతం పెంపు</span></button>
+      <button type="button" role="tab" id="tab-reverse" data-mode="reverse" aria-controls="results"><span class="ic" aria-hidden="true">🎯</span><span data-i18n="mode_reverse">చేతి జీతం → CTC</span></button>
     </div>
 
     <div class="stx-split">
       <section class="card stx-in" id="inputs" aria-labelledby="h-your">
         <div class="grp">
-          <h2 id="h-your" data-i18n="sec_salary"></h2>
+          <h2 id="h-your" data-i18n="sec_salary">మీ జీతం</h2>
           <label class="stx-f" id="fCtc">
-            <span class="lbl" id="ctcLbl" data-i18n="ctc"></span>
+            <span class="lbl" id="ctcLbl" data-i18n="ctc">వార్షిక CTC (కంపెనీ మొత్తం ఖర్చు)</span>
             <input type="text" id="ctc" class="big" data-k="ctc" inputmode="decimal" autocomplete="off" data-i18n-placeholder="ctc_ph">
             <span class="prev" id="ctcPrev" aria-live="polite"></span>
           </label>
           <label class="stx-f" id="fHike" hidden>
-            <span class="lbl" data-i18n="hike_pct"></span>
+            <span class="lbl" data-i18n="hike_pct">పెంపు (%)</span>
             <input type="number" id="hike" class="big" data-k="hike" min="-90" max="1000" step="0.5" inputmode="decimal">
             <span class="prev" id="hikePrev" aria-live="polite"></span>
           </label>
           <label class="stx-f" id="fTarget" hidden>
-            <span class="lbl" data-i18n="target"></span>
+            <span class="lbl" data-i18n="target">నెలకు చేతికి ఎంత జీతం కావాలి</span>
             <input type="text" id="target" class="big" data-k="target" inputmode="decimal" autocomplete="off" data-i18n-placeholder="target_ph">
             <span class="prev" id="targetPrev" aria-live="polite"></span>
           </label>
           <label class="stx-f">
-            <span class="lbl" data-i18n="bonus"></span>
+            <span class="lbl" data-i18n="bonus">వార్షిక బోనస్ / వేరియబుల్ పే (CTC లోపలే)</span>
             <input type="text" id="bonus" data-k="bonus" inputmode="decimal" autocomplete="off" data-i18n-placeholder="bonus_ph">
-            <span class="hint" data-i18n="bonus_hint"></span>
+            <span class="hint" data-i18n="bonus_hint">ఇది ఏడాదికి ఒకసారి వస్తుంది, అందుకే నెల జీతంలో కలపలేదు.</span>
             <span class="prev" id="bonusPrev" aria-live="polite"></span>
           </label>
           <div class="stx-f" id="fRegime">
-            <span class="lbl" id="regLbl" data-i18n="regime"></span>
+            <span class="lbl" id="regLbl" data-i18n="regime">పన్ను విధానం</span>
             <div class="seg full" role="group" aria-labelledby="regLbl">
-              <button type="button" id="regNew" data-regime="new" data-i18n="reg_new"></button>
-              <button type="button" id="regOld" data-regime="old" data-i18n="reg_old"></button>
+              <button type="button" id="regNew" data-regime="new" data-i18n="reg_new">కొత్త విధానం</button>
+              <button type="button" id="regOld" data-regime="old" data-i18n="reg_old">పాత విధానం</button>
             </div>
-            <span class="hint" data-i18n="regime_hint"></span>
+            <span class="hint" data-i18n="regime_hint">కొత్త విధానం (సెక్షన్ 202, గతంలో 115BAC) దానంతట అదే వర్తిస్తుంది. ఉద్యోగులు ప్రతి ఏటా పాత విధానాన్ని ఎంచుకోవచ్చు.</span>
           </div>
           <label class="stx-f">
-            <span class="lbl" data-i18n="age"></span>
+            <span class="lbl" data-i18n="age">మీ వయసు</span>
             <select id="age" data-k="age">
-              <option value="below60" data-i18n="age_lt60"></option>
-              <option value="age60" data-i18n="age_60"></option>
-              <option value="age80" data-i18n="age_80"></option>
+              <option value="below60" data-i18n="age_lt60">60 కంటే తక్కువ</option>
+              <option value="age60" data-i18n="age_60">60 నుంచి 79</option>
+              <option value="age80" data-i18n="age_80">80 లేదా ఎక్కువ</option>
             </select>
           </label>
         </div>
 
         <div class="grp">
-          <h2 data-i18n="sec_breakup"></h2>
+          <h2 data-i18n="sec_breakup">CTC విభజన</h2>
           <div class="stx-f">
-            <label class="lbl" for="basicPct" data-i18n="basic_pct"></label>
+            <label class="lbl" for="basicPct" data-i18n="basic_pct">బేసిక్ జీతం (ఫిక్స్‌డ్ CTC లో %)</label>
             <div class="with-seg">
               <input type="number" id="basicPct" data-k="basicPct" min="10" max="100" step="1" inputmode="decimal">
               <div class="seg" role="group" data-i18n-aria-label="basic_pct">
@@ -216,74 +216,74 @@
                 <button type="button" data-basic="50">50%</button>
               </div>
             </div>
-            <span class="hint" data-i18n="basic_hint"></span>
+            <span class="hint" data-i18n="basic_hint">ఫిక్స్‌డ్ CTC అంటే CTC నుంచి బోనస్ తీసివేసింది. చాలా కంపెనీలు 40% లేదా 50% పెడతాయి.</span>
           </div>
           <div class="stx-f">
-            <span class="lbl" id="cityLbl" data-i18n="city"></span>
+            <span class="lbl" id="cityLbl" data-i18n="city">మీరు ఉండే నగరం</span>
             <div class="seg full" role="group" aria-labelledby="cityLbl">
-              <button type="button" id="cityMetro" data-city="metro" data-i18n="city_metro"></button>
-              <button type="button" id="cityOther" data-city="other" data-i18n="city_other"></button>
+              <button type="button" id="cityMetro" data-city="metro" data-i18n="city_metro">మెట్రో నగరం</button>
+              <button type="button" id="cityOther" data-city="other" data-i18n="city_other">ఇతర నగరం</button>
             </div>
             <span class="hint" data-rk="metro_list"></span>
           </div>
           <div class="two">
             <label class="stx-f">
-              <span class="lbl" data-i18n="hra_pct"></span>
+              <span class="lbl" data-i18n="hra_pct">HRA (బేసిక్‌లో %)</span>
               <input type="number" id="hraPct" data-k="hraPct" min="0" max="100" step="1" inputmode="decimal">
             </label>
             <label class="stx-f">
-              <span class="lbl" data-i18n="nps"></span>
+              <span class="lbl" data-i18n="nps">కంపెనీ NPS (బేసిక్‌లో %)</span>
               <input type="number" id="nps" data-k="nps" min="0" max="14" step="1" inputmode="decimal">
             </label>
           </div>
           <p class="hint" data-rk="nps_hint"></p>
           <label class="stx-f">
-            <span class="lbl" data-i18n="pf"></span>
+            <span class="lbl" data-i18n="pf">ప్రావిడెంట్ ఫండ్ (PF)</span>
             <select id="pf" data-k="pf">
-              <option value="full" data-i18n="pf_full"></option>
+              <option value="full" data-i18n="pf_full">పూర్తి బేసిక్‌లో 12%</option>
               <option value="cap" data-rk="pf_cap"></option>
-              <option value="none" data-i18n="pf_none"></option>
+              <option value="none" data-i18n="pf_none">PF లేదు</option>
             </select>
           </label>
           <label class="check"><input type="checkbox" id="grat" data-k="grat"> <span data-rk="grat"></span></label>
           <div class="two">
             <label class="stx-f">
-              <span class="lbl" data-i18n="state"></span>
+              <span class="lbl" data-i18n="state">రాష్ట్రం (వృత్తి పన్ను కోసం)</span>
               <select id="state" data-k="state"></select>
             </label>
             <label class="stx-f">
-              <span class="lbl" data-i18n="pt"></span>
+              <span class="lbl" data-i18n="pt">వార్షిక వృత్తి పన్ను (₹)</span>
               <input type="text" id="pt" data-k="pt" inputmode="numeric" autocomplete="off">
             </label>
           </div>
-          <p class="hint" id="ptHint" data-i18n="pt_hint"></p>
+          <p class="hint" id="ptHint" data-i18n="pt_hint">మీ రాష్ట్రం, జీతం ఆధారంగా నింపాం. పే స్లిప్‌లో వేరే మొత్తం ఉంటే మీ మొత్తం రాయండి.</p>
         </div>
 
         <div class="grp">
           <details id="dedBox">
-            <summary data-i18n="sec_ded"></summary>
+            <summary data-i18n="sec_ded">పాత విధానం మినహాయింపులు</summary>
             <div class="inner">
-              <p class="hint muted small mb0" data-i18n="ded_hint"></p>
+              <p class="hint muted small mb0" data-i18n="ded_hint">ఇవి పాత విధానంలో మాత్రమే పనికొస్తాయి. లేకపోతే ఖాళీగా వదిలేయండి.</p>
               <label class="stx-f">
-                <span class="lbl" data-i18n="rent"></span>
+                <span class="lbl" data-i18n="rent">నెలకు మీరు కట్టే ఇంటి అద్దె</span>
                 <input type="text" id="rent" data-k="rent" inputmode="decimal" autocomplete="off">
               </label>
               <label class="stx-f">
-                <span class="lbl" data-i18n="c80"></span>
+                <span class="lbl" data-i18n="c80">PF కాకుండా 80C పొదుపు (PPF, ELSS, LIC, పిల్లల ఫీజు, గృహ రుణం అసలు)</span>
                 <input type="text" id="c80" data-k="c80" inputmode="decimal" autocomplete="off">
                 <span class="hint" id="c80Hint"></span>
               </label>
               <div class="two">
                 <label class="stx-f">
-                  <span class="lbl" data-i18n="d80s"></span>
+                  <span class="lbl" data-i18n="d80s">80D ఆరోగ్య బీమా: మీరు, కుటుంబం</span>
                   <input type="text" id="d80s" data-k="d80s" inputmode="decimal" autocomplete="off">
                 </label>
                 <label class="stx-f">
-                  <span class="lbl" data-i18n="d80p"></span>
+                  <span class="lbl" data-i18n="d80p">80D ఆరోగ్య బీమా: తల్లిదండ్రులు</span>
                   <input type="text" id="d80p" data-k="d80p" inputmode="decimal" autocomplete="off">
                 </label>
               </div>
-              <label class="check"><input type="checkbox" id="par60" data-k="par60"> <span data-i18n="par60"></span></label>
+              <label class="check"><input type="checkbox" id="par60" data-k="par60"> <span data-i18n="par60">నా తల్లిదండ్రుల వయసు 60 లేదా ఎక్కువ</span></label>
               <label class="stx-f">
                 <span class="lbl" data-rk="ccd"></span>
                 <input type="text" id="ccd" data-k="ccd" inputmode="decimal" autocomplete="off">
@@ -298,13 +298,13 @@
 
         <div class="grp stx-act no-print">
           <button type="button" class="btn btn-primary" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
-          <button type="button" class="btn" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy_sum"></span></button>
-          <button type="button" class="btn" id="csvBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="csv"></span></button>
+          <button type="button" class="btn" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy_sum">సారాంశం కాపీ చేయండి</span></button>
+          <button type="button" class="btn" id="csvBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="csv">CSV డౌన్‌లోడ్ చేయండి</span></button>
           <button type="button" class="btn btn-danger" id="resetBtn" data-i18n="reset"></button>
         </div>
         <div class="quick no-print" id="quick" hidden>
           <span class="q-txt" id="quickTxt"></span>
-          <a href="#results" class="btn btn-sm btn-primary" id="quickGo" data-i18n="see_details"></a>
+          <a href="#results" class="btn btn-sm btn-primary" id="quickGo" data-i18n="see_details">వివరాలు చూడండి ↓</a>
         </div>
       </section>
 
@@ -312,13 +312,13 @@
     </div>
 
     <details class="card" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">ఎలా వాడాలి / పనికి చిట్కాలు</strong></summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">మొత్తాన్ని మాట్లాడినట్టే రాయండి: 12L, 12.5 లక్షలు, 1.2 cr, 85k లేదా 12,00,000. బాక్స్ కింద ఉన్న లైన్ యాప్ ఏమి అర్థం చేసుకుందో చూపిస్తుంది.</li>
+        <li data-i18n="tip2">ఆఫర్ లెటర్ తెరిచి బేసిక్ %, HRA, PF, బోనస్‌ను &quot;CTC విభజన&quot;లో నింపండి. అప్పుడు చేతి జీతం మీ పే స్లిప్‌తో దాదాపు సరిపోతుంది.</li>
+        <li data-i18n="tip3">ఆఫీసులో విధానం ఎంచుకునే ముందు పాత విధానం మినహాయింపులు (అద్దె, 80C, 80D, గృహ రుణం) నింపి &quot;పాత vs కొత్త విధానం&quot; తెరవండి. పాత విధానం లాభంగా మారాలంటే ఇంకా ఎంత పెట్టుబడి కావాలో బ్రేక్-ఈవెన్ లైన్ చెబుతుంది.</li>
+        <li data-i18n="tip4">ఉద్యోగ ఆఫర్‌పై బేరం ఆడుతున్నారా? ఎంత CTC అడగాలో &quot;చేతి జీతం → CTC&quot;లో, పెంపులో ఎంత బ్యాంకుకు వస్తుందో &quot;జీతం పెంపు&quot;లో చూడండి.</li>
+        <li data-i18n="tip5">HR బృందాలు, వ్యవస్థాపకులు: కొత్త ఉద్యోగికి జీతం నిర్మాణం వివరించడానికి సారాంశం ప్రింట్ చేయండి లేదా CSV డౌన్‌లోడ్ చేయండి. ఏదీ ఎక్కడికీ అప్‌లోడ్ కాదు.</li>
       </ul>
     </details>
 

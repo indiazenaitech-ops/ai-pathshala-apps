@@ -136,30 +136,30 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <div class="ss-privacy callout success small"><span class="ic" aria-hidden="true">🔒</span><p data-i18n="privacy"></p></div>
+    <p class="edu-intro" data-i18n="intro">குறிப்புகள், ஒரு பாடம், செய்திக் கட்டுரை அல்லது அலுவலகச் சுற்றறிக்கையை ஒட்டுங்கள் அல்லது PDF-ஐத் திறங்கள்; சில நொடிகளில் முக்கியக் கருத்துகள், முக்கியச் சொற்கள், மிக முக்கியமான வாக்கியங்கள் கிடைக்கும்.</p>
+    <div class="ss-privacy callout success small"><span class="ic" aria-hidden="true">🔒</span><p data-i18n="privacy">உங்கள் உரை எங்கும் பதிவேற்றப்படாது. சுருக்கம் இந்தச் சாதனத்திலேயே உருவாகிறது, இணையம் இல்லாமலும் வேலை செய்யும். PDF திறக்க மட்டும் முதல் முறை இணையம் தேவை.</p></div>
 
     <h1 class="print-only" id="printTitle"></h1>
     <div class="ss-layout">
       <section class="card stack" id="inCard" aria-labelledby="inH">
         <div class="ss-head">
-          <h2 id="inH" data-i18n="input_h"></h2>
+          <h2 id="inH" data-i18n="input_h">உங்கள் உரை</h2>
           <span class="muted small" id="inStats" aria-live="polite"></span>
         </div>
         <div class="ss-tools">
-          <button class="btn" type="button" id="sampleBtn"><span class="ic" aria-hidden="true">📄</span><span data-i18n="btn_sample"></span></button>
-          <label class="btn" for="fileIn" id="openBtn"><span class="ic" aria-hidden="true">📂</span><span data-i18n="btn_open"></span></label>
+          <button class="btn" type="button" id="sampleBtn"><span class="ic" aria-hidden="true">📄</span><span data-i18n="btn_sample">மாதிரி உரை</span></button>
+          <label class="btn" for="fileIn" id="openBtn"><span class="ic" aria-hidden="true">📂</span><span data-i18n="btn_open">.txt அல்லது PDF திற</span></label>
           <input type="file" id="fileIn" class="sr-only" accept=".txt,.text,.md,.csv,.srt,.vtt,.pdf,text/plain,application/pdf" data-i18n-aria-label="btn_open">
           <button class="btn btn-ghost" type="button" id="clearBtn"><span class="ic" aria-hidden="true">🧹</span><span data-i18n="clear"></span></button>
         </div>
-        <label for="text" class="sr-only" data-i18n="aria_input"></label>
+        <label for="text" class="sr-only" data-i18n="aria_input">சுருக்க வேண்டிய உரை</label>
         <textarea id="text" class="no-i18n" dir="auto" spellcheck="false" data-i18n-placeholder="input_ph"></textarea>
-        <p class="tiny muted ss-hint" data-i18n="drop_hint"></p>
+        <p class="tiny muted ss-hint" data-i18n="drop_hint">குறிப்பு: .txt அல்லது PDF கோப்பை இந்தப் பெட்டியில் இழுத்தும் விடலாம்.</p>
         <div id="fileBox" class="callout small ss-file" role="status" hidden>
           <span class="ss-spin" id="fileSpin" aria-hidden="true"></span>
           <span class="msg" id="fileMsg"></span>
           <button class="btn" type="button" id="fileRetry" data-i18n="try_again" hidden></button>
-          <a class="btn" id="fileOcr" href="../../../apps/smart-summarizer/../image-to-text/index.html" data-i18n="link_ocr" hidden></a>
+          <a class="btn" id="fileOcr" href="../../../apps/smart-summarizer/../image-to-text/index.html" data-i18n="link_ocr" hidden>படத்திலிருந்து உரை செயலியைத் திற</a>
           <div class="progress" id="fileProg" hidden><span id="fileBar"></span></div>
         </div>
       </section>
@@ -167,10 +167,10 @@
       <section class="card stack" id="outCard" aria-labelledby="outH">
         <div class="ss-opts">
           <div class="ss-opt">
-            <span class="lbl" id="lenLbl" data-i18n="len_label"></span>
+            <span class="lbl" id="lenLbl" data-i18n="len_label">நீளம்</span>
             <div class="seg" id="modeSeg" role="group" aria-labelledby="lenLbl">
-              <button type="button" data-mode="points" data-i18n="mode_points"></button>
-              <button type="button" data-mode="pct" data-i18n="mode_pct"></button>
+              <button type="button" data-mode="points" data-i18n="mode_points">கருத்துகள்</button>
+              <button type="button" data-mode="pct" data-i18n="mode_pct">உரையின் %</button>
             </div>
             <div class="ss-range">
               <input type="range" id="lenRange" min="3" max="10" step="1" value="5" data-i18n-aria-label="len_label">
@@ -178,18 +178,18 @@
             </div>
           </div>
           <div class="ss-opt" id="engRow" hidden>
-            <span class="lbl" id="engLbl" data-i18n="engine_label"></span>
+            <span class="lbl" id="engLbl" data-i18n="engine_label">முறை</span>
             <div class="seg" id="engSeg" role="group" aria-labelledby="engLbl">
-              <button type="button" data-eng="quick" data-i18n="eng_quick"></button>
-              <button type="button" data-eng="chrome" data-i18n="eng_chrome"></button>
+              <button type="button" data-eng="quick" data-i18n="eng_quick">விரைவு (ஆஃப்லைன்)</button>
+              <button type="button" data-eng="chrome" data-i18n="eng_chrome">Chrome AI</button>
             </div>
             <div class="ss-ai" id="aiOpts" hidden>
-              <p class="small" data-i18n="eng_chrome_note"></p>
+              <p class="small" data-i18n="eng_chrome_note">Chrome-இன் சாதனத்தில் இயங்கும் AI (Gemini Nano): எதுவும் அனுப்பப்படாது. இது புதிய வாக்கியங்களை எழுதும்; இப்போது ஆங்கில உரைக்கு மட்டுமே வேலை செய்யும்.</p>
               <div class="seg" id="typeSeg" role="group" data-i18n-aria-label="ai_type_label">
-                <button type="button" data-type="key-points" data-i18n="type_points"></button>
-                <button type="button" data-type="tldr" data-i18n="type_tldr"></button>
+                <button type="button" data-type="key-points" data-i18n="type_points">முக்கியக் கருத்துகள்</button>
+                <button type="button" data-type="tldr" data-i18n="type_tldr">சிறு பத்தி</button>
               </div>
-              <p class="tiny muted" id="aiFirst" data-i18n="ai_first_dl"></p>
+              <p class="tiny muted" id="aiFirst" data-i18n="ai_first_dl">முதல் முறை Chrome தன் AI மாடலை ஒருமுறை பதிவிறக்கும். அது பெரியது, எனவே Wi-Fi நல்லது.</p>
             </div>
           </div>
           <button class="btn btn-primary btn-lg" type="button" id="goBtn"></button>
@@ -202,14 +202,14 @@
         </div>
 
         <div class="ss-outhead" id="outHead">
-          <h2 id="outH" data-i18n="out_h"></h2>
+          <h2 id="outH" data-i18n="out_h">சுருக்கம்</h2>
           <span class="badge primary" id="engBadge" hidden></span>
         </div>
         <p class="ss-empty" id="outEmpty"></p>
         <div id="outBody" hidden>
           <div class="tabs" id="outTabs" role="tablist">
-            <button type="button" role="tab" data-tab="points" aria-controls="pane-points" data-i18n="tab_points"></button>
-            <button type="button" role="tab" data-tab="hl" aria-controls="pane-hl" data-i18n="tab_highlight"></button>
+            <button type="button" role="tab" data-tab="points" aria-controls="pane-points" data-i18n="tab_points">கருத்துகள்</button>
+            <button type="button" role="tab" data-tab="hl" aria-controls="pane-hl" data-i18n="tab_highlight">உரையில் பார்</button>
           </div>
           <div id="pane-points" role="tabpanel">
             <p class="muted small" id="outNote"></p>
@@ -221,13 +221,13 @@
           </div>
           <div class="ss-stats" id="stats" aria-live="polite"></div>
           <div class="ss-kw">
-            <h3 data-i18n="keywords_h"></h3>
+            <h3 data-i18n="keywords_h">முக்கியச் சொற்கள்</h3>
             <div id="kw" class="no-i18n"></div>
           </div>
         </div>
         <div class="ss-actions">
           <button class="btn" type="button" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
-          <button class="btn" type="button" id="dlBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="btn_download_txt"></span></button>
+          <button class="btn" type="button" id="dlBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="btn_download_txt">.txt பதிவிறக்கு</span></button>
           <button class="btn" type="button" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
           <span class="sp"></span>
           <button class="btn btn-danger" type="button" id="resetBtn" data-i18n="reset"></button>
@@ -236,26 +236,26 @@
     </div>
 
     <details class="card">
-      <summary data-i18n="help_h"></summary>
+      <summary data-i18n="help_h">பயன்படுத்துவது எப்படி / யோசனைகள்</summary>
       <ul>
         <li data-i18n-html="help1"></li>
-        <li data-i18n="help2"></li>
-        <li data-i18n="help3"></li>
-        <li data-i18n="help4"></li>
-        <li data-i18n="help5"></li>
+        <li data-i18n="help2">நீளத்தைத் தேர்ந்தெடுங்கள்: கருத்துகளின் எண்ணிக்கை (3 முதல் 10) அல்லது உரையின் பகுதி (10% முதல் 60%). கருத்துகள் உங்கள் உரையில் உள்ள வரிசையிலேயே இருக்கும்.</li>
+        <li data-i18n="help3">ஒரு முக்கியக் கருத்தைத் தட்டினால், அது முழு உரையில் முன்னிலைப்படுத்தப்பட்டுத் தெரியும்; அதன் முன்னும் பின்னும் உள்ளதையும் படிக்கலாம்.</li>
+        <li data-i18n="help4">படிப்புக்கு: ஒரு பாடத்தைச் சுருக்கி, ஒவ்வொரு கருத்தையும் உங்கள் சொந்த வார்த்தைகளில் விளக்குங்கள். வகுப்பில் மாணவர்கள் முதலில் தாங்களே 5 முக்கிய வாக்கியங்களைத் தேர்ந்தெடுத்து, பின் செயலியுடன் ஒப்பிடலாம்.</li>
+        <li data-i18n="help5">வேலைக்கு: கூட்டத்துக்கு முன் நீண்ட சுற்றறிக்கை, அறிக்கை அல்லது அறிவிப்பின் முக்கியக் கருத்துகளைப் பெற்று, WhatsApp-இல் நகலெடுங்கள் அல்லது .txt கோப்பாகப் பதிவிறக்குங்கள்.</li>
       </ul>
     </details>
     <details class="card">
-      <summary data-i18n="inside_h"></summary>
+      <summary data-i18n="inside_h">உள்ளே என்ன நடக்கிறது?</summary>
       <ol>
-        <li data-i18n="inside1"></li>
-        <li data-i18n="inside2"></li>
-        <li data-i18n="inside3"></li>
-        <li data-i18n="inside4"></li>
+        <li data-i18n="inside1">முற்றுப்புள்ளி, கேள்விக்குறி, (।) குறி, புதிய வரி ஆகியவற்றில் உரை வாக்கியங்களாகப் பிரிக்கப்படுகிறது.</li>
+        <li data-i18n="inside2">ஒவ்வொரு வாக்கியமும் அதன் முக்கியச் சொற்களின் பட்டியலாகிறது. &quot;மற்றும்&quot;, &quot;ஒரு&quot;, &quot;இந்த&quot; போன்ற சிறு சொற்கள் விடப்படுகின்றன. சில வாக்கியங்களில் வந்து, எல்லாவற்றிலும் வராத சொல்லுக்கு அதிக எடை (இதற்கு TF-IDF என்று பெயர்).</li>
+        <li data-i18n="inside3">ஒரே முக்கியச் சொற்களைக் கொண்ட வாக்கியங்கள் வலைபோல இணைக்கப்படுகின்றன. பல வாக்கியங்களுடன் இணைந்த வாக்கியம் &quot;மையமானது&quot;: முழு உரையும் எதைப் பற்றியது என்று அது சொல்கிறது. இதுதான் TextRank; இது Google வலைப்பக்கங்களை வரிசைப்படுத்தப் பயன்படுத்திய PageRank முறையை அடிப்படையாகக் கொண்டது.</li>
+        <li data-i18n="inside4">மிக மையமான வாக்கியங்கள் தேர்ந்தெடுக்கப்பட்டு (ஏறக்குறைய ஒரே மாதிரியானவற்றைத் தவிர்த்து), அசல் வரிசையில் காட்டப்படுகின்றன. எதுவும் பதிவிறக்கப்படாததால், இது ஆஃப்லைனிலும் எல்லா மொழிகளிலும் வேலை செய்கிறது.</li>
       </ol>
       <p class="small" data-i18n-html="inside_gen"></p>
       <p class="small" data-i18n-html="inside_chrome"></p>
-      <p class="small muted" data-i18n="inside_limits"></p>
+      <p class="small muted" data-i18n="inside_limits">வரம்புகள்: உரை எவ்வளவு நல்லதோ, சுருக்கமும் அவ்வளவுதான். பட்டியல்கள், அட்டவணைகள், மிகச் சிறிய உரைகள் நன்றாகச் சுருங்காது; ஸ்கேன் செய்த PDF-இல் படிக்க உரை இருக்காது.</p>
     </details>
   </main>
   <script src="../../../apps/smart-summarizer/../../shared/edu.js"></script>

@@ -126,30 +126,30 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">WhatsApp వాయిస్ నోట్, రికార్డింగ్ లేదా వీడియోను అక్షరాలుగా, సబ్‌టైటిల్స్‌గా మార్చండి: ఇంగ్లీష్, హిందీ ఇంకా ఇతర భారతీయ భాషల్లో. AI మీ సొంత పరికరంలోనే నడుస్తుంది, మీ ఆడియో ఎక్కడికీ అప్‌లోడ్ కాదు.</p>
 
     <div class="callout success vt-privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">మీ ఆడియో మీ పరికరంలోనే ఉంటుంది.</strong> <span data-i18n="privacy_body">AI మోడల్ మాత్రమే ఒకసారి డౌన్‌లోడ్ అవుతుంది. వాయిస్ నోట్‌లు ఎప్పుడూ అప్‌లోడ్ కావు, కాబట్టి వ్యక్తిగత మెసేజ్‌లు, మీటింగ్‌లకూ వాడుకోవచ్చు.</span></p>
     </div>
 
     <div class="vt-grid">
       <!-- 1. audio -->
       <section class="card stack" id="inCard" aria-labelledby="hIn">
-        <h2 class="vt-step" id="hIn" data-i18n="step_add"></h2>
+        <h2 class="vt-step" id="hIn" data-i18n="step_add">1. వాయిస్ నోట్ జోడించండి</h2>
         <div class="vt-drop" id="drop" tabindex="0" role="button" aria-describedby="dropHint">
           <span class="vt-drop-ic" aria-hidden="true">🎧</span>
-          <strong data-i18n="drop_title"></strong>
-          <span class="small muted" id="dropHint" data-i18n="drop_hint"></span>
+          <strong data-i18n="drop_title">ఆడియో లేదా వీడియో ఫైల్‌ను ఇక్కడ వదలండి</strong>
+          <span class="small muted" id="dropHint" data-i18n="drop_hint">లేదా ట్యాప్ చేసి ఎంచుకోండి: WhatsApp వాయిస్ నోట్ (.opus), mp3, m4a, wav, mp4, webm · 30 నిమిషాల వరకు</span>
         </div>
         <div class="vt-add">
-          <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_file"></span></button>
-          <button class="btn" id="recBtn" type="button"><span aria-hidden="true">🎙️</span> <span data-i18n="record"></span></button>
+          <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_file">ఫైల్ ఎంచుకోండి</span></button>
+          <button class="btn" id="recBtn" type="button"><span aria-hidden="true">🎙️</span> <span data-i18n="record">మైక్‌తో రికార్డ్ చేయండి</span></button>
         </div>
         <div class="vt-samples">
-          <span class="lbl" data-i18n="try_sample"></span>
-          <button class="btn btn-sm" id="sampleHi" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_hi"></span></button>
-          <button class="btn btn-sm" id="sampleEn" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_en"></span></button>
+          <span class="lbl" data-i18n="try_sample">నమూనా ప్రయత్నించండి:</span>
+          <button class="btn btn-sm" id="sampleHi" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_hi">హిందీ</span></button>
+          <button class="btn btn-sm" id="sampleEn" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_en">ఇంగ్లీష్</span></button>
         </div>
         <input type="file" id="fileInput" class="vt-hidden-input" accept="audio/*,video/*,.opus,.ogg,.oga,.m4a,.mp3,.wav,.aac,.flac,.webm,.mp4,.mov,.3gp" tabindex="-1" aria-hidden="true">
 
@@ -157,7 +157,7 @@
           <span class="dot" aria-hidden="true"></span>
           <span class="time no-i18n" id="recTime" aria-live="off">0:00</span>
           <span class="lvl" aria-hidden="true"><span id="recLvl"></span></span>
-          <button class="btn btn-danger btn-sm" id="recStop" type="button"><span aria-hidden="true">⏹</span> <span data-i18n="rec_stop"></span></button>
+          <button class="btn btn-danger btn-sm" id="recStop" type="button"><span aria-hidden="true">⏹</span> <span data-i18n="rec_stop">ఆపి వాడండి</span></button>
           <button class="btn btn-ghost btn-sm" id="recCancel" type="button" data-i18n="cancel"></button>
         </div>
 
@@ -168,33 +168,33 @@
           </div>
           <audio id="player" controls preload="metadata"></audio>
           <p class="small muted mb0" id="fileNote" hidden></p>
-          <div><button class="btn btn-sm btn-ghost" id="clearFile" type="button" data-i18n="remove_audio"></button></div>
+          <div><button class="btn btn-sm btn-ghost" id="clearFile" type="button" data-i18n="remove_audio">ఈ ఆడియో తీసేయండి</button></div>
         </div>
         <div class="callout danger" id="fileErr" role="alert" hidden></div>
       </section>
 
       <!-- 2. settings + run -->
       <section class="card stack" id="setCard" aria-labelledby="hSet">
-        <h2 class="vt-step" id="hSet" data-i18n="step_settings"></h2>
+        <h2 class="vt-step" id="hSet" data-i18n="step_settings">2. ఎంచుకుని మొదలుపెట్టండి</h2>
         <label class="field">
-          <span data-i18n="spoken_lang"></span>
+          <span data-i18n="spoken_lang">ఆడియోలో మాట్లాడిన భాష</span>
           <select id="langSel"></select>
         </label>
         <p class="small muted mb0" id="langNote"></p>
         <div class="field">
-          <span id="modeLbl" data-i18n="mode_label"></span>
+          <span id="modeLbl" data-i18n="mode_label">మీకు ఏం కావాలి?</span>
           <div class="seg" role="group" aria-labelledby="modeLbl" id="modeSeg">
-            <button type="button" data-mode="transcribe" data-i18n="mode_transcribe"></button>
-            <button type="button" data-mode="translate" data-i18n="mode_translate"></button>
+            <button type="button" data-mode="transcribe" data-i18n="mode_transcribe">మాట్లాడింది అలాగే రాయండి</button>
+            <button type="button" data-mode="translate" data-i18n="mode_translate">ఇంగ్లీష్‌లోకి అనువాదం</button>
           </div>
         </div>
         <div class="field">
-          <span id="modelLbl" data-i18n="model_label"></span>
+          <span id="modelLbl" data-i18n="model_label">AI మోడల్ (పెద్దది మంచిది, కానీ నెమ్మది)</span>
           <div class="vt-models" id="models" role="group" aria-labelledby="modelLbl"></div>
         </div>
         <p class="callout warning small mb0" id="scriptNote" hidden></p>
         <div class="vt-run">
-          <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled><span aria-hidden="true">📝</span> <span data-i18n="run_btn"></span></button>
+          <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled><span aria-hidden="true">📝</span> <span data-i18n="run_btn">అక్షరాలుగా మార్చండి</span></button>
           <button class="btn btn-danger" id="stopBtn" type="button" data-i18n="stop" hidden></button>
         </div>
         <div class="vt-status" id="statusBox" hidden>
@@ -207,59 +207,59 @@
           <div><button class="btn btn-sm" id="retryBtn" type="button" data-i18n="try_again"></button></div>
         </div>
         <p class="small muted mb0" id="firstNote"></p>
-        <p class="small muted mb0" data-i18n="phone_note"></p>
+        <p class="small muted mb0" data-i18n="phone_note">ఫోన్‌లో ఒక నిమిషం ఆడియోకి కొన్ని నిమిషాలు పట్టవచ్చు. పని అయ్యేవరకు ఈ పేజీని తెరిచే ఉంచండి.</p>
       </section>
     </div>
 
     <!-- 3. result -->
     <section class="card stack" id="resCard" aria-labelledby="hRes" style="margin-top:16px" hidden>
       <div class="vt-resbar">
-        <h2 class="vt-step" id="hRes" data-i18n="step_result"></h2>
+        <h2 class="vt-step" id="hRes" data-i18n="step_result">3. మీ అక్షరాలు</h2>
         <div class="vt-stats" id="stats"></div>
       </div>
-      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden></p>
+      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden>ఇది గత సారి వచ్చిన అక్షరాలు. వినడానికి ఆడియోను మళ్లీ జోడించండి.</p>
       <div class="row spread">
         <div class="seg" role="group" data-i18n-aria-label="view_label" id="viewSeg">
-          <button type="button" data-view="times" data-i18n="view_times"></button>
-          <button type="button" data-view="plain" data-i18n="view_plain"></button>
+          <button type="button" data-view="times" data-i18n="view_times">సమయంతో</button>
+          <button type="button" data-view="plain" data-i18n="view_plain">అక్షరాలు మాత్రమే</button>
         </div>
-        <span class="small muted" id="editHint" data-i18n="edit_hint"></span>
+        <span class="small muted" id="editHint" data-i18n="edit_hint">వినడానికి సమయంపై ట్యాప్ చేయండి. పదం సరిచేయడానికి అక్షరాలపై ట్యాప్ చేయండి.</span>
       </div>
       <div class="vt-segs no-i18n" id="segs" aria-live="polite"></div>
       <div class="vt-plain no-i18n" id="plain" tabindex="0" hidden></div>
       <div class="vt-actions">
         <button class="btn btn-primary" id="copyBtn" type="button"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
-        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt"></span></button>
-        <button class="btn" id="dlSrt" type="button"><span aria-hidden="true">🎬</span> <span data-i18n="dl_srt"></span></button>
-        <button class="btn" id="dlVtt" type="button"><span aria-hidden="true">🌐</span> <span data-i18n="dl_vtt"></span></button>
-        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text"></button>
+        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt">అక్షరాలు (.txt)</span></button>
+        <button class="btn" id="dlSrt" type="button"><span aria-hidden="true">🎬</span> <span data-i18n="dl_srt">సబ్‌టైటిల్స్ (.srt)</span></button>
+        <button class="btn" id="dlVtt" type="button"><span aria-hidden="true">🌐</span> <span data-i18n="dl_vtt">వెబ్ సబ్‌టైటిల్స్ (.vtt)</span></button>
+        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text">అక్షరాలు తుడిచేయండి</button>
       </div>
     </section>
 
     <details class="card vt-help no-print" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">ఎలా వాడాలి / ఆలోచనలు</strong></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">WhatsApp వాయిస్ నోట్: దాన్ని నొక్కి పట్టుకుని, Share ట్యాప్ చేసి ఫోన్‌లో సేవ్ చేయండి (ఉదా. Files లో). తర్వాత ఇక్కడ &quot;ఫైల్ ఎంచుకోండి&quot; తో దాన్ని ఎంచుకోండి.</li>
+        <li data-i18n="tip2">మాట్లాడిన భాషనే ఎంచుకోండి. &quot;ఆటోమేటిక్‌గా గుర్తించు&quot; కూడా పనిచేస్తుంది, కానీ మీరే భాష ఎంచుకోవడం ఎక్కువ నమ్మదగినది.</li>
+        <li data-i18n="tip3">ఇంగ్లీష్ ప్రతి మోడల్‌తో బాగా పనిచేస్తుంది. హిందీ, మరాఠీ, తమిళం, ఉర్దూ వాటి సొంత లిపిలో కావాలంటే స్మాల్ ఎంచుకోండి. తెలుగుతో సహా ఇతర భారతీయ భాషలు ఇంగ్లీష్ అక్షరాల్లో వస్తాయి.</li>
+        <li data-i18n="tip4">YouTube లేదా Instagram వీడియోల కోసం సబ్‌టైటిల్స్ (.srt) డౌన్‌లోడ్ చేసి వీడియోతో అప్‌లోడ్ చేయండి. ముందుగా పదాలు, సమయాలు చూసుకోండి.</li>
+        <li data-i18n="tip5">స్పష్టమైన మాట, ఒకసారి ఒక్కరు, తక్కువ శబ్దం ఉంటే మంచి అక్షరాలు వస్తాయి. వాడే ముందు ఎప్పుడూ చదవండి.</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="ideas_title"></h3>
-      <p class="mb0" data-i18n="ideas_body"></p>
-      <h3 style="margin-top:14px" data-i18n="inside_title"></h3>
+      <h3 style="margin-top:14px" data-i18n="ideas_title">పని, తరగతి కోసం ఆలోచనలు</h3>
+      <p class="mb0" data-i18n="ideas_body">మీటింగ్ లేదా క్లాస్ రికార్డింగ్ నుంచి నోట్స్ తయారు చేయండి, మీ వీడియోలకు సబ్‌టైటిల్స్ చేయండి, ఇంటర్వ్యూ రాయండి, లేదా విద్యార్థులతో చిన్న ప్రసంగం రికార్డ్ చేయించి వాళ్లు ఏం చెప్పారో, AI ఏం విందో పోల్చండి.</p>
+      <h3 style="margin-top:14px" data-i18n="inside_title">లోపల ఏం జరుగుతోంది</h3>
       <div class="vt-steps" aria-hidden="true">
-        <span class="chip" data-i18n="in_sound"></span><span class="arr">→</span>
-        <span class="chip" data-i18n="in_picture"></span><span class="arr">→</span>
-        <span class="chip" data-i18n="in_tokens"></span><span class="arr">→</span>
-        <span class="chip" data-i18n="in_text"></span>
+        <span class="chip" data-i18n="in_sound">శబ్దం</span><span class="arr">→</span>
+        <span class="chip" data-i18n="in_picture">శబ్ద చిత్రం</span><span class="arr">→</span>
+        <span class="chip" data-i18n="in_tokens">పద ముక్కలు</span><span class="arr">→</span>
+        <span class="chip" data-i18n="in_text">అక్షరాలు</span>
       </div>
-      <p data-i18n="inside_body"></p>
-      <p data-i18n="inside_mistakes"></p>
-      <p class="small muted mb0" data-i18n="inside_models"></p>
+      <p data-i18n="inside_body">ఆడియోను నిశ్శబ్ద క్షణాల దగ్గర కోసి 30 సెకన్ల వరకు ముక్కలు చేస్తారు. ప్రతి ముక్క ఒక &quot;శబ్ద చిత్రం&quot; (స్పెక్ట్రోగ్రామ్) అవుతుంది, ఇది ప్రతి క్షణంలో ఏ స్వరాలు గట్టిగా ఉన్నాయో చూపిస్తుంది. Whisper అనే AI ఈ చిత్రాన్ని చూసి ఒక్కో చిన్న పద ముక్కను (టోకెన్) ఊహించి, సమయంతో రాస్తుంది.</p>
+      <p data-i18n="inside_mistakes">చిన్న మోడల్స్ తక్కువ డేటా నుంచి నేర్చుకున్నాయి, ముఖ్యంగా భారతీయ భాషల్లో. అందుకే పేర్లు తప్పుగా వినవచ్చు, దగ్గరి శబ్దాలను కలిపేయవచ్చు, లేదా ఒక లైన్ మళ్లీ మళ్లీ రాయవచ్చు. పెద్ద మోడల్స్ తక్కువ తప్పులు చేస్తాయి కానీ నెమ్మదిగా ఉంటాయి. శబ్దం, సంగీతం, ఒకేసారి చాలామంది మాట్లాడటం కూడా తప్పులకు కారణం.</p>
+      <p class="small muted mb0" data-i18n="inside_models">మోడల్స్: OpenAI వారి Whisper టైనీ (41 MB), బేస్ (77 MB), స్మాల్ (249 MB), MIT లైసెన్స్, బ్రౌజర్‌లో Transformers.js (Apache-2.0) తో నడుస్తాయి. AI ఇంజిన్ (27 MB) కూడా ఒకసారి డౌన్‌లోడ్ అవుతుంది. Whisper లో ఇంకా ఒడియా లేదు.</p>
       <div class="vt-storage">
         <span class="small muted" id="storageText"></span>
-        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden></button>
+        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden>డౌన్‌లోడ్ చేసిన AI ఫైల్స్ తొలగించండి</button>
       </div>
       <div class="row spread" style="margin-top:12px">
         <span class="small muted" data-i18n="saved_local"></span>

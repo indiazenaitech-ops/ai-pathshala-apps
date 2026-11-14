@@ -345,30 +345,30 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro no-print" data-i18n="intro"></p>
+    <p class="edu-intro no-print" data-i18n="intro">मिनटों में कक्षा का साप्ताहिक टाइम टेबल बनाएँ: टैप करके पीरियड भरें, शिक्षकों के टकराव पकड़ें, अभी कौन-सा पीरियड चल रहा है देखें और रंगीन प्रिंट निकालें। विद्यार्थी अपनी पढ़ाई का टाइम टेबल भी बना सकते हैं।</p>
     <div id="live" class="sr-only" aria-live="polite"></div>
 
     <div class="no-print" id="ui">
       <section class="card bar">
         <div class="bar-row">
-          <label for="tt-sel" data-i18n="tt_label"></label>
+          <label for="tt-sel" data-i18n="tt_label">टाइम टेबल</label>
           <select id="tt-sel" class="no-i18n"></select>
-          <button type="button" class="btn btn-primary" id="new-tt"><span aria-hidden="true">＋</span> <span data-i18n="new_tt"></span></button>
+          <button type="button" class="btn btn-primary" id="new-tt"><span aria-hidden="true">＋</span> <span data-i18n="new_tt">नया टाइम टेबल</span></button>
         </div>
         <p class="tiny muted saved-note"><span aria-hidden="true">🔒</span> <span data-i18n="saved_local"></span></p>
       </section>
 
       <div class="callout" id="sample-note" hidden>
-        <span data-i18n="sample_note"></span>
+        <span data-i18n="sample_note">यह दो कक्षाओं वाला एक नमूना स्कूल है, ताकि आप सब कुछ आज़मा सकें। इसे बदलें, या “नया टाइम टेबल” से अपना बनाएँ।</span>
         <button type="button" class="btn btn-sm btn-ghost" id="sample-x" data-i18n-aria-label="close" data-i18n-title="close">✕</button>
       </div>
 
       <div class="tabs" role="tablist" data-i18n-aria-label="app_title">
-        <button type="button" role="tab" id="tab-grid" aria-controls="p-grid"><span class="ti" aria-hidden="true">📅</span><span data-i18n="tab_grid"></span></button>
-        <button type="button" role="tab" id="tab-setup" aria-controls="p-setup"><span class="ti" aria-hidden="true">⚙️</span><span data-i18n="tab_setup"></span></button>
-        <button type="button" role="tab" id="tab-summary" aria-controls="p-summary"><span class="ti" aria-hidden="true">📊</span><span data-i18n="tab_summary"></span></button>
-        <button type="button" role="tab" id="tab-teachers" aria-controls="p-teachers"><span class="ti" aria-hidden="true">🧑‍🏫</span><span data-i18n="tab_teachers"></span></button>
-        <button type="button" role="tab" id="tab-today" aria-controls="p-today"><span class="ti" aria-hidden="true">⏰</span><span data-i18n="tab_today"></span></button>
+        <button type="button" role="tab" id="tab-grid" aria-controls="p-grid"><span class="ti" aria-hidden="true">📅</span><span data-i18n="tab_grid">टाइम टेबल</span></button>
+        <button type="button" role="tab" id="tab-setup" aria-controls="p-setup"><span class="ti" aria-hidden="true">⚙️</span><span data-i18n="tab_setup">सेटिंग</span></button>
+        <button type="button" role="tab" id="tab-summary" aria-controls="p-summary"><span class="ti" aria-hidden="true">📊</span><span data-i18n="tab_summary">सारांश</span></button>
+        <button type="button" role="tab" id="tab-teachers" aria-controls="p-teachers"><span class="ti" aria-hidden="true">🧑‍🏫</span><span data-i18n="tab_teachers">शिक्षक</span></button>
+        <button type="button" role="tab" id="tab-today" aria-controls="p-today"><span class="ti" aria-hidden="true">⏰</span><span data-i18n="tab_today">आज</span></button>
       </div>
 
       <!-- TIMETABLE -->
@@ -376,12 +376,12 @@
         <div class="card stack" id="grid-card">
           <div class="toolbar">
             <div class="seg" id="mode-seg" role="group" data-i18n-aria-label="mode_label">
-              <button type="button" id="mode-paint" data-mode="paint"><span aria-hidden="true">🖌</span> <span data-i18n="mode_paint"></span></button>
-              <button type="button" id="mode-swap" data-mode="swap"><span aria-hidden="true">⇄</span> <span data-i18n="mode_swap"></span></button>
-              <button type="button" id="mode-pick" data-mode="pick"><span aria-hidden="true">☰</span> <span data-i18n="mode_pick"></span></button>
+              <button type="button" id="mode-paint" data-mode="paint"><span aria-hidden="true">🖌</span> <span data-i18n="mode_paint">भरें</span></button>
+              <button type="button" id="mode-swap" data-mode="swap"><span aria-hidden="true">⇄</span> <span data-i18n="mode_swap">अदला-बदली</span></button>
+              <button type="button" id="mode-pick" data-mode="pick"><span aria-hidden="true">☰</span> <span data-i18n="mode_pick">चुनें</span></button>
             </div>
             <span class="grow"></span>
-            <button type="button" class="btn" id="undo-btn" data-i18n-title="undo" data-i18n-aria-label="undo"><span aria-hidden="true">↶</span> <span class="hide-sm" data-i18n="undo"></span></button>
+            <button type="button" class="btn" id="undo-btn" data-i18n-title="undo" data-i18n-aria-label="undo"><span aria-hidden="true">↶</span> <span class="hide-sm" data-i18n="undo">वापस लें</span></button>
             <button type="button" class="btn" id="fs-btn" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen"><span aria-hidden="true">⛶</span></button>
           </div>
           <div class="palette" id="palette" role="group" data-i18n-aria-label="subjects"></div>
@@ -391,35 +391,35 @@
           <div class="grid-foot">
             <p class="small mb0" id="grid-status" aria-live="polite"></p>
             <div class="row">
-              <button type="button" class="btn" id="autofill"><span aria-hidden="true">✨</span> <span data-i18n="autofill"></span></button>
-              <button type="button" class="btn btn-danger" id="clear-all"><span data-i18n="clear_all"></span></button>
+              <button type="button" class="btn" id="autofill"><span aria-hidden="true">✨</span> <span data-i18n="autofill">खाली पीरियड अपने-आप भरें</span></button>
+              <button type="button" class="btn btn-danger" id="clear-all"><span data-i18n="clear_all">सारे पीरियड खाली करें</span></button>
             </div>
           </div>
         </div>
 
         <div class="card stack" id="subj-card">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="subjects"></h2>
-            <button type="button" class="btn" id="add-subj"><span aria-hidden="true">＋</span> <span data-i18n="add_subject"></span></button>
+            <h2 class="mb0" data-i18n="subjects">विषय</h2>
+            <button type="button" class="btn" id="add-subj"><span aria-hidden="true">＋</span> <span data-i18n="add_subject">विषय जोड़ें</span></button>
           </div>
-          <p class="muted small mb0" data-i18n="subj_help"></p>
+          <p class="muted small mb0" data-i18n="subj_help">नाम, छोटे नाम (छोटी स्क्रीन पर दिखते हैं), शिक्षक और रंग बदलें। “हफ़्ते में” यानी हफ़्ते में कितने पीरियड चाहिए; अपने-आप भरने में यही काम आता है।</p>
           <div id="subj-list"></div>
           <datalist id="teacher-dl" class="no-i18n"></datalist>
         </div>
 
         <div class="card stack">
-          <h2 class="mb0" data-i18n="share_title"></h2>
+          <h2 class="mb0" data-i18n="share_title">प्रिंट, सेव और शेयर</h2>
           <div class="row share-row">
-            <button type="button" class="btn btn-primary" id="print-tt"><span aria-hidden="true">🖨</span> <span data-i18n="print_tt"></span></button>
-            <button type="button" class="btn" id="print-all"><span aria-hidden="true">🖨</span> <span data-i18n="print_all"></span></button>
-            <button type="button" class="btn" id="export-csv"><span aria-hidden="true">⬇</span> <span data-i18n="export_csv"></span></button>
-            <button type="button" class="btn" id="copy-text"><span aria-hidden="true">📋</span> <span data-i18n="copy_text"></span></button>
+            <button type="button" class="btn btn-primary" id="print-tt"><span aria-hidden="true">🖨</span> <span data-i18n="print_tt">यह टाइम टेबल प्रिंट करें</span></button>
+            <button type="button" class="btn" id="print-all"><span aria-hidden="true">🖨</span> <span data-i18n="print_all">सारे टाइम टेबल प्रिंट करें</span></button>
+            <button type="button" class="btn" id="export-csv"><span aria-hidden="true">⬇</span> <span data-i18n="export_csv">CSV निकालें</span></button>
+            <button type="button" class="btn" id="copy-text"><span aria-hidden="true">📋</span> <span data-i18n="copy_text">टेक्स्ट कॉपी करें</span></button>
           </div>
           <div class="row share-row">
-            <button type="button" class="btn" id="backup"><span aria-hidden="true">💾</span> <span data-i18n="backup"></span></button>
-            <button type="button" class="btn" id="restore"><span aria-hidden="true">📂</span> <span data-i18n="restore"></span></button>
+            <button type="button" class="btn" id="backup"><span aria-hidden="true">💾</span> <span data-i18n="backup">बैकअप फ़ाइल सेव करें</span></button>
+            <button type="button" class="btn" id="restore"><span aria-hidden="true">📂</span> <span data-i18n="restore">बैकअप फ़ाइल खोलें</span></button>
           </div>
-          <p class="muted small mb0" data-i18n="backup_help"></p>
+          <p class="muted small mb0" data-i18n="backup_help">टेक्स्ट कॉपी करके WhatsApp में चिपकाएँ। बैकअप फ़ाइल से सारे टाइम टेबल दूसरे फ़ोन या कंप्यूटर में ले जा सकते हैं।</p>
         </div>
       </section>
 
@@ -427,69 +427,69 @@
       <section class="tabpanel" id="p-setup" role="tabpanel" aria-labelledby="tab-setup" hidden>
         <div class="grid-2">
           <div class="card stack">
-            <h2 class="mb0" data-i18n="this_tt"></h2>
-            <div class="field"><label for="tt-name" data-i18n="tt_name"></label><input type="text" id="tt-name" maxlength="60" data-i18n-placeholder="name_ph"></div>
+            <h2 class="mb0" data-i18n="this_tt">यह टाइम टेबल</h2>
+            <div class="field"><label for="tt-name" data-i18n="tt_name">नाम</label><input type="text" id="tt-name" maxlength="60" data-i18n-placeholder="name_ph"></div>
             <div class="field">
-              <span class="lbl" data-i18n="tt_kind"></span>
+              <span class="lbl" data-i18n="tt_kind">प्रकार</span>
               <div class="seg" id="kind-seg" role="group" data-i18n-aria-label="tt_kind">
-                <button type="button" data-kind="class"><span aria-hidden="true">🏫</span> <span data-i18n="kind_class"></span></button>
-                <button type="button" data-kind="study"><span aria-hidden="true">🎒</span> <span data-i18n="kind_study"></span></button>
+                <button type="button" data-kind="class"><span aria-hidden="true">🏫</span> <span data-i18n="kind_class">कक्षा (स्कूल)</span></button>
+                <button type="button" data-kind="study"><span aria-hidden="true">🎒</span> <span data-i18n="kind_study">पढ़ाई (विद्यार्थी)</span></button>
               </div>
             </div>
-            <div class="field" id="ct-field"><label for="tt-ct" data-i18n="class_teacher"></label><input type="text" id="tt-ct" maxlength="60" list="teacher-dl" data-i18n-placeholder="teacher_ph"></div>
+            <div class="field" id="ct-field"><label for="tt-ct" data-i18n="class_teacher">कक्षा अध्यापक</label><input type="text" id="tt-ct" maxlength="60" list="teacher-dl" data-i18n-placeholder="teacher_ph"></div>
             <div class="row">
-              <button type="button" class="btn" id="dup-tt"><span aria-hidden="true">📑</span> <span data-i18n="duplicate"></span></button>
-              <button type="button" class="btn btn-danger" id="del-tt"><span data-i18n="delete_tt"></span></button>
+              <button type="button" class="btn" id="dup-tt"><span aria-hidden="true">📑</span> <span data-i18n="duplicate">कॉपी बनाएँ</span></button>
+              <button type="button" class="btn btn-danger" id="del-tt"><span data-i18n="delete_tt">यह टाइम टेबल हटाएँ</span></button>
             </div>
           </div>
           <div class="card stack">
-            <h2 class="mb0" data-i18n="days_title"></h2>
+            <h2 class="mb0" data-i18n="days_title">स्कूल के दिन</h2>
             <div class="days-box" id="days-box" role="group" data-i18n-aria-label="days_title"></div>
             <hr class="divider">
-            <h2 class="mb0" data-i18n="display_title"></h2>
+            <h2 class="mb0" data-i18n="display_title">दिखावट</h2>
             <div class="field">
-              <span class="lbl" data-i18n="clock_label"></span>
+              <span class="lbl" data-i18n="clock_label">घड़ी</span>
               <div class="seg" id="clock-seg" role="group" data-i18n-aria-label="clock_label">
-                <button type="button" data-h24="0" data-i18n="clock_12"></button>
-                <button type="button" data-h24="1" data-i18n="clock_24"></button>
+                <button type="button" data-h24="0" data-i18n="clock_12">12 घंटे</button>
+                <button type="button" data-h24="1" data-i18n="clock_24">24 घंटे</button>
               </div>
             </div>
             <div class="field">
-              <span class="lbl" data-i18n="layout_label"></span>
+              <span class="lbl" data-i18n="layout_label">बनावट</span>
               <div class="seg" id="layout-seg" role="group" data-i18n-aria-label="layout_label">
-                <button type="button" data-layout="auto" data-i18n="layout_auto"></button>
-                <button type="button" data-layout="rows" data-i18n="layout_rows"></button>
-                <button type="button" data-layout="cols" data-i18n="layout_cols"></button>
+                <button type="button" data-layout="auto" data-i18n="layout_auto">अपने-आप</button>
+                <button type="button" data-layout="rows" data-i18n="layout_rows">दिन पंक्तियों में</button>
+                <button type="button" data-layout="cols" data-i18n="layout_cols">दिन कॉलम में</button>
               </div>
             </div>
-            <label class="check"><input type="checkbox" id="show-t"> <span data-i18n="show_teachers"></span></label>
-            <div class="field"><label for="school" data-i18n="school_name"></label><input type="text" id="school" maxlength="160" data-i18n-placeholder="school_ph"></div>
+            <label class="check"><input type="checkbox" id="show-t"> <span data-i18n="show_teachers">पीरियड में शिक्षकों के नाम दिखाएँ</span></label>
+            <div class="field"><label for="school" data-i18n="school_name">स्कूल का नाम (प्रिंट में सबसे ऊपर)</label><input type="text" id="school" maxlength="160" data-i18n-placeholder="school_ph"></div>
           </div>
         </div>
 
         <div class="card stack">
-          <h2 class="mb0" data-i18n="times_title"></h2>
-          <p class="muted small mb0" data-i18n="times_help"></p>
+          <h2 class="mb0" data-i18n="times_title">पीरियड और अवकाश</h2>
+          <p class="muted small mb0" data-i18n="times_help">हर पीरियड और अवकाश का शुरू और ख़त्म होने का समय भरें। ↑ ↓ से पंक्ति खिसकाने पर भी दिन उसी समय से शुरू होता है।</p>
           <div id="slots"></div>
           <datalist id="brk-dl"></datalist>
-          <p class="callout danger small mb0" id="slot-warn" hidden data-i18n="time_bad"></p>
+          <p class="callout danger small mb0" id="slot-warn" hidden data-i18n="time_bad">कुछ समय ग़लत हैं: कोई पंक्ति शुरू होने से पहले ख़त्म हो रही है, या ऊपर वाली पंक्ति से टकरा रही है।</p>
           <div class="row">
-            <button type="button" class="btn" id="add-period"><span aria-hidden="true">＋</span> <span data-i18n="add_period"></span></button>
-            <button type="button" class="btn" id="add-break"><span aria-hidden="true">＋</span> <span data-i18n="add_break"></span></button>
+            <button type="button" class="btn" id="add-period"><span aria-hidden="true">＋</span> <span data-i18n="add_period">पीरियड जोड़ें</span></button>
+            <button type="button" class="btn" id="add-break"><span aria-hidden="true">＋</span> <span data-i18n="add_break">अवकाश जोड़ें</span></button>
           </div>
           <hr class="divider">
-          <h3 class="mb0" data-i18n="recalc_title"></h3>
+          <h3 class="mb0" data-i18n="recalc_title">सारे समय अपने-आप भरें</h3>
           <div class="form-row">
-            <div class="field"><label for="auto-start" data-i18n="start_at"></label><input type="time" id="auto-start"></div>
-            <div class="field"><label for="auto-len" data-i18n="period_len"></label><input type="number" id="auto-len" min="5" max="240" step="5" inputmode="numeric"></div>
-            <button type="button" class="btn btn-primary" id="recalc"><span data-i18n="recalc"></span></button>
+            <div class="field"><label for="auto-start" data-i18n="start_at">दिन शुरू होता है</label><input type="time" id="auto-start"></div>
+            <div class="field"><label for="auto-len" data-i18n="period_len">एक पीरियड (मिनट)</label><input type="number" id="auto-len" min="5" max="240" step="5" inputmode="numeric"></div>
+            <button type="button" class="btn btn-primary" id="recalc"><span data-i18n="recalc">समय फिर से गिनें</span></button>
           </div>
-          <p class="muted small mb0" data-i18n="recalc_help"></p>
+          <p class="muted small mb0" data-i18n="recalc_help">हर पीरियड को इतने मिनट मिलते हैं, एक के बाद एक। अवकाश अपनी लंबाई रखते हैं।</p>
         </div>
 
         <div class="card stack">
-          <h2 class="mb0" data-i18n="reset_title"></h2>
-          <p class="muted small mb0" data-i18n="reset_help"></p>
+          <h2 class="mb0" data-i18n="reset_title">फिर से शुरू करें</h2>
+          <p class="muted small mb0" data-i18n="reset_help">इस डिवाइस के आपके सारे टाइम टेबल मिट जाएँगे और नमूना स्कूल वापस आ जाएगा।</p>
           <div class="row"><button type="button" class="btn btn-danger" id="reset-all"><span data-i18n="reset"></span></button></div>
         </div>
       </section>
@@ -501,17 +501,17 @@
           <div class="tiles" id="sum-tiles" aria-live="polite"></div>
         </div>
         <div class="card stack">
-          <h2 class="mb0" data-i18n="sum_subjects"></h2>
+          <h2 class="mb0" data-i18n="sum_subjects">हफ़्ते में हर विषय के पीरियड</h2>
           <div class="scroll-x"><table class="table" id="sum-table"></table></div>
         </div>
         <div class="grid-2">
           <div class="card stack">
-            <h2 class="mb0" data-i18n="sum_days"></h2>
+            <h2 class="mb0" data-i18n="sum_days">हफ़्ते भर में फैलाव</h2>
             <div class="scroll-x" id="spread"></div>
-            <p class="muted small mb0" data-i18n="spread_help"></p>
+            <p class="muted small mb0" data-i18n="spread_help">हर दिन किस विषय के कितने पीरियड हैं। मोटा अंक यानी एक ही दिन में दो या ज़्यादा।</p>
           </div>
           <div class="card stack" id="sum-teach-card">
-            <h2 class="mb0" data-i18n="sum_teachers"></h2>
+            <h2 class="mb0" data-i18n="sum_teachers">इस कक्षा के शिक्षक</h2>
             <div class="scroll-x" id="sum-teach"></div>
           </div>
         </div>
@@ -519,18 +519,18 @@
 
       <!-- TEACHERS -->
       <section class="tabpanel" id="p-teachers" role="tabpanel" aria-labelledby="tab-teachers" hidden>
-        <p class="callout" id="no-teachers" hidden data-i18n="no_teachers"></p>
+        <p class="callout" id="no-teachers" hidden data-i18n="no_teachers">टाइम टेबल टैब में विषयों के शिक्षकों के नाम लिखें, फिर यहाँ हर शिक्षक का टाइम टेबल, कार्यभार और टकराव दिखेंगे।</p>
         <div id="teach-main" class="stack">
           <div class="card stack">
-            <h2 class="mb0" data-i18n="clashes_title"></h2>
-            <p class="muted small mb0" data-i18n="clash_help"></p>
+            <h2 class="mb0" data-i18n="clashes_title">शिक्षकों के टकराव</h2>
+            <p class="muted small mb0" data-i18n="clash_help">टकराव यानी एक ही शिक्षक की एक ही समय पर दो कक्षाएँ। एक जैसा नाम यानी एक ही व्यक्ति।</p>
             <div id="clash-list" aria-live="polite"></div>
           </div>
           <div class="card stack">
             <div class="teach-head">
-              <h2 class="mb0" data-i18n="teacher_view"></h2>
+              <h2 class="mb0" data-i18n="teacher_view">शिक्षक का टाइम टेबल</h2>
               <div class="row">
-                <label for="teacher-sel" class="sr-only" data-i18n="pick_teacher"></label>
+                <label for="teacher-sel" class="sr-only" data-i18n="pick_teacher">शिक्षक चुनें</label>
                 <select id="teacher-sel" class="no-i18n"></select>
                 <button type="button" class="btn" id="print-teacher"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
               </div>
@@ -540,16 +540,16 @@
           </div>
           <div class="grid-2">
             <div class="card stack">
-              <h2 class="mb0" data-i18n="teachers_title"></h2>
+              <h2 class="mb0" data-i18n="teachers_title">शिक्षकों का कार्यभार (सारी कक्षाएँ)</h2>
               <div class="scroll-x"><table class="table" id="load-table"></table></div>
             </div>
             <div class="card stack">
-              <h2 class="mb0" data-i18n="free_title"></h2>
-              <p class="muted small mb0" data-i18n="free_help"></p>
+              <h2 class="mb0" data-i18n="free_title">कौन खाली है? (अरेंजमेंट / प्रॉक्सी के लिए)</h2>
+              <p class="muted small mb0" data-i18n="free_help">दिन और पीरियड चुनें, देखें उस समय किन शिक्षकों की कोई कक्षा नहीं है। उस दिन कम पीरियड वाले शिक्षक पहले दिखते हैं।</p>
               <div class="free-pick">
-                <label class="sr-only" for="free-day" data-i18n="col_day"></label>
+                <label class="sr-only" for="free-day" data-i18n="col_day">दिन</label>
                 <select id="free-day"></select>
-                <label class="sr-only" for="free-slot" data-i18n="col_time"></label>
+                <label class="sr-only" for="free-slot" data-i18n="col_time">समय</label>
                 <select id="free-slot"></select>
               </div>
               <ul id="free-list" aria-live="polite"></ul>
@@ -564,7 +564,7 @@
           <div class="today-head">
             <h2><span class="no-i18n" id="today-name"></span> <span class="td-day" id="today-day"></span></h2>
             <div class="row">
-              <button type="button" class="btn" id="copy-day"><span aria-hidden="true">📋</span> <span data-i18n="copy_day"></span></button>
+              <button type="button" class="btn" id="copy-day"><span aria-hidden="true">📋</span> <span data-i18n="copy_day">इस दिन को कॉपी करें</span></button>
               <button type="button" class="btn" id="today-fs" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen"><span aria-hidden="true">⛶</span></button>
             </div>
           </div>
@@ -576,14 +576,14 @@
       </section>
 
       <details class="card help">
-        <summary data-i18n="help_title"></summary>
+        <summary data-i18n="help_title">कैसे इस्तेमाल करें / कक्षा के लिए सुझाव</summary>
         <ul>
-          <li data-i18n="tip1"></li>
-          <li data-i18n="tip2"></li>
-          <li data-i18n="tip3"></li>
-          <li data-i18n="tip4"></li>
-          <li data-i18n="tip5"></li>
-          <li data-i18n="tip6"></li>
+          <li data-i18n="tip1">कोई विषय चुनें, फिर पीरियड पर टैप करें। दो पीरियड बदलने के लिए “अदला-बदली” और ग़लती होने पर “वापस लें” दबाएँ।</li>
+          <li data-i18n="tip2">हर विषय के हफ़्ते के पीरियड लिखें, फिर “खाली पीरियड अपने-आप भरें” दबाएँ। यह विषयों को अलग-अलग दिनों में बाँटता है और शिक्षकों के टकराव से बचाता है।</li>
+          <li data-i18n="tip3">“नया टाइम टेबल → अगली कक्षा, वही समय” से हर कक्षा का अलग टाइम टेबल बनाएँ। फिर शिक्षक टैब में हर शिक्षक का हफ़्ता और टकराव लाल रंग में दिखेंगे।</li>
+          <li data-i18n="tip4">स्मार्टबोर्ड पर “आज” टैब फ़ुल स्क्रीन में खोलें: अभी का पीरियड और बचे हुए मिनट दिखते हैं।</li>
+          <li data-i18n="tip5">कक्षा गतिविधि: विद्यार्थियों से अपना पढ़ाई टाइम टेबल बनवाएँ (नया टाइम टेबल → विद्यार्थी का पढ़ाई टाइम टेबल), फिर सारांश में देखें कि विषय, खेल और आराम में संतुलन है या नहीं।</li>
+          <li data-i18n="tip6">नोटिस बोर्ड के लिए लैंडस्केप में प्रिंट करें, या कक्षा के WhatsApp ग्रुप के लिए टेक्स्ट कॉपी करें।</li>
         </ul>
       </details>
     </div>

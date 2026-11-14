@@ -175,7 +175,7 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">કમ્પ્યુટરને ચિત્રો ઓળખતા શીખવો: કૅમેરાથી ઉદાહરણો બતાવો અને પછી તરત ચકાસો. ફીચર્સ, ટ્રેનિંગ ડેટા અને બાયસ (પક્ષપાત) એટલે શું તે સમજો.</p>
 
     <div id="modelState" class="callout" data-state="loading" aria-live="polite">
       <span class="spin" id="msSpin" aria-hidden="true"></span>
@@ -186,43 +186,43 @@
     <section id="lab" class="lab">
       <!-- 1. camera -->
       <div class="card cam-card" id="camCard">
-        <h2 class="step"><span class="num">1</span><span data-i18n="step_camera"></span></h2>
+        <h2 class="step"><span class="num">1</span><span data-i18n="step_camera">કૅમેરા</span></h2>
         <div class="cam-box" id="camBox">
           <video id="video" playsinline muted autoplay hidden></video>
           <div class="cam-off" id="camOff">
             <div class="big-ico" aria-hidden="true">📷</div>
-            <p class="mb0" id="camOffMsg" data-i18n="cam_off_msg"></p>
-            <button class="btn btn-primary btn-lg" id="camStart" type="button" data-i18n="cam_start"></button>
+            <p class="mb0" id="camOffMsg" data-i18n="cam_off_msg">કૅમેરા બંધ છે. ઉદાહરણો રેકોર્ડ કરવા તેને ચાલુ કરો, અથવા દરેક શ્રેણીમાં “ફોટા અપલોડ કરો” વાપરો.</p>
+            <button class="btn btn-primary btn-lg" id="camStart" type="button" data-i18n="cam_start">કૅમેરા ચાલુ કરો</button>
           </div>
-          <div class="rec-dot" id="recDot" hidden><span data-i18n="recording"></span></div>
+          <div class="rec-dot" id="recDot" hidden><span data-i18n="recording">રેકોર્ડિંગ</span></div>
           <div class="cam-label" id="camLabel" hidden><span class="no-i18n" id="camLabelTxt"></span></div>
         </div>
         <div class="callout warning small" id="camMsg" role="alert" hidden></div>
         <div class="row cam-tools">
-          <button class="btn" id="camStop" type="button" data-i18n="cam_stop" hidden></button>
-          <button class="btn" id="camFlip" type="button" hidden><span aria-hidden="true">🔄</span> <span data-i18n="cam_flip"></span></button>
+          <button class="btn" id="camStop" type="button" data-i18n="cam_stop" hidden>કૅમેરા બંધ કરો</button>
+          <button class="btn" id="camFlip" type="button" hidden><span aria-hidden="true">🔄</span> <span data-i18n="cam_flip">કૅમેરા બદલો</span></button>
           <button class="btn" id="fsBtn" type="button" aria-pressed="false"><span aria-hidden="true">⛶</span> <span data-i18n="fullscreen"></span></button>
         </div>
-        <p class="muted small center cam-hint mb0" style="margin-top:10px" data-i18n="record_hint"></p>
+        <p class="muted small center cam-hint mb0" style="margin-top:10px" data-i18n="record_hint">ટિપ: બટન 3–5 સેકન્ડ દબાવી રાખો અને વસ્તુ થોડી હલાવો — નજીક, દૂર, ત્રાંસી.</p>
       </div>
 
       <!-- 2. teach -->
       <div class="card teach-card" id="teachCard">
         <div class="teach-head">
-          <h2 class="step"><span class="num">2</span><span data-i18n="step_teach"></span></h2>
+          <h2 class="step"><span class="num">2</span><span data-i18n="step_teach">શીખવો: ઉદાહરણો આપો</span></h2>
           <div class="teach-tools">
-            <label class="sr-only" for="preset" data-i18n="preset_label" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></label>
+            <label class="sr-only" for="preset" data-i18n="preset_label" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">તૈયાર શ્રેણી-સેટ</label>
             <select id="preset"></select>
-            <button class="btn btn-accent" id="addClass" type="button"><span aria-hidden="true">＋</span> <span data-i18n="add_class"></span></button>
+            <button class="btn btn-accent" id="addClass" type="button"><span aria-hidden="true">＋</span> <span data-i18n="add_class">શ્રેણી ઉમેરો</span></button>
           </div>
         </div>
         <div class="classes" id="classes"></div>
       </div>
       <!-- 3. test -->
       <div class="card test-card" id="testCard">
-        <h2 class="step"><span class="num">3</span><span data-i18n="step_test"></span></h2>
+        <h2 class="step"><span class="num">3</span><span data-i18n="step_test">ચકાસો: AI શું વિચારે છે?</span></h2>
         <div class="winner-box" id="winnerBox">
-          <div class="winner-cap" id="winnerCap" data-i18n="winner_cap" hidden></div>
+          <div class="winner-cap" id="winnerCap" data-i18n="winner_cap" hidden>AI ના મતે આ છે</div>
           <div class="winner idle" id="winner" aria-live="polite"></div>
           <div class="winner-sub" id="winnerSub"></div>
         </div>
@@ -230,76 +230,76 @@
         <p class="muted small" id="votesNote" style="margin-top:12px"></p>
         <div class="test-prev" id="testPrev" hidden>
           <img id="testImg" alt="">
-          <button class="btn btn-sm" id="backLive" type="button" data-i18n="back_live"></button>
+          <button class="btn btn-sm" id="backLive" type="button" data-i18n="back_live">પાછા લાઇવ કૅમેરા પર</button>
         </div>
         <div class="row" style="margin-top:12px">
-          <button class="btn" id="testPhoto" type="button"><span aria-hidden="true">🖼️</span> <span data-i18n="test_photo"></span></button>
-          <label class="check"><input type="checkbox" id="speakChk"> <span data-i18n="speak_result"></span></label>
+          <button class="btn" id="testPhoto" type="button"><span aria-hidden="true">🖼️</span> <span data-i18n="test_photo">ફોટાથી ચકાસો</span></button>
+          <label class="check"><input type="checkbox" id="speakChk"> <span data-i18n="speak_result">જવાબ મોટેથી સંભળાવો</span></label>
         </div>
       </div>
 
     </section>
 
     <div class="tm-bottom">
-      <button class="btn" id="saveModel" type="button"><span aria-hidden="true">💾</span> <span data-i18n="save_model"></span></button>
-      <button class="btn" id="openModel" type="button"><span aria-hidden="true">📂</span> <span data-i18n="open_model"></span></button>
+      <button class="btn" id="saveModel" type="button"><span aria-hidden="true">💾</span> <span data-i18n="save_model">મોડેલ સેવ કરો (ફાઇલ)</span></button>
+      <button class="btn" id="openModel" type="button"><span aria-hidden="true">📂</span> <span data-i18n="open_model">સેવ કરેલું મોડેલ ખોલો</span></button>
       <button class="btn btn-danger" id="resetAll" type="button" data-i18n="reset"></button>
-      <span class="muted small grow" data-i18n="saved_note"></span>
+      <span class="muted small grow" data-i18n="saved_note">આ પેજ ખુલ્લું હોય ત્યાં સુધી જ ઉદાહરણો રહે છે. પછી ફરી વાપરવા માટે મોડેલને ફાઇલમાં સેવ કરો.</span>
     </div>
 
     <details class="card" id="insideBox" style="margin-top:16px">
-      <summary data-i18n="inside_title"></summary>
+      <summary data-i18n="inside_title">AI ની અંદર શું થાય છે?</summary>
       <div class="inside-grid">
         <div>
-          <h3 data-i18n="in1_h"></h3>
-          <p data-i18n="in1"></p>
+          <h3 data-i18n="in1_h">1. ચિત્ર → સંખ્યાઓ (ફીચર્સ)</h3>
+          <p data-i18n="in1">કૅમેરાનું દરેક ચિત્ર ચોરસ કાપીને 224 × 224 પિક્સેલનું કરાય છે અને MobileNet ને અપાય છે. MobileNet એક ન્યૂરલ નેટવર્ક છે, જે પહેલેથી આશરે 12 લાખ ફોટામાંથી શીખેલું છે. તે જવાબ નથી આપતું; તે ચિત્રને 1,280 સંખ્યાઓની યાદીમાં ફેરવે છે, જેને ફીચર્સ કહે છે. એકસરખાં દેખાતાં ચિત્રોની સંખ્યાઓ પણ લગભગ સરખી હોય છે.</p>
           <div class="fp-wrap" style="margin-top:10px">
             <canvas id="fp" width="640" height="200" aria-hidden="true"></canvas>
-            <p class="tiny muted mb0" style="margin-top:6px" data-i18n="fp_caption"></p>
+            <p class="tiny muted mb0" style="margin-top:6px" data-i18n="fp_caption">લાઇવ ફીચર ફિંગરપ્રિન્ટ: દરેક નાનું ખાનું હાલના ચિત્રની 1,280 સંખ્યાઓમાંથી એક છે (જેટલો વધુ રંગ, એટલી મોટી સંખ્યા). કંઈક જુદું બતાવો અને ભાત બદલાતી જુઓ.</p>
           </div>
         </div>
-        <div><h3 data-i18n="in2_h"></h3><p data-i18n="in2"></p></div>
+        <div><h3 data-i18n="in2_h">2. તમારાં ઉદાહરણો = ટ્રેનિંગ ડેટા</h3><p data-i18n="in2">“દબાવીને રેકોર્ડ કરો” દબાવી રાખો ત્યારે દર સેકન્ડે આશરે 10 ચિત્રો ફીચર્સમાં ફેરવાઈને તે શ્રેણીમાં સંગ્રહાય છે. આ સંગ્રહ જ ટ્રેનિંગ ડેટા છે. “અંગૂઠો ઉપર” શું છે એ AI ને ખબર જ નથી — તે ફક્ત તમારાં ઉદાહરણો જાણે છે.</p></div>
         <div>
-          <h3 data-i18n="in3_h"></h3><p data-i18n="in3"></p>
+          <h3 data-i18n="in3_h">3. સૌથી નજીકના પડોશીઓને પૂછવું (KNN)</h3><p data-i18n="in3">નવું ચિત્ર આવે ત્યારે ઍપ એવાં K સંગ્રહેલાં ઉદાહરણો શોધે છે જેની સંખ્યાઓ તેની સૌથી નજીક હોય. દરેક પડોશી પોતાની શ્રેણીને મત આપે છે. જે શ્રેણીને સૌથી વધુ મત મળે તે જીતે છે, અને મતોનો હિસ્સો એ જ ખાતરી (confidence) છે.</p>
           <label class="field" style="margin-top:10px"><span id="kLabel"></span>
             <input type="range" id="kRange" min="1" max="20" step="1" value="10">
           </label>
           <p class="tiny muted mb0" id="kNote" hidden></p>
         </div>
-        <div><h3 data-i18n="in4_h"></h3><p data-i18n="in4"></p></div>
-        <div class="callout warning"><h3 data-i18n="in5_h"></h3><p data-i18n="in5"></p></div>
+        <div><h3 data-i18n="in4_h">4. વધુ અને વિવિધ ઉદાહરણો કેમ મદદ કરે છે</h3><p data-i18n="in4">બધાં ઉદાહરણો એકસરખાં હોય તો AI ફક્ત એ એક જ દૃશ્ય શીખે છે. નજીકથી અને દૂરથી, જુદા જુદા ખૂણેથી, જુદા હાથથી અને જુદા પ્રકાશમાં રેકોર્ડ કરો. દરેક શ્રેણીમાં ઉદાહરણોની સંખ્યા લગભગ સરખી રાખો, નહીં તો મોટી શ્રેણીને વધુ મત મળશે.</p></div>
+        <div class="callout warning"><h3 data-i18n="in5_h">5. બાયસ: જ્યારે AI ખોટી વાત શીખે</h3><p data-i18n="in5">એક જ ઓરડામાં એક જ વ્યક્તિ સાથે શીખવો તો AI વસ્તુને બદલે દીવાલ, પ્રકાશ કે શર્ટનો રંગ શીખી શકે છે અને પછી બીજા લોકો અને જગ્યાએ ભૂલ કરે છે. આને બાયસ (પક્ષપાત) કહે છે. ફેસ અનલૉક કે તબીબી ઍપ જેવા સાચા AI ને ન્યાયી બનાવવા અનેક પ્રકારના લોકો અને જગ્યાઓ પર ચકાસવા જરૂરી છે.</p></div>
       </div>
     </details>
 
     <details class="card" id="helpBox" style="margin-top:16px">
-      <summary data-i18n="help_ideas"></summary>
+      <summary data-i18n="help_ideas">કેવી રીતે વાપરવું · વર્ગ માટે વિચારો</summary>
       <ul class="tips">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li><strong data-i18n="act_h"></strong> <span data-i18n="act1"></span></li>
-        <li><strong data-i18n="act2_h"></strong> <span data-i18n="act2"></span></li>
+        <li data-i18n="tip1">“કૅમેરા ચાલુ કરો” દબાવો. દરેક શ્રેણી માટે “દબાવીને રેકોર્ડ કરો” થોડી સેકન્ડ દબાવી રાખો. દરેક શ્રેણીમાં 30–50 ઉદાહરણો સારી શરૂઆત છે.</li>
+        <li data-i18n="tip2">હંમેશાં એક “કંઈ નહીં” શ્રેણી (ફક્ત પૃષ્ઠભૂમિ) ઉમેરો, જેથી કંઈ ન બતાવો ત્યારે પણ AI પાસે જવાબ હોય.</li>
+        <li data-i18n="tip3">કૅમેરા નથી કે પરવાનગી રોકાઈ છે? દરેક શ્રેણીમાં “ફોટા અપલોડ કરો” વાપરો, પછી “ફોટાથી ચકાસો”.</li>
+        <li data-i18n="tip4">સ્માર્ટબોર્ડ પર “પૂર્ણ સ્ક્રીન” દબાવો. કીબોર્ડ હોય તો 1–5 નંબરની કી દબાવી રાખીને તે શ્રેણીમાં રેકોર્ડ કરો.</li>
+        <li data-i18n="tip5">ઘરે મોડેલ તૈયાર કરો, “મોડેલ સેવ કરો (ફાઇલ)” થી સાચવી રાખો અને વર્ગમાં ખોલો. ચિત્રો આ ડિવાઇસની બહાર ક્યારેય જતાં નથી.</li>
+        <li><strong data-i18n="act_h">પ્રવૃત્તિ — પથ્થર, કાગળ, કાતર:</strong> <span data-i18n="act1">એક ટુકડી AI ને શીખવે, બીજી ટુકડી ચકાસે. 10 માંથી કેટલી વાર સાચું આવે છે તે ગણો. પછી વધુ વિવિધ ઉદાહરણો ઉમેરીને ફરી ચકાસો.</span></li>
+        <li><strong data-i18n="act2_h">પ્રવૃત્તિ — બાયસ જાસૂસ:</strong> <span data-i18n="act2">ફક્ત એક વિદ્યાર્થીના હાથથી, ઓરડાના એક ખૂણામાં શીખવો. પછી બીજાઓને બીજી જગ્યાએ કે જુદા પ્રકાશમાં ચકાસવા દો. તે કેમ ભૂલ કરે છે? કેવી રીતે સુધારશો? નીચેની વર્કશીટ ભરો.</span></li>
       </ul>
     </details>
 
     <details class="card" id="wsBox" style="margin-top:16px">
-      <summary data-i18n="ws_title"></summary>
+      <summary data-i18n="ws_title">વર્કશીટ: વધુ ડેટાથી મદદ મળે છે?</summary>
       <div class="stack">
-        <div class="row no-print"><button class="btn btn-primary" id="printWs" type="button"><span aria-hidden="true">🖨️</span> <span data-i18n="print_ws"></span></button></div>
-        <h2 class="print-only" data-i18n="ws_title"></h2>
-        <div class="ws-head-line"><span data-i18n="ws_name"></span><span data-i18n="ws_class"></span><span data-i18n="ws_date"></span></div>
-        <p data-i18n="ws_intro"></p>
+        <div class="row no-print"><button class="btn btn-primary" id="printWs" type="button"><span aria-hidden="true">🖨️</span> <span data-i18n="print_ws">વર્કશીટ પ્રિન્ટ કરો</span></button></div>
+        <h2 class="print-only" data-i18n="ws_title">વર્કશીટ: વધુ ડેટાથી મદદ મળે છે?</h2>
+        <div class="ws-head-line"><span data-i18n="ws_name">નામ: ____________</span><span data-i18n="ws_class">ધોરણ: ______</span><span data-i18n="ws_date">તારીખ: ________</span></div>
+        <p data-i18n="ws_intro">AI ને શીખવો, પછી 10 વાર ચકાસો. એક વખતે એક જ વસ્તુ બદલો (વધુ ઉદાહરણો, વધુ લોકો, જુદો પ્રકાશ) અને શું થયું તે લખો.</p>
         <div class="scroll-x">
           <table class="table ws-table">
-            <thead><tr><th>#</th><th data-i18n="ws_col_change"></th><th data-i18n="ws_col_examples"></th><th data-i18n="ws_col_where"></th><th data-i18n="ws_col_right"></th></tr></thead>
+            <thead><tr><th>#</th><th data-i18n="ws_col_change">અમે શું બદલ્યું</th><th data-i18n="ws_col_examples">દરેક શ્રેણીમાં ઉદાહરણો</th><th data-i18n="ws_col_where">કોણે / ક્યાં ચકાસ્યું</th><th data-i18n="ws_col_right">10 માંથી સાચા</th></tr></thead>
             <tbody id="wsRows"></tbody>
           </table>
         </div>
-        <p class="mb0" data-i18n="ws_q1"></p><div class="ws-lines"></div><div class="ws-lines"></div>
-        <p class="mb0" data-i18n="ws_q2"></p><div class="ws-lines"></div><div class="ws-lines"></div>
-        <p class="mb0" data-i18n="ws_q3"></p><div class="ws-lines"></div><div class="ws-lines"></div>
+        <p class="mb0" data-i18n="ws_q1">1. AI માટે કઈ શ્રેણી સૌથી સહેલી હતી? કેમ?</p><div class="ws-lines"></div><div class="ws-lines"></div>
+        <p class="mb0" data-i18n="ws_q2">2. AI એ ક્યારે ભૂલ કરી? એ ચિત્રોમાં શું જુદું હતું?</p><div class="ws-lines"></div><div class="ws-lines"></div>
+        <p class="mb0" data-i18n="ws_q3">3. તમારી શાળાના દરેક વિદ્યાર્થી માટે આ AI ને ન્યાયી કેવી રીતે બનાવશો?</p><div class="ws-lines"></div><div class="ws-lines"></div>
       </div>
     </details>
   </main>

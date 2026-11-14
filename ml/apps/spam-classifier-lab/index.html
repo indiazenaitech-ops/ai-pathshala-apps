@@ -229,11 +229,11 @@
 </head>
 <body>
   <main id="app">
-    <h1 class="print-title" data-i18n="app_title"></h1>
+    <h1 class="print-title" data-i18n="app_title">സ്പാം തിരിച്ചറിയുന്ന AI</h1>
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">വാക്കുകൾ എണ്ണിമാത്രം സ്പാമും യഥാർഥ മെസേജുകളും വേർതിരിക്കാൻ കമ്പ്യൂട്ടറിനെ പഠിപ്പിക്കൂ (Naive Bayes). കണക്കിന്റെ ഓരോ ഘട്ടവും കാണൂ, പിന്നെ അതിനെ കബളിപ്പിച്ചു നോക്കൂ.</p>
       <div class="row no-print">
-        <button type="button" class="btn btn-sm" id="proj-btn" aria-pressed="false"><span aria-hidden="true">📽️ </span><span data-i18n="projector"></span></button>
+        <button type="button" class="btn btn-sm" id="proj-btn" aria-pressed="false"><span aria-hidden="true">📽️ </span><span data-i18n="projector">പ്രൊജക്ടർ മോഡ്</span></button>
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm btn-danger" id="reset-btn" data-i18n="reset"></button>
       </div>
@@ -241,16 +241,16 @@
 
     <!-- 1. Check a message -->
     <section class="card stack" id="check-card">
-      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1"></span></h2>
+      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1">മെസേജ് പരിശോധിക്കൂ</span></h2>
       <div>
-        <label for="msg" class="lbl" data-i18n="msg_label"></label>
+        <label for="msg" class="lbl" data-i18n="msg_label">മെസേജ് എഴുതുക അല്ലെങ്കിൽ പേസ്റ്റ് ചെയ്യുക</label>
         <textarea id="msg" class="no-i18n" rows="2" maxlength="300" autocomplete="off" spellcheck="false" data-i18n-placeholder="msg_ph"></textarea>
       </div>
       <div class="tries no-print" id="tries-wrap">
-        <span class="lbl mb0" data-i18n="try_t"></span>
-        <button type="button" class="chip try-chip" data-kind="spam" data-i18n="try_spam"></button>
-        <button type="button" class="chip try-chip" data-kind="ham" data-i18n="try_ham"></button>
-        <button type="button" class="chip try-chip" data-kind="tricky" data-i18n="try_tricky"></button>
+        <span class="lbl mb0" data-i18n="try_t">അല്ലെങ്കിൽ ഇവയിൽ ഒന്ന് പരീക്ഷിക്കൂ:</span>
+        <button type="button" class="chip try-chip" data-kind="spam" data-i18n="try_spam">ലോട്ടറി മെസേജ്</button>
+        <button type="button" class="chip try-chip" data-kind="ham" data-i18n="try_ham">ക്ലാസ് റദ്ദാക്കി</button>
+        <button type="button" class="chip try-chip" data-kind="tricky" data-i18n="try_tricky">കുഴപ്പിക്കുന്ന മെസേജ്</button>
         <button type="button" class="chip" id="msg-clear" data-i18n="clear"></button>
       </div>
       <p class="callout small mb0" id="check-status" hidden></p>
@@ -260,69 +260,69 @@
           <div class="v-main"><div class="v-name" id="v-name"></div><div class="v-sure" id="v-sure"></div></div>
         </div>
         <div class="pbars">
-          <div class="pbar-row"><span class="pbar-lab" data-i18n="chance_spam"></span><div class="pbar spam"><span id="pbar-spam"></span></div><b class="pbar-pct num" id="p-spam"></b></div>
-          <div class="pbar-row"><span class="pbar-lab" data-i18n="chance_ham"></span><div class="pbar ham"><span id="pbar-ham"></span></div><b class="pbar-pct num" id="p-ham"></b></div>
+          <div class="pbar-row"><span class="pbar-lab" data-i18n="chance_spam">സ്പാം ആകാനുള്ള സാധ്യത</span><div class="pbar spam"><span id="pbar-spam"></span></div><b class="pbar-pct num" id="p-spam"></b></div>
+          <div class="pbar-row"><span class="pbar-lab" data-i18n="chance_ham">സ്പാം അല്ലാതിരിക്കാനുള്ള സാധ്യത</span><div class="pbar ham"><span id="pbar-ham"></span></div><b class="pbar-pct num" id="p-ham"></b></div>
         </div>
       </div>
       <div id="explain" class="stack">
-        <h3 class="mb0" data-i18n="evidence_t"></h3>
-        <p class="muted small mb0" data-i18n="evidence_hint"></p>
+        <h3 class="mb0" data-i18n="evidence_t">തെളിവ്, വാക്കുവാക്കായി</h3>
+        <p class="muted small mb0" data-i18n="evidence_hint">ചുവന്ന ബാർ = ഈ വാക്ക് സ്പാമിലേക്ക് വലിക്കുന്നു. പച്ച ബാർ = യഥാർഥ മെസേജിലേക്ക്. നീളം = കൂടുതൽ ശക്തി. ചാരനിറം = ഫിൽറ്റർ ഇതുവരെ കാണാത്ത പുതിയ വാക്ക്, അതിനാൽ ഒഴിവാക്കി.</p>
         <div class="ev-list no-i18n" id="bars"></div>
         <div class="legend">
-          <span><span class="sw" style="--sc: var(--spam)"></span><span data-i18n="lbl_spam"></span></span>
-          <span><span class="sw" style="--sc: var(--ham)"></span><span data-i18n="lbl_ham"></span></span>
-          <span><span class="sw" style="--sc: var(--border)"></span><span data-i18n="new_word"></span></span>
+          <span><span class="sw" style="--sc: var(--spam)"></span><span data-i18n="lbl_spam">സ്പാം</span></span>
+          <span><span class="sw" style="--sc: var(--ham)"></span><span data-i18n="lbl_ham">സ്പാം അല്ല</span></span>
+          <span><span class="sw" style="--sc: var(--border)"></span><span data-i18n="new_word">പുതിയ വാക്ക്, ഒഴിവാക്കി</span></span>
         </div>
         <details id="maths" open>
-          <summary data-i18n="maths_t"></summary>
+          <summary data-i18n="maths_t">ഘട്ടം ഘട്ടമായി: കണക്ക്</summary>
           <div class="stack" id="maths-body"></div>
         </details>
       </div>
-      <p class="muted tiny mb0" data-i18n="privacy"></p>
+      <p class="muted tiny mb0" data-i18n="privacy">എല്ലാം നിങ്ങളുടെ ബ്രൗസറിൽ തന്നെ നടക്കുന്നു. നിങ്ങൾ എഴുതുന്ന മെസേജുകൾ ഈ ഉപകരണത്തിന് പുറത്തു പോകില്ല.</p>
     </section>
 
     <!-- 2. Teach it -->
     <section class="card stack" id="data-card">
-      <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2"></span></h2>
-      <p class="muted small mb0" data-i18n="step2_hint"></p>
+      <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2">പഠിപ്പിക്കൂ: പരിശീലന മെസേജുകൾ</span></h2>
+      <p class="muted small mb0" data-i18n="step2_hint">ഫിൽറ്റർ ഈ മെസേജുകളിൽ നിന്ന് മാത്രമേ പഠിക്കൂ. നിങ്ങളുടെ മെസേജുകൾ ചേർക്കൂ, ചിലത് നീക്കൂ, മുകളിലെ തീരുമാനം ഉടൻ മാറുന്നത് കാണൂ.</p>
       <div class="labs">
         <div class="lab-card spam">
-          <div class="lab-head"><span class="lab-emoji" aria-hidden="true">🚫</span><span class="lab-name" data-i18n="lbl_spam"></span><span class="lab-count" id="cnt-spam" data-n="0"></span></div>
+          <div class="lab-head"><span class="lab-emoji" aria-hidden="true">🚫</span><span class="lab-name" data-i18n="lbl_spam">സ്പാം</span><span class="lab-count" id="cnt-spam" data-n="0"></span></div>
           <ul class="msg-list no-i18n" id="list-spam"></ul>
         </div>
         <div class="lab-card ham">
-          <div class="lab-head"><span class="lab-emoji" aria-hidden="true">✅</span><span class="lab-name" data-i18n="lbl_ham"></span><span class="lab-count" id="cnt-ham" data-n="0"></span></div>
+          <div class="lab-head"><span class="lab-emoji" aria-hidden="true">✅</span><span class="lab-name" data-i18n="lbl_ham">സ്പാം അല്ല</span><span class="lab-count" id="cnt-ham" data-n="0"></span></div>
           <ul class="msg-list no-i18n" id="list-ham"></ul>
         </div>
       </div>
       <div class="no-print">
-        <label for="add-input" class="lbl" data-i18n="add_as"></label>
+        <label for="add-input" class="lbl" data-i18n="add_as">പുതിയ മെസേജ് ഇങ്ങനെ ചേർക്കൂ</label>
         <div class="add-row">
           <div class="seg" role="group" data-i18n-aria-label="add_as">
-            <button type="button" id="add-spam" aria-pressed="true" data-i18n="lbl_spam"></button>
-            <button type="button" id="add-ham" aria-pressed="false" data-i18n="lbl_ham"></button>
+            <button type="button" id="add-spam" aria-pressed="true" data-i18n="lbl_spam">സ്പാം</button>
+            <button type="button" id="add-ham" aria-pressed="false" data-i18n="lbl_ham">സ്പാം അല്ല</button>
           </div>
           <input type="text" id="add-input" class="no-i18n" maxlength="300" autocomplete="off" spellcheck="false" data-i18n-placeholder="add_ph">
           <button type="button" class="btn btn-primary" id="add-btn" data-i18n="add"></button>
         </div>
       </div>
       <div class="row data-tools no-print">
-        <button type="button" class="btn btn-accent" id="samples-btn" data-i18n="load_samples"></button>
+        <button type="button" class="btn btn-accent" id="samples-btn" data-i18n="load_samples">സാമ്പിൾ മെസേജുകൾ</button>
         <div class="row">
-          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv"></button>
-          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv"></button>
-          <button type="button" class="btn btn-sm btn-danger" id="clear-btn" data-i18n="clear_all"></button>
+          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv">CSV തുറക്കുക</button>
+          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv">CSV ഡൗൺലോഡ്</button>
+          <button type="button" class="btn btn-sm btn-danger" id="clear-btn" data-i18n="clear_all">എല്ലാം മായ്ക്കുക</button>
         </div>
       </div>
-      <p class="muted tiny mb0 no-print" data-i18n="samples_note"></p>
-      <p class="muted tiny mb0 no-print" data-i18n="csv_hint"></p>
+      <p class="muted tiny mb0 no-print" data-i18n="samples_note">സാമ്പിൾ മെസേജുകൾ ആപ്പിന്റെ ഭാഷയിൽ കാണും. നിങ്ങൾ ചേർക്കുന്ന മെസേജുകൾ വിവർത്തനം ചെയ്യില്ല.</p>
+      <p class="muted tiny mb0 no-print" data-i18n="csv_hint">text, label (spam അല്ലെങ്കിൽ ham) കോളങ്ങളുള്ള CSV ഫയൽ. ഇത് Excel അല്ലെങ്കിൽ Google Sheets-ൽ തുറക്കും.</p>
       <div class="panel exp" id="exp">
-        <h3><span aria-hidden="true">🎯</span><span data-i18n="exp_t"></span></h3>
-        <p class="small" data-i18n="exp_d"></p>
+        <h3><span aria-hidden="true">🎯</span><span data-i18n="exp_t">പരീക്ഷണം: “നേടി” എപ്പോഴും സ്പാം ആണോ?</span></h3>
+        <p class="small" data-i18n="exp_d">കുഴപ്പിക്കുന്ന മെസേജ് ഒരു സുഹൃത്തിന്റെ യഥാർഥ മെസേജാണ്, പക്ഷേ അതിൽ “അഭിനന്ദനങ്ങൾ”, “നേടി”, “സമ്മാനം” പോലുള്ള വാക്കുകളുണ്ട്; ഫിൽറ്റർ ഇവ സ്പാമിൽ മാത്രമേ കണ്ടിട്ടുള്ളൂ. ഈ വാക്കുകളുള്ള 3 യഥാർഥ മെസേജുകൾ ചേർത്ത് എന്ത് സംഭവിക്കുന്നു എന്ന് കാണൂ.</p>
         <p class="small tricky-q no-i18n" id="exp-msg"></p>
         <div class="exp-btns">
-          <button type="button" class="btn btn-accent" id="exp-btn" data-i18n="exp_btn"></button>
-          <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩ </span><span data-i18n="undo_exp"></span></button>
+          <button type="button" class="btn btn-accent" id="exp-btn" data-i18n="exp_btn">3 യഥാർഥ മെസേജുകൾ ചേർക്കൂ</button>
+          <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩ </span><span data-i18n="undo_exp">പരീക്ഷണം പിൻവലിക്കൂ</span></button>
         </div>
         <div id="exp-res" aria-live="polite"></div>
       </div>
@@ -330,46 +330,46 @@
 
     <!-- 3. How good is it? -->
     <section class="card stack" id="eval-card">
-      <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3"></span></h2>
-      <label class="check no-print"><input type="checkbox" id="holdout-chk"><span data-i18n="holdout_label"></span></label>
+      <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3">ഇത് എത്ര നല്ലതാണ്? ന്യായമായ ടെസ്റ്റ്</span></h2>
+      <label class="check no-print"><input type="checkbox" id="holdout-chk"><span data-i18n="holdout_label">സാമ്പിൾ മെസേജുകളിൽ 25% ടെസ്റ്റിനായി മാറ്റിവയ്ക്കൂ, അവയിൽ നിന്ന് ഫിൽറ്റർ ഒരിക്കലും പഠിക്കില്ല</span></label>
       <div class="stats">
-        <div class="stat"><b id="st-train">0</b><span data-i18n="st_train"></span></div>
-        <div class="stat"><b id="st-test">0</b><span data-i18n="st_test"></span></div>
-        <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab"></span></div>
-        <div class="stat"><b id="st-acc" data-v="">–</b><span data-i18n="st_acc"></span></div>
+        <div class="stat"><b id="st-train">0</b><span data-i18n="st_train">പരിശീലന മെസേജുകൾ</span></div>
+        <div class="stat"><b id="st-test">0</b><span data-i18n="st_test">ടെസ്റ്റ് മെസേജുകൾ</span></div>
+        <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab">അറിയാവുന്ന വ്യത്യസ്ത വാക്കുകൾ</span></div>
+        <div class="stat"><b id="st-acc" data-v="">–</b><span data-i18n="st_acc">ടെസ്റ്റിൽ ശരി</span></div>
       </div>
-      <p class="callout warning small mb0" id="cheat-note" data-i18n="cheat_note" hidden></p>
-      <p class="callout small mb0" id="acc-none" data-i18n="acc_none" hidden></p>
+      <p class="callout warning small mb0" id="cheat-note" data-i18n="cheat_note" hidden>ന്യായമായ ടെസ്റ്റ് ഓഫാണ്, അതിനാൽ ഫിൽറ്റർ പഠിച്ച അതേ മെസേജുകളിൽ തന്നെ അതിനെ പരിശോധിക്കുന്നു, ഒരു വിദ്യാർഥി സ്വന്തം ഹോംവർക്ക് സ്വയം നോക്കുന്നതുപോലെ. സ്കോർ യഥാർഥത്തേക്കാൾ നല്ലതായി തോന്നും.</p>
+      <p class="callout small mb0" id="acc-none" data-i18n="acc_none" hidden>ടെസ്റ്റ് മെസേജുകളില്ല. മുകളിൽ ന്യായമായ ടെസ്റ്റ് ഓണാക്കൂ, അല്ലെങ്കിൽ സാമ്പിൾ മെസേജുകൾ ലോഡ് ചെയ്യൂ.</p>
       <div class="eval-grid" id="eval-grid">
         <div class="stack">
-          <h3 class="mb0" data-i18n="cm_t"></h3>
+          <h3 class="mb0" data-i18n="cm_t">കൺഫ്യൂഷൻ മാട്രിക്സ്</h3>
           <table class="cm" id="cm">
             <thead>
               <tr>
                 <th></th>
-                <th><span data-i18n="cm_said"></span><span class="lbl2" data-i18n="lbl_spam"></span></th>
-                <th><span data-i18n="cm_said"></span><span class="lbl2" data-i18n="lbl_ham"></span></th>
+                <th><span data-i18n="cm_said">ഫിൽറ്റർ പറഞ്ഞത്</span><span class="lbl2" data-i18n="lbl_spam">സ്പാം</span></th>
+                <th><span data-i18n="cm_said">ഫിൽറ്റർ പറഞ്ഞത്</span><span class="lbl2" data-i18n="lbl_ham">സ്പാം അല്ല</span></th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th class="rowh"><span data-i18n="cm_real"></span><span class="lbl2" data-i18n="lbl_spam"></span></th>
-                <td class="cell good" id="cm-tp" data-n="0"><span class="abbr">TP</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_tp"></span></td>
-                <td class="cell bad" id="cm-fn" data-n="0"><span class="abbr">FN</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_fn"></span></td>
+                <th class="rowh"><span data-i18n="cm_real">യഥാർഥത്തിൽ</span><span class="lbl2" data-i18n="lbl_spam">സ്പാം</span></th>
+                <td class="cell good" id="cm-tp" data-n="0"><span class="abbr">TP</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_tp">സ്പാം പിടിച്ചു</span></td>
+                <td class="cell bad" id="cm-fn" data-n="0"><span class="abbr">FN</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_fn">സ്പാം രക്ഷപ്പെട്ടു</span></td>
               </tr>
               <tr>
-                <th class="rowh"><span data-i18n="cm_real"></span><span class="lbl2" data-i18n="lbl_ham"></span></th>
-                <td class="cell bad" id="cm-fp" data-n="0"><span class="abbr">FP</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_fp"></span></td>
-                <td class="cell good" id="cm-tn" data-n="0"><span class="abbr">TN</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_tn"></span></td>
+                <th class="rowh"><span data-i18n="cm_real">യഥാർഥത്തിൽ</span><span class="lbl2" data-i18n="lbl_ham">സ്പാം അല്ല</span></th>
+                <td class="cell bad" id="cm-fp" data-n="0"><span class="abbr">FP</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_fp">യഥാർഥ മെസേജ് തടഞ്ഞു</span></td>
+                <td class="cell good" id="cm-tn" data-n="0"><span class="abbr">TN</span><span class="cnt num">0</span><span class="cell-name" data-i18n="cm_tn">യഥാർഥ മെസേജ് എത്തി</span></td>
               </tr>
             </tbody>
           </table>
           <div class="pr-lines"><div id="pr-line"></div><div id="rc-line"></div></div>
-          <div class="row no-print"><button type="button" class="btn btn-sm" id="reshuffle-btn" data-i18n="reshuffle"></button></div>
+          <div class="row no-print"><button type="button" class="btn btn-sm" id="reshuffle-btn" data-i18n="reshuffle">മറ്റ് ടെസ്റ്റ് മെസേജുകൾ തിരഞ്ഞെടുക്കൂ</button></div>
         </div>
         <div class="stack">
           <h3 class="mb0" id="mist-sum"></h3>
-          <p class="callout success small mb0" id="no-mist" data-i18n="no_mistakes" hidden></p>
+          <p class="callout success small mb0" id="no-mist" data-i18n="no_mistakes" hidden>ടെസ്റ്റ് മെസേജുകളിൽ തെറ്റില്ല. കഠിനമായ സെറ്റിനായി “മറ്റ് ടെസ്റ്റ് മെസേജുകൾ തിരഞ്ഞെടുക്കൂ” അമർത്തൂ.</p>
           <ul class="mist-list" id="mist-list"></ul>
         </div>
       </div>
@@ -377,45 +377,45 @@
 
     <!-- 4. Peek inside -->
     <section class="card stack" id="peek-card">
-      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="peek_t"></span></h2>
-      <p class="muted small mb0" data-i18n="peek_note"></p>
-      <p class="formula" data-i18n="formula_word"></p>
+      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="peek_t">ഉള്ളിലേക്ക് നോക്കൂ: വാക്കുകളുടെ എണ്ണമാണ് മുഴുവൻ മോഡൽ</span></h2>
+      <p class="muted small mb0" data-i18n="peek_note">പരിശീലനം എന്നാൽ എണ്ണൽ മാത്രം. ഫിൽറ്ററിന് അറിയാവുന്നതെല്ലാം ഈ പട്ടികയിലുണ്ട്.</p>
+      <p class="formula" data-i18n="formula_word">P(വാക്ക് | വിഭാഗം) = (ആ വിഭാഗത്തിൽ വാക്ക് വന്ന തവണ + 1) ÷ (ആ വിഭാഗത്തിലെ ആകെ വാക്കുകൾ + V)</p>
       <p class="muted small mb0" id="vocab-line"></p>
       <div class="peek-tools no-print">
         <input type="search" id="peek-filter" class="no-i18n" data-i18n-placeholder="peek_filter" data-i18n-aria-label="peek_filter" autocomplete="off">
         <div class="seg" role="group" data-i18n-aria-label="sort_by">
-          <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common"></button>
-          <button type="button" id="sort-spam" aria-pressed="false" data-i18n="sort_spam"></button>
-          <button type="button" id="sort-ham" aria-pressed="false" data-i18n="sort_ham"></button>
+          <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common">ഏറ്റവും കൂടുതൽ</button>
+          <button type="button" id="sort-spam" aria-pressed="false" data-i18n="sort_spam">സ്പാം സൂചനകൾ</button>
+          <button type="button" id="sort-ham" aria-pressed="false" data-i18n="sort_ham">യഥാർഥ മെസേജ് സൂചനകൾ</button>
         </div>
       </div>
       <p class="muted small mb0" id="peek-count"></p>
       <div class="scroll-x"><table class="table peek no-i18n" id="peek-table"></table></div>
-      <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more"></button>
+      <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more">കൂടുതൽ വാക്കുകൾ കാണിക്കൂ</button>
     </section>
 
     <!-- 5. What is happening inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside_t"></h2>
+      <h2 data-i18n="inside_t">ഉള്ളിൽ എന്താണ് നടക്കുന്നത്?</h2>
       <div class="grid-3 inside-grid">
-        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t"></span></h3><p data-i18n="in1"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t"></span></h3><p data-i18n="in2"></p><p class="formula" data-i18n="formula"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">➕</span><span data-i18n="in3_t"></span></h3><p data-i18n="in3"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">📉</span><span data-i18n="in4_t"></span></h3><p data-i18n="in4"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in5_t"></span></h3><p data-i18n="in5"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">📬</span><span data-i18n="in6_t"></span></h3><p data-i18n="in6"></p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t">ഇത് വാക്കുകൾ മാത്രം എണ്ണുന്നു</span></h3><p data-i18n="in1">പരിശീലനം എന്നാൽ എണ്ണൽ: ഓരോ വാക്കും സ്പാം മെസേജുകളിൽ എത്ര തവണ, യഥാർഥത്തിൽ എത്ര തവണ? “ലോട്ടറി” സ്പാമിൽ കൂടുന്നു, “ഹോംവർക്ക്” യഥാർഥത്തിൽ.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t">Bayes നിയമം</span></h3><p data-i18n="in2">പുതിയ മെസേജിന്, ഓരോ വിഭാഗത്തിന്റെയും തുടക്ക സാധ്യതയെ ആ വിഭാഗത്തിലെ ഓരോ വാക്കിന്റെയും സാധ്യത കൊണ്ട് ഗുണിക്കുന്നു. വലിയ ഫലമുള്ളത് ജയിക്കുന്നു. ഇതാണ് Naive Bayes, ആദ്യത്തെ ഇമെയിൽ സ്പാം ഫിൽറ്ററുകളുടെ രീതി.</p><p class="formula" data-i18n="formula">P(സ്പാം | മെസേജ്) ∝ P(സ്പാം) × P(വാക്ക്₁ | സ്പാം) × P(വാക്ക്₂ | സ്പാം) × …</p></div>
+        <div class="panel"><h3><span aria-hidden="true">➕</span><span data-i18n="in3_t">Laplace smoothing: +1 എന്ന സൂത്രം</span></h3><p data-i18n="in3">ഒരു വാക്ക് ഒരു വിഭാഗത്തിൽ ഒരിക്കലും കണ്ടില്ലെങ്കിൽ അതിന്റെ സാധ്യത 0 ആകുകയും മുഴുവൻ ഗുണനഫലവും 0 ആകുകയും ചെയ്യും. ഓരോ എണ്ണത്തിലും 1 കൂട്ടിയാൽ (ഭിന്നത്തിന്റെ താഴെ V കൂട്ടിയാൽ) ഓരോ സാധ്യതയും പൂജ്യത്തിന് അൽപം മുകളിൽ നിൽക്കും.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">📉</span><span data-i18n="in4_t">ലോഗ് എന്തിന്?</span></h3><p data-i18n="in4">0.003 പോലുള്ള ഇരുപത് സംഖ്യകൾ ഗുണിച്ചാൽ 0.000000000000000000000000000001 പോലെ എന്തെങ്കിലും കിട്ടും. കമ്പ്യൂട്ടറുകൾക്ക് ഇത്ര ചെറിയ സംഖ്യകൾ നഷ്ടപ്പെടും, അതിനാൽ യഥാർഥ ഫിൽറ്ററുകൾ log മൂല്യങ്ങൾ കൂട്ടുന്നു. വിജയി മാറില്ല.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in5_t">“Naive” (നിഷ്കളങ്കം) എന്തുകൊണ്ട്?</span></h3><p data-i18n="in5">ഇത് ഓരോ വാക്കിനെയും വെവ്വേറെ കാണുന്നു, ക്രമവും അർഥവും ശ്രദ്ധിക്കുന്നില്ല. “മത്സരം ജയിച്ചു”, “ലോട്ടറി ജയിച്ചു” രണ്ടിലും “ജയി” മാത്രം. അതുകൊണ്ടാണ് കുഴപ്പിക്കുന്ന മെസേജ് ഇതിനെ കബളിപ്പിക്കുന്നത്, പലതരം ഉദാഹരണങ്ങൾ സഹായിക്കുന്നതും.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">📬</span><span data-i18n="in6_t">യഥാർഥ സ്പാം ഫിൽറ്ററുകൾ</span></h3><p data-i18n="in6">Gmail-ഉം WhatsApp-ഉം ഇതേ ആശയവും അതിലേറെയും ഉപയോഗിക്കുന്നു: അയച്ചയാളുടെ ചരിത്രം, ലിങ്കുകൾ, ചിത്രങ്ങൾ, വലിയ ന്യൂറൽ നെറ്റ്‌വർക്കുകൾ. പക്ഷേ പാഠം ഒന്നുതന്നെ: ഫിൽറ്റർ അത് പഠിച്ച ഉദാഹരണങ്ങളോളം മാത്രമേ നല്ലതാകൂ.</p></div>
       </div>
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">എങ്ങനെ ഉപയോഗിക്കാം · ക്ലാസിനുള്ള ആശയങ്ങൾ</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">“മെസേജ് പരിശോധിക്കൂ” എന്നതിൽ ഏത് മെസേജും എഴുതൂ. തീരുമാനവും വാക്ക് ബാറുകളും ഘട്ടം ഘട്ടമായ കണക്കും എഴുതുമ്പോൾ തന്നെ മാറും.</li>
+        <li data-i18n="tip2">“ഘട്ടം ഘട്ടമായി: കണക്ക്” തുറന്ന്, “ഉള്ളിലേക്ക് നോക്കൂ” എണ്ണങ്ങൾ ഉപയോഗിച്ച് ഒരു ഭിന്നം കൈകൊണ്ട് പരിശോധിക്കൂ. ഇത് CBSE 10-ാം ക്ലാസ് AI evaluation യൂണിറ്റിനും 11–12 Naive Bayes വിഷയത്തിനും ചേരുന്നു.</li>
+        <li data-i18n="tip3">ക്ലാസ് പ്രവർത്തനം: രണ്ട് ടീമുകൾ. ടീം A ഫിൽറ്റർ സ്പാം എന്ന് പറയുന്ന 5 യഥാർഥ മെസേജുകൾ എഴുതട്ടെ; ടീം B രക്ഷപ്പെടുന്ന 5 സ്പാം എഴുതട്ടെ. അവ പരിശീലന മെസേജുകളിൽ ചേർത്ത് ഏത് ടീമിന്റെ സൂത്രം പ്രവർത്തിക്കാതാകുന്നു എന്ന് കാണൂ.</li>
+        <li data-i18n="tip4">ന്യായമായ ടെസ്റ്റ് ഓഫും ഓണും ആക്കൂ. പരിശീലന മെസേജുകളിൽ തന്നെ ടെസ്റ്റ് ചെയ്താൽ സ്കോർ എന്തുകൊണ്ട് അമിതമായി നല്ലതാകുന്നു എന്ന് ചർച്ച ചെയ്യൂ.</li>
+        <li data-i18n="tip5">മെസേജുകൾ CSV ആയി ഡൗൺലോഡ് ചെയ്യൂ, വിദ്യാർഥികൾ വീട്ടിൽ 20 പുതിയ മെസേജുകൾക്ക് ലേബൽ നൽകട്ടെ, അടുത്ത ക്ലാസിൽ അവ തുറക്കൂ. ഒന്നും അപ്‌ലോഡ് ചെയ്യില്ല: എല്ലാം ഈ ഉപകരണത്തിൽ തന്നെ.</li>
+        <li data-i18n="tip6">ചർച്ച ചെയ്യൂ: “അഭിനന്ദനങ്ങൾ, നീ ക്വിസ് ജയിച്ചു!” പോലുള്ള യഥാർഥ മെസേജിന് എന്ത് സംഭവിക്കും? തെറ്റായി തടഞ്ഞ മെസേജിന്റെ (false positive) വില എന്ത്? രക്ഷപ്പെട്ട സ്പാമിന്റെ (false negative) വില എന്ത്?</li>
       </ul>
     </details>
   </main>

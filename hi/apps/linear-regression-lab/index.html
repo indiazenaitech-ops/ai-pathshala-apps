@@ -184,17 +184,17 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">देखिए AI डेटा से एक सीधी रेखा कैसे सीखता है: त्रुटि, लॉस, ग्रेडिएंट डिसेंट और अनुमान।</p>
 
     <section class="card lr-toolbar no-print" aria-labelledby="ds-label">
       <div class="ds-wrap">
         <div class="ds-list" id="ds-list" role="group" aria-labelledby="ds-label"></div>
-        <p class="ds-about"><b id="ds-label" data-i18n="data_label"></b> · <span id="ds-about"></span></p>
+        <p class="ds-about"><b id="ds-label" data-i18n="data_label">डेटा</b> · <span id="ds-about"></span></p>
       </div>
       <div class="tb-actions">
         <span class="badge primary" id="pt-count" data-value="0"></span>
-        <button class="btn btn-sm" id="restore" type="button" data-i18n="restore"></button>
-        <button class="btn btn-sm" id="paste-btn" type="button" data-i18n="paste_btn"></button>
+        <button class="btn btn-sm" id="restore" type="button" data-i18n="restore">डेटा वापस लाएँ</button>
+        <button class="btn btn-sm" id="paste-btn" type="button" data-i18n="paste_btn">डेटा पेस्ट करें</button>
         <button class="btn btn-sm" id="print-btn" type="button" data-i18n="print"></button>
         <button class="btn btn-sm" id="fs-btn" type="button" data-i18n="fullscreen"></button>
         <button class="btn btn-sm btn-danger" id="reset-all" type="button" data-i18n="reset"></button>
@@ -207,26 +207,26 @@
       <section class="card lr-graph">
         <div class="stage plot-stage"><canvas id="plot" role="img"></canvas></div>
         <div class="show-row no-print" role="group" aria-labelledby="show-lbl">
-          <span class="lbl" id="show-lbl" data-i18n="show_label"></span>
-          <button class="chip" id="show-res" type="button" aria-pressed="true"><span class="sw sw-res" aria-hidden="true"></span><span data-i18n="show_res"></span></button>
-          <button class="chip" id="show-sq" type="button" aria-pressed="false"><span class="sw sw-sq" aria-hidden="true"></span><span data-i18n="show_sq"></span></button>
-          <button class="chip" id="show-best" type="button" aria-pressed="false"><span class="sw sw-best" aria-hidden="true"></span><span data-i18n="show_best"></span></button>
+          <span class="lbl" id="show-lbl" data-i18n="show_label">दिखाएँ:</span>
+          <button class="chip" id="show-res" type="button" aria-pressed="true"><span class="sw sw-res" aria-hidden="true"></span><span data-i18n="show_res">त्रुटियाँ</span></button>
+          <button class="chip" id="show-sq" type="button" aria-pressed="false"><span class="sw sw-sq" aria-hidden="true"></span><span data-i18n="show_sq">त्रुटियों के वर्ग</span></button>
+          <button class="chip" id="show-best" type="button" aria-pressed="false"><span class="sw sw-best" aria-hidden="true"></span><span data-i18n="show_best">सबसे अच्छी रेखा</span></button>
           <button class="chip fs-exit" id="fs-exit" type="button" aria-pressed="true"><span aria-hidden="true">✕</span><span data-i18n="fullscreen"></span></button>
         </div>
         <p class="canvas-hint no-print" id="canvas-hint"></p>
         <div class="stats">
           <div class="stat stat-eq">
-            <div class="lbl" data-i18n="eq_label"></div>
+            <div class="lbl" data-i18n="eq_label">मॉडल (रेखा)</div>
             <div class="eq" id="equation" data-m="0" data-c="0"></div>
             <div class="eq-words" id="eq-words"></div>
           </div>
           <div class="stat">
-            <div class="lbl" data-i18n="loss_label"></div>
+            <div class="lbl" data-i18n="loss_label">लॉस (MSE)</div>
             <div class="num" id="mse" data-value="0"></div>
             <div class="sub" id="miss"></div>
           </div>
           <div class="stat">
-            <div class="lbl" data-i18n="closeness"></div>
+            <div class="lbl" data-i18n="closeness">सबसे अच्छी से कितनी पास</div>
             <div class="num" id="close" data-value="0"></div>
             <div class="progress" aria-hidden="true"><span id="close-bar" style="width:0"></span></div>
           </div>
@@ -236,32 +236,32 @@
 
       <section class="card lr-side no-print">
         <div class="tabs" role="tablist">
-          <button role="tab" id="tab-manual" aria-controls="panel-manual" aria-selected="true" type="button" data-i18n="tab_manual"></button>
-          <button role="tab" id="tab-auto" aria-controls="panel-auto" aria-selected="false" type="button" data-i18n="tab_auto"></button>
-          <button role="tab" id="tab-predict" aria-controls="panel-predict" aria-selected="false" type="button" data-i18n="tab_predict"></button>
+          <button role="tab" id="tab-manual" aria-controls="panel-manual" aria-selected="true" type="button" data-i18n="tab_manual">हाथ से बैठाएँ</button>
+          <button role="tab" id="tab-auto" aria-controls="panel-auto" aria-selected="false" type="button" data-i18n="tab_auto">AI को सीखने दें</button>
+          <button role="tab" id="tab-predict" aria-controls="panel-predict" aria-selected="false" type="button" data-i18n="tab_predict">अनुमान</button>
         </div>
 
         <!-- 1. fit by hand -->
         <div id="panel-manual" role="tabpanel" aria-labelledby="tab-manual" class="stack">
-          <p class="hint mt0" data-i18n="manual_hint"></p>
+          <p class="hint mt0" data-i18n="manual_hint">रेखा को ऐसे खिसकाएँ कि लाल त्रुटि-लाइनें जितनी हो सके उतनी छोटी हो जाएँ। लॉस को घटते देखें।</p>
           <div class="field">
-            <label for="m-range" data-i18n="slope"></label>
+            <label for="m-range" data-i18n="slope">ढलान m (झुकाव)</label>
             <div class="sl-row">
               <input type="range" id="m-range" min="-1" max="1" step="0.001">
               <input type="number" id="m-num" step="any" data-i18n-aria-label="slope">
             </div>
-            <span class="hint" data-i18n="slope_hint"></span>
+            <span class="hint" data-i18n="slope_hint">x के 1 बढ़ने पर y कितना बदलता है।</span>
           </div>
           <div class="field">
-            <label for="c-range" data-i18n="intercept"></label>
+            <label for="c-range" data-i18n="intercept">अंतःखंड c</label>
             <div class="sl-row">
               <input type="range" id="c-range" min="-1" max="1" step="0.001">
               <input type="number" id="c-num" step="any" data-i18n-aria-label="intercept">
             </div>
-            <span class="hint" data-i18n="intercept_hint"></span>
+            <span class="hint" data-i18n="intercept_hint">जहाँ रेखा x = 0 पर मिलती है, वहाँ y का मान।</span>
           </div>
           <div class="row">
-            <button class="btn btn-sm" id="reset-line" type="button" data-i18n="reset_line"></button>
+            <button class="btn btn-sm" id="reset-line" type="button" data-i18n="reset_line">फिर से सपाट रेखा</button>
           </div>
           <p class="callout coach" id="coach-manual" aria-live="polite" data-code=""><span class="ico" aria-hidden="true"></span><span class="txt"></span></p>
         </div>
@@ -269,25 +269,25 @@
         <!-- 2. let AI learn -->
         <div id="panel-auto" role="tabpanel" aria-labelledby="tab-auto" class="stack" hidden>
           <div>
-            <h3 data-i18n="exact_title"></h3>
-            <p class="hint mt0" data-i18n="exact_hint"></p>
+            <h3 data-i18n="exact_title">सटीक उत्तर (न्यूनतम वर्ग विधि)</h3>
+            <p class="hint mt0" data-i18n="exact_hint">सीधी रेखा के लिए एक सूत्र एक बार में सबसे अच्छे m और c निकाल देता है।</p>
           </div>
           <div class="row">
-            <button class="btn btn-accent" id="fit-exact" type="button" data-i18n="exact_btn"></button>
+            <button class="btn btn-accent" id="fit-exact" type="button" data-i18n="exact_btn">सबसे अच्छी रेखा खोजें</button>
           </div>
-          <label class="check"><input type="checkbox" id="follow"> <span data-i18n="follow"></span></label>
+          <label class="check"><input type="checkbox" id="follow"> <span data-i18n="follow">बिंदु खिसकाते समय सबसे अच्छी रेखा बनाए रखें</span></label>
           <details class="math" id="math">
-            <summary data-i18n="show_math"></summary>
+            <summary data-i18n="show_math">हिसाब दिखाएँ</summary>
             <div class="math-body" id="math-body"></div>
           </details>
 
           <div class="block stack">
             <div>
-              <h3 data-i18n="gd_title"></h3>
-              <p class="hint mt0" data-i18n="gd_hint"></p>
+              <h3 data-i18n="gd_title">ग्रेडिएंट डिसेंट: AI कैसे सीखता है</h3>
+              <p class="hint mt0" data-i18n="gd_hint">AI एक सपाट रेखा से शुरू करता है। हर एपॉक में वह सारे बिंदु देखता है और m और c को लॉस की ढलान पर थोड़ा नीचे की ओर खिसकाता है।</p>
             </div>
             <div class="field">
-              <label for="lr" data-i18n="lr_label"></label>
+              <label for="lr" data-i18n="lr_label">लर्निंग रेट (कदम का आकार)</label>
               <div class="sl-row">
                 <input type="range" id="lr" min="0" max="7" step="1" value="4">
                 <output class="lr-val" id="lr-out" for="lr"></output>
@@ -296,30 +296,30 @@
             </div>
             <div class="gd-opts">
               <div class="field">
-                <label for="epochs" data-i18n="epochs_label"></label>
+                <label for="epochs" data-i18n="epochs_label">एक बार में एपॉक</label>
                 <select id="epochs"></select>
               </div>
               <div class="field">
-                <span class="lbl-like" id="speed-lbl" data-i18n="speed_label"></span>
+                <span class="lbl-like" id="speed-lbl" data-i18n="speed_label">गति</span>
                 <div class="seg" id="speed" role="group" aria-labelledby="speed-lbl">
-                  <button type="button" data-speed="slow" data-i18n="speed_slow"></button>
-                  <button type="button" data-speed="normal" data-i18n="speed_normal"></button>
-                  <button type="button" data-speed="fast" data-i18n="speed_fast"></button>
+                  <button type="button" data-speed="slow" data-i18n="speed_slow">धीमी</button>
+                  <button type="button" data-speed="normal" data-i18n="speed_normal">सामान्य</button>
+                  <button type="button" data-speed="fast" data-i18n="speed_fast">तेज़</button>
                 </div>
               </div>
             </div>
             <div class="gd-btns">
-              <button class="btn" id="gd-step" type="button" data-i18n="gd_step"></button>
+              <button class="btn" id="gd-step" type="button" data-i18n="gd_step">एक कदम</button>
               <button class="btn btn-primary" id="gd-run" type="button" aria-pressed="false"></button>
-              <button class="btn" id="gd-restart" type="button" data-i18n="gd_restart"></button>
+              <button class="btn" id="gd-restart" type="button" data-i18n="gd_restart">फिर से शुरू</button>
             </div>
             <div class="gd-read" aria-live="off">
-              <span><span data-i18n="epoch_label"></span>: <b id="epoch" data-value="0">0</b></span>
-              <span><span data-i18n="loss_label"></span>: <b id="gd-loss" data-value="0"></b></span>
-              <span><span data-i18n="best_possible"></span>: <b id="gd-best" data-value="0"></b></span>
+              <span><span data-i18n="epoch_label">एपॉक</span>: <b id="epoch" data-value="0">0</b></span>
+              <span><span data-i18n="loss_label">लॉस (MSE)</span>: <b id="gd-loss" data-value="0"></b></span>
+              <span><span data-i18n="best_possible">सबसे कम संभव</span>: <b id="gd-best" data-value="0"></b></span>
             </div>
             <div>
-              <div class="small muted" data-i18n="loss_chart"></div>
+              <div class="small muted" data-i18n="loss_chart">लॉस वक्र: हर एपॉक के बाद का लॉस</div>
               <div class="stage loss-stage"><canvas id="loss-chart" role="img"></canvas></div>
             </div>
             <p class="callout coach" id="coach-auto" aria-live="polite" data-code=""><span class="ico" aria-hidden="true"></span><span class="txt"></span></p>
@@ -329,8 +329,8 @@
         <!-- 3. predict -->
         <div id="panel-predict" role="tabpanel" aria-labelledby="tab-predict" class="stack" hidden>
           <div>
-            <h3 data-i18n="pred_title"></h3>
-            <p class="hint mt0" data-i18n="pred_hint"></p>
+            <h3 data-i18n="pred_title">नए मान का अनुमान</h3>
+            <p class="hint mt0" data-i18n="pred_hint">x चुनें या ग्राफ़ पर टैप करें। रेखा अनुमान देती है: ŷ = m × x + c</p>
           </div>
           <div class="pred-box">
             <div class="field">
@@ -340,24 +340,24 @@
           </div>
           <input type="range" id="pred-range" data-i18n-aria-label="pred_title">
           <div class="pred-out">
-            <div class="lbl" data-i18n="pred_answer"></div>
+            <div class="lbl" data-i18n="pred_answer">अनुमान ŷ</div>
             <div id="pred-y" data-value="0" aria-live="polite"></div>
           </div>
           <p class="pred-sentence" id="pred-sentence"></p>
           <p class="callout warning" id="pred-warn" hidden></p>
-          <p class="callout" id="pred-tip" hidden data-i18n="pred_tip_best"></p>
+          <p class="callout" id="pred-tip" hidden data-i18n="pred_tip_best">सुझाव: यह रेखा अभी सबसे अच्छी नहीं है। बेहतर अनुमान के लिए &quot;AI को सीखने दें&quot; खोलकर &quot;सबसे अच्छी रेखा खोजें&quot; दबाएँ।</p>
         </div>
       </section>
     </div>
 
     <section class="card section no-print" id="explain-card">
-      <h2 data-i18n="explain_title"></h2>
-      <h3 class="small muted" data-i18n="exp_title"></h3>
+      <h2 data-i18n="explain_title">इसे समझें</h2>
+      <h3 class="small muted" data-i18n="exp_title">एक प्रयोग करके देखें</h3>
       <div class="exp-row">
-        <button class="btn" id="exp-outlier" type="button" data-i18n="exp_outlier"></button>
-        <button class="btn" id="exp-small" type="button" data-i18n="exp_small"></button>
-        <button class="btn" id="exp-right" type="button" data-i18n="exp_right"></button>
-        <button class="btn" id="exp-big" type="button" data-i18n="exp_big"></button>
+        <button class="btn" id="exp-outlier" type="button" data-i18n="exp_outlier">📍 एक आउटलायर जोड़ें</button>
+        <button class="btn" id="exp-small" type="button" data-i18n="exp_small">🐢 लर्निंग रेट बहुत छोटा</button>
+        <button class="btn" id="exp-right" type="button" data-i18n="exp_right">👍 लर्निंग रेट बिल्कुल सही</button>
+        <button class="btn" id="exp-big" type="button" data-i18n="exp_big">💥 लर्निंग रेट बहुत बड़ा</button>
       </div>
       <p class="callout accent" id="exp-msg" aria-live="polite" hidden style="margin-top:10px"></p>
       <div class="concepts" id="concepts"></div>
@@ -365,10 +365,10 @@
 
     <section class="card section" id="table-card">
       <div class="tbl-head">
-        <h2 data-i18n="table_title"></h2>
+        <h2 data-i18n="table_title">डेटा तालिका और त्रुटियाँ</h2>
         <div class="row no-print">
-          <button class="btn btn-sm" id="add-row" type="button" data-i18n="add_row"></button>
-          <button class="btn btn-sm" id="dl-csv" type="button" data-i18n="dl_csv"></button>
+          <button class="btn btn-sm" id="add-row" type="button" data-i18n="add_row">पंक्ति जोड़ें</button>
+          <button class="btn btn-sm" id="dl-csv" type="button" data-i18n="dl_csv">CSV डाउनलोड करें</button>
         </div>
       </div>
       <div class="tbl-wrap scroll-x">
@@ -381,26 +381,26 @@
     </section>
 
     <section class="print-only worksheet section">
-      <h2 data-i18n="ws_title"></h2>
-      <p data-i18n="ws_name"></p>
+      <h2 data-i18n="ws_title">वर्कशीट: सबसे अच्छी रेखा</h2>
+      <p data-i18n="ws_name">नाम: ______________   कक्षा: ______   तारीख: __________</p>
       <ol>
-        <li><span data-i18n="ws_q1"></span><div class="ws-line"></div></li>
-        <li><span data-i18n="ws_q2"></span><div class="ws-line"></div><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q1">ऊपर के ग्राफ़ वाली रेखा का समीकरण लिखिए। इस डेटा के लिए m और c का क्या मतलब है?</span><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q2">कोई दो बिंदु चुनिए। हर एक की त्रुटि (y − ŷ) और त्रुटि का वर्ग निकालिए।</span><div class="ws-line"></div><div class="ws-line"></div></li>
         <li><span id="ws-q3"></span><div class="ws-line"></div><div class="ws-line"></div></li>
-        <li><span data-i18n="ws_q4"></span><div class="ws-line"></div><div class="ws-line"></div></li>
-        <li><span data-i18n="ws_q5"></span><div class="ws-line"></div><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q4">हम त्रुटियों को सीधे जोड़ने के बजाय उनका वर्ग क्यों करते हैं?</span><div class="ws-line"></div><div class="ws-line"></div></li>
+        <li><span data-i18n="ws_q5">ग्रेडिएंट डिसेंट में लर्निंग रेट बहुत बड़ा हो तो क्या होता है? बहुत छोटा हो तो?</span><div class="ws-line"></div><div class="ws-line"></div></li>
       </ol>
     </section>
 
     <details class="card section no-print">
-      <summary><b data-i18n="howto"></b></summary>
+      <summary><b data-i18n="howto">कैसे इस्तेमाल करें / कक्षा के लिए सुझाव</b></summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">&quot;हाथ से बैठाएँ&quot; से शुरू करें: रेखा को तब तक खींचें जब तक लॉस जितना हो सके कम न हो जाए। फिर तुलना के लिए &quot;सबसे अच्छी रेखा&quot; चालू करें।</li>
+        <li data-i18n="tip2">&quot;त्रुटियों के वर्ग&quot; चालू करें: डिब्बे दिखाते हैं कि एक बड़ी चूक कई छोटी चूकों से कहीं ज़्यादा क्यों गिनी जाती है।</li>
+        <li data-i18n="tip3">&quot;AI को सीखने दें&quot; खोलकर &quot;चलाएँ&quot; दबाएँ। गिरता हुआ लॉस वक्र ही &quot;ट्रेनिंग&quot; है। फिर लर्निंग रेट वाले प्रयोग आज़माएँ।</li>
+        <li data-i18n="tip4">कक्षा गतिविधि: 10–15 सहपाठियों की लंबाई और बाँहों का फैलाव नापें, &quot;डेटा पेस्ट करें&quot; से जोड़ें, और नए विद्यार्थी के फैलाव का अनुमान लगाएँ।</li>
+        <li data-i18n="tip5">&quot;अनुमान&quot; से चर्चा करें: क्या रेखा हफ़्ते में 40 घंटे पढ़ने वाले के अंक बता सकती है? क्यों नहीं?</li>
+        <li data-i18n="tip6">प्रिंट करने पर ग्राफ़, डेटा तालिका और 5 सवालों वाली वर्कशीट मिलती है। स्मार्टबोर्ड पर फ़ुलस्क्रीन अच्छा चलता है।</li>
       </ul>
     </details>
   </main>

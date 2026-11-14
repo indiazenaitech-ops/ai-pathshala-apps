@@ -269,12 +269,12 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">தொடர் மற்றும் பக்க இணைப்பு மின்சுற்றுகளை அமைத்து, மின்னோட்டம் பாய்வதைப் பாருங்கள்; நேரடி மீட்டர்கள், V–I வரைபடம், பயிற்சிக் கணக்குகள் மூலம் ஓம் விதியை (V = IR) கற்றுக்கொள்ளுங்கள்.</p>
 
     <div class="tabs cl-tabs" role="tablist">
-      <button type="button" role="tab" id="tab-lab" data-tab="lab" aria-controls="pane-lab" data-i18n="tab_lab"></button>
-      <button type="button" role="tab" id="tab-exp" data-tab="exp" aria-controls="pane-exp" data-i18n="tab_exp"></button>
-      <button type="button" role="tab" id="tab-prac" data-tab="prac" aria-controls="pane-prac" data-i18n="tab_prac"></button>
+      <button type="button" role="tab" id="tab-lab" data-tab="lab" aria-controls="pane-lab" data-i18n="tab_lab">மின்சுற்று ஆய்வகம்</button>
+      <button type="button" role="tab" id="tab-exp" data-tab="exp" aria-controls="pane-exp" data-i18n="tab_exp">V–I சோதனை</button>
+      <button type="button" role="tab" id="tab-prac" data-tab="prac" aria-controls="pane-prac" data-i18n="tab_prac">பயிற்சி</button>
     </div>
 
     <!-- ===================== circuit lab ===================== -->
@@ -282,29 +282,29 @@
       <div class="cl-lab">
         <div class="card cl-diag" id="diag-card">
           <div class="row spread cl-head">
-            <h2 class="mb0" data-i18n="diagram"></h2>
+            <h2 class="mb0" data-i18n="diagram">மின்சுற்றுப் படம்</h2>
             <button type="button" class="btn btn-sm" id="btn-fs" data-i18n="fullscreen"></button>
           </div>
           <div class="cl-stats" aria-live="polite">
-            <div class="cl-stat" id="st-req"><span class="k" data-i18n="req"></span><span class="v" id="out-req"></span></div>
-            <div class="cl-stat" id="st-i"><span class="k" data-i18n="itotal"></span><span class="v" id="out-i"></span></div>
-            <div class="cl-stat" id="st-p"><span class="k" data-i18n="ptotal"></span><span class="v" id="out-p"></span></div>
+            <div class="cl-stat" id="st-req"><span class="k" data-i18n="req">தொகுபயன் மின்தடை</span><span class="v" id="out-req"></span></div>
+            <div class="cl-stat" id="st-i"><span class="k" data-i18n="itotal">மொத்த மின்னோட்டம்</span><span class="v" id="out-i"></span></div>
+            <div class="cl-stat" id="st-p"><span class="k" data-i18n="ptotal">மொத்த மின்திறன்</span><span class="v" id="out-p"></span></div>
           </div>
           <div class="cl-svgwrap"><svg id="cv-lab" class="cv" viewBox="0 0 640 400" role="group"></svg></div>
-          <div class="callout warning" id="warn-open" hidden data-i18n="warn_open"></div>
-          <div class="callout danger" id="warn-short" role="alert" hidden data-i18n="warn_short"></div>
+          <div class="callout warning" id="warn-open" hidden data-i18n="warn_open">சுவிட்ச் திறந்துள்ளது, அதனால் மின்சுற்று முழுமையாக இல்லை. மின்னோட்டம் பாயாது: அம்மீட்டர் 0 காட்டும், விளக்குகள் எரியாது.</div>
+          <div class="callout danger" id="warn-short" role="alert" hidden data-i18n="warn_short">குறுக்குச் சுற்று (ஷார்ட் சர்க்யூட்)! ஒரு வெறும் கம்பி சுமையின் இரு முனைகளையும் இணைத்துவிட்டது, அதனால் மின்தடை ஏறக்குறைய 0 Ω ஆகிவிட்டது. I = V / R படி மின்னோட்டம் மிகப் பெரிதாகிறது: கம்பிகள் சூடாகின்றன, மின்கலம் விரைவில் தீர்ந்துவிடுகிறது. வீட்டில் தீ விபத்தைத் தடுக்க ஃப்யூஸ் அல்லது MCB மின்சாரத்தைத் துண்டிக்கிறது.</div>
           <div class="callout warning" id="warn-low" hidden></div>
           <p class="callout accent small cl-note" id="bright-note" hidden></p>
           <p class="tiny muted cl-note cl-dots-line"><span class="cl-dotkey" id="dot-key"></span><span id="dots-note"></span></p>
         </div>
 
         <div class="card cl-ctrl" id="ctrl-card">
-          <h2 data-i18n="ctrl_title"></h2>
-          <span class="lbl-t" id="type-lbl" data-i18n="circuit_type"></span>
+          <h2 data-i18n="ctrl_title">மின்சுற்றை அமையுங்கள்</h2>
+          <span class="lbl-t" id="type-lbl" data-i18n="circuit_type">மின்சுற்றின் வகை</span>
           <div class="cl-presets" role="group" aria-labelledby="type-lbl" id="presets"></div>
 
           <div class="cl-sl">
-            <label class="lbl-t" for="v-range" data-i18n="battery_v"></label>
+            <label class="lbl-t" for="v-range" data-i18n="battery_v">பேட்டரி மின்னழுத்தம் (V)</label>
             <div class="cl-sl-row">
               <input type="range" id="v-range" min="1.5" max="12" step="0.5">
               <input type="number" class="cl-num" id="v-num" min="1.5" max="12" step="0.5" inputmode="decimal" data-i18n-aria-label="battery_v">
@@ -313,11 +313,11 @@
           </div>
 
           <div class="cl-sl">
-            <span class="lbl-t" data-i18n="switch_lbl"></span>
+            <span class="lbl-t" data-i18n="switch_lbl">சுவிட்ச் (சாவி)</span>
             <button type="button" class="btn" id="btn-switch" aria-pressed="true"><span class="sw-ico" aria-hidden="true"></span><span id="sw-text"></span></button>
           </div>
 
-          <h3 class="cl-sub" data-i18n="resistances"></h3>
+          <h3 class="cl-sub" data-i18n="resistances">மின்தடைகள் (Ω)</h3>
           <div id="r-rows">
             <div class="cl-rrow" id="r-row-1">
               <label class="cl-rname" for="r1-range">R₁</label>
@@ -341,29 +341,29 @@
 
           <div class="cl-opts">
             <div>
-              <span class="lbl-t" id="as-lbl" data-i18n="show_as"></span>
+              <span class="lbl-t" id="as-lbl" data-i18n="show_as">எப்படிக் காட்டுவது</span>
               <div class="seg" role="group" aria-labelledby="as-lbl">
-                <button type="button" id="as-res" data-i18n="as_resistors"></button><button type="button" id="as-bulb" data-i18n="as_bulbs"></button>
+                <button type="button" id="as-res" data-i18n="as_resistors">மின்தடையாக்கிகள்</button><button type="button" id="as-bulb" data-i18n="as_bulbs">மின்விளக்குகள்</button>
               </div>
             </div>
             <div>
-              <span class="lbl-t" id="flow-lbl" data-i18n="dots_show"></span>
+              <span class="lbl-t" id="flow-lbl" data-i18n="dots_show">நகரும் புள்ளிகள் காட்டுவது</span>
               <div class="seg" role="group" aria-labelledby="flow-lbl">
-                <button type="button" id="flow-conv" data-i18n="flow_conv"></button><button type="button" id="flow-elec" data-i18n="flow_elec"></button>
+                <button type="button" id="flow-conv" data-i18n="flow_conv">மின்னோட்டம் (+ → −)</button><button type="button" id="flow-elec" data-i18n="flow_elec">எலக்ட்ரான்கள் (− → +)</button>
               </div>
             </div>
-            <label class="field" for="vm-sel"><span class="lbl-t mb0" data-i18n="vm_across"></span>
+            <label class="field" for="vm-sel"><span class="lbl-t mb0" data-i18n="vm_across">வோல்ட்மீட்டரை எதன் முனைகளுக்கு இடையே இணைப்பது</span>
               <select id="vm-sel"></select></label>
           </div>
 
           <div class="cl-btns">
             <button type="button" class="btn btn-danger" id="btn-short" aria-pressed="false"></button>
-            <button type="button" class="btn" id="btn-reset" data-i18n="reset_circuit"></button>
+            <button type="button" class="btn" id="btn-reset" data-i18n="reset_circuit">மின்சுற்றை மீட்டமை</button>
           </div>
         </div>
 
         <div class="card cl-calc" id="calc-card">
-          <h2 data-i18n="calc_title"></h2>
+          <h2 data-i18n="calc_title">படிப்படியான கணக்கீடு</h2>
           <div class="cl-steps" id="calc-steps"></div>
           <div class="scroll-x" style="margin-top:14px"><table class="table cl-table" id="calc-table"></table></div>
           <div class="callout success cl-check" id="calc-check" hidden></div>
@@ -372,29 +372,29 @@
 
       <div class="grid-2 cl-ref">
         <div class="card" id="legend-card">
-          <h2 data-i18n="legend_title"></h2>
+          <h2 data-i18n="legend_title">மின்சுற்றுக் குறியீடுகள்</h2>
           <div class="cl-syms">
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H27M37 16H62"/><path d="M27 4V28"/><path class="thick" d="M37 10V22"/></svg><span data-i18n="sym_cell"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H15M22 16H36M43 16H62"/><path d="M15 4V28M36 4V28"/><path class="thick" d="M22 10V22M43 10V22"/></svg><span data-i18n="sym_battery"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 20H18M46 20H62"/><path d="M20 20L42 6"/><circle class="bg" cx="20" cy="20" r="3.5"/><circle class="bg" cx="44" cy="20" r="3.5"/></svg><span data-i18n="sym_switch_open"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 20H62"/><circle class="bg" cx="20" cy="20" r="3.5"/><circle class="bg" cx="44" cy="20" r="3.5"/></svg><span data-i18n="sym_switch_closed"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H14L17 8L23 24L29 8L35 24L41 8L47 24L50 16H62"/></svg><span data-i18n="sym_resistor"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H19M45 16H62"/><circle cx="32" cy="16" r="13"/><path d="M23 7L41 25M23 25L41 7"/></svg><span data-i18n="sym_bulb"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H18M46 16H62"/><circle cx="32" cy="16" r="14"/><text x="32" y="22" text-anchor="middle">A</text></svg><span data-i18n="sym_ammeter"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H18M46 16H62"/><circle cx="32" cy="16" r="14"/><text x="32" y="22" text-anchor="middle">V</text></svg><span data-i18n="sym_voltmeter"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H62M32 2V30"/><circle class="f" cx="32" cy="16" r="5"/></svg><span data-i18n="sym_joint"></span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H27M37 16H62"/><path d="M27 4V28"/><path class="thick" d="M37 10V22"/></svg><span data-i18n="sym_cell">மின்கலம் (நீண்ட கோடு = +)</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H15M22 16H36M43 16H62"/><path d="M15 4V28M36 4V28"/><path class="thick" d="M22 10V22M43 10V22"/></svg><span data-i18n="sym_battery">பேட்டரி (இணைந்த மின்கலங்கள்)</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 20H18M46 20H62"/><path d="M20 20L42 6"/><circle class="bg" cx="20" cy="20" r="3.5"/><circle class="bg" cx="44" cy="20" r="3.5"/></svg><span data-i18n="sym_switch_open">சுவிட்ச் / சாவி திறந்த நிலை</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 20H62"/><circle class="bg" cx="20" cy="20" r="3.5"/><circle class="bg" cx="44" cy="20" r="3.5"/></svg><span data-i18n="sym_switch_closed">சுவிட்ச் / சாவி மூடிய நிலை</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H14L17 8L23 24L29 8L35 24L41 8L47 24L50 16H62"/></svg><span data-i18n="sym_resistor">மின்தடையாக்கி</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H19M45 16H62"/><circle cx="32" cy="16" r="13"/><path d="M23 7L41 25M23 25L41 7"/></svg><span data-i18n="sym_bulb">மின்விளக்கு</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H18M46 16H62"/><circle cx="32" cy="16" r="14"/><text x="32" y="22" text-anchor="middle">A</text></svg><span data-i18n="sym_ammeter">அம்மீட்டர் (தொடராக இணைப்பு)</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H18M46 16H62"/><circle cx="32" cy="16" r="14"/><text x="32" y="22" text-anchor="middle">V</text></svg><span data-i18n="sym_voltmeter">வோல்ட்மீட்டர் (பக்கமாக இணைப்பு)</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H62M32 2V30"/><circle class="f" cx="32" cy="16" r="5"/></svg><span data-i18n="sym_joint">கம்பிகளின் இணைப்பு</span></div>
           </div>
         </div>
         <div class="card" id="formula-card">
-          <h2 data-i18n="formula_title"></h2>
+          <h2 data-i18n="formula_title">சூத்திரங்கள்</h2>
           <dl class="cl-forms">
-            <div><dt data-i18n="f_ohm"></dt><dd class="math no-i18n">V = I × R &nbsp;·&nbsp; I = V / R &nbsp;·&nbsp; R = V / I</dd></div>
-            <div><dt data-i18n="f_series"></dt><dd class="math no-i18n">R = R₁ + R₂ + R₃</dd></div>
-            <div><dt data-i18n="f_parallel"></dt><dd class="math no-i18n">1/R = 1/R₁ + 1/R₂ + 1/R₃</dd></div>
-            <div><dt data-i18n="f_power"></dt><dd class="math no-i18n">P = V × I = I² × R = V² / R</dd></div>
-            <div><dt data-i18n="f_heat"></dt><dd class="math no-i18n">H = I² × R × t</dd></div>
-            <div><dt data-i18n="f_energy"></dt><dd class="math no-i18n">E = P × t &nbsp;·&nbsp; 1 kWh = 3.6 × 10⁶ J</dd></div>
-            <div><dt data-i18n="f_units"></dt><dd data-i18n="units_line"></dd></div>
+            <div><dt data-i18n="f_ohm">ஓம் விதி</dt><dd class="math no-i18n">V = I × R &nbsp;·&nbsp; I = V / R &nbsp;·&nbsp; R = V / I</dd></div>
+            <div><dt data-i18n="f_series">தொடர் இணைப்பில் மின்தடைகள்</dt><dd class="math no-i18n">R = R₁ + R₂ + R₃</dd></div>
+            <div><dt data-i18n="f_parallel">பக்க இணைப்பில் மின்தடைகள்</dt><dd class="math no-i18n">1/R = 1/R₁ + 1/R₂ + 1/R₃</dd></div>
+            <div><dt data-i18n="f_power">மின்திறன்</dt><dd class="math no-i18n">P = V × I = I² × R = V² / R</dd></div>
+            <div><dt data-i18n="f_heat">உருவாகும் வெப்பம் (ஜூல் விதி)</dt><dd class="math no-i18n">H = I² × R × t</dd></div>
+            <div><dt data-i18n="f_energy">மின் ஆற்றல்</dt><dd class="math no-i18n">E = P × t &nbsp;·&nbsp; 1 kWh = 3.6 × 10⁶ J</dd></div>
+            <div><dt data-i18n="f_units">SI அலகுகள்</dt><dd data-i18n="units_line">V வோல்ட் (V) அலகில் · I ஆம்பியர் (A) அலகில் · R ஓம் (Ω) அலகில் · P வாட் (W) அலகில்</dd></div>
           </dl>
         </div>
       </div>
@@ -404,17 +404,17 @@
     <section id="pane-exp" class="cl-pane" role="tabpanel" aria-labelledby="tab-exp" hidden>
       <div class="cl-exp">
         <div class="card" id="exp-card">
-          <h2 data-i18n="exp_title"></h2>
-          <p class="muted small" data-i18n="exp_how"></p>
+          <h2 data-i18n="exp_title">செயல்பாடு: மின்னழுத்தம் மாறும்போது மின்னோட்டம் எப்படி மாறுகிறது?</h2>
+          <p class="muted small" data-i18n="exp_how">1 மின்கலத்தைப் பயன்படுத்தி வோல்ட்மீட்டர் (V), அம்மீட்டர் (I) அளவீடுகளைக் குறியுங்கள். 2, 3, 4 மின்கலங்களுடன் மீண்டும் செய்யுங்கள். பிறகு V-க்கு எதிராக I வரைபடம் வரைந்து அதன் சாய்வைக் காணுங்கள்.</p>
           <div class="cl-svgwrap"><svg id="cv-exp" class="cv" viewBox="0 0 640 400" role="group"></svg></div>
           <div class="cl-meters" aria-live="polite">
-            <div class="cl-mbox"><span class="k" data-i18n="voltmeter"></span><span class="v ltr" id="exp-v"></span></div>
-            <div class="cl-mbox am"><span class="k" data-i18n="ammeter"></span><span class="v ltr" id="exp-i"></span></div>
+            <div class="cl-mbox"><span class="k" data-i18n="voltmeter">வோல்ட்மீட்டர்</span><span class="v ltr" id="exp-v"></span></div>
+            <div class="cl-mbox am"><span class="k" data-i18n="ammeter">அம்மீட்டர்</span><span class="v ltr" id="exp-i"></span></div>
           </div>
           <div class="cl-exp-ctrl">
-            <span class="lbl-t" id="exp-r-lbl" data-i18n="exp_resistor"></span>
+            <span class="lbl-t" id="exp-r-lbl" data-i18n="exp_resistor">சோதிக்கப்படும் கம்பி அல்லது மின்தடையாக்கி</span>
             <div class="seg" role="group" aria-labelledby="exp-r-lbl">
-              <button type="button" id="exp-known" data-i18n="exp_known"></button><button type="button" id="exp-mystery" data-i18n="exp_mystery"></button>
+              <button type="button" id="exp-known" data-i18n="exp_known">தெரிந்த மின்தடையாக்கி</button><button type="button" id="exp-mystery" data-i18n="exp_mystery">மர்மக் கம்பி</button>
             </div>
             <div class="cl-rrow" id="exp-r-row" style="margin-top:10px">
               <label class="cl-rname" for="exp-r-range">R</label>
@@ -423,34 +423,34 @@
               <span class="cl-unit">Ω</span>
             </div>
             <div class="row" id="exp-myst-row" style="margin-top:10px">
-              <button type="button" class="btn btn-sm" id="exp-new" data-i18n="exp_new_mystery"></button>
-              <button type="button" class="btn btn-sm" id="exp-reveal" data-i18n="exp_reveal"></button>
+              <button type="button" class="btn btn-sm" id="exp-new" data-i18n="exp_new_mystery">புதிய மர்மக் கம்பி</button>
+              <button type="button" class="btn btn-sm" id="exp-reveal" data-i18n="exp_reveal">R ஐக் காட்டு</button>
             </div>
             <p class="small muted" id="exp-lock" style="margin:8px 0 0"></p>
             <div class="cl-sl">
-              <label class="lbl-t" for="exp-cells" data-i18n="exp_cells"></label>
+              <label class="lbl-t" for="exp-cells" data-i18n="exp_cells">மின்கலங்களின் எண்ணிக்கை (ஒவ்வொன்றும் 1.5 V)</label>
               <div class="cl-sl-row" style="grid-template-columns:minmax(0,1fr) auto">
                 <input type="range" id="exp-cells" min="1" max="8" step="1">
                 <span class="cl-cellsv ltr numf" id="exp-cells-v"></span>
               </div>
             </div>
-            <label class="check" style="margin-top:12px"><input type="checkbox" id="exp-noise"> <span data-i18n="exp_noise"></span></label>
+            <label class="check" style="margin-top:12px"><input type="checkbox" id="exp-noise"> <span data-i18n="exp_noise">உண்மையான ஆய்வகம் போல மீட்டரில் சிறு பிழைகளைச் சேர்</span></label>
             <div class="cl-btns">
-              <button type="button" class="btn btn-primary" id="exp-record" data-i18n="exp_record"></button>
-              <button type="button" class="btn" id="exp-quick" data-i18n="exp_quick"></button>
+              <button type="button" class="btn btn-primary" id="exp-record" data-i18n="exp_record">இந்த அளவீட்டைக் குறி</button>
+              <button type="button" class="btn" id="exp-quick" data-i18n="exp_quick">4 அளவீடுகள் எடு (1 முதல் 4 மின்கலங்கள்)</button>
             </div>
           </div>
         </div>
 
         <div class="card" id="exp-res-card">
-          <h2 data-i18n="exp_table"></h2>
+          <h2 data-i18n="exp_table">உற்றுநோக்கல் அட்டவணை</h2>
           <div class="scroll-x"><table class="table cl-table" id="exp-table"></table></div>
           <div class="cl-tbl-tools">
             <button type="button" class="btn btn-sm" id="exp-csv" data-i18n="download"></button>
             <button type="button" class="btn btn-sm" id="exp-print" data-i18n="print"></button>
-            <button type="button" class="btn btn-sm btn-danger" id="exp-clear" data-i18n="clear_table"></button>
+            <button type="button" class="btn btn-sm btn-danger" id="exp-clear" data-i18n="clear_table">அட்டவணையை அழி</button>
           </div>
-          <h3 class="cl-sub" data-i18n="graph_title"></h3>
+          <h3 class="cl-sub" data-i18n="graph_title">V–I வரைபடம்</h3>
           <svg id="exp-graph" class="graph" viewBox="0 0 560 380" role="img"></svg>
           <div class="cl-result" id="exp-result" aria-live="polite"></div>
         </div>
@@ -462,41 +462,41 @@
       <div class="cl-prac">
         <div class="card" id="prac-card">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="prac_title"></h2>
+            <h2 class="mb0" data-i18n="prac_title">பயிற்சிக் கணக்குகள்</h2>
             <div class="cl-score" aria-live="polite">
               <span class="badge success" id="score"></span>
               <span class="badge accent" id="streak"></span>
             </div>
           </div>
           <div class="cl-topics" role="group" data-i18n-aria-label="topic">
-            <button type="button" class="chip" id="topic-all" data-topic="all" data-i18n="topic_all"></button>
-            <button type="button" class="chip" id="topic-ohm" data-topic="ohm" data-i18n="topic_ohm"></button>
-            <button type="button" class="chip" id="topic-combo" data-topic="combo" data-i18n="topic_combo"></button>
-            <button type="button" class="chip" id="topic-power" data-topic="power" data-i18n="topic_power"></button>
+            <button type="button" class="chip" id="topic-all" data-topic="all" data-i18n="topic_all">அனைத்தும்</button>
+            <button type="button" class="chip" id="topic-ohm" data-topic="ohm" data-i18n="topic_ohm">ஓம் விதி</button>
+            <button type="button" class="chip" id="topic-combo" data-topic="combo" data-i18n="topic_combo">தொடர் &amp; பக்க இணைப்பு</button>
+            <button type="button" class="chip" id="topic-power" data-topic="power" data-i18n="topic_power">மின்திறன் &amp; ஆற்றல்</button>
           </div>
           <p class="cl-q" id="q-text"></p>
           <p class="small muted mb0" id="q-unit-hint"></p>
           <div class="cl-ans">
-            <label class="field" for="q-ans"><span data-i18n="your_answer"></span>
+            <label class="field" for="q-ans"><span data-i18n="your_answer">உங்கள் விடை</span>
               <span class="inwrap"><input type="text" id="q-ans" inputmode="decimal" autocomplete="off"><span class="u" id="q-unit"></span></span></label>
-            <button type="button" class="btn btn-primary" id="q-check" data-i18n="check_btn"></button>
-            <button type="button" class="btn btn-accent" id="q-new" data-i18n="new_problem"></button>
+            <button type="button" class="btn btn-primary" id="q-check" data-i18n="check_btn">சரிபார்</button>
+            <button type="button" class="btn btn-accent" id="q-new" data-i18n="new_problem">புதிய கணக்கு</button>
           </div>
           <div class="callout" id="q-feedback" aria-live="polite"></div>
           <div class="cl-step" id="q-solution" hidden></div>
           <div class="row" style="margin-top:12px">
-            <button type="button" class="btn btn-sm" id="q-lab" data-i18n="try_lab" hidden></button>
-            <button type="button" class="btn btn-sm btn-danger" id="score-reset" data-i18n="reset_score"></button>
+            <button type="button" class="btn btn-sm" id="q-lab" data-i18n="try_lab" hidden>இந்த மின்சுற்றை ஆய்வகத்தில் அமை</button>
+            <button type="button" class="btn btn-sm btn-danger" id="score-reset" data-i18n="reset_score">மதிப்பெண்ணை மீட்டமை</button>
           </div>
         </div>
 
         <div class="card" id="ws-card">
-          <h2 data-i18n="ws_title"></h2>
-          <p class="muted small" data-i18n="ws_note"></p>
+          <h2 data-i18n="ws_title">அச்சிடக்கூடிய பயிற்சித்தாள்</h2>
+          <p class="muted small" data-i18n="ws_note">தேர்ந்தெடுத்த தலைப்பிலிருந்து 10 புதிய கணக்குகள், விடைக் குறிப்புடன்.</p>
           <div class="row ws-tools">
-            <button type="button" class="btn btn-primary" id="ws-make" data-i18n="ws_make"></button>
-            <button type="button" class="btn" id="ws-print" data-i18n="ws_print" disabled></button>
-            <label class="check"><input type="checkbox" id="ws-ans"> <span data-i18n="ws_answers"></span></label>
+            <button type="button" class="btn btn-primary" id="ws-make" data-i18n="ws_make">பயிற்சித்தாள் உருவாக்கு</button>
+            <button type="button" class="btn" id="ws-print" data-i18n="ws_print" disabled>பயிற்சித்தாளை அச்சிடு</button>
+            <label class="check"><input type="checkbox" id="ws-ans"> <span data-i18n="ws_answers">விடைக் குறிப்பையும் அச்சிடு</span></label>
           </div>
           <div id="ws-out"></div>
         </div>
@@ -504,14 +504,14 @@
     </section>
 
     <details class="card cl-help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">எப்படிப் பயன்படுத்துவது / வகுப்பறைக்கான யோசனைகள்</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">மின்சுற்றின் வகையைத் தேர்ந்தெடுத்து ஸ்லைடர்களை நகர்த்துங்கள். மீட்டர்கள், படிப்படியான கணக்கீடு, நகரும் புள்ளிகளின் வேகம் உடனே மாறும்.</li>
+        <li data-i18n="tip2">“எப்படிக் காட்டுவது” இல் மின்விளக்குகளைத் தேர்ந்து ஒப்பிடுங்கள்: தொடர் இணைப்பிலுள்ள விளக்குகள் பக்க இணைப்பிலுள்ள அதே விளக்குகளை விட மங்கலாக ஒளிரும். அதனால்தான் நம் வீடுகளின் மின் இணைப்பு பக்க இணைப்பாக உள்ளது.</li>
+        <li data-i18n="tip3">படத்திலுள்ள சுவிட்சைத் தட்டித் திறக்கவோ மூடவோ செய்யுங்கள். வோல்ட்மீட்டரை வெவ்வேறு பகுதிகளில் இணையுங்கள்: வோல்ட்மீட்டர் எப்போதும் பக்க இணைப்பிலும், அம்மீட்டர் எப்போதும் தொடர் இணைப்பிலும் இருக்கும்.</li>
+        <li data-i18n="tip4">வகுப்பறைச் செயல்பாடு (NCERT 10ஆம் வகுப்பு): V–I சோதனையில் 1, 2, 3, 4 மின்கலங்களுடன் அளவீடுகள் எடுத்து, வரைபடம் வரைந்து சாய்விலிருந்து R ஐக் காணுங்கள். ஒவ்வொரு குழுவுக்கும் ஒரு மர்மக் கம்பியைக் கொடுத்து யாருடைய விடை மிக அருகில் உள்ளது எனப் பாருங்கள்.</li>
+        <li data-i18n="tip5">“சுமையைக் குறுக்குச் சுற்றாக்கு” அழுத்தி, குறுக்குச் சுற்று ஏன் ஆபத்தானது, ஃப்யூஸ், MCB நம் வீடுகளை எப்படிப் பாதுகாக்கின்றன என்று விவாதியுங்கள்.</li>
+        <li data-i18n="tip6">புள்ளிகள் திசையை மட்டும் காட்டி மின்னோட்டங்களை ஒப்பிடுகின்றன. உண்மையான எலக்ட்ரான்கள் மிக மெதுவாக நகர்கின்றன (ஒரு வினாடிக்கு ஒரு மில்லிமீட்டருக்கும் குறைவு). ஸ்மார்ட்போர்டில் முழுத்திரை பொத்தானைப் பயன்படுத்துங்கள்.</li>
       </ul>
     </details>
   </main>

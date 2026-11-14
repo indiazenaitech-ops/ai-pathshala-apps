@@ -165,27 +165,27 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">PDF-ൽ ഇവിടെത്തന്നെ ഒപ്പിടുക, പൂരിപ്പിക്കുക, സീൽ വയ്ക്കുക: ഒപ്പ് വരയ്ക്കുകയോ ടൈപ്പ് ചെയ്യുകയോ ചെയ്യുക, ടെക്സ്റ്റ്, തീയതി, ടിക്ക്, “Self attested” കുറിപ്പ്, സ്റ്റാമ്പ് എന്നിവ ചേർക്കുക, ഫോമിലെ കള്ളികൾ പൂരിപ്പിക്കുക. ഫയൽ നിങ്ങളുടെ ഉപകരണത്തിൽ നിന്ന് പുറത്തുപോകില്ല.</p>
 
     <div class="callout success sf-privacy" id="privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong><span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">നിങ്ങളുടെ PDF ഈ ഉപകരണത്തിൽ നിന്ന് ഒരിക്കലും പുറത്തുപോകില്ല.</strong><span data-i18n="privacy_body">ഓഫർ ലെറ്റർ, കരാറുകൾ, KYC പകർപ്പുകൾ, ഫോമുകൾ എന്നിവ നിങ്ങളുടെ ബ്രൗസറിനുള്ളിൽത്തന്നെ ഒപ്പിടുന്നു. ഒന്നും അപ്‌ലോഡ് ചെയ്യുന്നില്ല; ഈ പേജ് അടച്ചാൽ ഫയൽ പോകും.</span></p>
     </div>
 
     <div id="engine" class="sf-engine small" role="status" aria-live="polite">
       <span class="sf-spin" id="engSpin" aria-hidden="true"></span>
       <span id="engMsg"></span>
-      <button class="btn btn-sm" id="engRetry" type="button" data-i18n="retry" hidden></button>
+      <button class="btn btn-sm" id="engRetry" type="button" data-i18n="retry" hidden>വീണ്ടും ശ്രമിക്കുക</button>
     </div>
 
     <div class="card sf-drop" id="drop">
       <div class="big" aria-hidden="true">✍️</div>
-      <h2 id="dropTitle" data-i18n="drop_title"></h2>
-      <p class="muted small mb0 sf-drop-hint" data-i18n="drop_hint"></p>
+      <h2 id="dropTitle" data-i18n="drop_title">PDF ഇവിടെ ഇടുക</h2>
+      <p class="muted small mb0 sf-drop-hint" data-i18n="drop_hint">അല്ലെങ്കിൽ ഫോണിൽ നിന്നോ കമ്പ്യൂട്ടറിൽ നിന്നോ തുറക്കുക. ഓഫർ ലെറ്റർ, കരാർ, അപേക്ഷാ ഫോം, ആധാർ അല്ലെങ്കിൽ PAN പകർപ്പ്.</p>
       <span class="sf-fname no-i18n" id="fname"><span aria-hidden="true">📄</span><span class="nm" id="fnameTxt"></span><span class="inf" id="fnameInf"></span></span>
       <div class="row">
-        <button class="btn btn-primary btn-lg" id="openBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="open_pdf"></span></button>
-        <button class="btn" id="sampleBtn" type="button" data-i18n="try_sample"></button>
+        <button class="btn btn-primary btn-lg" id="openBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="open_pdf">PDF തുറക്കുക</span></button>
+        <button class="btn" id="sampleBtn" type="button" data-i18n="try_sample">മാതൃകാ കത്ത് പരീക്ഷിക്കുക</button>
       </div>
       <input type="file" id="fileInput" accept=".pdf,application/pdf" hidden>
     </div>
@@ -198,15 +198,15 @@
         <div class="card sf-bar" id="bar">
           <div class="grp">
             <button class="tb" type="button" id="prevBtn" data-i18n-title="prev_page" data-i18n-aria-label="prev_page"><span class="i flipx" aria-hidden="true">◀</span></button>
-            <label class="sf-pageno"><span class="sr-only" data-i18n="goto_page"></span><input type="number" id="pageNo" min="1" step="1" inputmode="numeric" value="1"><span id="pageTotal" class="no-i18n"></span></label>
+            <label class="sf-pageno"><span class="sr-only" data-i18n="goto_page">പേജിലേക്ക് പോകുക</span><input type="number" id="pageNo" min="1" step="1" inputmode="numeric" value="1"><span id="pageTotal" class="no-i18n"></span></label>
             <button class="tb" type="button" id="nextBtn" data-i18n-title="next_page" data-i18n-aria-label="next_page"><span class="i flipx" aria-hidden="true">▶</span></button>
           </div>
           <span class="sep" aria-hidden="true"></span>
           <div class="grp">
-            <button class="tb" type="button" id="undoBtn" data-i18n-title="undo" data-i18n-aria-label="undo"><span class="i flipx" aria-hidden="true">↶</span><span class="lbl" data-i18n="undo"></span></button>
+            <button class="tb" type="button" id="undoBtn" data-i18n-title="undo" data-i18n-aria-label="undo"><span class="i flipx" aria-hidden="true">↶</span><span class="lbl" data-i18n="undo">പഴയപടി</span></button>
             <button class="tb" type="button" id="redoBtn" data-i18n-title="redo" data-i18n-aria-label="redo"><span class="i flipx" aria-hidden="true">↷</span></button>
-            <button class="tb danger" type="button" id="delBtn" data-i18n-title="it_delete" data-i18n-aria-label="it_delete"><span class="i" aria-hidden="true">🗑</span><span class="lbl" data-i18n="it_delete"></span></button>
-            <button class="tb" type="button" id="clearPageBtn" data-i18n-title="clear_page" data-i18n-aria-label="clear_page"><span class="i" aria-hidden="true">⌫</span><span class="lbl" data-i18n="clear_page"></span></button>
+            <button class="tb danger" type="button" id="delBtn" data-i18n-title="it_delete" data-i18n-aria-label="it_delete"><span class="i" aria-hidden="true">🗑</span><span class="lbl" data-i18n="it_delete">നീക്കുക</span></button>
+            <button class="tb" type="button" id="clearPageBtn" data-i18n-title="clear_page" data-i18n-aria-label="clear_page"><span class="i" aria-hidden="true">⌫</span><span class="lbl" data-i18n="clear_page">ഈ പേജ് മായ്ക്കുക</span></button>
           </div>
           <span class="sf-count" id="countTxt" aria-live="polite"></span>
         </div>
@@ -217,29 +217,29 @@
             <div id="overlay" class="sf-overlay no-i18n" data-i18n-aria-label="items_label" role="group"></div>
           </div>
         </div>
-        <p class="small muted sf-stage-hint" data-i18n="stage_hint"></p>
+        <p class="small muted sf-stage-hint" data-i18n="stage_hint">തിരഞ്ഞെടുക്കാൻ ടാപ്പ് ചെയ്യുക, നീക്കാൻ വലിക്കുക, വലുപ്പം മാറ്റാൻ നീല മൂല വലിക്കുക. ആരോ കീകളും നീക്കും.</p>
         <p id="live" class="sr-only" aria-live="polite"></p>
       </section>
 
       <aside class="sf-side" id="side">
         <div class="card stack">
           <div class="sf-tools" role="tablist" data-i18n-aria-label="tools_label">
-            <button type="button" role="tab" data-tool="sign" aria-controls="pSign"><span class="i" aria-hidden="true">✍️</span><span data-i18n="tool_sign"></span></button>
-            <button type="button" role="tab" data-tool="text" aria-controls="pText"><span class="i" aria-hidden="true">🔤</span><span data-i18n="tool_text"></span></button>
-            <button type="button" role="tab" data-tool="date" aria-controls="pDate"><span class="i" aria-hidden="true">📅</span><span data-i18n="tool_date"></span></button>
-            <button type="button" role="tab" data-tool="mark" aria-controls="pMark"><span class="i" aria-hidden="true">✅</span><span data-i18n="tool_mark"></span></button>
-            <button type="button" role="tab" data-tool="self" aria-controls="pSelf"><span class="i" aria-hidden="true">🪪</span><span data-i18n="tool_self"></span></button>
-            <button type="button" role="tab" data-tool="stamp" aria-controls="pStamp"><span class="i" aria-hidden="true">📮</span><span data-i18n="tool_stamp"></span></button>
-            <button type="button" role="tab" data-tool="hide" aria-controls="pHide"><span class="i" aria-hidden="true">⬜</span><span data-i18n="tool_hide"></span></button>
-            <button type="button" role="tab" data-tool="form" aria-controls="pForm"><span class="i" aria-hidden="true">📝</span><span data-i18n="tool_form"></span></button>
+            <button type="button" role="tab" data-tool="sign" aria-controls="pSign"><span class="i" aria-hidden="true">✍️</span><span data-i18n="tool_sign">ഒപ്പ്</span></button>
+            <button type="button" role="tab" data-tool="text" aria-controls="pText"><span class="i" aria-hidden="true">🔤</span><span data-i18n="tool_text">ടെക്സ്റ്റ്</span></button>
+            <button type="button" role="tab" data-tool="date" aria-controls="pDate"><span class="i" aria-hidden="true">📅</span><span data-i18n="tool_date">തീയതി</span></button>
+            <button type="button" role="tab" data-tool="mark" aria-controls="pMark"><span class="i" aria-hidden="true">✅</span><span data-i18n="tool_mark">ടിക്ക് / ക്രോസ്</span></button>
+            <button type="button" role="tab" data-tool="self" aria-controls="pSelf"><span class="i" aria-hidden="true">🪪</span><span data-i18n="tool_self">സ്വയം സാക്ഷ്യം</span></button>
+            <button type="button" role="tab" data-tool="stamp" aria-controls="pStamp"><span class="i" aria-hidden="true">📮</span><span data-i18n="tool_stamp">സ്റ്റാമ്പ്</span></button>
+            <button type="button" role="tab" data-tool="hide" aria-controls="pHide"><span class="i" aria-hidden="true">⬜</span><span data-i18n="tool_hide">മായ്ക്കൽ</span></button>
+            <button type="button" role="tab" data-tool="form" aria-controls="pForm"><span class="i" aria-hidden="true">📝</span><span data-i18n="tool_form">ഫോം കള്ളികൾ</span></button>
           </div>
 
           <!-- Signature -->
           <div class="sf-panel" id="pSign" role="tabpanel">
             <div class="seg w100" role="group" id="sigModeSeg">
-              <button type="button" data-val="draw" data-i18n="sig_draw"></button>
-              <button type="button" data-val="type" data-i18n="sig_type"></button>
-              <button type="button" data-val="photo" data-i18n="sig_photo"></button>
+              <button type="button" data-val="draw" data-i18n="sig_draw">വരയ്ക്കുക</button>
+              <button type="button" data-val="type" data-i18n="sig_type">ടൈപ്പ്</button>
+              <button type="button" data-val="photo" data-i18n="sig_photo">ഫോട്ടോ</button>
             </div>
             <div id="sigDrawBox" class="stack">
               <div class="sf-pad-wrap">
@@ -247,115 +247,115 @@
                 <span class="sf-pad-line" aria-hidden="true"></span><span class="sf-pad-x" aria-hidden="true">✕</span>
               </div>
               <div class="row spread">
-                <span class="tiny muted" data-i18n="sig_pad_hint"></span>
+                <span class="tiny muted" data-i18n="sig_pad_hint">വിരൽ, സ്റ്റൈലസ് അല്ലെങ്കിൽ മൗസ് കൊണ്ട് ഇവിടെ ഒപ്പിടുക.</span>
                 <button class="btn btn-sm" type="button" id="sigClear" data-i18n="clear"></button>
               </div>
             </div>
             <div id="sigTypeBox" class="stack" hidden>
-              <label class="field"><span data-i18n="sig_type_label"></span><input type="text" id="sigTypeText" class="no-i18n" maxlength="60" autocomplete="name" data-i18n-placeholder="sig_type_ph"></label>
+              <label class="field"><span data-i18n="sig_type_label">നിങ്ങളുടെ പേര്</span><input type="text" id="sigTypeText" class="no-i18n" maxlength="60" autocomplete="name" data-i18n-placeholder="sig_type_ph"></label>
               <div class="sf-type-prev no-i18n" id="sigTypePrev" aria-hidden="true"></div>
             </div>
             <div id="sigPhotoBox" class="stack" hidden>
-              <button class="btn" type="button" id="sigPhotoBtn"><span aria-hidden="true">🖼</span> <span data-i18n="sig_photo_pick"></span></button>
+              <button class="btn" type="button" id="sigPhotoBtn"><span aria-hidden="true">🖼</span> <span data-i18n="sig_photo_pick">ഒപ്പിന്റെ ഫോട്ടോ തിരഞ്ഞെടുക്കുക</span></button>
               <input type="file" id="sigPhotoInput" accept="image/*" hidden>
               <img id="sigPhotoPrev" class="sf-photo-prev" alt="" hidden>
-              <p class="tiny muted mb0" data-i18n="sig_photo_hint"></p>
+              <p class="tiny muted mb0" data-i18n="sig_photo_hint">വെള്ളക്കടലാസിൽ കടും നിറ പേന കൊണ്ട് ഒപ്പിട്ട് വ്യക്തമായ ഫോട്ടോ എടുക്കുക. കടലാസ് തനിയെ സുതാര്യമാകും.</p>
             </div>
-            <div class="field"><span data-i18n="ink"></span>
+            <div class="field"><span data-i18n="ink">മഷിയുടെ നിറം</span>
               <div class="sf-colors" role="group" id="inkColors">
-                <button type="button" data-val="#1a3fb5" aria-pressed="true"><i style="background:#1a3fb5"></i><span data-i18n="col_blue"></span></button>
-                <button type="button" data-val="#111111"><i style="background:#111"></i><span data-i18n="col_black"></span></button>
-                <button type="button" data-val="#c81e1e"><i style="background:#c81e1e"></i><span data-i18n="col_red"></span></button>
-                <button type="button" data-val="#1b7f3b"><i style="background:#1b7f3b"></i><span data-i18n="col_green"></span></button>
+                <button type="button" data-val="#1a3fb5" aria-pressed="true"><i style="background:#1a3fb5"></i><span data-i18n="col_blue">നീല</span></button>
+                <button type="button" data-val="#111111"><i style="background:#111"></i><span data-i18n="col_black">കറുപ്പ്</span></button>
+                <button type="button" data-val="#c81e1e"><i style="background:#c81e1e"></i><span data-i18n="col_red">ചുവപ്പ്</span></button>
+                <button type="button" data-val="#1b7f3b"><i style="background:#1b7f3b"></i><span data-i18n="col_green">പച്ച</span></button>
               </div>
             </div>
             <div class="row">
-              <button class="btn btn-primary" type="button" id="sigUse"><span aria-hidden="true">＋</span> <span data-i18n="sig_use"></span></button>
-              <button class="btn" type="button" id="sigUseInit" data-i18n="sig_use_init"></button>
+              <button class="btn btn-primary" type="button" id="sigUse"><span aria-hidden="true">＋</span> <span data-i18n="sig_use">ഒപ്പായി ചേർക്കുക</span></button>
+              <button class="btn" type="button" id="sigUseInit" data-i18n="sig_use_init">ചുരുക്കൊപ്പായി ചേർക്കുക</button>
             </div>
             <div id="savedBox" class="stack" hidden>
-              <p class="small muted mb0" data-i18n="sig_saved_title"></p>
+              <p class="small muted mb0" data-i18n="sig_saved_title">ഈ ഉപകരണത്തിൽ സൂക്ഷിച്ചത്</p>
               <div class="sf-saved" id="savedSig" hidden>
                 <img alt="" id="savedSigImg">
-                <div><strong data-i18n="sig_saved_sig"></strong>
+                <div><strong data-i18n="sig_saved_sig">ഒപ്പ്</strong>
                   <div class="acts">
-                    <button class="btn btn-sm btn-primary" type="button" data-slot="sig" data-act="add" data-i18n="sig_add"></button>
-                    <button class="btn btn-sm" type="button" data-slot="sig" data-act="all" data-i18n="sig_add_all"></button>
-                    <button class="btn btn-sm btn-ghost" type="button" data-slot="sig" data-act="forget" data-i18n="sig_forget"></button>
+                    <button class="btn btn-sm btn-primary" type="button" data-slot="sig" data-act="add" data-i18n="sig_add">പേജിൽ ചേർക്കുക</button>
+                    <button class="btn btn-sm" type="button" data-slot="sig" data-act="all" data-i18n="sig_add_all">എല്ലാ പേജിലും</button>
+                    <button class="btn btn-sm btn-ghost" type="button" data-slot="sig" data-act="forget" data-i18n="sig_forget">മറക്കുക</button>
                   </div>
                 </div>
               </div>
               <div class="sf-saved" id="savedInit" hidden>
                 <img alt="" id="savedInitImg">
-                <div><strong data-i18n="sig_saved_init"></strong>
+                <div><strong data-i18n="sig_saved_init">ചുരുക്കൊപ്പ്</strong>
                   <div class="acts">
-                    <button class="btn btn-sm btn-primary" type="button" data-slot="init" data-act="add" data-i18n="sig_add"></button>
-                    <button class="btn btn-sm" type="button" data-slot="init" data-act="all" data-i18n="sig_add_all"></button>
-                    <button class="btn btn-sm btn-ghost" type="button" data-slot="init" data-act="forget" data-i18n="sig_forget"></button>
+                    <button class="btn btn-sm btn-primary" type="button" data-slot="init" data-act="add" data-i18n="sig_add">പേജിൽ ചേർക്കുക</button>
+                    <button class="btn btn-sm" type="button" data-slot="init" data-act="all" data-i18n="sig_add_all">എല്ലാ പേജിലും</button>
+                    <button class="btn btn-sm btn-ghost" type="button" data-slot="init" data-act="forget" data-i18n="sig_forget">മറക്കുക</button>
                   </div>
                 </div>
               </div>
-              <p class="tiny muted mb0" data-i18n="sig_saved_note"></p>
+              <p class="tiny muted mb0" data-i18n="sig_saved_note">വീണ്ടും ഉപയോഗിക്കാൻ ഈ ബ്രൗസറിൽ മാത്രം സൂക്ഷിക്കുന്നു. പൊതു കമ്പ്യൂട്ടറിൽ ജോലി കഴിഞ്ഞാൽ “മറക്കുക” അമർത്തുക.</p>
             </div>
           </div>
 
           <!-- Text -->
           <div class="sf-panel" id="pText" role="tabpanel" hidden>
-            <label class="field"><span data-i18n="text_label"></span><input type="text" id="textIn" class="no-i18n" dir="auto" maxlength="200" data-i18n-placeholder="text_ph"></label>
+            <label class="field"><span data-i18n="text_label">ടെക്സ്റ്റ്</span><input type="text" id="textIn" class="no-i18n" dir="auto" maxlength="200" data-i18n-placeholder="text_ph"></label>
             <div class="sf-two">
-              <label class="field"><span data-i18n="text_size"></span><input type="number" id="textSize" min="6" max="72" step="1" inputmode="numeric" value="14"></label>
-              <div class="field"><span data-i18n="text_style"></span>
+              <label class="field"><span data-i18n="text_size">വലുപ്പം</span><input type="number" id="textSize" min="6" max="72" step="1" inputmode="numeric" value="14"></label>
+              <div class="field"><span data-i18n="text_style">ശൈലി</span>
                 <div class="seg w100" role="group" id="fontSeg">
-                  <button type="button" data-val="sans" data-i18n="font_normal"></button>
-                  <button type="button" data-val="hand" data-i18n="font_hand"></button>
+                  <button type="button" data-val="sans" data-i18n="font_normal">സാധാരണ</button>
+                  <button type="button" data-val="hand" data-i18n="font_hand">കൈയക്ഷരം</button>
                 </div>
               </div>
             </div>
-            <p class="tiny muted mb0" data-i18n="text_ink_note"></p>
-            <button class="btn btn-primary" type="button" id="textAdd"><span aria-hidden="true">＋</span> <span data-i18n="text_add"></span></button>
+            <p class="tiny muted mb0" data-i18n="text_ink_note">ഒപ്പ് ഭാഗത്ത് തിരഞ്ഞെടുത്ത മഷിനിറം ഉപയോഗിക്കും.</p>
+            <button class="btn btn-primary" type="button" id="textAdd"><span aria-hidden="true">＋</span> <span data-i18n="text_add">ടെക്സ്റ്റ് ചേർക്കുക</span></button>
           </div>
 
           <!-- Date -->
           <div class="sf-panel" id="pDate" role="tabpanel" hidden>
             <div class="sf-two">
-              <label class="field"><span data-i18n="date_label"></span><input type="date" id="dateIn"></label>
-              <label class="field"><span data-i18n="date_fmt"></span><select id="dateFmt" class="no-i18n"></select></label>
+              <label class="field"><span data-i18n="date_label">തീയതി</span><input type="date" id="dateIn"></label>
+              <label class="field"><span data-i18n="date_fmt">രീതി</span><select id="dateFmt" class="no-i18n"></select></label>
             </div>
-            <label class="field"><span data-i18n="text_size"></span><input type="number" id="dateSize" min="6" max="72" step="1" inputmode="numeric" value="12"></label>
-            <button class="btn btn-primary" type="button" id="dateAdd"><span aria-hidden="true">＋</span> <span data-i18n="date_add"></span></button>
+            <label class="field"><span data-i18n="text_size">വലുപ്പം</span><input type="number" id="dateSize" min="6" max="72" step="1" inputmode="numeric" value="12"></label>
+            <button class="btn btn-primary" type="button" id="dateAdd"><span aria-hidden="true">＋</span> <span data-i18n="date_add">തീയതി ചേർക്കുക</span></button>
           </div>
 
           <!-- Tick / cross -->
           <div class="sf-panel" id="pMark" role="tabpanel" hidden>
-            <p class="small muted mb0" data-i18n="mark_help"></p>
+            <p class="small muted mb0" data-i18n="mark_help">കള്ളിയിൽ ടിക്ക് ചെയ്യുക അല്ലെങ്കിൽ ഒരു ഓപ്ഷൻ വെട്ടുക. വലുതാക്കാൻ മൂല വലിക്കുക.</p>
             <div class="sf-marks">
-              <button class="btn btn-primary" type="button" id="tickAdd"><span aria-hidden="true">✔</span> <span data-i18n="mark_tick"></span></button>
-              <button class="btn" type="button" id="crossAdd"><span aria-hidden="true">✘</span> <span data-i18n="mark_cross"></span></button>
+              <button class="btn btn-primary" type="button" id="tickAdd"><span aria-hidden="true">✔</span> <span data-i18n="mark_tick">ടിക്ക്</span></button>
+              <button class="btn" type="button" id="crossAdd"><span aria-hidden="true">✘</span> <span data-i18n="mark_cross">ക്രോസ്</span></button>
             </div>
           </div>
 
           <!-- Self attested -->
           <div class="sf-panel" id="pSelf" role="tabpanel" hidden>
-            <p class="small mb0" data-i18n="self_help"></p>
-            <label class="field"><span data-i18n="self_text_label"></span><input type="text" id="selfText" class="no-i18n" dir="auto" maxlength="80"></label>
-            <p class="tiny muted mb0" id="selfNeed" data-i18n="self_need_sig" hidden></p>
+            <p class="small mb0" data-i18n="self_help">ആധാർ, PAN, മാർക്ക് ഷീറ്റ്, സർട്ടിഫിക്കറ്റ് എന്നിവയുടെ “Self attested” പകർപ്പുകൾ ഓഫീസുകൾ ചോദിക്കും: ഓരോ പകർപ്പിലും അത് എഴുതി, ഒപ്പിട്ട്, തീയതി ഇടുക. ഇത് മൂന്നും ഒരുമിച്ച് ചേർക്കുന്നു.</p>
+            <label class="field"><span data-i18n="self_text_label">ടെക്സ്റ്റ്</span><input type="text" id="selfText" class="no-i18n" dir="auto" maxlength="80"></label>
+            <p class="tiny muted mb0" id="selfNeed" data-i18n="self_need_sig" hidden>ആദ്യം ഒരു ഒപ്പ് ഉണ്ടാക്കുക (വരച്ചോ ടൈപ്പ് ചെയ്തോ ഫോട്ടോയിൽ നിന്നോ). അത് ടെക്സ്റ്റിനും ഇന്നത്തെ തീയതിക്കും ഒപ്പം വയ്ക്കും.</p>
             <div class="row">
-              <button class="btn btn-primary" type="button" id="selfAdd"><span aria-hidden="true">＋</span> <span data-i18n="self_add"></span></button>
-              <button class="btn" type="button" id="selfAddAll" data-i18n="self_add_all"></button>
+              <button class="btn btn-primary" type="button" id="selfAdd"><span aria-hidden="true">＋</span> <span data-i18n="self_add">ഈ പേജിൽ ചേർക്കുക</span></button>
+              <button class="btn" type="button" id="selfAddAll" data-i18n="self_add_all">എല്ലാ പേജിലും</button>
             </div>
           </div>
 
           <!-- Stamp / seal -->
           <div class="sf-panel" id="pStamp" role="tabpanel" hidden>
-            <p class="small muted mb0" data-i18n="stamp_help"></p>
-            <button class="btn btn-primary" type="button" id="stampBtn"><span aria-hidden="true">🖼</span> <span data-i18n="stamp_pick"></span></button>
+            <p class="small muted mb0" data-i18n="stamp_help">കമ്പനി സീൽ, “PAID”, “RECEIVED”, സ്കൂൾ സ്റ്റാമ്പ്. സുതാര്യ പശ്ചാത്തലമുള്ള PNG ആണ് നല്ലത്.</p>
+            <button class="btn btn-primary" type="button" id="stampBtn"><span aria-hidden="true">🖼</span> <span data-i18n="stamp_pick">സ്റ്റാമ്പ് ചിത്രം തിരഞ്ഞെടുക്കുക</span></button>
             <input type="file" id="stampInput" accept="image/*" hidden>
             <div class="sf-saved" id="stampBox" hidden>
               <img alt="" id="stampImg">
-              <div><strong data-i18n="stamp_last"></strong>
+              <div><strong data-i18n="stamp_last">സ്റ്റാമ്പ്</strong>
                 <div class="acts">
-                  <button class="btn btn-sm btn-primary" type="button" id="stampAdd" data-i18n="sig_add"></button>
-                  <button class="btn btn-sm" type="button" id="stampAddAll" data-i18n="sig_add_all"></button>
+                  <button class="btn btn-sm btn-primary" type="button" id="stampAdd" data-i18n="sig_add">പേജിൽ ചേർക്കുക</button>
+                  <button class="btn btn-sm" type="button" id="stampAddAll" data-i18n="sig_add_all">എല്ലാ പേജിലും</button>
                 </div>
               </div>
             </div>
@@ -363,29 +363,29 @@
 
           <!-- White-out -->
           <div class="sf-panel" id="pHide" role="tabpanel" hidden>
-            <p class="small mb0" data-i18n="hide_help"></p>
-            <button class="btn btn-primary" type="button" id="hideAdd"><span aria-hidden="true">＋</span> <span data-i18n="hide_add"></span></button>
+            <p class="small mb0" data-i18n="hide_help">പേജിന്റെ ഒരു ഭാഗം വെള്ളപ്പെട്ടി കൊണ്ട് മൂടുന്നു, ഉദാ. പഴയ തീയതി അല്ലെങ്കിൽ തെറ്റായ എഴുത്ത്. അടിയിലെ എഴുത്ത് ഫയലിൽ അപ്പോഴും ഉണ്ടാകും, അതിനാൽ രഹസ്യം മറയ്ക്കാൻ ഉപയോഗിക്കരുത്.</p>
+            <button class="btn btn-primary" type="button" id="hideAdd"><span aria-hidden="true">＋</span> <span data-i18n="hide_add">വെള്ളപ്പെട്ടി ചേർക്കുക</span></button>
           </div>
 
           <!-- Form fields -->
           <div class="sf-panel" id="pForm" role="tabpanel" hidden>
             <p class="small muted mb0" id="formHelp"></p>
             <div class="sf-form-list no-i18n" id="formList"></div>
-            <label class="check" id="flattenBox" hidden><input type="checkbox" id="flatten" checked> <span data-i18n="form_flatten"></span></label>
+            <label class="check" id="flattenBox" hidden><input type="checkbox" id="flatten" checked> <span data-i18n="form_flatten">സേവ് ചെയ്ത ശേഷം കള്ളികൾ ലോക്ക് ചെയ്യുക (flatten)</span></label>
           </div>
         </div>
 
         <div class="card stack sf-save">
           <label class="field">
-            <span data-i18n="out_name"></span>
+            <span data-i18n="out_name">ഫയലിന്റെ പേര്</span>
             <input type="text" id="outName" maxlength="80" autocomplete="off" spellcheck="false">
           </label>
-          <button class="btn btn-primary btn-lg" id="saveBtn" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="save_btn"></span></button>
+          <button class="btn btn-primary btn-lg" id="saveBtn" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="save_btn">ഒപ്പിട്ട PDF സേവ് ചെയ്യുക</span></button>
           <div id="progBox" class="row" hidden><span class="sf-spin" aria-hidden="true"></span><span class="small muted" id="progMsg" aria-live="polite"></span></div>
           <div class="callout success sf-result" id="result" role="status" hidden>
             <p class="mb0" id="resultMsg"></p>
             <div class="row">
-              <button class="btn btn-sm" type="button" id="againBtn"><span aria-hidden="true">⬇</span> <span data-i18n="download_again"></span></button>
+              <button class="btn btn-sm" type="button" id="againBtn"><span aria-hidden="true">⬇</span> <span data-i18n="download_again">വീണ്ടും ഡൗൺലോഡ്</span></button>
             </div>
           </div>
         </div>
@@ -393,28 +393,28 @@
     </div>
 
     <div class="callout warning sf-legal" id="legal">
-      <p><strong data-i18n="legal_title"></strong><span data-i18n="legal_body"></span></p>
+      <p><strong data-i18n="legal_title">ശ്രദ്ധിക്കുക</strong><span data-i18n="legal_body">ഇത് PDF-ൽ നിങ്ങളുടെ ഒപ്പിന്റെ ചിത്രം ചേർക്കുന്നു. ഇത് IT Act പ്രകാരമുള്ള ഡിജിറ്റൽ സിഗ്നേച്ചർ സർട്ടിഫിക്കറ്റ് (DSC) അല്ലെങ്കിൽ ആധാർ eSign അല്ല. സാധാരണ രേഖകൾക്ക് പല ഓഫീസുകളും ഇത് സ്വീകരിക്കും, പക്ഷേ ചില ഫയലിംഗുകൾക്ക് (GST, MCA, ആദായനികുതി, ടെൻഡർ) DSC അല്ലെങ്കിൽ eSign വേണം. സ്വീകരിക്കുന്നവർക്ക് എന്താണ് വേണ്ടതെന്ന് ചോദിക്കുക.</span></p>
     </div>
 
     <details class="card" id="helpBox">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">ഉപയോഗിക്കേണ്ട വിധം · ജോലിക്കുള്ള ആശയങ്ങൾ</strong></summary>
       <ul class="stack">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">PDF തുറന്ന് ഒരിക്കൽ ഒപ്പ് വരച്ച് “ഒപ്പായി ചേർക്കുക” അമർത്തുക. ഇത് ഈ ഉപകരണത്തിൽ സൂക്ഷിക്കും, അടുത്ത തവണ “പേജിൽ ചേർക്കുക” മാത്രം അമർത്തിയാൽ മതി.</li>
+        <li data-i18n="tip2">ഓഫർ ലെറ്റർ അല്ലെങ്കിൽ കരാർ: ഒപ്പ് ചേർക്കുക, പിന്നെ “തീയതി”, പിന്നെ ടെക്സ്റ്റ് ടൂളിൽ പേര് എഴുതുക. സേവ് ചെയ്ത് പുതിയ ഫയൽ തിരികെ അയയ്ക്കുക.</li>
+        <li data-i18n="tip3">ബാങ്ക്, സ്കൂൾ, ജോലി എന്നിവയ്ക്കുള്ള രേഖാപകർപ്പുകൾ: എല്ലാ പേജിലും “സ്വയം സാക്ഷ്യം” ഉപയോഗിക്കുക. ബാങ്ക് ചോദിച്ചാൽ PDF Merge ആപ്പിൽ KYC വാട്ടർമാർക്ക് ചേർക്കുക.</li>
+        <li data-i18n="tip4">കട അല്ലെങ്കിൽ ഓഫീസ്: റബ്ബർ സ്റ്റാമ്പിന്റെ PNG ഉണ്ടാക്കുക (വെള്ളക്കടലാസിൽ ഫോട്ടോ, ഫോട്ടോ ടൂൾ), ബില്ലുകളിലും രസീതുകളിലും “സ്റ്റാമ്പ്” ഉപയോഗിക്കുക.</li>
+        <li data-i18n="tip5">കള്ളികളുള്ള ഫോമുകൾ: “ഫോം കള്ളികൾ” ടൂൾ അവ കാണിക്കും; നേരിട്ട് പൂരിപ്പിച്ച് ടിക്ക് ചെയ്യുക. സ്കാൻ ചെയ്ത ഫോമുകൾക്ക് ടെക്സ്റ്റ്, ടിക്ക്, ക്രോസ് ഉപയോഗിക്കുക.</li>
+        <li data-i18n="tip6">കടലാസിൽ തെറ്റ് പറ്റിയോ? സ്കാൻ ചെയ്ത്, തെറ്റ് വെള്ളപ്പെട്ടി കൊണ്ട് മൂടി, ടെക്സ്റ്റ് കൊണ്ട് തിരുത്ത് എഴുതുക.</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="keys_title"></h3>
+      <h3 style="margin-top:14px" data-i18n="keys_title">കീബോർഡ്</h3>
       <ul class="sf-keys small">
-        <li data-i18n="key1"></li>
-        <li data-i18n="key2"></li>
-        <li data-i18n="key3"></li>
-        <li data-i18n="key4"></li>
+        <li data-i18n="key1">Tab കൊണ്ട് ഒരു ഇനത്തിലെത്തുക, പിന്നെ ആരോ കീകൾ അത് നീക്കും; Shift + ആരോ വേഗത്തിൽ നീക്കും.</li>
+        <li data-i18n="key2">+, − എന്നിവ തിരഞ്ഞെടുത്തത് വലുതാക്കുകയോ ചെറുതാക്കുകയോ ചെയ്യും.</li>
+        <li data-i18n="key3">Delete അത് നീക്കും; Esc തിരഞ്ഞെടുപ്പ് മാറ്റും.</li>
+        <li data-i18n="key4">Ctrl+Z പഴയപടി, Ctrl+Y വീണ്ടും.</li>
       </ul>
       <div class="row spread" style="margin-top:12px">
-        <span class="small muted" data-i18n="reset_help"></span>
+        <span class="small muted" data-i18n="reset_help">ഈ ഉപകരണത്തിൽ സൂക്ഷിച്ച ഒപ്പും ക്രമീകരണങ്ങളും മറക്കുക.</span>
         <button class="btn btn-sm btn-danger" id="resetAll" type="button" data-i18n="reset"></button>
       </div>
     </details>

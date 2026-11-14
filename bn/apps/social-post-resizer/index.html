@@ -136,29 +136,29 @@
 </head>
 <body>
   <main id="app" data-busy="0">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">একটি ছবি বা পোস্টারকে Instagram, YouTube, WhatsApp, Facebook, LinkedIn, X ও Google Business-এর সঠিক মাপে বদলান: টেনে জায়গায় বসান, জুম করুন, তারপর সব মাপ ডাউনলোড করুন।</p>
 
     <div class="callout success spr-privacy" role="note">
       <span class="ic" aria-hidden="true">🔒</span>
-      <div><strong data-i18n="privacy_head"></strong><p data-i18n="privacy_body"></p></div>
+      <div><strong data-i18n="privacy_head">আপনার ছবি কখনও এই ডিভাইসের বাইরে যায় না।</strong><p data-i18n="privacy_body">মাপ বদলানোর কাজ আপনার ব্রাউজারের ভিতরেই হয়। কিছুই আপলোড হয় না, কিছুই অনলাইনে সেভ হয় না।</p></div>
     </div>
 
     <section class="card spr-drop" id="drop" tabindex="0" aria-labelledby="dropTitle">
       <div class="big" aria-hidden="true">🖼️</div>
       <div class="spr-drop-txt">
-        <strong id="dropTitle" data-i18n="drop_title"></strong>
-        <span class="small muted" data-i18n="drop_hint"></span>
+        <strong id="dropTitle" data-i18n="drop_title">ছবি বা পোস্টার বেছে নিন</strong>
+        <span class="small muted" data-i18n="drop_hint">JPG, PNG, WebP বা GIF · এখানে টেনে ছাড়ুন, বা পেস্ট করুন (Ctrl+V)</span>
       </div>
       <div class="spr-drop-btns">
-        <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">＋</span> <span data-i18n="pick_btn"></span></button>
-        <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">✨</span> <span data-i18n="sample_btn"></span></button>
+        <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">＋</span> <span data-i18n="pick_btn">ছবি বাছুন</span></button>
+        <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">✨</span> <span data-i18n="sample_btn">নমুনা দেখুন</span></button>
       </div>
       <input type="file" id="fileIn" accept="image/*,.heic,.heif" hidden>
       <div class="spr-drop-foot">
         <p class="small muted no-i18n" id="loadInfo" aria-live="polite"></p>
         <div class="callout danger" id="loadErr" hidden role="alert">
           <p id="errMsg"></p>
-          <a class="btn btn-sm" id="heicLink" href="../../../apps/social-post-resizer/../image-compressor/" hidden data-i18n="err_heic_link"></a>
+          <a class="btn btn-sm" id="heicLink" href="../../../apps/social-post-resizer/../image-compressor/" hidden data-i18n="err_heic_link">Image Compressor খুলুন</a>
         </div>
       </div>
     </section>
@@ -166,62 +166,62 @@
     <div class="spr-layout">
       <!-- ============ editor ============ -->
       <section class="card" id="editorCard" aria-labelledby="hAdjust">
-        <h2 class="spr-h"><span class="num" aria-hidden="true">2</span> <span id="hAdjust" data-i18n="h_adjust"></span> <span class="badge primary no-i18n" id="activeBadge"><span id="activeName"></span> · <span class="spr-dim" id="activeDim"></span></span></h2>
+        <h2 class="spr-h"><span class="num" aria-hidden="true">2</span> <span id="hAdjust" data-i18n="h_adjust">ঠিক করুন</span> <span class="badge primary no-i18n" id="activeBadge"><span id="activeName"></span> · <span class="spr-dim" id="activeDim"></span></span></h2>
         <div class="spr-stage" id="stage">
           <canvas id="preview" width="300" height="300" tabindex="0" role="img" data-i18n-aria-label="stage_aria" aria-label="preview"></canvas>
         </div>
         <div class="spr-hints">
           <p class="tiny muted" id="safeHint"></p>
-          <p class="tiny muted" data-i18n="drag_hint"></p>
+          <p class="tiny muted" data-i18n="drag_hint">ছবি সরাতে টানুন · জুম করতে স্ক্রল করুন বা দুই আঙুলে ছড়ান</p>
           <p class="tiny muted spr-keys" data-i18n-html="keys_hint"></p>
         </div>
 
         <div class="spr-ctl">
           <div class="field">
-            <span data-i18n="mode_label"></span>
+            <span data-i18n="mode_label">ফিট না ফিল</span>
             <div class="seg spr-seg" role="group" data-i18n-aria-label="mode_label" aria-label="mode">
-              <button type="button" id="mode-fit" data-mode="fit" data-i18n="mode_fit"></button>
-              <button type="button" id="mode-fill" data-mode="fill" data-i18n="mode_fill"></button>
+              <button type="button" id="mode-fit" data-mode="fit" data-i18n="mode_fit">ফিট (পুরো ছবি)</button>
+              <button type="button" id="mode-fill" data-mode="fill" data-i18n="mode_fill">ফিল (মাপে কাটা)</button>
             </div>
           </div>
-          <label class="field" for="zoom"><span data-i18n="zoom"></span>
+          <label class="field" for="zoom"><span data-i18n="zoom">জুম</span>
             <span class="spr-rangerow"><input type="range" id="zoom" min="50" max="400" step="1" value="100"><output id="zoomOut" for="zoom" class="no-i18n">100%</output>
               <button type="button" class="btn btn-sm" id="centerBtn" data-i18n-title="center_btn" data-i18n-aria-label="center_btn" aria-label="reset position" title="reset position">⟲</button></span>
           </label>
           <div class="field full" id="bgField">
-            <span data-i18n="bg_label"></span>
+            <span data-i18n="bg_label">ব্যাকগ্রাউন্ড (ছবি পুরো ফ্রেম না ভরলে)</span>
             <div class="spr-chips" id="bgChips" role="group" data-i18n-aria-label="bg_label" aria-label="background">
-              <button type="button" class="chip" data-bg="blur" data-i18n="bg_blur"></button>
-              <button type="button" class="chip" data-bg="auto"><i id="autoSw" aria-hidden="true"></i> <span data-i18n="bg_auto"></span></button>
-              <button type="button" class="chip" data-bg="white"><i style="background:#fff" aria-hidden="true"></i> <span data-i18n="bg_white"></span></button>
-              <button type="button" class="chip" data-bg="black"><i style="background:#000" aria-hidden="true"></i> <span data-i18n="bg_black"></span></button>
-              <label class="chip" for="bgColor" id="bgCustomChip" data-bg="custom"><input type="color" id="bgColor" value="#0b4f5c" data-i18n-aria-label="bg_custom" aria-label="colour" style="width:30px;height:24px;padding:0;border:0;background:transparent"> <span data-i18n="bg_custom"></span></label>
+              <button type="button" class="chip" data-bg="blur" data-i18n="bg_blur">ঝাপসা ছবি</button>
+              <button type="button" class="chip" data-bg="auto"><i id="autoSw" aria-hidden="true"></i> <span data-i18n="bg_auto">নিজে থেকে রং</span></button>
+              <button type="button" class="chip" data-bg="white"><i style="background:#fff" aria-hidden="true"></i> <span data-i18n="bg_white">সাদা</span></button>
+              <button type="button" class="chip" data-bg="black"><i style="background:#000" aria-hidden="true"></i> <span data-i18n="bg_black">কালো</span></button>
+              <label class="chip" for="bgColor" id="bgCustomChip" data-bg="custom"><input type="color" id="bgColor" value="#0b4f5c" data-i18n-aria-label="bg_custom" aria-label="colour" style="width:30px;height:24px;padding:0;border:0;background:transparent"> <span data-i18n="bg_custom">রং বাছুন</span></label>
             </div>
           </div>
           <div class="full row spread">
-            <label class="check"><input type="checkbox" id="safeOn" checked> <span data-i18n="safe_show"></span></label>
-            <button type="button" class="btn btn-sm" id="applyAll" data-i18n="apply_all"></button>
+            <label class="check"><input type="checkbox" id="safeOn" checked> <span data-i18n="safe_show">নিরাপদ অংশ দেখান</span></label>
+            <button type="button" class="btn btn-sm" id="applyAll" data-i18n="apply_all">সব মাপে এই ফিট / ফিল</button>
           </div>
 
           <details class="spr-det full" id="capDet">
-            <summary><span data-i18n="h_caption"></span> <span class="badge" id="capBadge" hidden></span></summary>
+            <summary><span data-i18n="h_caption">ক্যাপশন পট্টি</span> <span class="badge" id="capBadge" hidden></span></summary>
             <div>
-              <label class="check"><input type="checkbox" id="capOn"> <span data-i18n="caption_on"></span></label>
-              <label class="field"><span data-i18n="caption_text"></span>
+              <label class="check"><input type="checkbox" id="capOn"> <span data-i18n="caption_on">ক্যাপশন পট্টি যোগ করুন</span></label>
+              <label class="field"><span data-i18n="caption_text">ক্যাপশনের লেখা</span>
                 <input type="text" id="capText" class="no-i18n" maxlength="90" data-i18n-placeholder="caption_ph" autocomplete="off">
               </label>
               <div class="spr-ctl" style="margin-top:0">
-                <div class="field"><span data-i18n="caption_pos"></span>
+                <div class="field"><span data-i18n="caption_pos">জায়গা</span>
                   <div class="seg spr-seg" role="group" data-i18n-aria-label="caption_pos" aria-label="position">
-                    <button type="button" data-cpos="top" data-i18n="pos_top"></button>
-                    <button type="button" data-cpos="bottom" data-i18n="pos_bottom"></button>
+                    <button type="button" data-cpos="top" data-i18n="pos_top">উপরে</button>
+                    <button type="button" data-cpos="bottom" data-i18n="pos_bottom">নীচে</button>
                   </div>
                 </div>
-                <div class="field"><span data-i18n="caption_style"></span>
+                <div class="field"><span data-i18n="caption_style">স্টাইল</span>
                   <div class="seg spr-seg" role="group" data-i18n-aria-label="caption_style" aria-label="style">
-                    <button type="button" data-cstyle="dark" data-i18n="style_dark"></button>
-                    <button type="button" data-cstyle="light" data-i18n="style_light"></button>
-                    <button type="button" data-cstyle="brand" data-i18n="style_brand"></button>
+                    <button type="button" data-cstyle="dark" data-i18n="style_dark">গাঢ়</button>
+                    <button type="button" data-cstyle="light" data-i18n="style_light">হালকা</button>
+                    <button type="button" data-cstyle="brand" data-i18n="style_brand">বাছা রং</button>
                   </div>
                 </div>
               </div>
@@ -229,17 +229,17 @@
           </details>
 
           <details class="spr-det full" id="logoDet">
-            <summary><span data-i18n="h_logo"></span> <span class="badge" id="logoBadge" hidden></span></summary>
+            <summary><span data-i18n="h_logo">কোণে লোগো</span> <span class="badge" id="logoBadge" hidden></span></summary>
             <div>
               <div class="row">
                 <img class="spr-logo-prev" id="logoPrev" alt="" hidden>
-                <button type="button" class="btn" id="logoPick" data-i18n="logo_pick"></button>
-                <button type="button" class="btn btn-sm btn-danger" id="logoDel" data-i18n="logo_remove" hidden></button>
+                <button type="button" class="btn" id="logoPick" data-i18n="logo_pick">লোগো যোগ করুন</button>
+                <button type="button" class="btn btn-sm btn-danger" id="logoDel" data-i18n="logo_remove" hidden>লোগো সরান</button>
                 <input type="file" id="logoIn" accept="image/*" hidden>
               </div>
-              <p class="tiny muted mb0" data-i18n="logo_hint"></p>
+              <p class="tiny muted mb0" data-i18n="logo_hint">স্বচ্ছ ব্যাকগ্রাউন্ডের PNG সবচেয়ে ভালো দেখায়।</p>
               <div class="spr-ctl" style="margin-top:0">
-                <div class="field"><span data-i18n="logo_corner"></span>
+                <div class="field"><span data-i18n="logo_corner">কোণ</span>
                   <div class="spr-pos" id="cornerGrid" role="group" data-i18n-aria-label="logo_corner" aria-label="corner">
                     <button type="button" data-corner="tl" data-i18n-aria-label="corner_tl" aria-label="top left">◤</button>
                     <button type="button" data-corner="tr" data-i18n-aria-label="corner_tr" aria-label="top right">◥</button>
@@ -247,7 +247,7 @@
                     <button type="button" data-corner="br" data-i18n-aria-label="corner_br" aria-label="bottom right">◢</button>
                   </div>
                 </div>
-                <label class="field" for="logoSize"><span data-i18n="logo_size"></span>
+                <label class="field" for="logoSize"><span data-i18n="logo_size">লোগোর মাপ</span>
                   <span class="spr-rangerow"><input type="range" id="logoSize" min="6" max="35" step="1" value="14"><output id="logoSizeOut" for="logoSize" class="no-i18n">14%</output></span>
                 </label>
               </div>
@@ -259,61 +259,61 @@
       <div class="spr-side">
         <!-- ============ sizes ============ -->
         <section class="card" id="sizesCard" aria-labelledby="hSizes">
-          <h2 class="spr-h"><span class="num" aria-hidden="true">1</span> <span id="hSizes" data-i18n="h_sizes"></span></h2>
-          <p class="small muted" data-i18n="sizes_hint"></p>
+          <h2 class="spr-h"><span class="num" aria-hidden="true">1</span> <span id="hSizes" data-i18n="h_sizes">মাপ</span></h2>
+          <p class="small muted" data-i18n="sizes_hint">ঠিক করতে একটি মাপে ট্যাপ করুন। যে মাপগুলো ডাউনলোড করবেন, সেগুলোতে টিক দিন।</p>
           <div class="seg spr-pf no-i18n" id="pfSeg" role="tablist" data-i18n-aria-label="h_sizes" aria-label="platform"></div>
           <div class="spr-presets" id="presetGrid"></div>
           <div class="spr-custom" id="customBox" hidden>
-            <label class="field"><span data-i18n="custom_w"></span><input type="number" id="customW" min="16" max="4096" step="1" inputmode="numeric"></label>
-            <label class="field"><span data-i18n="custom_h"></span><input type="number" id="customH" min="16" max="4096" step="1" inputmode="numeric"></label>
-            <p class="tiny muted mb0" style="grid-column:1/-1" data-i18n="custom_hint"></p>
+            <label class="field"><span data-i18n="custom_w">চওড়া (px)</span><input type="number" id="customW" min="16" max="4096" step="1" inputmode="numeric"></label>
+            <label class="field"><span data-i18n="custom_h">উচ্চতা (px)</span><input type="number" id="customH" min="16" max="4096" step="1" inputmode="numeric"></label>
+            <p class="tiny muted mb0" style="grid-column:1/-1" data-i18n="custom_hint">16 থেকে 4096 px-এর মধ্যে কোনো মাপ।</p>
           </div>
           <div class="spr-selrow">
             <span class="small" id="selCount" aria-live="polite"></span>
             <span class="row" style="gap:6px">
-              <button type="button" class="btn btn-sm" id="selAll" data-i18n="sel_all"></button>
-              <button type="button" class="btn btn-sm" id="selNone" data-i18n="sel_none"></button>
+              <button type="button" class="btn btn-sm" id="selAll" data-i18n="sel_all">সবগুলোতে টিক</button>
+              <button type="button" class="btn btn-sm" id="selNone" data-i18n="sel_none">সব টিক তুলুন</button>
             </span>
           </div>
         </section>
 
         <!-- ============ download ============ -->
         <section class="card stack spr-dl" id="exportCard" aria-labelledby="hExport">
-          <h2 class="spr-h mb0"><span class="num" aria-hidden="true">3</span> <span id="hExport" data-i18n="h_export"></span></h2>
+          <h2 class="spr-h mb0"><span class="num" aria-hidden="true">3</span> <span id="hExport" data-i18n="h_export">ডাউনলোড</span></h2>
           <div class="field">
-            <span data-i18n="fmt_label"></span>
+            <span data-i18n="fmt_label">ফরম্যাট</span>
             <div class="seg spr-seg no-i18n" role="group" id="fmtSeg" data-i18n-aria-label="fmt_label" aria-label="format">
               <button type="button" id="fmt-jpg" data-fmt="jpg">JPG</button>
               <button type="button" id="fmt-png" data-fmt="png">PNG</button>
             </div>
             <span class="hint" id="fmtHint"></span>
           </div>
-          <label class="field" for="quality" id="qualityField"><span data-i18n="quality"></span>
+          <label class="field" for="quality" id="qualityField"><span data-i18n="quality">JPG কোয়ালিটি</span>
             <span class="spr-rangerow"><input type="range" id="quality" min="50" max="100" step="1" value="90"><output id="qualityOut" for="quality" class="no-i18n">90</output></span>
           </label>
           <p class="small muted mb0" id="estSize" aria-live="polite"></p>
           <button class="btn btn-primary btn-lg" id="dlThis" type="button"><span aria-hidden="true">⬇</span> <span id="dlThisTxt"></span></button>
           <button class="btn btn-lg" id="dlAll" type="button"><span aria-hidden="true">⬇</span> <span id="dlAllTxt"></span></button>
-          <button class="btn" id="shareBtn" type="button" hidden><span aria-hidden="true">↗</span> <span data-i18n="share_btn"></span></button>
+          <button class="btn" id="shareBtn" type="button" hidden><span aria-hidden="true">↗</span> <span data-i18n="share_btn">এই মাপ শেয়ার করুন</span></button>
           <p class="small muted spr-status no-i18n" id="status" aria-live="polite"></p>
-          <p class="tiny muted mb0" data-i18n="dl_many_hint"></p>
+          <p class="tiny muted mb0" data-i18n="dl_many_hint">ফাইলগুলো একটি একটি করে ডাউনলোড হয়। ব্রাউজার একাধিক ডাউনলোডের অনুমতি চাইলে হ্যাঁ বলুন।</p>
           <div class="row spread">
             <span class="tiny muted" data-i18n="saved_local"></span>
-            <button type="button" class="btn btn-sm btn-danger" id="resetAll" data-i18n="reset_all"></button>
+            <button type="button" class="btn btn-sm btn-danger" id="resetAll" data-i18n="reset_all">সেটিংস রিসেট করুন</button>
           </div>
         </section>
       </div>
     </div>
 
     <details class="card spr-help no-print" id="helpBox" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">কীভাবে ব্যবহার করবেন / আইডিয়া</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">ছবি বাছুন, একটি মাপে ট্যাপ করুন, তারপর ছবিটি টেনে জায়গায় বসান। দরকারি অংশে জুম করতে স্ক্রল করুন বা দুই আঙুলে ছড়ান। প্রতিটি মাপ নিজের জায়গা মনে রাখে।</li>
+        <li data-i18n="tip2">ফিট পুরো পোস্টার রাখে এবং ফাঁকা জায়গা ঝাপসা কপি বা রঙে ভরে দেয়। ফিল ছবিটিকে ঠিক আকারে কেটে নেয়। &quot;সব মাপে এই ফিট / ফিল&quot; আপনার পছন্দ সব জায়গায় লাগায়।</li>
+        <li data-i18n="tip3">দোকানদার: অফারের পোস্টার একবার বানান, Instagram পোস্ট, WhatsApp স্ট্যাটাস ও Facebook কভারে টিক দিন এবং সব একসঙ্গে ডাউনলোড করুন। ক্যাপশন পট্টিতে দোকানের নাম দিন।</li>
+        <li data-i18n="tip4">ক্রিয়েটর: Shorts, Reels ও স্ট্যাটাসে লেখা উপরে-নীচের ছায়া অংশের বাইরে রাখুন, সেখানে অ্যাপের বোতাম থাকে। YouTube ব্যানারে সব কিছু উজ্জ্বল মাঝের অংশে রাখুন।</li>
+        <li data-i18n="tip5">স্কুল ও অফিস: একটি নোটিসের ছবি এক মিনিটে WhatsApp DP, YouTube থাম্বনেল ও Facebook কভার হয়ে যায়। কোণে লোগো দিন, যাতে প্রতিটি পোস্ট আপনার পরিচয় দেখায়।</li>
+        <li data-i18n="tip6">লেখা ও লোগোসহ পোস্টারের জন্য PNG বাছুন। ছবির জন্য JPG কোয়ালিটি 85–92 রাখুন: ফাইল ছোট থাকে এবং ধীর নেটওয়ার্কেও দ্রুত আপলোড হয়।</li>
       </ul>
     </details>
   </main>

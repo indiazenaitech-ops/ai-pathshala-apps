@@ -202,52 +202,52 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="callout success small privacy no-print"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">গলি, স্কুল বা অফিসের ক্রিকেট ম্যাচের স্কোর প্রতি বলে লিখুন: লাইভ স্কোর, রান রেট, টার্গেট, পুরো স্কোরকার্ড আর WhatsApp সারাংশ। ইন্টারনেট ছাড়াও চলে।</p>
+    <p class="callout success small privacy no-print"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">বিনামূল্যে, অফলাইনে চলে। সাইন-আপ নেই, বিজ্ঞাপন নেই। ম্যাচ শুধু এই ফোন বা কম্পিউটারেই সেভ হয়।</span></p>
 
     <!-- ============ SETUP ============ -->
     <section class="card" id="setupView" aria-labelledby="hSetup">
-      <h2 id="hSetup" data-i18n="h_setup"></h2>
+      <h2 id="hSetup" data-i18n="h_setup">ম্যাচ সাজান</h2>
       <form id="setupForm" novalidate>
         <div class="su-grid">
-          <div class="field"><label for="suT1" data-i18n="lbl_team1"></label><input id="suT1" type="text" class="no-i18n" maxlength="30" autocomplete="off"></div>
-          <div class="field"><label for="suT2" data-i18n="lbl_team2"></label><input id="suT2" type="text" class="no-i18n" maxlength="30" autocomplete="off"></div>
+          <div class="field"><label for="suT1" data-i18n="lbl_team1">দল 1</label><input id="suT1" type="text" class="no-i18n" maxlength="30" autocomplete="off"></div>
+          <div class="field"><label for="suT2" data-i18n="lbl_team2">দল 2</label><input id="suT2" type="text" class="no-i18n" maxlength="30" autocomplete="off"></div>
           <div class="field">
-            <label for="suPps" data-i18n="lbl_pps"></label>
+            <label for="suPps" data-i18n="lbl_pps">প্রতি দলে খেলোয়াড়</label>
             <div class="su-num"><input id="suPps" type="number" min="2" max="11" step="1" inputmode="numeric"><span class="hint">2–11</span></div>
           </div>
           <div class="field">
-            <label for="suOvers" data-i18n="lbl_overs"></label>
+            <label for="suOvers" data-i18n="lbl_overs">প্রতি ইনিংসে ওভার</label>
             <div class="su-num"><input id="suOvers" type="number" min="1" max="50" step="1" inputmode="numeric">
-              <label class="check"><input type="checkbox" id="suUnl"> <span data-i18n="lbl_unlimited"></span></label></div>
+              <label class="check"><input type="checkbox" id="suUnl"> <span data-i18n="lbl_unlimited">ওভারের কোনো সীমা নেই</span></label></div>
           </div>
           <div class="field"><label for="suP1" id="suP1L"></label><textarea id="suP1" class="no-i18n" rows="4" aria-describedby="suPH"></textarea><span class="hint" id="suP1C"></span></div>
           <div class="field"><label for="suP2" id="suP2L"></label><textarea id="suP2" class="no-i18n" rows="4" aria-describedby="suPH"></textarea><span class="hint" id="suP2C"></span></div>
-          <p class="hint wide mb0" id="suPH" data-i18n="hint_players"></p>
-          <div class="field"><label for="suToss" data-i18n="lbl_toss"></label><select id="suToss" class="no-i18n"></select></div>
-          <div class="field"><span class="lbl" id="suDecL"><b data-i18n="lbl_decision"></b></span>
+          <p class="hint wide mb0" id="suPH" data-i18n="hint_players">খেলোয়াড়দের নাম দেওয়া জরুরি নয়: প্রতি লাইনে একটি নাম। WhatsApp থেকে তালিকা পেস্ট করতে পারেন।</p>
+          <div class="field"><label for="suToss" data-i18n="lbl_toss">টস জিতেছে</label><select id="suToss" class="no-i18n"></select></div>
+          <div class="field"><span class="lbl" id="suDecL"><b data-i18n="lbl_decision">কী বেছে নিল</b></span>
             <div class="seg" role="group" aria-labelledby="suDecL" id="suDec">
-              <button type="button" data-v="bat" id="decBat" data-i18n="opt_bat"></button><button type="button" data-v="bowl" id="decBowl" data-i18n="opt_bowl"></button>
+              <button type="button" data-v="bat" id="decBat" data-i18n="opt_bat">আগে ব্যাটিং</button><button type="button" data-v="bowl" id="decBowl" data-i18n="opt_bowl">আগে বোলিং</button>
             </div>
           </div>
         </div>
         <details class="su-rules" id="suRules">
-          <summary data-i18n="h_rules"></summary>
+          <summary data-i18n="h_rules">গলির নিয়ম</summary>
           <div class="su-grid">
-            <div class="field"><label for="suWd" data-i18n="lbl_wide"></label>
-              <select id="suWd"><option value="1" data-i18n="opt_run_reball"></option><option value="0" data-i18n="opt_norun_reball"></option></select></div>
-            <div class="field"><label for="suNb" data-i18n="lbl_noball"></label>
-              <select id="suNb"><option value="1" data-i18n="opt_run_reball"></option><option value="0" data-i18n="opt_norun_reball"></option></select></div>
-            <label class="check"><input type="checkbox" id="suFh"> <span data-i18n="lbl_freehit"></span></label>
-            <label class="check"><input type="checkbox" id="suAlone"> <span data-i18n="lbl_lastalone"></span></label>
-            <div class="field"><label for="suMax" data-i18n="lbl_maxov"></label>
-              <div class="su-num"><input id="suMax" type="number" min="0" max="50" step="1" inputmode="numeric"><span class="hint" data-i18n="hint_maxov"></span></div></div>
+            <div class="field"><label for="suWd" data-i18n="lbl_wide">ওয়াইড বল</label>
+              <select id="suWd"><option value="1" data-i18n="opt_run_reball">1 রান + আবার বল</option><option value="0" data-i18n="opt_norun_reball">রান নেই, শুধু আবার বল</option></select></div>
+            <div class="field"><label for="suNb" data-i18n="lbl_noball">নো-বল</label>
+              <select id="suNb"><option value="1" data-i18n="opt_run_reball">1 রান + আবার বল</option><option value="0" data-i18n="opt_norun_reball">রান নেই, শুধু আবার বল</option></select></div>
+            <label class="check"><input type="checkbox" id="suFh"> <span data-i18n="lbl_freehit">নো-বলের পরে ফ্রি হিট</span></label>
+            <label class="check"><input type="checkbox" id="suAlone"> <span data-i18n="lbl_lastalone">শেষ ব্যাটার একা খেলতে পারবে</span></label>
+            <div class="field"><label for="suMax" data-i18n="lbl_maxov">একজন বোলারের সর্বোচ্চ ওভার</label>
+              <div class="su-num"><input id="suMax" type="number" min="0" max="50" step="1" inputmode="numeric"><span class="hint" data-i18n="hint_maxov">0 = কোনো সীমা নেই</span></div></div>
           </div>
-          <p class="hint mb0" style="margin-top:10px" data-i18n="rules_note"></p>
+          <p class="hint mb0" style="margin-top:10px" data-i18n="rules_note">স্কোরিং MCC-র ক্রিকেট আইন (2017 কোড, 2022 সংস্করণ) আর এখানে বেছে নেওয়া গলির নিয়ম মেনে হয়। ফ্রি হিট আর সুপার ওভার ICC-র শর্ত অনুযায়ী।</p>
         </details>
         <div class="row su-btns">
-          <button type="submit" class="btn btn-primary btn-lg" id="btnStart"><span aria-hidden="true">🏏</span> <span data-i18n="btn_start"></span></button>
-          <button type="button" class="btn" id="btnSample" data-i18n="btn_sample"></button>
+          <button type="submit" class="btn btn-primary btn-lg" id="btnStart"><span aria-hidden="true">🏏</span> <span data-i18n="btn_start">ম্যাচ শুরু করুন</span></button>
+          <button type="button" class="btn" id="btnSample" data-i18n="btn_sample">নমুনা ম্যাচ দেখুন</button>
         </div>
       </form>
     </section>
@@ -256,20 +256,20 @@
     <div class="lv" id="liveView" hidden>
       <div class="lv-col">
         <div class="board" id="board" aria-live="polite">
-          <div class="b-top"><span id="bInn"></span><span class="b-fh" id="bFh" hidden data-i18n="free_hit"></span><span class="grow"></span>
+          <div class="b-top"><span id="bInn"></span><span class="b-fh" id="bFh" hidden data-i18n="free_hit">ফ্রি হিট</span><span class="grow"></span>
             <button type="button" class="b-fsbtn no-print" id="btnBoard"></button></div>
           <div class="b-team no-i18n" id="bTeam"></div>
           <div class="b-score"><span class="b-total num" id="sTotal">0/0</span>
-            <span class="b-ov"><bdi class="num" dir="ltr"><span id="sOvers">0</span><span id="sOvMax"></span></bdi> <small data-i18n="lbl_overs_word"></small></span></div>
+            <span class="b-ov"><bdi class="num" dir="ltr"><span id="sOvers">0</span><span id="sOvMax"></span></bdi> <small data-i18n="lbl_overs_word">ওভার</small></span></div>
           <div class="b-stats">
-            <div class="b-stat"><span data-i18n="lbl_crr"></span><b class="num" id="sCrr">-</b></div>
-            <div class="b-stat" id="stTarget" hidden><span data-i18n="lbl_target"></span><b class="num" id="sTarget"></b></div>
-            <div class="b-stat" id="stRrr" hidden><span data-i18n="lbl_rrr"></span><b class="num" id="sRrr"></b></div>
+            <div class="b-stat"><span data-i18n="lbl_crr">রান রেট</span><b class="num" id="sCrr">-</b></div>
+            <div class="b-stat" id="stTarget" hidden><span data-i18n="lbl_target">টার্গেট</span><b class="num" id="sTarget"></b></div>
+            <div class="b-stat" id="stRrr" hidden><span data-i18n="lbl_rrr">দরকারি রান রেট</span><b class="num" id="sRrr"></b></div>
           </div>
           <div class="b-need" id="bNeed"></div>
           <div class="b-result" id="bResult"></div>
           <div class="b-rows no-i18n" id="bRows"></div>
-          <div class="b-over"><span data-i18n="lbl_this_over"></span><div class="chips no-i18n" id="bOver"></div></div>
+          <div class="b-over"><span data-i18n="lbl_this_over">এই ওভার</span><div class="chips no-i18n" id="bOver"></div></div>
           <div class="b-part" id="bPart"></div>
           <div class="b-toss" id="bToss"></div>
         </div>
@@ -277,74 +277,74 @@
         <div class="card prompt" id="prompt"></div>
 
         <section class="card pad" id="pad" aria-labelledby="padH">
-          <h2 class="sr-only" id="padH" data-i18n="btn_wkt"></h2>
+          <h2 class="sr-only" id="padH" data-i18n="btn_wkt">উইকেট</h2>
           <div class="pad-runs" id="padRuns">
             <button type="button" class="btn key" data-run="0" id="run0">0</button><button type="button" class="btn key" data-run="1" id="run1">1</button><button type="button" class="btn key" data-run="2" id="run2">2</button><button type="button" class="btn key" data-run="3" id="run3">3</button><button type="button" class="btn key k4" data-run="4" id="run4">4</button><button type="button" class="btn key" data-run="5" id="run5">5</button><button type="button" class="btn key k6" data-run="6" id="run6">6</button>
           </div>
           <div class="pad-x">
-            <button type="button" class="btn" id="xWd" data-x="wd" aria-pressed="false" data-i18n="btn_wd"></button>
-            <button type="button" class="btn" id="xNb" data-x="nb" aria-pressed="false" data-i18n="btn_nb"></button>
-            <button type="button" class="btn" id="xB" data-x="b" aria-pressed="false" data-i18n="btn_bye"></button>
-            <button type="button" class="btn" id="xLb" data-x="lb" aria-pressed="false" data-i18n="btn_lb"></button>
-            <button type="button" class="btn btn-out" id="btnWkt" data-i18n="btn_wkt"></button>
+            <button type="button" class="btn" id="xWd" data-x="wd" aria-pressed="false" data-i18n="btn_wd">ওয়াইড</button>
+            <button type="button" class="btn" id="xNb" data-x="nb" aria-pressed="false" data-i18n="btn_nb">নো-বল</button>
+            <button type="button" class="btn" id="xB" data-x="b" aria-pressed="false" data-i18n="btn_bye">বাই</button>
+            <button type="button" class="btn" id="xLb" data-x="lb" aria-pressed="false" data-i18n="btn_lb">লেগ-বাই</button>
+            <button type="button" class="btn btn-out" id="btnWkt" data-i18n="btn_wkt">উইকেট</button>
           </div>
           <p class="arm hint" id="armHint" aria-live="polite"></p>
           <div class="pad-tools">
-            <button type="button" class="btn" id="btnUndo"><span aria-hidden="true">↶</span> <span data-i18n="btn_undo"></span></button>
-            <button type="button" class="btn" id="btnSwap"><span aria-hidden="true">⇄</span> <span data-i18n="btn_swap"></span></button>
-            <button type="button" class="btn" id="btnChBowl" data-i18n="btn_chbowl"></button>
-            <button type="button" class="btn" id="btnRetire" data-i18n="btn_retire"></button>
-            <button type="button" class="btn btn-danger" id="btnEnd" data-i18n="btn_end"></button>
+            <button type="button" class="btn" id="btnUndo"><span aria-hidden="true">↶</span> <span data-i18n="btn_undo">আগেরটা মুছুন</span></button>
+            <button type="button" class="btn" id="btnSwap"><span aria-hidden="true">⇄</span> <span data-i18n="btn_swap">স্ট্রাইক বদলান</span></button>
+            <button type="button" class="btn" id="btnChBowl" data-i18n="btn_chbowl">বোলার বদলান</button>
+            <button type="button" class="btn" id="btnRetire" data-i18n="btn_retire">ব্যাটার রিটায়ার</button>
+            <button type="button" class="btn btn-danger" id="btnEnd" data-i18n="btn_end">ইনিংস শেষ করুন</button>
           </div>
-          <p class="tiny muted mb0" style="margin-top:10px" data-i18n="key_hint"></p>
+          <p class="tiny muted mb0" style="margin-top:10px" data-i18n="key_hint">কিবোর্ড: রানের জন্য 0 থেকে 6, উইকেটের জন্য W, মুছতে U।</p>
         </section>
       </div>
 
       <div class="lv-col" id="lvTables">
         <section class="card" aria-labelledby="hBat">
-          <h2 id="hBat" data-i18n="sum_top_bat"></h2>
+          <h2 id="hBat" data-i18n="sum_top_bat">ব্যাটিং</h2>
           <div class="scroll-x"><table class="table" id="tBat"></table></div>
-          <h2 style="margin-top:16px" data-i18n="sum_top_bowl"></h2>
+          <h2 style="margin-top:16px" data-i18n="sum_top_bowl">বোলিং</h2>
           <div class="scroll-x"><table class="table" id="tBowl"></table></div>
-          <h3 style="margin-top:16px" data-i18n="lbl_fow"></h3>
+          <h3 style="margin-top:16px" data-i18n="lbl_fow">উইকেট পতন</h3>
           <p class="fow" id="lvFow"></p>
         </section>
         <div class="row">
-          <button type="button" class="btn" id="btnNew"><span aria-hidden="true">＋</span> <span data-i18n="btn_newmatch"></span></button>
+          <button type="button" class="btn" id="btnNew"><span aria-hidden="true">＋</span> <span data-i18n="btn_newmatch">নতুন ম্যাচ</span></button>
         </div>
       </div>
     </div>
 
     <!-- ============ SCORECARD ============ -->
     <section class="card" id="scCard" aria-labelledby="hSc">
-      <h2 id="hSc" data-i18n="h_scorecard"></h2>
-      <div class="callout warning small row spread" id="scSaved" hidden><span data-i18n="viewing_saved"></span><button type="button" class="btn btn-sm" id="btnCloseSaved" data-i18n="btn_back_live"></button></div>
+      <h2 id="hSc" data-i18n="h_scorecard">স্কোরকার্ড</h2>
+      <div class="callout warning small row spread" id="scSaved" hidden><span data-i18n="viewing_saved">আপনি একটি সেভ করা ম্যাচ দেখছেন।</span><button type="button" class="btn btn-sm" id="btnCloseSaved" data-i18n="btn_back_live">বন্ধ করুন</button></div>
       <p class="result-line" id="scResult" aria-live="polite"></p>
       <div id="scBody"></div>
       <div class="chart-box" id="chartBox">
-        <h3 data-i18n="h_chart"></h3>
+        <h3 data-i18n="h_chart">প্রতি ওভারের রান</h3>
         <div class="chart" id="chart"></div>
         <div class="legend no-i18n" id="legend"></div>
-        <details class="chart-tbl"><summary data-i18n="show_table"></summary><div class="scroll-x"><table class="table" id="chartTbl"></table></div></details>
+        <details class="chart-tbl"><summary data-i18n="show_table">সংখ্যাগুলো দেখান</summary><div class="scroll-x"><table class="table" id="chartTbl"></table></div></details>
       </div>
       <div class="actions">
-        <button type="button" class="btn" id="btnCopy"><span aria-hidden="true">⧉</span> <span data-i18n="btn_copy_sum"></span></button>
-        <a class="btn btn-wa" id="btnWa" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="btn_wa_sum"></span></a>
+        <button type="button" class="btn" id="btnCopy"><span aria-hidden="true">⧉</span> <span data-i18n="btn_copy_sum">সারাংশ কপি করুন</span></button>
+        <a class="btn btn-wa" id="btnWa" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="btn_wa_sum">WhatsApp-এ পাঠান</span></a>
         <button type="button" class="btn" id="btnPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
       </div>
     </section>
 
     <!-- ============ HISTORY ============ -->
     <section class="card" id="histCard" aria-labelledby="hHist">
-      <h2 id="hHist" data-i18n="h_history"></h2>
+      <h2 id="hHist" data-i18n="h_history">শেষ হওয়া ম্যাচ</h2>
       <div class="hist" id="histList"></div>
     </section>
 
     <details class="card help no-print">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li><li data-i18n="tip5"></li><li data-i18n="tip6"></li>
+        <li data-i18n="tip1">দলের নাম আর ওভার লিখুন বা যেমন আছে রাখুন, তারপর &quot;ম্যাচ শুরু করুন&quot; চাপুন। খেলোয়াড়দের নাম জরুরি নয়।</li><li data-i18n="tip2">প্রতি বলের পরে রান চাপুন। ওয়াইড বা নো-বল হলে আগে ওয়াইড বা নো-বল চাপুন, তারপর নেওয়া রান (না হলে 0)।</li><li data-i18n="tip3">ভুল হয়েছে? যত খুশি বল মুছুন: পুরো স্কোর বলের তালিকা থেকে আবার হিসাব হয়।</li>
+        <li data-i18n="tip4">ফোন স্ট্যান্ডে রাখুন বা প্রজেক্টরে লাগান আর &quot;বড় স্কোরবোর্ড&quot; চাপুন, যাতে মাঠের সবাই স্কোর দেখতে পায়।</li><li data-i18n="tip5">ম্যাচের পরে দলের WhatsApp গ্রুপে সারাংশ পাঠান বা পুরো স্কোরকার্ড প্রিন্ট করুন।</li><li data-i18n="tip6">অফিস বা স্কুলের টুর্নামেন্ট? ম্যাচের আগে গলির নিয়ম আর বোলারের সর্বোচ্চ ওভার ঠিক করুন। প্রতিটি শেষ স্কোরকার্ড &quot;শেষ হওয়া ম্যাচ&quot;-এ থাকে।</li>
       </ul>
     </details>
 

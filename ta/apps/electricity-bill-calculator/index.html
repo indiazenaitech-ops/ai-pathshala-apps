@@ -175,15 +175,15 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="eb-privacy no-print"><span aria-hidden="true">🔒</span><span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">எந்த சாதனங்கள் அதிக மின்சாரம் சாப்பிடுகின்றன என்று கண்டறியுங்கள், மாதக் கட்டணத்தை அடுக்கு வாரியாக மதிப்பிடுங்கள், LED, BLDC மின்விசிறி அல்லது 24 °C-ல் AC எவ்வளவு சேமிக்கும் என்று பாருங்கள்.</p>
+    <p class="eb-privacy no-print"><span aria-hidden="true">🔒</span><span data-i18n="privacy">எல்லா கணக்கீடும் உங்கள் சாதனத்திலேயே நடக்கிறது. எதுவும் பதிவேற்றப்படவோ வேறெங்கும் சேமிக்கப்படவோ இல்லை.</span></p>
 
     <nav class="eb-tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-audit" data-tab="audit" aria-controls="p-audit"><span class="ic" aria-hidden="true">🔌</span><span data-i18n="tab_audit"></span></button>
-      <button type="button" role="tab" id="tab-bill" data-tab="bill" aria-controls="p-bill"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_bill"></span></button>
-      <button type="button" role="tab" id="tab-save" data-tab="save" aria-controls="p-save"><span class="ic" aria-hidden="true">🌱</span><span data-i18n="tab_save"></span></button>
-      <button type="button" role="tab" id="tab-meter" data-tab="meter" aria-controls="p-meter"><span class="ic" aria-hidden="true">☀️</span><span data-i18n="tab_meter"></span></button>
-      <button type="button" role="tab" id="tab-science" data-tab="science" aria-controls="p-science"><span class="ic" aria-hidden="true">⚡</span><span data-i18n="tab_science"></span></button>
+      <button type="button" role="tab" id="tab-audit" data-tab="audit" aria-controls="p-audit"><span class="ic" aria-hidden="true">🔌</span><span data-i18n="tab_audit">சாதனங்கள்</span></button>
+      <button type="button" role="tab" id="tab-bill" data-tab="bill" aria-controls="p-bill"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_bill">கட்டண மதிப்பீடு</span></button>
+      <button type="button" role="tab" id="tab-save" data-tab="save" aria-controls="p-save"><span class="ic" aria-hidden="true">🌱</span><span data-i18n="tab_save">சேமிப்பு வழிகாட்டி</span></button>
+      <button type="button" role="tab" id="tab-meter" data-tab="meter" aria-controls="p-meter"><span class="ic" aria-hidden="true">☀️</span><span data-i18n="tab_meter">மீட்டர் &amp; சோலார்</span></button>
+      <button type="button" role="tab" id="tab-science" data-tab="science" aria-controls="p-science"><span class="ic" aria-hidden="true">⚡</span><span data-i18n="tab_science">அறிவியல் மூலை</span></button>
     </nav>
 
     <!-- 1. Appliance audit -->
@@ -192,33 +192,33 @@
         <div class="stack">
           <section class="card stack">
             <div class="row spread">
-              <h2 class="mb0" data-i18n="audit_title"></h2>
+              <h2 class="mb0" data-i18n="audit_title">வீட்டு ஆற்றல் தணிக்கை</h2>
               <div class="field" style="margin:0">
-                <label for="days" class="eb-lbl" data-i18n="days_label"></label>
+                <label for="days" class="eb-lbl" data-i18n="days_label">மாதத்தின் நாட்கள்</label>
                 <input id="days" class="eb-num" type="number" inputmode="numeric" min="1" max="366" step="1" style="width:110px">
               </div>
             </div>
             <div class="eb-add">
-              <label for="add-sel" class="ap-l" data-i18n="add_label"></label>
+              <label for="add-sel" class="ap-l" data-i18n="add_label">சேர்க்க வேண்டிய சாதனம்</label>
               <select id="add-sel"></select>
-              <button type="button" class="btn btn-primary" id="add-btn">＋ <span data-i18n="add"></span></button>
+              <button type="button" class="btn btn-primary" id="add-btn">＋ <span data-i18n="add">சேர்</span></button>
             </div>
             <div class="ap-head" aria-hidden="true">
-              <span data-i18n="col_appliance"></span><span data-i18n="col_watts"></span><span data-i18n="col_qty"></span><span data-i18n="col_hours"></span><span class="v" data-i18n="col_units"></span><span></span>
+              <span data-i18n="col_appliance">சாதனம்</span><span data-i18n="col_watts">வாட்</span><span data-i18n="col_qty">எண்ணிக்கை</span><span data-i18n="col_hours">மணி/நாள்</span><span class="v" data-i18n="col_units">யூனிட்</span><span></span>
             </div>
             <div class="ap-rows" id="audit-rows"></div>
-            <p class="muted eb-empty" id="audit-empty" data-i18n="audit_empty"></p>
+            <p class="muted eb-empty" id="audit-empty" data-i18n="audit_empty">இன்னும் சாதனங்கள் இல்லை. மேலே சேர்க்கவும் அல்லது மாதிரி வீட்டை ஏற்றவும்.</p>
             <div class="row">
-              <button type="button" class="btn" id="sample-btn" data-i18n="load_sample"></button>
+              <button type="button" class="btn" id="sample-btn" data-i18n="load_sample">மாதிரி வீட்டை ஏற்று</button>
               <button type="button" class="btn btn-danger" id="clear-btn" data-i18n="clear"></button>
             </div>
-            <p class="eb-note" data-i18n="audit_hint"></p>
+            <p class="eb-note" data-i18n="audit_hint">யூனிட் = வாட் × எண்ணிக்கை × நாளுக்கு மணி × நாட்கள் ÷ 1000. வாட் பொதுவான மதிப்புகள்: உங்கள் சாதனத்தின் லேபிளைப் பார்த்து மாற்றுங்கள்.</p>
           </section>
         </div>
         <div class="stack">
           <section class="card eb-result" id="audit-result" aria-live="polite"></section>
           <section class="card">
-            <h2 data-i18n="rank_title"></h2>
+            <h2 data-i18n="rank_title">யார் அதிகம் சாப்பிடுகிறது?</h2>
             <div id="top3" class="top3"></div>
             <ol class="rk-list" id="rank-list"></ol>
           </section>
@@ -231,46 +231,46 @@
       <div class="eb-two">
         <div class="stack">
           <section class="card stack">
-            <h2 class="mb0" data-i18n="bill_inputs"></h2>
+            <h2 class="mb0" data-i18n="bill_inputs">உங்கள் இணைப்பு</h2>
             <div class="eb-in-row">
               <div class="field">
-                <label for="b-units" data-i18n="b_units"></label>
+                <label for="b-units" data-i18n="b_units">இந்த மாத யூனிட் (kWh)</label>
                 <input id="b-units" class="eb-num" type="number" inputmode="decimal" min="0" step="1">
               </div>
               <div class="field">
-                <label for="b-state" data-i18n="b_state"></label>
+                <label for="b-state" data-i18n="b_state">மாநில விலை (மாதிரி)</label>
                 <select id="b-state"></select>
               </div>
             </div>
-            <label class="check"><input type="checkbox" id="b-use-audit"><span data-i18n="b_use_audit"></span></label>
-            <p class="eb-approx" data-i18n="approx_note"></p>
+            <label class="check"><input type="checkbox" id="b-use-audit"><span data-i18n="b_use_audit">சாதனப் பட்டியலின் மொத்தத்தைப் பயன்படுத்து</span></label>
+            <p class="eb-approx" data-i18n="approx_note">வீட்டு விலைகளின் மாதிரிகள், தோராயம், அக்டோபர் 2026. விதிகள் வேறுபடலாம் (இரு மாதக் கட்டணம், மானிய நிபந்தனைகள், நேர வாரியான விலை). உங்கள் DISCOM கட்டணத்தைப் பார்த்து எண்களை மாற்றுங்கள்.</p>
             <div class="field">
-              <span class="eb-lbl" id="tele-lbl" data-i18n="tele_label"></span>
+              <span class="eb-lbl" id="tele-lbl" data-i18n="tele_label">அடுக்கு முறை</span>
               <div class="seg eb-seg" id="b-tele" role="group" aria-labelledby="tele-lbl">
-                <button type="button" data-v="1" data-i18n="tele_yes"></button>
-                <button type="button" data-v="0" data-i18n="tele_no"></button>
+                <button type="button" data-v="1" data-i18n="tele_yes">டெலிஸ்கோபிக்</button>
+                <button type="button" data-v="0" data-i18n="tele_no">நான்-டெலிஸ்கோபிக்</button>
               </div>
               <p class="eb-note" id="tele-hint"></p>
             </div>
             <div>
-              <div class="sl-head" aria-hidden="true"><span data-i18n="col_upto"></span><span data-i18n="col_rate"></span><span></span></div>
+              <div class="sl-head" aria-hidden="true"><span data-i18n="col_upto">வரை (யூனிட்)</span><span data-i18n="col_rate">விலை (₹/யூனிட்)</span><span></span></div>
               <div class="sl-rows" id="slab-rows"></div>
               <div class="row" style="margin-top:10px">
-                <button type="button" class="btn btn-sm" id="slab-add">＋ <span data-i18n="slab_add"></span></button>
-                <button type="button" class="btn btn-sm" id="slab-restore" data-i18n="slab_restore"></button>
+                <button type="button" class="btn btn-sm" id="slab-add">＋ <span data-i18n="slab_add">அடுக்கு சேர்</span></button>
+                <button type="button" class="btn btn-sm" id="slab-restore" data-i18n="slab_restore">மாநில அட்டவணையை மீட்டெடு</button>
               </div>
             </div>
             <div class="eb-in-row">
-              <div class="field"><label for="b-load" data-i18n="b_load"></label><input id="b-load" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
-              <div class="field"><label for="b-fixed" data-i18n="b_fixed"></label><input id="b-fixed" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+              <div class="field"><label for="b-load" data-i18n="b_load">அனுமதிக்கப்பட்ட லோடு (kW)</label><input id="b-load" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+              <div class="field"><label for="b-fixed" data-i18n="b_fixed">நிலைக் கட்டணம் (₹ ஒரு kW-க்கு மாதம்)</label><input id="b-fixed" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
             </div>
             <div class="eb-in-row">
-              <div class="field"><label for="b-duty" data-i18n="b_duty"></label><input id="b-duty" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
-              <div class="field"><label for="b-fuel" data-i18n="b_fuel"></label><input id="b-fuel" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+              <div class="field"><label for="b-duty" data-i18n="b_duty">மின்சார வரி (%)</label><input id="b-duty" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+              <div class="field"><label for="b-fuel" data-i18n="b_fuel">எரிபொருள் கூடுதல் கட்டணம் (%)</label><input id="b-fuel" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
             </div>
             <div class="eb-in-row">
-              <label class="check" style="flex:1 1 200px"><input type="checkbox" id="b-sub"><span data-i18n="b_sub"></span></label>
-              <div class="field"><label for="b-free" data-i18n="b_free"></label><input id="b-free" class="eb-num" type="number" inputmode="numeric" min="0" step="1"></div>
+              <label class="check" style="flex:1 1 200px"><input type="checkbox" id="b-sub"><span data-i18n="b_sub">மானியம் / இலவச யூனிட்</span></label>
+              <div class="field"><label for="b-free" data-i18n="b_free">மாதத்திற்கு இலவச யூனிட்</label><input id="b-free" class="eb-num" type="number" inputmode="numeric" min="0" step="1"></div>
             </div>
           </section>
         </div>
@@ -282,18 +282,18 @@
     <section id="p-save" role="tabpanel" aria-labelledby="tab-save" class="eb-panel" hidden>
       <div class="eb-two">
         <section class="card stack">
-          <h2 class="mb0" data-i18n="save_title"></h2>
-          <p class="eb-note" data-i18n="save_hint"></p>
+          <h2 class="mb0" data-i18n="save_title">இப்படிச் செய்தால்…</h2>
+          <p class="eb-note" data-i18n="save_hint">ஒரு மாற்றத்தைத் தேர்ந்தெடுத்து, உங்கள் சாதனப் பட்டியலின்படி எத்தனை யூனிட், எவ்வளவு ரூபாய் சேமிக்கலாம் என்று பாருங்கள்.</p>
           <div class="sw-list">
-            <label class="check"><input type="checkbox" id="sw-led"><span><span data-i18n="sw_led"></span><small data-i18n="sw_led_h"></small></span></label>
-            <label class="check"><input type="checkbox" id="sw-ac24"><span><span data-i18n="sw_ac24"></span><small data-i18n="sw_ac24_h"></small></span></label>
-            <label class="check"><input type="checkbox" id="sw-fridge5"><span><span data-i18n="sw_fridge5"></span><small data-i18n="sw_fridge5_h"></small></span></label>
-            <label class="check"><input type="checkbox" id="sw-bldc"><span><span data-i18n="sw_bldc"></span><small data-i18n="sw_bldc_h"></small></span></label>
-            <label class="check"><input type="checkbox" id="sw-standby"><span><span data-i18n="sw_standby"></span><small data-i18n="sw_standby_h"></small></span></label>
+            <label class="check"><input type="checkbox" id="sw-led"><span><span data-i18n="sw_led">பல்பு, CFL, டியூப்புக்குப் பதில் 9 W LED</span><small data-i18n="sw_led_h">60 W பல்பு → 9 W LED ஒவ்வொரு மணிக்கும் 51 W சேமிக்கும்.</small></span></label>
+            <label class="check"><input type="checkbox" id="sw-ac24"><span><span data-i18n="sw_ac24">AC-ஐ 18 °C-க்குப் பதில் 24 °C-ல் இயக்கு</span><small data-i18n="sw_ac24_h">ஒரு டிகிரிக்கு சுமார் 6 % குறைவு: 6 டிகிரி ≈ 36 %.</small></span></label>
+            <label class="check"><input type="checkbox" id="sw-fridge5"><span><span data-i18n="sw_fridge5">5-ஸ்டார் குளிர்சாதனப் பெட்டிக்கு மாறு</span><small data-i18n="sw_fridge5_h">பழைய 2-ஸ்டார் பிரிட்ஜை விட சுமார் 30 % குறைவு.</small></span></label>
+            <label class="check"><input type="checkbox" id="sw-bldc"><span><span data-i18n="sw_bldc">சீலிங் பேனுக்குப் பதில் BLDC பேன்</span><small data-i18n="sw_bldc_h">ஒரு மின்விசிறிக்கு 75 W → 30 W.</small></span></label>
+            <label class="check"><input type="checkbox" id="sw-standby"><span><span data-i18n="sw_standby">ஸ்டாண்ட்பை மின்சாரத்தை அணை</span><small data-i18n="sw_standby_h">TV, செட்-டாப் பாக்ஸ், சார்ஜர், கணினி சும்மா இருக்கும்போதும் தலா சுமார் 2 W எடுக்கும்.</small></span></label>
           </div>
           <div class="eb-in-row">
-            <div class="field"><label for="sv-rate" data-i18n="sv_rate"></label><input id="sv-rate" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
-            <button type="button" class="btn" id="sv-rate-auto" data-i18n="sv_rate_auto"></button>
+            <div class="field"><label for="sv-rate" data-i18n="sv_rate">பயன்படுத்தும் விலை (₹ ஒரு யூனிட்)</label><input id="sv-rate" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
+            <button type="button" class="btn" id="sv-rate-auto" data-i18n="sv_rate_auto">என் கட்டண விலையை எடு</button>
           </div>
         </section>
         <section class="card eb-result" id="save-result" aria-live="polite"></section>
@@ -304,20 +304,20 @@
     <section id="p-meter" role="tabpanel" aria-labelledby="tab-meter" class="eb-panel" hidden>
       <div class="eb-two">
         <section class="card stack">
-          <h2 class="mb0" data-i18n="meter_title"></h2>
-          <p class="eb-note" data-i18n="meter_hint"></p>
+          <h2 class="mb0" data-i18n="meter_title">மீட்டர் அளவீடு</h2>
+          <p class="eb-note" data-i18n="meter_hint">கடைசிக் கட்டணத்தின் அளவீட்டையும் இப்போது மீட்டரில் உள்ள அளவீட்டையும் உள்ளிடுங்கள்.</p>
           <div class="eb-in-row">
-            <div class="field"><label for="m-prev" data-i18n="m_prev"></label><input id="m-prev" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
-            <div class="field"><label for="m-cur" data-i18n="m_cur"></label><input id="m-cur" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+            <div class="field"><label for="m-prev" data-i18n="m_prev">முந்தைய அளவீடு</label><input id="m-prev" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+            <div class="field"><label for="m-cur" data-i18n="m_cur">தற்போதைய அளவீடு</label><input id="m-cur" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
           </div>
           <div id="meter-result" aria-live="polite"></div>
         </section>
         <section class="card stack">
-          <h2 class="mb0" data-i18n="solar_title"></h2>
-          <p class="eb-note" data-i18n="solar_hint"></p>
+          <h2 class="mb0" data-i18n="solar_title">கூரை சோலார்: விரைவு மதிப்பீடு</h2>
+          <p class="eb-note" data-i18n="solar_hint">இந்தியாவில் 1 kW கூரை சோலார் நாளுக்கு சுமார் 4 யூனிட், மாதத்திற்கு சுமார் 120 யூனிட் தரும் (நகரம், பருவம், நிழலைப் பொறுத்து மாறும்).</p>
           <div class="eb-in-row">
-            <div class="field"><label for="s-kw" data-i18n="s_kw"></label><input id="s-kw" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
-            <div class="field"><label for="s-per" data-i18n="s_per"></label><input id="s-per" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
+            <div class="field"><label for="s-kw" data-i18n="s_kw">சோலார் அளவு (kW)</label><input id="s-kw" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+            <div class="field"><label for="s-per" data-i18n="s_per">ஒரு kW-க்கு நாளுக்கு யூனிட்</label><input id="s-per" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
           </div>
           <div id="solar-result" aria-live="polite"></div>
         </section>
@@ -327,51 +327,51 @@
     <!-- 5. Science corner -->
     <section id="p-science" role="tabpanel" aria-labelledby="tab-science" class="eb-panel" hidden>
       <section class="card">
-        <h2 data-i18n="sci_title"></h2>
-        <p class="eb-note" data-i18n="sci_hint"></p>
+        <h2 data-i18n="sci_title">அறிவியல் மூலை (10-ஆம் வகுப்பு, மின்சாரம்)</h2>
+        <p class="eb-note" data-i18n="sci_hint">கட்டணத்தில் பயன்படும் அதே கணக்கு, NCERT எழுதும் விதத்தில்.</p>
         <div class="sc-formulas" style="margin-top:12px">
-          <div class="sc-f"><div class="f eb-ltr">P = V × I</div><p data-i18n="f_power"></p></div>
-          <div class="sc-f"><div class="f eb-ltr">E = P × t</div><p data-i18n="f_energy"></p></div>
-          <div class="sc-f"><div class="f eb-ltr">1 kWh = 3.6 × 10<sup>6</sup> J</div><p data-i18n="f_unit"></p></div>
+          <div class="sc-f"><div class="f eb-ltr">P = V × I</div><p data-i18n="f_power">திறன் (வாட்) = மின்னழுத்தம் (வோல்ட்) × மின்னோட்டம் (ஆம்பியர்).</p></div>
+          <div class="sc-f"><div class="f eb-ltr">E = P × t</div><p data-i18n="f_energy">ஆற்றல் = திறன் × நேரம். 1 kWh = 1000 W ஒரு மணி = 1 யூனிட்.</p></div>
+          <div class="sc-f"><div class="f eb-ltr">1 kWh = 3.6 × 10<sup>6</sup> J</div><p data-i18n="f_unit">ஒரு யூனிட் மின்சாரம் = 36 லட்சம் ஜூல்.</p></div>
         </div>
       </section>
       <div class="eb-two">
         <section class="card stack">
-          <h2 class="mb0" data-i18n="sci_calc"></h2>
+          <h2 class="mb0" data-i18n="sci_calc">முயன்று பார்</h2>
           <div class="eb-in-row">
-            <div class="field"><label for="sc-v" data-i18n="sc_v"></label><input id="sc-v" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
-            <div class="field"><label for="sc-i" data-i18n="sc_i"></label><input id="sc-i" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
+            <div class="field"><label for="sc-v" data-i18n="sc_v">மின்னழுத்தம் (V)</label><input id="sc-v" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+            <div class="field"><label for="sc-i" data-i18n="sc_i">மின்னோட்டம் (A)</label><input id="sc-i" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
           </div>
           <p class="eb-note" id="sc-p-out" aria-live="polite"></p>
           <div class="eb-in-row">
-            <div class="field"><label for="sc-pw" data-i18n="sc_pw"></label><input id="sc-pw" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
-            <div class="field"><label for="sc-h" data-i18n="sc_h"></label><input id="sc-h" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
-            <div class="field"><label for="sc-d" data-i18n="sc_d"></label><input id="sc-d" class="eb-num" type="number" inputmode="numeric" min="1" step="1"></div>
+            <div class="field"><label for="sc-pw" data-i18n="sc_pw">திறன் (W)</label><input id="sc-pw" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+            <div class="field"><label for="sc-h" data-i18n="sc_h">நாளுக்கு மணி</label><input id="sc-h" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+            <div class="field"><label for="sc-d" data-i18n="sc_d">நாட்கள்</label><input id="sc-d" class="eb-num" type="number" inputmode="numeric" min="1" step="1"></div>
           </div>
           <div id="sc-e-out" aria-live="polite"></div>
         </section>
         <section class="card">
-          <h2 data-i18n="sci_practice"></h2>
+          <h2 data-i18n="sci_practice">பயிற்சிக் கேள்விகள்</h2>
           <ol class="sc-q" id="sc-q"></ol>
         </section>
       </div>
     </section>
 
     <details class="card no-print">
-      <summary data-i18n="howto_title"></summary>
+      <summary data-i18n="howto_title">பயன்படுத்துவது எப்படி / யோசனைகள்</summary>
       <ul>
-        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li><li data-i18n="tip4"></li><li data-i18n="tip5"></li>
+        <li data-i18n="tip1">போனுடன் வீட்டைச் சுற்றி ஒவ்வொரு சாதனத்தையும் பட்டியலிடுங்கள்; லேபிள் அல்லது ஸ்டிக்கரில் வாட்டைப் படியுங்கள்.</li><li data-i18n="tip2">சாதனம் உண்மையில் இயங்கும் மணிநேரத்தையே உள்ளிடுங்கள். AC அல்லது பிரிட்ஜ் கம்ப்ரசர் இடைவிட்டு ஓடுவதால் &quot;பயனுள்ள மணிநேரம்&quot; குறைவு.</li><li data-i18n="tip3">மதிப்பீட்டை உண்மைக் கட்டணத்துடன் ஒப்பிடுங்கள். பெரிய வேறுபாடு இருந்தால் மணிநேரம் அல்லது விலை அட்டவணையைத் திருத்துங்கள், அல்லது கீசர் தெர்மோஸ்டாட் பழுது போன்ற கசிவு இருக்கலாம்.</li><li data-i18n="tip4">அலுவலகம் அல்லது கடை: விளக்குகள், மின்விசிறிகள், AC, கணினிகளைப் பட்டியலிடுங்கள்; இரவில் ஸ்டாண்ட்பையை அணைப்பதே பெரும்பாலும் 5–10 % சேமிக்கும்.</li><li data-i18n="tip5">வகுப்பறை: 10-ஆம் வகுப்பு மாணவர்கள் தம் வீட்டைத் தணிக்கை செய்து, வகுப்பு முதல் 3 அதிக நுகர்வு சாதனங்களையும் வீடு வாரியான சேமிப்பையும் ஒப்பிடட்டும்.</li>
       </ul>
     </details>
     <details class="card no-print">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">தெரிந்துகொள்ள வேண்டிய சொற்கள்</summary>
       <ul>
-        <li data-i18n="word_unit"></li><li data-i18n="word_watt"></li><li data-i18n="word_slab"></li><li data-i18n="word_tele"></li><li data-i18n="word_load"></li><li data-i18n="word_duty"></li>
+        <li data-i18n="word_unit">யூனிட் (kWh): 1000 W சாதனம் ஒரு மணியில் பயன்படுத்தும் ஆற்றல். கட்டணம் யூனிட்டுகளை எண்ணுகிறது.</li><li data-i18n="word_watt">வாட் (W): சாதனம் எவ்வளவு வேகமாக ஆற்றலைப் பயன்படுத்துகிறது. 1 kW = 1000 W.</li><li data-i18n="word_slab">அடுக்கு: தனக்கென யூனிட் விலை கொண்ட யூனிட் வரம்பு, எ.கா. 0–100 க்கு ₹3.</li><li data-i18n="word_tele">டெலிஸ்கோபிக்: ஒவ்வொரு அடுக்கும் தனியாகக் கணக்கிட்டுக் கூட்டப்படும். நான்-டெலிஸ்கோபிக்: மொத்தத்தால் தீர்மானிக்கப்படும் ஒரே விலை எல்லா யூனிட்டுக்கும்.</li><li data-i18n="word_load">அனுமதிக்கப்பட்ட லோடு: உங்கள் இணைப்புக்கு அனுமதிக்கப்பட்ட kW; நிலைக் கட்டணம் பெரும்பாலும் இதன் ஒரு kW-க்கு.</li><li data-i18n="word_duty">மின்சார வரி: கட்டணங்களின் சதவீதமாகச் சேர்க்கப்படும் மாநில வரி; எரிபொருள் கூடுதல் கட்டணம் DISCOM-ன் மாறும் எரிபொருள் செலவுக்கு.</li>
       </ul>
     </details>
-    <p class="muted small no-print" data-i18n="disclaimer"></p>
+    <p class="muted small no-print" data-i18n="disclaimer">மதிப்பீடு மட்டுமே, கட்டணம் அல்ல. விலைகள் தோராய மாதிரிகள் (அக்டோபர் 2026), அடிக்கடி மாறும்: எப்போதும் உங்கள் DISCOM கட்டணத்தைப் பாருங்கள்.</p>
     <div class="row no-print">
-      <button type="button" class="btn" id="print-btn">🖨 <span data-i18n="print_audit"></span></button>
+      <button type="button" class="btn" id="print-btn">🖨 <span data-i18n="print_audit">தணிக்கைத் தாளை அச்சிடு</span></button>
       <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset"></button>
     </div>
     <div id="print-area" aria-hidden="true"></div>

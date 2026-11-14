@@ -136,30 +136,30 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <div class="ss-privacy callout success small"><span class="ic" aria-hidden="true">🔒</span><p data-i18n="privacy"></p></div>
+    <p class="edu-intro" data-i18n="intro">نوٹس، کوئی سبق، خبر کا مضمون یا دفتر کا سرکلر پیسٹ کریں یا PDF کھولیں، اور چند سیکنڈ میں اہم نکات، کلیدی الفاظ اور سب سے ضروری جملے حاصل کریں۔</p>
+    <div class="ss-privacy callout success small"><span class="ic" aria-hidden="true">🔒</span><p data-i18n="privacy">آپ کا متن کہیں اپ لوڈ نہیں ہوتا۔ خلاصہ اسی ڈیوائس پر بنتا ہے اور انٹرنیٹ کے بغیر بھی چلتا ہے۔ صرف PDF کھولنے کے لیے پہلی بار انٹرنیٹ چاہیے۔</p></div>
 
     <h1 class="print-only" id="printTitle"></h1>
     <div class="ss-layout">
       <section class="card stack" id="inCard" aria-labelledby="inH">
         <div class="ss-head">
-          <h2 id="inH" data-i18n="input_h"></h2>
+          <h2 id="inH" data-i18n="input_h">آپ کا متن</h2>
           <span class="muted small" id="inStats" aria-live="polite"></span>
         </div>
         <div class="ss-tools">
-          <button class="btn" type="button" id="sampleBtn"><span class="ic" aria-hidden="true">📄</span><span data-i18n="btn_sample"></span></button>
-          <label class="btn" for="fileIn" id="openBtn"><span class="ic" aria-hidden="true">📂</span><span data-i18n="btn_open"></span></label>
+          <button class="btn" type="button" id="sampleBtn"><span class="ic" aria-hidden="true">📄</span><span data-i18n="btn_sample">نمونہ متن</span></button>
+          <label class="btn" for="fileIn" id="openBtn"><span class="ic" aria-hidden="true">📂</span><span data-i18n="btn_open">TXT یا PDF کھولیں</span></label>
           <input type="file" id="fileIn" class="sr-only" accept=".txt,.text,.md,.csv,.srt,.vtt,.pdf,text/plain,application/pdf" data-i18n-aria-label="btn_open">
           <button class="btn btn-ghost" type="button" id="clearBtn"><span class="ic" aria-hidden="true">🧹</span><span data-i18n="clear"></span></button>
         </div>
-        <label for="text" class="sr-only" data-i18n="aria_input"></label>
+        <label for="text" class="sr-only" data-i18n="aria_input">خلاصے کے لیے متن</label>
         <textarea id="text" class="no-i18n" dir="auto" spellcheck="false" data-i18n-placeholder="input_ph"></textarea>
-        <p class="tiny muted ss-hint" data-i18n="drop_hint"></p>
+        <p class="tiny muted ss-hint" data-i18n="drop_hint">مشورہ: آپ TXT یا PDF فائل کو اس خانے پر کھینچ کر بھی چھوڑ سکتے ہیں۔</p>
         <div id="fileBox" class="callout small ss-file" role="status" hidden>
           <span class="ss-spin" id="fileSpin" aria-hidden="true"></span>
           <span class="msg" id="fileMsg"></span>
           <button class="btn" type="button" id="fileRetry" data-i18n="try_again" hidden></button>
-          <a class="btn" id="fileOcr" href="../../../apps/smart-summarizer/../image-to-text/index.html" data-i18n="link_ocr" hidden></a>
+          <a class="btn" id="fileOcr" href="../../../apps/smart-summarizer/../image-to-text/index.html" data-i18n="link_ocr" hidden>تصویر سے متن ایپ کھولیں</a>
           <div class="progress" id="fileProg" hidden><span id="fileBar"></span></div>
         </div>
       </section>
@@ -167,10 +167,10 @@
       <section class="card stack" id="outCard" aria-labelledby="outH">
         <div class="ss-opts">
           <div class="ss-opt">
-            <span class="lbl" id="lenLbl" data-i18n="len_label"></span>
+            <span class="lbl" id="lenLbl" data-i18n="len_label">لمبائی</span>
             <div class="seg" id="modeSeg" role="group" aria-labelledby="lenLbl">
-              <button type="button" data-mode="points" data-i18n="mode_points"></button>
-              <button type="button" data-mode="pct" data-i18n="mode_pct"></button>
+              <button type="button" data-mode="points" data-i18n="mode_points">نکات</button>
+              <button type="button" data-mode="pct" data-i18n="mode_pct">متن کا %</button>
             </div>
             <div class="ss-range">
               <input type="range" id="lenRange" min="3" max="10" step="1" value="5" data-i18n-aria-label="len_label">
@@ -178,18 +178,18 @@
             </div>
           </div>
           <div class="ss-opt" id="engRow" hidden>
-            <span class="lbl" id="engLbl" data-i18n="engine_label"></span>
+            <span class="lbl" id="engLbl" data-i18n="engine_label">طریقہ</span>
             <div class="seg" id="engSeg" role="group" aria-labelledby="engLbl">
-              <button type="button" data-eng="quick" data-i18n="eng_quick"></button>
-              <button type="button" data-eng="chrome" data-i18n="eng_chrome"></button>
+              <button type="button" data-eng="quick" data-i18n="eng_quick">تیز (آف لائن)</button>
+              <button type="button" data-eng="chrome" data-i18n="eng_chrome">Chrome AI</button>
             </div>
             <div class="ss-ai" id="aiOpts" hidden>
-              <p class="small" data-i18n="eng_chrome_note"></p>
+              <p class="small" data-i18n="eng_chrome_note">Chrome کا ڈیوائس پر چلنے والا AI (Gemini Nano): کچھ بھی بھیجا نہیں جاتا۔ یہ نئے جملے لکھتا ہے اور ابھی صرف انگریزی متن کے لیے کام کرتا ہے۔</p>
               <div class="seg" id="typeSeg" role="group" data-i18n-aria-label="ai_type_label">
-                <button type="button" data-type="key-points" data-i18n="type_points"></button>
-                <button type="button" data-type="tldr" data-i18n="type_tldr"></button>
+                <button type="button" data-type="key-points" data-i18n="type_points">اہم نکات</button>
+                <button type="button" data-type="tldr" data-i18n="type_tldr">مختصر پیراگراف</button>
               </div>
-              <p class="tiny muted" id="aiFirst" data-i18n="ai_first_dl"></p>
+              <p class="tiny muted" id="aiFirst" data-i18n="ai_first_dl">پہلی بار Chrome اپنا AI ماڈل ایک بار ڈاؤن لوڈ کرتا ہے۔ یہ بڑا ہے، اس لیے Wi-Fi بہتر ہے۔</p>
             </div>
           </div>
           <button class="btn btn-primary btn-lg" type="button" id="goBtn"></button>
@@ -202,14 +202,14 @@
         </div>
 
         <div class="ss-outhead" id="outHead">
-          <h2 id="outH" data-i18n="out_h"></h2>
+          <h2 id="outH" data-i18n="out_h">خلاصہ</h2>
           <span class="badge primary" id="engBadge" hidden></span>
         </div>
         <p class="ss-empty" id="outEmpty"></p>
         <div id="outBody" hidden>
           <div class="tabs" id="outTabs" role="tablist">
-            <button type="button" role="tab" data-tab="points" aria-controls="pane-points" data-i18n="tab_points"></button>
-            <button type="button" role="tab" data-tab="hl" aria-controls="pane-hl" data-i18n="tab_highlight"></button>
+            <button type="button" role="tab" data-tab="points" aria-controls="pane-points" data-i18n="tab_points">اہم نکات</button>
+            <button type="button" role="tab" data-tab="hl" aria-controls="pane-hl" data-i18n="tab_highlight">پورے متن میں دیکھیں</button>
           </div>
           <div id="pane-points" role="tabpanel">
             <p class="muted small" id="outNote"></p>
@@ -221,13 +221,13 @@
           </div>
           <div class="ss-stats" id="stats" aria-live="polite"></div>
           <div class="ss-kw">
-            <h3 data-i18n="keywords_h"></h3>
+            <h3 data-i18n="keywords_h">کلیدی الفاظ</h3>
             <div id="kw" class="no-i18n"></div>
           </div>
         </div>
         <div class="ss-actions">
           <button class="btn" type="button" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
-          <button class="btn" type="button" id="dlBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="btn_download_txt"></span></button>
+          <button class="btn" type="button" id="dlBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="btn_download_txt">TXT ڈاؤن لوڈ کریں</span></button>
           <button class="btn" type="button" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
           <span class="sp"></span>
           <button class="btn btn-danger" type="button" id="resetBtn" data-i18n="reset"></button>
@@ -236,26 +236,26 @@
     </div>
 
     <details class="card">
-      <summary data-i18n="help_h"></summary>
+      <summary data-i18n="help_h">استعمال کا طریقہ / خیالات</summary>
       <ul>
         <li data-i18n-html="help1"></li>
-        <li data-i18n="help2"></li>
-        <li data-i18n="help3"></li>
-        <li data-i18n="help4"></li>
-        <li data-i18n="help5"></li>
+        <li data-i18n="help2">لمبائی چنیں: نکات کی تعداد (3 سے 10) یا متن کا حصہ (10% سے 60%)۔ نکات اسی ترتیب میں رہتے ہیں جیسے آپ کے متن میں ہیں۔</li>
+        <li data-i18n="help3">کسی اہم نکتے کو دبائیں، وہ پورے متن میں نشان زدہ دکھے گا، تاکہ آپ اس سے پہلے اور بعد کی بات بھی پڑھ سکیں۔</li>
+        <li data-i18n="help4">پڑھائی کے لیے: کسی سبق کا خلاصہ بنائیں، پھر ہر نکتے کو اپنے الفاظ میں سمجھائیں۔ کلاس میں طلبہ پہلے خود 5 اہم جملے چنیں، پھر ایپ سے جانچیں۔</li>
+        <li data-i18n="help5">کام کے لیے: میٹنگ سے پہلے کسی لمبے سرکلر، رپورٹ یا نوٹس کے اہم نکات نکالیں، پھر انہیں WhatsApp میں کاپی کریں یا TXT فائل کے طور پر ڈاؤن لوڈ کریں۔</li>
       </ul>
     </details>
     <details class="card">
-      <summary data-i18n="inside_h"></summary>
+      <summary data-i18n="inside_h">اندر کیا ہو رہا ہے؟</summary>
       <ol>
-        <li data-i18n="inside1"></li>
-        <li data-i18n="inside2"></li>
-        <li data-i18n="inside3"></li>
-        <li data-i18n="inside4"></li>
+        <li data-i18n="inside1">متن کو ختمہ (۔)، ڈنڈا (।)، سوالیہ نشان اور نئی سطر پر جملوں میں توڑا جاتا ہے۔</li>
+        <li data-i18n="inside2">ہر جملہ اپنے اہم الفاظ کی فہرست بن جاتا ہے۔ &quot;ہے&quot;، &quot;کا&quot;، &quot;اور&quot; جیسے چھوٹے الفاظ چھوڑ دیے جاتے ہیں۔ جو لفظ کچھ جملوں میں آتا ہے مگر سب میں نہیں، اس کا وزن زیادہ ہوتا ہے (اسے TF-IDF کہتے ہیں)۔</li>
+        <li data-i18n="inside3">جن جملوں میں ایک جیسے اہم الفاظ ہوں، وہ جال کی طرح آپس میں جڑ جاتے ہیں۔ جو جملہ بہت سے جملوں سے جڑا ہو، وہ &quot;مرکزی&quot; ہے: وہ بتاتا ہے کہ پورا متن کس بارے میں ہے۔ اسے TextRank کہتے ہیں، جو PageRank پر مبنی ہے، یعنی وہی طریقہ جس سے Google ویب صفحوں کی درجہ بندی کرتا تھا۔</li>
+        <li data-i18n="inside4">سب سے مرکزی جملے چنے جاتے ہیں (تقریباً ایک جیسے جملے چھوڑ کر) اور اپنی اصل ترتیب میں دکھائے جاتے ہیں۔ کچھ ڈاؤن لوڈ نہیں ہوتا، اس لیے یہ آف لائن اور ہر زبان میں چلتا ہے۔</li>
       </ol>
       <p class="small" data-i18n-html="inside_gen"></p>
       <p class="small" data-i18n-html="inside_chrome"></p>
-      <p class="small muted" data-i18n="inside_limits"></p>
+      <p class="small muted" data-i18n="inside_limits">حدود: خلاصہ اتنا ہی اچھا ہوتا ہے جتنا متن۔ فہرستوں، جدولوں اور بہت چھوٹے متن کا خلاصہ ٹھیک نہیں بنتا، اور اسکین کی ہوئی PDF میں پڑھنے کو متن نہیں ہوتا۔</p>
     </details>
   </main>
   <script src="../../../apps/smart-summarizer/../../shared/edu.js"></script>

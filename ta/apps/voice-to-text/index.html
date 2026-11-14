@@ -126,30 +126,30 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">WhatsApp குரல் குறிப்பு, பதிவு அல்லது வீடியோவை எழுத்தாகவும் சப்டைட்டிலாகவும் மாற்றுங்கள்: ஆங்கிலம், இந்தி, தமிழ் மற்றும் பிற இந்திய மொழிகளில். AI உங்கள் சொந்த சாதனத்திலேயே இயங்குகிறது, உங்கள் ஆடியோ எங்கும் பதிவேற்றப்படாது.</p>
 
     <div class="callout success vt-privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">உங்கள் ஆடியோ உங்கள் சாதனத்திலேயே இருக்கும்.</strong> <span data-i18n="privacy_body">AI மாடல் மட்டும் ஒரு முறை பதிவிறக்கப்படும். குரல் குறிப்புகள் ஒருபோதும் பதிவேற்றப்படாது, எனவே தனிப்பட்ட செய்திகள் மற்றும் கூட்டங்களுக்கும் பயன்படுத்தலாம்.</span></p>
     </div>
 
     <div class="vt-grid">
       <!-- 1. audio -->
       <section class="card stack" id="inCard" aria-labelledby="hIn">
-        <h2 class="vt-step" id="hIn" data-i18n="step_add"></h2>
+        <h2 class="vt-step" id="hIn" data-i18n="step_add">1. குரல் குறிப்பைச் சேர்க்கவும்</h2>
         <div class="vt-drop" id="drop" tabindex="0" role="button" aria-describedby="dropHint">
           <span class="vt-drop-ic" aria-hidden="true">🎧</span>
-          <strong data-i18n="drop_title"></strong>
-          <span class="small muted" id="dropHint" data-i18n="drop_hint"></span>
+          <strong data-i18n="drop_title">ஆடியோ அல்லது வீடியோ கோப்பை இங்கே விடுங்கள்</strong>
+          <span class="small muted" id="dropHint" data-i18n="drop_hint">அல்லது தட்டித் தேர்வு செய்யுங்கள்: WhatsApp குரல் குறிப்பு (.opus), mp3, m4a, wav, mp4, webm · 30 நிமிடம் வரை</span>
         </div>
         <div class="vt-add">
-          <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_file"></span></button>
-          <button class="btn" id="recBtn" type="button"><span aria-hidden="true">🎙️</span> <span data-i18n="record"></span></button>
+          <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_file">கோப்பைத் தேர்வு செய்</span></button>
+          <button class="btn" id="recBtn" type="button"><span aria-hidden="true">🎙️</span> <span data-i18n="record">மைக்கில் பதிவு செய்</span></button>
         </div>
         <div class="vt-samples">
-          <span class="lbl" data-i18n="try_sample"></span>
-          <button class="btn btn-sm" id="sampleHi" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_hi"></span></button>
-          <button class="btn btn-sm" id="sampleEn" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_en"></span></button>
+          <span class="lbl" data-i18n="try_sample">மாதிரியை முயற்சி செய்யுங்கள்:</span>
+          <button class="btn btn-sm" id="sampleHi" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_hi">இந்தி</span></button>
+          <button class="btn btn-sm" id="sampleEn" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_en">ஆங்கிலம்</span></button>
         </div>
         <input type="file" id="fileInput" class="vt-hidden-input" accept="audio/*,video/*,.opus,.ogg,.oga,.m4a,.mp3,.wav,.aac,.flac,.webm,.mp4,.mov,.3gp" tabindex="-1" aria-hidden="true">
 
@@ -157,7 +157,7 @@
           <span class="dot" aria-hidden="true"></span>
           <span class="time no-i18n" id="recTime" aria-live="off">0:00</span>
           <span class="lvl" aria-hidden="true"><span id="recLvl"></span></span>
-          <button class="btn btn-danger btn-sm" id="recStop" type="button"><span aria-hidden="true">⏹</span> <span data-i18n="rec_stop"></span></button>
+          <button class="btn btn-danger btn-sm" id="recStop" type="button"><span aria-hidden="true">⏹</span> <span data-i18n="rec_stop">நிறுத்திப் பயன்படுத்து</span></button>
           <button class="btn btn-ghost btn-sm" id="recCancel" type="button" data-i18n="cancel"></button>
         </div>
 
@@ -168,33 +168,33 @@
           </div>
           <audio id="player" controls preload="metadata"></audio>
           <p class="small muted mb0" id="fileNote" hidden></p>
-          <div><button class="btn btn-sm btn-ghost" id="clearFile" type="button" data-i18n="remove_audio"></button></div>
+          <div><button class="btn btn-sm btn-ghost" id="clearFile" type="button" data-i18n="remove_audio">இந்த ஆடியோவை நீக்கு</button></div>
         </div>
         <div class="callout danger" id="fileErr" role="alert" hidden></div>
       </section>
 
       <!-- 2. settings + run -->
       <section class="card stack" id="setCard" aria-labelledby="hSet">
-        <h2 class="vt-step" id="hSet" data-i18n="step_settings"></h2>
+        <h2 class="vt-step" id="hSet" data-i18n="step_settings">2. தேர்வு செய்து தொடங்குங்கள்</h2>
         <label class="field">
-          <span data-i18n="spoken_lang"></span>
+          <span data-i18n="spoken_lang">ஆடியோவில் பேசப்பட்ட மொழி</span>
           <select id="langSel"></select>
         </label>
         <p class="small muted mb0" id="langNote"></p>
         <div class="field">
-          <span id="modeLbl" data-i18n="mode_label"></span>
+          <span id="modeLbl" data-i18n="mode_label">உங்களுக்கு என்ன வேண்டும்?</span>
           <div class="seg" role="group" aria-labelledby="modeLbl" id="modeSeg">
-            <button type="button" data-mode="transcribe" data-i18n="mode_transcribe"></button>
-            <button type="button" data-mode="translate" data-i18n="mode_translate"></button>
+            <button type="button" data-mode="transcribe" data-i18n="mode_transcribe">பேசியதை அப்படியே எழுது</button>
+            <button type="button" data-mode="translate" data-i18n="mode_translate">ஆங்கிலத்தில் மொழிபெயர்</button>
           </div>
         </div>
         <div class="field">
-          <span id="modelLbl" data-i18n="model_label"></span>
+          <span id="modelLbl" data-i18n="model_label">AI மாடல் (பெரியது சிறந்தது, ஆனால் மெதுவானது)</span>
           <div class="vt-models" id="models" role="group" aria-labelledby="modelLbl"></div>
         </div>
         <p class="callout warning small mb0" id="scriptNote" hidden></p>
         <div class="vt-run">
-          <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled><span aria-hidden="true">📝</span> <span data-i18n="run_btn"></span></button>
+          <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled><span aria-hidden="true">📝</span> <span data-i18n="run_btn">எழுத்தாக மாற்று</span></button>
           <button class="btn btn-danger" id="stopBtn" type="button" data-i18n="stop" hidden></button>
         </div>
         <div class="vt-status" id="statusBox" hidden>
@@ -207,59 +207,59 @@
           <div><button class="btn btn-sm" id="retryBtn" type="button" data-i18n="try_again"></button></div>
         </div>
         <p class="small muted mb0" id="firstNote"></p>
-        <p class="small muted mb0" data-i18n="phone_note"></p>
+        <p class="small muted mb0" data-i18n="phone_note">போனில் ஒரு நிமிட ஆடியோவுக்குச் சில நிமிடங்கள் ஆகலாம். முடியும் வரை இந்தப் பக்கத்தைத் திறந்தே வையுங்கள்.</p>
       </section>
     </div>
 
     <!-- 3. result -->
     <section class="card stack" id="resCard" aria-labelledby="hRes" style="margin-top:16px" hidden>
       <div class="vt-resbar">
-        <h2 class="vt-step" id="hRes" data-i18n="step_result"></h2>
+        <h2 class="vt-step" id="hRes" data-i18n="step_result">3. உங்கள் எழுத்து</h2>
         <div class="vt-stats" id="stats"></div>
       </div>
-      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden></p>
+      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden>இது கடந்த முறை வந்த எழுத்து. கேட்க ஆடியோவை மீண்டும் சேர்க்கவும்.</p>
       <div class="row spread">
         <div class="seg" role="group" data-i18n-aria-label="view_label" id="viewSeg">
-          <button type="button" data-view="times" data-i18n="view_times"></button>
-          <button type="button" data-view="plain" data-i18n="view_plain"></button>
+          <button type="button" data-view="times" data-i18n="view_times">நேரத்துடன்</button>
+          <button type="button" data-view="plain" data-i18n="view_plain">எழுத்து மட்டும்</button>
         </div>
-        <span class="small muted" id="editHint" data-i18n="edit_hint"></span>
+        <span class="small muted" id="editHint" data-i18n="edit_hint">கேட்க நேரத்தைத் தட்டுங்கள். ஒரு சொல்லைத் திருத்த எழுத்தைத் தட்டுங்கள்.</span>
       </div>
       <div class="vt-segs no-i18n" id="segs" aria-live="polite"></div>
       <div class="vt-plain no-i18n" id="plain" tabindex="0" hidden></div>
       <div class="vt-actions">
         <button class="btn btn-primary" id="copyBtn" type="button"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
-        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt"></span></button>
-        <button class="btn" id="dlSrt" type="button"><span aria-hidden="true">🎬</span> <span data-i18n="dl_srt"></span></button>
-        <button class="btn" id="dlVtt" type="button"><span aria-hidden="true">🌐</span> <span data-i18n="dl_vtt"></span></button>
-        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text"></button>
+        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt">எழுத்து (.txt)</span></button>
+        <button class="btn" id="dlSrt" type="button"><span aria-hidden="true">🎬</span> <span data-i18n="dl_srt">சப்டைட்டில் (.srt)</span></button>
+        <button class="btn" id="dlVtt" type="button"><span aria-hidden="true">🌐</span> <span data-i18n="dl_vtt">வெப் சப்டைட்டில் (.vtt)</span></button>
+        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text">எழுத்தை அழி</button>
       </div>
     </section>
 
     <details class="card vt-help no-print" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">எப்படிப் பயன்படுத்துவது / யோசனைகள்</strong></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">WhatsApp குரல் குறிப்பு: அதை அழுத்திப் பிடித்து, Share தட்டி, போனில் சேமியுங்கள் (எ.கா. Files இல்). பிறகு இங்கே &quot;கோப்பைத் தேர்வு செய்&quot; மூலம் தேர்வு செய்யுங்கள்.</li>
+        <li data-i18n="tip2">பேசப்பட்ட மொழியையே தேர்வு செய்யுங்கள். &quot;தானாகக் கண்டுபிடி&quot; வேலை செய்யும், ஆனால் நீங்களே மொழியைத் தேர்வு செய்வது அதிக நம்பகமானது.</li>
+        <li data-i18n="tip3">ஆங்கிலம் எல்லா மாடலிலும் நன்றாக வேலை செய்யும். தமிழ் பேஸ் மற்றும் ஸ்மால் மாடலில் தமிழ் எழுத்துகளிலேயே வரும். இந்தி, மராத்தி, உருது அவற்றின் எழுத்தில் வேண்டுமானால் ஸ்மால் தேர்வு செய்யுங்கள்.</li>
+        <li data-i18n="tip4">YouTube அல்லது Instagram வீடியோவுக்கு சப்டைட்டில் (.srt) பதிவிறக்கி வீடியோவுடன் பதிவேற்றுங்கள். முதலில் சொற்களையும் நேரங்களையும் சரிபாருங்கள்.</li>
+        <li data-i18n="tip5">தெளிவான பேச்சு, ஒரு நேரத்தில் ஒருவர், குறைந்த சத்தம் இருந்தால் சிறந்த எழுத்து கிடைக்கும். பயன்படுத்தும் முன் எழுத்தை எப்போதும் படியுங்கள்.</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="ideas_title"></h3>
-      <p class="mb0" data-i18n="ideas_body"></p>
-      <h3 style="margin-top:14px" data-i18n="inside_title"></h3>
+      <h3 style="margin-top:14px" data-i18n="ideas_title">வேலை மற்றும் வகுப்புக்கான யோசனைகள்</h3>
+      <p class="mb0" data-i18n="ideas_body">கூட்டம் அல்லது வகுப்புப் பதிவிலிருந்து குறிப்புகள் எடுங்கள், உங்கள் வீடியோக்களுக்கு சப்டைட்டில் செய்யுங்கள், நேர்காணலை எழுதுங்கள், அல்லது மாணவர்களைச் சிறிய பேச்சு பதிவு செய்யச் சொல்லி, அவர்கள் சொன்னதையும் AI கேட்டதையும் ஒப்பிடுங்கள்.</p>
+      <h3 style="margin-top:14px" data-i18n="inside_title">உள்ளே என்ன நடக்கிறது</h3>
       <div class="vt-steps" aria-hidden="true">
-        <span class="chip" data-i18n="in_sound"></span><span class="arr">→</span>
-        <span class="chip" data-i18n="in_picture"></span><span class="arr">→</span>
-        <span class="chip" data-i18n="in_tokens"></span><span class="arr">→</span>
-        <span class="chip" data-i18n="in_text"></span>
+        <span class="chip" data-i18n="in_sound">ஒலி</span><span class="arr">→</span>
+        <span class="chip" data-i18n="in_picture">ஒலிப் படம்</span><span class="arr">→</span>
+        <span class="chip" data-i18n="in_tokens">சொல் துண்டுகள்</span><span class="arr">→</span>
+        <span class="chip" data-i18n="in_text">எழுத்து</span>
       </div>
-      <p data-i18n="inside_body"></p>
-      <p data-i18n="inside_mistakes"></p>
-      <p class="small muted mb0" data-i18n="inside_models"></p>
+      <p data-i18n="inside_body">ஆடியோ அமைதியான இடங்களில் வெட்டப்பட்டு 30 வினாடி வரையிலான துண்டுகளாகிறது. ஒவ்வொரு துண்டும் ஒரு &quot;ஒலிப் படம்&quot; (ஸ்பெக்ட்ரோகிராம்) ஆகிறது; ஒவ்வொரு நொடியிலும் எந்த ஸ்வரங்கள் உரக்க இருக்கின்றன என்று அது காட்டுகிறது. Whisper என்ற AI இந்தப் படத்தைப் பார்த்து ஒவ்வொரு சிறிய சொல் துண்டாக (டோக்கன்) ஊகித்து, நேரத்துடன் எழுதுகிறது.</p>
+      <p data-i18n="inside_mistakes">சிறிய மாடல்கள் குறைந்த தரவிலிருந்து கற்றவை, குறிப்பாக இந்திய மொழிகளில். அதனால் பெயர்களைத் தவறாகக் கேட்கலாம், ஒத்த ஒலிகளைக் குழப்பலாம் அல்லது ஒரு வரியைத் திரும்பத் திரும்ப எழுதலாம். பெரிய மாடல்கள் குறைவான தவறுகள் செய்யும், ஆனால் மெதுவானவை. சத்தம், இசை, பலர் ஒரே நேரத்தில் பேசுவதும் தவறுகளை உண்டாக்கும்.</p>
+      <p class="small muted mb0" data-i18n="inside_models">மாடல்கள்: OpenAI இன் Whisper டைனி (41 MB), பேஸ் (77 MB), ஸ்மால் (249 MB), MIT உரிமம், உலாவியில் Transformers.js (Apache-2.0) மூலம் இயங்குகின்றன. AI இன்ஜினும் (27 MB) ஒரு முறை பதிவிறக்கப்படும். Whisper இல் இன்னும் ஒடியா இல்லை.</p>
       <div class="vt-storage">
         <span class="small muted" id="storageText"></span>
-        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden></button>
+        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden>பதிவிறக்கிய AI கோப்புகளை நீக்கு</button>
       </div>
       <div class="row spread" style="margin-top:12px">
         <span class="small muted" data-i18n="saved_local"></span>

@@ -180,38 +180,38 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <div class="print-only print-head"><h2 class="mb0" data-i18n="app_title"></h2><p class="mb0" id="print-sum"></p></div>
+    <p class="edu-intro" data-i18n="intro">देखिए, एक रोबोट कोशिश और गलती से ख़ज़ाना ढूँढना कैसे सीखता है। यही रीइनफ़ोर्समेंट लर्निंग है: कोई उसे रास्ता नहीं बताता, उसे सिर्फ़ इनाम और सज़ा मिलती है।</p>
+    <div class="print-only print-head"><h2 class="mb0" data-i18n="app_title">इनाम से सीखता रोबोट</h2><p class="mb0" id="print-sum"></p></div>
 
     <div class="ql" id="ql">
       <!-- ============ the board ============ -->
       <section class="card ql-stage" aria-labelledby="board-h">
-        <h2 id="board-h" class="mb0" hidden data-i18n="board_title"></h2>
+        <h2 id="board-h" class="mb0" hidden data-i18n="board_title">ग्रिड की दुनिया</h2>
         <div class="stats">
-          <div class="stat"><span class="lbl" data-i18n="stat_episodes"></span><span class="num" id="st-ep">0</span></div>
-          <div class="stat" data-i18n-title="eps_hint"><span class="lbl" data-i18n="stat_eps"></span><span class="num" id="st-eps">0.30</span></div>
-          <div class="stat"><span class="lbl" data-i18n="stat_last"></span><span class="num" id="st-last">–</span></div>
-          <div class="stat"><span class="lbl" data-i18n="stat_success"></span><span class="num" id="st-succ">–</span></div>
+          <div class="stat"><span class="lbl" data-i18n="stat_episodes">एपिसोड</span><span class="num" id="st-ep">0</span></div>
+          <div class="stat" data-i18n-title="eps_hint"><span class="lbl" data-i18n="stat_eps">अभी खोजबीन (ε)</span><span class="num" id="st-eps">0.30</span></div>
+          <div class="stat"><span class="lbl" data-i18n="stat_last">पिछला इनाम</span><span class="num" id="st-last">–</span></div>
+          <div class="stat"><span class="lbl" data-i18n="stat_success">सफलता (पिछले 100)</span><span class="num" id="st-succ">–</span></div>
         </div>
 
         <div class="board-wrap"><canvas id="board" tabindex="0" role="img"></canvas></div>
 
         <div class="ql-ctrl no-print">
-          <button type="button" class="btn" id="btn-step"><span aria-hidden="true">👣</span> <span data-i18n="btn_step"></span></button>
+          <button type="button" class="btn" id="btn-step"><span aria-hidden="true">👣</span> <span data-i18n="btn_step">1 कदम</span></button>
           <button type="button" class="btn btn-primary" id="btn-episode" aria-pressed="false"><span aria-hidden="true" id="ep-ico">▶</span> <span id="ep-txt"></span></button>
           <button type="button" class="btn" id="btn-fast100"><span aria-hidden="true">⏩</span> <span id="fast100-txt"></span></button>
           <button type="button" class="btn" id="btn-fast1000"><span aria-hidden="true">⏩</span> <span id="fast1000-txt"></span></button>
         </div>
         <div class="ql-ctrl no-print">
           <button type="button" class="btn btn-accent" id="btn-play" aria-pressed="false"><span aria-hidden="true" id="play-ico">🏁</span> <span id="play-txt"></span></button>
-          <button type="button" class="btn btn-danger" id="btn-reset"><span aria-hidden="true">↺</span> <span data-i18n="btn_reset"></span></button>
+          <button type="button" class="btn btn-danger" id="btn-reset"><span aria-hidden="true">↺</span> <span data-i18n="btn_reset">सीखना रीसेट करें</span></button>
         </div>
         <div class="ql-ctrl2 no-print">
-          <span class="lbl" id="speed-lbl" data-i18n="speed"></span>
+          <span class="lbl" id="speed-lbl" data-i18n="speed">रफ़्तार</span>
           <div class="seg" id="speed" role="group" aria-labelledby="speed-lbl">
-            <button type="button" data-speed="slow" data-i18n="speed_slow"></button>
-            <button type="button" data-speed="normal" data-i18n="speed_normal"></button>
-            <button type="button" data-speed="fast" data-i18n="speed_fast"></button>
+            <button type="button" data-speed="slow" data-i18n="speed_slow">धीमी</button>
+            <button type="button" data-speed="normal" data-i18n="speed_normal">सामान्य</button>
+            <button type="button" data-speed="fast" data-i18n="speed_fast">तेज़</button>
           </div>
           <div class="push">
             <button type="button" class="btn btn-sm" id="fs-btn"><span aria-hidden="true">⛶</span> <span data-i18n="fullscreen"></span></button>
@@ -224,68 +224,68 @@
       <!-- ============ side panel ============ -->
       <aside class="ql-side">
         <section class="card stack" aria-labelledby="world-h">
-          <h2 id="world-h" data-i18n="world_title"></h2>
+          <h2 id="world-h" data-i18n="world_title">दुनिया</h2>
           <div>
-            <p class="sub-lbl" id="pre-lbl" data-i18n="preset_label"></p>
+            <p class="sub-lbl" id="pre-lbl" data-i18n="preset_label">तैयार दुनियाएँ</p>
             <div class="pre-grid" role="group" aria-labelledby="pre-lbl">
-              <button type="button" class="pre-btn" id="preset-simple" data-preset="simple"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_simple"></span></button>
-              <button type="button" class="pre-btn" id="preset-maze" data-preset="maze"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_maze"></span></button>
-              <button type="button" class="pre-btn" id="preset-cliff" data-preset="cliff"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_cliff"></span></button>
-              <button type="button" class="pre-btn" id="preset-empty" data-preset="empty"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_empty"></span></button>
+              <button type="button" class="pre-btn" id="preset-simple" data-preset="simple"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_simple">आसान</span></button>
+              <button type="button" class="pre-btn" id="preset-maze" data-preset="maze"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_maze">भूलभुलैया</span></button>
+              <button type="button" class="pre-btn" id="preset-cliff" data-preset="cliff"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_cliff">खाई का किनारा</span></button>
+              <button type="button" class="pre-btn" id="preset-empty" data-preset="empty"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_empty">खुला मैदान</span></button>
             </div>
             <p class="hint" id="preset-hint"></p>
           </div>
           <div>
-            <p class="sub-lbl" id="tool-lbl" data-i18n="tool_label"></p>
+            <p class="sub-lbl" id="tool-lbl" data-i18n="tool_label">खाने पर टैप करके</p>
             <div class="seg full" id="tools" role="group" aria-labelledby="tool-lbl">
-              <button type="button" id="tool-cycle" data-tool="cycle"><span aria-hidden="true">🧱</span> <span data-i18n="tool_cycle"></span></button>
-              <button type="button" id="tool-start" data-tool="start"><span aria-hidden="true">🤖</span> <span data-i18n="tool_start"></span></button>
-              <button type="button" id="tool-look" data-tool="look"><span aria-hidden="true">🔍</span> <span data-i18n="tool_look"></span></button>
+              <button type="button" id="tool-cycle" data-tool="cycle"><span aria-hidden="true">🧱</span> <span data-i18n="tool_cycle">बदलें</span></button>
+              <button type="button" id="tool-start" data-tool="start"><span aria-hidden="true">🤖</span> <span data-i18n="tool_start">शुरुआत बदलें</span></button>
+              <button type="button" id="tool-look" data-tool="look"><span aria-hidden="true">🔍</span> <span data-i18n="tool_look">अंदर झाँकें</span></button>
             </div>
             <p class="hint" id="tool-hint"></p>
           </div>
           <ul class="legend">
-            <li><canvas width="52" height="52" data-ico="robot" aria-hidden="true"></canvas><span data-i18n="legend_robot"></span></li>
-            <li><canvas width="52" height="52" data-ico="goal" aria-hidden="true"></canvas><span data-i18n="legend_goal"></span></li>
-            <li><canvas width="52" height="52" data-ico="pit" aria-hidden="true"></canvas><span data-i18n="legend_pit"></span></li>
-            <li><canvas width="52" height="52" data-ico="wall" aria-hidden="true"></canvas><span data-i18n="legend_wall"></span></li>
-            <li><canvas width="52" height="52" data-ico="start" aria-hidden="true"></canvas><span data-i18n="legend_start"></span></li>
+            <li><canvas width="52" height="52" data-ico="robot" aria-hidden="true"></canvas><span data-i18n="legend_robot">रोबोट (एजेंट)</span></li>
+            <li><canvas width="52" height="52" data-ico="goal" aria-hidden="true"></canvas><span data-i18n="legend_goal">ख़ज़ाना +10</span></li>
+            <li><canvas width="52" height="52" data-ico="pit" aria-hidden="true"></canvas><span data-i18n="legend_pit">गड्ढा −10</span></li>
+            <li><canvas width="52" height="52" data-ico="wall" aria-hidden="true"></canvas><span data-i18n="legend_wall">दीवार</span></li>
+            <li><canvas width="52" height="52" data-ico="start" aria-hidden="true"></canvas><span data-i18n="legend_start">शुरुआत</span></li>
           </ul>
         </section>
 
         <section class="card stack" aria-labelledby="set-h">
-          <h2 id="set-h" data-i18n="settings_title"></h2>
+          <h2 id="set-h" data-i18n="settings_title">सीखने की सेटिंग</h2>
           <div class="slider">
-            <div class="top"><label for="sl-alpha" data-i18n="alpha_label"></label><output id="out-alpha" for="sl-alpha"></output></div>
+            <div class="top"><label for="sl-alpha" data-i18n="alpha_label">सीखने की दर α</label><output id="out-alpha" for="sl-alpha"></output></div>
             <input type="range" id="sl-alpha" min="0.01" max="1" step="0.01">
-            <p class="hint" data-i18n="alpha_hint"></p>
+            <p class="hint" data-i18n="alpha_hint">एक नया अनुभव पुराने अंदाज़े को कितना बदलता है। 1 = सिर्फ़ नए पर भरोसा, छोटा = धीरे-धीरे सीखना।</p>
           </div>
           <div class="slider">
-            <div class="top"><label for="sl-gamma" data-i18n="gamma_label"></label><output id="out-gamma" for="sl-gamma"></output></div>
+            <div class="top"><label for="sl-gamma" data-i18n="gamma_label">डिस्काउंट γ</label><output id="out-gamma" for="sl-gamma"></output></div>
             <input type="range" id="sl-gamma" min="0" max="0.99" step="0.01">
-            <p class="hint" data-i18n="gamma_hint"></p>
+            <p class="hint" data-i18n="gamma_hint">आगे मिलने वाले इनाम कितने मायने रखते हैं। 1 के पास = दूर तक की योजना, 0 = सिर्फ़ अगले इनाम की परवाह।</p>
           </div>
           <div class="slider">
-            <div class="top"><label for="sl-eps" data-i18n="eps_label"></label><output id="out-eps" for="sl-eps"></output></div>
+            <div class="top"><label for="sl-eps" data-i18n="eps_label">खोजबीन ε</label><output id="out-eps" for="sl-eps"></output></div>
             <input type="range" id="sl-eps" min="0" max="1" step="0.01">
-            <p class="hint" data-i18n="eps_hint"></p>
-            <label class="check"><input type="checkbox" id="chk-decay"> <span data-i18n="decay_label"></span></label>
+            <p class="hint" data-i18n="eps_hint">रैंडम चाल चलने का मौका। रैंडम चालें नए रास्ते ढूँढती हैं; सबसे अच्छी चालें पुरानी सीख का फ़ायदा उठाती हैं।</p>
+            <label class="check"><input type="checkbox" id="chk-decay"> <span data-i18n="decay_label">समय के साथ कम खोजबीन (हर एपिसोड के बाद ε × 0.99)</span></label>
           </div>
           <div class="slider">
-            <div class="top"><label for="sl-cost" data-i18n="cost_label"></label><output id="out-cost" for="sl-cost"></output></div>
+            <div class="top"><label for="sl-cost" data-i18n="cost_label">हर कदम की सज़ा</label><output id="out-cost" for="sl-cost"></output></div>
             <input type="range" id="sl-cost" min="0" max="2" step="0.05">
-            <p class="hint" data-i18n="cost_hint"></p>
+            <p class="hint" data-i18n="cost_hint">हर सामान्य कदम पर यह इनाम (छोटा माइनस) मिलता है। इससे रोबोट जल्दी करता है।</p>
           </div>
-          <div><button type="button" class="btn btn-sm" id="btn-defaults"><span aria-hidden="true">⚙</span> <span data-i18n="defaults_btn"></span></button></div>
+          <div><button type="button" class="btn btn-sm" id="btn-defaults"><span aria-hidden="true">⚙</span> <span data-i18n="defaults_btn">डिफ़ॉल्ट सेटिंग</span></button></div>
         </section>
 
         <section class="card stack" aria-labelledby="view-h">
-          <h2 id="view-h" data-i18n="view_title"></h2>
+          <h2 id="view-h" data-i18n="view_title">बोर्ड पर दिखाएँ</h2>
           <div class="checks">
-            <label class="check"><input type="checkbox" id="v-heat"> <span data-i18n="view_heat"></span></label>
-            <label class="check"><input type="checkbox" id="v-arrows"> <span data-i18n="view_arrows"></span></label>
-            <label class="check"><input type="checkbox" id="v-q"> <span data-i18n="view_q"></span></label>
-            <label class="check"><input type="checkbox" id="v-nums"> <span data-i18n="view_nums"></span></label>
+            <label class="check"><input type="checkbox" id="v-heat"> <span data-i18n="view_heat">वैल्यू के रंग (हरा = अच्छा, लाल = बुरा)</span></label>
+            <label class="check"><input type="checkbox" id="v-arrows"> <span data-i18n="view_arrows">सबसे अच्छी चाल के तीर</span></label>
+            <label class="check"><input type="checkbox" id="v-q"> <span data-i18n="view_q">चारों Q-वैल्यू (त्रिकोण)</span></label>
+            <label class="check"><input type="checkbox" id="v-nums"> <span data-i18n="view_nums">संख्याएँ</span></label>
           </div>
         </section>
       </aside>
@@ -294,56 +294,56 @@
     <!-- ============ results ============ -->
     <div class="grid-2 ql-results">
       <section class="card stack" aria-labelledby="chart-h">
-        <h2 id="chart-h" data-i18n="chart_title"></h2>
+        <h2 id="chart-h" data-i18n="chart_title">हर एपिसोड का कुल इनाम</h2>
         <canvas id="chart" role="img" data-i18n-aria-label="chart_title"></canvas>
         <div class="chart-legend" id="chart-legend">
-          <span><i class="thin" id="lg-raw"></i><span data-i18n="chart_raw"></span></span>
-          <span><i id="lg-avg"></i><span data-i18n="chart_avg"></span></span>
-          <span><i class="dash" id="lg-best"></i><span data-i18n="chart_best"></span></span>
+          <span><i class="thin" id="lg-raw"></i><span data-i18n="chart_raw">हर एपिसोड</span></span>
+          <span><i id="lg-avg"></i><span data-i18n="chart_avg">पिछले 20 का औसत</span></span>
+          <span><i class="dash" id="lg-best"></i><span data-i18n="chart_best">सबसे अच्छा संभव</span></span>
         </div>
-        <p class="small muted mb0" data-i18n="chart_note"></p>
+        <p class="small muted mb0" data-i18n="chart_note">शुरू में रेखा नीचे और ऊबड़-खाबड़ होती है: रोबोट खोजबीन करता है और गड्ढों में गिरता है। जैसे-जैसे वह सीखता है, रेखा सबसे अच्छे संभव इनाम की ओर चढ़ती है।</p>
       </section>
 
       <section class="card stack" id="brain-card" aria-labelledby="brain-h">
-        <h2 id="brain-h" data-i18n="brain_title"></h2>
+        <h2 id="brain-h" data-i18n="brain_title">रोबोट के दिमाग़ के अंदर</h2>
         <p class="mb0" id="brain-cell"></p>
         <div class="compass" id="compass" aria-live="polite"></div>
         <p class="small mb0" id="brain-note"></p>
-        <h3 data-i18n="upd_title"></h3>
-        <p class="small rule mb0" data-i18n="upd_rule"></p>
+        <h3 data-i18n="upd_title">पिछला अपडेट: Q-लर्निंग का नियम</h3>
+        <p class="small rule mb0" data-i18n="upd_rule">नया Q = पुराना Q + α × (इनाम + γ × अगले खाने का सबसे अच्छा Q − पुराना Q)</p>
         <div id="upd-box" aria-live="polite"></div>
       </section>
     </div>
 
     <!-- ============ learn ============ -->
     <section class="card stack page-sec" aria-labelledby="learn-h">
-      <h2 id="learn-h" data-i18n="learn_title"></h2>
+      <h2 id="learn-h" data-i18n="learn_title">अंदर क्या हो रहा है?</h2>
       <div class="learn-grid">
-        <div class="learn-box"><h3><span aria-hidden="true">🤖</span> <span data-i18n="l1_t"></span></h3><p data-i18n="l1"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🗺️</span> <span data-i18n="l2_t"></span></h3><p data-i18n="l2"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">📍</span> <span data-i18n="l3_t"></span></h3><p data-i18n="l3"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🕹️</span> <span data-i18n="l4_t"></span></h3><p data-i18n="l4"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🎁</span> <span data-i18n="l5_t"></span></h3><p data-i18n="l5"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🧮</span> <span data-i18n="l6_t"></span></h3><p data-i18n="l6"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">⚖️</span> <span data-i18n="l7_t"></span></h3><p data-i18n="l7"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🎚️</span> <span data-i18n="l8_t"></span></h3><p data-i18n="l8"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🌍</span> <span data-i18n="l9_t"></span></h3><p data-i18n="l9"></p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🤖</span> <span data-i18n="l1_t">एजेंट</span></h3><p data-i18n="l1">सीखने वाला, जो फ़ैसले लेता है। यहाँ वह रोबोट है। वीडियो गेम में वह कंप्यूटर वाला खिलाड़ी होता।</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🗺️</span> <span data-i18n="l2_t">पर्यावरण (एनवायरनमेंट)</span></h3><p data-i18n="l2">एजेंट के आसपास सब कुछ: दीवारों, गड्ढों और ख़ज़ाने वाली 7 × 7 ग्रिड। हर चाल के बाद यह रोबोट को बताता है कि वह अब कहाँ है और उसे कितना इनाम मिला।</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">📍</span> <span data-i18n="l3_t">स्थिति (स्टेट)</span></h3><p data-i18n="l3">अभी की हालत। यहाँ स्थिति बस रोबोट का खाना है, इसलिए 49 स्थितियाँ हैं।</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🕹️</span> <span data-i18n="l4_t">क्रिया (एक्शन)</span></h3><p data-i18n="l4">एजेंट जो चुन सकता है: ऊपर, दाएँ, नीचे या बाएँ। दीवार या किनारे की ओर चलने पर रोबोट वहीं रहता है।</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🎁</span> <span data-i18n="l5_t">इनाम (रिवॉर्ड)</span></h3><p data-i18n="l5">एक संख्या जो अच्छा या बुरा बताती है: ख़ज़ाने पर +10, गड्ढे पर −10 और हर कदम पर थोड़ा माइनस। रोबोट को कोई रास्ता नहीं बताता, उसे सिर्फ़ इनाम मिलते हैं।</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🧮</span> <span data-i18n="l6_t">Q-वैल्यू और Q-टेबल</span></h3><p data-i18n="l6">Q(स्थिति, क्रिया) रोबोट का अंदाज़ा है कि वहाँ वह क्रिया करने पर आगे कुल कितना इनाम मिलेगा। सारे 49 × 4 अंदाज़े मिलकर Q-टेबल बनाते हैं। हर कदम के बाद Q-लर्निंग के नियम से एक अंदाज़ा सुधरता है।</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">⚖️</span> <span data-i18n="l7_t">खोजबीन या फ़ायदा?</span></h3><p data-i18n="l7">फ़ायदा (एक्सप्लॉइट) = जो सबसे अच्छी चाल पता है, वही चलो। खोजबीन (एक्सप्लोर) = कुछ नया आज़माओ, शायद उससे भी अच्छा मिल जाए। जैसे कैंटीन में हमेशा अपना पसंदीदा समोसा लेना, या कोई नई डिश चखना। ε तय करता है कि रोबोट कितनी बार खोजबीन करे।</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🎚️</span> <span data-i18n="l8_t">α और γ</span></h3><p data-i18n="l8">α (सीखने की दर) बताता है कि अंदाज़े कितनी जल्दी बदलते हैं। γ (डिस्काउंट) बताता है कि भविष्य कितना मायने रखता है: आज के ₹100 अगले साल के वादे वाले ₹100 से ज़्यादा क़ीमती हैं, और पास का ख़ज़ाना दूर वाले से बेहतर है।</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🌍</span> <span data-i18n="l9_t">गेम और रोबोट कैसे सीखते हैं</span></h3><p data-i18n="l9">AlphaGo ने Go खेल कुछ हद तक ख़ुद से लाखों बाज़ियाँ खेलकर सीखा, और 2016 में दुनिया के सबसे अच्छे खिलाड़ियों में से एक, ली सेडोल को हराया। रोबोट सिमुलेशन में चलना सीखते हैं, और चैटबॉट इंसानों की राय से सुधारे जाते हैं (RLHF)। बड़ी समस्याओं में स्थितियाँ इतनी ज़्यादा होती हैं कि टेबल काम नहीं करती, इसलिए न्यूरल नेटवर्क अंदाज़े लगाता है (Deep Q-Network)।</p></div>
       </div>
     </section>
 
     <!-- ============ by hand ============ -->
     <section class="card stack page-sec" id="calc" aria-labelledby="calc-h">
-      <h2 id="calc-h" data-i18n="calc_title"></h2>
-      <p class="small mb0" data-i18n="calc_intro"></p>
+      <h2 id="calc-h" data-i18n="calc_title">एक अपडेट ख़ुद हाथ से करें</h2>
+      <p class="small mb0" data-i18n="calc_intro">इन संख्याओं के साथ Q-लर्निंग का नियम लगाइए। पहले कोष्ठक निकालिए, फिर नया Q।</p>
       <div class="calc-given" id="calc-given"></div>
       <div class="row">
-        <label for="calc-input" data-i18n="calc_ask"></label>
+        <label for="calc-input" data-i18n="calc_ask">नया Q =</label>
         <input type="text" id="calc-input" autocomplete="off" spellcheck="false" class="no-print">
         <span class="print-line" aria-hidden="true"></span>
         <span class="row calc-actions">
-          <button type="button" class="btn btn-primary" id="calc-check" data-i18n="calc_check"></button>
-          <button type="button" class="btn" id="calc-show" data-i18n="calc_show"></button>
-          <button type="button" class="btn" id="calc-new"><span aria-hidden="true">🎲</span> <span data-i18n="calc_new"></span></button>
+          <button type="button" class="btn btn-primary" id="calc-check" data-i18n="calc_check">जाँचें</button>
+          <button type="button" class="btn" id="calc-show" data-i18n="calc_show">उत्तर दिखाएँ</button>
+          <button type="button" class="btn" id="calc-new"><span aria-hidden="true">🎲</span> <span data-i18n="calc_new">नई संख्याएँ</span></button>
         </span>
       </div>
       <div class="calc-fb" id="calc-fb" aria-live="polite"></div>
@@ -352,7 +352,7 @@
     <!-- ============ quiz ============ -->
     <section class="card stack page-sec" id="quiz" aria-labelledby="quiz-h">
       <div class="row spread">
-        <h2 id="quiz-h" class="mb0" data-i18n="quiz_title"></h2>
+        <h2 id="quiz-h" class="mb0" data-i18n="quiz_title">छोटी क्विज़</h2>
         <div class="row">
           <span class="badge primary" id="quiz-score" aria-live="polite"></span>
           <button type="button" class="btn btn-sm" id="quiz-again" data-i18n="try_again"></button>
@@ -362,14 +362,14 @@
     </section>
 
     <details class="card help page-sec">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">कैसे इस्तेमाल करें / कक्षा के लिए आइडिया</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">आसान दुनिया से शुरू करें। कुछ बार 1 एपिसोड दबाइए और देखिए हरा रंग ख़ज़ाने से पीछे की ओर, एक-एक खाना करके फैलता है।</li>
+        <li data-i18n="tip2">1000 एपिसोड दबाइए, फिर “सीखी हुई नीति चलाएँ”। क्या रोबोट सबसे छोटा रास्ता लेता है? चार्ट की तुलना “सबसे अच्छा संभव” वाली डैश रेखा से कीजिए।</li>
+        <li data-i18n="tip3">“चारों Q-वैल्यू” चालू कीजिए और “अंदर झाँकें” से संख्याएँ पढ़िए। तीर हमेशा चारों में सबसे बड़ी वैल्यू की ओर होता है।</li>
+        <li data-i18n="tip4">प्रयोग: ε = 0 रखिए, “सीखना रीसेट करें” दबाइए और सिखाइए। फिर ε = 1 आज़माइए। थोड़ी खोजबीन क्यों ज़रूरी है, पर बहुत ज़्यादा क्यों नहीं?</li>
+        <li data-i18n="tip5">कक्षा गतिविधि: ब्लैकबोर्ड पर 4 × 4 ग्रिड बनाइए। एक विद्यार्थी रोबोट बने और कक्षा इनाम दे (+10, −10, −1)। हर चाल के बाद पर्चियों पर Q-वैल्यू लिखिए, फिर इस ऐप से मिलाइए।</li>
+        <li data-i18n="tip6">खाई का किनारा: ट्रेनिंग के दौरान रोबोट अक्सर गिरता है (रैंडम चालें), पर सीखा हुआ रास्ता ठीक किनारे से जाता है। चर्चा कीजिए: क्या सबसे छोटा रास्ता हमेशा सबसे सुरक्षित होता है?</li>
       </ul>
     </details>
   </main>

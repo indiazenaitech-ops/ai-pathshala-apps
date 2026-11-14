@@ -169,34 +169,34 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <h2 class="print-only pm-print-h" data-i18n="app_title"></h2>
+    <p class="edu-intro" data-i18n="intro">যে কোনো দ্রুতি, কোণ আর উচ্চতা থেকে ক্রিকেট বল ছুড়ুন — পৃথিবীতে বা অন্য গ্রহে। বলের পথ দেখুন, আর একাদশ শ্রেণির সূত্র দিয়ে বিচরণকাল, পাল্লা ও সর্বাধিক উচ্চতা মিলিয়ে নিন।</p>
+    <h2 class="print-only pm-print-h" data-i18n="app_title">প্রাসের গতি ল্যাব</h2>
 
     <div class="pm-top" id="pm-top">
       <!-- picture -->
       <section class="card pm-stagecard" aria-labelledby="h-stage">
-        <h2 id="h-stage" hidden data-i18n="app_title"></h2>
+        <h2 id="h-stage" hidden data-i18n="app_title">প্রাসের গতি ল্যাব</h2>
         <div class="pm-bar no-print">
           <div class="seg" role="group" data-i18n-aria-label="mode_label">
-            <button type="button" id="mode-explore" aria-pressed="true" data-i18n="mode_explore"></button>
-            <button type="button" id="mode-game" aria-pressed="false" data-i18n="mode_game"></button>
+            <button type="button" id="mode-explore" aria-pressed="true" data-i18n="mode_explore">অন্বেষণ</button>
+            <button type="button" id="mode-game" aria-pressed="false" data-i18n="mode_game">লক্ষ্যভেদ খেলা</button>
           </div>
           <span class="grow"></span>
-          <button type="button" class="btn btn-sm" id="save-png"><span aria-hidden="true">🖼</span> <span data-i18n="save_png"></span></button>
+          <button type="button" class="btn btn-sm" id="save-png"><span aria-hidden="true">🖼</span> <span data-i18n="save_png">ছবি সেভ করুন</span></button>
           <button type="button" class="btn btn-sm" id="print"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
           <button type="button" class="btn btn-sm" id="fs"><span aria-hidden="true">⛶</span> <span data-i18n="fullscreen"></span></button>
         </div>
 
         <div class="callout accent pm-game stack" id="game-panel" hidden>
           <div class="row spread">
-            <h2 data-i18n="h_game"></h2>
+            <h2 data-i18n="h_game">উইকেটে লাগান!</h2>
             <div class="row no-print">
-              <span class="small muted" data-i18n="level"></span>
+              <span class="small muted" data-i18n="level">স্তর</span>
               <div class="seg" role="group" data-i18n-aria-label="level">
-                <button type="button" id="lvl-easy" aria-pressed="true" data-i18n="level_easy"></button>
-                <button type="button" id="lvl-hard" aria-pressed="false" data-i18n="level_hard"></button>
+                <button type="button" id="lvl-easy" aria-pressed="true" data-i18n="level_easy">সহজ</button>
+                <button type="button" id="lvl-hard" aria-pressed="false" data-i18n="level_hard">কঠিন</button>
               </div>
-              <button type="button" class="btn btn-sm btn-primary" id="new-target"><span aria-hidden="true">🎯</span> <span data-i18n="new_target"></span></button>
+              <button type="button" class="btn btn-sm btn-primary" id="new-target"><span aria-hidden="true">🎯</span> <span data-i18n="new_target">নতুন লক্ষ্য</span></button>
             </div>
           </div>
           <p class="mb0" id="target-info"></p>
@@ -208,66 +208,66 @@
         <div class="stage pm-stage"><canvas id="cv" dir="ltr" role="img" data-i18n-aria-label="cv_aria" data-busy="0"></canvas></div>
 
         <div class="pm-actions no-print">
-          <button type="button" class="btn btn-accent btn-lg pm-launch" id="launch"><span aria-hidden="true">🏏</span> <span data-i18n="launch"></span></button>
-          <button type="button" class="btn" id="clear"><span aria-hidden="true">🧹</span> <span data-i18n="clear_trails"></span></button>
-          <label class="check"><input type="checkbox" id="vectors"> <span data-i18n="vectors"></span></label>
-          <label class="check"><input type="checkbox" id="slow"> <span data-i18n="slow"></span></label>
+          <button type="button" class="btn btn-accent btn-lg pm-launch" id="launch"><span aria-hidden="true">🏏</span> <span data-i18n="launch">ছুড়ুন</span></button>
+          <button type="button" class="btn" id="clear"><span aria-hidden="true">🧹</span> <span data-i18n="clear_trails">পথ মুছুন</span></button>
+          <label class="check"><input type="checkbox" id="vectors"> <span data-i18n="vectors">বেগের তীর</span></label>
+          <label class="check"><input type="checkbox" id="slow"> <span data-i18n="slow">ধীর গতি</span></label>
         </div>
         <div class="pm-scrub no-print">
-          <label for="scrub" data-i18n="scrub"></label>
+          <label for="scrub" data-i18n="scrub">শেষ পথ ধরে এগিয়ে-পিছিয়ে দেখুন</label>
           <input type="range" id="scrub" dir="ltr" min="0" max="1000" step="1" value="1000">
           <div class="pm-readout no-i18n" id="readout" aria-live="off"></div>
         </div>
         <div class="pm-stats" id="stats" aria-live="polite">
-          <div class="pm-stat"><span class="lbl" data-i18n="r_time"></span><span class="val" id="st-T">–</span></div>
-          <div class="pm-stat"><span class="lbl" data-i18n="r_range"></span><span class="val" id="st-R">–</span></div>
-          <div class="pm-stat"><span class="lbl" data-i18n="r_height"></span><span class="val" id="st-H">–</span></div>
+          <div class="pm-stat"><span class="lbl" data-i18n="r_time">বিচরণকাল (T)</span><span class="val" id="st-T">–</span></div>
+          <div class="pm-stat"><span class="lbl" data-i18n="r_range">পাল্লা (R)</span><span class="val" id="st-R">–</span></div>
+          <div class="pm-stat"><span class="lbl" data-i18n="r_height">সর্বাধিক উচ্চতা (H)</span><span class="val" id="st-H">–</span></div>
         </div>
       </section>
 
       <!-- settings -->
       <section class="card pm-ctrl no-print" aria-labelledby="h-settings">
-        <h2 id="h-settings" data-i18n="h_settings"></h2>
+        <h2 id="h-settings" data-i18n="h_settings">ছোড়ার সেটিং</h2>
         <div class="pm-param">
-          <div class="pm-plabel"><label for="speed-num" data-i18n="speed"></label><span class="pm-kmh" id="kmh"></span></div>
+          <div class="pm-plabel"><label for="speed-num" data-i18n="speed">দ্রুতি (u)</label><span class="pm-kmh" id="kmh"></span></div>
           <input type="range" id="speed" min="1" max="60" step="0.5" data-i18n-aria-label="speed">
           <input type="number" id="speed-num" min="0.1" max="100" step="0.1" inputmode="decimal">
           <span class="pm-unit">m/s</span>
         </div>
         <div class="pm-param">
-          <div class="pm-plabel"><label for="angle-num" data-i18n="angle"></label></div>
+          <div class="pm-plabel"><label for="angle-num" data-i18n="angle">কোণ (θ)</label></div>
           <input type="range" id="angle" min="0" max="90" step="1" data-i18n-aria-label="angle">
           <input type="number" id="angle-num" min="0" max="90" step="0.1" inputmode="decimal">
           <span class="pm-unit">°</span>
         </div>
         <fieldset class="pm-fs" id="fixed-fs">
           <div class="pm-param">
-            <div class="pm-plabel"><label for="height-num" data-i18n="height"></label></div>
+            <div class="pm-plabel"><label for="height-num" data-i18n="height">ছোড়ার উচ্চতা (h)</label></div>
             <input type="range" id="height" min="0" max="100" step="1" data-i18n-aria-label="height">
             <input type="number" id="height-num" min="0" max="500" step="0.1" inputmode="decimal">
             <span class="pm-unit">m</span>
           </div>
           <div class="pm-sub">
-            <div class="pm-plabel"><span class="small" style="font-weight:600" id="g-label" data-i18n="gravity"></span></div>
+            <div class="pm-plabel"><span class="small" style="font-weight:600" id="g-label" data-i18n="gravity">অভিকর্ষ (g, m/s² এককে)</span></div>
             <div class="pm-chips" role="group" aria-labelledby="g-label" id="g-chips">
-              <button type="button" class="chip" id="g-earth" data-g="earth"><span aria-hidden="true">🌍</span> <span data-i18n="g_earth"></span> <span class="gv">9.8</span></button>
-              <button type="button" class="chip" id="g-moon" data-g="moon"><span aria-hidden="true">🌕</span> <span data-i18n="g_moon"></span> <span class="gv">1.6</span></button>
-              <button type="button" class="chip" id="g-mars" data-g="mars"><span aria-hidden="true">🔴</span> <span data-i18n="g_mars"></span> <span class="gv">3.7</span></button>
-              <button type="button" class="chip" id="g-jupiter" data-g="jupiter"><span aria-hidden="true">🪐</span> <span data-i18n="g_jupiter"></span> <span class="gv">24.8</span></button>
-              <button type="button" class="chip" id="g-custom" data-g="custom"><span aria-hidden="true">✏️</span> <span data-i18n="g_custom"></span></button>
+              <button type="button" class="chip" id="g-earth" data-g="earth"><span aria-hidden="true">🌍</span> <span data-i18n="g_earth">পৃথিবী</span> <span class="gv">9.8</span></button>
+              <button type="button" class="chip" id="g-moon" data-g="moon"><span aria-hidden="true">🌕</span> <span data-i18n="g_moon">চাঁদ</span> <span class="gv">1.6</span></button>
+              <button type="button" class="chip" id="g-mars" data-g="mars"><span aria-hidden="true">🔴</span> <span data-i18n="g_mars">মঙ্গল</span> <span class="gv">3.7</span></button>
+              <button type="button" class="chip" id="g-jupiter" data-g="jupiter"><span aria-hidden="true">🪐</span> <span data-i18n="g_jupiter">বৃহস্পতি</span> <span class="gv">24.8</span></button>
+              <button type="button" class="chip" id="g-custom" data-g="custom"><span aria-hidden="true">✏️</span> <span data-i18n="g_custom">নিজের মান</span></button>
             </div>
             <div class="pm-custom" id="custom-row" hidden>
-              <label for="g-custom-val" data-i18n="custom_g"></label>
+              <label for="g-custom-val" data-i18n="custom_g">আপনার g-এর মান</label>
               <input type="number" id="g-custom-val" min="0.1" max="100" step="0.1" inputmode="decimal">
               <span class="pm-unit">m/s²</span>
             </div>
           </div>
           <div class="pm-sub">
-            <label class="check"><input type="checkbox" id="air"> <span data-i18n="air"></span></label>
+            <label class="check"><input type="checkbox" id="air"> <span data-i18n="air">বায়ুর বাধা (আনুমানিক)</span></label>
             <p class="callout small mb0" id="air-note"></p>
           </div>
         </fieldset>
-        <p class="callout warning small" id="game-locked" hidden data-i18n="game_locked"></p>
+        <p class="callout warning small" id="game-locked" hidden data-i18n="game_locked">লক্ষ্যভেদ খেলায় প্রতিটি লক্ষ্যের উচ্চতা আর অভিকর্ষ ঠিক করা থাকে। আপনি শুধু দ্রুতি আর কোণ বাছুন।</p>
         <div class="row pm-sub">
           <button type="button" class="btn btn-danger btn-sm" id="reset"><span aria-hidden="true">↺</span> <span data-i18n="reset"></span></button>
         </div>
@@ -277,56 +277,56 @@
     <div class="pm-below">
       <div class="pm-col">
         <section class="card pm-results" aria-labelledby="h-results">
-          <h2 id="h-results" data-i18n="h_results"></h2>
-          <p class="muted" id="res-none" data-i18n="res_none"></p>
+          <h2 id="h-results" data-i18n="h_results">শেষ ছোড়ার ফল</h2>
+          <p class="muted" id="res-none" data-i18n="res_none">ফল দেখতে বল ছুড়ুন।</p>
           <div id="res-wrap" hidden>
             <div class="scroll-x">
               <table class="table pm-res">
-                <thead><tr><th data-i18n="col_qty"></th><th class="num" data-i18n="col_sim"></th><th class="num" id="col-formula" data-i18n="col_formula"></th></tr></thead>
+                <thead><tr><th data-i18n="col_qty">রাশি</th><th class="num" data-i18n="col_sim">সিমুলেশন</th><th class="num" id="col-formula" data-i18n="col_formula">সূত্র (বাতাস ছাড়া)</th></tr></thead>
                 <tbody id="res-body"></tbody>
               </table>
             </div>
             <p class="callout pm-note small" id="res-note" aria-live="polite"></p>
-            <h3 class="pm-sub" data-i18n="h_working"></h3>
+            <h3 class="pm-sub" data-i18n="h_working">সূত্র দিয়ে সমাধান</h3>
             <p class="small muted mb0" id="work-intro"></p>
             <div class="pm-work" id="work"></div>
           </div>
         </section>
         <section class="card pm-trails-card" aria-labelledby="h-trails">
-          <h2 id="h-trails" data-i18n="h_trails"></h2>
+          <h2 id="h-trails" data-i18n="h_trails">তুলনার জন্য পথ</h2>
           <p class="small muted" id="trails-hint"></p>
           <ol class="pm-trails" id="trails"></ol>
-          <p class="muted mb0" id="trails-empty" data-i18n="trails_empty"></p>
+          <p class="muted mb0" id="trails-empty" data-i18n="trails_empty">এখনও কোনো পথ নেই।</p>
         </section>
       </div>
       <div class="pm-col">
         <section class="card pm-learn" aria-labelledby="h-learn">
-          <h2 id="h-learn" data-i18n="h_learn"></h2>
+          <h2 id="h-learn" data-i18n="h_learn">ধারণাগুলো বুঝুন</h2>
           <div class="pm-learn-grid">
-            <div class="pm-learn-item"><h3 data-i18n="learn_45_t"></h3><p data-i18n="learn_45"></p></div>
-            <div class="pm-learn-item"><h3 data-i18n="learn_comp_t"></h3><p data-i18n="learn_comp"></p></div>
-            <div class="pm-learn-item"><h3 data-i18n="learn_ind_t"></h3><p data-i18n="learn_ind"></p></div>
-            <div class="pm-learn-item"><h3 data-i18n="learn_real_t"></h3><p data-i18n="learn_real"></p></div>
+            <div class="pm-learn-item"><h3 data-i18n="learn_45_t">45°-এ বল সবচেয়ে দূরে যায় কেন?</h3><p data-i18n="learn_45">সমতল মাটিতে R = u² sin 2θ / g। sin 2θ সবচেয়ে বড় (= 1) হয় যখন 2θ = 90°, অর্থাৎ θ = 45°। তাই একই দ্রুতিতে 45° কোণে পাল্লা সবচেয়ে বেশি।</p></div>
+            <div class="pm-learn-item"><h3 data-i18n="learn_comp_t">পূরক কোণ</h3><p data-i18n="learn_comp">θ আর 90° − θ কোণে (যেমন 30° আর 60°) পাল্লা সমান হয়, কারণ sin 2θ = sin (180° − 2θ)। খাড়া ছোড়া বল বেশি উঁচুতে ওঠে আর বেশিক্ষণ বাতাসে থাকে।</p></div>
+            <div class="pm-learn-item"><h3 data-i18n="learn_ind_t">একসঙ্গে দুটি গতি</h3><p data-i18n="learn_ind">অনুভূমিক বেগ vx = u cosθ কখনও বদলায় না (বাতাস ছাড়া)। উল্লম্ব বেগ vy = u sinθ − gt প্রতি সেকেন্ডে g করে কমে আর সর্বোচ্চ বিন্দুতে 0 হয়। দেখতে বেগের তীর চালু করুন।</p></div>
+            <div class="pm-learn-item"><h3 data-i18n="learn_real_t">বাস্তব জীবনে</h3><p data-i18n="learn_real">উঁচু থেকে ছুড়লে, বা বাতাস থাকলে, সেরা কোণ 45°-এর চেয়ে কম হয়। বাতাস পথটাকে একপেশেও করে: বল যতটা ঢালে ওঠে, তার চেয়ে খাড়াভাবে নামে।</p></div>
           </div>
           <div class="pm-demos">
-            <button type="button" class="btn" id="demo-45"><span aria-hidden="true">📐</span> <span data-i18n="demo_45"></span></button>
-            <button type="button" class="btn" id="demo-comp"><span aria-hidden="true">⚖️</span> <span data-i18n="demo_comp"></span></button>
-            <button type="button" class="btn" id="find-best"><span aria-hidden="true">🔍</span> <span data-i18n="find_best"></span></button>
+            <button type="button" class="btn" id="demo-45"><span aria-hidden="true">📐</span> <span data-i18n="demo_45">15°, 30°, 45°, 60°, 75° দেখান</span></button>
+            <button type="button" class="btn" id="demo-comp"><span aria-hidden="true">⚖️</span> <span data-i18n="demo_comp">θ আর 90° − θ তুলনা</span></button>
+            <button type="button" class="btn" id="find-best"><span aria-hidden="true">🔍</span> <span data-i18n="find_best">সেরা কোণ খুঁজুন</span></button>
           </div>
           <div class="callout success pm-best row" id="best-box" hidden>
             <span class="grow" id="best-out" aria-live="polite"></span>
-            <button type="button" class="btn btn-sm btn-primary" id="use-best" data-i18n="use_best"></button>
+            <button type="button" class="btn btn-sm btn-primary" id="use-best" data-i18n="use_best">এই কোণে ছুড়ুন</button>
           </div>
         </section>
         <details class="card pm-help">
-          <summary data-i18n="h_help"></summary>
+          <summary data-i18n="h_help">কীভাবে ব্যবহার করবেন / ক্লাসের জন্য আইডিয়া</summary>
           <ul>
-            <li data-i18n="tip1"></li>
-            <li data-i18n="tip2"></li>
-            <li data-i18n="tip3"></li>
-            <li data-i18n="tip4"></li>
-            <li data-i18n="tip5"></li>
-            <li data-i18n="tip6"></li>
+            <li data-i18n="tip1">দ্রুতি, কোণ, উচ্চতা আর অভিকর্ষ বেছে &quot;ছুড়ুন&quot; টিপুন। আগের পথগুলো রঙিন রেখা হয়ে থাকে, তাই তুলনা করা যায়।</li>
+            <li data-i18n="tip2">বেগের তীর চালু করে ছবির নিচের স্লাইডার টেনে বলকে যে কোনো জায়গায় থামান; t, x, y, vx আর vy পড়ুন।</li>
+            <li data-i18n="tip3">ক্লাসের কাজ: প্রতিটি দল খাতায় R = u² sin 2θ / g দিয়ে পাল্লা বের করুক, তারপর ছুড়ে মিলিয়ে দেখুক। যার উত্তর সবচেয়ে কাছে, সে জিতবে!</li>
+            <li data-i18n="tip4">ক্রিকেটের সঙ্গে যোগ: দ্রুত বোলার প্রায় 140 km/h ≈ 39 m/s-এ বল করেন, আর বাউন্ডারি থেকে জোরালো থ্রো প্রায় 30 m/s।</li>
+            <li data-i18n="tip5">একই বল চাঁদে আর বৃহস্পতিতে ছুড়ুন। T, R আর H কীভাবে বদলায়? সূত্রের সঙ্গে মিলিয়ে দেখুন।</li>
+            <li data-i18n="tip6">&quot;প্রিন্ট&quot; দিয়ে ছবি, ফল আর পুরো সমাধানসহ একটি ওয়ার্কশিট বানান।</li>
           </ul>
         </details>
       </div>

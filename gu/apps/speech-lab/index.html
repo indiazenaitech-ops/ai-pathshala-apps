@@ -201,31 +201,31 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">બોલો અને જુઓ કમ્પ્યુટર તમારા શબ્દો કેવી રીતે લખે છે, તેની પાસે કોઈ પણ લખાણ વંચાવો અને ઉચ્ચારનો અભ્યાસ કરો — 12 ભારતીય ભાષાઓમાં. speech AI કેવી રીતે સાંભળે છે તે જાણો.</p>
 
     <section class="card sl-bar no-print" aria-labelledby="sp-lang-lbl">
       <div class="sl-langf">
-        <label id="sp-lang-lbl" for="sp-lang" class="lbl" data-i18n="speech_lang"></label>
+        <label id="sp-lang-lbl" for="sp-lang" class="lbl" data-i18n="speech_lang">બોલવાની ભાષા</label>
         <select id="sp-lang"></select>
       </div>
       <div class="sl-badges">
         <span class="badge" id="badge-sr"></span>
         <span class="badge" id="badge-tts"></span>
       </div>
-      <p class="tiny muted hint" data-i18n="speech_lang_hint"></p>
+      <p class="tiny muted hint" data-i18n="speech_lang_hint">જે ભાષામાં તમે બોલશો અને સાંભળશો. તે પેજની ભાષાથી અલગ પણ હોઈ શકે.</p>
     </section>
 
     <div id="sr-warn" class="callout warning no-print" hidden>
-      <strong data-i18n="unsupported_title"></strong>
-      <p class="small mb0" data-i18n="unsupported_body"></p>
+      <strong data-i18n="unsupported_title">આ બ્રાઉઝર બોલીને લખાણમાં ફેરવી શકતું નથી</strong>
+      <p class="small mb0" data-i18n="unsupported_body">બોલીને લખવું Android ફોન અને કમ્પ્યુટર પર Google Chrome માં સૌથી સારું ચાલે છે (Microsoft Edge માં પણ ચાલે છે). Firefox માં આ સુવિધા નથી, અને iPhone કે iPad પર કદાચ બરાબર ન ચાલે. છતાં તમે &quot;લખેલું સાંભળો&quot;, &quot;સાંભળો અને લખો&quot; અભ્યાસ અને &quot;આ કેવી રીતે કામ કરે છે&quot; માં અવાજનું ચિત્ર વાપરી શકો છો.</p>
     </div>
-    <p id="file-note" class="callout small no-print" data-i18n="file_note" hidden></p>
+    <p id="file-note" class="callout small no-print" data-i18n="file_note" hidden>ડાઉનલોડ કરેલા ફોલ્ડરમાંથી ખોલ્યું છે? જો માઇક્રોફોન શરૂ ન થાય, તો Chrome માં આ ઍપનું ઓનલાઇન વર્ઝન ખોલો.</p>
 
     <div class="tabs no-print" role="tablist" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-dict" data-tab="dict" aria-controls="panel-dict" data-i18n="tab_dict"></button>
-      <button type="button" role="tab" id="tab-tts" data-tab="tts" aria-controls="panel-tts" data-i18n="tab_tts"></button>
-      <button type="button" role="tab" id="tab-prac" data-tab="prac" aria-controls="panel-prac" data-i18n="tab_prac"></button>
-      <button type="button" role="tab" id="tab-how" data-tab="how" aria-controls="panel-how" data-i18n="tab_how"></button>
+      <button type="button" role="tab" id="tab-dict" data-tab="dict" aria-controls="panel-dict" data-i18n="tab_dict">🎙️ બોલીને લખો</button>
+      <button type="button" role="tab" id="tab-tts" data-tab="tts" aria-controls="panel-tts" data-i18n="tab_tts">🔊 લખેલું સાંભળો</button>
+      <button type="button" role="tab" id="tab-prac" data-tab="prac" aria-controls="panel-prac" data-i18n="tab_prac">🎯 ઉચ્ચાર અભ્યાસ</button>
+      <button type="button" role="tab" id="tab-how" data-tab="how" aria-controls="panel-how" data-i18n="tab_how">🧠 આ કેવી રીતે કામ કરે છે</button>
     </div>
 
     <!-- ============ 1. speak to text ============ -->
@@ -233,15 +233,15 @@
       <div class="dict-grid">
         <section class="card stack fs-target" id="dict-card">
           <div class="card-head">
-            <h2 data-i18n="dict_title"></h2>
+            <h2 data-i18n="dict_title">બોલો અને તમારા શબ્દો જુઓ</h2>
             <button type="button" class="btn btn-sm btn-ghost" id="dict-fs">⛶ <span data-i18n="fullscreen"></span></button>
           </div>
           <div class="mic-row">
             <button type="button" class="btn btn-primary mic-btn" id="dict-mic" aria-pressed="false"><span class="ic" aria-hidden="true">🎤</span><span id="dict-mic-lbl"></span></button>
             <div id="dict-status" class="sl-status" role="status" aria-live="polite" data-state="idle"></div>
           </div>
-          <div class="interim" id="dict-interim-wrap"><span class="tiny" data-i18n="dict_hearing"></span><span id="dict-interim" class="no-i18n"></span></div>
-          <label for="dict-text" class="sr-only" data-i18n="dict_label"></label>
+          <div class="interim" id="dict-interim-wrap"><span class="tiny" data-i18n="dict_hearing">સંભળાય છે:</span><span id="dict-interim" class="no-i18n"></span></div>
+          <label for="dict-text" class="sr-only" data-i18n="dict_label">તમારું લખાણ</label>
           <textarea id="dict-text" class="transcript no-i18n" data-i18n-placeholder="dict_placeholder"></textarea>
           <div class="row punct-row" id="dict-punct">
             <button type="button" class="btn btn-sm" data-p="stop" data-i18n-title="add_stop" data-i18n-aria-label="add_stop"></button>
@@ -252,7 +252,7 @@
           <div class="tools-row">
             <span id="dict-count" class="muted small" aria-live="polite"></span>
             <div class="row">
-              <button type="button" class="btn btn-sm" id="dict-say">🔊 <span data-i18n="read_aloud"></span></button>
+              <button type="button" class="btn btn-sm" id="dict-say">🔊 <span data-i18n="read_aloud">વાંચીને સંભળાવો</span></button>
               <button type="button" class="btn btn-sm" id="dict-copy">📋 <span data-i18n="copy"></span></button>
               <button type="button" class="btn btn-sm" id="dict-dl">⬇ <span data-i18n="download"></span></button>
               <button type="button" class="btn btn-sm" id="dict-print">🖨 <span data-i18n="print"></span></button>
@@ -261,10 +261,10 @@
           </div>
         </section>
         <aside class="card stack" id="guess-card">
-          <h3 data-i18n="guesses_title"></h3>
+          <h3 data-i18n="guesses_title">AI ના અનુમાન</h3>
           <ol id="dict-guesses" class="guesses no-i18n" aria-live="polite"></ol>
-          <p class="small muted" id="guesses-empty" data-i18n="guesses_empty"></p>
-          <p class="small callout mb0" data-i18n="guesses_note"></p>
+          <p class="small muted" id="guesses-empty" data-i18n="guesses_empty">કોઈ વાક્ય બોલો, પછી જુઓ AI એ તેના માટે કયાં કયાં અનુમાન કર્યાં.</p>
+          <p class="small callout mb0" data-i18n="guesses_note">Speech AI ક્યારેય 100% ખાતરીથી કહેતું નથી. તે દરેક અનુમાનને ભરોસાનો એક અંક આપે છે અને સૌથી શક્ય અનુમાન લખે છે.</p>
         </aside>
       </div>
     </section>
@@ -272,41 +272,41 @@
     <!-- ============ 2. text to speech ============ -->
     <section id="panel-tts" role="tabpanel" aria-labelledby="tab-tts" hidden>
       <section class="card stack">
-        <h2 data-i18n="tts_title"></h2>
-        <label for="tts-text" class="lbl" data-i18n="tts_text_label"></label>
+        <h2 data-i18n="tts_title">કંઈક લખો અને સાંભળો</h2>
+        <label for="tts-text" class="lbl" data-i18n="tts_text_label">બોલવા માટેનું લખાણ</label>
         <textarea id="tts-text" class="no-i18n"></textarea>
         <div class="row">
-          <button type="button" class="btn btn-sm" id="tts-sample">📄 <span data-i18n="tts_sample_btn"></span></button>
-          <button type="button" class="btn btn-sm" id="tts-from-dict">🎙️ <span data-i18n="tts_use_dict"></span></button>
+          <button type="button" class="btn btn-sm" id="tts-sample">📄 <span data-i18n="tts_sample_btn">નમૂનાનું લખાણ</span></button>
+          <button type="button" class="btn btn-sm" id="tts-from-dict">🎙️ <span data-i18n="tts_use_dict">મારું બોલેલું લખાણ લો</span></button>
         </div>
         <div class="grid-2">
           <div class="field">
-            <label for="tts-voice" class="lbl" data-i18n="voice"></label>
+            <label for="tts-voice" class="lbl" data-i18n="voice">અવાજ</label>
             <select id="tts-voice" class="no-i18n"></select>
-            <label class="check small"><input type="checkbox" id="tts-all"> <span data-i18n="show_all_voices"></span></label>
+            <label class="check small"><input type="checkbox" id="tts-all"> <span data-i18n="show_all_voices">બધી ભાષાઓના અવાજ બતાવો</span></label>
           </div>
           <div class="stack">
             <div class="field">
-              <label for="tts-rate" class="lbl" data-i18n="rate"></label>
+              <label for="tts-rate" class="lbl" data-i18n="rate">ઝડપ</label>
               <div class="range-row"><input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1"><output id="tts-rate-out" for="tts-rate"></output></div>
             </div>
             <div class="field">
-              <label for="tts-pitch" class="lbl" data-i18n="pitch"></label>
+              <label for="tts-pitch" class="lbl" data-i18n="pitch">સૂર (પિચ)</label>
               <div class="range-row"><input type="range" id="tts-pitch" min="0" max="2" step="0.1" value="1"><output id="tts-pitch-out" for="tts-pitch"></output></div>
             </div>
           </div>
         </div>
         <div id="tts-novoice" class="callout warning" hidden>
           <strong id="tts-nv-title"></strong>
-          <p class="small" data-i18n="tts_none_body"></p>
-          <button type="button" class="btn btn-sm" id="tts-try" data-i18n="try_anyway"></button>
+          <p class="small" data-i18n="tts_none_body">Android પર ઉમેરવા: Settings → Text-to-speech → Google → વૉઇસ ડેટા ઇન્સ્ટોલ કરો. Windows પર: Settings → Time &amp; language → Speech → Add voices. અથવા &quot;તો પણ અજમાવો&quot; દબાવો — કેટલાક બ્રાઉઝર તો પણ વાંચી દે છે.</p>
+          <button type="button" class="btn btn-sm" id="tts-try" data-i18n="try_anyway">તો પણ અજમાવો</button>
         </div>
         <div class="row tts-actions">
-          <button type="button" class="btn btn-primary btn-lg" id="tts-play">🔊 <span data-i18n="tts_play"></span></button>
+          <button type="button" class="btn btn-primary btn-lg" id="tts-play">🔊 <span data-i18n="tts_play">બોલો</span></button>
           <button type="button" class="btn btn-lg" id="tts-stop">⏹ <span data-i18n="stop"></span></button>
           <span id="tts-status" class="muted" role="status" aria-live="polite"></span>
         </div>
-        <p class="small muted mb0" data-i18n="tts_tip"></p>
+        <p class="small muted mb0" data-i18n="tts_tip">અજમાવી જુઓ: ધીમી ઝડપ નવા શીખનારા માટે સારી છે; ઊંચો સૂર કાર્ટૂન જેવો અને નીચો સૂર ભારે લાગે છે. આ અવાજ AI લખાણમાંથી બનાવે છે — કોઈ માણસ અત્યારે રેકોર્ડ નથી કરતો.</p>
       </section>
     </section>
 
@@ -314,10 +314,10 @@
     <section id="panel-prac" role="tabpanel" aria-labelledby="tab-prac" hidden>
       <section class="card stack fs-target" id="prac-card">
         <div class="card-head">
-          <h2 data-i18n="prac_title"></h2>
+          <h2 data-i18n="prac_title">વાક્ય મોટેથી વાંચો</h2>
           <div class="seg" id="pr-mode" role="group" data-i18n-aria-label="mode_label">
-            <button type="button" data-mode="speak" data-i18n="mode_speak"></button>
-            <button type="button" data-mode="type" data-i18n="mode_type"></button>
+            <button type="button" data-mode="speak" data-i18n="mode_speak">🎤 બોલીને</button>
+            <button type="button" data-mode="type" data-i18n="mode_type">✍️ સાંભળો અને લખો</button>
           </div>
         </div>
         <p class="small muted mb0" id="pr-mode-hint"></p>
@@ -329,14 +329,14 @@
         <p id="pr-target" class="prac-target" aria-live="polite"></p>
         <div class="row prac-ctrls">
           <button type="button" class="btn" id="pr-prev" data-i18n="previous"></button>
-          <button type="button" class="btn btn-lg" id="pr-listen">🔊 <span data-i18n="listen"></span></button>
+          <button type="button" class="btn btn-lg" id="pr-listen">🔊 <span data-i18n="listen">સાંભળો</span></button>
           <button type="button" class="btn btn-primary btn-lg mic-btn" id="pr-mic" aria-pressed="false"><span class="ic" aria-hidden="true">🎤</span><span id="pr-mic-lbl"></span></button>
           <button type="button" class="btn" id="pr-next" data-i18n="next"></button>
         </div>
         <div class="typebox" id="pr-typebox" hidden>
-          <label for="pr-typed" class="sr-only" data-i18n="typed_label"></label>
+          <label for="pr-typed" class="sr-only" data-i18n="typed_label">જે સાંભળ્યું તે ટાઇપ કરો</label>
           <input type="text" id="pr-typed" class="no-i18n" data-i18n-placeholder="typed_label" autocomplete="off" spellcheck="false">
-          <button type="button" class="btn btn-primary" id="pr-check" data-i18n="check"></button>
+          <button type="button" class="btn btn-primary" id="pr-check" data-i18n="check">તપાસો</button>
         </div>
         <div id="pr-status" class="sl-status center" role="status" aria-live="polite" data-state="idle"></div>
         <div id="pr-result" class="prac-result" hidden>
@@ -350,10 +350,10 @@
           <div class="heard-line"><b id="pr-heard-lbl"></b><span id="pr-heard" class="no-i18n"></span></div>
           <div id="pr-align" class="align no-i18n"></div>
           <div class="legend tiny muted">
-            <span><i class="l-ok"></i><span data-i18n="legend_ok"></span></span>
-            <span><i class="l-close"></i><span data-i18n="legend_close"></span></span>
-            <span><i class="l-miss"></i><span data-i18n="legend_miss"></span></span>
-            <span><i class="l-extra"></i><span data-i18n="legend_extra"></span></span>
+            <span><i class="l-ok"></i><span data-i18n="legend_ok">મળ્યું</span></span>
+            <span><i class="l-close"></i><span data-i18n="legend_close">લગભગ</span></span>
+            <span><i class="l-miss"></i><span data-i18n="legend_miss">છૂટ્યું કે ખોટું</span></span>
+            <span><i class="l-extra"></i><span data-i18n="legend_extra">વધારાનો શબ્દ</span></span>
           </div>
           <div class="row">
             <button type="button" class="btn" id="pr-again">↻ <span data-i18n="try_again"></span></button>
@@ -368,84 +368,84 @@
           </div>
         </div>
         <details class="panel">
-          <summary data-i18n="how_scored_t"></summary>
-          <p class="small" data-i18n="how_scored"></p>
+          <summary data-i18n="how_scored_t">ગુણ કેવી રીતે ગણાય છે?</summary>
+          <p class="small" data-i18n="how_scored">તમે બોલેલા શબ્દોને અમે વાક્યના શબ્દો સાથે &quot;edit distance&quot; થી મેળવીએ છીએ (એકને બીજામાં ફેરવવા ઓછામાં ઓછા કેટલા ફેરફાર જોઈએ). ગુણ = (વાક્યના શબ્દ − ભૂલો) ÷ વાક્યના શબ્દ. છૂટેલા, ખોટા અને વધારાના શબ્દો ભૂલ ગણાય છે. AI થોડાં અનુમાન આપે છે અને અમે સૌથી નજીકનું અનુમાન લઈએ છીએ.</p>
         </details>
       </section>
       <section class="card stack" id="own-card">
-        <h3 data-i18n="my_sentences"></h3>
-        <p class="small muted" data-i18n="my_sentences_hint"></p>
+        <h3 data-i18n="my_sentences">તમારાં પોતાનાં વાક્યો ઉમેરો</h3>
+        <p class="small muted" data-i18n="my_sentences_hint">શિક્ષકો: પાઠ્યપુસ્તકની લીટીઓ બોલવાની ભાષામાં ઉમેરો. તે ફક્ત આ જ ડિવાઇસ પર સેવ થાય છે.</p>
         <div class="add-row">
-          <label for="pr-new" class="sr-only" data-i18n="add_sentence"></label>
+          <label for="pr-new" class="sr-only" data-i18n="add_sentence">વાક્ય ઉમેરો</label>
           <input type="text" id="pr-new" class="no-i18n" data-i18n-placeholder="add_sentence_ph" maxlength="200" autocomplete="off">
-          <button type="button" class="btn" id="pr-add">＋ <span data-i18n="add_sentence"></span></button>
+          <button type="button" class="btn" id="pr-add">＋ <span data-i18n="add_sentence">વાક્ય ઉમેરો</span></button>
         </div>
         <ul id="pr-own" class="own-list"></ul>
-        <p class="small muted mb0" id="pr-own-empty" data-i18n="own_empty"></p>
+        <p class="small muted mb0" id="pr-own-empty" data-i18n="own_empty">હજી કોઈ વાક્ય ઉમેર્યું નથી.</p>
       </section>
     </section>
 
     <!-- ============ 4. how it works ============ -->
     <section id="panel-how" role="tabpanel" aria-labelledby="tab-how" hidden>
       <section class="card stack">
-        <h2 data-i18n="how_title"></h2>
+        <h2 data-i18n="how_title">કમ્પ્યુટર બોલીને કેવી રીતે સમજે છે?</h2>
         <ol class="pipe">
-          <li><span class="pic" aria-hidden="true">🎤〰️</span><strong data-i18n="step1_t"></strong><span class="small muted" data-i18n="step1_d"></span></li>
-          <li><span class="pic" aria-hidden="true">🌈</span><strong data-i18n="step2_t"></strong><span class="small muted" data-i18n="step2_d"></span></li>
-          <li><span class="pic" aria-hidden="true">🧠</span><strong data-i18n="step3_t"></strong><span class="small muted" data-i18n="step3_d"></span></li>
-          <li><span class="pic" aria-hidden="true">📝</span><strong data-i18n="step4_t"></strong><span class="small muted" data-i18n="step4_d"></span></li>
+          <li><span class="pic" aria-hidden="true">🎤〰️</span><strong data-i18n="step1_t">1. અવાજ</strong><span class="small muted" data-i18n="step1_d">તમારા અવાજથી હવા ધ્રૂજે છે. માઇક્રોફોન આ ધ્વનિતરંગોને સંખ્યાઓમાં ફેરવે છે — દર સેકન્ડે હજારો સંખ્યાઓ.</span></li>
+          <li><span class="pic" aria-hidden="true">🌈</span><strong data-i18n="step2_t">2. અવાજનું ચિત્ર</strong><span class="small muted" data-i18n="step2_d">કમ્પ્યુટર અવાજને સમય સાથે નીચા અને ઊંચા સૂરોમાં વહેંચે છે. આ ચિત્રને સ્પેક્ટ્રોગ્રામ કહે છે.</span></li>
+          <li><span class="pic" aria-hidden="true">🧠</span><strong data-i18n="step3_t">3. AI મોડેલ</strong><span class="small muted" data-i18n="step3_d">હજારો કલાકની બોલી સાંભળીને શીખેલું ન્યુરલ નેટવર્ક ચિત્રમાં નાના ધ્વનિ (જેમ કે &quot;ક&quot;, &quot;આ&quot;, &quot;શ&quot;) ઓળખે છે.</span></li>
+          <li><span class="pic" aria-hidden="true">📝</span><strong data-i18n="step4_t">4. શબ્દો</strong><span class="small muted" data-i18n="step4_d">એક ભાષા મોડેલ આ ધ્વનિઓને જોડીને સૌથી શક્ય શબ્દો બનાવે છે, અને બાકીના વાક્યમાંથી સંકેત લે છે.</span></li>
         </ol>
       </section>
       <section class="card stack" id="see-card">
         <div class="card-head">
-          <h2 data-i18n="see_title"></h2>
+          <h2 data-i18n="see_title">તમારો અવાજ જુઓ</h2>
           <div class="row">
             <button type="button" class="btn btn-primary" id="see-mic" aria-pressed="false">🎤 <span id="see-mic-lbl"></span></button>
-            <button type="button" class="btn" id="see-demo">🎵 <span data-i18n="see_demo"></span></button>
+            <button type="button" class="btn" id="see-demo">🎵 <span data-i18n="see_demo">ટેસ્ટ અવાજ વગાડો</span></button>
           </div>
         </div>
-        <p class="small muted mb0" data-i18n="see_hint"></p>
+        <p class="small muted mb0" data-i18n="see_hint">નીચે = નીચો સૂર, ઉપર = ઊંચો સૂર. નવો અવાજ જમણી બાજુ આવે છે અને ડાબી બાજુ ખસે છે. ચમકતો રંગ = મોટો અવાજ.</p>
         <div class="viz">
-          <p class="viz-lbl small" data-i18n="wave_label"></p>
+          <p class="viz-lbl small" data-i18n="wave_label">ધ્વનિતરંગ</p>
           <canvas id="wave" aria-hidden="true"></canvas>
-          <p class="viz-lbl small" style="margin-top:10px" data-i18n="spec_label"></p>
+          <p class="viz-lbl small" style="margin-top:10px" data-i18n="spec_label">સ્પેક્ટ્રોગ્રામ (અવાજનું ચિત્ર)</p>
           <div class="spec-wrap">
             <canvas id="spec" data-frames="0" aria-hidden="true"></canvas>
             <div class="spec-axis" id="spec-axis" dir="ltr" aria-hidden="true"></div>
-            <div class="viz-empty" id="see-empty" data-i18n="see_empty"></div>
+            <div class="viz-empty" id="see-empty" data-i18n="see_empty">&quot;માઇક્રોફોન શરૂ કરો&quot; કે &quot;ટેસ્ટ અવાજ વગાડો&quot; દબાવો અને અવાજનું ચિત્ર જુઓ.</div>
           </div>
         </div>
         <p id="see-status" class="see-status" role="status" aria-live="polite" data-state="idle"></p>
-        <p class="callout small mb0" data-i18n="see_try"></p>
+        <p class="callout small mb0" data-i18n="see_try">અજમાવો: &quot;આઆઆ&quot; બોલો, પછી &quot;સસસસ&quot;, પછી સીટી વગાડો. સ્વરો સુંદર પટ્ટા બનાવે છે, &quot;સ&quot; ઉપરની બાજુ ઝાંખાં નિશાન, અને સીટી એક પાતળી રેખા દોરે છે.</p>
       </section>
       <div class="grid-2">
         <section class="card stack">
-          <h3 data-i18n="why_title"></h3>
+          <h3 data-i18n="why_title">Speech AI ભૂલો કેમ કરે છે?</h3>
           <ul class="plain-list small">
-            <li data-i18n="why_1"></li><li data-i18n="why_2"></li><li data-i18n="why_3"></li><li data-i18n="why_4"></li>
+            <li data-i18n="why_1">ઘોંઘાટ: પંખો, ટ્રાફિક અને બીજા લોકોની વાતો અવાજના ચિત્રમાં વધારાનાં નિશાન ઉમેરે છે.</li><li data-i18n="why_2">બોલવાની ઢબ: શીખતી વખતે AI એ તમારા જેવા બોલનારા ઓછા સાંભળ્યા હોય, તો તે વધુ ભૂલો કરે છે. દરેક પ્રદેશના અવાજોથી શીખવવાથી AI બધા માટે ન્યાયી બને છે.</li><li data-i18n="why_3">સરખા સંભળાતા શબ્દો, જેમ કે &quot;દિન&quot; અને &quot;દીન&quot;: AI બાકીનું વાક્ય જોઈને પસંદ કરે છે.</li><li data-i18n="why_4">ખૂબ ઝડપથી, ખૂબ ધીમા અવાજે કે માઇક્રોફોનથી દૂર બોલવાથી ધ્વનિઓને અલગ ઓળખવા અઘરા બને છે.</li>
           </ul>
         </section>
         <section class="card stack">
-          <h3 data-i18n="privacy_title"></h3>
+          <h3 data-i18n="privacy_title">ગોપનીયતા: મારો અવાજ ક્યાં જાય છે?</h3>
           <ul class="plain-list small">
-            <li data-i18n="privacy_1"></li>
-            <li><strong data-i18n="privacy_2"></strong></li>
-            <li data-i18n="privacy_3"></li>
+            <li data-i18n="privacy_1">આ ઍપ તમારો અવાજ રેકોર્ડ કરતી નથી, સેવ કરતી નથી કે ક્યાંય મોકલતી નથી. તમારું લખાણ ફક્ત આ જ ડિવાઇસ પર રહે છે.</li>
+            <li><strong data-i18n="privacy_2">પણ ધ્યાન રાખો: Google Chrome માં બોલીને લખવું સામાન્ય રીતે તમારો અવાજ Google ના સર્વર પર મોકલીને થાય છે, ત્યાં તે લખાણમાં ફેરવાય છે. Microsoft Edge તેને Microsoft ને મોકલે છે. એટલે જ ઇન્ટરનેટ જોઈએ.</strong></li>
+            <li data-i18n="privacy_3">લખેલું સંભળાવવા માટે મોટે ભાગે તમારા ડિવાઇસમાંના અવાજ વપરાય છે. &quot;ઓનલાઇન&quot; લખેલા અવાજ લખાણને ઇન્ટરનેટથી મોકલે છે.</li>
           </ul>
-          <p class="callout danger small mb0" data-i18n="privacy_4"></p>
+          <p class="callout danger small mb0" data-i18n="privacy_4">તેથી કોઈ પણ વૉઇસ ટૂલમાં પાસવર્ડ, OTP, ફોન નંબર કે અંગત વાતો ક્યારેય ન બોલો.</p>
         </section>
       </div>
       <section class="card">
-        <h3 data-i18n="uses_title"></h3>
-        <p class="small mb0" data-i18n="uses_body"></p>
+        <h3 data-i18n="uses_title">Speech AI ક્યાં વપરાય છે?</h3>
+        <p class="small mb0" data-i18n="uses_body">ફોન પર વૉઇસ ટાઇપિંગ, વૉઇસ આસિસ્ટન્ટ, YouTube નાં આપમેળે બનતાં કૅપ્શન, જોઈ ન શકતા લોકો માટે બોલતી ઍપ, અને ભાષિણી — ભારતીય ભાષાઓ વચ્ચે બોલીનો અનુવાદ કરતો ભારતનો પ્રોજેક્ટ.</p>
       </section>
     </section>
 
     <details class="card help no-print" id="help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">કેવી રીતે વાપરવું / વર્ગ માટે વિચારો</summary>
       <ul class="small">
-        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li><li data-i18n="tip5"></li><li data-i18n="tip6"></li>
+        <li data-i18n="tip1">પહેલાં બોલવાની ભાષા પસંદ કરો. તે પેજની ભાષાથી અલગ હોઈ શકે — જેમ કે અંગ્રેજી બટન અને ગુજરાતીમાં બોલવું.</li><li data-i18n="tip2">બોલીને લખવા માટે ઇન્ટરનેટ સાથે Android ફોન કે કમ્પ્યુટર પર Chrome વાપરો, અને પૂછવામાં આવે ત્યારે માઇક્રોફોનની મંજૂરી આપો.</li><li data-i18n="tip3">શાંત જગ્યાએ, માઇક્રોફોનથી લગભગ એક વેંત દૂર, સામાન્ય ઝડપે બોલો.</li>
+        <li data-i18n="tip4">વર્ગ પ્રવૃત્તિ — &quot;ઘોંઘાટ પરીક્ષણ&quot;: એક વિદ્યાર્થી એક જ વાક્ય ત્રણ વાર વાંચે: શાંતિમાં, પંખો ચાલુ રાખીને, અને વર્ગ ગુસપુસ કરતો હોય ત્યારે. ગુણની સરખામણી કરો અને AI કેમ ગૂંચવાયું તેની ચર્ચા કરો.</li><li data-i18n="tip5">&quot;સાંભળો અને લખો&quot; દરેક બ્રાઉઝરમાં, માઇક્રોફોન વગર પણ ચાલે છે: એક વાક્ય વગાડો અને આખા વર્ગ પાસે લખાવો — ઝટપટ શ્રુતલેખન.</li><li data-i18n="tip6">ઉચ્ચાર અભ્યાસમાં પાઠ્યપુસ્તકનાં વાક્યો ઉમેરો અને &quot;પ્રિન્ટ&quot; દબાવીને અભ્યાસ પત્રક બનાવો.</li>
       </ul>
     </details>
 

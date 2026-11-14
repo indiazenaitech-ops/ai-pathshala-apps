@@ -232,12 +232,12 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">কয়েক সেকেন্ডে ক্লাসের হাজিরা নিন, মাসের মোট ও হাজিরার % দেখুন, আর খাতা প্রিন্ট করুন। সব তথ্য এই ডিভাইসেই থাকে।</p>
 
     <section class="card bar">
       <div class="row">
         <div class="bar-cls">
-          <label for="class-sel" data-i18n="class_label"></label>
+          <label for="class-sel" data-i18n="class_label">ক্লাস</label>
           <select id="class-sel" class="no-i18n"></select>
         </div>
         <button type="button" class="btn" id="fs-btn" data-i18n-title="fullscreen"><span aria-hidden="true">⛶</span> <span class="fs-txt" data-i18n="fullscreen"></span></button>
@@ -246,9 +246,9 @@
     </section>
 
     <div class="tabs" role="tablist">
-      <button type="button" role="tab" id="tab-day" data-tab="day" aria-controls="p-day"><span class="ti" aria-hidden="true">✅</span><span data-i18n="tab_day"></span></button>
-      <button type="button" role="tab" id="tab-month" data-tab="month" aria-controls="p-month"><span class="ti" aria-hidden="true">📅</span><span data-i18n="tab_month"></span></button>
-      <button type="button" role="tab" id="tab-students" data-tab="students" aria-controls="p-students"><span class="ti" aria-hidden="true">👥</span><span data-i18n="tab_students"></span></button>
+      <button type="button" role="tab" id="tab-day" data-tab="day" aria-controls="p-day"><span class="ti" aria-hidden="true">✅</span><span data-i18n="tab_day">দৈনিক</span></button>
+      <button type="button" role="tab" id="tab-month" data-tab="month" aria-controls="p-month"><span class="ti" aria-hidden="true">📅</span><span data-i18n="tab_month">মাসিক</span></button>
+      <button type="button" role="tab" id="tab-students" data-tab="students" aria-controls="p-students"><span class="ti" aria-hidden="true">👥</span><span data-i18n="tab_students">ছাত্রছাত্রী</span></button>
     </div>
 
     <!-- DAILY -->
@@ -258,29 +258,29 @@
           <button type="button" class="btn navbtn" id="day-prev" data-i18n-aria-label="prev_day" data-i18n-title="prev_day"><span class="flip" aria-hidden="true">‹</span></button>
           <input type="date" id="day-date" data-i18n-aria-label="date_label">
           <button type="button" class="btn navbtn" id="day-next" data-i18n-aria-label="next_day" data-i18n-title="next_day"><span class="flip" aria-hidden="true">›</span></button>
-          <button type="button" class="btn" id="day-today" data-i18n="today"></button>
+          <button type="button" class="btn" id="day-today" data-i18n="today">আজ</button>
         </div>
         <p class="day-long" id="day-long"></p>
-        <div class="callout" id="sample-note" hidden><span data-i18n="sample_note"></span></div>
-        <div class="callout warning" id="day-future" hidden><span data-i18n="future_note"></span></div>
+        <div class="callout" id="sample-note" hidden><span data-i18n="sample_note">এটি একটি নমুনা ক্লাস, হাজিরাগুলো বানানো, যাতে আপনি অ্যাপটি চালিয়ে দেখতে পারেন। “ছাত্রছাত্রী” ট্যাবে নিজের ক্লাস যোগ করুন, তারপর নমুনাটি মুছে দিন।</span></div>
+        <div class="callout warning" id="day-future" hidden><span data-i18n="future_note">এই তারিখটি এখনও আসেনি।</span></div>
         <div class="callout accent row spread" id="day-holiday" hidden>
           <strong id="day-holiday-txt"></strong>
-          <button type="button" class="btn btn-sm" id="day-unholiday" data-i18n="take_anyway"></button>
+          <button type="button" class="btn btn-sm" id="day-unholiday" data-i18n="take_anyway">এই দিনেও হাজিরা নিন</button>
         </div>
         <div class="callout row spread" id="day-empty" hidden>
-          <span data-i18n="no_students"></span>
-          <button type="button" class="btn btn-primary btn-sm" id="day-go-students" data-i18n="go_students"></button>
+          <span data-i18n="no_students">এই ক্লাসে এখনও কোনো ছাত্রছাত্রী নেই।</span>
+          <button type="button" class="btn btn-primary btn-sm" id="day-go-students" data-i18n="go_students">ছাত্রছাত্রী যোগ করুন</button>
         </div>
         <div id="day-work" class="stack">
           <div class="sum" id="day-sum" aria-live="polite"></div>
           <div class="day-actions">
-            <button type="button" class="btn btn-primary btn-lg" id="all-present"><span aria-hidden="true">✓</span> <span data-i18n="mark_all"></span></button>
-            <button type="button" class="btn" id="copy-absent"><span aria-hidden="true">📋</span> <span data-i18n="copy_absent"></span></button>
-            <button type="button" class="btn" id="day-make-holiday" data-i18n="make_holiday"></button>
-            <button type="button" class="btn btn-danger" id="clear-day" data-i18n="clear_day"></button>
+            <button type="button" class="btn btn-primary btn-lg" id="all-present"><span aria-hidden="true">✓</span> <span data-i18n="mark_all">সবাইকে উপস্থিত দিন</span></button>
+            <button type="button" class="btn" id="copy-absent"><span aria-hidden="true">📋</span> <span data-i18n="copy_absent">অনুপস্থিতদের তালিকা কপি করুন</span></button>
+            <button type="button" class="btn" id="day-make-holiday" data-i18n="make_holiday">ছুটি ঘোষণা করুন</button>
+            <button type="button" class="btn btn-danger" id="clear-day" data-i18n="clear_day">এই দিনটি মুছুন</button>
           </div>
           <div class="search"><input type="search" id="day-search" data-i18n-placeholder="search_ph" data-i18n-aria-label="search"></div>
-          <p class="muted small mb0" data-i18n="tap_hint"></p>
+          <p class="muted small mb0" data-i18n="tap_hint">নামে ট্যাপ করে বদলান: উপস্থিত → অনুপস্থিত → দেরিতে → ছুটি → বাকি।</p>
           <div class="day-grid" id="day-grid"></div>
           <p class="muted" id="day-nomatch" hidden></p>
         </div>
@@ -297,30 +297,30 @@
             <button type="button" class="btn navbtn" id="m-next" data-i18n-aria-label="next_month" data-i18n-title="next_month"><span class="flip" aria-hidden="true">›</span></button>
           </div>
           <div class="row">
-            <button type="button" class="btn" id="export-csv"><span aria-hidden="true">⬇</span> <span data-i18n="export_csv"></span></button>
-            <button type="button" class="btn btn-primary" id="print-btn"><span aria-hidden="true">🖨</span> <span data-i18n="print_register"></span></button>
+            <button type="button" class="btn" id="export-csv"><span aria-hidden="true">⬇</span> <span data-i18n="export_csv">CSV নিন</span></button>
+            <button type="button" class="btn btn-primary" id="print-btn"><span aria-hidden="true">🖨</span> <span data-i18n="print_register">খাতা প্রিন্ট করুন</span></button>
           </div>
         </div>
         <div class="tiles" aria-live="polite">
-          <div class="stat"><div class="stat-l" data-i18n="stat_days"></div><div class="stat-v" id="m-days"></div></div>
-          <div class="stat"><div class="stat-l" data-i18n="stat_avg"></div><div class="stat-v" id="m-avg"></div></div>
+          <div class="stat"><div class="stat-l" data-i18n="stat_days">যত দিন হাজিরা নেওয়া হয়েছে</div><div class="stat-v" id="m-days"></div></div>
+          <div class="stat"><div class="stat-l" data-i18n="stat_avg">ক্লাসের গড়</div><div class="stat-v" id="m-avg"></div></div>
           <div class="stat"><div class="stat-l" id="m-below-l"></div><div class="stat-v" id="m-below"></div></div>
         </div>
         <div class="m-opts">
-          <label class="check"><input type="checkbox" id="opt-sun"> <span data-i18n="sundays_off"></span></label>
-          <label class="check"><input type="checkbox" id="opt-leave"> <span data-i18n="leave_counts"></span></label>
-          <label class="minpct"><span data-i18n="min_pct"></span> <input type="number" id="opt-min" min="1" max="100" step="1" inputmode="numeric"></label>
+          <label class="check"><input type="checkbox" id="opt-sun"> <span data-i18n="sundays_off">রবিবার ও জাতীয় ছুটি (26 জানুয়ারি, 15 আগস্ট, 2 অক্টোবর) বন্ধ</span></label>
+          <label class="check"><input type="checkbox" id="opt-leave"> <span data-i18n="leave_counts">ছুটিকে উপস্থিত ধরুন</span></label>
+          <label class="minpct"><span data-i18n="min_pct">ন্যূনতম হাজিরা %</span> <input type="number" id="opt-min" min="1" max="100" step="1" inputmode="numeric"></label>
         </div>
         <div class="search"><input type="search" id="m-search" data-i18n-placeholder="search_ph" data-i18n-aria-label="search"></div>
-        <p class="muted small mb0" data-i18n="month_hint"></p>
+        <p class="muted small mb0" data-i18n="month_hint">হাজিরা বদলাতে ঘরে ট্যাপ করুন। উপরে কোনো তারিখে ট্যাপ করে সেটিকে ছুটি করুন, বা আবার ক্লাসের দিন করুন।</p>
       </div>
       <div class="print-head">
-        <div><div class="ph-school no-i18n" id="ph-school"></div><h2 data-i18n="app_title"></h2></div>
+        <div><div class="ph-school no-i18n" id="ph-school"></div><h2 data-i18n="app_title">হাজিরা খাতা</h2></div>
         <div><p class="strong" id="ph-meta"></p><p id="ph-date"></p></div>
       </div>
       <div class="reg-wrap"><table class="reg" id="month-table"></table></div>
       <div class="legend" id="m-legend"></div>
-      <div class="sign-row"><span data-i18n="sign_teacher"></span><span data-i18n="sign_principal"></span></div>
+      <div class="sign-row"><span data-i18n="sign_teacher">শ্রেণি শিক্ষক</span><span data-i18n="sign_principal">প্রধান শিক্ষক</span></div>
     </section>
 
     <!-- STUDENTS -->
@@ -328,52 +328,52 @@
       <div class="st-grid">
         <div class="stack">
           <div class="card stack">
-            <h2 data-i18n="class_settings"></h2>
-            <label class="field"><span data-i18n="class_name"></span>
+            <h2 data-i18n="class_settings">এই ক্লাস</h2>
+            <label class="field"><span data-i18n="class_name">ক্লাসের নাম</span>
               <span class="name-row"><input type="text" id="cls-name" class="no-i18n" maxlength="60" data-i18n-placeholder="class_ph"><button type="button" class="btn" id="cls-save" data-i18n="save"></button></span>
             </label>
             <div class="row">
-              <button type="button" class="btn btn-danger" id="cls-del" data-i18n="delete_class"></button>
+              <button type="button" class="btn btn-danger" id="cls-del" data-i18n="delete_class">এই ক্লাস মুছুন</button>
             </div>
           </div>
           <div class="card stack">
-            <h2 data-i18n="new_class"></h2>
-            <label class="field"><span data-i18n="class_name"></span>
-              <span class="name-row"><input type="text" id="new-class-name" class="no-i18n" maxlength="60" data-i18n-placeholder="class_ph"><button type="button" class="btn btn-primary" id="add-class" data-i18n="add_class"></button></span>
+            <h2 data-i18n="new_class">নতুন ক্লাস যোগ করুন</h2>
+            <label class="field"><span data-i18n="class_name">ক্লাসের নাম</span>
+              <span class="name-row"><input type="text" id="new-class-name" class="no-i18n" maxlength="60" data-i18n-placeholder="class_ph"><button type="button" class="btn btn-primary" id="add-class" data-i18n="add_class">ক্লাস যোগ করুন</button></span>
             </label>
           </div>
           <div class="card stack">
-            <h2 data-i18n="paste_title"></h2>
-            <p class="muted small mb0" data-i18n="paste_help"></p>
+            <h2 data-i18n="paste_title">ছাত্রছাত্রীদের তালিকা পেস্ট করুন</h2>
+            <p class="muted small mb0" data-i18n="paste_help">প্রতি লাইনে একজন: আগে রোল নম্বর, তারপর নাম। যে লাইনে শুধু নাম আছে, সে পরের রোল নম্বর পাবে। Excel বা Google Sheets থেকে দুটি কলাম সরাসরি কপি করতে পারেন।</p>
             <textarea id="paste-box" class="no-i18n" data-i18n-placeholder="paste_ph" data-i18n-aria-label="paste_title"></textarea>
             <div class="row">
-              <button type="button" class="btn btn-primary" id="paste-add" data-i18n="paste_add"></button>
-              <button type="button" class="btn" id="import-csv"><span aria-hidden="true">📄</span> <span data-i18n="import_csv"></span></button>
+              <button type="button" class="btn btn-primary" id="paste-add" data-i18n="paste_add">এদের যোগ করুন</button>
+              <button type="button" class="btn" id="import-csv"><span aria-hidden="true">📄</span> <span data-i18n="import_csv">CSV ইমপোর্ট করুন</span></button>
             </div>
-            <p class="muted small mb0" data-i18n="csv_help"></p>
+            <p class="muted small mb0" data-i18n="csv_help">অথবা রোল নম্বর ও নামের কলাম থাকা CSV ফাইল ইমপোর্ট করুন। শিরোনামের সারি নিজে থেকেই বাদ যায়।</p>
           </div>
         </div>
         <div class="stack">
           <div class="card stack">
-            <div class="row spread"><h2 class="mb0" data-i18n="tab_students"></h2><span class="badge primary" id="stu-count"></span></div>
+            <div class="row spread"><h2 class="mb0" data-i18n="tab_students">ছাত্রছাত্রী</h2><span class="badge primary" id="stu-count"></span></div>
             <form class="inline-form" id="one-form">
-              <label class="field"><span data-i18n="roll_ph"></span><input type="text" id="one-roll" class="no-i18n" maxlength="8" inputmode="numeric"></label>
-              <label class="field"><span data-i18n="name_ph"></span><input type="text" id="one-name" class="no-i18n" maxlength="80"></label>
+              <label class="field"><span data-i18n="roll_ph">রোল</span><input type="text" id="one-roll" class="no-i18n" maxlength="8" inputmode="numeric"></label>
+              <label class="field"><span data-i18n="name_ph">ছাত্র/ছাত্রীর নাম</span><input type="text" id="one-name" class="no-i18n" maxlength="80"></label>
               <button type="submit" class="btn btn-primary" id="one-add" data-i18n="add"></button>
             </form>
             <div class="callout warning" id="dup-warn" hidden></div>
             <div class="slist" id="stu-list"></div>
           </div>
           <div class="card stack">
-            <label class="field"><span data-i18n="school_name"></span>
+            <label class="field"><span data-i18n="school_name">স্কুলের নাম (প্রিন্ট করা খাতায় দেখাবে)</span>
               <input type="text" id="school" class="no-i18n" maxlength="100" data-i18n-placeholder="school_ph"></label>
           </div>
           <div class="card stack">
-            <h2 data-i18n="backup_title"></h2>
-            <p class="muted small mb0" data-i18n="backup_help"></p>
+            <h2 data-i18n="backup_title">ব্যাকআপ ও রিস্টোর</h2>
+            <p class="muted small mb0" data-i18n="backup_help">হাজিরা শুধু এই ব্রাউজারেই সেভ থাকে। প্রতি সপ্তাহে ব্যাকআপ ডাউনলোড করুন, আর নতুন ফোন বা কম্পিউটারে রিস্টোর করুন।</p>
             <div class="row">
-              <button type="button" class="btn btn-primary" id="backup-btn"><span aria-hidden="true">💾</span> <span data-i18n="backup_dl"></span></button>
-              <button type="button" class="btn" id="restore-btn" data-i18n="restore"></button>
+              <button type="button" class="btn btn-primary" id="backup-btn"><span aria-hidden="true">💾</span> <span data-i18n="backup_dl">ব্যাকআপ ডাউনলোড করুন</span></button>
+              <button type="button" class="btn" id="restore-btn" data-i18n="restore">ব্যাকআপ রিস্টোর করুন</button>
               <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset"></button>
             </div>
           </div>
@@ -384,12 +384,12 @@
     <details class="card help" style="margin-top:16px">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">যতগুলো সেকশনে পড়ান, প্রতিটির জন্য আলাদা ক্লাস বানান। স্কুলের তালিকা থেকে নাম পেস্ট করুন বা CSV ফাইল ইমপোর্ট করুন।</li>
+        <li data-i18n="help_2">প্রতিদিন সকালে “সবাইকে উপস্থিত দিন” টিপুন, তারপর শুধু অনুপস্থিতদের নামে ট্যাপ করুন। 60 জনের হাজিরাও এক মিনিটের কম সময়ে হয়ে যায়।</li>
+        <li data-i18n="help_3">“মাসিক” ট্যাবে প্রত্যেকের হাজিরার % দেখা যায়। লাল সারিগুলো ন্যূনতমের কম (CBSE অনুযায়ী 75% লাগে), তাই সময় থাকতেই অভিভাবকদের সঙ্গে কথা বলতে পারবেন।</li>
+        <li data-i18n="help_4">মাসের শেষে খাতা প্রিন্ট করুন (A4 আড়াআড়ি) ও সই করুন, অথবা Excel / Google Sheets-এর জন্য CSV নিন।</li>
+        <li data-i18n="help_5">ক্লাসের কাজ: ক্লাস মনিটরকে স্মার্টবোর্ডে হাজিরা নিতে দিন। তারপর ছাত্রছাত্রীরা নিজেদের হাজিরার % বের করুক: (উপস্থিত দিন ÷ ক্লাসের দিন) × 100।</li>
+        <li data-i18n="help_6">আপনার তথ্য এই ডিভাইসের বাইরে যায় না। প্রতি সপ্তাহে ব্যাকআপ ডাউনলোড করুন, যাতে ফোন বদলালেও কিছু না হারায়।</li>
       </ul>
     </details>
   </main>

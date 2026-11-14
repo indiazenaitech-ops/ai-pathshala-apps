@@ -171,19 +171,19 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="ssm-priv"><span class="badge success" data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">किसी भी कर्मचारी की महीने की सैलरी स्लिप बनाएँ: कमाई, PF, ESI, प्रोफ़ेशनल टैक्स और शब्दों में नेट सैलरी। प्रिंट करें या PDF सेव करें, या CSV से पूरी टीम की स्लिप एक साथ बनाएँ।</p>
+    <p class="ssm-priv"><span class="badge success" data-i18n="privacy">🔒 नाम, सैलरी और फ़ाइलें इस डिवाइस से बाहर नहीं जातीं। कंपनी और कर्मचारियों की जानकारी सिर्फ़ इसी ब्राउज़र में सेव होती है।</span></p>
     <div class="callout ssm-note" role="note"><p id="ratesNote"></p></div>
 
     <div id="sampleBanner" class="callout accent row spread no-print" hidden>
-      <span class="grow" data-i18n="sample_banner"></span>
-      <button class="btn btn-sm btn-primary" id="goCompany" type="button" data-i18n="fill_company"></button>
+      <span class="grow" data-i18n="sample_banner">इस स्लिप पर कंपनी और कर्मचारी का नमूना दिखाया गया है। अपनी जानकारी एक बार भरें, फिर हर स्लिप में वही आएगी।</span>
+      <button class="btn btn-sm btn-primary" id="goCompany" type="button" data-i18n="fill_company">कंपनी की जानकारी भरें</button>
     </div>
 
     <div class="ssm-tabs no-print" role="tablist" id="tabs">
-      <button type="button" role="tab" id="tab-slip" data-tab="slip" aria-controls="p-slip"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_slip"></span></button>
-      <button type="button" role="tab" id="tab-batch" data-tab="batch" aria-controls="p-batch"><span class="ic" aria-hidden="true">👥</span><span data-i18n="tab_batch"></span></button>
-      <button type="button" role="tab" id="tab-company" data-tab="company" aria-controls="p-company"><span class="ic" aria-hidden="true">🏢</span><span data-i18n="tab_company"></span></button>
+      <button type="button" role="tab" id="tab-slip" data-tab="slip" aria-controls="p-slip"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_slip">सैलरी स्लिप</span></button>
+      <button type="button" role="tab" id="tab-batch" data-tab="batch" aria-controls="p-batch"><span class="ic" aria-hidden="true">👥</span><span data-i18n="tab_batch">कई स्लिप (CSV)</span></button>
+      <button type="button" role="tab" id="tab-company" data-tab="company" aria-controls="p-company"><span class="ic" aria-hidden="true">🏢</span><span data-i18n="tab_company">कंपनी</span></button>
     </div>
 
     <!-- ================= SLIP ================= -->
@@ -192,134 +192,134 @@
         <div class="stack">
           <section class="card form">
             <div class="grp">
-              <h2 data-i18n="sec_employee"></h2>
+              <h2 data-i18n="sec_employee">कर्मचारी</h2>
               <div class="emp-pick">
-                <label class="f"><span class="lbl" data-i18n="saved_emps"></span><select id="empPick" class="no-i18n"></select></label>
-                <button type="button" class="btn btn-danger btn-sm" id="empDel" data-i18n="delete_emp"></button>
+                <label class="f"><span class="lbl" data-i18n="saved_emps">सेव किए कर्मचारी</span><select id="empPick" class="no-i18n"></select></label>
+                <button type="button" class="btn btn-danger btn-sm" id="empDel" data-i18n="delete_emp">सेव किया हटाएँ</button>
               </div>
-              <label class="f"><span class="lbl" data-i18n="emp_name"></span><input type="text" id="eName" data-e="name" maxlength="80" autocomplete="off" dir="auto" data-i18n-placeholder="sample_emp"></label>
+              <label class="f"><span class="lbl" data-i18n="emp_name">कर्मचारी का नाम</span><input type="text" id="eName" data-e="name" maxlength="80" autocomplete="off" dir="auto" data-i18n-placeholder="sample_emp"></label>
               <div class="two">
-                <label class="f"><span class="lbl" data-i18n="emp_id"></span><input type="text" id="eId" data-e="id" maxlength="30" autocomplete="off" dir="ltr" placeholder="EMP-014" class="no-i18n"></label>
-                <label class="f"><span class="lbl" data-i18n="emp_doj"></span><input type="date" id="eDoj" data-e="doj"></label>
-              </div>
-              <div class="two">
-                <label class="f"><span class="lbl" data-i18n="emp_desig"></span><input type="text" id="eDesig" data-e="desig" maxlength="60" autocomplete="off" dir="auto" data-i18n-placeholder="sample_desig"></label>
-                <label class="f"><span class="lbl" data-i18n="emp_dept"></span><input type="text" id="eDept" data-e="dept" maxlength="60" autocomplete="off" dir="auto" data-i18n-placeholder="sample_dept"></label>
+                <label class="f"><span class="lbl" data-i18n="emp_id">कर्मचारी ID</span><input type="text" id="eId" data-e="id" maxlength="30" autocomplete="off" dir="ltr" placeholder="EMP-014" class="no-i18n"></label>
+                <label class="f"><span class="lbl" data-i18n="emp_doj">जॉइनिंग की तारीख़</span><input type="date" id="eDoj" data-e="doj"></label>
               </div>
               <div class="two">
-                <label class="f"><span class="lbl" data-i18n="emp_bank"></span><input type="text" id="eBank" data-e="bank4" maxlength="4" inputmode="numeric" autocomplete="off" dir="ltr" placeholder="4821" class="no-i18n"></label>
-                <label class="f"><span class="lbl" data-i18n="emp_uan"></span><input type="text" id="eUan" data-e="uan" maxlength="12" inputmode="numeric" autocomplete="off" dir="ltr" placeholder="100123456789" class="no-i18n"></label>
+                <label class="f"><span class="lbl" data-i18n="emp_desig">पद</span><input type="text" id="eDesig" data-e="desig" maxlength="60" autocomplete="off" dir="auto" data-i18n-placeholder="sample_desig"></label>
+                <label class="f"><span class="lbl" data-i18n="emp_dept">विभाग</span><input type="text" id="eDept" data-e="dept" maxlength="60" autocomplete="off" dir="auto" data-i18n-placeholder="sample_dept"></label>
               </div>
-              <label class="f"><span class="lbl" data-i18n="emp_pan"></span><input type="text" id="ePan" data-e="pan" maxlength="10" autocomplete="off" dir="ltr" placeholder="ABCPS1234K" class="no-i18n" style="text-transform:uppercase"></label>
+              <div class="two">
+                <label class="f"><span class="lbl" data-i18n="emp_bank">बैंक खाता (आख़िरी 4 अंक)</span><input type="text" id="eBank" data-e="bank4" maxlength="4" inputmode="numeric" autocomplete="off" dir="ltr" placeholder="4821" class="no-i18n"></label>
+                <label class="f"><span class="lbl" data-i18n="emp_uan">UAN (PF नंबर)</span><input type="text" id="eUan" data-e="uan" maxlength="12" inputmode="numeric" autocomplete="off" dir="ltr" placeholder="100123456789" class="no-i18n"></label>
+              </div>
+              <label class="f"><span class="lbl" data-i18n="emp_pan">कर्मचारी का PAN</span><input type="text" id="ePan" data-e="pan" maxlength="10" autocomplete="off" dir="ltr" placeholder="ABCPS1234K" class="no-i18n" style="text-transform:uppercase"></label>
               <div class="row">
-                <button type="button" class="btn" id="empSave"><span aria-hidden="true">💾</span> <span data-i18n="save_emp"></span></button>
+                <button type="button" class="btn" id="empSave"><span aria-hidden="true">💾</span> <span data-i18n="save_emp">कर्मचारी सेव करें</span></button>
                 <span class="muted small" data-i18n="saved_local"></span>
               </div>
             </div>
 
             <div class="grp">
-              <h2 data-i18n="sec_period"></h2>
+              <h2 data-i18n="sec_period">सैलरी का महीना और हाज़िरी</h2>
               <div class="two">
-                <label class="f"><span class="lbl" data-i18n="month"></span><select id="month" data-p="month"></select></label>
-                <label class="f"><span class="lbl" data-i18n="year"></span><input type="number" id="year" data-p="year" min="2000" max="2099" step="1" inputmode="numeric"></label>
+                <label class="f"><span class="lbl" data-i18n="month">महीना</span><select id="month" data-p="month"></select></label>
+                <label class="f"><span class="lbl" data-i18n="year">साल</span><input type="number" id="year" data-p="year" min="2000" max="2099" step="1" inputmode="numeric"></label>
               </div>
               <div class="two">
-                <label class="f"><span class="lbl" data-i18n="days_in_month"></span><input type="number" id="days" data-p="days" min="1" max="31" step="1" inputmode="numeric"></label>
-                <label class="f"><span class="lbl" data-i18n="lop_days"></span><input type="number" id="lop" data-p="lop" min="0" max="31" step="0.5" inputmode="decimal"></label>
+                <label class="f"><span class="lbl" data-i18n="days_in_month">महीने के दिन</span><input type="number" id="days" data-p="days" min="1" max="31" step="1" inputmode="numeric"></label>
+                <label class="f"><span class="lbl" data-i18n="lop_days">बिना वेतन छुट्टी (LOP) के दिन</span><input type="number" id="lop" data-p="lop" min="0" max="31" step="0.5" inputmode="decimal"></label>
               </div>
               <p class="sum" id="paidDays" aria-live="polite"></p>
-              <div class="callout warning small" id="lopWarn" hidden data-i18n="lop_warn"></div>
-              <span class="hint" data-i18n="prorate_hint"></span>
+              <div class="callout warning small" id="lopWarn" hidden data-i18n="lop_warn">LOP के दिन महीने के दिनों से ज़्यादा नहीं हो सकते। वेतन के दिन 0 कर दिए।</div>
+              <span class="hint" data-i18n="prorate_hint">बेसिक, HRA, DA, कन्वेयंस और स्पेशल अलाउंस वेतन के दिनों के हिसाब से घटते हैं। ओवरटाइम और बोनस पूरे मिलते हैं।</span>
             </div>
 
             <div class="grp">
-              <h2 data-i18n="sec_earn"></h2>
-              <div class="amt-row"><label for="e_basic" data-i18n="e_basic"></label><input type="text" id="e_basic" data-k="basic" inputmode="decimal" autocomplete="off"></div>
-              <div class="amt-row"><label for="e_hra" data-i18n="e_hra"></label><input type="text" id="e_hra" data-k="hra" inputmode="decimal" autocomplete="off"></div>
-              <div class="amt-row"><label for="e_da" data-i18n="e_da"></label><input type="text" id="e_da" data-k="da" inputmode="decimal" autocomplete="off"></div>
-              <div class="amt-row"><label for="e_conv" data-i18n="e_conv"></label><input type="text" id="e_conv" data-k="conv" inputmode="decimal" autocomplete="off"></div>
-              <div class="amt-row"><label for="e_special" data-i18n="e_special"></label><input type="text" id="e_special" data-k="special" inputmode="decimal" autocomplete="off"></div>
-              <div class="amt-row"><label for="e_ot" data-i18n="e_ot"></label><input type="text" id="e_ot" data-k="ot" inputmode="decimal" autocomplete="off"></div>
-              <div class="amt-row"><label for="e_bonus" data-i18n="e_bonus"></label><input type="text" id="e_bonus" data-k="bonus" inputmode="decimal" autocomplete="off"></div>
+              <h2 data-i18n="sec_earn">पूरे महीने की कमाई (₹)</h2>
+              <div class="amt-row"><label for="e_basic" data-i18n="e_basic">बेसिक</label><input type="text" id="e_basic" data-k="basic" inputmode="decimal" autocomplete="off"></div>
+              <div class="amt-row"><label for="e_hra" data-i18n="e_hra">मकान किराया भत्ता (HRA)</label><input type="text" id="e_hra" data-k="hra" inputmode="decimal" autocomplete="off"></div>
+              <div class="amt-row"><label for="e_da" data-i18n="e_da">महँगाई भत्ता (DA)</label><input type="text" id="e_da" data-k="da" inputmode="decimal" autocomplete="off"></div>
+              <div class="amt-row"><label for="e_conv" data-i18n="e_conv">कन्वेयंस (यात्रा भत्ता)</label><input type="text" id="e_conv" data-k="conv" inputmode="decimal" autocomplete="off"></div>
+              <div class="amt-row"><label for="e_special" data-i18n="e_special">स्पेशल अलाउंस</label><input type="text" id="e_special" data-k="special" inputmode="decimal" autocomplete="off"></div>
+              <div class="amt-row"><label for="e_ot" data-i18n="e_ot">ओवरटाइम</label><input type="text" id="e_ot" data-k="ot" inputmode="decimal" autocomplete="off"></div>
+              <div class="amt-row"><label for="e_bonus" data-i18n="e_bonus">बोनस / इंसेंटिव</label><input type="text" id="e_bonus" data-k="bonus" inputmode="decimal" autocomplete="off"></div>
               <div id="xEarn" class="stack"></div>
-              <button type="button" class="btn btn-sm" id="addEarn">＋ <span data-i18n="add_row"></span></button>
+              <button type="button" class="btn btn-sm" id="addEarn">＋ <span data-i18n="add_row">एक लाइन जोड़ें</span></button>
               <p class="sum" id="grossLine" aria-live="polite"></p>
             </div>
 
             <div class="grp">
-              <h2 data-i18n="sec_ded"></h2>
-              <label class="check-wrap"><input type="checkbox" id="pfOn" data-p="pf"> <span data-i18n="pf_on"></span></label>
+              <h2 data-i18n="sec_ded">कटौती (₹)</h2>
+              <label class="check-wrap"><input type="checkbox" id="pfOn" data-p="pf"> <span data-i18n="pf_on">कर्मचारी PF: PF वेतन का 12%</span></label>
               <div class="two" id="pfBox">
                 <div class="f">
-                  <span class="lbl" id="pfBaseLbl" data-i18n="pf_base"></span>
+                  <span class="lbl" id="pfBaseLbl" data-i18n="pf_base">PF वेतन</span>
                   <div class="seg full" role="group" aria-labelledby="pfBaseLbl">
-                    <button type="button" data-pfbase="bd" data-i18n="pf_base_bd"></button>
-                    <button type="button" data-pfbase="b" data-i18n="pf_base_b"></button>
+                    <button type="button" data-pfbase="bd" data-i18n="pf_base_bd">बेसिक + DA</button>
+                    <button type="button" data-pfbase="b" data-i18n="pf_base_b">सिर्फ़ बेसिक</button>
                   </div>
                 </div>
               </div>
               <label class="check-wrap"><input type="checkbox" id="pfCap" data-p="pfCap"> <span id="pfCapLbl"></span></label>
-              <span class="hint" data-i18n="pf_hint"></span>
+              <span class="hint" data-i18n="pf_hint">EPF नियमों से PF वेतन = बेसिक + DA। कंपनी भी 12% देती है; यहाँ सिर्फ़ कर्मचारी का हिस्सा कटता है।</span>
               <label class="check-wrap"><input type="checkbox" id="esiOn" data-p="esi"> <span id="esiLbl"></span></label>
               <span class="hint" id="esiHint"></span>
-              <div class="amt-row"><label for="pt" data-i18n="d_pt"></label><input type="text" id="pt" inputmode="numeric" autocomplete="off"></div>
+              <div class="amt-row"><label for="pt" data-i18n="d_pt">प्रोफ़ेशनल टैक्स</label><input type="text" id="pt" inputmode="numeric" autocomplete="off"></div>
               <span class="hint" id="ptHint"></span>
-              <span class="hint" id="ptWomen" hidden data-i18n="pt_mh_women"></span>
-              <div class="amt-row"><label for="tds" data-i18n="d_tds"></label><input type="text" id="tds" data-p="tds" inputmode="decimal" autocomplete="off"></div>
-              <span class="hint" data-i18n="tds_hint"></span>
-              <div class="amt-row"><label for="adv" data-i18n="d_adv"></label><input type="text" id="adv" data-p="adv" inputmode="decimal" autocomplete="off"></div>
+              <span class="hint" id="ptWomen" hidden data-i18n="pt_mh_women">महाराष्ट्र में ₹25,000 महीना तक कमाने वाली महिलाओं पर प्रोफ़ेशनल टैक्स नहीं लगता: उनके लिए 0 लिखें।</span>
+              <div class="amt-row"><label for="tds" data-i18n="d_tds">TDS (इनकम टैक्स)</label><input type="text" id="tds" data-p="tds" inputmode="decimal" autocomplete="off"></div>
+              <span class="hint" data-i18n="tds_hint">अपने टैक्स हिसाब से महीने का TDS लिखें (सैलरी और इनकम टैक्स कैलकुलेटर ऐप इसका अनुमान दे सकता है)।</span>
+              <div class="amt-row"><label for="adv" data-i18n="d_adv">सैलरी एडवांस / लोन की वसूली</label><input type="text" id="adv" data-p="adv" inputmode="decimal" autocomplete="off"></div>
               <div id="xDed" class="stack"></div>
-              <button type="button" class="btn btn-sm" id="addDed">＋ <span data-i18n="add_row"></span></button>
+              <button type="button" class="btn btn-sm" id="addDed">＋ <span data-i18n="add_row">एक लाइन जोड़ें</span></button>
               <p class="sum" id="dedLine" aria-live="polite"></p>
             </div>
 
             <div class="grp">
-              <h2 data-i18n="sec_slip"></h2>
+              <h2 data-i18n="sec_slip">स्लिप का डिज़ाइन</h2>
               <div class="f">
-                <span class="lbl" id="tplLbl" data-i18n="template"></span>
+                <span class="lbl" id="tplLbl" data-i18n="template">टेम्पलेट</span>
                 <div class="seg full" role="group" aria-labelledby="tplLbl" id="tplSeg">
-                  <button type="button" data-tpl="simple" data-i18n="tpl_simple"></button>
-                  <button type="button" data-tpl="formal" data-i18n="tpl_formal"></button>
-                  <button type="button" data-tpl="bi" data-i18n="tpl_bilingual"></button>
+                  <button type="button" data-tpl="simple" data-i18n="tpl_simple">सादा</button>
+                  <button type="button" data-tpl="formal" data-i18n="tpl_formal">औपचारिक</button>
+                  <button type="button" data-tpl="bi" data-i18n="tpl_bilingual">दो भाषाओं में</button>
                 </div>
-                <span class="hint" data-i18n="bilingual_hint"></span>
+                <span class="hint" data-i18n="bilingual_hint">दो भाषाओं वाली स्लिप में हर लेबल अंग्रेज़ी और स्लिप की भाषा दोनों में छपता है, ताकि कर्मचारी और बैंक दोनों आसानी से पढ़ सकें।</span>
               </div>
               <div class="two">
                 <div class="f">
-                  <span class="lbl" id="paperLbl" data-i18n="paper"></span>
+                  <span class="lbl" id="paperLbl" data-i18n="paper">पेपर साइज़</span>
                   <div class="seg full" role="group" aria-labelledby="paperLbl" id="paperSeg">
                     <button type="button" data-paper="A4">A4</button>
                     <button type="button" data-paper="A5">A5</button>
                   </div>
                 </div>
-                <label class="f"><span class="lbl" data-i18n="slip_lang"></span><select id="slipLang"></select></label>
+                <label class="f"><span class="lbl" data-i18n="slip_lang">स्लिप की भाषा</span><select id="slipLang"></select></label>
               </div>
             </div>
           </section>
 
           <section class="card net-card" aria-live="polite">
-            <span class="lbl" data-i18n="net_pay"></span>
+            <span class="lbl" data-i18n="net_pay">नेट सैलरी (हाथ में)</span>
             <div class="big-number" id="netPay"></div>
             <div class="w" id="wordsEn"></div>
             <div class="w2" id="wordsLocal"></div>
-            <div class="callout danger small" id="netNeg" hidden data-i18n="net_negative"></div>
+            <div class="callout danger small" id="netNeg" hidden data-i18n="net_negative">कटौती कमाई से ज़्यादा है। रक़में जाँचें।</div>
             <div class="actions no-print" style="margin-top:8px">
-              <button type="button" class="btn btn-primary" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print_pdf"></span></button>
-              <a class="btn btn-wa" id="waBtn" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="wa_share"></span></a>
-              <button type="button" class="btn" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy_text"></span></button>
-              <button type="button" class="btn btn-danger" id="resetBtn" data-i18n="reset_all"></button>
+              <button type="button" class="btn btn-primary" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print_pdf">प्रिंट / PDF सेव करें</span></button>
+              <a class="btn btn-wa" id="waBtn" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="wa_share">WhatsApp पर नेट सैलरी भेजें</span></a>
+              <button type="button" class="btn" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy_text">सार कॉपी करें</span></button>
+              <button type="button" class="btn btn-danger" id="resetBtn" data-i18n="reset_all">सब कुछ रीसेट करें</button>
             </div>
-            <span class="hint" data-i18n="print_hint"></span>
-            <span class="hint" data-i18n="wa_hint"></span>
+            <span class="hint" data-i18n="print_hint">प्रिंट डायलॉग में प्रिंटर की जगह &quot;Save as PDF&quot; चुनें, PDF फ़ाइल मिल जाएगी।</span>
+            <span class="hint" data-i18n="wa_hint">मैसेज में सिर्फ़ महीना और नेट सैलरी होती है: बैंक या ID नंबर नहीं।</span>
           </section>
           <div class="quick no-print" id="quick">
             <span class="q-txt" id="quickTxt"></span>
-            <a href="#preview" class="btn btn-sm btn-primary" data-i18n="see_slip"></a>
+            <a href="#preview" class="btn btn-sm btn-primary" data-i18n="see_slip">स्लिप देखें</a>
           </div>
         </div>
 
         <div class="pv-col" id="preview">
-          <h2 class="small muted" style="margin:0 0 6px" data-i18n="preview_title"></h2>
+          <h2 class="small muted" style="margin:0 0 6px" data-i18n="preview_title">प्रीव्यू (ऐसी ही छपेगी)</h2>
           <div class="pv-wrap" id="pvWrap"><div class="pages a4 no-i18n" id="pages"></div></div>
         </div>
       </div>
@@ -328,20 +328,20 @@
     <!-- ================= BATCH ================= -->
     <section id="p-batch" role="tabpanel" aria-labelledby="tab-batch" class="stack" hidden>
       <section class="card stack">
-        <p class="mb0" data-i18n="batch_intro"></p>
-        <p class="hint mb0" data-i18n="batch_cols"></p>
-        <label class="f"><span class="lbl" data-i18n="batch_paste"></span><textarea id="csvText" class="csv no-i18n" rows="6" spellcheck="false"></textarea></label>
+        <p class="mb0" data-i18n="batch_intro">हर कर्मचारी की एक लाइन वाली CSV पेस्ट या अपलोड करें। कंपनी की जानकारी, महीना, राज्य और सैलरी स्लिप टैब की PF / ESI सेटिंग हर स्लिप पर लागू होती हैं।</p>
+        <p class="hint mb0" data-i18n="batch_cols">पहली लाइन में कॉलम नाम, किसी भी क्रम में: name, id, designation, department, doj, bank4, uan, pan, basic, hra, da, conveyance, special, overtime, bonus, lop, tds, advance, pf (yes/no), esi (yes/no)। सिर्फ़ name और basic ज़रूरी हैं।</p>
+        <label class="f"><span class="lbl" data-i18n="batch_paste">CSV यहाँ पेस्ट करें</span><textarea id="csvText" class="csv no-i18n" rows="6" spellcheck="false"></textarea></label>
         <div class="row">
-          <button type="button" class="btn" id="csvPick"><span aria-hidden="true">📂</span> <span data-i18n="batch_pick"></span></button>
-          <button type="button" class="btn" id="csvSample"><span aria-hidden="true">⬇️</span> <span data-i18n="batch_sample"></span></button>
-          <button type="button" class="btn btn-primary" id="batchMake"><span aria-hidden="true">🧾</span> <span data-i18n="batch_make"></span></button>
+          <button type="button" class="btn" id="csvPick"><span aria-hidden="true">📂</span> <span data-i18n="batch_pick">CSV फ़ाइल अपलोड करें</span></button>
+          <button type="button" class="btn" id="csvSample"><span aria-hidden="true">⬇️</span> <span data-i18n="batch_sample">नमूना CSV डाउनलोड करें</span></button>
+          <button type="button" class="btn btn-primary" id="batchMake"><span aria-hidden="true">🧾</span> <span data-i18n="batch_make">स्लिप बनाएँ</span></button>
         </div>
         <p class="batch-msg" id="batchMsg" aria-live="polite"></p>
       </section>
       <section class="card stack" id="batchCard" hidden>
         <div class="row spread">
           <h2 class="mb0" id="batchCount"></h2>
-          <button type="button" class="btn btn-primary" id="batchPrint"><span aria-hidden="true">🖨️</span> <span data-i18n="batch_print"></span></button>
+          <button type="button" class="btn btn-primary" id="batchPrint"><span aria-hidden="true">🖨️</span> <span data-i18n="batch_print">सभी स्लिप प्रिंट करें</span></button>
         </div>
         <div class="pv-wrap" id="batchWrap"><div class="pages a4 no-i18n" id="batchPages"></div></div>
       </section>
@@ -351,34 +351,34 @@
     <section id="p-company" role="tabpanel" aria-labelledby="tab-company" hidden>
       <section class="card form" style="max-width:720px">
         <div class="grp">
-          <h2 data-i18n="sec_company"></h2>
-          <label class="f"><span class="lbl" data-i18n="co_name"></span><input type="text" id="cName" data-c="name" maxlength="120" autocomplete="off" dir="auto" data-i18n-placeholder="sample_co"></label>
-          <label class="f"><span class="lbl" data-i18n="co_addr"></span><textarea id="cAddr" data-c="addr" rows="2" maxlength="300" dir="auto" data-i18n-placeholder="sample_addr"></textarea></label>
+          <h2 data-i18n="sec_company">कंपनी की जानकारी (हर स्लिप पर छपेगी)</h2>
+          <label class="f"><span class="lbl" data-i18n="co_name">कंपनी / दुकान का नाम</span><input type="text" id="cName" data-c="name" maxlength="120" autocomplete="off" dir="auto" data-i18n-placeholder="sample_co"></label>
+          <label class="f"><span class="lbl" data-i18n="co_addr">पता</span><textarea id="cAddr" data-c="addr" rows="2" maxlength="300" dir="auto" data-i18n-placeholder="sample_addr"></textarea></label>
           <div class="two">
-            <label class="f"><span class="lbl" data-i18n="co_gstin"></span><input type="text" id="cGstin" data-c="gstin" maxlength="15" autocomplete="off" dir="ltr" class="no-i18n" style="text-transform:uppercase"></label>
-            <label class="f"><span class="lbl" data-i18n="co_pan"></span><input type="text" id="cPan" data-c="pan" maxlength="10" autocomplete="off" dir="ltr" class="no-i18n" style="text-transform:uppercase"></label>
+            <label class="f"><span class="lbl" data-i18n="co_gstin">GSTIN (वैकल्पिक)</span><input type="text" id="cGstin" data-c="gstin" maxlength="15" autocomplete="off" dir="ltr" class="no-i18n" style="text-transform:uppercase"></label>
+            <label class="f"><span class="lbl" data-i18n="co_pan">कंपनी का PAN (वैकल्पिक)</span><input type="text" id="cPan" data-c="pan" maxlength="10" autocomplete="off" dir="ltr" class="no-i18n" style="text-transform:uppercase"></label>
           </div>
-          <label class="f"><span class="lbl" data-i18n="co_state"></span><select id="cState" data-c="state"></select></label>
-          <label class="f"><span class="lbl" data-i18n="co_sign"></span><input type="text" id="cSign" data-c="sign" maxlength="120" autocomplete="off" dir="auto" data-i18n-placeholder="sample_sign"></label>
+          <label class="f"><span class="lbl" data-i18n="co_state">काम का राज्य (प्रोफ़ेशनल टैक्स के लिए)</span><select id="cState" data-c="state"></select></label>
+          <label class="f"><span class="lbl" data-i18n="co_sign">हस्ताक्षर करने वाला (नाम, पद)</span><input type="text" id="cSign" data-c="sign" maxlength="120" autocomplete="off" dir="auto" data-i18n-placeholder="sample_sign"></label>
           <div class="f">
-            <span class="lbl" data-i18n="co_logo"></span>
+            <span class="lbl" data-i18n="co_logo">लोगो</span>
             <div class="imgbox">
               <div class="thumb" id="logoThumb"></div>
-              <button type="button" class="btn btn-sm" id="logoPick" data-i18n="pick_logo"></button>
-              <button type="button" class="btn btn-sm btn-danger" id="logoDel" data-i18n="remove_logo" hidden></button>
+              <button type="button" class="btn btn-sm" id="logoPick" data-i18n="pick_logo">लोगो अपलोड करें</button>
+              <button type="button" class="btn btn-sm btn-danger" id="logoDel" data-i18n="remove_logo" hidden>लोगो हटाएँ</button>
             </div>
-            <span class="hint" data-i18n="logo_hint"></span>
+            <span class="hint" data-i18n="logo_hint">PNG या JPG, स्लिप के ऊपर दिखेगा। यह इसी डिवाइस पर रहता है।</span>
           </div>
-          <label class="check-wrap"><input type="checkbox" id="cMask" data-c="mask"> <span data-i18n="mask_ids"></span></label>
+          <label class="check-wrap"><input type="checkbox" id="cMask" data-c="mask"> <span data-i18n="mask_ids">स्लिप पर ID नंबर छिपाएँ (PAN, UAN, GSTIN के सिर्फ़ आख़िरी 4 अक्षर दिखें)</span></label>
           <p class="muted small mb0" data-i18n="saved_local"></p>
         </div>
       </section>
     </section>
 
     <details class="card" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">कैसे इस्तेमाल करें / काम के सुझाव</strong></summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li><li data-i18n="tip4"></li><li data-i18n="tip5"></li><li data-i18n="tip6"></li>
+        <li data-i18n="tip1">कंपनी टैब एक बार भरें। नाम, पता, लोगो और राज्य इसी डिवाइस पर सेव रहते हैं और हर स्लिप पर छपते हैं।</li><li data-i18n="tip2">पूरे महीने की सैलरी लिखें। देर से जुड़े या बिना वेतन छुट्टी वाले कर्मचारी के लिए LOP दिन भरें: बेसिक और भत्ते अपने आप घट जाते हैं।</li><li data-i18n="tip3">PF बेसिक + DA का 12% है। कंपनी PF वेतन सीमित करती हो तो ₹15,000 की सीमा टिक करें। ESI (0.75%) सिर्फ़ तब तक लगता है जब कुल कमाई ₹21,000 तक हो।</li><li data-i18n="tip4">हर लेबल अंग्रेज़ी और अपनी भाषा में छापने के लिए &quot;दो भाषाओं में&quot; चुनें, और छोटी आधे पन्ने की स्लिप के लिए A5 पेपर।</li><li data-i18n="tip5">दुकान या छोटा ऑफ़िस चलाते हैं? हर कर्मचारी एक बार सेव करें; हर महीने बस महीना और LOP दिन बदलकर प्रिंट करें। 10+ स्टाफ़ के लिए CSV टैब: हर व्यक्ति की एक लाइन, सारी स्लिप एक साथ।</li><li data-i18n="tip6">कर्मचारी को स्लिप WhatsApp पर दें: PDF में प्रिंट करके फ़ाइल भेजें, या बैंक जानकारी के बिना छोटे मैसेज के लिए &quot;नेट सैलरी भेजें&quot; बटन दबाएँ।</li>
       </ul>
     </details>
 

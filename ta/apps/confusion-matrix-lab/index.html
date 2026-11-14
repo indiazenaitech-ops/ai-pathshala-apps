@@ -202,19 +202,19 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ஒரு AI மாடல் எவ்வளவு நல்லது என்று சோதியுங்கள், CBSE 10ஆம் வகுப்பு AI-யின் “மதிப்பீடு (Evaluation)” பாடம் போலவே. த்ரெஷோல்டை நகர்த்தி, கன்ஃப்யூஷன் மேட்ரிக்ஸ், அக்யூரசி, ப்ரிசிஷன், ரீகால், F1 ஸ்கோர் எப்படி மாறுகின்றன என்று பாருங்கள்.</p>
 
     <div class="tabs" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-explore" data-tab="explore" aria-controls="panel-explore" data-i18n="tab_explore"></button>
-      <button type="button" role="tab" id="tab-learn" data-tab="learn" aria-controls="panel-learn" data-i18n="tab_learn"></button>
-      <button type="button" role="tab" id="tab-practice" data-tab="practice" aria-controls="panel-practice" data-i18n="tab_practice"></button>
+      <button type="button" role="tab" id="tab-explore" data-tab="explore" aria-controls="panel-explore" data-i18n="tab_explore">த்ரெஷோல்ட் ஆய்வகம்</button>
+      <button type="button" role="tab" id="tab-learn" data-tab="learn" aria-controls="panel-learn" data-i18n="tab_learn">கணிப்பு vs உண்மை</button>
+      <button type="button" role="tab" id="tab-practice" data-tab="practice" aria-controls="panel-practice" data-i18n="tab_practice">பயிற்சி</button>
     </div>
 
     <!-- ============ THRESHOLD LAB ============ -->
     <section id="panel-explore" role="tabpanel" aria-labelledby="tab-explore" class="stack">
       <div class="card stack" id="scen-card">
         <div>
-          <h2 class="h-sm muted" data-i18n="choose_scenario"></h2>
+          <h2 class="h-sm muted" data-i18n="choose_scenario">சோதிக்க ஒரு AI மாடலைத் தேர்ந்தெடுங்கள்</h2>
           <div class="row scen-list" id="scen-list" role="group" data-i18n-aria-label="choose_scenario"></div>
         </div>
         <div class="lab-head">
@@ -223,7 +223,7 @@
             <p class="small muted mb0" id="scen-score"></p>
           </div>
           <div class="lab-tools">
-            <button type="button" class="btn btn-sm" id="new-data"><span aria-hidden="true">🔀</span> <span data-i18n="new_data"></span></button>
+            <button type="button" class="btn btn-sm" id="new-data"><span aria-hidden="true">🔀</span> <span data-i18n="new_data">புதிய சோதனைத் தரவு</span></button>
             <button type="button" class="btn btn-sm" id="fs-btn"><span aria-hidden="true">⛶</span> <span data-i18n="fullscreen"></span></button>
             <button type="button" class="btn btn-sm btn-danger" id="reset-all" data-i18n="reset"></button>
           </div>
@@ -238,37 +238,37 @@
             <div class="axis-ends small muted" dir="ltr"><span id="axis-low" dir="auto"></span><span id="axis-high" dir="auto"></span></div>
           </div>
           <div class="thr-row">
-            <label for="thr" data-i18n="threshold"></label>
+            <label for="thr" data-i18n="threshold">த்ரெஷோல்ட்</label>
             <output id="thr-val" class="thr-val" for="thr"></output>
             <div class="thr-ctrl" dir="ltr">
               <button type="button" class="btn btn-sm thr-btn" id="thr-down" data-i18n-aria-label="thr_lower" data-i18n-title="thr_lower">−</button>
               <input type="range" id="thr" min="0" max="1" step="0.01" value="0.5">
               <button type="button" class="btn btn-sm thr-btn" id="thr-up" data-i18n-aria-label="thr_higher" data-i18n-title="thr_higher">+</button>
             </div>
-            <button type="button" class="btn btn-sm" id="best-f1"><span aria-hidden="true">⭐</span> <span data-i18n="best_f1"></span></button>
+            <button type="button" class="btn btn-sm" id="best-f1"><span aria-hidden="true">⭐</span> <span data-i18n="best_f1">சிறந்த F1</span></button>
           </div>
           <p class="mb0" id="thr-rule"></p>
           <p class="small mb0 dot-info" id="dot-info" aria-live="polite"></p>
           <div class="callout" id="insight" aria-live="polite"></div>
         </div>
         <div class="card stack" id="cm-card">
-          <h2 class="mb0" data-i18n="matrix_title"></h2>
-          <p class="small muted mb0" data-i18n="matrix_note"></p>
+          <h2 class="mb0" data-i18n="matrix_title">கன்ஃப்யூஷன் மேட்ரிக்ஸ்</h2>
+          <p class="small muted mb0" data-i18n="matrix_note">வரிசைகள் = AI என்ன கணித்தது. நெடுவரிசைகள் = உண்மையில் என்ன இருந்தது. (CBSE புத்தகத்தில் உள்ள அதே அமைப்பு.)</p>
           <div class="scroll-x"><table class="cm" id="cm"></table></div>
           <p class="small muted mb0" id="cm-totals"></p>
         </div>
       </div>
 
       <div class="card stack" id="metrics-card">
-        <h2 class="mb0" data-i18n="metrics_title"></h2>
+        <h2 class="mb0" data-i18n="metrics_title">இந்த மாடல் எவ்வளவு நல்லது?</h2>
         <div class="metrics" id="metrics"></div>
       </div>
 
       <div class="card stack" id="which-card">
-        <h2 class="mb0" data-i18n="which_title"></h2>
+        <h2 class="mb0" data-i18n="which_title">இங்கே எந்தத் தவறு மோசமானது?</h2>
         <div class="which-grid">
-          <div class="which-box k-fp"><b data-i18n="fp_is"></b><p id="which-fp"></p></div>
-          <div class="which-box k-fn"><b data-i18n="fn_is"></b><p id="which-fn"></p></div>
+          <div class="which-box k-fp"><b data-i18n="fp_is">ஃபால்ஸ் பாசிட்டிவ் (FP) = தவறான அலாரம்</b><p id="which-fp"></p></div>
+          <div class="which-box k-fn"><b data-i18n="fn_is">ஃபால்ஸ் நெகட்டிவ் (FN) = உண்மையான கேஸ் தவறியது</b><p id="which-fn"></p></div>
         </div>
         <p class="callout accent mb0" id="which-why"></p>
       </div>
@@ -282,39 +282,39 @@
     <!-- ============ LEARN ============ -->
     <section id="panel-learn" role="tabpanel" aria-labelledby="tab-learn" class="stack" hidden>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="learn_h_why"></h2>
-        <p class="mb0" data-i18n="learn_why"></p>
-        <p class="callout warning small mb0" data-i18n="learn_overfit"></p>
+        <h2 class="mb0" data-i18n="learn_h_why">AI மாடலை ஏன் மதிப்பிடுகிறோம்?</h2>
+        <p class="mb0" data-i18n="learn_why">ஒரு மாடலைப் பயிற்றுவித்த பிறகு அது எவ்வளவு நல்லது என்று சோதிக்க வேண்டும். சரியான விடைகள் தெரிந்த சோதனைத் தரவை அதற்குக் கொடுத்து, அதன் கணிப்பை (Prediction) உண்மையுடன் (Reality) ஒப்பிடுகிறோம். ஒவ்வொரு சோதனையும் நான்கு கட்டங்களில் ஒன்றில் விழும்.</p>
+        <p class="callout warning small mb0" data-i18n="learn_overfit">பயிற்சிக்குப் பயன்படுத்திய தரவிலேயே மாடலை ஒருபோதும் சோதிக்காதீர்கள். அது விடைகளை மனப்பாடம் செய்திருக்கலாம் (இதை ஓவர்ஃபிட்டிங் என்பர்), உண்மையைவிட நன்றாகத் தோன்றலாம்.</p>
       </div>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="learn_h_cases"></h2>
-        <p class="mb0" data-i18n="learn_cases_intro"></p>
+        <h2 class="mb0" data-i18n="learn_h_cases">4 நிலைகள்: CBSE புத்தகத்தின் காட்டுத்தீ உதாரணம்</h2>
+        <p class="mb0" data-i18n="learn_cases_intro">காட்டில் உள்ள கேமராக்களின் படங்களைப் பார்த்து ஒரு AI கணிக்கிறது: காட்டில் தீ இருக்கிறதா? (ஆம் = தீ, இல்லை = தீ இல்லை)</p>
         <div class="cases" id="learn-cases"></div>
-        <p class="callout accent mb0"><b data-i18n="trick_title"></b> <span data-i18n="trick"></span></p>
+        <p class="callout accent mb0"><b data-i18n="trick_title">நினைவில் வைக்க ஒரு வழி:</b> <span data-i18n="trick">பெயரைக் கடைசியிலிருந்து படியுங்கள். பாசிட்டிவ் அல்லது நெகட்டிவ் = AI என்ன சொன்னது (ஆம் அல்லது இல்லை). ட்ரூ அல்லது ஃபால்ஸ் = AI சரியாக இருந்ததா?</span></p>
       </div>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="learn_h_matrix"></h2>
-        <p class="mb0" data-i18n="learn_matrix"></p>
+        <h2 class="mb0" data-i18n="learn_h_matrix">கன்ஃப்யூஷன் மேட்ரிக்ஸ்</h2>
+        <p class="mb0" data-i18n="learn_matrix">ஒவ்வொரு கட்டத்திலும் எத்தனை சோதனைகள் விழுந்தன என்று எண்ணி, அந்த எண்களை 2 × 2 அட்டவணையில் எழுதுங்கள். CBSE புத்தகத்தில் வரிசைகள் கணிப்பையும் நெடுவரிசைகள் உண்மையையும் காட்டுகின்றன. மேட்ரிக்ஸ் தானே ஒரு ஸ்கோர் அல்ல; ஸ்கோர்களைக் கணக்கிட உதவும் ஒரு பதிவு அது.</p>
         <div class="scroll-x"><table class="cm" id="learn-cm"></table></div>
-        <p class="callout warning small mb0" data-i18n="learn_swap"></p>
+        <p class="callout warning small mb0" data-i18n="learn_swap">கவனம்: சில புத்தகங்களும் மென்பொருள்களும் (எ.கா. Python-இன் scikit-learn) வரிசைகளில் உண்மையையும் நெடுவரிசைகளில் கணிப்பையும் வைக்கின்றன. எப்போதும் முதலில் லேபிள்களைப் படியுங்கள்!</p>
       </div>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="learn_h_formulas"></h2>
+        <h2 class="mb0" data-i18n="learn_h_formulas">நான்கு சூத்திரங்கள்</h2>
         <p class="mb0" id="learn-example"></p>
         <div class="fcards" id="learn-formulas"></div>
-        <p class="small muted mb0" data-i18n="learn_pct"></p>
+        <p class="small muted mb0" data-i18n="learn_pct">சதவீதம் பெற 100 ஆல் பெருக்குங்கள்: 0.82 = 82%.</p>
       </div>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="learn_h_which"></h2>
+        <h2 class="mb0" data-i18n="learn_h_which">எந்த ஸ்கோரைப் பார்க்க வேண்டும்?</h2>
         <ul class="which-list mb0">
-          <li data-i18n="which_fn"></li>
-          <li data-i18n="which_fp"></li>
-          <li data-i18n="which_both"></li>
-          <li data-i18n="which_acc"></li>
+          <li data-i18n="which_fn">உண்மையான கேஸ் தவறுவது ஆபத்தானால் (ஃபால்ஸ் நெகட்டிவ் விலை அதிகம்) → ரீகால் பாருங்கள். உதாரணங்கள்: நோய்ப் பரிசோதனை, காட்டுத்தீ எச்சரிக்கை, வைரஸ் பரவல்.</li>
+          <li data-i18n="which_fp">தவறான அலாரம் விலை அதிகமானால் (ஃபால்ஸ் பாசிட்டிவ் விலை அதிகம்) → ப்ரிசிஷன் பாருங்கள். உதாரணங்கள்: ஸ்பேம் ஃபில்டர் முக்கியமான மின்னஞ்சலை மறைப்பது, புதையல் இல்லாத இடத்தில் சுரங்கம் தோண்டுவது, நேர்மையான மாணவரைக் குற்றம் சாட்டுவது.</li>
+          <li data-i18n="which_both">இரண்டு தவறுகளும் முக்கியமானால் → F1 ஸ்கோர் பாருங்கள்.</li>
+          <li data-i18n="which_acc">ஆம், இல்லை கேஸ்கள் கிட்டத்தட்டச் சமமாக இருந்தால் மட்டுமே அக்யூரசி நியாயமானது. 100 பேரில் 95 பேர் ஆரோக்கியமாக இருந்தால், எல்லோரையும் “ஆரோக்கியம்” என்று சொல்லும் சோம்பேறி மாடலும் 95% அக்யூரசி பெறும், ஆனால் ஒரு நோயாளியைக்கூடக் கண்டுபிடிக்காது!</li>
         </ul>
       </div>
       <div class="row" id="learn-actions">
-        <button type="button" class="btn btn-primary" id="go-lab"><span data-i18n="learn_try"></span> <span class="flip" aria-hidden="true">→</span></button>
+        <button type="button" class="btn btn-primary" id="go-lab"><span data-i18n="learn_try">த்ரெஷோல்ட் ஆய்வகத்தில் முயற்சி செய்யுங்கள்</span> <span class="flip" aria-hidden="true">→</span></button>
         <button type="button" class="btn" id="print-learn"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
       </div>
     </section>
@@ -323,11 +323,11 @@
     <section id="panel-practice" role="tabpanel" aria-labelledby="tab-practice" class="stack" hidden>
       <div class="card stack">
         <div class="row spread">
-          <h2 class="mb0" data-i18n="practice_title"></h2>
+          <h2 class="mb0" data-i18n="practice_title">பயிற்சி</h2>
           <div class="row score-badges" aria-live="polite"><span class="badge primary" id="score-line"></span><span class="badge" id="streak-line"></span></div>
         </div>
         <div>
-          <p class="small muted" style="margin-bottom:6px" data-i18n="ask_label"></p>
+          <p class="small muted" style="margin-bottom:6px" data-i18n="ask_label">கேள்விகள் எதில்:</p>
           <div class="row mode-list" id="mode-list" role="group" data-i18n-aria-label="ask_label"></div>
         </div>
       </div>
@@ -338,24 +338,24 @@
         <div id="q-answer"></div>
         <div id="q-feedback" aria-live="polite"></div>
         <div class="row" id="q-actions">
-          <button type="button" class="btn btn-primary" id="q-next"><span data-i18n="next_q"></span> <span class="flip" aria-hidden="true">→</span></button>
+          <button type="button" class="btn btn-primary" id="q-next"><span data-i18n="next_q">அடுத்த கேள்வி</span> <span class="flip" aria-hidden="true">→</span></button>
         </div>
       </div>
       <div class="row" id="practice-tools">
-        <button type="button" class="btn" id="ws-print"><span aria-hidden="true">🖨</span> <span data-i18n="ws_print"></span></button>
-        <button type="button" class="btn btn-danger" id="score-reset" data-i18n="reset_score"></button>
+        <button type="button" class="btn" id="ws-print"><span aria-hidden="true">🖨</span> <span data-i18n="ws_print">பயிற்சித்தாளை அச்சிடு</span></button>
+        <button type="button" class="btn btn-danger" id="score-reset" data-i18n="reset_score">மதிப்பெண்ணை மீட்டமை</button>
       </div>
     </section>
 
     <details class="card help">
-      <summary data-i18n="help_summary"></summary>
+      <summary data-i18n="help_summary">பயன்படுத்துவது எப்படி / வகுப்பறைக்கான யோசனைகள்</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">ஒரு சூழலைத் தேர்ந்தெடுங்கள். ஒவ்வொரு புள்ளியும் ஒரு சோதனை உருப்படி: மேல் வரிசை உண்மையில் “ஆம்”, கீழ் வரிசை உண்மையில் “இல்லை”. புள்ளி எவ்வளவு வலப்பக்கம் இருக்கிறதோ, விடை “ஆம்” என்று AI அவ்வளவு உறுதியாக இருக்கிறது.</li>
+        <li data-i18n="help_2">த்ரெஷோல்ட் கோட்டை இழுங்கள் (அல்லது ஸ்லைடரைப் பயன்படுத்துங்கள்). கோட்டின் வலப்பக்கப் புள்ளிகளின் கணிப்பு “ஆம்”. ஒவ்வொரு சூத்திரத்திலும் எண்களை வைத்து, கன்ஃப்யூஷன் மேட்ரிக்ஸும் நான்கு ஸ்கோர்களும் எப்படி மாறுகின்றன என்று பாருங்கள்.</li>
+        <li data-i18n="help_3">உள்ளே என்ன நடக்கிறது: உண்மையான AI மாடல் நேரடியாக ஆம் அல்லது இல்லை என்று சொல்வதில்லை. அது 0 முதல் 1 வரை ஒரு ஸ்கோர் தருகிறது, த்ரெஷோல்டை மனிதர்கள் தீர்மானிக்கிறார்கள். குறைந்த த்ரெஷோல்ட் அதிக உண்மையான கேஸ்களைப் பிடிக்கும், ஆனால் தவறான அலாரங்களும் கூடும்; உயர்ந்த த்ரெஷோல்ட் இதற்கு நேர்மாறு.</li>
+        <li data-i18n="help_4">வகுப்புச் செயல்பாடு: இரண்டு அணிகள் அமையுங்கள், “மருத்துவர்கள்” (எந்த நோயாளியும் தவறக்கூடாது), “குடும்பத்தினர்” (தவறான அலாரம் பிடிக்காது). ஒவ்வொரு அணியும் நோய்ப் பரிசோதனைக்கு ஒரு த்ரெஷோல்டைத் தேர்ந்தெடுத்து ப்ரிசிஷன், ரீகால் கொண்டு வாதிடட்டும். பிறகு காப்பியடிப்பதைக் கண்டறியும் கேமராவைப் பற்றி விவாதியுங்கள்: அலாரம் அடித்தால் பள்ளி என்ன செய்ய வேண்டும்?</li>
+        <li data-i18n="help_5">விரைவுப் பயிற்சிக்கு “பயிற்சி” தாவலைப் பயன்படுத்துங்கள், வீட்டுப்பாடம் அல்லது வகுப்புத் தேர்வுக்கு விடைக் குறிப்புடன் பயிற்சித்தாளை அச்சிடுங்கள்.</li>
+        <li data-i18n="help_6">ஆஃப்லைனிலும், போனிலும், ஸ்மார்ட்போர்டிலும் இயங்கும் (முழுத் திரையைப் பயன்படுத்துங்கள்). எதுவும் பதிவேற்றப்படாது; உங்கள் மதிப்பெண் இந்தச் சாதனத்தில் மட்டுமே சேமிக்கப்படும்.</li>
       </ul>
     </details>
 

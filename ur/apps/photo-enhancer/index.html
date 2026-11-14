@@ -104,22 +104,22 @@
 </head>
 <body>
   <main id="app" data-state="empty">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">چھوٹی، دھندلی یا پرانی تصویروں کو AI سے بڑا اور صاف بنائیں، سیدھے آپ کے براؤزر میں۔ آپ کی تصویر کہیں اپ لوڈ نہیں ہوتی۔</p>
 
     <div class="callout success pe-privacy" role="note">
       <span class="pe-ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">آپ کی تصویر آپ کے پاس ہی رہتی ہے۔</strong> <span data-i18n="privacy_body">یہ اس فون یا کمپیوٹر سے باہر نہیں جاتی۔ صرف AI ماڈل ایک بار انٹرنیٹ سے ڈاؤن لوڈ ہوتا ہے؛ اس کے بعد یہ آف لائن بھی چلتا ہے۔</span></p>
     </div>
 
     <section class="card pe-drop" id="drop" tabindex="0" role="button" aria-labelledby="dropTitle">
       <div class="pe-drop-ico" aria-hidden="true">🖼️</div>
       <div class="pe-drop-txt">
-        <strong id="dropTitle" data-i18n="drop_title"></strong>
-        <span class="small muted" data-i18n="drop_hint"></span>
+        <strong id="dropTitle" data-i18n="drop_title">تصویر شامل کریں</strong>
+        <span class="small muted" data-i18n="drop_hint">ٹیپ کر کے تصویر چنیں، یہاں کھینچ لائیں، یا پیسٹ کریں (Ctrl+V)۔ JPG، PNG یا WebP۔</span>
       </div>
       <div class="pe-drop-btns">
-        <button class="btn btn-primary btn-lg" id="pickBtn" type="button"><span aria-hidden="true">＋</span> <span data-i18n="pick_photo"></span></button>
-        <button class="btn" id="sampleBtn" type="button" data-i18n="try_sample"></button>
+        <button class="btn btn-primary btn-lg" id="pickBtn" type="button"><span aria-hidden="true">＋</span> <span data-i18n="pick_photo">تصویر چنیں</span></button>
+        <button class="btn" id="sampleBtn" type="button" data-i18n="try_sample">نمونہ تصویر آزمائیں</button>
       </div>
       <input type="file" id="fileInput" accept="image/*" hidden>
     </section>
@@ -130,16 +130,16 @@
       <section class="pe-col" aria-labelledby="hView">
         <div class="card" id="viewer" hidden>
           <div class="pe-vhead">
-            <h2 id="hView" data-i18n="h_view"></h2>
-            <label class="check small"><input type="checkbox" id="zoom1"> <span data-i18n="zoom_100"></span></label>
+            <h2 id="hView" data-i18n="h_view">پہلے اور بعد میں</h2>
+            <label class="check small"><input type="checkbox" id="zoom1"> <span data-i18n="zoom_100">اصل سائز (100%)</span></label>
           </div>
           <div class="pe-cmpbox" id="cmpBox">
             <div class="pe-cmp" id="cmp" dir="ltr">
               <canvas id="cvAfter" width="10" height="10"></canvas>
               <canvas id="cvBefore" width="10" height="10"></canvas>
               <div class="pe-line" id="cmpLine"></div>
-              <span class="pe-tag b" data-i18n="before"></span>
-              <span class="pe-tag a" data-i18n="after"></span>
+              <span class="pe-tag b" data-i18n="before">پہلے</span>
+              <span class="pe-tag a" data-i18n="after">بعد میں</span>
             </div>
           </div>
           <input type="range" id="cmpRange" min="0" max="100" value="50" data-i18n-aria-label="compare_aria" aria-label="compare">
@@ -152,34 +152,34 @@
         </div>
         <div class="card pe-empty" id="empty">
           <div class="pe-big" aria-hidden="true">✨</div>
-          <p class="mb0" data-i18n="empty"></p>
+          <p class="mb0" data-i18n="empty">شروع کرنے کے لیے تصویر شامل کریں یا نمونہ آزمائیں۔</p>
         </div>
-        <p class="callout warning pe-note mb0" data-i18n="honest"></p>
+        <p class="callout warning pe-note mb0" data-i18n="honest">AI چھوٹی ہوئی باریکیوں کا سمجھداری سے اندازہ لگاتا ہے۔ یہ چہرے، نمبر یا لکھائی بالکل پہلے جیسی واپس نہیں لا سکتا، اس لیے نتیجہ ہمیشہ جانچ لیں۔</p>
       </section>
 
       <!-- ============ controls ============ -->
       <section class="card stack" id="controls" aria-label="settings" data-i18n-aria-label="settings">
         <div class="pe-sec">
-          <h2><span class="pe-num" aria-hidden="true">1</span> <span data-i18n="h_ai"></span></h2>
+          <h2><span class="pe-num" aria-hidden="true">1</span> <span data-i18n="h_ai">AI سے بڑا کریں</span></h2>
           <div class="field">
-            <span data-i18n="scale_label"></span>
+            <span data-i18n="scale_label">کتنا بڑا کریں</span>
             <div class="seg pe-seg no-i18n" role="group" id="scaleSeg" aria-label="scale" data-i18n-aria-label="scale_label">
               <button type="button" id="scale-2" data-scale="2" dir="ltr">2×</button>
               <button type="button" id="scale-4" data-scale="4" dir="ltr">4×</button>
             </div>
           </div>
           <div class="field">
-            <span data-i18n="model_label"></span>
+            <span data-i18n="model_label">AI ماڈل</span>
             <div class="seg pe-seg" role="group" id="modelSeg" aria-label="model" data-i18n-aria-label="model_label">
-              <button type="button" id="model-best" data-model="best" data-i18n="m_best"></button>
-              <button type="button" id="model-quick" data-model="quick" data-i18n="m_quick"></button>
+              <button type="button" id="model-best" data-model="best" data-i18n="m_best">تصویروں کے لیے بہترین</button>
+              <button type="button" id="model-quick" data-model="quick" data-i18n="m_quick">تیز</button>
             </div>
             <span class="hint" id="modelHint"></span>
           </div>
           <label class="pe-check small" id="gpuRow" hidden><input type="checkbox" id="gpu"> <span id="gpuLabel"></span></label>
           <p class="callout pe-note mb0" id="aiNote"></p>
           <div class="pe-actions">
-            <button class="btn btn-primary btn-lg" id="enhanceBtn" type="button" disabled><span aria-hidden="true">✨</span> <span data-i18n="enhance_btn"></span></button>
+            <button class="btn btn-primary btn-lg" id="enhanceBtn" type="button" disabled><span aria-hidden="true">✨</span> <span data-i18n="enhance_btn">AI سے بہتر بنائیں</span></button>
           </div>
           <div class="pe-status" id="statusBox" hidden>
             <div class="progress" id="barWrap" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="bar" style="width:0%"></span></div>
@@ -193,35 +193,35 @@
         </div>
 
         <div class="pe-sec">
-          <h2><span class="pe-num" aria-hidden="true">2</span> <span data-i18n="h_fix"></span></h2>
-          <label class="pe-check"><input type="checkbox" id="fixAuto"> <span data-i18n="fix_auto"></span></label>
-          <label class="pe-check"><input type="checkbox" id="fixOld"> <span data-i18n="fix_old"></span></label>
+          <h2><span class="pe-num" aria-hidden="true">2</span> <span data-i18n="h_fix">آسان درستیاں (کوئی ڈاؤن لوڈ نہیں)</span></h2>
+          <label class="pe-check"><input type="checkbox" id="fixAuto"> <span data-i18n="fix_auto">آٹو درستی: روشنی، رنگ، دانے اور شارپنس</span></label>
+          <label class="pe-check"><input type="checkbox" id="fixOld"> <span data-i18n="fix_old">پرانی تصویر: پھیکے رنگ اور کنٹراسٹ واپس لائیں</span></label>
           <div class="field">
-            <span data-i18n="color_label"></span>
+            <span data-i18n="color_label">رنگ</span>
             <div class="seg pe-seg" role="group" id="colorSeg" aria-label="colour" data-i18n-aria-label="color_label">
-              <button type="button" id="color-keep" data-color="keep" data-i18n="c_keep"></button>
-              <button type="button" id="color-sepia" data-color="sepia" data-i18n="c_sepia"></button>
-              <button type="button" id="color-bw" data-color="bw" data-i18n="c_bw"></button>
+              <button type="button" id="color-keep" data-color="keep" data-i18n="c_keep">رنگین</button>
+              <button type="button" id="color-sepia" data-color="sepia" data-i18n="c_sepia">سیپیا</button>
+              <button type="button" id="color-bw" data-color="bw" data-i18n="c_bw">بلیک اینڈ وائٹ</button>
             </div>
           </div>
         </div>
 
         <div class="pe-sec">
-          <h2><span class="pe-num" aria-hidden="true">3</span> <span data-i18n="h_save"></span></h2>
+          <h2><span class="pe-num" aria-hidden="true">3</span> <span data-i18n="h_save">محفوظ کریں</span></h2>
           <div class="field">
-            <span data-i18n="save_size_label"></span>
+            <span data-i18n="save_size_label">سائز</span>
             <div class="seg pe-seg" role="group" id="sizeSeg" aria-label="size" data-i18n-aria-label="save_size_label">
               <button type="button" id="size-enh" data-size="enh"></button>
               <button type="button" id="size-orig" data-size="orig"></button>
             </div>
           </div>
           <div class="field">
-            <span data-i18n="fmt_label"></span>
+            <span data-i18n="fmt_label">فارمیٹ</span>
             <div class="seg pe-seg no-i18n" role="group" id="fmtSeg" aria-label="format" data-i18n-aria-label="fmt_label">
               <button type="button" id="fmt-jpg" data-fmt="jpg">JPG</button>
               <button type="button" id="fmt-png" data-fmt="png">PNG</button>
             </div>
-            <span class="hint" data-i18n="fmt_hint"></span>
+            <span class="hint" data-i18n="fmt_hint">JPG = چھوٹی فائل، WhatsApp کے لیے اچھی۔ PNG = بہترین کوالٹی، بڑی فائل۔</span>
           </div>
           <div class="pe-actions">
             <button class="btn btn-accent" id="dlBtn" type="button" disabled><span aria-hidden="true">⬇</span> <span data-i18n="download"></span></button>
@@ -229,30 +229,30 @@
         </div>
 
         <div class="pe-sec row spread">
-          <span class="tiny muted" data-i18n="settings_saved"></span>
-          <button type="button" class="btn btn-sm btn-danger" id="resetBtn" data-i18n="reset_settings"></button>
+          <span class="tiny muted" data-i18n="settings_saved">سیٹنگز اسی ڈیوائس پر محفوظ رہتی ہیں۔</span>
+          <button type="button" class="btn btn-sm btn-danger" id="resetBtn" data-i18n="reset_settings">سیٹنگز ری سیٹ کریں</button>
         </div>
       </section>
     </div>
 
     <details class="card pe-help no-print" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">کیسے استعمال کریں / مشورے</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">تصویر شامل کریں (یا نمونہ آزمائیں)، 2× یا 4× چنیں اور &quot;AI سے بہتر بنائیں&quot; دبائیں۔ پہلے اور بعد کا موازنہ کرنے کے لیے تصویر پر لکیر کھسکائیں۔</li>
+        <li data-i18n="tip2">دکانیں اور بیچنے والے: WhatsApp Business، Instagram، Meesho یا Amazon پر ڈالنے سے پہلے چھوٹی پروڈکٹ تصویر کو بڑا اور صاف کریں۔</li>
+        <li data-i18n="tip3">پرانی خاندانی تصویریں: پرنٹ کی سیدھی اور روشن تصویر لیں، پھر &quot;پرانی تصویر&quot; چنیں اور چاہیں تو سیپیا یا بلیک اینڈ وائٹ۔</li>
+        <li data-i18n="tip4">بڑی تصویروں کو AI کی ضرورت نہیں، صرف &quot;آٹو درستی&quot; کافی ہے۔ &quot;اصل سائز&quot; میں محفوظ کریں تو سائز وہی رہے گا مگر تصویر صاف ہوگی۔</li>
+        <li data-i18n="tip5">کلاس سرگرمی: عام زوم اور AI کے نتیجے کو 100% پر ملا کر دیکھیں۔ ڈھونڈیں کہ AI نے کہاں ایسی باریکیاں بنا دیں جو تصویر میں تھیں ہی نہیں، اور بات کریں کہ AI کی تصویر ثبوت کیوں نہیں ہے۔</li>
       </ul>
     </details>
     <details class="card pe-help no-print">
-      <summary data-i18n="inside_title"></summary>
+      <summary data-i18n="inside_title">اندر کیا ہو رہا ہے</summary>
       <ul>
-        <li data-i18n="inside1"></li>
-        <li data-i18n="inside2"></li>
-        <li data-i18n="inside3"></li>
+        <li data-i18n="inside1">تصویر چھوٹے چھوٹے رنگین نقطوں کا جال ہوتی ہے، جنہیں پکسل کہتے ہیں۔ بڑا کرنے کے لیے پرانے پکسلوں کے بیچ نئے پکسل بنانے پڑتے ہیں۔ عام ری سائز بس پاس کے رنگ ملا دیتا ہے، اس لیے تصویر نرم لگتی ہے۔</li>
+        <li data-i18n="inside2">AI ماڈل (Swin2SR) نے چھوٹی اور بڑی تصویروں کے لاکھوں جوڑوں سے سیکھا ہے کہ تیز کنارے اور بناوٹ عام طور پر کیسی دکھتی ہیں۔ یہ 8 × 8 پکسل کی چھوٹی کھڑکیاں دیکھتا ہے اور سب سے ممکنہ باریکیاں بناتا ہے۔</li>
+        <li data-i18n="inside3">کم میموری لگے، اس لیے تصویر کو ایک دوسرے پر تھوڑے چڑھے چھوٹے ٹکڑوں میں کاٹا جاتا ہے۔ ہر ٹکڑا بڑا ہوتا ہے اور جوڑوں کو آہستہ سے ملایا جاتا ہے، تاکہ کوئی جوڑ نظر نہ آئے۔</li>
         <li id="inside4"></li>
-        <li data-i18n="inside5"></li>
+        <li data-i18n="inside5">آسان درستیاں AI نہیں، سیدھا حساب استعمال کرتی ہیں: اندھیرے اور چمکیلے حصوں کو پھیلاتی ہیں، رنگوں کا توازن ٹھیک کرتی ہیں، دانے کم کرتی ہیں اور کنارے شارپ کرتی ہیں۔</li>
       </ul>
     </details>
   </main>

@@ -197,24 +197,24 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="callout success small privacy"><span class="ic" aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">ট্রিপ, ডিনার ও রুমের খরচ বন্ধু বা পরিবারের সঙ্গে ভাগ করুন: কে দিল লিখুন, দেখুন কে কাকে দেবে, আর সবচেয়ে কম UPI পেমেন্টে হিসাব মেটান।</p>
+    <p class="callout success small privacy"><span class="ic" aria-hidden="true">🔒</span> <span data-i18n="privacy">সব কিছু এই ডিভাইসেই থাকে। কোনও অ্যাকাউন্ট নেই, আপলোড নেই: বন্ধুদের নাম, UPI ID আর টাকার অঙ্ক আপনার ফোনের বাইরে কখনও যায় না।</span></p>
 
     <!-- ---------- group bar ---------- -->
     <section class="card grp" aria-labelledby="grpLbl">
       <div class="grp-head">
         <div class="field">
-          <label for="grpSel" id="grpLbl" data-i18n="h_group"></label>
+          <label for="grpSel" id="grpLbl" data-i18n="h_group">গ্রুপ</label>
           <select id="grpSel" class="no-i18n"></select>
         </div>
         <div class="grp-btns">
-          <button type="button" class="btn btn-primary" id="btnNewGroup"><span class="ic" aria-hidden="true">＋</span> <span data-i18n="btn_new_group"></span></button>
-          <button type="button" class="btn" id="btnRenameGroup" data-i18n="btn_rename"></button>
-          <button type="button" class="btn btn-danger" id="btnDeleteGroup" data-i18n="btn_delete_group"></button>
+          <button type="button" class="btn btn-primary" id="btnNewGroup"><span class="ic" aria-hidden="true">＋</span> <span data-i18n="btn_new_group">নতুন গ্রুপ</span></button>
+          <button type="button" class="btn" id="btnRenameGroup" data-i18n="btn_rename">নাম বদলান</button>
+          <button type="button" class="btn btn-danger" id="btnDeleteGroup" data-i18n="btn_delete_group">গ্রুপ মুছুন</button>
         </div>
       </div>
       <form class="panel grp-panel" id="grpPanel" hidden>
-        <label for="grpName" id="grpPanelLbl" data-i18n="lbl_group_name"></label>
+        <label for="grpName" id="grpPanelLbl" data-i18n="lbl_group_name">গ্রুপের নাম</label>
         <div class="row">
           <input id="grpName" type="text" class="no-i18n" maxlength="50" autocomplete="off" data-i18n-placeholder="ph_group_name">
           <button type="submit" class="btn btn-primary" id="btnGrpOk"></button>
@@ -222,13 +222,13 @@
         </div>
       </form>
       <div class="callout ex-note" id="exNote" hidden>
-        <p><span data-i18n="example_note"></span></p>
-        <button type="button" class="btn btn-sm" id="btnMakeMine" data-i18n="btn_start_own"></button>
+        <p><span data-i18n="example_note">এটি একটি উদাহরণ গ্রুপ, যাতে আপনি দেখতে পারেন কীভাবে কাজ করে। ইচ্ছেমতো বদলান, বা নিজের গ্রুপ শুরু করুন।</span></p>
+        <button type="button" class="btn btn-sm" id="btnMakeMine" data-i18n="btn_start_own">নিজের গ্রুপ শুরু করুন</button>
       </div>
       <div class="tiles" role="group" data-i18n-aria-label="summary_aria">
-        <div class="stat"><div class="stat-l" data-i18n="stat_total"></div><div class="stat-v num" id="stTotal"></div></div>
-        <div class="stat"><div class="stat-l" data-i18n="stat_members"></div><div class="stat-v" id="stMembers"></div></div>
-        <div class="stat"><div class="stat-l" data-i18n="stat_expenses"></div><div class="stat-v" id="stExpenses"></div></div>
+        <div class="stat"><div class="stat-l" data-i18n="stat_total">মোট খরচ</div><div class="stat-v num" id="stTotal"></div></div>
+        <div class="stat"><div class="stat-l" data-i18n="stat_members">সদস্য</div><div class="stat-v" id="stMembers"></div></div>
+        <div class="stat"><div class="stat-l" data-i18n="stat_expenses">খরচ</div><div class="stat-v" id="stExpenses"></div></div>
       </div>
     </section>
 
@@ -236,23 +236,23 @@
       <div class="sb-col">
         <!-- ---------- members ---------- -->
         <section class="card" aria-labelledby="hMembers">
-          <div class="card-head"><h2 id="hMembers"><span class="ic" aria-hidden="true">👥</span> <span data-i18n="h_members"></span></h2></div>
+          <div class="card-head"><h2 id="hMembers"><span class="ic" aria-hidden="true">👥</span> <span data-i18n="h_members">সদস্য</span></h2></div>
           <div id="memList" class="mem-list no-i18n"></div>
           <form id="memForm" class="mem-form">
             <div class="two">
               <div class="field">
-                <label for="memName" data-i18n="lbl_member_name"></label>
+                <label for="memName" data-i18n="lbl_member_name">নাম</label>
                 <input id="memName" type="text" class="no-i18n" maxlength="40" autocomplete="off" data-i18n-placeholder="ph_member_name">
               </div>
               <div class="field">
-                <label for="memUpi"><span data-i18n="lbl_upi"></span> <span class="hint" data-i18n="optional"></span></label>
+                <label for="memUpi"><span data-i18n="lbl_upi">UPI ID</span> <span class="hint" data-i18n="optional">(ঐচ্ছিক)</span></label>
                 <input id="memUpi" type="text" class="no-i18n" dir="ltr" inputmode="email" autocapitalize="off" spellcheck="false" maxlength="80" autocomplete="off" data-i18n-placeholder="ph_upi">
               </div>
             </div>
             <div class="row">
               <button type="submit" class="btn btn-primary" id="btnAddMember"></button>
               <button type="button" class="btn" id="btnMemCancel" data-i18n="cancel" hidden></button>
-              <span class="hint" id="memHint" data-i18n="upi_hint"></span>
+              <span class="hint" id="memHint" data-i18n="upi_hint">UPI ID যোগ করুন, তাহলে কেউ এই ব্যক্তিকে টাকা দিতে হলে এক ট্যাপে Pay বোতাম পাবে।</span>
             </div>
             <div class="callout danger small msg" id="memMsg" role="alert"></div>
           </form>
@@ -261,34 +261,34 @@
         <!-- ---------- expenses ---------- -->
         <section class="card" aria-labelledby="hExpenses">
           <div class="card-head">
-            <h2 id="hExpenses"><span class="ic" aria-hidden="true">🧾</span> <span data-i18n="h_expenses"></span></h2>
-            <button type="button" class="btn btn-primary" id="btnAddExpense"><span class="ic" aria-hidden="true">＋</span> <span data-i18n="btn_add_expense"></span></button>
+            <h2 id="hExpenses"><span class="ic" aria-hidden="true">🧾</span> <span data-i18n="h_expenses">খরচ</span></h2>
+            <button type="button" class="btn btn-primary" id="btnAddExpense"><span class="ic" aria-hidden="true">＋</span> <span data-i18n="btn_add_expense">খরচ যোগ করুন</span></button>
           </div>
           <form id="expForm" class="exp-form" hidden aria-labelledby="expFormTitle">
             <h3 id="expFormTitle"></h3>
             <div class="two">
               <div class="field">
-                <label for="exTitle" data-i18n="f_title"></label>
+                <label for="exTitle" data-i18n="f_title">কিসের খরচ?</label>
                 <input id="exTitle" type="text" class="no-i18n" maxlength="60" autocomplete="off" data-i18n-placeholder="ph_title">
               </div>
               <div class="field">
-                <label for="exAmount" data-i18n="f_amount"></label>
+                <label for="exAmount" data-i18n="f_amount">টাকা (₹)</label>
                 <div class="nf"><span class="nf-pfx" aria-hidden="true">₹</span><input id="exAmount" type="text" class="no-i18n" dir="ltr" inputmode="decimal" autocomplete="off" placeholder="0"></div>
-                <span class="hint" id="amountHint" hidden data-i18n="amount_auto"></span>
+                <span class="hint" id="amountHint" hidden data-i18n="amount_auto">নীচের আইটেম থেকে যোগ করা</span>
               </div>
               <div class="field">
-                <label for="exPayer" data-i18n="f_payer"></label>
+                <label for="exPayer" data-i18n="f_payer">কে দিলেন?</label>
                 <select id="exPayer" class="no-i18n"></select>
               </div>
               <div class="field">
-                <label for="exDate" data-i18n="f_date"></label>
+                <label for="exDate" data-i18n="f_date">তারিখ</label>
                 <input id="exDate" type="date">
               </div>
             </div>
             <div class="field">
-              <span class="lbl" id="splitLbl" data-i18n="f_split"></span>
+              <span class="lbl" id="splitLbl" data-i18n="f_split">কীভাবে ভাগ হবে</span>
               <div class="seg modes" id="segMode" role="group" aria-labelledby="splitLbl">
-                <button type="button" data-mode="equal" id="mode-equal" data-i18n="mode_equal"></button><button type="button" data-mode="shares" id="mode-shares" data-i18n="mode_shares"></button><button type="button" data-mode="exact" id="mode-exact" data-i18n="mode_exact"></button><button type="button" data-mode="percent" id="mode-percent" data-i18n="mode_percent"></button><button type="button" data-mode="items" id="mode-items" data-i18n="mode_items"></button>
+                <button type="button" data-mode="equal" id="mode-equal" data-i18n="mode_equal">সমান</button><button type="button" data-mode="shares" id="mode-shares" data-i18n="mode_shares">ভাগ অনুযায়ী</button><button type="button" data-mode="exact" id="mode-exact" data-i18n="mode_exact">নির্দিষ্ট অঙ্ক</button><button type="button" data-mode="percent" id="mode-percent" data-i18n="mode_percent">শতাংশে</button><button type="button" data-mode="items" id="mode-items" data-i18n="mode_items">রেস্তোরাঁর বিল</button>
               </div>
               <span class="hint" id="modeHint"></span>
             </div>
@@ -306,27 +306,27 @@
       <div class="sb-col">
         <!-- ---------- balances ---------- -->
         <section class="card" aria-labelledby="hBalances">
-          <div class="card-head"><h2 id="hBalances"><span class="ic" aria-hidden="true">⚖️</span> <span data-i18n="h_balances"></span></h2></div>
+          <div class="card-head"><h2 id="hBalances"><span class="ic" aria-hidden="true">⚖️</span> <span data-i18n="h_balances">হিসাব</span></h2></div>
           <div id="balList" class="bal-list" aria-live="polite"></div>
-          <div class="legend"><span><i style="background: var(--c1)"></i><span data-i18n="col_paid"></span></span><span><i style="background: var(--c2)"></i><span data-i18n="col_share"></span></span></div>
+          <div class="legend"><span><i style="background: var(--c1)"></i><span data-i18n="col_paid">দিয়েছেন</span></span><span><i style="background: var(--c2)"></i><span data-i18n="col_share">ভাগ</span></span></div>
         </section>
 
         <!-- ---------- settle up ---------- -->
         <section class="card" aria-labelledby="hSettle">
-          <div class="card-head"><h2 id="hSettle"><span class="ic" aria-hidden="true">🤝</span> <span data-i18n="h_settle"></span></h2></div>
+          <div class="card-head"><h2 id="hSettle"><span class="ic" aria-hidden="true">🤝</span> <span data-i18n="h_settle">হিসাব মেটান</span></h2></div>
           <p class="small muted" id="settleInfo" aria-live="polite" style="margin: 0 0 10px"></p>
           <div id="settleList" class="settle-list" aria-live="polite"></div>
-          <p class="tiny muted" style="margin: 10px 0 0" data-i18n="upi_phone_hint"></p>
+          <p class="tiny muted" style="margin: 10px 0 0" data-i18n="upi_phone_hint">Pay বোতাম ফোনে GPay, PhonePe, Paytm বা কোনও UPI অ্যাপ খোলে। টাকা দেওয়ার আগে অ্যাপে নাম ও অঙ্ক মিলিয়ে নিন।</p>
         </section>
 
         <!-- ---------- share & export ---------- -->
         <section class="card" aria-labelledby="hShare">
-          <div class="card-head"><h2 id="hShare"><span class="ic" aria-hidden="true">📤</span> <span data-i18n="h_share"></span></h2></div>
+          <div class="card-head"><h2 id="hShare"><span class="ic" aria-hidden="true">📤</span> <span data-i18n="h_share">শেয়ার ও এক্সপোর্ট</span></h2></div>
           <div class="acts">
-            <button type="button" class="btn" id="btnCopySummary"><span class="ic" aria-hidden="true">⧉</span> <span data-i18n="btn_copy_summary"></span></button>
-            <a class="btn btn-wa" id="btnWaSummary" href="#" target="_blank" rel="noopener"><span class="ic" aria-hidden="true">💬</span> <span data-i18n="btn_wa_summary"></span></a>
-            <button type="button" class="btn" id="btnPng"><span class="ic" aria-hidden="true">🖼</span> <span data-i18n="btn_png"></span></button>
-            <button type="button" class="btn" id="btnCsv"><span class="ic" aria-hidden="true">⬇</span> <span data-i18n="btn_csv"></span></button>
+            <button type="button" class="btn" id="btnCopySummary"><span class="ic" aria-hidden="true">⧉</span> <span data-i18n="btn_copy_summary">সারসংক্ষেপ কপি</span></button>
+            <a class="btn btn-wa" id="btnWaSummary" href="#" target="_blank" rel="noopener"><span class="ic" aria-hidden="true">💬</span> <span data-i18n="btn_wa_summary">WhatsApp-এ পাঠান</span></a>
+            <button type="button" class="btn" id="btnPng"><span class="ic" aria-hidden="true">🖼</span> <span data-i18n="btn_png">সারসংক্ষেপের ছবি</span></button>
+            <button type="button" class="btn" id="btnCsv"><span class="ic" aria-hidden="true">⬇</span> <span data-i18n="btn_csv">CSV ডাউনলোড</span></button>
             <button type="button" class="btn wide" id="btnPrint"><span class="ic" aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
           </div>
           <canvas id="pngCanvas" class="no-i18n" width="1080" height="1350" aria-hidden="true"></canvas>
@@ -335,14 +335,14 @@
     </div>
 
     <details class="card help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">কীভাবে ব্যবহার করবেন / আইডিয়া</summary>
       <ul>
-        <li data-i18n="tip_1"></li>
-        <li data-i18n="tip_2"></li>
-        <li data-i18n="tip_3"></li>
-        <li data-i18n="tip_4"></li>
-        <li data-i18n="tip_5"></li>
-        <li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">প্রতিটি ট্রিপ, ফ্ল্যাট বা অনুষ্ঠানের জন্য একটি গ্রুপ। আগে সবাইকে যোগ করুন, তারপর খরচ হলেই লিখুন, বাসে ইন্টারনেট ছাড়াও।</li>
+        <li data-i18n="tip_2">দম্পতি বা পরিবার 2 বা 3 জন গণ্য হলে &quot;ভাগ অনুযায়ী&quot; বেছে নিন, আর যিনি সেই খাবার খাননি তাঁকে 0 ভাগ দিন।</li>
+        <li data-i18n="tip_3">রেস্তোরাঁর বিল: খাবার লিখুন আর কে কোনটা খেয়েছেন ট্যাপ করুন। GST ও সার্ভিস চার্জ ন্যায্যভাবে ভাগ হয়, মোট পয়সা পর্যন্ত মেলে।</li>
+        <li data-i18n="tip_4">&quot;হিসাব মেটান&quot; সবচেয়ে কম পেমেন্ট দেখায়। সদস্যদের UPI ID যোগ করলে এক ট্যাপে Pay বোতাম, বা নিজের ভাষায় WhatsApp রিমাইন্ডার পাঠান।</li>
+        <li data-i18n="tip_5">সারসংক্ষেপের ছবি বা টেক্সট গ্রুপ চ্যাটে পাঠান, যাতে সবাই একই হিসাব দেখে। রেকর্ড রাখতে CSV ডাউনলোড করুন।</li>
+        <li data-i18n="tip_6">রুমমেট: মাসের গ্রুপ চালান (ভাড়া, Wi-Fi, বাজার) আর মাইনের দিনে মেটান। ছাত্রছাত্রী: ক্লাস পিকনিক বা হোস্টেল মেসেও একই কাজ করে।</li>
       </ul>
     </details>
 

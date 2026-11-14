@@ -103,71 +103,71 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">दो CSV फ़ाइलों को एक मिलते-जुलते कॉलम से जोड़ें (VLOOKUP की तरह), या कई महीनों की फ़ाइलों को एक के नीचे एक रखें। देखें क्या मिला, क्या नहीं मिला, और नतीजा डाउनलोड करें।</p>
     <div class="tabs" id="mode-tabs" role="tablist">
-      <button type="button" role="tab" data-mode="join" data-i18n="mode_join"></button>
-      <button type="button" role="tab" data-mode="stack" data-i18n="mode_stack"></button>
+      <button type="button" role="tab" data-mode="join" data-i18n="mode_join">दो फ़ाइलें जोड़ें</button>
+      <button type="button" role="tab" data-mode="stack" data-i18n="mode_stack">कई फ़ाइलें एक के नीचे एक</button>
     </div>
 
     <!-- ============ JOIN ============ -->
     <div id="join-panel">
       <section class="card" aria-labelledby="h-files">
-        <h2 class="cj-h" id="h-files" data-i18n="h_files"></h2>
+        <h2 class="cj-h" id="h-files" data-i18n="h_files">1. आपकी दो फ़ाइलें</h2>
         <div class="cj-samples">
-          <span class="small muted" data-i18n="try_sample"></span>
+          <span class="small muted" data-i18n="try_sample">नमूना आज़माएँ:</span>
           <div class="seg" id="sample-seg" role="group">
-            <button type="button" data-s="students" data-i18n="sample_students"></button>
-            <button type="button" data-s="orders" data-i18n="sample_orders"></button>
+            <button type="button" data-s="students" data-i18n="sample_students">छात्र + अंक</button>
+            <button type="button" data-s="orders" data-i18n="sample_orders">ऑर्डर + ग्राहक</button>
           </div>
           <button class="btn btn-sm btn-danger" id="reset" type="button" data-i18n="reset"></button>
         </div>
         <div class="cj-files">
           <div class="cj-file fa" id="file-a">
-            <h3 data-i18n="file_a"></h3>
+            <h3 data-i18n="file_a">फ़ाइल A (बाएँ)</h3>
             <div class="cj-fname no-i18n"></div>
             <div class="cj-finfo small muted"></div>
             <div class="cj-fcols no-i18n"></div>
-            <div class="row"><button class="btn btn-sm btn-primary cj-open" type="button" data-i18n="open_csv"></button></div>
-            <details><summary data-i18n="paste_data"></summary>
+            <div class="row"><button class="btn btn-sm btn-primary cj-open" type="button" data-i18n="open_csv">CSV खोलें</button></div>
+            <details><summary data-i18n="paste_data">डेटा पेस्ट करें</summary>
               <textarea class="no-i18n" data-i18n-placeholder="paste_ph" data-i18n-aria-label="paste_data"></textarea>
-              <button class="btn btn-sm cj-use" type="button" data-i18n="use_paste"></button></details>
+              <button class="btn btn-sm cj-use" type="button" data-i18n="use_paste">पेस्ट किया डेटा इस्तेमाल करें</button></details>
           </div>
           <div class="cj-file fb" id="file-b">
-            <h3 data-i18n="file_b"></h3>
+            <h3 data-i18n="file_b">फ़ाइल B (दाएँ)</h3>
             <div class="cj-fname no-i18n"></div>
             <div class="cj-finfo small muted"></div>
             <div class="cj-fcols no-i18n"></div>
-            <div class="row"><button class="btn btn-sm btn-primary cj-open" type="button" data-i18n="open_csv"></button></div>
-            <details><summary data-i18n="paste_data"></summary>
+            <div class="row"><button class="btn btn-sm btn-primary cj-open" type="button" data-i18n="open_csv">CSV खोलें</button></div>
+            <details><summary data-i18n="paste_data">डेटा पेस्ट करें</summary>
               <textarea class="no-i18n" data-i18n-placeholder="paste_ph" data-i18n-aria-label="paste_data"></textarea>
-              <button class="btn btn-sm cj-use" type="button" data-i18n="use_paste"></button></details>
+              <button class="btn btn-sm cj-use" type="button" data-i18n="use_paste">पेस्ट किया डेटा इस्तेमाल करें</button></details>
           </div>
         </div>
-        <p class="small muted" data-i18n="drop_hint"></p>
+        <p class="small muted" data-i18n="drop_hint">CSV फ़ाइलें यहाँ खींचकर भी छोड़ सकते हैं। Excel में: File → Save as → CSV। आपकी फ़ाइलें इसी डिवाइस पर रहती हैं।</p>
       </section>
 
       <section class="card cj-sec" aria-labelledby="h-match">
-        <h2 class="cj-h" id="h-match" data-i18n="h_match"></h2>
+        <h2 class="cj-h" id="h-match" data-i18n="h_match">2. पंक्तियाँ कैसे मिलाएँ</h2>
         <div class="cj-match">
           <div>
             <div class="cj-keys">
-              <label class="field"><span data-i18n="key_a"></span><select id="key-a"></select></label>
-              <label class="field"><span data-i18n="key_b"></span><select id="key-b"></select></label>
+              <label class="field"><span data-i18n="key_a">A का की-कॉलम</span><select id="key-a"></select></label>
+              <label class="field"><span data-i18n="key_b">B का की-कॉलम</span><select id="key-b"></select></label>
             </div>
             <div class="cj-opts">
-              <label class="check"><input type="checkbox" id="opt-trim"> <span data-i18n="opt_trim"></span></label>
-              <label class="check"><input type="checkbox" id="opt-icase"> <span data-i18n="opt_icase"></span></label>
-              <label class="check"><input type="checkbox" id="opt-num"> <span data-i18n="opt_num"></span></label>
-              <div><button class="btn btn-sm" id="swap" type="button" data-i18n="swap"></button></div>
+              <label class="check"><input type="checkbox" id="opt-trim"> <span data-i18n="opt_trim">फ़ालतू स्पेस अनदेखा करें</span></label>
+              <label class="check"><input type="checkbox" id="opt-icase"> <span data-i18n="opt_icase">बड़े-छोटे अक्षर अनदेखा करें</span></label>
+              <label class="check"><input type="checkbox" id="opt-num"> <span data-i18n="opt_num">&quot;007&quot; और &quot;7&quot; को एक जैसा मानें</span></label>
+              <div><button class="btn btn-sm" id="swap" type="button" data-i18n="swap">A और B अदला-बदली करें</button></div>
             </div>
           </div>
           <div>
-            <span class="small muted" data-i18n="join_type"></span>
+            <span class="small muted" data-i18n="join_type">जोड़ने का तरीका</span>
             <div class="seg" id="type-seg" role="group" style="margin-top:5px">
-              <button type="button" data-type="inner" data-i18n="type_inner"></button>
-              <button type="button" data-type="left" data-i18n="type_left"></button>
-              <button type="button" data-type="right" data-i18n="type_right"></button>
-              <button type="button" data-type="full" data-i18n="type_full"></button>
+              <button type="button" data-type="inner" data-i18n="type_inner">इनर</button>
+              <button type="button" data-type="left" data-i18n="type_left">लेफ़्ट</button>
+              <button type="button" data-type="right" data-i18n="type_right">राइट</button>
+              <button type="button" data-type="full" data-i18n="type_full">फ़ुल आउटर</button>
             </div>
             <div class="cj-vennbox">
               <svg id="venn" class="cj-venn" viewBox="0 0 200 120" role="img" data-i18n-aria-label="venn_label" aria-label="Venn">
@@ -189,37 +189,37 @@
       </section>
 
       <section class="card cj-sec" aria-labelledby="h-result">
-        <h2 class="cj-h" id="h-result" data-i18n="h_result"></h2>
+        <h2 class="cj-h" id="h-result" data-i18n="h_result">3. नतीजा</h2>
         <div class="cj-stats" aria-live="polite">
-          <div class="cj-stat"><span class="lbl" data-i18n="st_matched"></span><span class="val" id="st-matched"></span></div>
+          <div class="cj-stat"><span class="lbl" data-i18n="st_matched">A की मिली हुई पंक्तियाँ</span><span class="val" id="st-matched"></span></div>
           <div class="cj-stat"><span class="lbl no-i18n" id="lbl-onlya"></span><span class="val" id="st-onlya"></span></div>
           <div class="cj-stat"><span class="lbl no-i18n" id="lbl-onlyb"></span><span class="val" id="st-onlyb"></span></div>
-          <div class="cj-stat main"><span class="lbl" data-i18n="st_rows"></span><span class="val" id="st-rows"></span></div>
+          <div class="cj-stat main"><span class="lbl" data-i18n="st_rows">नतीजे में पंक्तियाँ</span><span class="val" id="st-rows"></span></div>
         </div>
         <div id="warnings"></div>
-        <span class="small muted" data-i18n="out_cols"></span>
+        <span class="small muted" data-i18n="out_cols">नतीजे के कॉलम (छिपाने या दिखाने के लिए दबाएँ):</span>
         <div class="cj-cols no-i18n" id="out-cols"></div>
         <div class="cj-gridwrap no-i18n"><table class="table cj-grid" id="out-grid"></table></div>
-        <p id="out-empty" class="muted" hidden data-i18n="no_rows"></p>
+        <p id="out-empty" class="muted" hidden data-i18n="no_rows">नतीजे में कोई पंक्ति नहीं।</p>
         <div class="cj-pager" id="out-pager"><button class="btn btn-sm pg-prev" type="button" data-i18n="previous"></button><span class="pg-info small"></span><button class="btn btn-sm pg-next" type="button" data-i18n="next"></button></div>
-        <div class="cj-foot"><span class="small muted" data-i18n="legend_nm"></span><button class="btn btn-primary" id="dl-out" type="button" data-i18n="download_csv"></button></div>
+        <div class="cj-foot"><span class="small muted" data-i18n="legend_nm">धारीदार सेल: दूसरी फ़ाइल में मेल खाती पंक्ति नहीं।</span><button class="btn btn-primary" id="dl-out" type="button" data-i18n="download_csv">CSV डाउनलोड करें</button></div>
       </section>
 
       <section class="card cj-sec" aria-labelledby="h-um">
-        <h2 class="cj-h" id="h-um" data-i18n="h_unmatched"></h2>
-        <p class="small muted" data-i18n="um_note"></p>
+        <h2 class="cj-h" id="h-um" data-i18n="h_unmatched">4. जो पंक्तियाँ नहीं मिलीं</h2>
+        <p class="small muted" data-i18n="um_note">नतीजे पर भरोसा करने से पहले इन्हें देखें। की में वर्तनी की गलती या एक फ़ालतू 0 सबसे आम वजह है।</p>
         <div class="tabs no-i18n" id="um-tabs" role="tablist">
           <button type="button" role="tab" data-side="a"></button>
           <button type="button" role="tab" data-side="b"></button>
         </div>
         <div class="cj-gridwrap no-i18n"><table class="table cj-grid" id="um-grid"></table></div>
-        <p id="um-empty" class="muted" hidden data-i18n="um_none"></p>
+        <p id="um-empty" class="muted" hidden data-i18n="um_none">हर पंक्ति का मेल मिल गया।</p>
         <div class="cj-pager" id="um-pager"><button class="btn btn-sm pg-prev" type="button" data-i18n="previous"></button><span class="pg-info small"></span><button class="btn btn-sm pg-next" type="button" data-i18n="next"></button></div>
-        <div class="cj-foot"><span></span><button class="btn" id="dl-um" type="button" data-i18n="download_um"></button></div>
+        <div class="cj-foot"><span></span><button class="btn" id="dl-um" type="button" data-i18n="download_um">ये पंक्तियाँ डाउनलोड करें</button></div>
       </section>
 
       <section class="card cj-sec cj-lookup">
-        <h2 class="cj-h" data-i18n="h_lookup"></h2>
+        <h2 class="cj-h" data-i18n="h_lookup">यही है VLOOKUP / XLOOKUP</h2>
         <p data-i18n-html="lookup_1"></p>
         <p data-i18n-html="lookup_2"></p>
       </section>
@@ -228,44 +228,44 @@
     <!-- ============ STACK ============ -->
     <div id="stack-panel" hidden>
       <section class="card" aria-labelledby="h-stack">
-        <h2 class="cj-h" id="h-stack" data-i18n="h_stack"></h2>
-        <p class="small muted" data-i18n="stack_note"></p>
+        <h2 class="cj-h" id="h-stack" data-i18n="h_stack">1. एक के नीचे एक रखने वाली फ़ाइलें</h2>
+        <p class="small muted" data-i18n="stack_note">एक जैसे कॉलम वाली फ़ाइलों के लिए, जैसे जनवरी, फ़रवरी और मार्च की बिक्री। कॉलम नाम से मिलाए जाते हैं, भले ही क्रम अलग हो।</p>
         <div id="st-drop">
           <ol id="st-files"></ol>
-          <p id="st-empty" class="muted" hidden data-i18n="st_empty"></p>
+          <p id="st-empty" class="muted" hidden data-i18n="st_empty">अभी कोई फ़ाइल नहीं। CSV फ़ाइलें जोड़ें या नमूना खोलें।</p>
           <div class="row">
-            <button class="btn btn-primary" id="st-add" type="button" data-i18n="st_add"></button>
-            <button class="btn" id="st-sample" type="button" data-i18n="st_sample"></button>
-            <button class="btn btn-danger" id="st-clear" type="button" data-i18n="st_clear"></button>
+            <button class="btn btn-primary" id="st-add" type="button" data-i18n="st_add">CSV फ़ाइलें जोड़ें</button>
+            <button class="btn" id="st-sample" type="button" data-i18n="st_sample">नमूना: 3 महीने की बिक्री</button>
+            <button class="btn btn-danger" id="st-clear" type="button" data-i18n="st_clear">सब हटाएँ</button>
           </div>
-          <p class="small muted" style="margin-bottom:0" data-i18n="drop_hint"></p>
+          <p class="small muted" style="margin-bottom:0" data-i18n="drop_hint">CSV फ़ाइलें यहाँ खींचकर भी छोड़ सकते हैं। Excel में: File → Save as → CSV। आपकी फ़ाइलें इसी डिवाइस पर रहती हैं।</p>
         </div>
         <div class="cj-opts">
-          <label class="check"><input type="checkbox" id="st-loose"> <span data-i18n="st_loose"></span></label>
-          <label class="check"><input type="checkbox" id="st-source"> <span data-i18n="st_source"></span></label>
+          <label class="check"><input type="checkbox" id="st-loose"> <span data-i18n="st_loose">कॉलम के नाम मिलाते समय बड़े-छोटे अक्षर और फ़ालतू स्पेस अनदेखा करें</span></label>
+          <label class="check"><input type="checkbox" id="st-source"> <span data-i18n="st_source">&quot;स्रोत फ़ाइल&quot; कॉलम जोड़ें</span></label>
         </div>
       </section>
       <section class="card cj-sec">
-        <h2 class="cj-h" data-i18n="h_stacked"></h2>
+        <h2 class="cj-h" data-i18n="h_stacked">2. एक साथ रखा नतीजा</h2>
         <p id="st-total" class="no-i18n" aria-live="polite" style="font-weight:600"></p>
         <div class="cj-gridwrap no-i18n"><table class="table cj-grid" id="st-grid"></table></div>
         <div class="cj-pager" id="st-pager"><button class="btn btn-sm pg-prev" type="button" data-i18n="previous"></button><span class="pg-info small"></span><button class="btn btn-sm pg-next" type="button" data-i18n="next"></button></div>
-        <div class="cj-foot"><span class="small muted" data-i18n="legend_blank"></span><button class="btn btn-primary" id="st-dl" type="button" data-i18n="download_csv"></button></div>
+        <div class="cj-foot"><span class="small muted" data-i18n="legend_blank">धारीदार सेल खाली हैं (अक्सर इसलिए कि उस फ़ाइल में वह कॉलम नहीं था)।</span><button class="btn btn-primary" id="st-dl" type="button" data-i18n="download_csv">CSV डाउनलोड करें</button></div>
       </section>
     </div>
 
     <details class="card cj-sec">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">&quot;छात्र + अंक&quot; नमूने से शुरू करें और इनर, लेफ़्ट, राइट और फ़ुल आउटर बदलकर देखें। पंक्तियों की गिनती और वेन आरेख बदलते देखें।</li>
+        <li data-i18n="tip2">दफ़्तर: इस महीने के ऑर्डर को ग्राहक सूची से जोड़ें ताकि हर ग्राहक का शहर और फ़ोन आ जाए, फिर डिलीवरी के लिए एक फ़ाइल डाउनलोड करें।</li>
+        <li data-i18n="tip3">कक्षा गतिविधि: दोनों नमूना फ़ाइलें प्रिंट करें। छात्र कागज़ पर हाथ से जोड़ें, फिर ऐप से जाँचें। सिर्फ़ 7 छात्र मिले, फिर इनर जॉइन में 9 पंक्तियाँ क्यों हैं?</li>
+        <li data-i18n="tip4">की दोनों फ़ाइलों में एक ही तरह लिखी होनी चाहिए। पहले उसे साफ़ करें (स्पेस, बड़े-छोटे अक्षर, &quot;007&quot; और &quot;7&quot;) यहाँ के विकल्पों से या डेटा सफ़ाई लैब ऐप से।</li>
+        <li data-i18n="tip5">एक के नीचे एक: 12 महीनों की बिक्री फ़ाइलें मिलाकर एक साल की फ़ाइल बनाएँ, &quot;स्रोत फ़ाइल&quot; कॉलम के साथ जो बताए कि हर पंक्ति कहाँ से आई।</li>
       </ul>
     </details>
     <details class="card cj-sec">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">ज़रूरी शब्द: अंदर क्या हो रहा है</summary>
       <ul>
         <li data-i18n-html="w_key"></li>
         <li data-i18n-html="w_inner"></li>

@@ -119,41 +119,41 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">व्यक्ती किंवा वस्तूच्या फोटोचा बॅकग्राउंड काढा. पारदर्शक PNG, ऑनलाइन दुकानासाठी पांढरा बॅकग्राउंड, कोणताही रंग किंवा धूसर बॅकग्राउंड मिळवा. AI तुमच्या स्वतःच्या फोन किंवा कॉम्प्युटरवर चालतो: तुमचा फोटो अपलोड होत नाही.</p>
 
     <div class="callout success br-privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">तुमचा फोटो तुमच्याकडेच राहतो.</strong> <span data-i18n="privacy_body">तो या डिव्हाइसबाहेर जात नाही. फक्त AI मॉडेल एकदाच डाउनलोड होते, मग इंटरनेटशिवाय चालते.</span></p>
     </div>
 
     <div class="br-grid">
       <div class="br-col">
         <!-- 1. photo + AI -->
         <section class="card stack" id="photoCard" aria-labelledby="hPhoto">
-          <h2 class="br-step" id="hPhoto" data-i18n="step_photo"></h2>
+          <h2 class="br-step" id="hPhoto" data-i18n="step_photo">1. फोटो निवडा</h2>
           <div class="br-drop" id="drop" tabindex="0" role="button" aria-describedby="dropHint">
             <span class="br-drop-ic" aria-hidden="true">🖼️</span>
-            <strong data-i18n="drop_title"></strong>
-            <span class="small muted" id="dropHint" data-i18n="drop_hint"></span>
+            <strong data-i18n="drop_title">फोटो इथे सोडा किंवा निवडण्यासाठी टॅप करा</strong>
+            <span class="small muted" id="dropHint" data-i18n="drop_hint">फोटो पेस्टही करू शकता (Ctrl+V). JPG, PNG किंवा WebP.</span>
           </div>
           <div class="br-add">
-            <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_photo"></span></button>
-            <button class="btn" id="samplePerson" type="button"><span aria-hidden="true">🧑</span> <span data-i18n="sample_person"></span></button>
-            <button class="btn" id="sampleProduct" type="button"><span aria-hidden="true">🫖</span> <span data-i18n="sample_product"></span></button>
+            <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_photo">फोटो निवडा</span></button>
+            <button class="btn" id="samplePerson" type="button"><span aria-hidden="true">🧑</span> <span data-i18n="sample_person">नमुना: व्यक्ती</span></button>
+            <button class="btn" id="sampleProduct" type="button"><span aria-hidden="true">🫖</span> <span data-i18n="sample_product">नमुना: वस्तू</span></button>
           </div>
           <fieldset class="br-models" id="models">
-            <legend data-i18n="model_label"></legend>
+            <legend data-i18n="model_label">AI मॉडेल</legend>
             <label class="br-model">
               <input type="radio" name="model" value="isnet" id="mIsnet">
-              <span class="br-model-body"><strong data-i18n="model_isnet"></strong><span class="small" id="noteIsnet"></span></span>
+              <span class="br-model-body"><strong data-i18n="model_isnet">ऑल-राउंड</strong><span class="small" id="noteIsnet"></span></span>
             </label>
             <label class="br-model">
               <input type="radio" name="model" value="modnet" id="mModnet">
-              <span class="br-model-body"><strong data-i18n="model_modnet"></strong><span class="small" id="noteModnet"></span></span>
+              <span class="br-model-body"><strong data-i18n="model_modnet">जलद</strong><span class="small" id="noteModnet"></span></span>
             </label>
           </fieldset>
           <div class="br-run">
-            <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled><span aria-hidden="true">✨</span> <span data-i18n="remove_btn"></span></button>
+            <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled><span aria-hidden="true">✨</span> <span data-i18n="remove_btn">बॅकग्राउंड काढा</span></button>
             <button class="btn btn-danger" id="stopBtn" type="button" data-i18n="stop" hidden></button>
           </div>
           <p class="small muted mb0" id="firstTime"></p>
@@ -170,65 +170,65 @@
 
         <!-- 3. background, size, download -->
         <section class="card stack" id="finishCard" aria-labelledby="hFinish" hidden>
-          <h2 class="br-step" id="hFinish" data-i18n="step_finish"></h2>
+          <h2 class="br-step" id="hFinish" data-i18n="step_finish">3. बॅकग्राउंड, आकार आणि डाउनलोड</h2>
           <div class="stack">
-            <strong id="hBg" data-i18n="bg_label"></strong>
+            <strong id="hBg" data-i18n="bg_label">बॅकग्राउंड</strong>
             <div class="br-chips" id="bgChips" role="group" aria-labelledby="hBg">
-              <button class="chip" type="button" data-bg="none" data-i18n="bg_none"></button>
-              <button class="chip" type="button" data-bg="white" data-i18n="bg_white"></button>
-              <button class="chip" type="button" data-bg="color" data-i18n="bg_color"></button>
-              <button class="chip" type="button" data-bg="blur" data-i18n="bg_blur"></button>
-              <button class="chip" type="button" data-bg="photo" data-i18n="bg_photo"></button>
+              <button class="chip" type="button" data-bg="none" data-i18n="bg_none">पारदर्शक</button>
+              <button class="chip" type="button" data-bg="white" data-i18n="bg_white">पांढरा</button>
+              <button class="chip" type="button" data-bg="color" data-i18n="bg_color">रंग</button>
+              <button class="chip" type="button" data-bg="blur" data-i18n="bg_blur">धूसर</button>
+              <button class="chip" type="button" data-bg="photo" data-i18n="bg_photo">माझा फोटो</button>
             </div>
             <div class="br-swatches no-i18n" id="swatches" hidden></div>
-            <label class="br-range" id="blurRow" hidden><span class="lbl" data-i18n="blur_amount"></span><input type="range" id="blurAmt" min="2" max="40" step="1"></label>
-            <div id="bgPhotoRow" hidden><button class="btn btn-sm" id="bgPickBtn" type="button"><span aria-hidden="true">🏞️</span> <span data-i18n="choose_bg"></span></button></div>
+            <label class="br-range" id="blurRow" hidden><span class="lbl" data-i18n="blur_amount">धूसरपणा</span><input type="range" id="blurAmt" min="2" max="40" step="1"></label>
+            <div id="bgPhotoRow" hidden><button class="btn btn-sm" id="bgPickBtn" type="button"><span aria-hidden="true">🏞️</span> <span data-i18n="choose_bg">बॅकग्राउंड फोटो निवडा</span></button></div>
           </div>
           <div class="stack">
-            <strong id="hSize" data-i18n="size_label"></strong>
+            <strong id="hSize" data-i18n="size_label">आकार</strong>
             <div class="br-chips" id="sizeChips" role="group" aria-labelledby="hSize">
-              <button class="chip" type="button" data-size="orig" data-i18n="size_orig"></button>
-              <button class="chip" type="button" data-size="dp" data-i18n="size_dp"></button>
-              <button class="chip" type="button" data-size="product" data-i18n="size_product"></button>
+              <button class="chip" type="button" data-size="orig" data-i18n="size_orig">फोटोसारखाच</button>
+              <button class="chip" type="button" data-size="dp" data-i18n="size_dp">चौकोनी DP</button>
+              <button class="chip" type="button" data-size="product" data-i18n="size_product">प्रॉडक्ट 1000 × 1000</button>
             </div>
             <p class="small muted mb0" id="sizeNote"></p>
           </div>
           <div class="br-dl">
-            <button class="btn btn-primary" id="dlPng" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_png"></span></button>
-            <button class="btn" id="dlJpg" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_jpg"></span></button>
+            <button class="btn btn-primary" id="dlPng" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_png">PNG डाउनलोड करा</span></button>
+            <button class="btn" id="dlJpg" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_jpg">JPG डाउनलोड करा</span></button>
           </div>
-          <p class="small muted mb0" data-i18n="png_hint"></p>
-          <p class="callout small mb0"><span data-i18n="resize_hint"></span> <a href="../../../apps/background-remover/../form-photo-resizer/index.html" data-i18n="resize_link"></a></p>
+          <p class="small muted mb0" data-i18n="png_hint">PNG मध्ये पारदर्शक बॅकग्राउंड टिकतो. JPG फाइल लहान असते; पारदर्शक भाग पांढरे होतात.</p>
+          <p class="callout small mb0"><span data-i18n="resize_hint">परीक्षा किंवा नोकरीच्या फॉर्मसाठी फोटो ठरावीक आकारात किंवा KB मध्ये हवा आहे?</span> <a href="../../../apps/background-remover/../form-photo-resizer/index.html" data-i18n="resize_link">फॉर्म फोटो रिसाइजर उघडा</a></p>
         </section>
       </div>
 
       <div class="br-col">
         <!-- 2. result + touch-up -->
         <section class="card stack" id="resultCard" aria-labelledby="hResult" data-state="empty">
-          <h2 class="br-step" id="hResult" data-i18n="step_result"></h2>
+          <h2 class="br-step" id="hResult" data-i18n="step_result">2. निकाल आणि दुरुस्ती</h2>
           <div class="br-stage" id="stage">
-            <div class="br-empty" id="emptyBox"><span class="br-empty-ic" aria-hidden="true">✂️</span><span data-i18n="empty_stage"></span></div>
+            <div class="br-empty" id="emptyBox"><span class="br-empty-ic" aria-hidden="true">✂️</span><span data-i18n="empty_stage">तुमचा फोटो इथे दिसेल.</span></div>
             <canvas id="view" width="10" height="10" role="img" data-i18n-aria-label="preview_label" hidden></canvas>
             <div class="br-busy" id="busyOverlay" hidden><span id="busyText"></span></div>
           </div>
           <div class="br-info" id="infoRow"></div>
-          <p class="callout warning small mb0" id="nothingNote" data-i18n="nothing_found" hidden></p>
+          <p class="callout warning small mb0" id="nothingNote" data-i18n="nothing_found" hidden>AI ला ठेवण्यासारखे जवळजवळ काहीच सापडले नाही. माणसांव्यतिरिक्त वस्तूंसाठी &quot;ऑल-राउंड&quot; निवडा आणि पुन्हा &quot;बॅकग्राउंड काढा&quot; दाबा.</p>
           <div class="stack" id="toolsBox" hidden>
             <div class="br-chips" id="toolChips" role="group" data-i18n-aria-label="tools_label">
-              <button class="chip" type="button" data-tool="compare"><span aria-hidden="true">↔️</span> <span data-i18n="tool_compare"></span></button>
-              <button class="chip" type="button" data-tool="erase"><span aria-hidden="true">🧽</span> <span data-i18n="tool_erase"></span></button>
-              <button class="chip" type="button" data-tool="restore"><span aria-hidden="true">🖌️</span> <span data-i18n="tool_restore"></span></button>
+              <button class="chip" type="button" data-tool="compare"><span aria-hidden="true">↔️</span> <span data-i18n="tool_compare">तुलना</span></button>
+              <button class="chip" type="button" data-tool="erase"><span aria-hidden="true">🧽</span> <span data-i18n="tool_erase">पुसा</span></button>
+              <button class="chip" type="button" data-tool="restore"><span aria-hidden="true">🖌️</span> <span data-i18n="tool_restore">परत आणा</span></button>
             </div>
             <!-- always left-to-right, like the picture: "before" is on the left of the photo in every language -->
             <div class="br-cmp" id="cmpRow" dir="ltr">
-              <span class="tiny" data-i18n="before"></span>
+              <span class="tiny" data-i18n="before">आधी</span>
               <input type="range" id="cmpRange" min="0" max="100" step="1" dir="ltr" data-i18n-aria-label="compare_label">
-              <span class="tiny" data-i18n="after"></span>
+              <span class="tiny" data-i18n="after">नंतर</span>
             </div>
-            <label class="br-range" id="brushRow" hidden><span class="lbl" data-i18n="brush_size"></span><input type="range" id="brushSize" min="4" max="80" step="1"></label>
+            <label class="br-range" id="brushRow" hidden><span class="lbl" data-i18n="brush_size">ब्रशचा आकार</span><input type="range" id="brushSize" min="4" max="80" step="1"></label>
             <div class="br-tools">
-              <button class="btn btn-sm" id="undoBtn" type="button" disabled><span aria-hidden="true">↶</span> <span data-i18n="undo"></span></button>
-              <button class="btn btn-sm btn-ghost" id="undoAllBtn" type="button" disabled data-i18n="undo_all"></button>
+              <button class="btn btn-sm" id="undoBtn" type="button" disabled><span aria-hidden="true">↶</span> <span data-i18n="undo">मागे घ्या</span></button>
+              <button class="btn btn-sm btn-ghost" id="undoAllBtn" type="button" disabled data-i18n="undo_all">सर्व दुरुस्त्या रद्द करा</button>
             </div>
             <p class="small muted mb0" id="toolHint"></p>
           </div>
@@ -237,20 +237,20 @@
     </div>
 
     <details class="card br-help no-print" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">कसे वापरावे आणि कामासाठी कल्पना</strong></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">स्पष्ट फोटो निवडा ज्यात व्यक्ती किंवा वस्तू बॅकग्राउंडपासून वेगळी दिसते. चांगल्या प्रकाशामुळे AI ला मदत होते.</li>
+        <li data-i18n="tip2">वस्तू, पाळीव प्राणी आणि माणसांसाठी &quot;ऑल-राउंड&quot; निवडा. सेल्फी आणि पोर्ट्रेटसाठी &quot;जलद&quot; लवकर चालते.</li>
+        <li data-i18n="tip3">AI ने एखादा भाग चुकवला तर &quot;पुसा&quot; किंवा &quot;परत आणा&quot; निवडून त्यावर रंगवा. &quot;मागे घ्या&quot; शेवटचा स्ट्रोक रद्द करते.</li>
+        <li data-i18n="tip4">दुकानदार: कोणत्याही टेबलवर वस्तूचा फोटो काढा, मग Amazon, Flipkart, Meesho किंवा WhatsApp कॅटलॉगसाठी &quot;प्रॉडक्ट 1000 × 1000&quot; आणि पांढरा बॅकग्राउंड निवडा.</li>
+        <li data-i18n="tip5">क्रिएटर: YouTube थंबनेल, पोस्टर आणि स्टिकरसाठी स्वतःला पारदर्शक PNG मध्ये कापा, किंवा &quot;माझा फोटो&quot; ने मागे सण किंवा ऑफिसचा फोटो लावा.</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="inside_title"></h3>
-      <p data-i18n="inside_body"></p>
-      <p class="mb0" data-i18n="inside_models"></p>
+      <h3 style="margin-top:14px" data-i18n="inside_title">आत काय घडते?</h3>
+      <p data-i18n="inside_body">AI मॉडेल प्रत्येक पिक्सेल पाहते आणि तो मुख्य व्यक्ती किंवा वस्तूचा भाग आहे का याचा अंदाज लावते. यातून एक &quot;मास्क&quot; बनतो: पांढरा म्हणजे ठेवा, काळा म्हणजे काढा, राखाडी म्हणजे केसांसारख्या मऊ कडा. मग ॲप या मास्कने तुमचा फोटो कापते. AI फोटोची 1024 px प्रत पाहते आणि मास्क पूर्ण फोटोएवढा मोठा केला जातो. सर्व काही तुमच्या ब्राउझरमध्ये Transformers.js आणि ONNX Runtime ने चालते: ब्राउझरने परवानगी दिली तर ग्राफिक्स चिपवर (WebGPU), नाहीतर प्रोसेसरवर.</p>
+      <p class="mb0" data-i18n="inside_models">मॉडेल: &quot;ऑल-राउंड&quot; = ISNet general-use (44 MB, MIT परवाना; ISNet: Xuebin Qin आणि टीम, Apache-2.0). &quot;जलद&quot; = MODNet (7 MB, Apache-2.0 परवाना). दोन्ही Hugging Face वरून एकदाच डाउनलोड होतात. चमकदार किंवा पारदर्शक वस्तू (स्टील, काच) आणि बॅकग्राउंडच्या रंगाशी जुळणाऱ्या वस्तू सर्वात कठीण असतात.</p>
       <div class="br-storage">
         <span class="small muted" id="storageText"></span>
-        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden></button>
+        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden>सेव्ह केलेली AI मॉडेल हटवा</button>
       </div>
       <div class="row spread" style="margin-top:12px">
         <span class="small muted" data-i18n="saved_local"></span>

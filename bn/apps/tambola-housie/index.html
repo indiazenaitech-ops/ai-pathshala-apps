@@ -297,14 +297,14 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">প্রিন্ট বা শেয়ার করার জন্য সঠিক তাম্বোলা (হাউজি) টিকিট বানান, বড় স্ক্রিনে 1–90 নম্বর জোরে ডাকুন আর প্রতিটি দাবি কয়েক সেকেন্ডে যাচাই করুন।</p>
 
     <div class="tb-tabs" role="tablist" id="tabs" data-i18n-aria-label="app_title">
-      <button type="button" role="tab" id="tab-tickets" data-tab="tickets" aria-controls="panel-tickets" aria-selected="true"><span class="ic" aria-hidden="true">🎟️</span><span data-i18n="tab_tickets"></span></button>
-      <button type="button" role="tab" id="tab-caller" data-tab="caller" aria-controls="panel-caller" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">📢</span><span data-i18n="tab_caller"></span></button>
-      <button type="button" role="tab" id="tab-check" data-tab="check" aria-controls="panel-check" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">✅</span><span data-i18n="tab_check"></span></button>
-      <button type="button" role="tab" id="tab-prizes" data-tab="prizes" aria-controls="panel-prizes" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">🏆</span><span data-i18n="tab_prizes"></span></button>
-      <button type="button" role="tab" id="tab-play" data-tab="play" aria-controls="panel-play" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">📱</span><span data-i18n="tab_play"></span></button>
+      <button type="button" role="tab" id="tab-tickets" data-tab="tickets" aria-controls="panel-tickets" aria-selected="true"><span class="ic" aria-hidden="true">🎟️</span><span data-i18n="tab_tickets">টিকিট</span></button>
+      <button type="button" role="tab" id="tab-caller" data-tab="caller" aria-controls="panel-caller" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">📢</span><span data-i18n="tab_caller">নম্বর কলার</span></button>
+      <button type="button" role="tab" id="tab-check" data-tab="check" aria-controls="panel-check" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">✅</span><span data-i18n="tab_check">দাবি যাচাই</span></button>
+      <button type="button" role="tab" id="tab-prizes" data-tab="prizes" aria-controls="panel-prizes" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">🏆</span><span data-i18n="tab_prizes">পুরস্কার ও নিয়ম</span></button>
+      <button type="button" role="tab" id="tab-play" data-tab="play" aria-controls="panel-play" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">📱</span><span data-i18n="tab_play">ফোনে খেলুন</span></button>
     </div>
 
     <!-- ===================== TICKETS ===================== -->
@@ -312,70 +312,70 @@
       <div class="tk-layout">
         <div class="stack">
           <div class="card stack">
-            <h2 data-i18n="h_make"></h2>
+            <h2 data-i18n="h_make">টিকিট বানান</h2>
             <div class="field">
-              <label for="party" data-i18n="f_party"></label>
+              <label for="party" data-i18n="f_party">পার্টি বা অনুষ্ঠানের নাম</label>
               <input type="text" id="party" class="no-i18n" maxlength="80" autocomplete="off">
             </div>
             <div class="two">
               <div class="field">
-                <label for="pdate" data-i18n="f_date"></label>
+                <label for="pdate" data-i18n="f_date">তারিখ</label>
                 <input type="date" id="pdate">
               </div>
               <div class="field">
-                <label for="code" data-i18n="f_code"></label>
+                <label for="code" data-i18n="f_code">গেম কোড</label>
                 <input type="text" id="code" class="no-i18n code-in" maxlength="16" autocomplete="off" spellcheck="false" autocapitalize="characters" aria-describedby="codeHint">
               </div>
             </div>
-            <div><button type="button" class="btn btn-sm" id="newCode"><span aria-hidden="true">🎲</span><span data-i18n="new_code"></span></button></div>
-            <p class="hint" id="codeHint" data-i18n="code_hint"></p>
-            <p class="callout danger small mb0" id="codeErr" role="alert" hidden data-i18n="code_bad"></p>
+            <div><button type="button" class="btn btn-sm" id="newCode"><span aria-hidden="true">🎲</span><span data-i18n="new_code">নতুন কোড বানান</span></button></div>
+            <p class="hint" id="codeHint" data-i18n="code_hint">একই কোড থেকে সবসময় একই টিকিট তৈরি হয়। কোড আর টিকিট নম্বর দিয়ে যেকোনো দাবি যাচাই করা যায়।</p>
+            <p class="callout danger small mb0" id="codeErr" role="alert" hidden data-i18n="code_bad">গেম কোডে 3 থেকে 16টি অক্ষর বা সংখ্যা লিখুন।</p>
             <div class="field">
-              <label for="count" data-i18n="f_count"></label>
+              <label for="count" data-i18n="f_count">কতগুলো টিকিট?</label>
               <div class="row count-row">
                 <input type="number" id="count" min="1" max="600" step="1" inputmode="numeric">
                 <div class="chips" id="countChips"></div>
               </div>
-              <span class="hint" data-i18n="count_hint"></span>
+              <span class="hint" data-i18n="count_hint">1 থেকে 600টি টিকিট।</span>
             </div>
-            <label class="check"><input type="checkbox" id="strips"> <span data-i18n="f_strips"></span></label>
+            <label class="check"><input type="checkbox" id="strips"> <span data-i18n="f_strips">6টি টিকিটের পুরো শিট (প্রতি শিটে 1–90 প্রতিটি নম্বর একবার, সাধারণ নিয়ম)</span></label>
             <div class="field">
-              <label for="start" data-i18n="f_start"></label>
+              <label for="start" data-i18n="f_start">প্রথম টিকিট নম্বর</label>
               <input type="number" id="start" class="w-num" min="1" max="99996" step="1" inputmode="numeric">
-              <span class="hint" data-i18n="start_hint"></span>
+              <span class="hint" data-i18n="start_hint">পরে আরও প্রিন্ট করবেন? পরের নম্বর থেকে শুরু করুন, যেমন 25।</span>
             </div>
             <div class="field">
-              <span class="lbl" id="ppLbl" data-i18n="f_perpage"></span>
+              <span class="lbl" id="ppLbl" data-i18n="f_perpage">একটি A4 পাতায় টিকিট</span>
               <div class="seg" role="group" aria-labelledby="ppLbl" id="perPage">
-                <button type="button" data-pp="6" aria-pressed="true" data-i18n="pp_6"></button>
-                <button type="button" data-pp="12" aria-pressed="false" data-i18n="pp_12"></button>
+                <button type="button" data-pp="6" aria-pressed="true" data-i18n="pp_6">6 (বড়)</button>
+                <button type="button" data-pp="12" aria-pressed="false" data-i18n="pp_12">12 (ছোট)</button>
               </div>
             </div>
             <div class="sum" id="tkSummary" aria-live="polite"></div>
             <div class="row">
-              <button type="button" class="btn btn-primary btn-lg" id="printTk"><span aria-hidden="true">🖨</span><span data-i18n="btn_print_tk"></span></button>
-              <button type="button" class="btn" id="csvTk"><span aria-hidden="true">⬇</span><span data-i18n="btn_csv"></span></button>
+              <button type="button" class="btn btn-primary btn-lg" id="printTk"><span aria-hidden="true">🖨</span><span data-i18n="btn_print_tk">টিকিট প্রিন্ট করুন</span></button>
+              <button type="button" class="btn" id="csvTk"><span aria-hidden="true">⬇</span><span data-i18n="btn_csv">CSV ডাউনলোড করুন</span></button>
             </div>
-            <p class="tiny muted mb0" data-i18n="print_tip"></p>
+            <p class="tiny muted mb0" data-i18n="print_tip">পরামর্শ: প্রিন্ট উইন্ডোতে A4 বাছুন, &quot;Fit to page&quot; বন্ধ রাখুন আর ড্যাশ লাইন বরাবর কাটুন। সাদা-কালোতেও টিকিট পরিষ্কার দেখায়।</p>
           </div>
 
           <div class="card stack">
-            <h2 class="h-sm" data-i18n="h_send"></h2>
-            <p class="hint" data-i18n="send_hint"></p>
+            <h2 class="h-sm" data-i18n="h_send">ফোনে টিকিট পাঠান</h2>
+            <p class="hint" data-i18n="send_hint">অতিথিরা নিজের ফোনে খেলতে পারেন: তাঁদের টিকিট নম্বর আর লিংক পাঠান। কিছুই আপলোড হয় না; কোড থেকে টিকিট আবার তৈরি হয়।</p>
             <div class="row send-row">
               <div class="field">
-                <label for="sendNo" data-i18n="f_ticket"></label>
+                <label for="sendNo" data-i18n="f_ticket">টিকিট নম্বর</label>
                 <input type="number" id="sendNo" min="1" max="99996" step="1" inputmode="numeric">
               </div>
-              <a class="btn btn-wa" id="sendWa" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span><span data-i18n="btn_wa_ticket"></span></a>
-              <button type="button" class="btn" id="sendCopy"><span aria-hidden="true">🔗</span><span data-i18n="btn_copy_link"></span></button>
+              <a class="btn btn-wa" id="sendWa" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span><span data-i18n="btn_wa_ticket">WhatsApp-এ পাঠান</span></a>
+              <button type="button" class="btn" id="sendCopy"><span aria-hidden="true">🔗</span><span data-i18n="btn_copy_link">লিংক কপি করুন</span></button>
             </div>
           </div>
         </div>
 
         <div class="card stack" id="previewCard">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="h_preview"></h2>
+            <h2 class="mb0" data-i18n="h_preview">প্রিভিউ</h2>
             <div class="pg-nav">
               <button type="button" class="btn btn-sm" id="pgPrev" data-i18n-aria-label="previous" data-i18n-title="previous"><span class="flip" aria-hidden="true">◀</span></button>
               <span id="pgLbl" class="pg-lbl" aria-live="polite"></span>
@@ -383,7 +383,7 @@
             </div>
           </div>
           <div class="tk-list" id="tkList"></div>
-          <p class="hint" data-i18n="preview_hint"></p>
+          <p class="hint" data-i18n="preview_hint">ধূসর ঘরগুলো ফাঁকা। প্রতিটি টিকিটে 15টি নম্বর: প্রতি সারিতে 5টি।</p>
         </div>
       </div>
     </section>
@@ -405,44 +405,44 @@
               <p class="cl-info" id="callInfo"></p>
             </div>
             <div class="cl-last" id="lastWrap">
-              <span class="lbl small" data-i18n="h_last"></span>
+              <span class="lbl small" data-i18n="h_last">আগের নম্বর</span>
               <div class="coins" id="last5" dir="ltr"></div>
             </div>
-            <button type="button" class="btn btn-primary btn-lg cl-next" id="nextBtn"><span aria-hidden="true">🎱</span><span data-i18n="btn_next"></span></button>
+            <button type="button" class="btn btn-primary btn-lg cl-next" id="nextBtn"><span aria-hidden="true">🎱</span><span data-i18n="btn_next">পরের নম্বর</span></button>
             <div class="cl-btns">
               <button type="button" class="btn" id="autoBtn" aria-pressed="false"><span aria-hidden="true" id="autoIc">▶</span><span id="autoLbl"></span></button>
-              <button type="button" class="btn" id="undoBtn"><span aria-hidden="true">↶</span><span data-i18n="btn_undo"></span></button>
-              <button type="button" class="btn" id="repeatBtn"><span aria-hidden="true">🔊</span><span data-i18n="btn_repeat"></span></button>
+              <button type="button" class="btn" id="undoBtn"><span aria-hidden="true">↶</span><span data-i18n="btn_undo">ফিরিয়ে নিন</span></button>
+              <button type="button" class="btn" id="repeatBtn"><span aria-hidden="true">🔊</span><span data-i18n="btn_repeat">আবার বলুন</span></button>
             </div>
             <div class="progress auto-bar" id="autoBar" hidden><span id="autoFill" style="width:0"></span></div>
             <div class="cl-counts"><span id="calledN"></span><span id="leftN"></span></div>
             <div class="progress"><span id="callBar" style="width:0"></span></div>
-            <button type="button" class="btn btn-accent" id="claimBtn"><span aria-hidden="true">🙋</span><span data-i18n="btn_claim"></span></button>
+            <button type="button" class="btn btn-accent" id="claimBtn"><span aria-hidden="true">🙋</span><span data-i18n="btn_claim">কেউ দাবি করেছে! যাচাই করুন</span></button>
           </div>
           <div class="cl-right">
             <div class="board" id="board" dir="ltr" role="group" data-i18n-aria-label="board_label"></div>
-            <p class="small muted" id="manualHint" data-i18n="manual_hint" hidden></p>
+            <p class="small muted" id="manualHint" data-i18n="manual_hint" hidden>নিজের থলি থেকে নম্বর তুলছেন? প্রতিটি ডাকা নম্বর বোর্ডে ট্যাপ করুন। ফিরিয়ে নিতে আবার ট্যাপ করুন।</p>
             <div class="won" id="wonMini" aria-live="polite"></div>
             <details class="order no-print-fs">
-              <summary data-i18n="h_order"></summary>
+              <summary data-i18n="h_order">ডাকার ক্রমে সব নম্বর</summary>
               <p class="order-list mb0" id="orderList" dir="ltr"></p>
             </details>
           </div>
         </div>
         <div class="cl-settings" id="clSettings">
           <div class="set-grid">
-            <div class="field"><label for="every" data-i18n="f_every"></label><select id="every"></select></div>
-            <div class="field"><label for="vlang" data-i18n="f_vlang"></label><select id="vlang"></select></div>
+            <div class="field"><label for="every" data-i18n="f_every">নিজে থেকে প্রতি</label><select id="every"></select></div>
+            <div class="field"><label for="vlang" data-i18n="f_vlang">কণ্ঠের ভাষা</label><select id="vlang"></select></div>
           </div>
           <div class="checks">
-            <label class="check"><input type="checkbox" id="voice"> <span data-i18n="f_voice"></span></label>
-            <label class="check"><input type="checkbox" id="digits"> <span data-i18n="f_digits"></span></label>
-            <label class="check"><input type="checkbox" id="slow"> <span data-i18n="f_slow"></span></label>
-            <label class="check"><input type="checkbox" id="manual"> <span data-i18n="f_manual"></span></label>
+            <label class="check"><input type="checkbox" id="voice"> <span data-i18n="f_voice">প্রতিটি নম্বর জোরে বলুন</span></label>
+            <label class="check"><input type="checkbox" id="digits"> <span data-i18n="f_digits">অঙ্কগুলোও বলুন (&quot;4 আর 5, 45&quot;)</span></label>
+            <label class="check"><input type="checkbox" id="slow"> <span data-i18n="f_slow">ধীর কণ্ঠ</span></label>
+            <label class="check"><input type="checkbox" id="manual"> <span data-i18n="f_manual">নম্বর আমি নিজে তুলব (বোর্ডে ট্যাপ করুন)</span></label>
           </div>
           <p class="callout warning small mb0" id="voiceNote" hidden></p>
-          <p class="tiny muted mb0" data-i18n="keys_tip"></p>
-          <button type="button" class="btn btn-danger" id="newGameBtn"><span aria-hidden="true">🔄</span><span data-i18n="btn_new_game"></span></button>
+          <p class="tiny muted mb0" data-i18n="keys_tip">কিবোর্ড: স্পেস বা N = পরের নম্বর, A = নিজে থেকে চালু/বন্ধ, R = আবার বলুন, F = পূর্ণ পর্দা।</p>
+          <button type="button" class="btn btn-danger" id="newGameBtn"><span aria-hidden="true">🔄</span><span data-i18n="btn_new_game">নতুন গেম (ডাকা নম্বর মুছুন)</span></button>
         </div>
       </div>
     </section>
@@ -451,40 +451,40 @@
     <section id="panel-check" role="tabpanel" aria-labelledby="tab-check" hidden>
       <div class="split ck-split">
         <div class="card stack">
-          <h2 data-i18n="h_check"></h2>
+          <h2 data-i18n="h_check">দাবি যাচাই করুন</h2>
           <div class="seg" role="group" id="srcSeg" data-i18n-aria-label="h_check">
-            <button type="button" data-src="game" aria-pressed="true" data-i18n="src_game"></button>
-            <button type="button" data-src="typed" aria-pressed="false" data-i18n="src_typed"></button>
+            <button type="button" data-src="game" aria-pressed="true" data-i18n="src_game">এই অ্যাপের টিকিট</button>
+            <button type="button" data-src="typed" aria-pressed="false" data-i18n="src_typed">অন্য জায়গায় ছাপা টিকিট</button>
           </div>
           <div class="two" id="srcGame">
             <div class="field">
-              <label for="chkCode" data-i18n="f_code"></label>
+              <label for="chkCode" data-i18n="f_code">গেম কোড</label>
               <input type="text" id="chkCode" class="no-i18n code-in" maxlength="16" autocomplete="off" spellcheck="false" autocapitalize="characters">
             </div>
             <div class="field">
-              <label for="chkNo" data-i18n="f_ticket"></label>
+              <label for="chkNo" data-i18n="f_ticket">টিকিট নম্বর</label>
               <input type="number" id="chkNo" min="1" max="99996" step="1" inputmode="numeric">
             </div>
           </div>
           <div class="field" id="srcTyped" hidden>
-            <label for="typed" data-i18n="f_typed"></label>
+            <label for="typed" data-i18n="f_typed">টিকিটের নম্বরগুলো লিখুন</label>
             <textarea id="typed" class="no-i18n" rows="3" spellcheck="false" placeholder="4 23 37 61 85&#10;9 15 42 56 77&#10;18 29 49 68 90"></textarea>
-            <span class="hint" data-i18n="typed_hint"></span>
+            <span class="hint" data-i18n="typed_hint">প্রতি সারি আলাদা লাইনে (উপর, মাঝ, নিচ), বা সব 15টি নম্বর ক্রমে।</span>
           </div>
           <div class="field">
-            <label for="claim" data-i18n="f_claim"></label>
+            <label for="claim" data-i18n="f_claim">কীসের দাবি?</label>
             <select id="claim"></select>
             <span class="hint" id="claimDesc"></span>
           </div>
           <div class="row">
-            <button type="button" class="btn btn-primary btn-lg" id="checkBtn"><span aria-hidden="true">🔍</span><span data-i18n="btn_check"></span></button>
-            <button type="button" class="btn" id="findBtn"><span aria-hidden="true">🔎</span><span data-i18n="btn_find"></span></button>
+            <button type="button" class="btn btn-primary btn-lg" id="checkBtn"><span aria-hidden="true">🔍</span><span data-i18n="btn_check">যাচাই করুন</span></button>
+            <button type="button" class="btn" id="findBtn"><span aria-hidden="true">🔎</span><span data-i18n="btn_find">সব জেতা টিকিট খুঁজুন</span></button>
           </div>
         </div>
         <div class="card stack" id="checkOut" aria-live="polite"></div>
       </div>
       <div class="card stack" style="margin-top:16px">
-        <h2 class="h-sm" data-i18n="h_winners"></h2>
+        <h2 class="h-sm" data-i18n="h_winners">এই গেমের বিজয়ী</h2>
         <ul class="winners" id="winners"></ul>
       </div>
     </section>
@@ -493,21 +493,21 @@
     <section id="panel-prizes" role="tabpanel" aria-labelledby="tab-prizes" hidden>
       <div class="grid-2">
         <div class="card stack">
-          <h2 data-i18n="h_prizes"></h2>
-          <p class="hint" data-i18n="prizes_hint"></p>
-          <div class="pz-head" aria-hidden="true"><span data-i18n="col_play"></span><span data-i18n="col_name"></span><span data-i18n="col_win"></span></div>
+          <h2 data-i18n="h_prizes">পুরস্কার</h2>
+          <p class="hint" data-i18n="prizes_hint">যে পুরস্কারগুলো খেলবেন তাতে টিক দিন, নিজের ভাষায় নাম দিন আর প্রতিটিতে কী মিলবে লিখুন।</p>
+          <div class="pz-head" aria-hidden="true"><span data-i18n="col_play">খেলুন</span><span data-i18n="col_name">নাম</span><span data-i18n="col_win">পুরস্কার</span></div>
           <div class="pz-list" id="prizeList"></div>
           <div class="field">
-            <label for="notes" data-i18n="f_notes"></label>
+            <label for="notes" data-i18n="f_notes">আপনার নিজের নিয়ম বা নোট (ঐচ্ছিক)</label>
             <textarea id="notes" class="no-i18n" rows="3" maxlength="1000" data-i18n-placeholder="notes_ph"></textarea>
           </div>
           <div class="row">
-            <button type="button" class="btn btn-primary" id="printRules"><span aria-hidden="true">🖨</span><span data-i18n="btn_print_rules"></span></button>
-            <button type="button" class="btn btn-ghost" id="defPrizes"><span aria-hidden="true">↺</span><span data-i18n="btn_default_prizes"></span></button>
+            <button type="button" class="btn btn-primary" id="printRules"><span aria-hidden="true">🖨</span><span data-i18n="btn_print_rules">নিয়মের শিট প্রিন্ট করুন</span></button>
+            <button type="button" class="btn btn-ghost" id="defPrizes"><span aria-hidden="true">↺</span><span data-i18n="btn_default_prizes">আগের পুরস্কার</span></button>
           </div>
         </div>
         <div class="card stack">
-          <h2 data-i18n="h_rules"></h2>
+          <h2 data-i18n="h_rules">নিয়মের শিট</h2>
           <div class="rules-paper" id="rulesPreview"></div>
         </div>
       </div>
@@ -516,18 +516,18 @@
     <!-- ===================== PLAY ON PHONE ===================== -->
     <section id="panel-play" role="tabpanel" aria-labelledby="tab-play" hidden>
       <div class="card stack">
-        <h2 data-i18n="h_play"></h2>
-        <p class="hint" data-i18n="play_hint"></p>
+        <h2 data-i18n="h_play">নিজের ফোনে খেলুন</h2>
+        <p class="hint" data-i18n="play_hint">হোস্টের কাছ থেকে টিকিট নম্বর পেয়েছেন? গেম কোড আর টিকিট নম্বর দিন, তারপর ডাকা নম্বরে ট্যাপ করুন।</p>
         <div class="row play-form">
           <div class="field">
-            <label for="playCode" data-i18n="f_code"></label>
+            <label for="playCode" data-i18n="f_code">গেম কোড</label>
             <input type="text" id="playCode" class="no-i18n code-in" maxlength="16" autocomplete="off" spellcheck="false" autocapitalize="characters" data-i18n-placeholder="code_ph">
           </div>
           <div class="field">
-            <label for="playNo" data-i18n="f_ticket"></label>
+            <label for="playNo" data-i18n="f_ticket">টিকিট নম্বর</label>
             <input type="number" id="playNo" min="1" max="99996" step="1" inputmode="numeric">
           </div>
-          <button type="button" class="btn btn-primary" id="openBtn"><span aria-hidden="true">🎟️</span><span data-i18n="btn_open"></span></button>
+          <button type="button" class="btn btn-primary" id="openBtn"><span aria-hidden="true">🎟️</span><span data-i18n="btn_open">আমার টিকিট খুলুন</span></button>
         </div>
         <p class="callout danger small mb0" id="playErr" role="alert" hidden></p>
       </div>
@@ -537,12 +537,12 @@
     <details class="card help">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">পার্টির হোস্ট: টিকিটের সংখ্যা বাছুন, প্রিন্ট করুন (পাতায় 6টি) আর কেটে নিন। গেম কোড রেখে দিন; এটি প্রতিটি টিকিটে ছাপা থাকে।</li>
+        <li data-i18n="help_2">খেলার দিন ল্যাপটপ বা টিভিতে &quot;নম্বর কলার&quot; খুলুন, পূর্ণ পর্দা টিপুন আর &quot;নিজে থেকে&quot; চালান। সবাই যাতে শোনে তাই স্পিকার লাগান।</li>
+        <li data-i18n="help_3">কেউ দাবি করলে &quot;কেউ দাবি করেছে! যাচাই করুন&quot; টিপুন, টিকিট নম্বর দিন আর দাবি বাছুন। অ্যাপ বাকি নম্বর দেখাবে।</li>
+        <li data-i18n="help_4">প্রিন্টার নেই? প্রত্যেক অতিথিকে WhatsApp-এ একটি টিকিট নম্বর পাঠান। তাঁরা ফোনে খুলে ডাকা নম্বরে ট্যাপ করবেন।</li>
+        <li data-i18n="help_5">ক্লাসে: ছোটদের জন্য নম্বর চেনার খেলা। পাতায় 12টি ছোট টিকিট ছাপুন, &quot;অঙ্কগুলোও বলুন&quot; চালু করে ধীরে ডাকুন আর শিশুদের নম্বর খুঁজতে দিন।</li>
+        <li data-i18n="help_6">কিটি পার্টি বা অফিসের অনুষ্ঠান: পুরস্কারের নাম নিজের ভাষায় দিন, পুরস্কারের টাকা লিখুন আর টেবিলের জন্য নিয়মের শিট ছাপুন।</li>
       </ul>
     </details>
 

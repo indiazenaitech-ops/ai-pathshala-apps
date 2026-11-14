@@ -128,28 +128,28 @@
 </head>
 <body>
   <main id="app" class="rl">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="callout small"><span data-i18n="fiction_note"></span> 🔒 <span data-i18n="privacy_line"></span></p>
+    <p class="edu-intro" data-i18n="intro">વિડિયો ઍપ જે સૂચવે છે તે કેમ સૂચવે છે? થોડા વિડિયોને સ્ટાર આપો, ત્રણ રેકમેન્ડર સિસ્ટમની બાજુ-બાજુ તુલના કરો (ગણિત સાથે), અને જુઓ ફિલ્ટર બબલ કેવી રીતે બને છે.</p>
+    <p class="callout small"><span data-i18n="fiction_note">30 વિડિયો અને 40 યુઝર આ લૅબ માટે કાલ્પનિક છે. ફક્ત ગણિત સાચું છે.</span> 🔒 <span data-i18n="privacy_line">બધું આ જ ડિવાઇસ પર ચાલે છે. તમારા સ્ટાર ફક્ત આ બ્રાઉઝરમાં સેવ થાય છે અને ક્યાંય મોકલાતા નથી.</span></p>
 
     <!-- 1. rate -->
     <section class="card" id="rateCard">
-      <h2 data-i18n="step1"></h2>
-      <p class="hint" data-i18n="step1_hint"></p>
+      <h2 data-i18n="step1">1. થોડા વિડિયોને સ્ટાર આપો</h2>
+      <p class="hint" data-i18n="step1_hint">સ્ટાર પર ટૅપ કરો: 1 = બોરિંગ, 5 = ખૂબ ગમ્યો. રેટિંગ કાઢવા એ જ સ્ટાર પર ફરી ટૅપ કરો. ઓછામાં ઓછા 3 વિડિયો રેટ કરો; 10 કે વધુથી પરિણામ સારા આવે છે.</p>
       <div class="bar">
-        <div class="field"><span data-i18n="rater_label"></span>
+        <div class="field"><span data-i18n="rater_label">કોણ રેટ કરે છે?</span>
           <div class="seg" id="raterSeg">
-            <button type="button" data-rater="you" data-i18n="rater_you"></button>
-            <button type="button" data-rater="friend" data-i18n="rater_friend"></button>
+            <button type="button" data-rater="you" data-i18n="rater_you">તમે</button>
+            <button type="button" data-rater="friend" data-i18n="rater_friend">એક મિત્ર</button>
           </div>
         </div>
-        <label class="field"><span data-i18n="filter_label"></span><select id="filterSel"></select></label>
-        <label class="check"><input type="checkbox" id="onlyRated"> <span data-i18n="only_rated"></span></label>
+        <label class="field"><span data-i18n="filter_label">બતાવો</span><select id="filterSel"></select></label>
+        <label class="check"><input type="checkbox" id="onlyRated"> <span data-i18n="only_rated">ફક્ત રેટ કરેલા</span></label>
         <div class="push">
-          <button class="btn btn-sm" id="exampleBtn" type="button" data-i18n="example_btn"></button>
-          <button class="btn btn-sm" id="clearBtn" type="button" data-i18n="clear_btn"></button>
+          <button class="btn btn-sm" id="exampleBtn" type="button" data-i18n="example_btn">ઉદાહરણ રેટિંગ</button>
+          <button class="btn btn-sm" id="clearBtn" type="button" data-i18n="clear_btn">આ રેટિંગ સાફ કરો</button>
         </div>
       </div>
-      <p class="small muted" id="friendHint" data-i18n="friend_hint"></p>
+      <p class="small muted" id="friendHint" data-i18n="friend_hint">“એક મિત્ર” પસંદ કરો અને તેના માટે સ્ટાર આપો. મિત્ર 40 યુઝરમાં જોડાય છે, એટલે તે “તમારા જેવા લોકો” માં દેખાઈ શકે છે.</p>
       <p class="rated-line" id="ratedLine" aria-live="polite"></p>
       <ul class="vlist" id="vlist"></ul>
     </section>
@@ -157,94 +157,94 @@
     <!-- 2. compare -->
     <section class="card" id="cmpCard">
       <div class="row spread">
-        <h2 data-i18n="step2"></h2>
+        <h2 data-i18n="step2">2. ત્રણ રેકમેન્ડરની તુલના કરો</h2>
         <button class="btn btn-sm no-print" id="fsBtn" type="button">⛶ <span data-i18n="fullscreen"></span></button>
       </div>
-      <p class="hint" data-i18n="step2_hint"></p>
+      <p class="hint" data-i18n="step2_hint">દરેક યાદીમાં રેટ કરનારે હજી રેટ ન કરેલા 5 શ્રેષ્ઠ વિડિયો છે. સૂચન પાછળનું ગણિત જોવા “કેમ?” પર ટૅપ કરો.</p>
       <h3 id="forWho" style="margin-bottom:10px"></h3>
       <div class="cmp" aria-live="polite">
         <div class="col pop" id="colPop">
-          <h3>📈 <span data-i18n="rec_pop"></span></h3><p class="sub" data-i18n="rec_pop_sub"></p>
+          <h3>📈 <span data-i18n="rec_pop">લોકપ્રિય</span></h3><p class="sub" data-i18n="rec_pop_sub">40 યુઝરમાંથી મોટા ભાગનાને જે ગમ્યું</p>
           <ol class="recs" id="recPop"></ol>
         </div>
         <div class="col cb" id="colCb">
-          <h3>🏷️ <span data-i18n="rec_content"></span></h3><p class="sub" data-i18n="rec_content_sub"></p>
+          <h3>🏷️ <span data-i18n="rec_content">સરખા વિડિયો</span></h3><p class="sub" data-i18n="rec_content_sub">તમને ગમેલા વિડિયો જેવા ટૅગ (કન્ટેન્ટ-આધારિત)</p>
           <div id="cbNeed" class="callout warning need" hidden></div>
           <ol class="recs" id="recCb"></ol>
           <div class="extra">
-            <h4 data-i18n="profile_title"></h4>
+            <h4 data-i18n="profile_title">પસંદ પ્રોફાઇલ</h4>
             <div class="profile" id="profile"></div>
-            <p class="small muted" data-i18n="profile_hint"></p>
+            <p class="small muted" data-i18n="profile_hint">રેટ કરેલા દરેક વિડિયોના દરેક ટૅગને (સ્ટાર − 3) મળે: 5★ થી +2, 4★ થી +1, 3★ થી કંઈ નહીં, 1★ થી −2. લંબાઈ = વર્ગોના સરવાળાનું વર્ગમૂળ.</p>
           </div>
         </div>
         <div class="col cf" id="colCf">
-          <h3>👥 <span data-i18n="rec_cf"></span></h3><p class="sub" data-i18n="rec_cf_sub"></p>
+          <h3>👥 <span data-i18n="rec_cf">તમારા જેવા લોકો</span></h3><p class="sub" data-i18n="rec_cf_sub">તમારા જેવી રેટિંગ આપનારા યુઝરને જે ગમ્યું (કોલૅબોરેટિવ ફિલ્ટરિંગ)</p>
           <div id="cfNeed" class="callout warning need" hidden></div>
           <ol class="recs" id="recCf"></ol>
           <div class="extra">
-            <h4 data-i18n="neighbours_title"></h4>
-            <p class="small muted" data-i18n="neighbours_hint"></p>
+            <h4 data-i18n="neighbours_title">તમારી સાથે સૌથી મળતા યુઝર</h4>
+            <p class="small muted" data-i18n="neighbours_hint">સમાનતા તમે બંનેએ રેટ કરેલા વિડિયોની તુલના કરે છે (ઓછામાં ઓછા 2): પસંદ-નાપસંદમાં સંમતિ તેને વધારે; 1.00 = પૂર્ણ સંમતિ.</p>
             <ul class="nlist" id="neighbours"></ul>
           </div>
         </div>
       </div>
-      <p class="tie-hint" id="tieHint" data-i18n="tie_hint" hidden></p>
+      <p class="tie-hint" id="tieHint" data-i18n="tie_hint" hidden>“=” એટલે બરાબરી: ઉપરના વિડિયો જેટલો જ સ્કોર, કૅટલૉગના ક્રમમાં બતાવેલ.</p>
     </section>
 
     <!-- 3. filter bubble -->
     <section class="card" id="bubCard">
-      <h2 data-i18n="step3"></h2>
-      <p class="hint" data-i18n="step3_hint"></p>
+      <h2 data-i18n="step3">3. ફિલ્ટર બબલ: ઑટોપ્લે સિમ્યુલેટર</h2>
+      <p class="hint" data-i18n="step3_hint">માનો કે તમે બિલકુલ નવા યુઝર છો. આ ફીડ ફક્ત એ જાણે છે કે તમે અહીં શું જુઓ છો. એક જ વિષય પર ટૅપ કરતા રહો અને વિવિધતા મીટરને ઘટતું જુઓ.</p>
       <div class="bub">
         <div>
           <div class="now" id="now"></div>
-          <h3 style="margin-top:12px" data-i18n="up_next"></h3>
+          <h3 style="margin-top:12px" data-i18n="up_next">આગળ</h3>
           <ul class="next" id="next"></ul>
-          <label class="check" style="margin-top:10px"><input type="checkbox" id="exploreChk"> <span data-i18n="explore"></span></label>
+          <label class="check" style="margin-top:10px"><input type="checkbox" id="exploreChk"> <span data-i18n="explore">એક્સપ્લોર મોડ: બીજા બે વિષય ભેળવો</span></label>
         </div>
         <div>
-          <h3 data-i18n="variety"></h3>
+          <h3 data-i18n="variety">“આગળ” માં વિવિધતા</h3>
           <div class="meter" role="meter" aria-valuemin="0" aria-valuemax="5" id="meter"><span id="meterFill"></span></div>
           <div><span class="meter-num" id="varietyNum"></span> <span id="varietyTxt"></span></div>
           <p class="feed-msg callout" id="feedMsg" aria-live="polite"></p>
-          <h3 data-i18n="history"></h3>
+          <h3 data-i18n="history">જોયેલા વિડિયો</h3>
           <p class="small muted" id="histCount"></p>
           <div class="hist" id="hist" aria-hidden="true"></div>
           <div class="gbar" id="gbar"></div>
-          <p><button class="btn btn-sm" id="clearHist" type="button" data-i18n="clear_history"></button></p>
-          <p class="small muted" data-i18n="feed_how"></p>
+          <p><button class="btn btn-sm" id="clearHist" type="button" data-i18n="clear_history">નવા યુઝર તરીકે ફરી શરૂ કરો</button></p>
+          <p class="small muted" data-i18n="feed_how">આ ફીડ આમ કામ કરે છે: તમે જે વિડિયો જુઓ તેના દરેક ટૅગને વૉચ પ્રોફાઇલમાં +3 મળે છે. “આગળ” = એ પ્રોફાઇલ સાથે સૌથી વધુ કોસાઇન સમાનતા ધરાવતા 5 વિડિયો (બરાબરીમાં લોકપ્રિયતા). પહેલાં જોયેલા વિડિયો ફરી આવી શકે, સાચી ઍપ જેમ.</p>
         </div>
       </div>
     </section>
 
     <!-- learn -->
     <section class="card">
-      <h2 data-i18n="learn_title"></h2>
+      <h2 data-i18n="learn_title">અંદર શું થાય છે?</h2>
       <div class="learn">
-        <div><h3 data-i18n="l1_t"></h3><p data-i18n="l1"></p></div>
-        <div><h3 data-i18n="l2_t"></h3><p data-i18n="l2"></p></div>
-        <div><h3 data-i18n="l3_t"></h3><p data-i18n="l3"></p></div>
-        <div><h3 data-i18n="l4_t"></h3><p data-i18n="l4"></p></div>
-        <div><h3 data-i18n="l5_t"></h3><p data-i18n="l5"></p></div>
-        <div><h3 data-i18n="l6_t"></h3><p data-i18n="l6"></p></div>
+        <div><h3 data-i18n="l1_t">લોકપ્રિય</h3><p data-i18n="l1">સૌથી સરળ રેકમેન્ડર: દરેક વિડિયો કેટલા લોકોને ગમ્યો તે ગણો અને ઉપરના બતાવો. બધાને એક જ યાદી મળે. બિલકુલ નવા યુઝર માટે સારું, તમારી ખાસ રુચિઓ માટે નકામું.</p></div>
+        <div><h3 data-i18n="l2_t">કન્ટેન્ટ-આધારિત (સરખા વિડિયો)</h3><p data-i18n="l2">દરેક વિડિયો ટૅગની યાદી છે. તમારી પસંદ પ્રોફાઇલ ગમેલા વિડિયોના ટૅગ ઉમેરે છે અને નાપસંદના બાદ કરે છે. કોસાઇન સમાનતા તમારી પ્રોફાઇલ અને વિડિયો વચ્ચેનો ખૂણો માપે છે: 100% = એક જ દિશા, 0% = કંઈ સામાન્ય નહીં.</p></div>
+        <div><h3 data-i18n="l3_t">કોલૅબોરેટિવ ફિલ્ટરિંગ (તમારા જેવા લોકો)</h3><p data-i18n="l3">“તમારા જેવું રેટ કરનારાને આ પણ ગમ્યું…”. ઍપ એવા યુઝર શોધે છે જેમની રેટિંગ તમારી સાથે મળે અને તેમના સ્ટારથી તમારા સ્ટારનો અંદાજ કરે છે. તેને ટૅગ જોઈતા નથી, ફક્ત ઘણી રેટિંગ જોઈએ; એટલે જ સાચા પ્લૅટફૉર્મ તમારું આટલું વર્તન ભેગું કરે છે.</p></div>
+        <div><h3 data-i18n="l4_t">ફિલ્ટર બબલ</h3><p data-i18n="l4">દરેક ક્લિક સિસ્ટમને શીખવે છે, અને સિસ્ટમ તમને એવું જ વધુ બતાવે છે. થોડા સમયમાં તમને એક જ વિષય દેખાય છે. પ્લૅટફૉર્મ ચક્ર તોડવા “એક્સપ્લોર” વિડિયો ઉમેરે છે, પણ તે જોવાનો સમય પણ વધારવા માગે છે, જે તમને અંદર જ રાખે છે.</p></div>
+        <div><h3 data-i18n="l5_t">પૂર્વગ્રહ (બાયસ)</h3><p data-i18n="l5">લોકપ્રિય યાદી જે પહેલેથી લોકપ્રિય છે તેને આગળ રાખે છે. કોલૅબોરેટિવ ફિલ્ટરિંગ બહુમતીની પસંદને આગળ રાખે છે અને નાની ભાષાઓ કે પ્રદેશોના વિડિયો છુપાવી શકે છે. સિસ્ટમ જે ડેટાથી શીખે છે, તે જ નક્કી કરે છે કે તે કોની સારી સેવા કરશે.</p></div>
+        <div><h3 data-i18n="l6_t">ગોપનીયતા</h3><p data-i18n="l6">સૂચવવા માટે પ્લૅટફૉર્મ સંગ્રહે છે: તમે શું જોયું, કેટલો સમય, શું છોડ્યું, ક્યારે અને ક્યાં. આ લૅબ તમારા સ્ટાર ફક્ત આ બ્રાઉઝરમાં રાખે છે. પૂછો: તમારી સાચી વૉચ હિસ્ટરી બીજું કોણ જોઈ શકે?</p></div>
       </div>
     </section>
 
     <section class="card disc">
-      <h2 data-i18n="disc_title"></h2>
+      <h2 data-i18n="disc_title">ચર્ચાના પ્રશ્નો: પૂર્વગ્રહ અને ગોપનીયતા</h2>
       <ol>
-        <li data-i18n="q1"></li><li data-i18n="q2"></li><li data-i18n="q3"></li><li data-i18n="q4"></li><li data-i18n="q5"></li>
+        <li data-i18n="q1">લોકપ્રિય યાદી બધાને એક જ વિડિયો બતાવે છે. કોણ ક્યારેય દેખાતું નથી? નવા ક્રિએટર કે નાની ભાષાનું શું થાય?</li><li data-i18n="q2">“તમારા જેવા લોકો” 40 યુઝર પરથી શીખ્યું. જો તેમાંના 30 ને ક્રિકેટ ગમે, તો સંગીતપ્રેમીને શું દેખાય? આ પૂર્વગ્રહ કેવી રીતે?</li><li data-i18n="q3">સાચું પ્લૅટફૉર્મ એ પણ સંગ્રહે છે કે તમે કેટલો સમય જોયું, શું છોડ્યું, તમારું સ્થાન અને દિવસનો સમય. આમાંથી તમે શું શેર કરશો, અને કોની સાથે?</li><li data-i18n="q4">રેકમેન્ડર માટે “સારું” એટલે શું તે કોણ નક્કી કરે: વધુ ખુશ યુઝર, કે વધુ કલાક જોવું? બંને ફીડ કેવી રીતે અલગ હશે?</li><li data-i18n="q5">ફિલ્ટર બબલ ડેમો પછી: પ્લૅટફૉર્મ તમને નવી વસ્તુઓ શોધવામાં કેવી રીતે મદદ કરી શકે? કાયદાએ તે ફરજિયાત કરવું જોઈએ?</li>
       </ol>
     </section>
 
     <details class="card">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">કેવી રીતે વાપરવું / વર્ગ માટે વિચારો</summary>
       <ul>
-        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li><li data-i18n="tip5"></li><li data-i18n="tip6"></li>
+        <li data-i18n="tip1">ઉદાહરણ રેટિંગથી શરૂ કરો, પછી થોડા સ્ટાર બદલો અને ત્રણેય યાદીઓ બદલાતી જુઓ.</li><li data-i18n="tip2">એક વિષયના 3 વિડિયોને 5 સ્ટાર આપો: “સરખા વિડિયો” ટૅગને અનુસરે છે, “તમારા જેવા લોકો” બીજા યુઝરને, અને “લોકપ્રિય” ને તમારી પરવા જ નથી.</li><li data-i18n="tip3">કોઈ પણ સૂચન પર “કેમ?” ટૅપ કરો અને ગણિત મોટેથી વાંચો. વિદ્યાર્થીઓ કાગળ પર કોસાઇન તપાસી શકે.</li>
+        <li data-i18n="tip4">એક મિત્રની રેટિંગ ઉમેરો અને તુલના કરો: એ જ 3 મનપસંદ હોય તો બંનેને એક જ યાદી મળે છે? ક્યાં ફરક છે, અને કેમ?</li><li data-i18n="tip5">વર્ગ પ્રવૃત્તિ: વર્ગને “લોકપ્રિય”, “સરખા વિડિયો” અને “તમારા જેવા લોકો” ટીમોમાં વહેંચો. દરેક ટીમ એક સ્વયંસેવકની રેટિંગ માટે ઍપ બતાવે તે પહેલાં ટોપ વિડિયોનો અંદાજ કરે, પછી સમજાવે કે તેની પદ્ધતિ કોની સારી સેવા કરે છે અને કોને બાકાત રાખે છે.</li><li data-i18n="tip6">પ્રોજેક્ટર: તુલના પર પૂર્ણ સ્ક્રીન વાપરો અને વિદ્યાર્થીઓને તેમની સ્ટાર રેટિંગ બોલવા દો.</li>
       </ul>
     </details>
-    <p class="no-print" style="margin-top:16px"><button class="btn btn-danger" id="resetAll" type="button" data-i18n="reset_all"></button></p>
+    <p class="no-print" style="margin-top:16px"><button class="btn btn-danger" id="resetAll" type="button" data-i18n="reset_all">બધું રીસેટ કરો</button></p>
   </main>
   <script src="../../../apps/recommendation-lab/../../shared/edu.js"></script>
   <script src="../../../apps/recommendation-lab/strings.js"></script>

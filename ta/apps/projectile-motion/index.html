@@ -169,34 +169,34 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <h2 class="print-only pm-print-h" data-i18n="app_title"></h2>
+    <p class="edu-intro" data-i18n="intro">கிரிக்கெட் பந்தை எந்த வேகத்திலும், கோணத்திலும், உயரத்திலிருந்தும் எறியுங்கள் — பூமியில் அல்லது மற்ற கோள்களில். அதன் பாதையைப் பாருங்கள்; 11ஆம் வகுப்பு சூத்திரங்களால் பறக்கும் நேரம், வீச்சு, பெரும உயரம் ஆகியவற்றைச் சரிபாருங்கள்.</p>
+    <h2 class="print-only pm-print-h" data-i18n="app_title">எறிபொருள் இயக்க ஆய்வகம்</h2>
 
     <div class="pm-top" id="pm-top">
       <!-- picture -->
       <section class="card pm-stagecard" aria-labelledby="h-stage">
-        <h2 id="h-stage" hidden data-i18n="app_title"></h2>
+        <h2 id="h-stage" hidden data-i18n="app_title">எறிபொருள் இயக்க ஆய்வகம்</h2>
         <div class="pm-bar no-print">
           <div class="seg" role="group" data-i18n-aria-label="mode_label">
-            <button type="button" id="mode-explore" aria-pressed="true" data-i18n="mode_explore"></button>
-            <button type="button" id="mode-game" aria-pressed="false" data-i18n="mode_game"></button>
+            <button type="button" id="mode-explore" aria-pressed="true" data-i18n="mode_explore">ஆராய்</button>
+            <button type="button" id="mode-game" aria-pressed="false" data-i18n="mode_game">இலக்கு விளையாட்டு</button>
           </div>
           <span class="grow"></span>
-          <button type="button" class="btn btn-sm" id="save-png"><span aria-hidden="true">🖼</span> <span data-i18n="save_png"></span></button>
+          <button type="button" class="btn btn-sm" id="save-png"><span aria-hidden="true">🖼</span> <span data-i18n="save_png">படத்தைச் சேமி</span></button>
           <button type="button" class="btn btn-sm" id="print"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
           <button type="button" class="btn btn-sm" id="fs"><span aria-hidden="true">⛶</span> <span data-i18n="fullscreen"></span></button>
         </div>
 
         <div class="callout accent pm-game stack" id="game-panel" hidden>
           <div class="row spread">
-            <h2 data-i18n="h_game"></h2>
+            <h2 data-i18n="h_game">ஸ்டம்புகளைத் தாக்குங்கள்!</h2>
             <div class="row no-print">
-              <span class="small muted" data-i18n="level"></span>
+              <span class="small muted" data-i18n="level">நிலை</span>
               <div class="seg" role="group" data-i18n-aria-label="level">
-                <button type="button" id="lvl-easy" aria-pressed="true" data-i18n="level_easy"></button>
-                <button type="button" id="lvl-hard" aria-pressed="false" data-i18n="level_hard"></button>
+                <button type="button" id="lvl-easy" aria-pressed="true" data-i18n="level_easy">எளிது</button>
+                <button type="button" id="lvl-hard" aria-pressed="false" data-i18n="level_hard">கடினம்</button>
               </div>
-              <button type="button" class="btn btn-sm btn-primary" id="new-target"><span aria-hidden="true">🎯</span> <span data-i18n="new_target"></span></button>
+              <button type="button" class="btn btn-sm btn-primary" id="new-target"><span aria-hidden="true">🎯</span> <span data-i18n="new_target">புதிய இலக்கு</span></button>
             </div>
           </div>
           <p class="mb0" id="target-info"></p>
@@ -208,66 +208,66 @@
         <div class="stage pm-stage"><canvas id="cv" dir="ltr" role="img" data-i18n-aria-label="cv_aria" data-busy="0"></canvas></div>
 
         <div class="pm-actions no-print">
-          <button type="button" class="btn btn-accent btn-lg pm-launch" id="launch"><span aria-hidden="true">🏏</span> <span data-i18n="launch"></span></button>
-          <button type="button" class="btn" id="clear"><span aria-hidden="true">🧹</span> <span data-i18n="clear_trails"></span></button>
-          <label class="check"><input type="checkbox" id="vectors"> <span data-i18n="vectors"></span></label>
-          <label class="check"><input type="checkbox" id="slow"> <span data-i18n="slow"></span></label>
+          <button type="button" class="btn btn-accent btn-lg pm-launch" id="launch"><span aria-hidden="true">🏏</span> <span data-i18n="launch">எறி</span></button>
+          <button type="button" class="btn" id="clear"><span aria-hidden="true">🧹</span> <span data-i18n="clear_trails">பாதைகளை அழி</span></button>
+          <label class="check"><input type="checkbox" id="vectors"> <span data-i18n="vectors">திசைவேக அம்புகள்</span></label>
+          <label class="check"><input type="checkbox" id="slow"> <span data-i18n="slow">மெதுவான இயக்கம்</span></label>
         </div>
         <div class="pm-scrub no-print">
-          <label for="scrub" data-i18n="scrub"></label>
+          <label for="scrub" data-i18n="scrub">கடைசிப் பாதையில் முன்னும் பின்னும் நகர்த்து</label>
           <input type="range" id="scrub" dir="ltr" min="0" max="1000" step="1" value="1000">
           <div class="pm-readout no-i18n" id="readout" aria-live="off"></div>
         </div>
         <div class="pm-stats" id="stats" aria-live="polite">
-          <div class="pm-stat"><span class="lbl" data-i18n="r_time"></span><span class="val" id="st-T">–</span></div>
-          <div class="pm-stat"><span class="lbl" data-i18n="r_range"></span><span class="val" id="st-R">–</span></div>
-          <div class="pm-stat"><span class="lbl" data-i18n="r_height"></span><span class="val" id="st-H">–</span></div>
+          <div class="pm-stat"><span class="lbl" data-i18n="r_time">பறக்கும் நேரம் (T)</span><span class="val" id="st-T">–</span></div>
+          <div class="pm-stat"><span class="lbl" data-i18n="r_range">வீச்சு (R)</span><span class="val" id="st-R">–</span></div>
+          <div class="pm-stat"><span class="lbl" data-i18n="r_height">பெரும உயரம் (H)</span><span class="val" id="st-H">–</span></div>
         </div>
       </section>
 
       <!-- settings -->
       <section class="card pm-ctrl no-print" aria-labelledby="h-settings">
-        <h2 id="h-settings" data-i18n="h_settings"></h2>
+        <h2 id="h-settings" data-i18n="h_settings">எறியும் அமைப்புகள்</h2>
         <div class="pm-param">
-          <div class="pm-plabel"><label for="speed-num" data-i18n="speed"></label><span class="pm-kmh" id="kmh"></span></div>
+          <div class="pm-plabel"><label for="speed-num" data-i18n="speed">வேகம் (u)</label><span class="pm-kmh" id="kmh"></span></div>
           <input type="range" id="speed" min="1" max="60" step="0.5" data-i18n-aria-label="speed">
           <input type="number" id="speed-num" min="0.1" max="100" step="0.1" inputmode="decimal">
           <span class="pm-unit">m/s</span>
         </div>
         <div class="pm-param">
-          <div class="pm-plabel"><label for="angle-num" data-i18n="angle"></label></div>
+          <div class="pm-plabel"><label for="angle-num" data-i18n="angle">கோணம் (θ)</label></div>
           <input type="range" id="angle" min="0" max="90" step="1" data-i18n-aria-label="angle">
           <input type="number" id="angle-num" min="0" max="90" step="0.1" inputmode="decimal">
           <span class="pm-unit">°</span>
         </div>
         <fieldset class="pm-fs" id="fixed-fs">
           <div class="pm-param">
-            <div class="pm-plabel"><label for="height-num" data-i18n="height"></label></div>
+            <div class="pm-plabel"><label for="height-num" data-i18n="height">எறியும் உயரம் (h)</label></div>
             <input type="range" id="height" min="0" max="100" step="1" data-i18n-aria-label="height">
             <input type="number" id="height-num" min="0" max="500" step="0.1" inputmode="decimal">
             <span class="pm-unit">m</span>
           </div>
           <div class="pm-sub">
-            <div class="pm-plabel"><span class="small" style="font-weight:600" id="g-label" data-i18n="gravity"></span></div>
+            <div class="pm-plabel"><span class="small" style="font-weight:600" id="g-label" data-i18n="gravity">ஈர்ப்பு (g, m/s² இல்)</span></div>
             <div class="pm-chips" role="group" aria-labelledby="g-label" id="g-chips">
-              <button type="button" class="chip" id="g-earth" data-g="earth"><span aria-hidden="true">🌍</span> <span data-i18n="g_earth"></span> <span class="gv">9.8</span></button>
-              <button type="button" class="chip" id="g-moon" data-g="moon"><span aria-hidden="true">🌕</span> <span data-i18n="g_moon"></span> <span class="gv">1.6</span></button>
-              <button type="button" class="chip" id="g-mars" data-g="mars"><span aria-hidden="true">🔴</span> <span data-i18n="g_mars"></span> <span class="gv">3.7</span></button>
-              <button type="button" class="chip" id="g-jupiter" data-g="jupiter"><span aria-hidden="true">🪐</span> <span data-i18n="g_jupiter"></span> <span class="gv">24.8</span></button>
-              <button type="button" class="chip" id="g-custom" data-g="custom"><span aria-hidden="true">✏️</span> <span data-i18n="g_custom"></span></button>
+              <button type="button" class="chip" id="g-earth" data-g="earth"><span aria-hidden="true">🌍</span> <span data-i18n="g_earth">பூமி</span> <span class="gv">9.8</span></button>
+              <button type="button" class="chip" id="g-moon" data-g="moon"><span aria-hidden="true">🌕</span> <span data-i18n="g_moon">நிலா</span> <span class="gv">1.6</span></button>
+              <button type="button" class="chip" id="g-mars" data-g="mars"><span aria-hidden="true">🔴</span> <span data-i18n="g_mars">செவ்வாய்</span> <span class="gv">3.7</span></button>
+              <button type="button" class="chip" id="g-jupiter" data-g="jupiter"><span aria-hidden="true">🪐</span> <span data-i18n="g_jupiter">வியாழன்</span> <span class="gv">24.8</span></button>
+              <button type="button" class="chip" id="g-custom" data-g="custom"><span aria-hidden="true">✏️</span> <span data-i18n="g_custom">சொந்த மதிப்பு</span></button>
             </div>
             <div class="pm-custom" id="custom-row" hidden>
-              <label for="g-custom-val" data-i18n="custom_g"></label>
+              <label for="g-custom-val" data-i18n="custom_g">உங்கள் g மதிப்பு</label>
               <input type="number" id="g-custom-val" min="0.1" max="100" step="0.1" inputmode="decimal">
               <span class="pm-unit">m/s²</span>
             </div>
           </div>
           <div class="pm-sub">
-            <label class="check"><input type="checkbox" id="air"> <span data-i18n="air"></span></label>
+            <label class="check"><input type="checkbox" id="air"> <span data-i18n="air">காற்றுத் தடை (தோராயமாக)</span></label>
             <p class="callout small mb0" id="air-note"></p>
           </div>
         </fieldset>
-        <p class="callout warning small" id="game-locked" hidden data-i18n="game_locked"></p>
+        <p class="callout warning small" id="game-locked" hidden data-i18n="game_locked">இலக்கு விளையாட்டில் ஒவ்வொரு இலக்குக்கும் உயரமும் ஈர்ப்பும் நிலையானவை. நீங்கள் வேகத்தையும் கோணத்தையும் மட்டும் தேர்ந்தெடுங்கள்.</p>
         <div class="row pm-sub">
           <button type="button" class="btn btn-danger btn-sm" id="reset"><span aria-hidden="true">↺</span> <span data-i18n="reset"></span></button>
         </div>
@@ -277,56 +277,56 @@
     <div class="pm-below">
       <div class="pm-col">
         <section class="card pm-results" aria-labelledby="h-results">
-          <h2 id="h-results" data-i18n="h_results"></h2>
-          <p class="muted" id="res-none" data-i18n="res_none"></p>
+          <h2 id="h-results" data-i18n="h_results">கடைசி எறிதலின் முடிவுகள்</h2>
+          <p class="muted" id="res-none" data-i18n="res_none">முடிவுகளைக் காண பந்தை எறியுங்கள்.</p>
           <div id="res-wrap" hidden>
             <div class="scroll-x">
               <table class="table pm-res">
-                <thead><tr><th data-i18n="col_qty"></th><th class="num" data-i18n="col_sim"></th><th class="num" id="col-formula" data-i18n="col_formula"></th></tr></thead>
+                <thead><tr><th data-i18n="col_qty">அளவு</th><th class="num" data-i18n="col_sim">சிமுலேஷன்</th><th class="num" id="col-formula" data-i18n="col_formula">சூத்திரம் (காற்று இல்லாமல்)</th></tr></thead>
                 <tbody id="res-body"></tbody>
               </table>
             </div>
             <p class="callout pm-note small" id="res-note" aria-live="polite"></p>
-            <h3 class="pm-sub" data-i18n="h_working"></h3>
+            <h3 class="pm-sub" data-i18n="h_working">சூத்திரங்களால் தீர்வு</h3>
             <p class="small muted mb0" id="work-intro"></p>
             <div class="pm-work" id="work"></div>
           </div>
         </section>
         <section class="card pm-trails-card" aria-labelledby="h-trails">
-          <h2 id="h-trails" data-i18n="h_trails"></h2>
+          <h2 id="h-trails" data-i18n="h_trails">ஒப்பிடுவதற்கான பாதைகள்</h2>
           <p class="small muted" id="trails-hint"></p>
           <ol class="pm-trails" id="trails"></ol>
-          <p class="muted mb0" id="trails-empty" data-i18n="trails_empty"></p>
+          <p class="muted mb0" id="trails-empty" data-i18n="trails_empty">இன்னும் பாதைகள் இல்லை.</p>
         </section>
       </div>
       <div class="pm-col">
         <section class="card pm-learn" aria-labelledby="h-learn">
-          <h2 id="h-learn" data-i18n="h_learn"></h2>
+          <h2 id="h-learn" data-i18n="h_learn">கருத்துகளைப் புரிந்துகொள்ளுங்கள்</h2>
           <div class="pm-learn-grid">
-            <div class="pm-learn-item"><h3 data-i18n="learn_45_t"></h3><p data-i18n="learn_45"></p></div>
-            <div class="pm-learn-item"><h3 data-i18n="learn_comp_t"></h3><p data-i18n="learn_comp"></p></div>
-            <div class="pm-learn-item"><h3 data-i18n="learn_ind_t"></h3><p data-i18n="learn_ind"></p></div>
-            <div class="pm-learn-item"><h3 data-i18n="learn_real_t"></h3><p data-i18n="learn_real"></p></div>
+            <div class="pm-learn-item"><h3 data-i18n="learn_45_t">45° இல் பந்து ஏன் அதிக தூரம் போகிறது?</h3><p data-i18n="learn_45">சமதளத் தரையில் R = u² sin 2θ / g. 2θ = 90° ஆகும்போது, அதாவது θ = 45° இல், sin 2θ மிகப் பெரியது (= 1). எனவே அதே வேகத்தில் 45° அதிக வீச்சு தரும்.</p></div>
+            <div class="pm-learn-item"><h3 data-i18n="learn_comp_t">நிரப்புக் கோணங்கள்</h3><p data-i18n="learn_comp">θ, 90° − θ கோணங்கள் (எ.கா. 30°, 60°) ஒரே வீச்சு தரும்; ஏனெனில் sin 2θ = sin (180° − 2θ). செங்குத்தான எறிதல் அதிக உயரம் சென்று காற்றில் அதிக நேரம் இருக்கும்.</p></div>
+            <div class="pm-learn-item"><h3 data-i18n="learn_ind_t">ஒரே நேரத்தில் இரு இயக்கங்கள்</h3><p data-i18n="learn_ind">கிடைத் திசைவேகம் vx = u cosθ மாறுவதே இல்லை (காற்று இல்லாமல்). செங்குத்துத் திசைவேகம் vy = u sinθ − gt ஒவ்வொரு வினாடியும் g அளவு குறைந்து, உச்சப் புள்ளியில் 0 ஆகிறது. இதைக் காண திசைவேக அம்புகளை இயக்குங்கள்.</p></div>
+            <div class="pm-learn-item"><h3 data-i18n="learn_real_t">நிஜ வாழ்க்கையில்</h3><p data-i18n="learn_real">உயரத்திலிருந்து எறிந்தால் அல்லது காற்று இருந்தால், சிறந்த கோணம் 45° ஐ விடக் குறைவு. காற்று பாதையை ஒருபக்கமாகவும் ஆக்குகிறது: பந்து ஏறியதை விட அதிகச் சரிவுடன் இறங்குகிறது.</p></div>
           </div>
           <div class="pm-demos">
-            <button type="button" class="btn" id="demo-45"><span aria-hidden="true">📐</span> <span data-i18n="demo_45"></span></button>
-            <button type="button" class="btn" id="demo-comp"><span aria-hidden="true">⚖️</span> <span data-i18n="demo_comp"></span></button>
-            <button type="button" class="btn" id="find-best"><span aria-hidden="true">🔍</span> <span data-i18n="find_best"></span></button>
+            <button type="button" class="btn" id="demo-45"><span aria-hidden="true">📐</span> <span data-i18n="demo_45">15°, 30°, 45°, 60°, 75° காட்டு</span></button>
+            <button type="button" class="btn" id="demo-comp"><span aria-hidden="true">⚖️</span> <span data-i18n="demo_comp">θ மற்றும் 90° − θ ஒப்பிடு</span></button>
+            <button type="button" class="btn" id="find-best"><span aria-hidden="true">🔍</span> <span data-i18n="find_best">சிறந்த கோணத்தைக் கண்டுபிடி</span></button>
           </div>
           <div class="callout success pm-best row" id="best-box" hidden>
             <span class="grow" id="best-out" aria-live="polite"></span>
-            <button type="button" class="btn btn-sm btn-primary" id="use-best" data-i18n="use_best"></button>
+            <button type="button" class="btn btn-sm btn-primary" id="use-best" data-i18n="use_best">இந்தக் கோணத்தில் எறி</button>
           </div>
         </section>
         <details class="card pm-help">
-          <summary data-i18n="h_help"></summary>
+          <summary data-i18n="h_help">பயன்படுத்தும் முறை / வகுப்பறைக்கான யோசனைகள்</summary>
           <ul>
-            <li data-i18n="tip1"></li>
-            <li data-i18n="tip2"></li>
-            <li data-i18n="tip3"></li>
-            <li data-i18n="tip4"></li>
-            <li data-i18n="tip5"></li>
-            <li data-i18n="tip6"></li>
+            <li data-i18n="tip1">வேகம், கோணம், உயரம், ஈர்ப்பு ஆகியவற்றைத் தேர்ந்தெடுத்து &quot;எறி&quot; அழுத்துங்கள். பழைய பாதைகள் வண்ணக் கோடுகளாக இருக்கும்; ஒப்பிடலாம்.</li>
+            <li data-i18n="tip2">திசைவேக அம்புகளை இயக்கி, படத்தின் கீழுள்ள ஸ்லைடரை நகர்த்தி பந்தை எங்கும் நிறுத்துங்கள்; t, x, y, vx, vy படியுங்கள்.</li>
+            <li data-i18n="tip3">வகுப்புச் செயல்பாடு: ஒவ்வொரு குழுவும் R = u² sin 2θ / g மூலம் தாளில் வீச்சைக் கணக்கிட்டு, பின் எறிந்து சரிபார்க்கட்டும். மிக நெருக்கமான குழு வெல்லும்!</li>
+            <li data-i18n="tip4">கிரிக்கெட் இணைப்பு: வேகப்பந்து வீச்சாளர் சுமார் 140 km/h ≈ 39 m/s வேகத்தில் வீசுகிறார்; எல்லைக் கோட்டிலிருந்து வலுவான த்ரோ சுமார் 30 m/s.</li>
+            <li data-i18n="tip5">அதே பந்தை நிலாவிலும் வியாழனிலும் எறியுங்கள். T, R, H எப்படி மாறுகின்றன? சூத்திரங்களுடன் ஒப்பிடுங்கள்.</li>
+            <li data-i18n="tip6">&quot;அச்சிடு&quot; மூலம் படம், முடிவுகள், முழுத் தீர்வு கொண்ட பயிற்சித்தாள் உருவாக்குங்கள்.</li>
           </ul>
         </details>
       </div>

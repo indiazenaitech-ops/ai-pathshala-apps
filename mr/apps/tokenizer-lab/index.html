@@ -146,9 +146,9 @@
 </head>
 <body>
   <main id="app">
-    <h1 class="print-only" data-i18n="app_title"></h1>
+    <h1 class="print-only" data-i18n="app_title">टोकन एक्सप्लोरर</h1>
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">ChatGPT सारखी AI मॉडेल अक्षरे किंवा शब्द वाचत नाहीत, ती टोकन वाचतात. काहीही लिहा, तुमचा टोकनायझर स्वतः शिकवा आणि काही भाषांना जास्त टोकन का लागतात ते पाहा.</p>
       <div class="row no-print">
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm" id="fs-btn" data-i18n="fullscreen"></button>
@@ -160,64 +160,64 @@
       <div class="lab-left">
         <!-- 1. Text -->
         <section class="card stack" id="input-card">
-          <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="input_t"></span></h2>
-          <label for="input" class="lbl" data-i18n="input_label"></label>
+          <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="input_t">काहीतरी लिहा</span></h2>
+          <label for="input" class="lbl" data-i18n="input_label">टोकनमध्ये तोडायचा मजकूर</label>
           <textarea id="input" class="no-i18n" rows="4" spellcheck="false" data-i18n-placeholder="input_ph"></textarea>
           <div class="row no-print">
-            <button type="button" class="btn btn-sm" id="ex-lang" data-i18n="ex_lang"></button>
-            <button type="button" class="btn btn-sm" id="ex-en" data-i18n="ex_en"></button>
-            <button type="button" class="btn btn-sm" id="ex-mix" data-i18n="ex_mix"></button>
+            <button type="button" class="btn btn-sm" id="ex-lang" data-i18n="ex_lang">माझ्या भाषेतील उदाहरण</button>
+            <button type="button" class="btn btn-sm" id="ex-en" data-i18n="ex_en">इंग्रजी उदाहरण</button>
+            <button type="button" class="btn btn-sm" id="ex-mix" data-i18n="ex_mix">मिश्र भाषेचे उदाहरण</button>
             <button type="button" class="btn btn-sm btn-ghost" id="clear-input" data-i18n="clear"></button>
           </div>
         </section>
 
         <!-- 2. Tokenizer -->
         <section class="card stack" id="mode-card">
-          <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="mode_t"></span></h2>
+          <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="mode_t">टोकनायझर निवडा</span></h2>
           <div class="seg big no-print" role="group" data-i18n-aria-label="mode_t">
-            <button type="button" id="mode-char" data-i18n="mode_char"></button>
-            <button type="button" id="mode-word" data-i18n="mode_word"></button>
-            <button type="button" id="mode-bpe" data-i18n="mode_bpe"></button>
+            <button type="button" id="mode-char" data-i18n="mode_char">कॅरेक्टर</button>
+            <button type="button" id="mode-word" data-i18n="mode_word">शब्द</button>
+            <button type="button" id="mode-bpe" data-i18n="mode_bpe">BPE (AI सारखे)</button>
           </div>
           <p class="callout small mb0" id="mode-note"></p>
 
           <div id="train-block" class="stack">
-            <h3 class="mb0" data-i18n="train_t"></h3>
+            <h3 class="mb0" data-i18n="train_t">टोकनायझरला शिकवा</h3>
             <div class="no-print">
-              <span class="lbl" id="src-lbl" data-i18n="train_src"></span>
+              <span class="lbl" id="src-lbl" data-i18n="train_src">प्रशिक्षणाचा मजकूर</span>
               <div class="seg src" role="group" aria-labelledby="src-lbl">
-                <button type="button" id="src-en" data-i18n="src_en"></button>
+                <button type="button" id="src-en" data-i18n="src_en">इंग्रजी</button>
                 <button type="button" id="src-lang"></button>
-                <button type="button" id="src-both" data-i18n="src_both"></button>
-                <button type="button" id="src-all" data-i18n="src_all"></button>
-                <button type="button" id="src-own" data-i18n="src_own"></button>
+                <button type="button" id="src-both" data-i18n="src_both">दोन्ही</button>
+                <button type="button" id="src-all" data-i18n="src_all">सर्व 12 भाषा</button>
+                <button type="button" id="src-own" data-i18n="src_own">माझा स्वतःचा मजकूर</button>
               </div>
             </div>
             <div id="own-wrap" class="stack" hidden>
-              <label for="own-text" class="lbl" data-i18n="own_label"></label>
+              <label for="own-text" class="lbl" data-i18n="own_label">तुमचा प्रशिक्षणाचा मजकूर</label>
               <textarea id="own-text" class="no-i18n" rows="4" spellcheck="false" data-i18n-placeholder="own_ph"></textarea>
             </div>
-            <p class="callout warning small mb0" id="own-empty" data-i18n="own_empty" hidden></p>
+            <p class="callout warning small mb0" id="own-empty" data-i18n="own_empty" hidden>तुमचा प्रशिक्षणाचा मजकूर रिकामा आहे. काही मजकूर पेस्ट करा किंवा दुसरा प्रशिक्षणाचा मजकूर निवडा.</p>
             <p class="muted small mb0" id="corpus-info" aria-live="polite"></p>
 
             <div id="bpe-block" class="stack">
               <div>
                 <div class="range-head">
-                  <label for="merges" data-i18n="merges_label"></label>
+                  <label for="merges" data-i18n="merges_label">मर्जची संख्या</label>
                   <b id="merges-val" class="no-i18n"></b>
                 </div>
                 <input type="range" id="merges" min="0" max="600" step="1" class="no-print">
-                <div class="range-ends tiny muted no-print"><span data-i18n="merges_few"></span><span data-i18n="merges_many"></span></div>
+                <div class="range-ends tiny muted no-print"><span data-i18n="merges_few">कमी मर्ज, लहान टोकन</span><span data-i18n="merges_many">जास्त मर्ज, मोठे टोकन</span></div>
               </div>
               <p class="small mb0" id="vocab-size"></p>
               <p class="callout small mb0" id="merges-early" aria-live="polite" hidden></p>
               <div class="row no-print">
-                <button type="button" class="btn btn-accent" id="play" data-i18n="play"></button>
-                <span class="small muted" data-i18n="play_hint"></span>
+                <button type="button" class="btn btn-accent" id="play" data-i18n="play">▶ शिकताना पाहा</button>
+                <span class="small muted" data-i18n="play_hint">0 पासून सुरू करून एकेक मर्ज जोडते.</span>
               </div>
-              <h4 class="mb0" data-i18n="merge_list_t"></h4>
+              <h4 class="mb0" data-i18n="merge_list_t">मर्ज यादी (सर्वात नवीन सर्वात वर)</h4>
               <div class="merge-box">
-                <p class="muted small merge-empty" id="merge-empty" data-i18n="merge_empty"></p>
+                <p class="muted small merge-empty" id="merge-empty" data-i18n="merge_empty">अजून एकही मर्ज नाही, म्हणून प्रत्येक टोकन एक बाइट आहे. स्लायडर पुढे सरकवा.</p>
                 <ol class="merge-list no-i18n" id="merge-list"></ol>
               </div>
             </div>
@@ -227,16 +227,16 @@
 
       <!-- 3. Tokens -->
       <section class="card stack" id="result-card">
-        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="result_t"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="result_t">टोकन पाहा</span></h2>
         <div class="stats" id="stats" aria-live="polite">
-          <div class="stat main"><b id="stat-tokens">0</b><span data-i18n="stat_tokens"></span></div>
-          <div class="stat"><b id="stat-chars">0</b><span data-i18n="stat_chars"></span></div>
-          <div class="stat"><b id="stat-bytes">0</b><span data-i18n="stat_bytes"></span></div>
-          <div class="stat"><b id="stat-cpt">0</b><span data-i18n="stat_cpt"></span></div>
-          <div class="stat unk" id="stat-unk-wrap" hidden><b id="stat-unk">0</b><span data-i18n="stat_unk"></span></div>
+          <div class="stat main"><b id="stat-tokens">0</b><span data-i18n="stat_tokens">टोकन</span></div>
+          <div class="stat"><b id="stat-chars">0</b><span data-i18n="stat_chars">कॅरेक्टर</span></div>
+          <div class="stat"><b id="stat-bytes">0</b><span data-i18n="stat_bytes">UTF-8 बाइट</span></div>
+          <div class="stat"><b id="stat-cpt">0</b><span data-i18n="stat_cpt">प्रति टोकन कॅरेक्टर</span></div>
+          <div class="stat unk" id="stat-unk-wrap" hidden><b id="stat-unk">0</b><span data-i18n="stat_unk">अनोळखी [UNK]</span></div>
         </div>
         <div class="row spread no-print">
-          <label class="check"><input type="checkbox" id="show-ids"> <span data-i18n="show_ids"></span></label>
+          <label class="check"><input type="checkbox" id="show-ids"> <span data-i18n="show_ids">टोकन ID दाखवा</span></label>
           <span class="small muted" id="mode-badge"></span>
         </div>
         <div class="chips no-i18n" id="chips" dir="auto"></div>
@@ -245,8 +245,8 @@
         <p class="muted small mb0" id="chips-hint"></p>
         <div id="ids-wrap" class="stack">
           <div class="row spread">
-            <h3 class="mb0" data-i18n="ids_t"></h3>
-            <button type="button" class="btn btn-sm no-print" id="copy-ids" data-i18n="copy_ids"></button>
+            <h3 class="mb0" data-i18n="ids_t">AI मॉडेल प्रत्यक्षात हेच पाहते</h3>
+            <button type="button" class="btn btn-sm no-print" id="copy-ids" data-i18n="copy_ids">ID कॉपी करा</button>
           </div>
           <pre class="ids-box no-i18n" id="ids-box" dir="ltr"></pre>
         </div>
@@ -255,57 +255,57 @@
 
     <!-- 4. Comparison -->
     <section class="card stack" id="cmp-card">
-      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="cmp_t"></span></h2>
+      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="cmp_t">एकच अर्थ, 12 भाषा</span></h2>
       <p class="mb0" id="cmp-intro"></p>
       <div class="legend">
-        <span><span class="sw en" aria-hidden="true"></span><span data-i18n="cmp_en"></span> <span class="muted small" id="cmp-en-m"></span></span>
-        <span><span class="sw mu" aria-hidden="true"></span><span data-i18n="cmp_multi"></span> <span class="muted small" id="cmp-mu-m"></span></span>
+        <span><span class="sw en" aria-hidden="true"></span><span data-i18n="cmp_en">फक्त इंग्रजीवर शिकवलेला</span> <span class="muted small" id="cmp-en-m"></span></span>
+        <span><span class="sw mu" aria-hidden="true"></span><span data-i18n="cmp_multi">सर्व 12 भाषांवर शिकवलेला</span> <span class="muted small" id="cmp-mu-m"></span></span>
       </div>
       <div class="cmp-rows no-i18n" id="cmp-rows"></div>
       <p class="callout accent mb0" id="cmp-summary" aria-live="polite"></p>
       <p class="callout mb0 small" id="cmp-budget" hidden></p>
       <div class="callout warning">
-        <h3 data-i18n="cmp_why_t"></h3>
+        <h3 data-i18n="cmp_why_t">हा समानतेचा प्रश्न का आहे?</h3>
         <ul class="mb0" style="margin:0;padding-inline-start:20px">
-          <li data-i18n="cmp_why_1"></li>
-          <li data-i18n="cmp_why_2"></li>
-          <li data-i18n="cmp_why_3"></li>
-          <li data-i18n="cmp_why_4"></li>
+          <li data-i18n="cmp_why_1">पैसे घेणाऱ्या AI सेवा प्रत्येक टोकनचे पैसे घेतात. तुमच्या भाषेला 3 पट टोकन लागत असतील, तर तोच प्रश्न आणि उत्तर 3 पट महाग पडते.</li>
+          <li data-i18n="cmp_why_2">मॉडेल एका वेळी ठरावीक संख्येनेच टोकन वाचू शकते (त्याची कॉन्टेक्स्ट विंडो). प्रत्येक वाक्यात जास्त टोकन म्हणजे तुमच्या धड्याचा किंवा चॅटचा कमी भाग ते सांभाळू शकते.</li>
+          <li data-i18n="cmp_why_3">जास्त टोकन म्हणजे उत्तरेही हळू येतात. आणि ज्या भाषेचा मजकूर प्रशिक्षणाच्या डेटामध्ये कमी असतो, त्या भाषेतील उत्तरे अनेकदा कमकुवत असतात.</li>
+          <li data-i18n="cmp_why_4">यावर उपाय म्हणजे टोकनायझरला भारतीय भाषांवरही शिकवणे. नवीन मॉडेल आणि भारतीय AI टीम हे करत आहेत, त्यामुळे त्यांचे टोकन आपल्या भाषांना जास्त चांगले जुळतात.</li>
         </ul>
       </div>
-      <p class="muted small mb0" data-i18n="cmp_bytes_note"></p>
-      <p class="muted small mb0" id="cmp-real" data-i18n="cmp_real"></p>
+      <p class="muted small mb0" data-i18n="cmp_bytes_note">0 मर्जवर इतके टोकन का? तेव्हा प्रत्येक टोकन एक बाइट असतो. UTF-8 मध्ये इंग्रजी अक्षराला 1 बाइट, उर्दू अक्षराला 2 बाइट, आणि मराठी, तमिळ किंवा कोणत्याही भारतीय लिपीतील अक्षराला 3 बाइट लागतात.</p>
+      <p class="muted small mb0" id="cmp-real" data-i18n="cmp_real">हे शिकवण्यासाठी बनवलेले अगदी छोटे टोकनायझर आहेत, म्हणून खऱ्या AI मॉडेलमध्ये आकडे वेगळे येतात. पण खऱ्या टोकनायझरवरच्या अभ्यासांतही हाच नमुना दिसला आहे: अनेक भारतीय भाषांना इंग्रजीपेक्षा जास्त टोकन लागतात, आणि टोकनायझर भारतीय भाषांच्या जास्त मजकुरातून शिकला की हा फरक कमी होतो.</p>
     </section>
 
     <!-- Inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside_t"></h2>
+      <h2 data-i18n="inside_t">आत काय चालले आहे?</h2>
       <div class="grid-2 inside-grid">
         <div class="panel stack">
-          <h3><span aria-hidden="true">🧩</span><span data-i18n="in_tok_t"></span></h3>
-          <p class="mb0" data-i18n="in_tok"></p>
+          <h3><span aria-hidden="true">🧩</span><span data-i18n="in_tok_t">टोकन म्हणजे शब्द नव्हेत</span></h3>
+          <p class="mb0" data-i18n="in_tok">संगणकाला अक्षरे समजत नाहीत. टोकनायझर आधी मजकुराचे लहान तुकडे करतो, त्यांना टोकन म्हणतात, आणि प्रत्येक तुकड्याला एक क्रमांक (ID) देतो. AI मॉडेल फक्त हे क्रमांकच पाहते. एक टोकन म्हणजे पूर्ण शब्द (&quot;शाळा&quot;), शब्दाचा भाग (&quot;ing&quot;), एक अक्षर, किंवा अक्षराचा तुकडाही असू शकतो.</p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">🔢</span><span data-i18n="in_bpe_t"></span></h3>
-          <p class="mb0" data-i18n="in_bpe"></p>
+          <h3><span aria-hidden="true">🔢</span><span data-i18n="in_bpe_t">BPE कसे शिकते</span></h3>
+          <p class="mb0" data-i18n="in_bpe">बाइटपासून सुरुवात करा. प्रशिक्षणाच्या मजकुरात शेजारी असलेल्या टोकनची प्रत्येक जोडी मोजा. सर्वात जास्त दिसणारी जोडी जोडून एक नवीन टोकन बनवा आणि शब्दसंग्रहात टाका. पुन्हा करा. मोठ्या AI मॉडेलचे टोकनायझर जवळपास 50,000 ते 2,50,000 टोकन होईपर्यंत हे करत राहतात.</p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">💾</span><span data-i18n="in_uni_t"></span></h3>
-          <p data-i18n="in_uni"></p>
-          <label for="byte-in" class="lbl" data-i18n="byte_demo"></label>
+          <h3><span aria-hidden="true">💾</span><span data-i18n="in_uni_t">Unicode आणि बाइट</span></h3>
+          <p data-i18n="in_uni">प्रत्येक भाषेतील प्रत्येक कॅरेक्टरचा एक Unicode क्रमांक असतो: &quot;A&quot; म्हणजे U+0041 आणि &quot;क&quot; म्हणजे U+0915. संगणक मजकूर UTF-8 बाइटमध्ये सेव्ह करतो. इंग्रजी अक्षराला 1 बाइट, भारतीय लिपीतील अक्षराला 3 बाइट आणि बहुतेक इमोजींना 4 बाइट लागतात.</p>
+          <label for="byte-in" class="lbl" data-i18n="byte_demo">स्वतः करून पाहा: काही कॅरेक्टर लिहा</label>
           <input type="text" id="byte-in" class="byte-in no-i18n" maxlength="24" autocomplete="off" spellcheck="false">
           <div class="scroll-x">
             <table class="table byte-table">
-              <thead><tr><th data-i18n="col_char"></th><th data-i18n="col_code"></th><th data-i18n="col_bytes"></th></tr></thead>
+              <thead><tr><th data-i18n="col_char">कॅरेक्टर</th><th data-i18n="col_code">Unicode क्रमांक</th><th data-i18n="col_bytes">UTF-8 बाइट</th></tr></thead>
               <tbody id="byte-body" class="no-i18n"></tbody>
             </table>
           </div>
           <p class="small mb0" id="byte-total" aria-live="polite"></p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">🪟</span><span data-i18n="in_ctx_t"></span></h3>
-          <p data-i18n="in_ctx"></p>
-          <label for="ctx-size" class="lbl" data-i18n="ctx_label"></label>
+          <h3><span aria-hidden="true">🪟</span><span data-i18n="in_ctx_t">कॉन्टेक्स्ट विंडो</span></h3>
+          <p data-i18n="in_ctx">मॉडेलची कॉन्टेक्स्ट विंडो म्हणजे ते एका वेळी जास्तीत जास्त किती टोकन हाताळू शकते: तुमचा प्रश्न, आतापर्यंतचा चॅट आणि त्याचे उत्तर. विंडो भरली की सर्वात जुना भाग कापला जातो किंवा विसरला जातो.</p>
+          <label for="ctx-size" class="lbl" data-i18n="ctx_label">कॉन्टेक्स्ट विंडोचा आकार</label>
           <select id="ctx-size"></select>
           <p class="ctx-out mb0" id="ctx-out" aria-live="polite"></p>
         </div>
@@ -313,14 +313,14 @@
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">कसे वापरायचे / वर्गासाठी कल्पना</summary>
       <ul>
-        <li data-i18n="tip_1"></li>
-        <li data-i18n="tip_2"></li>
-        <li data-i18n="tip_3"></li>
-        <li data-i18n="tip_4"></li>
-        <li data-i18n="tip_5"></li>
-        <li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">BPE निवडा आणि &quot;मर्जची संख्या&quot; स्लायडर 0 पासून 600 पर्यंत न्या. नेहमीचे शब्द कसे एकेक टोकन बनतात ते पाहा.</li>
+        <li data-i18n="tip_2">स्मार्टबोर्डवर &quot;शिकताना पाहा&quot; दाबा आणि मध्येच थांबवा. वर्गाला विचारा: पुढची कोणती जोडी जोडली जाईल, आणि का?</li>
+        <li data-i18n="tip_3">वर्ग उपक्रम: प्रत्येक गटाला तुलनेच्या तक्त्यातील एक भाषा द्या. प्रत्येक गटाने आधी आपल्या टोकनच्या संख्येचा अंदाज करावा, मग तपासावे. मग चर्चा करा: काही भाषांचा खर्च जास्त असणे योग्य आहे का?</li>
+        <li data-i18n="tip_4">&quot;शब्द&quot; निवडा आणि एखादा नवीन शब्द किंवा चुकीचे स्पेलिंग लिहा: तो [UNK] होतो. आता BPE निवडा: ते तरीही काम करते, शब्दाचे लहान तुकडे करून.</li>
+        <li data-i18n="tip_5">&quot;माझा स्वतःचा मजकूर&quot; निवडा आणि तुमच्या पुस्तकातील एक धडा पेस्ट करा. तुमच्या विषयातून सर्वात आधी कोणते मर्ज तयार होतात?</li>
+        <li data-i18n="tip_6">हे पान प्रिंट करा: तुलनेचा तक्ता संगणक प्रयोगशाळेसाठी टोकन आणि समानता यावरचे छान पोस्टर बनतो.</li>
       </ul>
       <p class="muted small mb0" data-i18n="saved_local"></p>
     </details>

@@ -229,92 +229,92 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="callout success small upi-privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">اپنی دکان، ٹیوشن کلاس، اسٹال یا فری لانس کام کے لیے پرنٹ ہونے والا &quot;اسکین کریں اور پیمنٹ کریں&quot; UPI QR بنائیں۔ کاؤنٹر موڈ آپ کے فون پر بل کی رقم کے ساتھ QR دکھاتا ہے۔</p>
+    <p class="callout success small upi-privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">آپ کی UPI ID، فون نمبر اور لوگو کبھی اس ڈیوائس سے باہر نہیں جاتے۔ کئی QR ویب سائٹیں انہیں محفوظ رکھ سکتی ہیں۔</span></p>
 
     <div class="upi-layout">
       <section class="card stack" id="detailsCard" aria-labelledby="hDetails">
-        <h2 id="hDetails" data-i18n="h_details"></h2>
+        <h2 id="hDetails" data-i18n="h_details">آپ کی UPI معلومات</h2>
 
         <div>
-          <div class="lbl" id="savedLbl" data-i18n="saved_ids"></div>
+          <div class="lbl" id="savedLbl" data-i18n="saved_ids">محفوظ کی گئی UPI ID</div>
           <div class="saved-row" id="savedRow" role="group" aria-labelledby="savedLbl"></div>
         </div>
 
         <div class="field">
-          <label for="vpa" data-i18n="f_vpa"></label>
+          <label for="vpa" data-i18n="f_vpa">UPI ID (VPA)</label>
           <input id="vpa" type="text" dir="ltr" inputmode="email" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="400" aria-describedby="vpaHint">
-          <span class="hint" id="vpaHint" data-i18n="f_vpa_hint"></span>
+          <span class="hint" id="vpaHint" data-i18n="f_vpa_hint">نام@بینک جیسی دکھتی ہے۔ اپنی UPI ایپ کی پروفائل میں دیکھیں۔ آپ upi:// لنک بھی پیسٹ کر سکتے ہیں۔</span>
         </div>
         <div class="msgs" id="vpaMsgs" aria-live="polite">
           <div class="callout danger small" id="vpaErr" hidden></div>
-          <div class="callout small" id="sampleNote" data-i18n="sample_note" hidden></div>
+          <div class="callout small" id="sampleNote" data-i18n="sample_note" hidden>یہ نمونے کی UPI ID ہے۔ پرنٹ یا شیئر کرنے سے پہلے اپنی ID لکھیں۔</div>
         </div>
 
         <div class="two">
           <div class="field">
-            <label for="pn" data-i18n="f_pn"></label>
+            <label for="pn" data-i18n="f_pn">رقم پانے والے کا نام</label>
             <input id="pn" type="text" dir="auto" autocomplete="off" spellcheck="false" maxlength="99">
-            <span class="hint" data-i18n="f_pn_hint"></span>
+            <span class="hint" data-i18n="f_pn_hint">بینک کھاتے والا نام، انگریزی حروف میں۔</span>
           </div>
           <div class="field">
-            <label for="shop" data-i18n="f_shop"></label>
+            <label for="shop" data-i18n="f_shop">اسٹینڈی پر نام</label>
             <input id="shop" type="text" dir="auto" autocomplete="off" maxlength="60">
-            <span class="hint" data-i18n="f_shop_hint"></span>
+            <span class="hint" data-i18n="f_shop_hint">دکان، کلاس یا کاروبار کا نام، کسی بھی زبان میں۔</span>
           </div>
         </div>
         <div class="msgs" aria-live="polite"><div class="callout warning small" id="pnWarn" hidden></div></div>
 
         <div class="two">
           <div class="field">
-            <label for="amt"><span data-i18n="f_amt"></span> <span class="opt">· <span data-i18n="optional"></span></span></label>
+            <label for="amt"><span data-i18n="f_amt">طے شدہ رقم (₹)</span> <span class="opt">· <span data-i18n="optional">اختیاری</span></span></label>
             <input id="amt" type="text" inputmode="decimal" dir="ltr" autocomplete="off" maxlength="14" placeholder="250">
-            <span class="hint" data-i18n="f_amt_hint"></span>
+            <span class="hint" data-i18n="f_amt_hint">خالی چھوڑیں تاکہ گاہک خود رقم لکھیں۔ طے شدہ فیس کے لیے بھریں۔</span>
           </div>
           <div class="field">
-            <label for="note"><span data-i18n="f_note"></span> <span class="opt">· <span data-i18n="optional"></span></span></label>
+            <label for="note"><span data-i18n="f_note">پیمنٹ نوٹ</span> <span class="opt">· <span data-i18n="optional">اختیاری</span></span></label>
             <input id="note" type="text" dir="auto" autocomplete="off" maxlength="120">
-            <span class="hint"><span data-i18n="f_note_hint"></span> <span class="count badge" id="noteCount"></span></span>
+            <span class="hint"><span data-i18n="f_note_hint">پیمنٹ کرنے والے کی ایپ میں دکھتا ہے۔ 50 حروف تک۔</span> <span class="count badge" id="noteCount"></span></span>
           </div>
         </div>
         <div class="msgs" id="amtMsgs" aria-live="polite">
           <div class="callout danger small" id="amtErr" hidden></div>
-          <div class="callout warning small" id="amtWarn" data-i18n="warn_amt_big" hidden></div>
-          <div class="callout small" id="noteCut" data-i18n="note_cut" hidden></div>
+          <div class="callout warning small" id="amtWarn" data-i18n="warn_amt_big" hidden>کئی UPI ایپس ایک پیمنٹ میں زیادہ سے زیادہ ₹1,00,000 ہی بھیجنے دیتی ہیں۔</div>
+          <div class="callout small" id="noteCut" data-i18n="note_cut" hidden>نوٹ 50 حروف تک چھوٹا کر دیا گیا۔</div>
         </div>
 
         <div class="field">
-          <div class="lbl"><span data-i18n="f_logo"></span> <span class="opt">· <span data-i18n="optional"></span></span></div>
+          <div class="lbl"><span data-i18n="f_logo">لوگو</span> <span class="opt">· <span data-i18n="optional">اختیاری</span></span></div>
           <div class="logo-row">
             <img class="logo-prev" id="logoPrev" alt="" hidden>
-            <button type="button" class="btn" id="btnLogo"><span aria-hidden="true">🖼</span> <span data-i18n="btn_logo"></span></button>
-            <button type="button" class="btn btn-danger btn-sm" id="btnLogoDel" data-i18n="btn_logo_remove" hidden></button>
+            <button type="button" class="btn" id="btnLogo"><span aria-hidden="true">🖼</span> <span data-i18n="btn_logo">لوگو جوڑیں</span></button>
+            <button type="button" class="btn btn-danger btn-sm" id="btnLogoDel" data-i18n="btn_logo_remove" hidden>لوگو ہٹائیں</button>
           </div>
         </div>
 
         <div class="two">
           <div class="field">
-            <label for="slang" data-i18n="f_slang"></label>
+            <label for="slang" data-i18n="f_slang">اسٹینڈی کی زبان</label>
             <select id="slang"></select>
           </div>
           <div class="field">
-            <div class="lbl" id="colorLbl" data-i18n="f_color"></div>
+            <div class="lbl" id="colorLbl" data-i18n="f_color">رنگ</div>
             <div class="swatches" id="swatches" role="group" aria-labelledby="colorLbl"></div>
           </div>
         </div>
-        <label class="check"><input type="checkbox" id="addEn"> <span data-i18n="f_add_en"></span></label>
+        <label class="check"><input type="checkbox" id="addEn"> <span data-i18n="f_add_en">انگریزی لائن بھی چھاپیں</span></label>
 
         <div class="row">
-          <button type="button" class="btn btn-primary" id="btnSave"><span aria-hidden="true">💾</span> <span data-i18n="btn_save_id"></span></button>
+          <button type="button" class="btn btn-primary" id="btnSave"><span aria-hidden="true">💾</span> <span data-i18n="btn_save_id">یہ UPI ID محفوظ کریں</span></button>
         </div>
       </section>
 
       <section class="card stack" id="designCard" aria-labelledby="hDesign">
         <div class="head-row">
-          <h2 id="hDesign" data-i18n="h_design"></h2>
-          <button type="button" class="btn btn-accent" id="btnCounter"><span aria-hidden="true">🧾</span> <span data-i18n="btn_counter"></span></button>
+          <h2 id="hDesign" data-i18n="h_design">ڈیزائن</h2>
+          <button type="button" class="btn btn-accent" id="btnCounter"><span aria-hidden="true">🧾</span> <span data-i18n="btn_counter">کاؤنٹر موڈ</span></button>
         </div>
-        <p class="small muted mb0" data-i18n="counter_hint"></p>
+        <p class="small muted mb0" data-i18n="counter_hint">بل کی رقم لکھیں اور فون گاہک کی طرف گھما دیں۔</p>
         <div class="designs" id="designs" role="group" aria-labelledby="hDesign"></div>
         <div class="subopts">
           <div class="seg" id="segPaper" role="group" data-i18n-aria-label="paper">
@@ -324,7 +324,7 @@
             <button type="button" id="stk-6" data-v="6"></button><button type="button" id="stk-12" data-v="12"></button>
           </div>
           <div class="seg" id="segImg" role="group" data-i18n-aria-label="d_image">
-            <button type="button" id="img-status" data-v="status" data-i18n="img_status"></button><button type="button" id="img-square" data-v="square" data-i18n="img_square"></button>
+            <button type="button" id="img-status" data-v="status" data-i18n="img_status">WhatsApp اسٹیٹس (9:16)</button><button type="button" id="img-square" data-v="square" data-i18n="img_square">چوکور (DP / پوسٹ)</button>
           </div>
         </div>
         <div class="pv-wrap" id="pvWrap" role="region" data-i18n-aria-label="h_preview">
@@ -332,40 +332,40 @@
           <canvas id="imgCanvas" class="no-i18n" width="1080" height="1920" role="img" hidden></canvas>
         </div>
         <p class="small muted mb0" id="sizeInfo" aria-live="polite"></p>
-        <div class="callout warning small" id="sizeWarn" data-i18n="size_small" hidden></div>
+        <div class="callout warning small" id="sizeWarn" data-i18n="size_small" hidden>QR 2.5 سینٹی میٹر سے چھوٹا چھپے گا اور کچھ فون اسے اسکین نہیں کر پائیں گے۔ کم اسٹیکر یا بڑا کاغذ چنیں۔</div>
         <div class="pv-actions">
           <button type="button" class="btn btn-primary" id="btnPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
-          <button type="button" class="btn btn-primary" id="btnPng"><span aria-hidden="true">⬇</span> <span data-i18n="btn_png"></span></button>
-          <button type="button" class="btn wide" id="btnCopy"><span aria-hidden="true">⧉</span> <span data-i18n="btn_copy_link"></span></button>
+          <button type="button" class="btn btn-primary" id="btnPng"><span aria-hidden="true">⬇</span> <span data-i18n="btn_png">PNG ڈاؤن لوڈ کریں</span></button>
+          <button type="button" class="btn wide" id="btnCopy"><span aria-hidden="true">⧉</span> <span data-i18n="btn_copy_link">UPI لنک کاپی کریں</span></button>
         </div>
         <details class="inside">
-          <summary data-i18n="payload_title"></summary>
+          <summary data-i18n="payload_title">QR کے اندر کیا ہے</summary>
           <pre id="payload" class="no-i18n" dir="ltr"></pre>
-          <p class="small muted mb0" data-i18n="payload_hint"></p>
+          <p class="small muted mb0" data-i18n="payload_hint">ہر UPI ایپ یہ لنک پڑھتی ہے۔ اس میں بس وہی ہے جو آپ نے اوپر لکھا۔</p>
         </details>
       </section>
     </div>
 
     <section class="card safety" aria-labelledby="hSafety">
-      <h2 id="hSafety"><span aria-hidden="true">🛡</span> <span data-i18n="h_safety"></span></h2>
+      <h2 id="hSafety"><span aria-hidden="true">🛡</span> <span data-i18n="h_safety">UPI میں محفوظ رہیں</span></h2>
       <ul class="safe-list">
-        <li><span class="ic" aria-hidden="true">🧪</span><span data-i18n="safe_1"></span></li>
-        <li><span class="ic" aria-hidden="true">🚫</span><span data-i18n="safe_2"></span></li>
-        <li><span class="ic" aria-hidden="true">👀</span><span data-i18n="safe_3"></span></li>
-        <li><span class="ic" aria-hidden="true">✅</span><span data-i18n="safe_4"></span></li>
-        <li><span class="ic" aria-hidden="true">🏦</span><span data-i18n="safe_5"></span></li>
-        <li><span class="ic" aria-hidden="true">🔒</span><span data-i18n="safe_6"></span></li>
+        <li><span class="ic" aria-hidden="true">🧪</span><span data-i18n="safe_1">پرنٹ کرنے سے پہلے دوسرے فون سے ₹1 بھیج کر دیکھیں۔ صحیح نام دکھے اور رقم آپ تک پہنچے۔</span></li>
+        <li><span class="ic" aria-hidden="true">🚫</span><span data-i18n="safe_2">رقم پانے کے لیے آپ کو کبھی QR اسکین نہیں کرنا ہوتا اور نہ UPI PIN ڈالنا ہوتا ہے۔ جو ایسا کرنے کو کہے، وہ دھوکا دے رہا ہے۔</span></li>
+        <li><span class="ic" aria-hidden="true">👀</span><span data-i18n="safe_3">کاؤنٹر والا QR روز دیکھیں۔ دھوکے باز دکان کے QR پر اپنا QR چپکا دیتے ہیں۔ اسٹینڈی لیمینیٹ کرائیں اور اپنی نظر کے سامنے رکھیں۔</span></li>
+        <li><span class="ic" aria-hidden="true">✅</span><span data-i18n="safe_4">پیمنٹ صرف اپنی UPI ایپ، ساؤنڈ باکس یا بینک SMS میں پکی کریں؛ گاہک کی اسکرین یا اسکرین شاٹ پر بھروسا نہ کریں۔</span></li>
+        <li><span class="ic" aria-hidden="true">🏦</span><span data-i18n="safe_5">اگر روز بہت پیمنٹ آتے ہیں تو اپنے بینک سے مرچنٹ (کاروباری) QR کے بارے میں پوچھیں اور اس کی سہولتیں اور چارج ملا کر دیکھیں۔</span></li>
+        <li><span class="ic" aria-hidden="true">🔒</span><span data-i18n="safe_6">آپ کی UPI ID اور فون نمبر اسی ڈیوائس پر رہتے ہیں۔ کئی مفت QR ویب سائٹیں آپ کی لکھی معلومات محفوظ کر سکتی ہیں۔</span></li>
       </ul>
     </section>
 
     <details class="card help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">کیسے استعمال کریں</summary>
       <ul>
-        <li data-i18n="tip_1"></li>
-        <li data-i18n="tip_2"></li>
-        <li data-i18n="tip_3"></li>
-        <li data-i18n="tip_4"></li>
-        <li data-i18n="tip_5"></li>
+        <li data-i18n="tip_1">UPI ایپ کی پروفائل سے اپنی UPI ID اور بینک کھاتے والا نام لکھیں۔ اسے محفوظ کر لیں تاکہ الگ دکانوں یا گھر والوں کے کھاتوں میں آسانی سے بدل سکیں۔</li>
+        <li data-i18n="tip_2">ڈیزائن چنیں: A5 یا A4 کاؤنٹر اسٹینڈی، بیچ سے موڑنے والا ٹیبل ٹینٹ، یا تھیلوں، بلوں اور پارسل کے لیے 6 یا 12 اسٹیکر کی شیٹ۔</li>
+        <li data-i18n="tip_3">دکان کے فون پر کاؤنٹر موڈ چلائیں: بل کی رقم لکھیں اور اسکرین گاہک کی طرف کر دیں۔ ان کی ایپ میں رقم پہلے سے بھری ہوگی۔</li>
+        <li data-i18n="tip_4">ٹیوشن ٹیچر اور فری لانسر: طے شدہ فیس اور &quot;جولائی کی فیس&quot; جیسا نوٹ جوڑیں، پھر PNG کو WhatsApp پر بھیجیں۔</li>
+        <li data-i18n="tip_5">موٹے کاغذ پر چھاپیں یا لیمینیٹ کرائیں۔ QR کم سے کم 2.5 سینٹی میٹر چوڑا ہو اور اس کے چاروں طرف سفید کنارا ہو، تاکہ ہر فون اسکین کر سکے۔</li>
       </ul>
     </details>
 
@@ -377,20 +377,20 @@
 
   <div class="cm" id="counter" role="dialog" aria-modal="true" aria-labelledby="cmLbl" hidden>
     <div class="cm-bar">
-      <label id="cmLbl" for="cmAmt" data-i18n="cm_amount"></label>
+      <label id="cmLbl" for="cmAmt" data-i18n="cm_amount">بل کی رقم (₹)</label>
       <div class="cm-in"><span aria-hidden="true">₹</span><input id="cmAmt" type="text" inputmode="decimal" dir="ltr" autocomplete="off" maxlength="14"></div>
-      <button type="button" class="btn" id="cmNew" data-i18n="cm_new"></button>
+      <button type="button" class="btn" id="cmNew" data-i18n="cm_new">نیا بل</button>
       <button type="button" class="btn" id="cmClose"><span aria-hidden="true">✕</span> <span data-i18n="close"></span></button>
     </div>
     <div class="cm-body">
       <div class="cm-shop no-i18n" id="cmShop" dir="auto"></div>
       <div class="cm-qr is-off" id="cmQr" role="img"></div>
       <div class="cm-amount no-i18n" id="cmAmount" aria-live="polite"></div>
-      <div class="cm-scan" data-i18n="st_scan"></div>
+      <div class="cm-scan" data-i18n="st_scan">کسی بھی UPI ایپ سے اسکین کر کے پیمنٹ کریں</div>
       <div class="cm-payee no-i18n" id="cmPayee"></div>
       <p class="cm-msg" id="cmMsg" aria-live="polite"></p>
     </div>
-    <p class="cm-paid" data-i18n="cm_paid"></p>
+    <p class="cm-paid" data-i18n="cm_paid">دکاندار: رقم آپ کی اپنی UPI ایپ یا بینک SMS میں آئی ہے، یہ ضرور دیکھیں۔</p>
   </div>
 
   <script src="../../../apps/upi-qr-standee/../../shared/edu.js"></script>

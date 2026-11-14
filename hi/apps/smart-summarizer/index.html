@@ -136,30 +136,30 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <div class="ss-privacy callout success small"><span class="ic" aria-hidden="true">🔒</span><p data-i18n="privacy"></p></div>
+    <p class="edu-intro" data-i18n="intro">नोट्स, कोई पाठ, समाचार लेख या ऑफ़िस का सर्कुलर पेस्ट करें या PDF खोलें, और कुछ ही सेकंड में मुख्य बातें, कीवर्ड और सबसे ज़रूरी वाक्य पाएँ।</p>
+    <div class="ss-privacy callout success small"><span class="ic" aria-hidden="true">🔒</span><p data-i18n="privacy">आपका टेक्स्ट कहीं अपलोड नहीं होता। सारांश इसी डिवाइस पर बनता है और बिना इंटरनेट के भी चलता है। सिर्फ़ PDF खोलने के लिए पहली बार इंटरनेट चाहिए।</p></div>
 
     <h1 class="print-only" id="printTitle"></h1>
     <div class="ss-layout">
       <section class="card stack" id="inCard" aria-labelledby="inH">
         <div class="ss-head">
-          <h2 id="inH" data-i18n="input_h"></h2>
+          <h2 id="inH" data-i18n="input_h">आपका टेक्स्ट</h2>
           <span class="muted small" id="inStats" aria-live="polite"></span>
         </div>
         <div class="ss-tools">
-          <button class="btn" type="button" id="sampleBtn"><span class="ic" aria-hidden="true">📄</span><span data-i18n="btn_sample"></span></button>
-          <label class="btn" for="fileIn" id="openBtn"><span class="ic" aria-hidden="true">📂</span><span data-i18n="btn_open"></span></label>
+          <button class="btn" type="button" id="sampleBtn"><span class="ic" aria-hidden="true">📄</span><span data-i18n="btn_sample">नमूना टेक्स्ट</span></button>
+          <label class="btn" for="fileIn" id="openBtn"><span class="ic" aria-hidden="true">📂</span><span data-i18n="btn_open">.txt या PDF खोलें</span></label>
           <input type="file" id="fileIn" class="sr-only" accept=".txt,.text,.md,.csv,.srt,.vtt,.pdf,text/plain,application/pdf" data-i18n-aria-label="btn_open">
           <button class="btn btn-ghost" type="button" id="clearBtn"><span class="ic" aria-hidden="true">🧹</span><span data-i18n="clear"></span></button>
         </div>
-        <label for="text" class="sr-only" data-i18n="aria_input"></label>
+        <label for="text" class="sr-only" data-i18n="aria_input">सारांश के लिए टेक्स्ट</label>
         <textarea id="text" class="no-i18n" dir="auto" spellcheck="false" data-i18n-placeholder="input_ph"></textarea>
-        <p class="tiny muted ss-hint" data-i18n="drop_hint"></p>
+        <p class="tiny muted ss-hint" data-i18n="drop_hint">सुझाव: आप .txt या PDF फ़ाइल को इस बॉक्स पर छोड़ भी सकते हैं।</p>
         <div id="fileBox" class="callout small ss-file" role="status" hidden>
           <span class="ss-spin" id="fileSpin" aria-hidden="true"></span>
           <span class="msg" id="fileMsg"></span>
           <button class="btn" type="button" id="fileRetry" data-i18n="try_again" hidden></button>
-          <a class="btn" id="fileOcr" href="../../../apps/smart-summarizer/../image-to-text/index.html" data-i18n="link_ocr" hidden></a>
+          <a class="btn" id="fileOcr" href="../../../apps/smart-summarizer/../image-to-text/index.html" data-i18n="link_ocr" hidden>इमेज से टेक्स्ट ऐप खोलें</a>
           <div class="progress" id="fileProg" hidden><span id="fileBar"></span></div>
         </div>
       </section>
@@ -167,10 +167,10 @@
       <section class="card stack" id="outCard" aria-labelledby="outH">
         <div class="ss-opts">
           <div class="ss-opt">
-            <span class="lbl" id="lenLbl" data-i18n="len_label"></span>
+            <span class="lbl" id="lenLbl" data-i18n="len_label">लंबाई</span>
             <div class="seg" id="modeSeg" role="group" aria-labelledby="lenLbl">
-              <button type="button" data-mode="points" data-i18n="mode_points"></button>
-              <button type="button" data-mode="pct" data-i18n="mode_pct"></button>
+              <button type="button" data-mode="points" data-i18n="mode_points">बिंदु</button>
+              <button type="button" data-mode="pct" data-i18n="mode_pct">टेक्स्ट का %</button>
             </div>
             <div class="ss-range">
               <input type="range" id="lenRange" min="3" max="10" step="1" value="5" data-i18n-aria-label="len_label">
@@ -178,18 +178,18 @@
             </div>
           </div>
           <div class="ss-opt" id="engRow" hidden>
-            <span class="lbl" id="engLbl" data-i18n="engine_label"></span>
+            <span class="lbl" id="engLbl" data-i18n="engine_label">तरीका</span>
             <div class="seg" id="engSeg" role="group" aria-labelledby="engLbl">
-              <button type="button" data-eng="quick" data-i18n="eng_quick"></button>
-              <button type="button" data-eng="chrome" data-i18n="eng_chrome"></button>
+              <button type="button" data-eng="quick" data-i18n="eng_quick">तेज़ (ऑफ़लाइन)</button>
+              <button type="button" data-eng="chrome" data-i18n="eng_chrome">Chrome AI</button>
             </div>
             <div class="ss-ai" id="aiOpts" hidden>
-              <p class="small" data-i18n="eng_chrome_note"></p>
+              <p class="small" data-i18n="eng_chrome_note">Chrome का डिवाइस पर चलने वाला AI (Gemini Nano): कुछ भी भेजा नहीं जाता। यह नए वाक्य लिखता है और अभी सिर्फ़ अंग्रेज़ी टेक्स्ट के लिए काम करता है।</p>
               <div class="seg" id="typeSeg" role="group" data-i18n-aria-label="ai_type_label">
-                <button type="button" data-type="key-points" data-i18n="type_points"></button>
-                <button type="button" data-type="tldr" data-i18n="type_tldr"></button>
+                <button type="button" data-type="key-points" data-i18n="type_points">मुख्य बिंदु</button>
+                <button type="button" data-type="tldr" data-i18n="type_tldr">छोटा पैराग्राफ़</button>
               </div>
-              <p class="tiny muted" id="aiFirst" data-i18n="ai_first_dl"></p>
+              <p class="tiny muted" id="aiFirst" data-i18n="ai_first_dl">पहली बार Chrome अपना AI मॉडल एक बार डाउनलोड करता है। यह बड़ा है, इसलिए Wi-Fi बेहतर है।</p>
             </div>
           </div>
           <button class="btn btn-primary btn-lg" type="button" id="goBtn"></button>
@@ -202,14 +202,14 @@
         </div>
 
         <div class="ss-outhead" id="outHead">
-          <h2 id="outH" data-i18n="out_h"></h2>
+          <h2 id="outH" data-i18n="out_h">सारांश</h2>
           <span class="badge primary" id="engBadge" hidden></span>
         </div>
         <p class="ss-empty" id="outEmpty"></p>
         <div id="outBody" hidden>
           <div class="tabs" id="outTabs" role="tablist">
-            <button type="button" role="tab" data-tab="points" aria-controls="pane-points" data-i18n="tab_points"></button>
-            <button type="button" role="tab" data-tab="hl" aria-controls="pane-hl" data-i18n="tab_highlight"></button>
+            <button type="button" role="tab" data-tab="points" aria-controls="pane-points" data-i18n="tab_points">मुख्य बिंदु</button>
+            <button type="button" role="tab" data-tab="hl" aria-controls="pane-hl" data-i18n="tab_highlight">पूरे टेक्स्ट में देखें</button>
           </div>
           <div id="pane-points" role="tabpanel">
             <p class="muted small" id="outNote"></p>
@@ -221,13 +221,13 @@
           </div>
           <div class="ss-stats" id="stats" aria-live="polite"></div>
           <div class="ss-kw">
-            <h3 data-i18n="keywords_h"></h3>
+            <h3 data-i18n="keywords_h">कीवर्ड</h3>
             <div id="kw" class="no-i18n"></div>
           </div>
         </div>
         <div class="ss-actions">
           <button class="btn" type="button" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
-          <button class="btn" type="button" id="dlBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="btn_download_txt"></span></button>
+          <button class="btn" type="button" id="dlBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="btn_download_txt">.txt डाउनलोड करें</span></button>
           <button class="btn" type="button" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
           <span class="sp"></span>
           <button class="btn btn-danger" type="button" id="resetBtn" data-i18n="reset"></button>
@@ -236,26 +236,26 @@
     </div>
 
     <details class="card">
-      <summary data-i18n="help_h"></summary>
+      <summary data-i18n="help_h">कैसे इस्तेमाल करें / सुझाव</summary>
       <ul>
         <li data-i18n-html="help1"></li>
-        <li data-i18n="help2"></li>
-        <li data-i18n="help3"></li>
-        <li data-i18n="help4"></li>
-        <li data-i18n="help5"></li>
+        <li data-i18n="help2">लंबाई चुनें: बिंदुओं की संख्या (3 से 10) या टेक्स्ट का हिस्सा (10% से 60%)। बिंदु उसी क्रम में रहते हैं जैसे आपके टेक्स्ट में हैं।</li>
+        <li data-i18n="help3">किसी मुख्य बिंदु को दबाएँ, वह पूरे टेक्स्ट में हाइलाइट दिखेगा, ताकि आप उसके आगे-पीछे की बात भी पढ़ सकें।</li>
+        <li data-i18n="help4">पढ़ाई के लिए: किसी पाठ का सारांश बनाएँ, फिर हर बिंदु को अपने शब्दों में समझाएँ। अपने नोट्स को सारांश और कीवर्ड से मिलाएँ। कक्षा में बच्चे पहले 5 मुख्य वाक्य ख़ुद चुनें, फिर ऐप से जाँचें।</li>
+        <li data-i18n="help5">काम के लिए: मीटिंग से पहले किसी लंबे सर्कुलर, रिपोर्ट या नोटिस की मुख्य बातें निकालें, फिर उन्हें WhatsApp में कॉपी करें या .txt फ़ाइल में डाउनलोड करें।</li>
       </ul>
     </details>
     <details class="card">
-      <summary data-i18n="inside_h"></summary>
+      <summary data-i18n="inside_h">अंदर क्या हो रहा है?</summary>
       <ol>
-        <li data-i18n="inside1"></li>
-        <li data-i18n="inside2"></li>
-        <li data-i18n="inside3"></li>
-        <li data-i18n="inside4"></li>
+        <li data-i18n="inside1">टेक्स्ट को पूर्ण विराम (। और .), प्रश्नचिह्न और नई लाइन पर वाक्यों में बाँटा जाता है।</li>
+        <li data-i18n="inside2">हर वाक्य उसके ज़रूरी शब्दों की सूची बन जाता है। &quot;है&quot;, &quot;का&quot;, &quot;और&quot; जैसे छोटे शब्द छोड़ दिए जाते हैं। जो शब्द कुछ वाक्यों में आता है पर सब में नहीं, उसका वज़न ज़्यादा होता है (इसे TF-IDF कहते हैं)।</li>
+        <li data-i18n="inside3">जिन वाक्यों में एक जैसे ज़रूरी शब्द हैं, वे जाल की तरह आपस में जुड़ जाते हैं। जो वाक्य बहुत से वाक्यों से जुड़ा हो, वह &quot;केंद्रीय&quot; है: वह बताता है कि पूरा टेक्स्ट किस बारे में है। यह TextRank है, जो PageRank पर आधारित है, यानी वही तरीका जिससे Google वेब पेजों को रैंक करता था।</li>
+        <li data-i18n="inside4">सबसे केंद्रीय वाक्य चुने जाते हैं (लगभग एक जैसे वाक्य छोड़कर) और अपने असली क्रम में दिखाए जाते हैं। कुछ डाउनलोड नहीं होता, इसलिए यह ऑफ़लाइन और हर भाषा में चलता है।</li>
       </ol>
       <p class="small" data-i18n-html="inside_gen"></p>
       <p class="small" data-i18n-html="inside_chrome"></p>
-      <p class="small muted" data-i18n="inside_limits"></p>
+      <p class="small muted" data-i18n="inside_limits">सीमाएँ: सारांश उतना ही अच्छा होता है जितना टेक्स्ट। सूचियाँ, तालिकाएँ और बहुत छोटे टेक्स्ट का सारांश ठीक नहीं बनता, और स्कैन की हुई PDF में पढ़ने को टेक्स्ट नहीं होता।</p>
     </details>
   </main>
   <script src="../../../apps/smart-summarizer/../../shared/edu.js"></script>

@@ -136,28 +136,28 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">உங்கள் குறிப்புகளையோ PDF-ஐயோ சேர்த்து, உங்கள் மொழியில் கேள்வி கேளுங்கள்; பதில் உள்ள பத்திகளைப் பாருங்கள். உங்கள் குறிப்புகள் எங்கும் பதிவேற்றப்படாது: எல்லாம் உங்கள் சாதனத்திலேயே நடக்கும்.</p>
 
     <div class="callout success an-privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">உங்கள் குறிப்புகள் உங்களிடமே இருக்கும்.</strong> <span data-i18n="privacy_body">தேடல் இந்த உலாவிக்குள்ளேயே நடக்கிறது. AI மாடல் மட்டும் பதிவிறக்கப்படும் (ஒருமுறை, AI தேடலை இயக்கினால்). உங்கள் உரையும் கேள்விகளும் எங்கும் அனுப்பப்படாது.</span></p>
     </div>
 
     <div class="an-grid">
       <!-- 1. notes -->
       <div class="an-col">
         <section class="card stack" id="notesCard" aria-labelledby="hNotes">
-          <h2 class="an-step" id="hNotes" data-i18n="step_notes"></h2>
+          <h2 class="an-step" id="hNotes" data-i18n="step_notes">1. உங்கள் குறிப்புகள்</h2>
           <div class="an-src">
-            <button class="btn btn-primary" id="openBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="open_file"></span></button>
+            <button class="btn btn-primary" id="openBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="open_file">TXT அல்லது PDF திற</span></button>
             <span class="an-sample">
-              <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">📗</span> <span data-i18n="load_sample"></span></button>
+              <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">📗</span> <span data-i18n="load_sample">மாதிரிப் பாடம்</span></button>
               <select id="sampleLang" class="no-i18n" data-i18n-aria-label="sample_lang"></select>
             </span>
           </div>
           <input type="file" id="fileInput" class="an-hidden-input" accept=".txt,.text,.md,.csv,.pdf,text/plain,application/pdf" tabindex="-1" aria-hidden="true">
           <label class="field" for="notes">
-            <span data-i18n="notes_label"></span>
+            <span data-i18n="notes_label">குறிப்புகள் (ஒட்டவும், தட்டச்சு செய்யவும் அல்லது கோப்பைத் திறக்கவும்)</span>
             <textarea id="notes" class="no-i18n" spellcheck="false" data-i18n-placeholder="notes_ph"></textarea>
           </label>
           <div class="row spread"><div class="an-stats" id="stats" aria-live="polite"></div><button class="btn btn-sm btn-ghost" id="clearBtn" type="button"><span aria-hidden="true">🗑️</span> <span data-i18n="clear"></span></button></div>
@@ -167,41 +167,41 @@
           </div>
           <div class="callout danger stack" id="fileErr" hidden role="alert">
             <p class="mb0" id="fileErrText"></p>
-            <div id="ocrLinkWrap" hidden><a class="btn btn-sm" href="../../../apps/ask-your-notes/../image-to-text/index.html" data-i18n="open_ocr"></a></div>
+            <div id="ocrLinkWrap" hidden><a class="btn btn-sm" href="../../../apps/ask-your-notes/../image-to-text/index.html" data-i18n="open_ocr">படத்திலிருந்து உரை (OCR) திற</a></div>
           </div>
-          <p class="small muted mb0" data-i18n="drop_hint"></p>
+          <p class="small muted mb0" data-i18n="drop_hint">.txt அல்லது .pdf கோப்பை இங்கே இழுத்தும் விடலாம். PDF-இல் உண்மையான உரை இருக்க வேண்டும்; புகைப்படம் அல்லது ஸ்கேனுக்கு முதலில் படத்திலிருந்து உரை (OCR) பயன்படுத்துங்கள்.</p>
         </section>
       </div>
 
       <!-- 2. ask -->
       <div class="an-col">
         <section class="card stack" id="askCard" aria-labelledby="hAsk">
-          <h2 class="an-step" id="hAsk" data-i18n="step_ask"></h2>
+          <h2 class="an-step" id="hAsk" data-i18n="step_ask">2. கேள்வி கேளுங்கள்</h2>
           <form class="an-ask" id="askForm" autocomplete="off">
-            <label class="an-hidden-input" for="q" data-i18n="q_label"></label>
+            <label class="an-hidden-input" for="q" data-i18n="q_label">உங்கள் கேள்வி</label>
             <input id="q" type="search" class="no-i18n" enterkeyhint="search" data-i18n-placeholder="q_ph">
-            <button class="btn btn-primary" id="askBtn" type="submit"><span aria-hidden="true">🔎</span> <span data-i18n="find"></span></button>
+            <button class="btn btn-primary" id="askBtn" type="submit"><span aria-hidden="true">🔎</span> <span data-i18n="find">தேடு</span></button>
           </form>
           <div class="an-try" id="tryRow" hidden>
-            <span class="small muted" data-i18n="try_label"></span>
+            <span class="small muted" data-i18n="try_label">முயன்று பாருங்கள்:</span>
             <span id="tryChips" class="an-try no-i18n"></span>
           </div>
           <div class="an-mode" role="group" data-i18n-aria-label="mode_label">
-            <button type="button" id="modeKw" aria-pressed="true"><span class="nm"><span aria-hidden="true">🔤</span> <span data-i18n="mode_kw"></span></span><span class="sub" data-i18n="mode_kw_sub"></span></button>
-            <button type="button" id="modeAi" aria-pressed="false"><span class="nm"><span aria-hidden="true">🧠</span> <span data-i18n="mode_ai"></span></span><span class="sub" data-i18n="mode_ai_sub"></span></button>
+            <button type="button" id="modeKw" aria-pressed="true"><span class="nm"><span aria-hidden="true">🔤</span> <span data-i18n="mode_kw">சொல் தேடல்</span></span><span class="sub" data-i18n="mode_kw_sub">உடனே · அதே சொற்களைத் தேடும்</span></button>
+            <button type="button" id="modeAi" aria-pressed="false"><span class="nm"><span aria-hidden="true">🧠</span> <span data-i18n="mode_ai">AI தேடல்</span></span><span class="sub" data-i18n="mode_ai_sub">பொருளைப் புரிந்துகொள்ளும் · எந்த மொழியும்</span></button>
           </div>
 
           <!-- AI model: ask before downloading -->
           <div class="callout stack" id="aiBox" hidden>
             <div id="aiAsk" class="stack">
               <p class="mb0" id="aiBody"></p>
-              <p class="mb0 small an-ok" id="aiCachedNote" hidden data-i18n="ai_cached_note"></p>
+              <p class="mb0 small an-ok" id="aiCachedNote" hidden data-i18n="ai_cached_note">AI மாடல் ஏற்கனவே இந்தச் சாதனத்தில் சேமிக்கப்பட்டுள்ளது.</p>
               <div class="row"><button class="btn btn-primary" id="aiGet" type="button"></button></div>
             </div>
             <div class="an-status" id="aiStatus" hidden>
               <span id="aiText" class="small" aria-live="polite"></span>
               <div class="progress" id="aiBarWrap" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="aiBar" style="width:0%"></span></div>
-              <span class="tiny muted" id="aiPhone" data-i18n="ai_phone"></span>
+              <span class="tiny muted" id="aiPhone" data-i18n="ai_phone">கைப்பேசியில் இதற்கு ஒரு நிமிடம் ஆகலாம்.</span>
               <div class="row"><button class="btn btn-sm" id="aiCancel" type="button" data-i18n="cancel"></button></div>
             </div>
             <div class="callout danger stack" id="aiErr" hidden role="alert">
@@ -223,7 +223,7 @@
         <section class="card stack" id="resCard" aria-labelledby="hRes" aria-live="polite">
           <div class="an-reshead">
             <h3 id="hRes"></h3>
-            <button class="btn btn-sm" id="copyAll" type="button" hidden><span aria-hidden="true">📋</span> <span data-i18n="copy_all"></span></button>
+            <button class="btn btn-sm" id="copyAll" type="button" hidden><span aria-hidden="true">📋</span> <span data-i18n="copy_all">அனைத்தையும் நகலெடு</span></button>
           </div>
           <div id="resMsg"></div>
           <ol class="an-results" id="results"></ol>
@@ -233,56 +233,56 @@
 
     <!-- what's happening inside -->
     <section class="card stack an-inside" id="inside" aria-labelledby="hInside" style="margin-top:16px">
-      <h2 id="hInside" data-i18n="inside_title"></h2>
+      <h2 id="hInside" data-i18n="inside_title">உள்ளே என்ன நடக்கிறது</h2>
       <div class="grid-3 an-inside-grid">
         <div class="panel">
-          <h3><span aria-hidden="true">🔤</span> <span data-i18n="in_kw_h"></span></h3>
-          <p class="small" data-i18n="in_kw_p"></p>
+          <h3><span aria-hidden="true">🔤</span> <span data-i18n="in_kw_h">சொல் தேடல் (BM25)</span></h3>
+          <p class="small" data-i18n="in_kw_p">உங்கள் குறிப்புகள் சுமார் 3 வாக்கியங்கள் கொண்ட சிறு பகுதிகளாகப் பிரிக்கப்படுகின்றன. சொல் தேடல் ஒவ்வொரு பகுதியிலும் உங்கள் கேள்வியின் சொற்களை எண்ணுகிறது. அரிதான சொற்களுக்கு (“பச்சையம்” போல) பொதுவான சொற்களை (“தாவரம்” போல) விட அதிக மதிப்பு. இது உடனே இயங்கும், எதையும் பதிவிறக்க வேண்டாம்; ஆனால் அதே சொற்களை மட்டுமே கண்டுபிடிக்கும்.</p>
         </div>
         <div class="panel">
-          <h3><span aria-hidden="true">🧠</span> <span data-i18n="in_ai_h"></span></h3>
-          <p class="small" data-i18n="in_ai_p"></p>
+          <h3><span aria-hidden="true">🧠</span> <span data-i18n="in_ai_h">AI தேடல்: பொருளை எண்களாக மாற்றுதல்</span></h3>
+          <p class="small" data-i18n="in_ai_p">AI மாடல் ஒவ்வொரு பகுதியையும் 384 எண்கள் கொண்ட பட்டியலாக மாற்றுகிறது; இதற்கு எம்பெடிங் என்று பெயர். ஒத்த பொருள் கொண்ட பகுதிகளுக்கு ஒத்த எண்கள் கிடைக்கும், மொழி வேறாக இருந்தாலும். உங்கள் கேள்விக்கும் ஒரு பட்டியல் உருவாகிறது; செயலி கொசைன் ஒற்றுமையால் பட்டியல்களை ஒப்பிடுகிறது: 1-க்கு எவ்வளவு அருகில் உள்ளதோ, பொருள் அவ்வளவு அருகில்.</p>
         </div>
         <div class="panel">
-          <h3><span aria-hidden="true">✅</span> <span data-i18n="in_find_h"></span></h3>
-          <p class="small" data-i18n="in_find_p"></p>
+          <h3><span aria-hidden="true">✅</span> <span data-i18n="in_find_h">இது தேடுகிறது, எழுதுவதில்லை</span></h3>
+          <p class="small" data-i18n="in_find_p">இந்தச் செயலி ஒருபோதும் புதிய பதிலை எழுதாது. உங்கள் குறிப்புகளில் ஏற்கனவே உள்ள வாக்கியங்களை மட்டுமே காட்டும்; அதனால் இல்லாத தகவலை உருவாக்க முடியாது (சாட்பாட்கள் சில நேரம் உருவாக்குகின்றன; இதற்கு ஹாலுசினேஷன் என்று பெயர்). குறிப்புகளில் பதில் இல்லாவிட்டாலும் மிக அருகிலுள்ள பகுதி காட்டப்படும்; எனவே எப்போதும் நீங்களே படித்துப் பாருங்கள்.</p>
         </div>
       </div>
       <div class="panel">
-        <h3 class="mb0" style="font-size:1rem" data-i18n="viz_title"></h3>
-        <p class="small muted mb0" id="vizEmpty" data-i18n="viz_empty"></p>
+        <h3 class="mb0" style="font-size:1rem" data-i18n="viz_title">உங்கள் கேள்வியை எண்களாகப் பாருங்கள்</h3>
+        <p class="small muted mb0" id="vizEmpty" data-i18n="viz_empty">AI தேடல் செய்து, உங்கள் கேள்வி மற்றும் சிறந்த பகுதியின் எண்களைப் பாருங்கள்.</p>
         <div id="viz" class="an-viz" hidden>
-          <div class="an-vrow"><span class="lbl" data-i18n="viz_q"></span><div class="an-cells" id="vizQ"></div></div>
-          <div class="an-vrow"><span class="lbl" data-i18n="viz_p"></span><div class="an-cells" id="vizP"></div></div>
+          <div class="an-vrow"><span class="lbl" data-i18n="viz_q">உங்கள் கேள்வி</span><div class="an-cells" id="vizQ"></div></div>
+          <div class="an-vrow"><span class="lbl" data-i18n="viz_p">சிறந்த பகுதி</span><div class="an-cells" id="vizP"></div></div>
           <div class="an-legend">
-            <span><i id="lgPos"></i><span data-i18n="viz_pos"></span></span>
-            <span><i id="lgNeg"></i><span data-i18n="viz_neg"></span></span>
+            <span><i id="lgPos"></i><span data-i18n="viz_pos">பூஜ்ஜியத்தை விட அதிகம்</span></span>
+            <span><i id="lgNeg"></i><span data-i18n="viz_neg">பூஜ்ஜியத்தை விடக் குறைவு</span></span>
             <span id="vizNote"></span>
           </div>
           <p class="mb0"><strong id="vizSim"></strong></p>
         </div>
       </div>
       <div class="panel">
-        <h3 style="font-size:1rem;margin:0 0 8px" data-i18n="model_h"></h3>
+        <h3 style="font-size:1rem;margin:0 0 8px" data-i18n="model_h">AI மாடல் பற்றி</h3>
         <dl class="an-facts">
-          <dt data-i18n="model_name"></dt><dd class="no-i18n" id="fModel" dir="auto"></dd>
-          <dt data-i18n="model_lic"></dt><dd id="fLic"></dd>
-          <dt data-i18n="model_size"></dt><dd id="fSize"></dd>
-          <dt data-i18n="model_dims"></dt><dd id="fDims"></dd>
-          <dt data-i18n="model_run"></dt><dd id="fRun"></dd>
+          <dt data-i18n="model_name">மாடல்</dt><dd class="no-i18n" id="fModel" dir="auto"></dd>
+          <dt data-i18n="model_lic">உரிமம்</dt><dd id="fLic"></dd>
+          <dt data-i18n="model_size">பதிவிறக்கம்</dt><dd id="fSize"></dd>
+          <dt data-i18n="model_dims">ஒவ்வொரு பகுதிக்கும் எண்கள்</dt><dd id="fDims"></dd>
+          <dt data-i18n="model_run">எங்கே இயங்குகிறது</dt><dd id="fRun"></dd>
         </dl>
       </div>
     </section>
 
     <details class="card" id="help" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">பயன்படுத்துவது எப்படி / வகுப்பறைக்கான யோசனைகள்</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">உங்கள் குறிப்புகளை ஒட்டுங்கள், .txt அல்லது PDF கோப்பைத் திறங்கள், அல்லது மாதிரிப் பாடத்தை ஏற்றுங்கள். குறிப்புகள் சுமார் 3 வாக்கியப் பகுதிகளாகப் பிரிக்கப்படும்; பக்க எண்கள் உடனிருக்கும்.</li>
+        <li data-i18n="tip2">உங்கள் சொற்களில் கேள்வியைத் தட்டச்சு செய்து தேடு அழுத்துங்கள். சொல் தேடல் உடனே பதில் தரும்; உங்கள் சொற்கள் குறிப்புகளிலிருந்து வேறாக இருந்தாலும் AI தேடல் பதிலைக் கண்டுபிடிக்கும்.</li>
+        <li data-i18n="tip3">AI தேடல் பல மொழிகளைப் புரிந்துகொள்ளும்: ஆங்கில மாதிரிப் பாடத்தை ஏற்றி, கேள்வியைத் தமிழ், இந்தி அல்லது உருதுவில் கேளுங்கள்.</li>
+        <li data-i18n="tip4">ஒவ்வொரு பதிலிலும் பக்க எண் தெரியும்; சிறந்த வாக்கியம் முன்னிலைப்படுத்தப்படும். முழுப் பகுதியையும் படித்து, பிறகு உங்கள் நோட்டில் எழுதிக்கொள்ளுங்கள்.</li>
+        <li data-i18n="tip5">வகுப்புச் செயல்பாடு: ஒரு பாடத்தை ஏற்றுங்கள். ஒவ்வொரு மாணவரும் 3 கேள்விகள் எழுதி, பதில் எந்தப் பக்கத்தில் உள்ளது என்று ஊகிக்கட்டும். செயலியில் சரிபார்த்து, சொல் தேடலையும் AI தேடலையும் ஒப்பிடுங்கள்: எந்தக் கேள்விகளை AI மட்டும் கண்டுபிடித்தது, ஏன்?</li>
+        <li data-i18n="tip6">புத்தகப் பக்கத்தின் ஸ்கேன் அல்லது புகைப்படமா? முதலில் படத்திலிருந்து உரை (OCR) மூலம் உரையாக மாற்றுங்கள். அலுவலகத்தில் நீண்ட சுற்றறிக்கைகள், கொள்கைகள், கூட்டக் குறிப்புகளையும் இப்படியே தேடுங்கள்.</li>
       </ul>
       <div class="row" style="margin-top:12px"><button class="btn btn-danger btn-sm" id="resetBtn" type="button" data-i18n="reset"></button></div>
     </details>

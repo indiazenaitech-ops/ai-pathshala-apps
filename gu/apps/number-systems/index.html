@@ -228,15 +228,15 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">કમ્પ્યુટર કેવી રીતે ગણે છે તે શીખો: બાઇનરી, ઑક્ટલ, ડેસિમલ અને હેક્ઝાડેસિમલ વચ્ચે પગલે-પગલે પૂરા ઉકેલ સાથે રૂપાંતર કરો, બિટ્સ સાથે રમો, બાઇનરીમાં સરવાળો કરો અને જુઓ કે Unicode ભારતીય લિપિઓ કેવી રીતે સાચવે છે.</p>
 
     <div class="ns-tabbar no-print">
       <div class="tabs" role="tablist" id="tabs">
-        <button type="button" role="tab" id="tab-convert" data-tab="convert" aria-controls="p-convert" data-i18n="tab_convert"></button>
-        <button type="button" role="tab" id="tab-bits" data-tab="bits" aria-controls="p-bits" data-i18n="tab_bits"></button>
-        <button type="button" role="tab" id="tab-add" data-tab="add" aria-controls="p-add" data-i18n="tab_add"></button>
-        <button type="button" role="tab" id="tab-text" data-tab="text" aria-controls="p-text" data-i18n="tab_text"></button>
-        <button type="button" role="tab" id="tab-quiz" data-tab="quiz" aria-controls="p-quiz" data-i18n="tab_quiz"></button>
+        <button type="button" role="tab" id="tab-convert" data-tab="convert" aria-controls="p-convert" data-i18n="tab_convert">કન્વર્ટર</button>
+        <button type="button" role="tab" id="tab-bits" data-tab="bits" aria-controls="p-bits" data-i18n="tab_bits">8-બિટ સ્વિચ</button>
+        <button type="button" role="tab" id="tab-add" data-tab="add" aria-controls="p-add" data-i18n="tab_add">બાઇનરી સરવાળો</button>
+        <button type="button" role="tab" id="tab-text" data-tab="text" aria-controls="p-text" data-i18n="tab_text">લખાણ એન્કોડિંગ</button>
+        <button type="button" role="tab" id="tab-quiz" data-tab="quiz" aria-controls="p-quiz" data-i18n="tab_quiz">મહાવરો</button>
       </div>
       <button type="button" class="btn btn-sm" id="fs-btn" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen">⛶</button>
     </div>
@@ -246,34 +246,34 @@
       <div class="ns-conv-grid">
         <div class="card stack">
           <div>
-            <label class="ns-label" for="num-in" data-i18n="number_in"></label>
+            <label class="ns-label" for="num-in" data-i18n="number_in">સંખ્યા લખો</label>
             <input id="num-in" class="ns-big-in" type="text" aria-describedby="conv-msg" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="48" dir="ltr">
           </div>
           <div>
-            <span class="ns-label" id="from-l" data-i18n="from_base"></span>
+            <span class="ns-label" id="from-l" data-i18n="from_base">આ સંખ્યા કઈ પદ્ધતિમાં છે</span>
             <div class="ns-pick" id="from" role="group" aria-labelledby="from-l"></div>
           </div>
           <p class="ns-msg small" id="conv-msg" aria-live="polite"></p>
           <label class="field" id="places-wrap">
-            <span data-i18n="places_label"></span>
+            <span data-i18n="places_label">બિંદુ પછી કેટલા અંક (અપૂર્ણાંક માટે)</span>
             <input id="places" type="number" min="1" max="24" step="1" value="8" style="max-width: 7rem">
           </label>
           <div class="no-print">
-            <span class="ns-label small" data-i18n="try_these"></span>
+            <span class="ns-label small" data-i18n="try_these">આ ઉદાહરણો અજમાવો</span>
             <div class="ns-examples" id="examples"></div>
           </div>
         </div>
         <div class="card">
-          <h2 class="ns-h" data-i18n="all_bases"></h2>
+          <h2 class="ns-h" data-i18n="all_bases">એ જ સંખ્યા ચારેય પદ્ધતિમાં</h2>
           <div class="ns-res" id="results" aria-live="polite"></div>
         </div>
       </div>
 
       <section class="card" id="steps-card">
         <div class="ns-steps-head">
-          <h2 data-i18n="steps_title"></h2>
+          <h2 data-i18n="steps_title">પગલે-પગલે ઉકેલ</h2>
           <div class="ns-target">
-            <span class="small muted" id="target-l" data-i18n="steps_for"></span>
+            <span class="small muted" id="target-l" data-i18n="steps_for">ઉકેલ બતાવો:</span>
             <div class="ns-pick three" id="target" role="group" aria-labelledby="target-l"></div>
           </div>
         </div>
@@ -281,7 +281,7 @@
       </section>
 
       <details class="card" id="chart-card">
-        <summary data-i18n="chart_title"></summary>
+        <summary data-i18n="chart_title">ઝટપટ ચાર્ટ: 0 થી 15 ચારેય પદ્ધતિમાં</summary>
         <div class="scroll-x"><table class="table ns-chart" id="chart"></table></div>
         <p class="no-print"><button type="button" class="btn btn-sm" id="chart-print" data-i18n="print"></button></p>
       </details>
@@ -290,26 +290,26 @@
     <!-- ================= 8-bit switches ================= -->
     <section id="p-bits" class="ns-panel" role="tabpanel" aria-labelledby="tab-bits" hidden>
       <div class="card stack">
-        <p class="muted mb0" data-i18n="bits_hint"></p>
+        <p class="muted mb0" data-i18n="bits_hint">1 બાઇટ = 8 બિટ. સ્વિચને સ્પર્શ કરીને બિટ ચાલુ (1) કે બંધ (0) કરો. દરેક બિટની કિંમત તેની જમણી બાજુના બિટ કરતાં બમણી હોય છે.</p>
         <div class="ns-bits" id="bits"></div>
         <div class="ns-sumline" id="bit-sum" aria-live="polite"></div>
         <div class="ns-tiles">
-          <div class="ns-tile"><span data-i18n="base10"></span><b id="bit-dec"></b></div>
-          <div class="ns-tile"><span data-i18n="base16"></span><b id="bit-hex"></b></div>
-          <div class="ns-tile"><span data-i18n="base8"></span><b id="bit-oct"></b></div>
-          <div class="ns-tile char"><span data-i18n="ascii_char"></span><b id="bit-char" class="no-i18n"></b><div class="note" id="bit-note"></div></div>
+          <div class="ns-tile"><span data-i18n="base10">ડેસિમલ</span><b id="bit-dec"></b></div>
+          <div class="ns-tile"><span data-i18n="base16">હેક્ઝાડેસિમલ</span><b id="bit-hex"></b></div>
+          <div class="ns-tile"><span data-i18n="base8">ઑક્ટલ</span><b id="bit-oct"></b></div>
+          <div class="ns-tile char"><span data-i18n="ascii_char">ASCII અક્ષર</span><b id="bit-char" class="no-i18n"></b><div class="note" id="bit-note"></div></div>
         </div>
         <div class="row ns-toyctl no-print">
           <button type="button" class="btn" id="bit-clear" data-i18n="clear"></button>
           <button type="button" class="btn" id="bit-dec1" data-i18n-aria-label="sub_one" data-i18n-title="sub_one" dir="ltr">−1</button>
           <button type="button" class="btn btn-primary" id="bit-inc" data-i18n-aria-label="add_one" data-i18n-title="add_one" dir="ltr">+1</button>
-          <button type="button" class="btn" id="bit-shl" data-i18n="shift_left"></button>
-          <button type="button" class="btn" id="bit-shr" data-i18n="shift_right"></button>
-          <button type="button" class="btn" id="bit-not" data-i18n="flip_all"></button>
+          <button type="button" class="btn" id="bit-shl" data-i18n="shift_left">ડાબે ખસેડો (×2)</button>
+          <button type="button" class="btn" id="bit-shr" data-i18n="shift_right">જમણે ખસેડો (÷2)</button>
+          <button type="button" class="btn" id="bit-not" data-i18n="flip_all">બધા બિટ ઊલટાવો (NOT)</button>
         </div>
         <div class="grid-2 no-print">
-          <label class="field"><span data-i18n="type_dec"></span><input id="bit-dec-in" type="number" min="0" max="255" step="1" inputmode="numeric"></label>
-          <label class="field"><span data-i18n="type_char"></span><input id="bit-char-in" type="text" maxlength="4" autocomplete="off" class="no-i18n"></label>
+          <label class="field"><span data-i18n="type_dec">ડેસિમલ સંખ્યા લખો (0–255)</span><input id="bit-dec-in" type="number" min="0" max="255" step="1" inputmode="numeric"></label>
+          <label class="field"><span data-i18n="type_char">અથવા કોઈ અક્ષર લખો</span><input id="bit-char-in" type="text" maxlength="4" autocomplete="off" class="no-i18n"></label>
         </div>
         <p class="small muted mb0" id="bit-msg" aria-live="polite"></p>
       </div>
@@ -318,21 +318,21 @@
     <!-- ================= binary addition ================= -->
     <section id="p-add" class="ns-panel" role="tabpanel" aria-labelledby="tab-add" hidden>
       <div class="card stack">
-        <p class="muted mb0" data-i18n="add_hint"></p>
+        <p class="muted mb0" data-i18n="add_hint">બે બાઇનરી સંખ્યાઓ લખો. વદ્દી (કૅરી) દરેક કૉલમની ઉપર નારંગી રંગમાં દેખાશે. કોઈ પગલા પર પૉઇન્ટર લઈ જશો તો તેની કૉલમ ચમકશે.</p>
         <div class="grid-2">
-          <label class="field"><span data-i18n="num_a"></span><input id="add-a" class="ns-big-in" type="text" maxlength="40" autocomplete="off" spellcheck="false" inputmode="numeric" dir="ltr"></label>
-          <label class="field"><span data-i18n="num_b"></span><input id="add-b" class="ns-big-in" type="text" maxlength="40" autocomplete="off" spellcheck="false" inputmode="numeric" dir="ltr"></label>
+          <label class="field"><span data-i18n="num_a">પહેલી સંખ્યા (બાઇનરી)</span><input id="add-a" class="ns-big-in" type="text" maxlength="40" autocomplete="off" spellcheck="false" inputmode="numeric" dir="ltr"></label>
+          <label class="field"><span data-i18n="num_b">બીજી સંખ્યા (બાઇનરી)</span><input id="add-b" class="ns-big-in" type="text" maxlength="40" autocomplete="off" spellcheck="false" inputmode="numeric" dir="ltr"></label>
         </div>
-        <div class="row no-print"><button type="button" class="btn" id="add-rand" data-i18n="new_example"></button></div>
+        <div class="row no-print"><button type="button" class="btn" id="add-rand" data-i18n="new_example">નવું ઉદાહરણ</button></div>
         <p class="ns-msg small" id="add-msg" aria-live="polite"></p>
         <div class="scroll-x" id="add-out" aria-live="polite"></div>
         <div class="callout success" id="add-check"></div>
         <details class="panel" id="add-cols-wrap" open>
-          <summary data-i18n="explain_cols"></summary>
+          <summary data-i18n="explain_cols">દરેક કૉલમ સમજો (જમણી બાજુથી ગણતરી)</summary>
           <ol class="ns-cols" id="add-cols"></ol>
         </details>
         <div>
-          <span class="ns-label small" data-i18n="add_rules"></span>
+          <span class="ns-label small" data-i18n="add_rules">બાઇનરી સરવાળાના નિયમો</span>
           <div class="ns-rules ns-ltr"><span class="badge">0 + 0 = 0</span><span class="badge">0 + 1 = 1</span><span class="badge">1 + 0 = 1</span><span class="badge">1 + 1 = 10</span><span class="badge">1 + 1 + 1 = 11</span></div>
         </div>
       </div>
@@ -341,38 +341,38 @@
     <!-- ================= text encoding ================= -->
     <section id="p-text" class="ns-panel" role="tabpanel" aria-labelledby="tab-text" hidden>
       <div class="card stack">
-        <p class="muted mb0" data-i18n="enc_hint"></p>
-        <label class="ns-label" for="enc-text" data-i18n="enc_label"></label>
+        <p class="muted mb0" data-i18n="enc_hint">કોઈ પણ ભાષામાં કંઈ પણ લખો. દરેક અક્ષરનો એક Unicode નંબર (કોડ પૉઇન્ટ) હોય છે, અને UTF-8 તેને 1 થી 4 બાઇટમાં સાચવે છે.</p>
+        <label class="ns-label" for="enc-text" data-i18n="enc_label">તમારું લખાણ</label>
         <textarea id="enc-text" class="no-i18n" maxlength="500" spellcheck="false"></textarea>
         <div class="ns-sample no-i18n no-print" id="enc-samples"></div>
         <div class="ns-tiles" aria-live="polite">
-          <div class="ns-tile"><span data-i18n="enc_chars"></span><b id="enc-n"></b></div>
-          <div class="ns-tile"><span data-i18n="enc_utf8"></span><b id="enc-bytes"></b></div>
-          <div class="ns-tile"><span data-i18n="enc_utf32"></span><b id="enc-u32"></b></div>
+          <div class="ns-tile"><span data-i18n="enc_chars">અક્ષરો (કોડ પૉઇન્ટ)</span><b id="enc-n"></b></div>
+          <div class="ns-tile"><span data-i18n="enc_utf8">UTF-8માં બાઇટ</span><b id="enc-bytes"></b></div>
+          <div class="ns-tile"><span data-i18n="enc_utf32">UTF-32માં બાઇટ</span><b id="enc-u32"></b></div>
         </div>
         <div class="ns-legend" id="enc-legend"></div>
-        <p class="small muted mb0" data-i18n="enc_pick"></p>
+        <p class="small muted mb0" data-i18n="enc_pick">કોઈ અક્ષરને સ્પર્શ કરો અને જુઓ કે તે બાઇટમાં કેવી રીતે બદલાય છે.</p>
         <div class="ns-strip" id="enc-strip"></div>
         <p class="small muted mb0" id="enc-limit"></p>
       </div>
       <div class="card ns-how" id="enc-how" aria-live="polite"></div>
       <div class="card">
-        <h2 class="ns-h" data-i18n="why_title"></h2>
-        <p data-i18n="why_text"></p>
+        <h2 class="ns-h" data-i18n="why_title">ભારતીય લિપિઓને 3 બાઇટ કેમ જોઈએ?</h2>
+        <p data-i18n="why_text">UTF-8માં U+007F સુધીના કોડ પૉઇન્ટ (અંગ્રેજી અક્ષરો અને અંકો) 1 બાઇટ લે છે, U+07FF સુધી 2 બાઇટ, U+FFFF સુધી 3 બાઇટ અને પછી 4 બાઇટ. દેવનાગરી (U+0900)થી મલયાલમ (U+0D7F) સુધીની બધી ભારતીય લિપિઓ U+07FF પછી આવે છે, તેથી તેમના દરેક અક્ષરને 3 બાઇટ જોઈએ. ઉર્દૂ અરબી લિપિ (U+0600)માં લખાય છે, તેને 2 બાઇટ જોઈએ.</p>
         <div class="scroll-x">
           <table class="table" id="utf8-rules">
-            <thead><tr><th data-i18n="col_range"></th><th data-i18n="col_bytes"></th><th data-i18n="col_pattern"></th><th data-i18n="example"></th></tr></thead>
+            <thead><tr><th data-i18n="col_range">કોડ પૉઇન્ટની મર્યાદા</th><th data-i18n="col_bytes">બાઇટ</th><th data-i18n="col_pattern">UTF-8 બિટ બીબું</th><th data-i18n="example"></th></tr></thead>
             <tbody class="ns-mono no-i18n"></tbody>
           </table>
         </div>
         <p class="small" id="matra-note"></p>
-        <p class="small muted mb0" data-i18n="enc_history"></p>
+        <p class="small muted mb0" data-i18n="enc_history">ASCII ફક્ત 128 અક્ષરો (અંગ્રેજી અક્ષરો, અંકો અને ચિહ્નો)નો 7-બિટ કોડ છે. ISCII ભારતીય લિપિઓ માટે ભારતમાં બનેલો 8-બિટ કોડ હતો. Unicode દરેક ભાષાના દરેક અક્ષરને પોતાનો નંબર આપે છે, જેમ કે U+0915. UTF-8 અને UTF-32 આ નંબરોને બાઇટમાં સાચવવાની બે રીતો છે.</p>
       </div>
       <details class="card">
-        <summary data-i18n="enc_table"></summary>
+        <summary data-i18n="enc_table">પૂરું કોષ્ટક: દરેક અક્ષર</summary>
         <div class="scroll-x">
           <table class="table ns-enc-table" id="enc-table">
-            <thead><tr><th data-i18n="col_char"></th><th data-i18n="col_code"></th><th data-i18n="col_script"></th><th data-i18n="col_hex"></th><th data-i18n="col_bin"></th><th data-i18n="col_bytes"></th></tr></thead>
+            <thead><tr><th data-i18n="col_char">અક્ષર</th><th data-i18n="col_code">કોડ પૉઇન્ટ</th><th data-i18n="col_script">લિપિ</th><th data-i18n="col_hex">UTF-8 (હેક્સ)</th><th data-i18n="col_bin">UTF-8 (બાઇનરી)</th><th data-i18n="col_bytes">બાઇટ</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
@@ -383,7 +383,7 @@
     <section id="p-quiz" class="ns-panel" role="tabpanel" aria-labelledby="tab-quiz" hidden>
       <div class="card stack">
         <div>
-          <span class="ns-label" id="lvl-l" data-i18n="quiz_level"></span>
+          <span class="ns-label" id="lvl-l" data-i18n="quiz_level">સ્તર</span>
           <div class="ns-pick" id="levels" role="group" aria-labelledby="lvl-l"></div>
         </div>
         <div class="ns-score" id="q-score" aria-live="polite"></div>
@@ -391,28 +391,28 @@
         <div class="ns-q" id="q-show"></div>
         <div class="ns-ansrow">
           <label class="field"><span id="q-ans-l"></span><input id="q-ans" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="40" dir="ltr"></label>
-          <button type="button" class="btn btn-primary btn-lg" id="q-check" data-i18n="check"></button>
+          <button type="button" class="btn btn-primary btn-lg" id="q-check" data-i18n="check">ચકાસો</button>
           <button type="button" class="btn btn-lg" id="q-next" data-i18n="next"></button>
         </div>
         <div class="ns-fb" id="q-fb" aria-live="polite"></div>
-        <div class="row no-print"><button type="button" class="btn btn-sm" id="q-show-work" data-i18n="show_working" hidden></button></div>
+        <div class="row no-print"><button type="button" class="btn btn-sm" id="q-show-work" data-i18n="show_working" hidden>ઉકેલ બતાવો</button></div>
         <div id="q-work" hidden></div>
-        <p class="small muted mb0" data-i18n="quiz_hint"></p>
+        <p class="small muted mb0" data-i18n="quiz_hint">ચકાસવા માટે Enter દબાવો. ખોટા જવાબ પર પૂરો ઉકેલ દેખાશે, જેથી તમે ભૂલ શોધી શકો.</p>
       </div>
       <div class="row no-print">
-        <button type="button" class="btn" id="ws-print" data-i18n="print_ws"></button>
-        <button type="button" class="btn btn-danger" id="q-reset" data-i18n="reset_score"></button>
+        <button type="button" class="btn" id="ws-print" data-i18n="print_ws">વર્કશીટ પ્રિન્ટ કરો (12 પ્રશ્નો + જવાબ)</button>
+        <button type="button" class="btn btn-danger" id="q-reset" data-i18n="reset_score">સ્કોર રીસેટ કરો</button>
       </div>
     </section>
 
     <details class="card no-print" id="help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">કેવી રીતે વાપરવું · વર્ગખંડ માટે વિચારો</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
+        <li data-i18n="help_1">કન્વર્ટર: તમારી સંખ્યાની પદ્ધતિ પસંદ કરો, સંખ્યા લખો અને તેને ચારેય પદ્ધતિમાં જુઓ. જે પદ્ધતિમાં બદલવું હોય તે પસંદ કરો અને નોટબુકમાં લખીએ એ જ રીતે પૂરો ઉકેલ જુઓ.</li>
+        <li data-i18n="help_2">અપૂર્ણાંક: 0.1 જેવો દશાંશ અપૂર્ણાંક બાઇનરીમાં ક્યારેય પૂરો થતો નથી. “બિંદુ પછી કેટલા અંક” બદલો અને જુઓ કે જવાબ કેવી રીતે વધુ નજીક આવે છે.</li>
+        <li data-i18n="help_3">8-બિટ સ્વિચ: સ્માર્ટબોર્ડ પર એક વિદ્યાર્થીને 65 (અક્ષર A) અને પછી 97 (a) બનાવવાનું કહો. કયો એક બિટ જુદો છે?</li>
+        <li data-i18n="help_4">વર્ગ પ્રવૃત્તિ: “લખાણ એન્કોડિંગ” ટૅબમાં તમારું નામ અંગ્રેજીમાં અને માતૃભાષામાં લખો. કોને વધુ બાઇટ જોઈએ, અને કેમ?</li>
+        <li data-i18n="help_5">મહાવરો: ધોરણ 6–8 માટે “સહેલું” અને ધોરણ 11 માટે “અઘરું” કે “અપૂર્ણાંક” પસંદ કરો. ગૃહકાર્ય માટે જવાબ ચાવી સાથે વર્કશીટ પ્રિન્ટ કરો.</li>
       </ul>
     </details>
 

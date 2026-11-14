@@ -154,124 +154,124 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="callout success small privacy no-print"><span class="ic" aria-hidden="true">🔒</span><span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">किसी भी लिंक में UTM टैग जोड़ें, ताकि Google Analytics (GA4) बताए कि कौन-सा WhatsApp स्टेटस, Instagram पोस्ट, विज्ञापन या पोस्टर हर विज़िटर को आपकी वेबसाइट तक लाया।</p>
+    <p class="callout success small privacy no-print"><span class="ic" aria-hidden="true">🔒</span><span data-i18n="privacy">आपके लिंक और कैंपेन के नाम इसी डिवाइस पर रहते हैं। न कोई लिंक शॉर्टनर, न इस टूल से कोई ट्रैकिंग: UTM टैग सिर्फ़ आपकी अपनी वेबसाइट का एनालिटिक्स पढ़ता है।</span></p>
 
     <nav class="ub-tabs" role="tablist" id="tabs">
-      <button type="button" role="tab" id="tab-single" data-tab="single" aria-controls="p-single"><span class="ic" aria-hidden="true">🔗</span><span data-i18n="tab_single"></span></button>
-      <button type="button" role="tab" id="tab-bulk" data-tab="bulk" aria-controls="p-bulk"><span class="ic" aria-hidden="true">🗂️</span><span data-i18n="tab_bulk"></span></button>
-      <button type="button" role="tab" id="tab-history" data-tab="history" aria-controls="p-history"><span class="ic" aria-hidden="true">🕘</span><span data-i18n="tab_history"></span></button>
+      <button type="button" role="tab" id="tab-single" data-tab="single" aria-controls="p-single"><span class="ic" aria-hidden="true">🔗</span><span data-i18n="tab_single">एक लिंक</span></button>
+      <button type="button" role="tab" id="tab-bulk" data-tab="bulk" aria-controls="p-bulk"><span class="ic" aria-hidden="true">🗂️</span><span data-i18n="tab_bulk">कई लिंक</span></button>
+      <button type="button" role="tab" id="tab-history" data-tab="history" aria-controls="p-history"><span class="ic" aria-hidden="true">🕘</span><span data-i18n="tab_history">इतिहास</span></button>
     </nav>
 
     <!-- ================= ONE LINK ================= -->
     <section id="p-single" role="tabpanel" aria-labelledby="tab-single" class="ub-split" hidden>
       <div class="stack">
         <div class="card stack">
-          <h2 class="ub-h mb0"><span class="step" aria-hidden="true">1</span><label for="url" data-i18n="h_url"></label></h2>
-          <p class="small muted mb0" data-i18n="url_label"></p>
+          <h2 class="ub-h mb0"><span class="step" aria-hidden="true">1</span><label for="url" data-i18n="h_url">आपके पेज का लिंक</label></h2>
+          <p class="small muted mb0" data-i18n="url_label">आपकी वेबसाइट, प्रोडक्ट पेज या Google Business Profile का लिंक।</p>
           <input id="url" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" dir="ltr" class="no-i18n ltr" placeholder="https://yourshop.in/diwali-offer">
           <div id="urlStatus" aria-live="polite"></div>
         </div>
 
         <div class="card stack">
-          <h2 class="ub-h mb0"><span class="step" aria-hidden="true">2</span><span data-i18n="h_channel"></span></h2>
-          <p class="small muted mb0" data-i18n="channel_hint"></p>
+          <h2 class="ub-h mb0"><span class="step" aria-hidden="true">2</span><span data-i18n="h_channel">इसे कहाँ शेयर करेंगे?</span></h2>
+          <p class="small muted mb0" data-i18n="channel_hint">एक चैनल चुनें: source और medium वैसे भर जाते हैं जैसे GA4 समझता है। आप इन्हें बाद में बदल भी सकते हैं।</p>
           <div class="chips" id="chips" role="group"></div>
           <p class="callout small chnote" id="chNote" hidden></p>
         </div>
 
         <div class="card stack">
-          <h2 class="ub-h mb0"><span class="step" aria-hidden="true">3</span><span data-i18n="h_tags"></span></h2>
+          <h2 class="ub-h mb0"><span class="step" aria-hidden="true">3</span><span data-i18n="h_tags">कैंपेन टैग</span></h2>
           <div class="tag-grid">
             <label class="field">
-              <span class="flab"><span data-i18n="f_source"></span><code class="no-i18n">utm_source</code><span class="badge primary" data-i18n="badge_req"></span></span>
+              <span class="flab"><span data-i18n="f_source">स्रोत</span><code class="no-i18n">utm_source</code><span class="badge primary" data-i18n="badge_req">ज़रूरी</span></span>
               <input id="f-source" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" class="no-i18n">
-              <span class="hint" data-i18n="hint_source"></span>
+              <span class="hint" data-i18n="hint_source">क्लिक कहाँ से आया: whatsapp, instagram, newsletter, poster।</span>
               <span class="fnote" id="n-source" aria-live="polite"></span>
             </label>
             <label class="field">
-              <span class="flab"><span data-i18n="f_medium"></span><code class="no-i18n">utm_medium</code><span class="badge" data-i18n="badge_rec"></span></span>
+              <span class="flab"><span data-i18n="f_medium">माध्यम</span><code class="no-i18n">utm_medium</code><span class="badge" data-i18n="badge_rec">सुझाया गया</span></span>
               <input id="f-medium" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" class="no-i18n">
-              <span class="hint" data-i18n="hint_medium"></span>
+              <span class="hint" data-i18n="hint_medium">चैनल का प्रकार। GA4 इसी से रिपोर्ट बाँटता है: social, email, cpc (पेड ऐड), video, sms।</span>
               <span class="fnote" id="n-medium" aria-live="polite"></span>
             </label>
             <label class="field">
-              <span class="flab"><span data-i18n="f_campaign"></span><code class="no-i18n">utm_campaign</code><span class="badge" data-i18n="badge_rec"></span></span>
+              <span class="flab"><span data-i18n="f_campaign">कैंपेन</span><code class="no-i18n">utm_campaign</code><span class="badge" data-i18n="badge_rec">सुझाया गया</span></span>
               <input id="f-campaign" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" class="no-i18n">
-              <span class="hint" data-i18n="hint_campaign"></span>
+              <span class="hint" data-i18n="hint_campaign">इस प्रमोशन का नाम: diwali-sale-2026, new-batch-admissions।</span>
               <span class="fnote" id="n-campaign" aria-live="polite"></span>
             </label>
             <label class="field">
-              <span class="flab"><span data-i18n="f_content"></span><code class="no-i18n">utm_content</code></span>
+              <span class="flab"><span data-i18n="f_content">कंटेंट</span><code class="no-i18n">utm_content</code></span>
               <input id="f-content" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" class="no-i18n">
-              <span class="hint" data-i18n="hint_content"></span>
+              <span class="hint" data-i18n="hint_content">कौन-सा वर्ज़न: story, reel, poster-counter, button-top। A/B टेस्ट के लिए बढ़िया।</span>
               <span class="fnote" id="n-content" aria-live="polite"></span>
             </label>
             <label class="field">
-              <span class="flab"><span data-i18n="f_term"></span><code class="no-i18n">utm_term</code></span>
+              <span class="flab"><span data-i18n="f_term">कीवर्ड</span><code class="no-i18n">utm_term</code></span>
               <input id="f-term" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" class="no-i18n">
-              <span class="hint" data-i18n="hint_term"></span>
+              <span class="hint" data-i18n="hint_term">पेड सर्च का कीवर्ड या ऑडियंस, जैसे silk-sarees-online।</span>
               <span class="fnote" id="n-term" aria-live="polite"></span>
             </label>
             <label class="field">
-              <span class="flab"><span data-i18n="f_id"></span><code class="no-i18n">utm_id</code></span>
+              <span class="flab"><span data-i18n="f_id">कैंपेन ID</span><code class="no-i18n">utm_id</code></span>
               <input id="f-id" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="100" class="no-i18n">
-              <span class="hint" data-i18n="hint_id"></span>
+              <span class="hint" data-i18n="hint_id">GA4 में विज्ञापन खर्च का डेटा इम्पोर्ट करने के लिए वैकल्पिक ID, जैसे dw26।</span>
               <span class="fnote" id="n-id" aria-live="polite"></span>
             </label>
           </div>
 
           <div class="opts">
-            <label class="check"><input type="checkbox" id="cleanOn"> <span data-i18n="clean_on"></span></label>
+            <label class="check"><input type="checkbox" id="cleanOn"> <span data-i18n="clean_on">ऑटो-क्लीन: छोटे अक्षर, बिना स्पेस</span></label>
             <div class="row" style="gap:8px">
-              <span class="small muted" id="sepLabel" data-i18n="sep_label"></span>
+              <span class="small muted" id="sepLabel" data-i18n="sep_label">शब्द जोड़ें</span>
               <div class="seg" role="group" id="sep" aria-labelledby="sepLabel">
-                <button type="button" data-v="-" data-i18n="sep_hyphen"></button>
-                <button type="button" data-v="_" data-i18n="sep_under"></button>
+                <button type="button" data-v="-" data-i18n="sep_hyphen">हाइफ़न: diwali-sale</button>
+                <button type="button" data-v="_" data-i18n="sep_under">अंडरस्कोर: diwali_sale</button>
               </div>
             </div>
           </div>
 
           <details class="sub" id="nameBox">
-            <summary data-i18n="name_title"></summary>
+            <summary data-i18n="name_title">कैंपेन नाम सहायक</summary>
             <div class="stack">
-              <p class="small muted mb0" data-i18n="name_hint"></p>
-              <label class="field"><span data-i18n="name_tpl"></span>
+              <p class="small muted mb0" data-i18n="name_hint">पूरी टीम एक ही पैटर्न रखे, तो रिपोर्ट में नाम सही क्रम में दिखते हैं: पहले साल-महीना, फिर प्रोडक्ट, फिर ऑफ़र।</p>
+              <label class="field"><span data-i18n="name_tpl">नाम का पैटर्न</span>
                 <input id="nameTpl" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120" class="no-i18n">
               </label>
-              <div class="ins-bar" id="tokBar"><span class="small muted" data-i18n="name_insert"></span></div>
+              <div class="ins-bar" id="tokBar"><span class="small muted" data-i18n="name_insert">जोड़ें:</span></div>
               <div class="name-grid">
-                <label class="field"><span data-i18n="name_product"></span><input id="nameProduct" type="text" dir="auto" maxlength="60" autocomplete="off" data-i18n-placeholder="ph_product"></label>
-                <label class="field"><span data-i18n="name_offer"></span><input id="nameOffer" type="text" dir="auto" maxlength="60" autocomplete="off" data-i18n-placeholder="ph_offer"></label>
-                <label class="field"><span data-i18n="name_place"></span><input id="namePlace" type="text" dir="auto" maxlength="60" autocomplete="off" data-i18n-placeholder="ph_place"></label>
+                <label class="field"><span data-i18n="name_product">प्रोडक्ट या सेवा</span><input id="nameProduct" type="text" dir="auto" maxlength="60" autocomplete="off" data-i18n-placeholder="ph_product"></label>
+                <label class="field"><span data-i18n="name_offer">ऑफ़र या थीम</span><input id="nameOffer" type="text" dir="auto" maxlength="60" autocomplete="off" data-i18n-placeholder="ph_offer"></label>
+                <label class="field"><span data-i18n="name_place">शहर या शाखा</span><input id="namePlace" type="text" dir="auto" maxlength="60" autocomplete="off" data-i18n-placeholder="ph_place"></label>
               </div>
               <div class="name-out">
-                <span class="small muted" data-i18n="name_preview"></span><bdi class="no-i18n" id="nameOut" dir="ltr"></bdi>
-                <button type="button" class="btn btn-sm btn-primary" id="nameUse" data-i18n="name_use"></button>
+                <span class="small muted" data-i18n="name_preview">नाम:</span><bdi class="no-i18n" id="nameOut" dir="ltr"></bdi>
+                <button type="button" class="btn btn-sm btn-primary" id="nameUse" data-i18n="name_use">यह नाम लगाएँ</button>
               </div>
             </div>
           </details>
 
           <details class="sub" id="advBox">
-            <summary data-i18n="adv_title"></summary>
+            <summary data-i18n="adv_title">और GA4 टैग (वैकल्पिक)</summary>
             <div class="stack">
               <div class="tag-grid">
                 <label class="field">
-                  <span class="flab"><span data-i18n="f_platform"></span><code class="no-i18n">utm_source_platform</code></span>
+                  <span class="flab"><span data-i18n="f_platform">स्रोत प्लेटफ़ॉर्म</span><code class="no-i18n">utm_source_platform</code></span>
                   <input id="f-source-platform" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" class="no-i18n">
-                  <span class="hint" data-i18n="hint_platform"></span>
+                  <span class="hint" data-i18n="hint_platform">ट्रैफ़िक भेजने वाला टूल: google-ads, meta, dv360।</span>
                   <span class="fnote" id="n-source_platform" aria-live="polite"></span>
                 </label>
                 <label class="field">
-                  <span class="flab"><span data-i18n="f_format"></span><code class="no-i18n">utm_creative_format</code></span>
+                  <span class="flab"><span data-i18n="f_format">क्रिएटिव फ़ॉर्मैट</span><code class="no-i18n">utm_creative_format</code></span>
                   <input id="f-creative-format" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" class="no-i18n">
-                  <span class="hint" data-i18n="hint_format"></span>
+                  <span class="hint" data-i18n="hint_format">क्रिएटिव का प्रकार: video, carousel, display, story।</span>
                   <span class="fnote" id="n-creative_format" aria-live="polite"></span>
                 </label>
                 <label class="field">
-                  <span class="flab"><span data-i18n="f_tactic"></span><code class="no-i18n">utm_marketing_tactic</code></span>
+                  <span class="flab"><span data-i18n="f_tactic">मार्केटिंग तरीका</span><code class="no-i18n">utm_marketing_tactic</code></span>
                   <input id="f-marketing-tactic" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" class="no-i18n">
-                  <span class="hint" data-i18n="hint_tactic"></span>
+                  <span class="hint" data-i18n="hint_tactic">टारगेटिंग: remarketing, prospecting, retention।</span>
                   <span class="fnote" id="n-marketing_tactic" aria-live="polite"></span>
                 </label>
               </div>
@@ -283,38 +283,38 @@
       <div class="stack side">
         <div class="card stack">
           <div class="res-top">
-            <h2 class="ub-h mb0"><label for="linkOut" data-i18n="h_result"></label></h2>
+            <h2 class="ub-h mb0"><label for="linkOut" data-i18n="h_result">आपका टैग किया लिंक</label></h2>
             <span class="badge" id="lenBadge" hidden></span>
           </div>
           <input id="linkOut" type="text" readonly class="no-i18n ltr" dir="ltr">
           <div id="resStatus" aria-live="polite"></div>
           <div class="actions">
-            <button class="btn btn-primary" id="copyLink" type="button"><span aria-hidden="true">⧉</span> <span data-i18n="copy_link"></span></button>
-            <button class="btn" id="copyParams" type="button" data-i18n="copy_params"></button>
-            <a class="btn" id="openLink" target="_blank" rel="noopener" data-i18n="open_link"></a>
-            <button class="btn btn-accent" id="saveHist" type="button"><span aria-hidden="true">★</span> <span data-i18n="save_hist"></span></button>
+            <button class="btn btn-primary" id="copyLink" type="button"><span aria-hidden="true">⧉</span> <span data-i18n="copy_link">लिंक कॉपी करें</span></button>
+            <button class="btn" id="copyParams" type="button" data-i18n="copy_params">सिर्फ़ पैरामीटर कॉपी करें</button>
+            <a class="btn" id="openLink" target="_blank" rel="noopener" data-i18n="open_link">लिंक खोलें</a>
+            <button class="btn btn-accent" id="saveHist" type="button"><span aria-hidden="true">★</span> <span data-i18n="save_hist">इतिहास में सेव करें</span></button>
           </div>
-          <p class="tiny muted mb0" data-i18n="params_hint"></p>
+          <p class="tiny muted mb0" data-i18n="params_hint">“सिर्फ़ पैरामीटर” में ? के बाद का हिस्सा ही कॉपी होता है, Meta Ads Manager या Google Ads के URL parameters खाने के लिए।</p>
         </div>
 
         <div class="card stack">
-          <h2 class="ub-h mb0" data-i18n="anat_title"></h2>
+          <h2 class="ub-h mb0" data-i18n="anat_title">इस लिंक के अंदर क्या है</h2>
           <div class="anat no-i18n ltr" id="anat" aria-hidden="true"></div>
           <div class="legend">
-            <span class="l-utm"><i aria-hidden="true"></i><span data-i18n="anat_utm"></span></span>
-            <span class="l-keep"><i aria-hidden="true"></i><span data-i18n="anat_keep"></span></span>
-            <span class="l-frag"><i aria-hidden="true"></i><span data-i18n="anat_frag"></span></span>
+            <span class="l-utm"><i aria-hidden="true"></i><span data-i18n="anat_utm">UTM टैग</span></span>
+            <span class="l-keep"><i aria-hidden="true"></i><span data-i18n="anat_keep">लिंक में पहले से था, रखा गया</span></span>
+            <span class="l-frag"><i aria-hidden="true"></i><span data-i18n="anat_frag"># के बाद का हिस्सा, अंत में रखा गया</span></span>
           </div>
         </div>
 
         <details class="card sub" id="qrBox">
-          <summary data-i18n="qr_title"></summary>
+          <summary data-i18n="qr_title">पोस्टर और स्टैंडी के लिए QR कोड</summary>
           <div class="stack">
             <div class="qr-wrap">
               <canvas id="qr" width="1" height="1" data-ok="0"></canvas>
               <div class="qr-side stack">
-                <p class="small muted mb0" id="qrMsg" data-i18n="qr_hint"></p>
-                <button class="btn" id="qrDl" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="qr_dl"></span></button>
+                <p class="small muted mb0" id="qrMsg" data-i18n="qr_hint">प्रिंट से पहले एक बार अपने फ़ोन से स्कैन करके देखें।</p>
+                <button class="btn" id="qrDl" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="qr_dl">QR डाउनलोड करें (PNG)</span></button>
               </div>
             </div>
           </div>
@@ -325,27 +325,27 @@
     <!-- ================= MANY LINKS ================= -->
     <section id="p-bulk" role="tabpanel" aria-labelledby="tab-bulk" class="stack" hidden>
       <div class="seg" role="group" id="bulkMode">
-        <button type="button" data-v="matrix" data-i18n="bulk_matrix"></button>
-        <button type="button" data-v="csv" data-i18n="bulk_csv"></button>
+        <button type="button" data-v="matrix" data-i18n="bulk_matrix">एक लिंक, कई चैनल</button>
+        <button type="button" data-v="csv" data-i18n="bulk_csv">सूची से (CSV)</button>
       </div>
 
       <div class="card stack" id="matrixCard">
-        <p class="small muted mb0" data-i18n="matrix_hint"></p>
+        <p class="small muted mb0" data-i18n="matrix_hint">“एक लिंक” टैब से पेज का लिंक, कैंपेन का नाम और बाकी टैग लिए जाते हैं। चैनल चुनें: हर एक को अपना source, medium और content मिलता है।</p>
         <p class="status info ltr no-i18n" id="matrixBase" dir="ltr" hidden></p>
         <div class="row">
-          <button class="btn btn-sm" id="pickAll" type="button" data-i18n="pick_all"></button>
-          <button class="btn btn-sm btn-ghost" id="pickNone" type="button" data-i18n="pick_none"></button>
+          <button class="btn btn-sm" id="pickAll" type="button" data-i18n="pick_all">सभी चुनें</button>
+          <button class="btn btn-sm btn-ghost" id="pickNone" type="button" data-i18n="pick_none">कोई नहीं</button>
         </div>
         <div class="chips" id="pickChips" role="group"></div>
       </div>
 
       <div class="card stack" id="csvCard" hidden>
-        <h2 class="ub-h mb0"><label for="csvIn" data-i18n="csv_label"></label></h2>
-        <p class="small muted mb0" data-i18n="csv_hint"></p>
+        <h2 class="ub-h mb0"><label for="csvIn" data-i18n="csv_label">अपनी सूची पेस्ट करें</label></h2>
+        <p class="small muted mb0" data-i18n="csv_hint">कॉलम: link, source, medium, campaign, term, content, note। हेडिंग वाली पंक्ति मदद करती है; क्रम कोई भी हो। Excel या Google Sheets से कॉपी करें, या CSV फ़ाइल इम्पोर्ट करें।</p>
         <textarea id="csvIn" rows="7" dir="ltr" spellcheck="false" wrap="off" data-i18n-placeholder="csv_ph"></textarea>
         <div class="row">
-          <button class="btn" id="importCsv" type="button"><span aria-hidden="true">📂</span> <span data-i18n="import_csv"></span></button>
-          <button class="btn btn-ghost" id="loadExample" type="button" data-i18n="load_example"></button>
+          <button class="btn" id="importCsv" type="button"><span aria-hidden="true">📂</span> <span data-i18n="import_csv">CSV इम्पोर्ट करें</span></button>
+          <button class="btn btn-ghost" id="loadExample" type="button" data-i18n="load_example">उदाहरण भरें</button>
           <button class="btn btn-ghost" id="clearCsv" type="button" data-i18n="clear"></button>
         </div>
       </div>
@@ -354,9 +354,9 @@
         <div class="bulk-head">
           <span class="badge primary" id="bulkCount"></span>
           <div class="row">
-            <button class="btn" id="copyAll" type="button"><span aria-hidden="true">⧉</span> <span data-i18n="copy_all"></span></button>
-            <button class="btn" id="dlCsv" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_csv"></span></button>
-            <button class="btn btn-accent" id="saveAll" type="button"><span aria-hidden="true">★</span> <span data-i18n="save_all"></span></button>
+            <button class="btn" id="copyAll" type="button"><span aria-hidden="true">⧉</span> <span data-i18n="copy_all">सभी लिंक कॉपी करें</span></button>
+            <button class="btn" id="dlCsv" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_csv">CSV डाउनलोड करें</span></button>
+            <button class="btn btn-accent" id="saveAll" type="button"><span aria-hidden="true">★</span> <span data-i18n="save_all">सभी इतिहास में सेव करें</span></button>
           </div>
         </div>
         <p class="status warn" id="bulkMsg" hidden></p>
@@ -370,32 +370,32 @@
       <div class="card stack">
         <div class="bulk-head">
           <div>
-            <h2 class="ub-h mb0" data-i18n="tab_history"></h2>
-            <p class="small muted mb0" data-i18n="hist_hint"></p>
+            <h2 class="ub-h mb0" data-i18n="tab_history">इतिहास</h2>
+            <p class="small muted mb0" data-i18n="hist_hint">आप जो लिंक सेव करते हैं, वह नोट के साथ यहाँ इसी डिवाइस पर रहता है। टीम के नाम-नियम बाँटने के लिए शीट डाउनलोड करें।</p>
           </div>
           <span class="badge primary" id="histCount"></span>
         </div>
         <div class="row">
-          <button class="btn btn-primary" id="dlSheet" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_sheet"></span></button>
-          <button class="btn" id="copyHist" type="button"><span aria-hidden="true">⧉</span> <span data-i18n="copy_all"></span></button>
-          <button class="btn btn-ghost btn-danger" id="clearHist" type="button" data-i18n="clear_hist"></button>
+          <button class="btn btn-primary" id="dlSheet" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_sheet">नाम-शीट डाउनलोड करें (CSV)</span></button>
+          <button class="btn" id="copyHist" type="button"><span aria-hidden="true">⧉</span> <span data-i18n="copy_all">सभी लिंक कॉपी करें</span></button>
+          <button class="btn btn-ghost btn-danger" id="clearHist" type="button" data-i18n="clear_hist">इतिहास साफ़ करें</button>
         </div>
         <div class="hrows" id="hrows" role="list"></div>
-        <p class="empty" id="histEmpty" data-i18n="hist_empty" hidden></p>
+        <p class="empty" id="histEmpty" data-i18n="hist_empty" hidden>अभी कोई लिंक सेव नहीं है। लिंक बनाएँ और “इतिहास में सेव करें” दबाएँ।</p>
       </div>
     </section>
 
     <details class="card no-print" id="helpBox" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">कैसे इस्तेमाल करें / आइडिया</strong></summary>
       <ul class="help-list" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">पेज का लिंक पेस्ट करें, चैनल चुनें (WhatsApp स्टेटस, Instagram रील, पोस्टर…), कैंपेन का नाम लिखें, कॉपी करें। बस।</li>
+        <li data-i18n="tip2">टीम के साथ नाम तय करें: सब छोटे अक्षरों में, हर बार वही शब्द। “Facebook”, “facebook” और “FB” GA4 में तीन अलग स्रोत बन जाते हैं।</li>
+        <li data-i18n="tip3">तुलना के लिए content इस्तेमाल करें: वही ऑफ़र WhatsApp स्टेटस में और ग्रुप मैसेज में, या दो जगहों पर दो पोस्टर।</li>
+        <li data-i18n="tip4">GA4 में Reports → Acquisition → Traffic acquisition खोलें और दूसरी डायमेंशन “Session campaign” जोड़ें, आपके नाम दिखेंगे।</li>
+        <li data-i18n="tip5">पोस्टर या स्टैंडी के लिए यहाँ से QR कोड डाउनलोड करें। सुंदर पोस्टर के लिए इसी लिंक के साथ फ़ेस्टिवल पोस्टर मेकर ऐप इस्तेमाल करें।</li>
+        <li data-i18n="tip6">कोचिंग क्लास, सलून या दुकान? हर WhatsApp ग्रुप और हर पोस्टर के लिए अलग लिंक बनाएँ, फिर देखें किससे एडमिशन या ग्राहक आए।</li>
       </ul>
-      <p class="callout small" style="margin-top:10px"><strong data-i18n="inside_title"></strong><br><span data-i18n="inside_text"></span></p>
+      <p class="callout small" style="margin-top:10px"><strong data-i18n="inside_title">अंदर क्या हो रहा है</strong><br><span data-i18n="inside_text">UTM टैग लिंक में ? के बाद लिखा सादा टेक्स्ट है, जैसे utm_source=whatsapp। आपकी वेबसाइट इसे पाती है और एनालिटिक्स स्क्रिप्ट इसे विज़िट के साथ सेव कर लेती है। टैग को व्यक्ति के बारे में कुछ पता नहीं होता; वह सिर्फ़ उस जगह का नाम बताता है जहाँ लिंक शेयर हुआ।</span></p>
       <div class="row spread" style="margin-top:10px">
         <span class="small muted" data-i18n="saved_local"></span>
         <button class="btn btn-sm btn-danger" id="resetAll" type="button" data-i18n="reset"></button>

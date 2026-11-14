@@ -160,23 +160,23 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">कोणत्याही ऑनलाइन फॉर्मसाठी PDF लहान करा (100 KB, 200 KB…), फोटोंपासून PDF बनवा, PDF ची पाने JPG म्हणून सेव्ह करा आणि तुमच्या PDF चा पासवर्ड काढा.</p>
 
     <div class="callout success pc-privacy" id="privacy">
       <span class="pc-lock" aria-hidden="true">🔒</span>
-      <p class="grow mb0"><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p class="grow mb0"><strong data-i18n="privacy_title">तुमच्या फाइल्स या डिव्हाइसबाहेर कधीच जात नाहीत.</strong> <span data-i18n="privacy_body">सगळे काम याच ब्राउझरमध्ये होते. काहीही अपलोड होत नाही आणि काहीही ठेवले जात नाही.</span></p>
       <span class="badge pc-engine" id="engineBadge" role="status" aria-live="polite"></span>
     </div>
     <div class="callout danger stack" id="engineFail" hidden>
-      <p class="mb0" data-i18n="engine_failed"></p>
+      <p class="mb0" data-i18n="engine_failed">PDF टूल्स लोड होऊ शकले नाहीत. पहिल्यांदा इंटरनेट लागते; त्यानंतर ते ऑफलाइनही चालतात. कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.</p>
       <div><button class="btn btn-sm" id="engineRetry" type="button" data-i18n="try_again"></button></div>
     </div>
 
     <nav class="pc-tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tools_label">
-      <button type="button" role="tab" id="tab-compress" data-tab="compress" aria-controls="p-compress"><span class="ic" aria-hidden="true">🗜️</span><span data-i18n="tab_compress"></span></button>
-      <button type="button" role="tab" id="tab-img" data-tab="img" aria-controls="p-img"><span class="ic" aria-hidden="true">🖼️</span><span data-i18n="tab_img"></span></button>
-      <button type="button" role="tab" id="tab-jpg" data-tab="jpg" aria-controls="p-jpg"><span class="ic" aria-hidden="true">📸</span><span data-i18n="tab_jpg"></span></button>
-      <button type="button" role="tab" id="tab-unlock" data-tab="unlock" aria-controls="p-unlock"><span class="ic" aria-hidden="true">🔓</span><span data-i18n="tab_unlock"></span></button>
+      <button type="button" role="tab" id="tab-compress" data-tab="compress" aria-controls="p-compress"><span class="ic" aria-hidden="true">🗜️</span><span data-i18n="tab_compress">PDF लहान करा</span></button>
+      <button type="button" role="tab" id="tab-img" data-tab="img" aria-controls="p-img"><span class="ic" aria-hidden="true">🖼️</span><span data-i18n="tab_img">JPG ते PDF</span></button>
+      <button type="button" role="tab" id="tab-jpg" data-tab="jpg" aria-controls="p-jpg"><span class="ic" aria-hidden="true">📸</span><span data-i18n="tab_jpg">PDF ते JPG</span></button>
+      <button type="button" role="tab" id="tab-unlock" data-tab="unlock" aria-controls="p-unlock"><span class="ic" aria-hidden="true">🔓</span><span data-i18n="tab_unlock">PDF अनलॉक</span></button>
     </nav>
 
     <!-- ================= COMPRESS ================= -->
@@ -184,37 +184,37 @@
       <div class="pc-cols">
         <div class="stack">
           <div class="card stack">
-            <div class="pc-head"><h2 data-i18n="c_title"></h2><p class="muted small mb0" data-i18n="c_desc"></p></div>
+            <div class="pc-head"><h2 data-i18n="c_title">PDF लहान करा</h2><p class="muted small mb0" data-i18n="c_desc">वेबसाइट जी साइझ मागते ती निवडा. त्या साइझमध्ये सर्वात स्पष्ट पाने मिळतील.</p></div>
             <input type="file" id="cFile" class="pc-file" accept="application/pdf,.pdf" tabindex="-1" aria-hidden="true">
             <div class="pc-drop" id="cDrop">
               <span class="pc-drop-ic" aria-hidden="true">📄</span>
-              <button class="btn btn-primary btn-lg" id="cPick" type="button" data-i18n="choose_pdf"></button>
-              <span class="small muted" data-i18n="or_drop"></span>
+              <button class="btn btn-primary btn-lg" id="cPick" type="button" data-i18n="choose_pdf">PDF निवडा</button>
+              <span class="small muted" data-i18n="or_drop">किंवा फाइल इथे सोडा</span>
             </div>
             <div class="pc-fileinfo" id="cInfo" hidden></div>
           </div>
 
           <div class="card stack" id="cOpts">
             <div class="field">
-              <span data-i18n="c_target"></span>
+              <span data-i18n="c_target">यापेक्षा लहान करा</span>
               <div class="pc-chips" id="cTargets" role="group" data-i18n-aria-label="c_target"></div>
             </div>
             <div class="pc-custom" id="cCustomRow" hidden>
-              <label class="field"><span data-i18n="c_custom"></span>
+              <label class="field"><span data-i18n="c_custom">साइझ KB मध्ये</span>
                 <input type="number" id="cCustom" min="10" max="100000" step="10" inputmode="numeric" data-i18n-placeholder="c_custom_ph">
               </label>
             </div>
             <p class="small mb0 pc-msg" id="cAim" aria-live="polite"></p>
             <fieldset class="field" style="border:0;padding:0;margin:0">
-              <legend class="small muted" style="padding:0;margin-bottom:5px" data-i18n="c_method"></legend>
+              <legend class="small muted" style="padding:0;margin-bottom:5px" data-i18n="c_method">पद्धत</legend>
               <div class="pc-methods">
-                <label class="pc-method" id="cmStrongL"><input type="radio" name="cMode" id="cmStrong" value="strong"><span><strong data-i18n="c_strong"></strong><span class="small" data-i18n="c_strong_d"></span></span></label>
-                <label class="pc-method" id="cmLightL"><input type="radio" name="cMode" id="cmLight" value="light"><span><strong data-i18n="c_light"></strong><span class="small" data-i18n="c_light_d"></span></span></label>
+                <label class="pc-method" id="cmStrongL"><input type="radio" name="cMode" id="cmStrong" value="strong"><span><strong data-i18n="c_strong">जोरदार: साइझपर्यंत पोहोचा</strong><span class="small" data-i18n="c_strong_d">फॉर्म आणि पोर्टलसाठी सर्वोत्तम. पाने चित्र बनतात, त्यामुळे मजकूर सिलेक्ट होत नाही.</span></span></label>
+                <label class="pc-method" id="cmLightL"><input type="radio" name="cMode" id="cmLight" value="light"><span><strong data-i18n="c_light">हलकी: मजकूर तसाच</strong><span class="small" data-i18n="c_light_d">मजकूर सिलेक्ट आणि सर्च करता येतो. बचत कमी, साधारण 5–30%.</span></span></label>
               </div>
             </fieldset>
-            <label class="check" id="cGrayRow"><input type="checkbox" id="cGray"> <span data-i18n="gray_opt"></span></label>
+            <label class="check" id="cGrayRow"><input type="checkbox" id="cGray"> <span data-i18n="gray_opt">ब्लॅक अँड व्हाइट (ग्रेस्केल): आणखी लहान</span></label>
             <div class="row pc-go">
-              <button class="btn btn-primary btn-lg" id="cGo" type="button"><span aria-hidden="true">🗜️</span> <span data-i18n="c_go"></span></button>
+              <button class="btn btn-primary btn-lg" id="cGo" type="button"><span aria-hidden="true">🗜️</span> <span data-i18n="c_go">PDF लहान करा</span></button>
               <button class="btn" id="cStop" type="button" data-i18n="stop" hidden></button>
             </div>
             <div class="pc-prog" id="cProg" hidden>
@@ -232,76 +232,76 @@
     <section id="p-img" role="tabpanel" aria-labelledby="tab-img" class="pc-panel" data-drop="img" hidden>
       <div class="stack">
         <div class="card stack">
-          <div class="pc-head"><h2 data-i18n="i_title"></h2><p class="muted small mb0" data-i18n="i_desc"></p></div>
+          <div class="pc-head"><h2 data-i18n="i_title">फोटोंपासून PDF</h2><p class="muted small mb0" data-i18n="i_desc">JPG किंवा PNG फोटो, स्कॅन आणि स्क्रीनशॉट एका PDF मध्ये जोडा. क्रम बदला, फिरवा आणि ओळखपत्राची पुढची-मागची बाजू एकाच पानावर प्रिंट करा.</p></div>
           <input type="file" id="iFile" class="pc-file" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/*" multiple tabindex="-1" aria-hidden="true">
           <div class="pc-drop" id="iDrop">
             <span class="pc-drop-ic" aria-hidden="true">🖼️</span>
-            <button class="btn btn-primary btn-lg" id="iPick" type="button" data-i18n="choose_imgs"></button>
-            <span class="small muted" data-i18n="or_drop_imgs"></span>
+            <button class="btn btn-primary btn-lg" id="iPick" type="button" data-i18n="choose_imgs">फोटो निवडा</button>
+            <span class="small muted" data-i18n="or_drop_imgs">किंवा फोटो इथे सोडा किंवा पेस्ट करा (JPG, PNG)</span>
           </div>
           <div id="iListWrap" class="stack" hidden>
             <div class="row spread">
               <span class="badge primary" id="iCount"></span>
               <div class="row" style="gap:6px">
-                <button class="btn btn-sm" id="iMore" type="button"><span aria-hidden="true">＋</span> <span data-i18n="i_add_more"></span></button>
-                <button class="btn btn-sm" id="iSort" type="button" data-i18n="i_sort"></button>
-                <button class="btn btn-sm btn-danger" id="iClear" type="button" data-i18n="i_clear"></button>
+                <button class="btn btn-sm" id="iMore" type="button"><span aria-hidden="true">＋</span> <span data-i18n="i_add_more">आणखी जोडा</span></button>
+                <button class="btn btn-sm" id="iSort" type="button" data-i18n="i_sort">नावाने क्रम</button>
+                <button class="btn btn-sm btn-danger" id="iClear" type="button" data-i18n="i_clear">सर्व काढा</button>
               </div>
             </div>
             <div class="pc-imgs" id="iList"></div>
-            <p class="tiny muted mb0" data-i18n="i_drag_hint"></p>
+            <p class="tiny muted mb0" data-i18n="i_drag_hint">टीप: फोटो ओढून जागा बदला किंवा बाणाची बटणे वापरा. Ctrl+V ने स्क्रीनशॉट पेस्ट होतो.</p>
           </div>
         </div>
 
         <div class="pc-cols">
           <div class="card stack">
             <div class="pc-opts">
-              <div class="field"><span data-i18n="i_page_size"></span>
+              <div class="field"><span data-i18n="i_page_size">पानाची साइझ</span>
                 <div class="seg" role="group" id="iSize">
                   <button type="button" data-v="a4">A4</button>
-                  <button type="button" data-v="letter" data-i18n="letter"></button>
-                  <button type="button" data-v="fit" data-i18n="i_fit"></button>
+                  <button type="button" data-v="letter" data-i18n="letter">लेटर</button>
+                  <button type="button" data-v="fit" data-i18n="i_fit">फोटोइतकी</button>
                 </div>
               </div>
-              <div class="field"><span data-i18n="i_orient"></span>
+              <div class="field"><span data-i18n="i_orient">दिशा</span>
                 <div class="seg" role="group" id="iOrient">
-                  <button type="button" data-v="auto" data-i18n="o_auto"></button>
-                  <button type="button" data-v="portrait" data-i18n="o_portrait"></button>
-                  <button type="button" data-v="landscape" data-i18n="o_landscape"></button>
+                  <button type="button" data-v="auto" data-i18n="o_auto">आपोआप</button>
+                  <button type="button" data-v="portrait" data-i18n="o_portrait">उभे</button>
+                  <button type="button" data-v="landscape" data-i18n="o_landscape">आडवे</button>
                 </div>
               </div>
-              <div class="field"><span data-i18n="i_margin"></span>
+              <div class="field"><span data-i18n="i_margin">समास</span>
                 <div class="seg" role="group" id="iMargin">
-                  <button type="button" data-v="none" data-i18n="m_none"></button>
-                  <button type="button" data-v="small" data-i18n="m_small"></button>
-                  <button type="button" data-v="large" data-i18n="m_large"></button>
+                  <button type="button" data-v="none" data-i18n="m_none">नाही</button>
+                  <button type="button" data-v="small" data-i18n="m_small">लहान</button>
+                  <button type="button" data-v="large" data-i18n="m_large">मोठा</button>
                 </div>
               </div>
-              <div class="field"><span data-i18n="i_per"></span>
+              <div class="field"><span data-i18n="i_per">एका पानावर फोटो</span>
                 <div class="seg" role="group" id="iPer">
-                  <button type="button" data-v="1" id="iPer1" data-i18n="i_per1"></button>
-                  <button type="button" data-v="2" id="iPer2" data-i18n="i_per2"></button>
+                  <button type="button" data-v="1" id="iPer1" data-i18n="i_per1">1</button>
+                  <button type="button" data-v="2" id="iPer2" data-i18n="i_per2">2 (पुढे + मागे)</button>
                 </div>
               </div>
-              <div class="field pc-wide"><span data-i18n="i_look"></span>
+              <div class="field pc-wide"><span data-i18n="i_look">रूप</span>
                 <div class="seg" role="group" id="iLook">
-                  <button type="button" data-v="original" data-i18n="look_orig"></button>
-                  <button type="button" data-v="scan" data-i18n="look_scan"></button>
-                  <button type="button" data-v="gray" data-i18n="look_gray"></button>
-                  <button type="button" data-v="bw" data-i18n="look_bw"></button>
+                  <button type="button" data-v="original" data-i18n="look_orig">मूळ</button>
+                  <button type="button" data-v="scan" data-i18n="look_scan">स्कॅनसारखे</button>
+                  <button type="button" data-v="gray" data-i18n="look_gray">ग्रेस्केल</button>
+                  <button type="button" data-v="bw" data-i18n="look_bw">ब्लॅक अँड व्हाइट</button>
                 </div>
               </div>
-              <label class="field"><span data-i18n="i_limit"></span>
+              <label class="field"><span data-i18n="i_limit">साइझची मर्यादा</span>
                 <select id="iLimit"></select>
               </label>
             </div>
-            <label class="check" id="iCardRow"><input type="checkbox" id="iCard"> <span data-i18n="i_card"></span></label>
+            <label class="check" id="iCardRow"><input type="checkbox" id="iCard"> <span data-i18n="i_card">खऱ्या ओळखपत्राची साइझ (8.56 × 5.4 cm), आधार, पॅन किंवा मतदार ओळखपत्राच्या प्रतीसाठी</span></label>
             <p class="small muted mb0 pc-msg" id="iFitNote"></p>
-            <label class="field"><span data-i18n="i_name"></span>
+            <label class="field"><span data-i18n="i_name">फाइलचे नाव</span>
               <span class="pc-name"><input type="text" id="iName" class="no-i18n" dir="auto" maxlength="80" autocomplete="off"><span aria-hidden="true" dir="ltr">.pdf</span></span>
             </label>
             <div class="row pc-go">
-              <button class="btn btn-primary btn-lg" id="iGo" type="button"><span aria-hidden="true">📄</span> <span data-i18n="i_go"></span></button>
+              <button class="btn btn-primary btn-lg" id="iGo" type="button"><span aria-hidden="true">📄</span> <span data-i18n="i_go">PDF बनवा</span></button>
               <button class="btn" id="iStop" type="button" data-i18n="stop" hidden></button>
             </div>
             <div class="pc-prog" id="iProg" hidden>
@@ -312,7 +312,7 @@
 
           <div class="stack">
             <div class="card stack">
-              <div class="row spread"><h3 class="mb0" data-i18n="i_preview"></h3><span class="badge" id="iPagesBadge"></span></div>
+              <div class="row spread"><h3 class="mb0" data-i18n="i_preview">पानांची झलक</h3><span class="badge" id="iPagesBadge"></span></div>
               <canvas id="iLayout" class="pc-layout" width="600" height="300" role="img" data-i18n-aria-label="i_preview"></canvas>
             </div>
             <div class="card stack" id="iResult" aria-live="polite" data-state="empty" hidden></div>
@@ -326,31 +326,31 @@
       <div class="stack">
         <div class="pc-cols">
           <div class="card stack">
-            <div class="pc-head"><h2 data-i18n="j_title"></h2><p class="muted small mb0" data-i18n="j_desc"></p></div>
+            <div class="pc-head"><h2 data-i18n="j_title">PDF ची पाने इमेजमध्ये</h2><p class="muted small mb0" data-i18n="j_desc">WhatsApp, स्लाइड किंवा वेबसाइटसाठी पाने JPG किंवा PNG म्हणून सेव्ह करा.</p></div>
             <input type="file" id="jFile" class="pc-file" accept="application/pdf,.pdf" tabindex="-1" aria-hidden="true">
             <div class="pc-drop" id="jDrop">
               <span class="pc-drop-ic" aria-hidden="true">📄</span>
-              <button class="btn btn-primary btn-lg" id="jPick" type="button" data-i18n="choose_pdf"></button>
-              <span class="small muted" data-i18n="or_drop"></span>
+              <button class="btn btn-primary btn-lg" id="jPick" type="button" data-i18n="choose_pdf">PDF निवडा</button>
+              <span class="small muted" data-i18n="or_drop">किंवा फाइल इथे सोडा</span>
             </div>
             <div class="pc-fileinfo" id="jInfo" hidden></div>
             <div class="pc-opts">
-              <div class="field"><span data-i18n="j_format"></span>
+              <div class="field"><span data-i18n="j_format">फॉरमॅट</span>
                 <div class="seg" role="group" id="jFmt">
                   <button type="button" data-v="jpg">JPG</button>
                   <button type="button" data-v="png">PNG</button>
                 </div>
               </div>
-              <div class="field pc-wide"><span data-i18n="j_dpi"></span>
+              <div class="field pc-wide"><span data-i18n="j_dpi">रिझोल्यूशन</span>
                 <div class="seg" role="group" id="jDpi">
-                  <button type="button" data-v="72" data-i18n="dpi_72"></button>
-                  <button type="button" data-v="150" data-i18n="dpi_150"></button>
-                  <button type="button" data-v="300" data-i18n="dpi_300"></button>
+                  <button type="button" data-v="72" data-i18n="dpi_72">72 dpi (स्क्रीन)</button>
+                  <button type="button" data-v="150" data-i18n="dpi_150">150 dpi (साधारण)</button>
+                  <button type="button" data-v="300" data-i18n="dpi_300">300 dpi (प्रिंट)</button>
                 </div>
               </div>
             </div>
             <div class="row pc-go">
-              <button class="btn btn-primary btn-lg" id="jGo" type="button"><span aria-hidden="true">📸</span> <span data-i18n="j_go"></span></button>
+              <button class="btn btn-primary btn-lg" id="jGo" type="button"><span aria-hidden="true">📸</span> <span data-i18n="j_go">इमेजमध्ये बदला</span></button>
               <button class="btn" id="jStop" type="button" data-i18n="stop" hidden></button>
             </div>
             <div class="pc-prog" id="jProg" hidden>
@@ -360,15 +360,15 @@
           </div>
 
           <div class="card stack" id="jPagesCard">
-            <div class="row spread"><h3 class="mb0" data-i18n="j_pages"></h3><span class="badge primary" id="jSelCount"></span></div>
+            <div class="row spread"><h3 class="mb0" data-i18n="j_pages">पाने</h3><span class="badge primary" id="jSelCount"></span></div>
             <div class="pc-range">
               <input type="text" id="jRange" class="no-i18n" autocomplete="off" data-i18n-placeholder="j_range_ph" data-i18n-aria-label="j_pages">
-              <button class="btn btn-sm" id="jAll" type="button" data-i18n="j_all"></button>
-              <button class="btn btn-sm" id="jNone" type="button" data-i18n="j_none"></button>
+              <button class="btn btn-sm" id="jAll" type="button" data-i18n="j_all">सर्व</button>
+              <button class="btn btn-sm" id="jNone" type="button" data-i18n="j_none">एकही नाही</button>
             </div>
             <p class="small bad mb0 pc-msg" id="jRangeMsg" role="alert"></p>
             <div class="pc-pages" id="jPages"></div>
-            <div class="pc-empty" id="jPagesEmpty"><span class="pc-drop-ic" aria-hidden="true">🗂️</span><span data-i18n="j_empty"></span></div>
+            <div class="pc-empty" id="jPagesEmpty"><span class="pc-drop-ic" aria-hidden="true">🗂️</span><span data-i18n="j_empty">PDF निवडा, तिची पाने इथे दिसतील.</span></div>
           </div>
         </div>
         <div class="card stack" id="jResult" aria-live="polite" data-state="empty" hidden></div>
@@ -379,26 +379,26 @@
     <section id="p-unlock" role="tabpanel" aria-labelledby="tab-unlock" class="pc-panel" data-drop="pdf" hidden>
       <div class="pc-cols">
         <div class="card stack">
-          <div class="pc-head"><h2 data-i18n="u_title"></h2><p class="muted small mb0" data-i18n="u_desc"></p></div>
-          <p class="callout warning small mb0" data-i18n="u_warn"></p>
+          <div class="pc-head"><h2 data-i18n="u_title">तुमची PDF अनलॉक करा</h2><p class="muted small mb0" data-i18n="u_desc">तुमच्या पासवर्ड असलेल्या PDF ची (ई-आधार, बँक स्टेटमेंट, पगार स्लिप) अशी प्रत सेव्ह करा जी पासवर्डशिवाय उघडते.</p></div>
+          <p class="callout warning small mb0" data-i18n="u_warn">फक्त तुमच्या स्वतःच्या कागदपत्रांसाठी. पासवर्ड तुम्हाला माहीत असला पाहिजे: हे टूल पासवर्डचा अंदाज लावत नाही किंवा तो तोडत नाही.</p>
           <input type="file" id="uFile" class="pc-file" accept="application/pdf,.pdf" tabindex="-1" aria-hidden="true">
           <div class="pc-drop" id="uDrop">
             <span class="pc-drop-ic" aria-hidden="true">🔐</span>
-            <button class="btn btn-primary btn-lg" id="uPick" type="button" data-i18n="choose_pdf"></button>
-            <span class="small muted" data-i18n="or_drop"></span>
+            <button class="btn btn-primary btn-lg" id="uPick" type="button" data-i18n="choose_pdf">PDF निवडा</button>
+            <span class="small muted" data-i18n="or_drop">किंवा फाइल इथे सोडा</span>
           </div>
           <div class="pc-fileinfo" id="uInfo" hidden></div>
           <p class="mb0 pc-msg" id="uStatus" aria-live="polite"></p>
           <div class="stack" id="uSaveBox" hidden>
-            <div class="field"><span data-i18n="u_quality"></span>
+            <div class="field"><span data-i18n="u_quality">क्वालिटी</span>
               <div class="seg" role="group" id="uDpi">
-                <button type="button" data-v="150" data-i18n="q_std"></button>
-                <button type="button" data-v="200" data-i18n="q_high"></button>
-                <button type="button" data-v="300" data-i18n="q_print"></button>
+                <button type="button" data-v="150" data-i18n="q_std">साधारण (150 dpi)</button>
+                <button type="button" data-v="200" data-i18n="q_high">उच्च (200 dpi)</button>
+                <button type="button" data-v="300" data-i18n="q_print">प्रिंट (300 dpi)</button>
               </div>
             </div>
             <div class="row pc-go">
-              <button class="btn btn-primary btn-lg" id="uGo" type="button"><span aria-hidden="true">🔓</span> <span data-i18n="u_go"></span></button>
+              <button class="btn btn-primary btn-lg" id="uGo" type="button"><span aria-hidden="true">🔓</span> <span data-i18n="u_go">अनलॉक प्रत सेव्ह करा</span></button>
               <button class="btn" id="uStop" type="button" data-i18n="stop" hidden></button>
             </div>
             <div class="pc-prog" id="uProg" hidden>
@@ -412,19 +412,19 @@
     </section>
 
     <details class="card no-print" id="helpBox" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">कसे वापरावे / कामासाठी कल्पना</strong></summary>
       <ul style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">परीक्षा किंवा नोकरीच्या फॉर्ममध्ये “PDF 200 KB पेक्षा कमी” लिहिले आहे? फाइल निवडा, 200 KB दाबा आणि “PDF लहान करा” वर क्लिक करा. SSC, UPSC, NEET, पासपोर्ट, शिष्यवृत्ती, GST आणि इन्कम टॅक्स पोर्टलसाठी उपयोगी.</li>
+        <li data-i18n="tip2">KYC साठी आधार किंवा पॅनची प्रत: पुढच्या आणि मागच्या बाजूचा फोटो काढा, “JPG ते PDF” उघडा, एका पानावर 2 फोटो आणि खऱ्या ओळखपत्राची साइझ निवडा, मग PDF प्रिंट करा किंवा पाठवा.</li>
+        <li data-i18n="tip3">फोनने काढलेला पानाचा फोटो राखाडी किंवा सावलीचा दिसतो? “स्कॅनसारखे” (रंग राहतात) किंवा “ब्लॅक अँड व्हाइट” (सर्वात स्पष्ट अक्षरे, सर्वात लहान फाइल) निवडा.</li>
+        <li data-i18n="tip4">WhatsApp, Instagram किंवा वेबसाइटसाठी स्लाइड, मेन्यू कार्ड किंवा प्रमाणपत्राची इमेज हवी? “PDF ते JPG” मध्ये 150 dpi वापरा; प्रिंटसाठी 300 dpi.</li>
+        <li data-i18n="tip5">ई-आधारचा पासवर्ड: तुमच्या नावाची पहिली 4 अक्षरे कॅपिटलमध्ये आणि जन्माचे वर्ष, उदा. SURE1990. बँक स्टेटमेंटसाठी अनेकदा जन्मतारीख किंवा कस्टमर ID असतो; बँकेच्या ईमेलमध्ये लिहिलेले असते.</li>
+        <li data-i18n="tip6">“जोरदार” पद्धत पानांना चित्र बनवते. नोंदीसाठी मूळ फाइल ठेवा, आणि करार किंवा इनव्हॉइससारख्या फाइल्ससाठी, ज्यात मजकूर सर्च व्हायला हवा, “हलकी” पद्धत वापरा.</li>
       </ul>
-      <h3 data-i18n="inside_title"></h3>
-      <p class="small" data-i18n="inside_body"></p>
+      <h3 data-i18n="inside_title">आत काय होते?</h3>
+      <p class="small" data-i18n="inside_body">PDF.js (Mozilla ने बनवलेले) प्रत्येक पान तुमच्या ब्राउझरमध्येच काढते. ठरलेल्या साइझपर्यंत पोहोचण्यासाठी ॲप काही नमुना पानांवर वेगवेगळी स्पष्टता (dpi) आणि JPEG क्वालिटी वापरून पाहते, बसणारी सर्वोत्तम सेटिंग निवडते, pdf-lib ने नवी PDF बनवते आणि मग तिची खरी साइझ तपासते. काहीही कोणत्याही सर्व्हरवर पाठवले जात नाही.</p>
       <div class="row spread" style="margin-top:10px">
-        <span class="small muted" data-i18n="settings_saved"></span>
+        <span class="small muted" data-i18n="settings_saved">तुमच्या सेटिंग्ज याच डिव्हाइसवर सेव्ह राहतात. तुमच्या फाइल्स कधीच सेव्ह होत नाहीत.</span>
         <button class="btn btn-sm btn-danger" id="resetAll" type="button" data-i18n="reset"></button>
       </div>
     </details>

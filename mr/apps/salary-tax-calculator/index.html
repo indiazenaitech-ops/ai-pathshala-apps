@@ -147,68 +147,68 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">तुमच्या CTC वरून दरमहा हातात येणारा पगार काढा, जुनी आणि नवी कर पद्धत यांची तुलना करा, पगारवाढीतून खरोखर किती मिळते ते पाहा, किंवा हवा तेवढा हातातील पगार मिळण्यासाठी किती CTC मागायचा ते शोधा.</p>
 
     <div class="callout stx-head" role="note" id="hdr">
       <p class="yr" id="hdrYear"></p>
       <p id="hdrNote"></p>
     </div>
-    <p class="stx-priv"><span class="badge success" data-i18n="privacy"></span> <span class="muted" data-i18n="scope"></span></p>
+    <p class="stx-priv"><span class="badge success" data-i18n="privacy">🔒 तुमचा पगार आणि फाइल्स या डिव्हाइसबाहेर जात नाहीत. लॉगिन नाही, फोन नंबर नाही.</span> <span class="muted" data-i18n="scope">फक्त पगाराच्या उत्पन्नासाठी (भांडवली नफा, भाडे किंवा व्यवसायाचे उत्पन्न नाही).</span></p>
 
     <div class="stx-tabs no-print" role="tablist" data-i18n-aria-label="modes_label" id="tabs">
-      <button type="button" role="tab" id="tab-salary" data-mode="salary" aria-controls="results"><span class="ic" aria-hidden="true">💰</span><span data-i18n="mode_salary"></span></button>
-      <button type="button" role="tab" id="tab-compare" data-mode="compare" aria-controls="results"><span class="ic" aria-hidden="true">⚖️</span><span data-i18n="mode_compare"></span></button>
-      <button type="button" role="tab" id="tab-hike" data-mode="hike" aria-controls="results"><span class="ic" aria-hidden="true">📈</span><span data-i18n="mode_hike"></span></button>
-      <button type="button" role="tab" id="tab-reverse" data-mode="reverse" aria-controls="results"><span class="ic" aria-hidden="true">🎯</span><span data-i18n="mode_reverse"></span></button>
+      <button type="button" role="tab" id="tab-salary" data-mode="salary" aria-controls="results"><span class="ic" aria-hidden="true">💰</span><span data-i18n="mode_salary">CTC → हातातील पगार</span></button>
+      <button type="button" role="tab" id="tab-compare" data-mode="compare" aria-controls="results"><span class="ic" aria-hidden="true">⚖️</span><span data-i18n="mode_compare">जुनी विरुद्ध नवी पद्धत</span></button>
+      <button type="button" role="tab" id="tab-hike" data-mode="hike" aria-controls="results"><span class="ic" aria-hidden="true">📈</span><span data-i18n="mode_hike">पगारवाढ</span></button>
+      <button type="button" role="tab" id="tab-reverse" data-mode="reverse" aria-controls="results"><span class="ic" aria-hidden="true">🎯</span><span data-i18n="mode_reverse">हातातील पगार → CTC</span></button>
     </div>
 
     <div class="stx-split">
       <section class="card stx-in" id="inputs" aria-labelledby="h-your">
         <div class="grp">
-          <h2 id="h-your" data-i18n="sec_salary"></h2>
+          <h2 id="h-your" data-i18n="sec_salary">तुमचा पगार</h2>
           <label class="stx-f" id="fCtc">
-            <span class="lbl" id="ctcLbl" data-i18n="ctc"></span>
+            <span class="lbl" id="ctcLbl" data-i18n="ctc">वार्षिक CTC (कंपनीचा एकूण खर्च)</span>
             <input type="text" id="ctc" class="big" data-k="ctc" inputmode="decimal" autocomplete="off" data-i18n-placeholder="ctc_ph">
             <span class="prev" id="ctcPrev" aria-live="polite"></span>
           </label>
           <label class="stx-f" id="fHike" hidden>
-            <span class="lbl" data-i18n="hike_pct"></span>
+            <span class="lbl" data-i18n="hike_pct">पगारवाढ (%)</span>
             <input type="number" id="hike" class="big" data-k="hike" min="-90" max="1000" step="0.5" inputmode="decimal">
             <span class="prev" id="hikePrev" aria-live="polite"></span>
           </label>
           <label class="stx-f" id="fTarget" hidden>
-            <span class="lbl" data-i18n="target"></span>
+            <span class="lbl" data-i18n="target">दरमहा हातात किती पगार हवा</span>
             <input type="text" id="target" class="big" data-k="target" inputmode="decimal" autocomplete="off" data-i18n-placeholder="target_ph">
             <span class="prev" id="targetPrev" aria-live="polite"></span>
           </label>
           <label class="stx-f">
-            <span class="lbl" data-i18n="bonus"></span>
+            <span class="lbl" data-i18n="bonus">वार्षिक बोनस / व्हेरिएबल पगार (CTC मध्येच)</span>
             <input type="text" id="bonus" data-k="bonus" inputmode="decimal" autocomplete="off" data-i18n-placeholder="bonus_ph">
-            <span class="hint" data-i18n="bonus_hint"></span>
+            <span class="hint" data-i18n="bonus_hint">हा वर्षातून एकदा मिळतो, म्हणून मासिक पगारात धरलेला नाही.</span>
             <span class="prev" id="bonusPrev" aria-live="polite"></span>
           </label>
           <div class="stx-f" id="fRegime">
-            <span class="lbl" id="regLbl" data-i18n="regime"></span>
+            <span class="lbl" id="regLbl" data-i18n="regime">कर पद्धत</span>
             <div class="seg full" role="group" aria-labelledby="regLbl">
-              <button type="button" id="regNew" data-regime="new" data-i18n="reg_new"></button>
-              <button type="button" id="regOld" data-regime="old" data-i18n="reg_old"></button>
+              <button type="button" id="regNew" data-regime="new" data-i18n="reg_new">नवी पद्धत</button>
+              <button type="button" id="regOld" data-regime="old" data-i18n="reg_old">जुनी पद्धत</button>
             </div>
-            <span class="hint" data-i18n="regime_hint"></span>
+            <span class="hint" data-i18n="regime_hint">नवी पद्धत (कलम 202, आधी 115BAC) आपोआप लागू होते. पगारदार दरवर्षी जुनी पद्धत निवडू शकतात.</span>
           </div>
           <label class="stx-f">
-            <span class="lbl" data-i18n="age"></span>
+            <span class="lbl" data-i18n="age">तुमचे वय</span>
             <select id="age" data-k="age">
-              <option value="below60" data-i18n="age_lt60"></option>
-              <option value="age60" data-i18n="age_60"></option>
-              <option value="age80" data-i18n="age_80"></option>
+              <option value="below60" data-i18n="age_lt60">60 पेक्षा कमी</option>
+              <option value="age60" data-i18n="age_60">60 ते 79</option>
+              <option value="age80" data-i18n="age_80">80 किंवा जास्त</option>
             </select>
           </label>
         </div>
 
         <div class="grp">
-          <h2 data-i18n="sec_breakup"></h2>
+          <h2 data-i18n="sec_breakup">CTC ची विभागणी</h2>
           <div class="stx-f">
-            <label class="lbl" for="basicPct" data-i18n="basic_pct"></label>
+            <label class="lbl" for="basicPct" data-i18n="basic_pct">मूळ पगार (फिक्स्ड CTC चा %)</label>
             <div class="with-seg">
               <input type="number" id="basicPct" data-k="basicPct" min="10" max="100" step="1" inputmode="decimal">
               <div class="seg" role="group" data-i18n-aria-label="basic_pct">
@@ -216,74 +216,74 @@
                 <button type="button" data-basic="50">50%</button>
               </div>
             </div>
-            <span class="hint" data-i18n="basic_hint"></span>
+            <span class="hint" data-i18n="basic_hint">फिक्स्ड CTC म्हणजे CTC वजा बोनस. बहुतेक कंपन्या 40% किंवा 50% ठेवतात.</span>
           </div>
           <div class="stx-f">
-            <span class="lbl" id="cityLbl" data-i18n="city"></span>
+            <span class="lbl" id="cityLbl" data-i18n="city">तुम्ही राहता ते शहर</span>
             <div class="seg full" role="group" aria-labelledby="cityLbl">
-              <button type="button" id="cityMetro" data-city="metro" data-i18n="city_metro"></button>
-              <button type="button" id="cityOther" data-city="other" data-i18n="city_other"></button>
+              <button type="button" id="cityMetro" data-city="metro" data-i18n="city_metro">मेट्रो शहर</button>
+              <button type="button" id="cityOther" data-city="other" data-i18n="city_other">इतर शहर</button>
             </div>
             <span class="hint" data-rk="metro_list"></span>
           </div>
           <div class="two">
             <label class="stx-f">
-              <span class="lbl" data-i18n="hra_pct"></span>
+              <span class="lbl" data-i18n="hra_pct">HRA (मूळ पगाराचा %)</span>
               <input type="number" id="hraPct" data-k="hraPct" min="0" max="100" step="1" inputmode="decimal">
             </label>
             <label class="stx-f">
-              <span class="lbl" data-i18n="nps"></span>
+              <span class="lbl" data-i18n="nps">कंपनीचा NPS (मूळ पगाराचा %)</span>
               <input type="number" id="nps" data-k="nps" min="0" max="14" step="1" inputmode="decimal">
             </label>
           </div>
           <p class="hint" data-rk="nps_hint"></p>
           <label class="stx-f">
-            <span class="lbl" data-i18n="pf"></span>
+            <span class="lbl" data-i18n="pf">भविष्य निर्वाह निधी (PF)</span>
             <select id="pf" data-k="pf">
-              <option value="full" data-i18n="pf_full"></option>
+              <option value="full" data-i18n="pf_full">पूर्ण मूळ पगाराच्या 12%</option>
               <option value="cap" data-rk="pf_cap"></option>
-              <option value="none" data-i18n="pf_none"></option>
+              <option value="none" data-i18n="pf_none">PF नाही</option>
             </select>
           </label>
           <label class="check"><input type="checkbox" id="grat" data-k="grat"> <span data-rk="grat"></span></label>
           <div class="two">
             <label class="stx-f">
-              <span class="lbl" data-i18n="state"></span>
+              <span class="lbl" data-i18n="state">राज्य (व्यवसाय करासाठी)</span>
               <select id="state" data-k="state"></select>
             </label>
             <label class="stx-f">
-              <span class="lbl" data-i18n="pt"></span>
+              <span class="lbl" data-i18n="pt">वार्षिक व्यवसाय कर (₹)</span>
               <input type="text" id="pt" data-k="pt" inputmode="numeric" autocomplete="off">
             </label>
           </div>
-          <p class="hint" id="ptHint" data-i18n="pt_hint"></p>
+          <p class="hint" id="ptHint" data-i18n="pt_hint">तुमचे राज्य आणि पगार यावरून भरले आहे. पगार पावतीवर वेगळी रक्कम असेल तर तुमची रक्कम लिहा.</p>
         </div>
 
         <div class="grp">
           <details id="dedBox">
-            <summary data-i18n="sec_ded"></summary>
+            <summary data-i18n="sec_ded">जुन्या पद्धतीतील सवलती</summary>
             <div class="inner">
-              <p class="hint muted small mb0" data-i18n="ded_hint"></p>
+              <p class="hint muted small mb0" data-i18n="ded_hint">या फक्त जुन्या पद्धतीत वापरल्या जातात. नसतील तर रिकामे ठेवा.</p>
               <label class="stx-f">
-                <span class="lbl" data-i18n="rent"></span>
+                <span class="lbl" data-i18n="rent">दरमहा तुम्ही भरत असलेले घरभाडे</span>
                 <input type="text" id="rent" data-k="rent" inputmode="decimal" autocomplete="off">
               </label>
               <label class="stx-f">
-                <span class="lbl" data-i18n="c80"></span>
+                <span class="lbl" data-i18n="c80">PF शिवाय 80C बचत (PPF, ELSS, LIC, शाळेची फी, गृहकर्जाची मुद्दल)</span>
                 <input type="text" id="c80" data-k="c80" inputmode="decimal" autocomplete="off">
                 <span class="hint" id="c80Hint"></span>
               </label>
               <div class="two">
                 <label class="stx-f">
-                  <span class="lbl" data-i18n="d80s"></span>
+                  <span class="lbl" data-i18n="d80s">80D आरोग्य विमा: तुम्ही आणि कुटुंब</span>
                   <input type="text" id="d80s" data-k="d80s" inputmode="decimal" autocomplete="off">
                 </label>
                 <label class="stx-f">
-                  <span class="lbl" data-i18n="d80p"></span>
+                  <span class="lbl" data-i18n="d80p">80D आरोग्य विमा: आई-वडील</span>
                   <input type="text" id="d80p" data-k="d80p" inputmode="decimal" autocomplete="off">
                 </label>
               </div>
-              <label class="check"><input type="checkbox" id="par60" data-k="par60"> <span data-i18n="par60"></span></label>
+              <label class="check"><input type="checkbox" id="par60" data-k="par60"> <span data-i18n="par60">माझे आई-वडील 60 किंवा जास्त वयाचे आहेत</span></label>
               <label class="stx-f">
                 <span class="lbl" data-rk="ccd"></span>
                 <input type="text" id="ccd" data-k="ccd" inputmode="decimal" autocomplete="off">
@@ -298,13 +298,13 @@
 
         <div class="grp stx-act no-print">
           <button type="button" class="btn btn-primary" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
-          <button type="button" class="btn" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy_sum"></span></button>
-          <button type="button" class="btn" id="csvBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="csv"></span></button>
+          <button type="button" class="btn" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy_sum">सारांश कॉपी करा</span></button>
+          <button type="button" class="btn" id="csvBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="csv">CSV डाउनलोड करा</span></button>
           <button type="button" class="btn btn-danger" id="resetBtn" data-i18n="reset"></button>
         </div>
         <div class="quick no-print" id="quick" hidden>
           <span class="q-txt" id="quickTxt"></span>
-          <a href="#results" class="btn btn-sm btn-primary" id="quickGo" data-i18n="see_details"></a>
+          <a href="#results" class="btn btn-sm btn-primary" id="quickGo" data-i18n="see_details">तपशील पाहा ↓</a>
         </div>
       </section>
 
@@ -312,13 +312,13 @@
     </div>
 
     <details class="card" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">कसे वापरावे / कामासाठी सूचना</strong></summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">रक्कम बोलता तशीच लिहा: 12L, 12.5 लाख, 1.2 cr, 85k किंवा 12,00,000. बॉक्सखालील ओळ दाखवते की ॲपने काय समजले.</li>
+        <li data-i18n="tip2">ऑफर लेटर उघडा आणि मूळ पगार %, HRA, PF आणि बोनस &quot;CTC ची विभागणी&quot; मध्ये भरा. मग हातातील पगार तुमच्या पगार पावतीशी जवळपास जुळतो.</li>
+        <li data-i18n="tip3">ऑफिसमध्ये पद्धत निवडण्यापूर्वी जुन्या पद्धतीतील सवलती (भाडे, 80C, 80D, गृहकर्ज) भरा आणि &quot;जुनी विरुद्ध नवी पद्धत&quot; उघडा. ब्रेक-ईव्हन ओळ सांगते की जुनी पद्धत फायद्याची होण्यासाठी आणखी किती गुंतवणूक लागेल.</li>
+        <li data-i18n="tip4">नोकरीच्या ऑफरवर बोलणी करत आहात? &quot;हातातील पगार → CTC&quot; ने किती CTC मागायचा ते शोधा, आणि &quot;पगारवाढ&quot; ने वाढीचा किती भाग बँकेत येतो ते पाहा.</li>
+        <li data-i18n="tip5">HR टीम आणि संस्थापक: नव्या कर्मचाऱ्याला पगार रचना समजावण्यासाठी सारांश प्रिंट करा किंवा CSV डाउनलोड करा. काहीही कुठेही अपलोड होत नाही.</li>
       </ul>
     </details>
 

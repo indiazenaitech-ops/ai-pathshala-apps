@@ -234,42 +234,42 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">সোজা রাস্তায় একটি গতি বানাও আর দেখো দূরত্ব–সময়, বেগ–সময় ও ত্বরণ–সময় গ্রাফ নিজে নিজে কীভাবে আঁকা হয়। ঢাল আর ক্ষেত্রফল পড়ো, গতির সমীকরণ ধাপে ধাপে সমাধান করো, আর গ্রাফ কুইজে নিজেকে যাচাই করো (নবম–একাদশ শ্রেণি)।</p>
 
     <div class="tabs" role="tablist" id="tabs">
-      <button type="button" role="tab" id="tab-lab" data-panel="panel-lab" aria-controls="panel-lab" aria-selected="true">🚗 <span data-i18n="tab_lab"></span></button>
-      <button type="button" role="tab" id="tab-eq" data-panel="panel-eq" aria-controls="panel-eq" aria-selected="false">🧮 <span data-i18n="tab_eq"></span></button>
-      <button type="button" role="tab" id="tab-quiz" data-panel="panel-quiz" aria-controls="panel-quiz" aria-selected="false">🧠 <span data-i18n="tab_quiz"></span></button>
-      <button type="button" role="tab" id="tab-words" data-panel="panel-words" aria-controls="panel-words" aria-selected="false">📖 <span data-i18n="tab_words"></span></button>
+      <button type="button" role="tab" id="tab-lab" data-panel="panel-lab" aria-controls="panel-lab" aria-selected="true">🚗 <span data-i18n="tab_lab">গতি ল্যাব</span></button>
+      <button type="button" role="tab" id="tab-eq" data-panel="panel-eq" aria-controls="panel-eq" aria-selected="false">🧮 <span data-i18n="tab_eq">গতির সমীকরণ</span></button>
+      <button type="button" role="tab" id="tab-quiz" data-panel="panel-quiz" aria-controls="panel-quiz" aria-selected="false">🧠 <span data-i18n="tab_quiz">গ্রাফ কুইজ</span></button>
+      <button type="button" role="tab" id="tab-words" data-panel="panel-words" aria-controls="panel-words" aria-selected="false">📖 <span data-i18n="tab_words">জরুরি শব্দ</span></button>
     </div>
 
     <!-- ===================== LAB ===================== -->
     <section id="panel-lab" role="tabpanel" aria-labelledby="tab-lab">
       <div class="mg-top">
         <div class="card stack mg-ctrl" id="ctrl-card">
-          <h2 class="mb0" data-i18n="scenario_title"></h2>
+          <h2 class="mb0" data-i18n="scenario_title">গতি বানাও</h2>
           <div class="field">
-            <span class="lbl" data-i18n="presets"></span>
+            <span class="lbl" data-i18n="presets">তৈরি উদাহরণ</span>
             <div class="mg-presets" id="presets"></div>
           </div>
           <div class="field">
-            <span class="lbl" id="lbl-veh" data-i18n="vehicle"></span>
+            <span class="lbl" id="lbl-veh" data-i18n="vehicle">যান</span>
             <div class="seg" role="group" aria-labelledby="lbl-veh" id="vehicles"></div>
           </div>
           <div>
-            <span class="lbl" data-i18n="segments"></span>
-            <p class="muted small" data-i18n="segments_hint"></p>
+            <span class="lbl" data-i18n="segments">গতির অংশগুলি</span>
+            <p class="muted small" data-i18n="segments_hint">প্রতিটি সারি একটি অংশ: t সেকেন্ড ধরে সমবেগে চলা, অথবা t সেকেন্ডে বেগ u থেকে v পর্যন্ত সমানভাবে বদলানো। ঋণাত্মক বেগ মানে পিছনে ফেরা।</p>
             <div class="scroll-x">
               <table class="table mg-segs" id="seg-table">
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th data-i18n="col_type"></th>
-                    <th><span class="ltr" data-i18n="col_u"></span></th>
-                    <th><span class="ltr" data-i18n="col_v"></span></th>
-                    <th><span class="ltr" data-i18n="col_t"></span></th>
-                    <th><span class="ltr" data-i18n="col_a"></span></th>
-                    <th data-i18n="col_dist"></th>
+                    <th data-i18n="col_type">ধরন</th>
+                    <th><span class="ltr" data-i18n="col_u">u (m/s)</span></th>
+                    <th><span class="ltr" data-i18n="col_v">v (m/s)</span></th>
+                    <th><span class="ltr" data-i18n="col_t">t (s)</span></th>
+                    <th><span class="ltr" data-i18n="col_a">a (m/s²)</span></th>
+                    <th data-i18n="col_dist">দূরত্ব (m)</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -277,13 +277,13 @@
               </table>
             </div>
             <div class="row" id="seg-actions" style="margin-top:8px">
-              <button type="button" class="btn btn-sm" id="add-const">+ <span data-i18n="add_const"></span></button>
-              <button type="button" class="btn btn-sm" id="add-accel">+ <span data-i18n="add_accel"></span></button>
+              <button type="button" class="btn btn-sm" id="add-const">+ <span data-i18n="add_const">সমবেগ</span></button>
+              <button type="button" class="btn btn-sm" id="add-accel">+ <span data-i18n="add_accel">গতি বাড়াও / কমাও</span></button>
             </div>
             <p class="mg-note" id="seg-note"></p>
           </div>
           <div class="row no-print">
-            <button type="button" class="btn" id="print-lab">🖨️ <span data-i18n="print_lab"></span></button>
+            <button type="button" class="btn" id="print-lab">🖨️ <span data-i18n="print_lab">গ্রাফ প্রিন্ট করো</span></button>
             <button type="button" class="btn btn-danger" id="reset">↺ <span data-i18n="reset"></span></button>
           </div>
         </div>
@@ -302,45 +302,45 @@
           </div>
           <div class="stage mg-stage"><canvas id="road" aria-hidden="true"></canvas></div>
           <div class="mg-scrub">
-            <label for="scrub" class="small" data-i18n="time_slider"></label>
+            <label for="scrub" class="small" data-i18n="time_slider">সময়</label>
             <input type="range" id="scrub" min="0" max="1000" value="0" step="1">
           </div>
           <div class="mg-now no-i18n" id="readnow" aria-live="polite" aria-atomic="true"></div>
         </div>
 
         <div class="card mg-readcard" id="read-card">
-          <h2 data-i18n="results_title"></h2>
+          <h2 data-i18n="results_title">পুরো গতির হিসাব</h2>
           <div class="mg-stats" aria-live="polite">
-            <div class="mg-stat"><b id="ro-time">–</b><span data-i18n="ro_time"></span></div>
-            <div class="mg-stat"><b id="ro-dist">–</b><span data-i18n="ro_dist"></span></div>
-            <div class="mg-stat hl"><b id="ro-disp">–</b><span data-i18n="ro_disp"></span><small id="ro-disp-f"></small></div>
-            <div class="mg-stat"><b id="ro-avgs">–</b><span data-i18n="ro_avgs"></span><small id="ro-avgs-f"></small></div>
-            <div class="mg-stat hl"><b id="ro-avgv">–</b><span data-i18n="ro_avgv"></span><small id="ro-avgv-f"></small></div>
+            <div class="mg-stat"><b id="ro-time">–</b><span data-i18n="ro_time">মোট সময়</span></div>
+            <div class="mg-stat"><b id="ro-dist">–</b><span data-i18n="ro_dist">দূরত্ব (পথের দৈর্ঘ্য)</span></div>
+            <div class="mg-stat hl"><b id="ro-disp">–</b><span data-i18n="ro_disp">সরণ</span><small id="ro-disp-f"></small></div>
+            <div class="mg-stat"><b id="ro-avgs">–</b><span data-i18n="ro_avgs">গড় দ্রুতি = দূরত্ব ÷ সময়</span><small id="ro-avgs-f"></small></div>
+            <div class="mg-stat hl"><b id="ro-avgv">–</b><span data-i18n="ro_avgv">গড় বেগ = সরণ ÷ সময়</span><small id="ro-avgv-f"></small></div>
           </div>
           <p class="callout small" id="ro-note" style="margin-top:10px"></p>
         </div>
 
         <div class="card mg-graphcard" id="graph-card">
-          <h3><span data-i18n="g_dt"></span> <span class="muted" data-i18n="g_dt_hint"></span></h3>
+          <h3><span data-i18n="g_dt">দূরত্ব–সময় (d–t)</span> <span class="muted" data-i18n="g_dt_hint">ঢাল = বেগ</span></h3>
           <svg id="svg-d" class="mg-graph" role="img" data-i18n-aria-label="g_dt"></svg>
-          <h3><span data-i18n="g_vt"></span> <span class="muted" data-i18n="g_vt_hint"></span></h3>
+          <h3><span data-i18n="g_vt">বেগ–সময় (v–t)</span> <span class="muted" data-i18n="g_vt_hint">ঢাল = ত্বরণ · ক্ষেত্রফল = সরণ</span></h3>
           <svg id="svg-v" class="mg-graph" role="img" data-i18n-aria-label="g_vt"></svg>
           <p class="mg-legend" id="area-legend"></p>
-          <h3><span data-i18n="g_at"></span> <span class="muted" data-i18n="g_at_hint"></span></h3>
+          <h3><span data-i18n="g_at">ত্বরণ–সময় (a–t)</span> <span class="muted" data-i18n="g_at_hint">ক্ষেত্রফল = বেগের পরিবর্তন</span></h3>
           <svg id="svg-a" class="mg-graph" role="img" data-i18n-aria-label="g_at"></svg>
         </div>
 
         <div class="card mg-slopecard stack" id="slope-card">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="slope_title"></h2>
-            <label class="check"><input type="checkbox" id="slope-on"> <span data-i18n="slope_on"></span></label>
+            <h2 class="mb0" data-i18n="slope_title">ঢাল মাপার টুল</h2>
+            <label class="check"><input type="checkbox" id="slope-on"> <span data-i18n="slope_on">মার্কার দেখাও</span></label>
           </div>
-          <p class="muted small mb0" data-i18n="slope_hint"></p>
+          <p class="muted small mb0" data-i18n="slope_hint">গ্রাফে দুটি মার্কার টেনে সরাও (বা সময় লেখো)। তাদের মাঝের রেখার ঢাল = উচ্চতা ÷ ভূমি।</p>
           <div id="slope-body" class="stack" hidden>
             <div class="row">
               <div class="seg" role="group" id="slope-kind" data-i18n-aria-label="slope_which">
-                <button type="button" data-k="d" aria-pressed="true"><span data-i18n="slope_on_dt"></span></button>
-                <button type="button" data-k="v" aria-pressed="false"><span data-i18n="slope_on_vt"></span></button>
+                <button type="button" data-k="d" aria-pressed="true"><span data-i18n="slope_on_dt">d–t-তে</span></button>
+                <button type="button" data-k="v" aria-pressed="false"><span data-i18n="slope_on_vt">v–t-তে</span></button>
               </div>
               <label>t₁ (s) <input type="number" id="slope-t1" step="0.5" min="0"></label>
               <label>t₂ (s) <input type="number" id="slope-t2" step="0.5" min="0"></label>
@@ -351,12 +351,12 @@
       </div>
 
       <details class="card" id="inside" style="margin-top:16px">
-        <summary><strong data-i18n="inside_title"></strong></summary>
+        <summary><strong data-i18n="inside_title">ভিতরে কী ঘটছে?</strong></summary>
         <ul class="stack" style="padding-inline-start:20px;margin-top:12px">
-          <li data-i18n="inside_1"></li>
-          <li data-i18n="inside_2"></li>
-          <li data-i18n="inside_3"></li>
-          <li data-i18n="inside_4"></li>
+          <li data-i18n="inside_1">টেবিলের প্রতিটি সারি গতির একটি অংশ। সমবেগে দূরত্ব = v × t। বেগ u থেকে v পর্যন্ত সমানভাবে বদলালে ত্বরণ a = (v − u) ÷ t এবং অতিক্রান্ত দূরত্ব = (u + v) ÷ 2 × t।</li>
+          <li data-i18n="inside_2">d–t গ্রাফ শুরু থেকে মাপা অবস্থান দেখায়। এর ঢাল (উচ্চতা ÷ ভূমি) হলো বেগ: খাড়া রেখা মানে দ্রুত, সমতল রেখা মানে থেমে আছে, নিচে নামা রেখা মানে পিছনে চলা।</li>
+          <li data-i18n="inside_3">v–t গ্রাফে ঢাল হলো ত্বরণ, আর রেখা ও সময়-অক্ষের মাঝের ক্ষেত্রফল হলো সরণ। অক্ষের উপরের ক্ষেত্রফল সামনে (+) ধরা হয়, নিচেরটা পিছনে (−)।</li>
+          <li data-i18n="inside_4">a–t গ্রাফ প্রতিটি অংশে সমতল, কারণ প্রতিটি অংশে ত্বরণ ধ্রুব (সমবেগে শূন্য)।</li>
         </ul>
       </details>
     </section>
@@ -365,40 +365,40 @@
     <section id="panel-eq" role="tabpanel" aria-labelledby="tab-eq" hidden>
       <div class="grid-2">
         <div class="card stack">
-          <h2 class="mb0" data-i18n="eq_title"></h2>
-          <p class="muted small mb0" data-i18n="eq_intro"></p>
+          <h2 class="mb0" data-i18n="eq_title">গতির সমীকরণ</h2>
+          <p class="muted small mb0" data-i18n="eq_intro">যে তিনটি রাশি জানো সেগুলিতে টিক দিয়ে মান লেখো। বাকি দুটি বের করে দেওয়া হবে, ব্যবহৃত সমীকরণ ও প্রতিটি ধাপসহ।</p>
           <ul class="mg-eqlist no-i18n" aria-hidden="true"><li>v = u + at</li><li>s = ut + ½at²</li><li>v² = u² + 2as</li><li>s = (u + v)t / 2</li></ul>
           <div class="seg" role="group" id="eq-mode" data-i18n-aria-label="eq_mode">
-            <button type="button" id="mode-general" aria-pressed="true" data-i18n="mode_general"></button>
-            <button type="button" id="mode-ff" aria-pressed="false" data-i18n="mode_ff"></button>
+            <button type="button" id="mode-general" aria-pressed="true" data-i18n="mode_general">যেকোনো গতি</button>
+            <button type="button" id="mode-ff" aria-pressed="false" data-i18n="mode_ff">মুক্ত পতন (অভিকর্ষ)</button>
           </div>
           <div id="ff-opts" class="stack" hidden>
             <div class="row">
-              <span class="lbl" id="lbl-planet" data-i18n="ff_where"></span>
+              <span class="lbl" id="lbl-planet" data-i18n="ff_where">কোথায়?</span>
               <div class="seg" role="group" aria-labelledby="lbl-planet" id="planets">
-                <button type="button" data-g="earth" aria-pressed="true"><span data-i18n="g_earth"></span> <span class="ltr">9.8</span></button>
-                <button type="button" data-g="moon" aria-pressed="false"><span data-i18n="g_moon"></span> <span class="ltr">1.6</span></button>
-                <button type="button" data-g="mars" aria-pressed="false"><span data-i18n="g_mars"></span> <span class="ltr">3.7</span></button>
+                <button type="button" data-g="earth" aria-pressed="true"><span data-i18n="g_earth">পৃথিবী</span> <span class="ltr">9.8</span></button>
+                <button type="button" data-g="moon" aria-pressed="false"><span data-i18n="g_moon">চাঁদ</span> <span class="ltr">1.6</span></button>
+                <button type="button" data-g="mars" aria-pressed="false"><span data-i18n="g_mars">মঙ্গল</span> <span class="ltr">3.7</span></button>
               </div>
             </div>
             <div class="row">
-              <span class="lbl" id="lbl-dir" data-i18n="ff_dir"></span>
+              <span class="lbl" id="lbl-dir" data-i18n="ff_dir">দিক</span>
               <div class="seg" role="group" aria-labelledby="lbl-dir" id="ff-dir">
-                <button type="button" data-d="down" aria-pressed="true" data-i18n="ff_down"></button>
-                <button type="button" data-d="up" aria-pressed="false" data-i18n="ff_up"></button>
+                <button type="button" data-d="down" aria-pressed="true" data-i18n="ff_down">নিচে পড়া</button>
+                <button type="button" data-d="up" aria-pressed="false" data-i18n="ff_up">উপরে ছোড়া</button>
               </div>
             </div>
             <p class="muted small mb0" id="ff-note"></p>
           </div>
-          <p class="lbl mb0" data-i18n="knowns_label"></p>
+          <p class="lbl mb0" data-i18n="knowns_label">যা জানা আছে তাতে টিক দাও:</p>
           <div class="mg-knowns" id="knowns"></div>
           <div class="row">
-            <button type="button" class="btn btn-primary btn-lg" id="solve">= <span data-i18n="solve"></span></button>
+            <button type="button" class="btn btn-primary btn-lg" id="solve">= <span data-i18n="solve">সমাধান করো</span></button>
             <button type="button" class="btn" id="eq-clear" data-i18n="clear"></button>
           </div>
         </div>
         <div class="card stack" id="eq-out" aria-live="polite">
-          <h2 class="mb0" data-i18n="eq_result"></h2>
+          <h2 class="mb0" data-i18n="eq_result">ফল</h2>
           <div class="mg-vals" id="eq-vals"></div>
           <div id="eq-err" class="callout warning" hidden></div>
           <div id="eq-steps" class="stack"></div>
@@ -407,24 +407,24 @@
       </div>
       <div class="grid-2" style="margin-top:16px">
         <div class="card stack">
-          <h2 class="mb0" data-i18n="conv_title"></h2>
-          <p class="muted small mb0" data-i18n="conv_hint"></p>
+          <h2 class="mb0" data-i18n="conv_title">km/h ⇄ m/s</h2>
+          <p class="muted small mb0" data-i18n="conv_hint">যেকোনো দিকে লেখো। 1 m/s = 3.6 km/h, কারণ 1 km = 1000 m এবং 1 ঘণ্টা = 3600 s।</p>
           <div class="mg-conv">
-            <label class="field"><span data-i18n="conv_ms"></span><input type="number" id="conv-ms" step="any" value="20"></label>
+            <label class="field"><span data-i18n="conv_ms">m/s</span><input type="number" id="conv-ms" step="any" value="20"></label>
             <span class="arrows" aria-hidden="true">⇄</span>
-            <label class="field"><span data-i18n="conv_kmh"></span><input type="number" id="conv-kmh" step="any" value="72"></label>
+            <label class="field"><span data-i18n="conv_kmh">km/h</span><input type="number" id="conv-kmh" step="any" value="72"></label>
           </div>
-          <p class="callout small mb0" data-i18n="conv_examples"></p>
+          <p class="callout small mb0" data-i18n="conv_examples">কাজের মান: 36 km/h = 10 m/s, 72 km/h = 20 m/s, 90 km/h = 25 m/s, 108 km/h = 30 m/s।</p>
         </div>
         <div class="card stack mg-deriv">
-          <h2 class="mb0" data-i18n="deriv_title"></h2>
-          <p class="muted small mb0" data-i18n="deriv_intro"></p>
+          <h2 class="mb0" data-i18n="deriv_title">v–t-এর নিচের ক্ষেত্রফল কেন সরণ?</h2>
+          <p class="muted small mb0" data-i18n="deriv_intro">সুষম ত্বরণে v–t গ্রাফ u থেকে v পর্যন্ত একটি সরলরেখা। এর নিচের ক্ষেত্রফল = একটি আয়তক্ষেত্র + একটি ত্রিভুজ:</p>
           <svg id="deriv-svg" role="img" data-i18n-aria-label="deriv_title"></svg>
           <ol class="stack" style="padding-inline-start:20px;margin:0">
-            <li data-i18n="deriv_1"></li>
-            <li data-i18n="deriv_2"></li>
-            <li data-i18n="deriv_3"></li>
-            <li data-i18n="deriv_4"></li>
+            <li data-i18n="deriv_1">আয়তক্ষেত্র: প্রস্থ t, উচ্চতা u, তাই ক্ষেত্রফল u × t (আদি বেগে অতিক্রান্ত দূরত্ব)।</li>
+            <li data-i18n="deriv_2">ত্রিভুজ: ভূমি t, উচ্চতা (v − u) = at, তাই ক্ষেত্রফল ½ × t × at = ½at² (গতি বাড়ার জন্য বাড়তি দূরত্ব)।</li>
+            <li data-i18n="deriv_3">মোট ক্ষেত্রফল = ut + ½at² = s। এটিই গতির দ্বিতীয় সমীকরণ।</li>
+            <li data-i18n="deriv_4">একই ছবি একটি ট্রাপিজিয়ামও, যা থেকে s = (u + v) ÷ 2 × t পাওয়া যায়; এতে t = (v − u) ÷ a বসালে v² = u² + 2as পাওয়া যায়।</li>
           </ol>
         </div>
       </div>
@@ -434,29 +434,29 @@
     <section id="panel-quiz" role="tabpanel" aria-labelledby="tab-quiz" hidden>
       <div class="card stack" id="quiz"></div>
       <div class="row no-print" style="margin-top:12px">
-        <button type="button" class="btn" id="quiz-print">🖨️ <span data-i18n="quiz_print"></span></button>
-        <button type="button" class="btn btn-ghost" id="quiz-restart">🔁 <span data-i18n="quiz_again"></span></button>
+        <button type="button" class="btn" id="quiz-print">🖨️ <span data-i18n="quiz_print">ওয়ার্কশিট প্রিন্ট করো</span></button>
+        <button type="button" class="btn btn-ghost" id="quiz-restart">🔁 <span data-i18n="quiz_again">আবার খেলো</span></button>
       </div>
     </section>
 
     <!-- ===================== WORDS TO KNOW ===================== -->
     <section id="panel-words" role="tabpanel" aria-labelledby="tab-words" hidden>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="words_title"></h2>
+        <h2 class="mb0" data-i18n="words_title">জরুরি শব্দ</h2>
         <div class="mg-words">
-          <div class="mg-word"><h3 data-i18n="w1_t"></h3><p data-i18n="w1_d"></p><p class="ex" data-i18n="w1_e"></p></div>
-          <div class="mg-word"><h3 data-i18n="w2_t"></h3><p data-i18n="w2_d"></p><p class="ex" data-i18n="w2_e"></p></div>
-          <div class="mg-word"><h3 data-i18n="w3_t"></h3><p data-i18n="w3_d"></p><p class="ex" data-i18n="w3_e"></p></div>
-          <div class="mg-word"><h3 data-i18n="w4_t"></h3><p data-i18n="w4_d"></p><p class="ex" data-i18n="w4_e"></p></div>
-          <div class="mg-word"><h3 data-i18n="w5_t"></h3><p data-i18n="w5_d"></p><p class="ex" data-i18n="w5_e"></p></div>
-          <div class="mg-word"><h3 data-i18n="w6_t"></h3><p data-i18n="w6_d"></p><p class="ex" data-i18n="w6_e"></p></div>
+          <div class="mg-word"><h3 data-i18n="w1_t">দূরত্ব ও সরণ</h3><p data-i18n="w1_d">দূরত্ব হলো অতিক্রান্ত পথের মোট দৈর্ঘ্য। সরণ হলো শুরু থেকে শেষ পর্যন্ত অবস্থানের সরলরৈখিক পরিবর্তন, এবং এর একটি দিক আছে।</p><p class="ex" data-i18n="w1_e">উদাহরণ: দোকানে 30 m যাও আর 30 m ফিরে এসো। দূরত্ব = 60 m, সরণ = 0।</p></div>
+          <div class="mg-word"><h3 data-i18n="w2_t">দ্রুতি ও বেগ</h3><p data-i18n="w2_d">দ্রুতি = দূরত্ব ÷ সময়; এর শুধু মান আছে। বেগ = সরণ ÷ সময়; এর মান ও দিক দুটোই আছে। এই অ্যাপে ঋণাত্মক বেগ মানে শুরুর দিকে ফিরে চলা।</p><p class="ex" data-i18n="w2_e">উদাহরণ: পূর্ব দিকে 20 m/s-এ চলা গাড়ি আর পশ্চিম দিকে 20 m/s-এ চলা গাড়ির দ্রুতি সমান, কিন্তু বেগ আলাদা।</p></div>
+          <div class="mg-word"><h3 data-i18n="w3_t">সুষম ও অসম গতি</h3><p data-i18n="w3_d">সুষম গতিতে সমান সময়ে সমান দূরত্ব অতিক্রান্ত হয়: d–t গ্রাফ সরলরেখা আর v–t গ্রাফ সমতল। অসম গতিতে দ্রুতি বদলাতে থাকে আর d–t গ্রাফ বেঁকে যায়।</p><p class="ex" data-i18n="w3_e">উদাহরণ: 60 km/h স্থির দ্রুতিতে চলা ট্রেন সুষম গতি; শহরের যানজটে বাস অসম গতি।</p></div>
+          <div class="mg-word"><h3 data-i18n="w4_t">গড় দ্রুতি</h3><p data-i18n="w4_d">গড় দ্রুতি = মোট দূরত্ব ÷ মোট সময়, পথে দ্রুতি বদলালেও। গড় বেগ = মোট সরণ ÷ মোট সময়।</p><p class="ex" data-i18n="w4_e">উদাহরণ: দিল্লি থেকে আগ্রা প্রায় 200 km। 2.5 ঘণ্টায় গেলে গড় দ্রুতি = 200 ÷ 2.5 = 80 km/h (প্রায় 22 m/s)।</p></div>
+          <div class="mg-word"><h3 data-i18n="w5_t">ত্বরণ</h3><p data-i18n="w5_d">ত্বরণ = বেগের পরিবর্তন ÷ সময়, একক m/s²। এটি v–t গ্রাফের ঢাল। ধনাত্মক মানে (সামনের দিকে) গতি বাড়া; ঋণাত্মক মানে ধীর হওয়া, যাকে মন্দনও বলে।</p><p class="ex" data-i18n="w5_e">উদাহরণ: 10 s-এ 0 থেকে 20 m/s হওয়া = 20 ÷ 10 = 2 m/s² ত্বরণ।</p></div>
+          <div class="mg-word"><h3 data-i18n="w6_t">সুষম বৃত্তীয় গতি</h3><p data-i18n="w6_d">স্থির দ্রুতিতে বৃত্তে ঘোরা বস্তুও ত্বরিত হয়, কারণ এর দিক ক্রমাগত বদলায়। এর দ্রুতি v = 2πr ÷ T, যেখানে r ব্যাসার্ধ আর T একটি পূর্ণ পাকের সময়।</p><p class="ex" data-i18n="w6_e">উদাহরণ: 2 m ব্যাসার্ধের গোল লাইনে খেলনা ট্রেন এক পাকে 4 s নেয়: v = 2 × 3.14 × 2 ÷ 4 ≈ 3.14 m/s।</p></div>
         </div>
         <div class="panel">
-          <h3 data-i18n="circ_title"></h3>
-          <p class="small muted" data-i18n="circ_hint"></p>
+          <h3 data-i18n="circ_title">চেষ্টা করো: v = 2πr / T</h3>
+          <p class="small muted" data-i18n="circ_hint">ব্যাসার্ধ r মিটারে আর পর্যায়কাল T (এক পূর্ণ পাকের সেকেন্ড)।</p>
           <div class="mg-circ">
-            <label class="field"><span data-i18n="circ_r"></span><input type="number" id="circ-r" step="any" min="0" value="2"></label>
-            <label class="field"><span data-i18n="circ_T"></span><input type="number" id="circ-T" step="any" min="0" value="4"></label>
+            <label class="field"><span data-i18n="circ_r">ব্যাসার্ধ r (m)</span><input type="number" id="circ-r" step="any" min="0" value="2"></label>
+            <label class="field"><span data-i18n="circ_T">পর্যায়কাল T (s)</span><input type="number" id="circ-T" step="any" min="0" value="4"></label>
             <div class="callout" id="circ-out" aria-live="polite"></div>
           </div>
         </div>
@@ -466,14 +466,14 @@
     <section id="worksheet" aria-hidden="true"></section>
 
     <details class="card" id="howto" style="margin-top:18px">
-      <summary><strong data-i18n="howto_title"></strong></summary>
+      <summary><strong data-i18n="howto_title">কীভাবে ব্যবহার করবে / ক্লাসের জন্য আইডিয়া</strong></summary>
       <ul>
-        <li data-i18n="how1"></li>
-        <li data-i18n="how2"></li>
-        <li data-i18n="how3"></li>
-        <li data-i18n="how4"></li>
-        <li data-i18n="how5"></li>
-        <li data-i18n="how6"></li>
+        <li data-i18n="how1">একটি তৈরি উদাহরণ বেছে নাও বা টেবিল বদলাও: প্রতিটি সারি যাত্রার একটি অংশ। “চালাও” চাপো আর যান ও তিনটি গ্রাফকে একসঙ্গে চলতে দেখো।</li>
+        <li data-i18n="how2">ঢাল মাপার টুল চালু করে মার্কার দুটি টানো: d–t-তে ঢাল হলো বেগ, v–t-তে ত্বরণ। a–t গ্রাফের সঙ্গে মিলিয়ে দেখো।</li>
+        <li data-i18n="how3">“উপরে ছোড়া বল” চেষ্টা করো: বেগের চিহ্ন বদলায়, v–t-এর নিচের ক্ষেত্রফল আগে + পরে − হয়, আর সরণ 0-তে ফিরে আসে কিন্তু দূরত্ব নয়।</li>
+        <li data-i18n="how4">“গতির সমীকরণ”-এ u, v, a, t, s-এর যেকোনো তিনটিতে টিক দাও। পৃথিবী, চাঁদ বা মঙ্গলের g ব্যবহার করতে মুক্ত পতনে যাও।</li>
+        <li data-i18n="how5">ক্লাসের কাজ: একজন ছাত্র বারান্দায় একটি যাত্রা অভিনয় করুক (হাঁটা, থামা, ফিরে আসা)। ক্লাস এখানে তার টেবিল বানাক আর “চালাও” চাপার আগে কাগজে d–t গ্রাফ আঁকুক।</li>
+        <li data-i18n="how6">স্মার্টবোর্ডে দলে ভাগ হয়ে গ্রাফ কুইজ খেলো, বা বাড়ির কাজের জন্য ওয়ার্কশিট (উত্তরমালাসহ) প্রিন্ট করো।</li>
       </ul>
     </details>
   </main>

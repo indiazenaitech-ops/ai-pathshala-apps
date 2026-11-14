@@ -146,9 +146,9 @@
 </head>
 <body>
   <main id="app">
-    <h1 class="print-only" data-i18n="app_title"></h1>
+    <h1 class="print-only" data-i18n="app_title">টোকেন এক্সপ্লোরার</h1>
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">ChatGPT-এর মতো AI মডেল অক্ষর বা শব্দ পড়ে না, তারা টোকেন পড়ে। যা খুশি লিখুন, নিজের টোকেনাইজার নিজেই শেখান, আর দেখুন কিছু ভাষায় কেন বেশি টোকেন লাগে।</p>
       <div class="row no-print">
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm" id="fs-btn" data-i18n="fullscreen"></button>
@@ -160,64 +160,64 @@
       <div class="lab-left">
         <!-- 1. Text -->
         <section class="card stack" id="input-card">
-          <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="input_t"></span></h2>
-          <label for="input" class="lbl" data-i18n="input_label"></label>
+          <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="input_t">কিছু লিখুন</span></h2>
+          <label for="input" class="lbl" data-i18n="input_label">টোকেনে ভাগ করার লেখা</label>
           <textarea id="input" class="no-i18n" rows="4" spellcheck="false" data-i18n-placeholder="input_ph"></textarea>
           <div class="row no-print">
-            <button type="button" class="btn btn-sm" id="ex-lang" data-i18n="ex_lang"></button>
-            <button type="button" class="btn btn-sm" id="ex-en" data-i18n="ex_en"></button>
-            <button type="button" class="btn btn-sm" id="ex-mix" data-i18n="ex_mix"></button>
+            <button type="button" class="btn btn-sm" id="ex-lang" data-i18n="ex_lang">আমার ভাষায় উদাহরণ</button>
+            <button type="button" class="btn btn-sm" id="ex-en" data-i18n="ex_en">ইংরেজি উদাহরণ</button>
+            <button type="button" class="btn btn-sm" id="ex-mix" data-i18n="ex_mix">মেশানো ভাষার উদাহরণ</button>
             <button type="button" class="btn btn-sm btn-ghost" id="clear-input" data-i18n="clear"></button>
           </div>
         </section>
 
         <!-- 2. Tokenizer -->
         <section class="card stack" id="mode-card">
-          <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="mode_t"></span></h2>
+          <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="mode_t">টোকেনাইজার বেছে নিন</span></h2>
           <div class="seg big no-print" role="group" data-i18n-aria-label="mode_t">
-            <button type="button" id="mode-char" data-i18n="mode_char"></button>
-            <button type="button" id="mode-word" data-i18n="mode_word"></button>
-            <button type="button" id="mode-bpe" data-i18n="mode_bpe"></button>
+            <button type="button" id="mode-char" data-i18n="mode_char">ক্যারেক্টার</button>
+            <button type="button" id="mode-word" data-i18n="mode_word">শব্দ</button>
+            <button type="button" id="mode-bpe" data-i18n="mode_bpe">BPE (AI-এর মতো)</button>
           </div>
           <p class="callout small mb0" id="mode-note"></p>
 
           <div id="train-block" class="stack">
-            <h3 class="mb0" data-i18n="train_t"></h3>
+            <h3 class="mb0" data-i18n="train_t">টোকেনাইজারকে শেখান</h3>
             <div class="no-print">
-              <span class="lbl" id="src-lbl" data-i18n="train_src"></span>
+              <span class="lbl" id="src-lbl" data-i18n="train_src">ট্রেনিংয়ের লেখা</span>
               <div class="seg src" role="group" aria-labelledby="src-lbl">
-                <button type="button" id="src-en" data-i18n="src_en"></button>
+                <button type="button" id="src-en" data-i18n="src_en">ইংরেজি</button>
                 <button type="button" id="src-lang"></button>
-                <button type="button" id="src-both" data-i18n="src_both"></button>
-                <button type="button" id="src-all" data-i18n="src_all"></button>
-                <button type="button" id="src-own" data-i18n="src_own"></button>
+                <button type="button" id="src-both" data-i18n="src_both">দুটোই</button>
+                <button type="button" id="src-all" data-i18n="src_all">সব 12টি ভাষা</button>
+                <button type="button" id="src-own" data-i18n="src_own">আমার নিজের লেখা</button>
               </div>
             </div>
             <div id="own-wrap" class="stack" hidden>
-              <label for="own-text" class="lbl" data-i18n="own_label"></label>
+              <label for="own-text" class="lbl" data-i18n="own_label">আপনার ট্রেনিংয়ের লেখা</label>
               <textarea id="own-text" class="no-i18n" rows="4" spellcheck="false" data-i18n-placeholder="own_ph"></textarea>
             </div>
-            <p class="callout warning small mb0" id="own-empty" data-i18n="own_empty" hidden></p>
+            <p class="callout warning small mb0" id="own-empty" data-i18n="own_empty" hidden>আপনার ট্রেনিংয়ের লেখা খালি। কিছু লেখা পেস্ট করুন, বা অন্য কোনো ট্রেনিংয়ের লেখা বেছে নিন।</p>
             <p class="muted small mb0" id="corpus-info" aria-live="polite"></p>
 
             <div id="bpe-block" class="stack">
               <div>
                 <div class="range-head">
-                  <label for="merges" data-i18n="merges_label"></label>
+                  <label for="merges" data-i18n="merges_label">মার্জের সংখ্যা</label>
                   <b id="merges-val" class="no-i18n"></b>
                 </div>
                 <input type="range" id="merges" min="0" max="600" step="1" class="no-print">
-                <div class="range-ends tiny muted no-print"><span data-i18n="merges_few"></span><span data-i18n="merges_many"></span></div>
+                <div class="range-ends tiny muted no-print"><span data-i18n="merges_few">কম মার্জ, ছোট টোকেন</span><span data-i18n="merges_many">বেশি মার্জ, বড় টোকেন</span></div>
               </div>
               <p class="small mb0" id="vocab-size"></p>
               <p class="callout small mb0" id="merges-early" aria-live="polite" hidden></p>
               <div class="row no-print">
-                <button type="button" class="btn btn-accent" id="play" data-i18n="play"></button>
-                <span class="small muted" data-i18n="play_hint"></span>
+                <button type="button" class="btn btn-accent" id="play" data-i18n="play">▶ শেখা দেখুন</button>
+                <span class="small muted" data-i18n="play_hint">0 থেকে শুরু করে একটি একটি করে মার্জ যোগ করে।</span>
               </div>
-              <h4 class="mb0" data-i18n="merge_list_t"></h4>
+              <h4 class="mb0" data-i18n="merge_list_t">মার্জ তালিকা (নতুনটি সবার উপরে)</h4>
               <div class="merge-box">
-                <p class="muted small merge-empty" id="merge-empty" data-i18n="merge_empty"></p>
+                <p class="muted small merge-empty" id="merge-empty" data-i18n="merge_empty">এখনও কোনো মার্জ নেই, তাই প্রতিটি টোকেন একটি বাইট। স্লাইডারটি সামনে সরান।</p>
                 <ol class="merge-list no-i18n" id="merge-list"></ol>
               </div>
             </div>
@@ -227,16 +227,16 @@
 
       <!-- 3. Tokens -->
       <section class="card stack" id="result-card">
-        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="result_t"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="result_t">টোকেন দেখুন</span></h2>
         <div class="stats" id="stats" aria-live="polite">
-          <div class="stat main"><b id="stat-tokens">0</b><span data-i18n="stat_tokens"></span></div>
-          <div class="stat"><b id="stat-chars">0</b><span data-i18n="stat_chars"></span></div>
-          <div class="stat"><b id="stat-bytes">0</b><span data-i18n="stat_bytes"></span></div>
-          <div class="stat"><b id="stat-cpt">0</b><span data-i18n="stat_cpt"></span></div>
-          <div class="stat unk" id="stat-unk-wrap" hidden><b id="stat-unk">0</b><span data-i18n="stat_unk"></span></div>
+          <div class="stat main"><b id="stat-tokens">0</b><span data-i18n="stat_tokens">টোকেন</span></div>
+          <div class="stat"><b id="stat-chars">0</b><span data-i18n="stat_chars">ক্যারেক্টার</span></div>
+          <div class="stat"><b id="stat-bytes">0</b><span data-i18n="stat_bytes">UTF-8 বাইট</span></div>
+          <div class="stat"><b id="stat-cpt">0</b><span data-i18n="stat_cpt">প্রতি টোকেনে ক্যারেক্টার</span></div>
+          <div class="stat unk" id="stat-unk-wrap" hidden><b id="stat-unk">0</b><span data-i18n="stat_unk">অজানা [UNK]</span></div>
         </div>
         <div class="row spread no-print">
-          <label class="check"><input type="checkbox" id="show-ids"> <span data-i18n="show_ids"></span></label>
+          <label class="check"><input type="checkbox" id="show-ids"> <span data-i18n="show_ids">টোকেন ID দেখান</span></label>
           <span class="small muted" id="mode-badge"></span>
         </div>
         <div class="chips no-i18n" id="chips" dir="auto"></div>
@@ -245,8 +245,8 @@
         <p class="muted small mb0" id="chips-hint"></p>
         <div id="ids-wrap" class="stack">
           <div class="row spread">
-            <h3 class="mb0" data-i18n="ids_t"></h3>
-            <button type="button" class="btn btn-sm no-print" id="copy-ids" data-i18n="copy_ids"></button>
+            <h3 class="mb0" data-i18n="ids_t">AI মডেল আসলে যা দেখে</h3>
+            <button type="button" class="btn btn-sm no-print" id="copy-ids" data-i18n="copy_ids">ID কপি করুন</button>
           </div>
           <pre class="ids-box no-i18n" id="ids-box" dir="ltr"></pre>
         </div>
@@ -255,57 +255,57 @@
 
     <!-- 4. Comparison -->
     <section class="card stack" id="cmp-card">
-      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="cmp_t"></span></h2>
+      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="cmp_t">একই অর্থ, 12টি ভাষা</span></h2>
       <p class="mb0" id="cmp-intro"></p>
       <div class="legend">
-        <span><span class="sw en" aria-hidden="true"></span><span data-i18n="cmp_en"></span> <span class="muted small" id="cmp-en-m"></span></span>
-        <span><span class="sw mu" aria-hidden="true"></span><span data-i18n="cmp_multi"></span> <span class="muted small" id="cmp-mu-m"></span></span>
+        <span><span class="sw en" aria-hidden="true"></span><span data-i18n="cmp_en">শুধু ইংরেজিতে শেখানো</span> <span class="muted small" id="cmp-en-m"></span></span>
+        <span><span class="sw mu" aria-hidden="true"></span><span data-i18n="cmp_multi">সব 12টি ভাষায় শেখানো</span> <span class="muted small" id="cmp-mu-m"></span></span>
       </div>
       <div class="cmp-rows no-i18n" id="cmp-rows"></div>
       <p class="callout accent mb0" id="cmp-summary" aria-live="polite"></p>
       <p class="callout mb0 small" id="cmp-budget" hidden></p>
       <div class="callout warning">
-        <h3 data-i18n="cmp_why_t"></h3>
+        <h3 data-i18n="cmp_why_t">এটা কেন সমতার সমস্যা?</h3>
         <ul class="mb0" style="margin:0;padding-inline-start:20px">
-          <li data-i18n="cmp_why_1"></li>
-          <li data-i18n="cmp_why_2"></li>
-          <li data-i18n="cmp_why_3"></li>
-          <li data-i18n="cmp_why_4"></li>
+          <li data-i18n="cmp_why_1">টাকা নেওয়া AI পরিষেবাগুলো প্রতি টোকেনে দাম নেয়। আপনার ভাষায় 3 গুণ টোকেন লাগলে একই প্রশ্ন-উত্তরের খরচও 3 গুণ।</li>
+          <li data-i18n="cmp_why_2">একটি মডেল একবারে নির্দিষ্ট সংখ্যক টোকেনই পড়তে পারে (তার কনটেক্সট উইন্ডো)। প্রতি বাক্যে বেশি টোকেন মানে আপনার অধ্যায় বা চ্যাটের কম অংশ সে ধরে রাখতে পারবে।</li>
+          <li data-i18n="cmp_why_3">বেশি টোকেন মানে উত্তরও ধীরে আসে। আর ট্রেনিং ডেটায় যে ভাষার লেখা কম থাকে, সেই ভাষায় উত্তর প্রায়ই দুর্বল হয়।</li>
+          <li data-i18n="cmp_why_4">সমাধান হলো ভারতীয় ভাষাতেও টোকেনাইজার শেখানো। নতুন মডেল আর ভারতীয় AI দলগুলো এটা করছে, তাই তাদের টোকেন আমাদের ভাষায় অনেক ভালো মেলে।</li>
         </ul>
       </div>
-      <p class="muted small mb0" data-i18n="cmp_bytes_note"></p>
-      <p class="muted small mb0" id="cmp-real" data-i18n="cmp_real"></p>
+      <p class="muted small mb0" data-i18n="cmp_bytes_note">0 মার্জে এত টোকেন কেন? তখন প্রতিটি টোকেন একটি বাইট। UTF-8-এ একটি ইংরেজি অক্ষর 1 বাইট, একটি উর্দু অক্ষর 2 বাইট, আর বাংলা, হিন্দি বা যেকোনো ভারতীয় লিপির অক্ষর 3 বাইট নেয়।</p>
+      <p class="muted small mb0" id="cmp-real" data-i18n="cmp_real">এগুলো শেখানোর জন্য বানানো খুব ছোট টোকেনাইজার, তাই আসল AI মডেলে সংখ্যাগুলো আলাদা হয়। কিন্তু আসল টোকেনাইজার নিয়ে গবেষণাতেও একই ধরন দেখা গেছে: অনেক ভারতীয় ভাষায় ইংরেজির চেয়ে বেশি টোকেন লাগে, আর টোকেনাইজার ভারতীয় ভাষার বেশি লেখা থেকে শিখলে এই ফারাক কমে যায়।</p>
     </section>
 
     <!-- Inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside_t"></h2>
+      <h2 data-i18n="inside_t">ভেতরে কী হচ্ছে?</h2>
       <div class="grid-2 inside-grid">
         <div class="panel stack">
-          <h3><span aria-hidden="true">🧩</span><span data-i18n="in_tok_t"></span></h3>
-          <p class="mb0" data-i18n="in_tok"></p>
+          <h3><span aria-hidden="true">🧩</span><span data-i18n="in_tok_t">টোকেন মানে শব্দ নয়</span></h3>
+          <p class="mb0" data-i18n="in_tok">কম্পিউটার অক্ষর বোঝে না। টোকেনাইজার প্রথমে লেখাকে ছোট ছোট টুকরোয় ভাগ করে, যাদের টোকেন বলে, আর প্রতিটি টুকরোকে একটি নম্বর (ID) দেয়। AI মডেল শুধু এই নম্বরগুলোই দেখে। একটি টোকেন হতে পারে পুরো শব্দ (&quot;স্কুল&quot;), শব্দের অংশ (&quot;ing&quot;), একটি অক্ষর, এমনকি অক্ষরের একটি টুকরোও।</p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">🔢</span><span data-i18n="in_bpe_t"></span></h3>
-          <p class="mb0" data-i18n="in_bpe"></p>
+          <h3><span aria-hidden="true">🔢</span><span data-i18n="in_bpe_t">BPE কীভাবে শেখে</span></h3>
+          <p class="mb0" data-i18n="in_bpe">বাইট দিয়ে শুরু করুন। ট্রেনিংয়ের লেখায় পাশাপাশি থাকা টোকেনের প্রতিটি জোড়া গুনুন। সবচেয়ে বেশি দেখা জোড়াকে জুড়ে একটি নতুন টোকেন বানান আর শব্দভান্ডারে যোগ করুন। আবার করুন। বড় AI মডেলের টোকেনাইজার চলতে থাকে যতক্ষণ না প্রায় 50,000 থেকে 2,50,000 টোকেন হয়।</p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">💾</span><span data-i18n="in_uni_t"></span></h3>
-          <p data-i18n="in_uni"></p>
-          <label for="byte-in" class="lbl" data-i18n="byte_demo"></label>
+          <h3><span aria-hidden="true">💾</span><span data-i18n="in_uni_t">Unicode আর বাইট</span></h3>
+          <p data-i18n="in_uni">প্রতিটি ভাষার প্রতিটি ক্যারেক্টারের একটি Unicode নম্বর আছে: &quot;A&quot; হলো U+0041 আর &quot;ক&quot; হলো U+0995। কম্পিউটার লেখা সেভ করে UTF-8 বাইটে। ইংরেজি অক্ষরে 1 বাইট, ভারতীয় লিপির অক্ষরে 3 বাইট আর বেশিরভাগ ইমোজিতে 4 বাইট লাগে।</p>
+          <label for="byte-in" class="lbl" data-i18n="byte_demo">নিজে দেখুন: কয়েকটি ক্যারেক্টার লিখুন</label>
           <input type="text" id="byte-in" class="byte-in no-i18n" maxlength="24" autocomplete="off" spellcheck="false">
           <div class="scroll-x">
             <table class="table byte-table">
-              <thead><tr><th data-i18n="col_char"></th><th data-i18n="col_code"></th><th data-i18n="col_bytes"></th></tr></thead>
+              <thead><tr><th data-i18n="col_char">ক্যারেক্টার</th><th data-i18n="col_code">Unicode নম্বর</th><th data-i18n="col_bytes">UTF-8 বাইট</th></tr></thead>
               <tbody id="byte-body" class="no-i18n"></tbody>
             </table>
           </div>
           <p class="small mb0" id="byte-total" aria-live="polite"></p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">🪟</span><span data-i18n="in_ctx_t"></span></h3>
-          <p data-i18n="in_ctx"></p>
-          <label for="ctx-size" class="lbl" data-i18n="ctx_label"></label>
+          <h3><span aria-hidden="true">🪟</span><span data-i18n="in_ctx_t">কনটেক্সট উইন্ডো</span></h3>
+          <p data-i18n="in_ctx">মডেলের কনটেক্সট উইন্ডো হলো সে একবারে সবচেয়ে বেশি কতগুলো টোকেন সামলাতে পারে: আপনার প্রশ্ন, এখন পর্যন্ত চ্যাট আর তার উত্তর। উইন্ডো ভরে গেলে সবচেয়ে পুরোনো অংশ বাদ পড়ে বা ভুলে যায়।</p>
+          <label for="ctx-size" class="lbl" data-i18n="ctx_label">কনটেক্সট উইন্ডোর মাপ</label>
           <select id="ctx-size"></select>
           <p class="ctx-out mb0" id="ctx-out" aria-live="polite"></p>
         </div>
@@ -313,14 +313,14 @@
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">কীভাবে ব্যবহার করবেন / ক্লাসের জন্য আইডিয়া</summary>
       <ul>
-        <li data-i18n="tip_1"></li>
-        <li data-i18n="tip_2"></li>
-        <li data-i18n="tip_3"></li>
-        <li data-i18n="tip_4"></li>
-        <li data-i18n="tip_5"></li>
-        <li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">BPE বেছে নিন আর &quot;মার্জের সংখ্যা&quot; স্লাইডারটি 0 থেকে 600 পর্যন্ত টানুন। দেখুন চেনা শব্দগুলো কীভাবে একটি করে টোকেন হয়ে যায়।</li>
+        <li data-i18n="tip_2">স্মার্টবোর্ডে &quot;শেখা দেখুন&quot; টিপুন আর মাঝপথে থামান। ক্লাসকে জিজ্ঞেস করুন: পরের কোন জোড়াটি জুড়বে, আর কেন?</li>
+        <li data-i18n="tip_3">ক্লাসের কাজ: প্রতিটি দলকে তুলনার চার্ট থেকে একটি ভাষা দিন। প্রতিটি দল আগে তার টোকেন সংখ্যা আন্দাজ করুক, তারপর মিলিয়ে দেখুক। তারপর আলোচনা করুন: কিছু ভাষার খরচ বেশি হওয়া কি ন্যায্য?</li>
+        <li data-i18n="tip_4">&quot;শব্দ&quot; বেছে নিন আর একটি নতুন শব্দ বা ভুল বানান লিখুন: সেটা [UNK] হয়ে যায়। এবার BPE বেছে নিন: এটা তবুও কাজ করে, শব্দটিকে ছোট টুকরোয় ভেঙে।</li>
+        <li data-i18n="tip_5">&quot;আমার নিজের লেখা&quot; বেছে নিন আর আপনার বইয়ের একটি অধ্যায় পেস্ট করুন। আপনার বিষয় থেকে প্রথমে কোন মার্জগুলো তৈরি হয়?</li>
+        <li data-i18n="tip_6">এই পাতাটি প্রিন্ট করুন: তুলনার চার্টটি কম্পিউটার ল্যাবের জন্য টোকেন আর সমতা নিয়ে একটি ভালো পোস্টার হয়।</li>
       </ul>
       <p class="muted small mb0" data-i18n="saved_local"></p>
     </details>

@@ -146,9 +146,9 @@
 </head>
 <body>
   <main id="app">
-    <h1 class="print-only" data-i18n="app_title"></h1>
+    <h1 class="print-only" data-i18n="app_title">ടോക്കൺ എക്സ്പ്ലോറർ</h1>
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">ChatGPT പോലുള്ള AI മോഡലുകൾ അക്ഷരങ്ങളോ വാക്കുകളോ വായിക്കുന്നില്ല, അവ ടോക്കണുകളാണ് വായിക്കുന്നത്. എന്തെങ്കിലും എഴുതൂ, നിങ്ങളുടെ ടോക്കണൈസറിനെ സ്വയം പഠിപ്പിക്കൂ, ചില ഭാഷകൾക്ക് കൂടുതൽ ടോക്കൺ വേണ്ടിവരുന്നത് എന്തുകൊണ്ടെന്ന് കാണൂ.</p>
       <div class="row no-print">
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm" id="fs-btn" data-i18n="fullscreen"></button>
@@ -160,64 +160,64 @@
       <div class="lab-left">
         <!-- 1. Text -->
         <section class="card stack" id="input-card">
-          <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="input_t"></span></h2>
-          <label for="input" class="lbl" data-i18n="input_label"></label>
+          <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="input_t">എന്തെങ്കിലും എഴുതൂ</span></h2>
+          <label for="input" class="lbl" data-i18n="input_label">ടോക്കണുകളായി മുറിക്കാനുള്ള എഴുത്ത്</label>
           <textarea id="input" class="no-i18n" rows="4" spellcheck="false" data-i18n-placeholder="input_ph"></textarea>
           <div class="row no-print">
-            <button type="button" class="btn btn-sm" id="ex-lang" data-i18n="ex_lang"></button>
-            <button type="button" class="btn btn-sm" id="ex-en" data-i18n="ex_en"></button>
-            <button type="button" class="btn btn-sm" id="ex-mix" data-i18n="ex_mix"></button>
+            <button type="button" class="btn btn-sm" id="ex-lang" data-i18n="ex_lang">എന്റെ ഭാഷയിൽ ഉദാഹരണം</button>
+            <button type="button" class="btn btn-sm" id="ex-en" data-i18n="ex_en">ഇംഗ്ലീഷ് ഉദാഹരണം</button>
+            <button type="button" class="btn btn-sm" id="ex-mix" data-i18n="ex_mix">കലർന്ന ഭാഷയിൽ ഉദാഹരണം</button>
             <button type="button" class="btn btn-sm btn-ghost" id="clear-input" data-i18n="clear"></button>
           </div>
         </section>
 
         <!-- 2. Tokenizer -->
         <section class="card stack" id="mode-card">
-          <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="mode_t"></span></h2>
+          <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="mode_t">ടോക്കണൈസർ തിരഞ്ഞെടുക്കൂ</span></h2>
           <div class="seg big no-print" role="group" data-i18n-aria-label="mode_t">
-            <button type="button" id="mode-char" data-i18n="mode_char"></button>
-            <button type="button" id="mode-word" data-i18n="mode_word"></button>
-            <button type="button" id="mode-bpe" data-i18n="mode_bpe"></button>
+            <button type="button" id="mode-char" data-i18n="mode_char">അക്ഷരങ്ങൾ</button>
+            <button type="button" id="mode-word" data-i18n="mode_word">വാക്കുകൾ</button>
+            <button type="button" id="mode-bpe" data-i18n="mode_bpe">BPE (AI പോലെ)</button>
           </div>
           <p class="callout small mb0" id="mode-note"></p>
 
           <div id="train-block" class="stack">
-            <h3 class="mb0" data-i18n="train_t"></h3>
+            <h3 class="mb0" data-i18n="train_t">ടോക്കണൈസറിനെ പഠിപ്പിക്കൂ</h3>
             <div class="no-print">
-              <span class="lbl" id="src-lbl" data-i18n="train_src"></span>
+              <span class="lbl" id="src-lbl" data-i18n="train_src">പരിശീലന എഴുത്ത്</span>
               <div class="seg src" role="group" aria-labelledby="src-lbl">
-                <button type="button" id="src-en" data-i18n="src_en"></button>
+                <button type="button" id="src-en" data-i18n="src_en">ഇംഗ്ലീഷ്</button>
                 <button type="button" id="src-lang"></button>
-                <button type="button" id="src-both" data-i18n="src_both"></button>
-                <button type="button" id="src-all" data-i18n="src_all"></button>
-                <button type="button" id="src-own" data-i18n="src_own"></button>
+                <button type="button" id="src-both" data-i18n="src_both">രണ്ടും</button>
+                <button type="button" id="src-all" data-i18n="src_all">എല്ലാ 12 ഭാഷകളും</button>
+                <button type="button" id="src-own" data-i18n="src_own">എന്റെ സ്വന്തം എഴുത്ത്</button>
               </div>
             </div>
             <div id="own-wrap" class="stack" hidden>
-              <label for="own-text" class="lbl" data-i18n="own_label"></label>
+              <label for="own-text" class="lbl" data-i18n="own_label">നിങ്ങളുടെ പരിശീലന എഴുത്ത്</label>
               <textarea id="own-text" class="no-i18n" rows="4" spellcheck="false" data-i18n-placeholder="own_ph"></textarea>
             </div>
-            <p class="callout warning small mb0" id="own-empty" data-i18n="own_empty" hidden></p>
+            <p class="callout warning small mb0" id="own-empty" data-i18n="own_empty" hidden>നിങ്ങളുടെ പരിശീലന എഴുത്ത് ശൂന്യമാണ്. കുറച്ച് എഴുത്ത് പേസ്റ്റ് ചെയ്യൂ, അല്ലെങ്കിൽ വേറൊരു പരിശീലന എഴുത്ത് തിരഞ്ഞെടുക്കൂ.</p>
             <p class="muted small mb0" id="corpus-info" aria-live="polite"></p>
 
             <div id="bpe-block" class="stack">
               <div>
                 <div class="range-head">
-                  <label for="merges" data-i18n="merges_label"></label>
+                  <label for="merges" data-i18n="merges_label">ചേർക്കലുകളുടെ എണ്ണം</label>
                   <b id="merges-val" class="no-i18n"></b>
                 </div>
                 <input type="range" id="merges" min="0" max="600" step="1" class="no-print">
-                <div class="range-ends tiny muted no-print"><span data-i18n="merges_few"></span><span data-i18n="merges_many"></span></div>
+                <div class="range-ends tiny muted no-print"><span data-i18n="merges_few">കുറച്ച് ചേർക്കൽ, ചെറിയ ടോക്കൺ</span><span data-i18n="merges_many">കൂടുതൽ ചേർക്കൽ, വലിയ ടോക്കൺ</span></div>
               </div>
               <p class="small mb0" id="vocab-size"></p>
               <p class="callout small mb0" id="merges-early" aria-live="polite" hidden></p>
               <div class="row no-print">
-                <button type="button" class="btn btn-accent" id="play" data-i18n="play"></button>
-                <span class="small muted" data-i18n="play_hint"></span>
+                <button type="button" class="btn btn-accent" id="play" data-i18n="play">▶ പഠിക്കുന്നത് കാണൂ</button>
+                <span class="small muted" data-i18n="play_hint">0-ൽ തുടങ്ങി ഓരോന്നായി ചേർക്കലുകൾ കൂട്ടുന്നു.</span>
               </div>
-              <h4 class="mb0" data-i18n="merge_list_t"></h4>
+              <h4 class="mb0" data-i18n="merge_list_t">ചേർക്കലുകളുടെ പട്ടിക (പുതിയത് മുകളിൽ)</h4>
               <div class="merge-box">
-                <p class="muted small merge-empty" id="merge-empty" data-i18n="merge_empty"></p>
+                <p class="muted small merge-empty" id="merge-empty" data-i18n="merge_empty">ഇതുവരെ ചേർക്കലുകൾ ഇല്ല, അതിനാൽ ഓരോ ടോക്കണും ഒരു ബൈറ്റ് ആണ്. സ്ലൈഡർ മുന്നോട്ട് നീക്കൂ.</p>
                 <ol class="merge-list no-i18n" id="merge-list"></ol>
               </div>
             </div>
@@ -227,16 +227,16 @@
 
       <!-- 3. Tokens -->
       <section class="card stack" id="result-card">
-        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="result_t"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="result_t">ടോക്കണുകൾ കാണൂ</span></h2>
         <div class="stats" id="stats" aria-live="polite">
-          <div class="stat main"><b id="stat-tokens">0</b><span data-i18n="stat_tokens"></span></div>
-          <div class="stat"><b id="stat-chars">0</b><span data-i18n="stat_chars"></span></div>
-          <div class="stat"><b id="stat-bytes">0</b><span data-i18n="stat_bytes"></span></div>
-          <div class="stat"><b id="stat-cpt">0</b><span data-i18n="stat_cpt"></span></div>
-          <div class="stat unk" id="stat-unk-wrap" hidden><b id="stat-unk">0</b><span data-i18n="stat_unk"></span></div>
+          <div class="stat main"><b id="stat-tokens">0</b><span data-i18n="stat_tokens">ടോക്കണുകൾ</span></div>
+          <div class="stat"><b id="stat-chars">0</b><span data-i18n="stat_chars">അക്ഷരങ്ങൾ</span></div>
+          <div class="stat"><b id="stat-bytes">0</b><span data-i18n="stat_bytes">UTF-8 ബൈറ്റ്</span></div>
+          <div class="stat"><b id="stat-cpt">0</b><span data-i18n="stat_cpt">ഒരു ടോക്കണിൽ അക്ഷരങ്ങൾ</span></div>
+          <div class="stat unk" id="stat-unk-wrap" hidden><b id="stat-unk">0</b><span data-i18n="stat_unk">അറിയാത്തവ [UNK]</span></div>
         </div>
         <div class="row spread no-print">
-          <label class="check"><input type="checkbox" id="show-ids"> <span data-i18n="show_ids"></span></label>
+          <label class="check"><input type="checkbox" id="show-ids"> <span data-i18n="show_ids">ടോക്കൺ ID കാണിക്കൂ</span></label>
           <span class="small muted" id="mode-badge"></span>
         </div>
         <div class="chips no-i18n" id="chips" dir="auto"></div>
@@ -245,8 +245,8 @@
         <p class="muted small mb0" id="chips-hint"></p>
         <div id="ids-wrap" class="stack">
           <div class="row spread">
-            <h3 class="mb0" data-i18n="ids_t"></h3>
-            <button type="button" class="btn btn-sm no-print" id="copy-ids" data-i18n="copy_ids"></button>
+            <h3 class="mb0" data-i18n="ids_t">AI മോഡൽ ശരിക്കും കാണുന്നത് ഇതാണ്</h3>
+            <button type="button" class="btn btn-sm no-print" id="copy-ids" data-i18n="copy_ids">ID പകർത്തുക</button>
           </div>
           <pre class="ids-box no-i18n" id="ids-box" dir="ltr"></pre>
         </div>
@@ -255,57 +255,57 @@
 
     <!-- 4. Comparison -->
     <section class="card stack" id="cmp-card">
-      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="cmp_t"></span></h2>
+      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="cmp_t">ഒരേ അർത്ഥം, 12 ഭാഷകൾ</span></h2>
       <p class="mb0" id="cmp-intro"></p>
       <div class="legend">
-        <span><span class="sw en" aria-hidden="true"></span><span data-i18n="cmp_en"></span> <span class="muted small" id="cmp-en-m"></span></span>
-        <span><span class="sw mu" aria-hidden="true"></span><span data-i18n="cmp_multi"></span> <span class="muted small" id="cmp-mu-m"></span></span>
+        <span><span class="sw en" aria-hidden="true"></span><span data-i18n="cmp_en">ഇംഗ്ലീഷിൽ മാത്രം പരിശീലനം</span> <span class="muted small" id="cmp-en-m"></span></span>
+        <span><span class="sw mu" aria-hidden="true"></span><span data-i18n="cmp_multi">എല്ലാ 12 ഭാഷകളിലും പരിശീലനം</span> <span class="muted small" id="cmp-mu-m"></span></span>
       </div>
       <div class="cmp-rows no-i18n" id="cmp-rows"></div>
       <p class="callout accent mb0" id="cmp-summary" aria-live="polite"></p>
       <p class="callout mb0 small" id="cmp-budget" hidden></p>
       <div class="callout warning">
-        <h3 data-i18n="cmp_why_t"></h3>
+        <h3 data-i18n="cmp_why_t">ഇത് എന്തുകൊണ്ട് തുല്യതയുടെ പ്രശ്നമാണ്?</h3>
         <ul class="mb0" style="margin:0;padding-inline-start:20px">
-          <li data-i18n="cmp_why_1"></li>
-          <li data-i18n="cmp_why_2"></li>
-          <li data-i18n="cmp_why_3"></li>
-          <li data-i18n="cmp_why_4"></li>
+          <li data-i18n="cmp_why_1">പണം വാങ്ങുന്ന AI സേവനങ്ങൾ ഓരോ ടോക്കണിനും പണം ഈടാക്കുന്നു. നിങ്ങളുടെ ഭാഷയ്ക്ക് 3 മടങ്ങ് ടോക്കൺ വേണമെങ്കിൽ, അതേ ചോദ്യത്തിനും ഉത്തരത്തിനും 3 മടങ്ങ് ചെലവാകും.</li>
+          <li data-i18n="cmp_why_2">ഒരു മോഡലിന് ഒരേസമയം നിശ്ചിത എണ്ണം ടോക്കണുകൾ മാത്രമേ വായിക്കാനാകൂ (അതിന്റെ കോൺടെക്സ്റ്റ് വിൻഡോ). ഓരോ വാക്യത്തിലും കൂടുതൽ ടോക്കൺ എന്നാൽ നിങ്ങളുടെ പാഠത്തിന്റെയോ ചാറ്റിന്റെയോ കുറഞ്ഞ ഭാഗം മാത്രമേ അതിന് ഓർത്തുവെക്കാനാകൂ.</li>
+          <li data-i18n="cmp_why_3">കൂടുതൽ ടോക്കൺ എന്നാൽ ഉത്തരങ്ങളും പതുക്കെയാകും. പരിശീലന ഡാറ്റയിൽ എഴുത്ത് കുറവുള്ള ഭാഷയിൽ ഉത്തരങ്ങൾ പലപ്പോഴും ദുർബലമായിരിക്കും.</li>
+          <li data-i18n="cmp_why_4">പരിഹാരം: ഇന്ത്യൻ ഭാഷകളിലും ടോക്കണൈസറുകളെ പരിശീലിപ്പിക്കുക. പുതിയ മോഡലുകളും ഇന്ത്യൻ AI ടീമുകളും ഇത് ചെയ്യുന്നുണ്ട്, അതിനാൽ അവയുടെ ടോക്കണുകൾ നമ്മുടെ ഭാഷകൾക്ക് വളരെ നന്നായി ചേരുന്നു.</li>
         </ul>
       </div>
-      <p class="muted small mb0" data-i18n="cmp_bytes_note"></p>
-      <p class="muted small mb0" id="cmp-real" data-i18n="cmp_real"></p>
+      <p class="muted small mb0" data-i18n="cmp_bytes_note">0 ചേർക്കലിൽ എന്തുകൊണ്ട് ഇത്രയും ടോക്കൺ? അപ്പോൾ ഓരോ ടോക്കണും ഒരു ബൈറ്റ് ആണ്. UTF-8-ൽ ഇംഗ്ലീഷ് അക്ഷരത്തിന് 1 ബൈറ്റ്, ഉറുദു അക്ഷരത്തിന് 2 ബൈറ്റ്, മലയാളം, ഹിന്ദി തുടങ്ങിയ ഏത് ഇന്ത്യൻ ലിപിയിലെ അക്ഷരത്തിനും 3 ബൈറ്റ് വേണം.</p>
+      <p class="muted small mb0" id="cmp-real" data-i18n="cmp_real">ഇവ പഠിപ്പിക്കാനായി ഉണ്ടാക്കിയ വളരെ ചെറിയ ടോക്കണൈസറുകളാണ്, അതിനാൽ യഥാർത്ഥ AI മോഡലുകളിൽ എണ്ണങ്ങൾ വ്യത്യസ്തമായിരിക്കും. പക്ഷേ യഥാർത്ഥ ടോക്കണൈസറുകളെക്കുറിച്ചുള്ള പഠനങ്ങളിലും ഇതേ രീതി കണ്ടിട്ടുണ്ട്: പല ഇന്ത്യൻ ഭാഷകൾക്കും ഇംഗ്ലീഷിനെക്കാൾ കൂടുതൽ ടോക്കൺ വേണം, ടോക്കണൈസർ ഇന്ത്യൻ ഭാഷകളിലെ കൂടുതൽ എഴുത്തിൽ നിന്ന് പഠിച്ചാൽ ഈ വ്യത്യാസം കുറയും.</p>
     </section>
 
     <!-- Inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside_t"></h2>
+      <h2 data-i18n="inside_t">ഉള്ളിൽ എന്താണ് നടക്കുന്നത്?</h2>
       <div class="grid-2 inside-grid">
         <div class="panel stack">
-          <h3><span aria-hidden="true">🧩</span><span data-i18n="in_tok_t"></span></h3>
-          <p class="mb0" data-i18n="in_tok"></p>
+          <h3><span aria-hidden="true">🧩</span><span data-i18n="in_tok_t">ടോക്കണുകൾ വാക്കുകളല്ല</span></h3>
+          <p class="mb0" data-i18n="in_tok">കമ്പ്യൂട്ടറിന് അക്ഷരങ്ങൾ മനസ്സിലാകില്ല. ടോക്കണൈസർ ആദ്യം എഴുത്തിനെ ടോക്കൺ എന്ന ചെറിയ കഷണങ്ങളായി മുറിച്ച്, ഓരോ കഷണത്തിനും ഒരു നമ്പർ (ID) നൽകുന്നു. AI മോഡൽ ഈ നമ്പറുകൾ മാത്രമേ കാണുന്നുള്ളൂ. ഒരു ടോക്കൺ മുഴുവൻ വാക്കോ (&quot;സ്കൂൾ&quot;), വാക്കിന്റെ ഭാഗമോ (&quot;ing&quot;), ഒരു അക്ഷരമോ, ഒരു അക്ഷരത്തിന്റെ കഷണം പോലുമോ ആകാം.</p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">🔢</span><span data-i18n="in_bpe_t"></span></h3>
-          <p class="mb0" data-i18n="in_bpe"></p>
+          <h3><span aria-hidden="true">🔢</span><span data-i18n="in_bpe_t">BPE എങ്ങനെ പഠിക്കുന്നു</span></h3>
+          <p class="mb0" data-i18n="in_bpe">ബൈറ്റുകളിൽ തുടങ്ങൂ. പരിശീലന എഴുത്തിൽ അടുത്തടുത്തുള്ള ടോക്കണുകളുടെ ഓരോ ജോടിയും എണ്ണൂ. ഏറ്റവും കൂടുതൽ കാണുന്ന ജോടിയെ ചേർത്ത് പുതിയ ടോക്കൺ ഉണ്ടാക്കി പദസമ്പത്തിൽ ചേർക്കൂ. വീണ്ടും ചെയ്യൂ. വലിയ AI മോഡലുകളുടെ ടോക്കണൈസറുകൾ ഏകദേശം 50,000 മുതൽ 2,50,000 വരെ ടോക്കൺ ആകുന്നതുവരെ ഇത് തുടരുന്നു.</p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">💾</span><span data-i18n="in_uni_t"></span></h3>
-          <p data-i18n="in_uni"></p>
-          <label for="byte-in" class="lbl" data-i18n="byte_demo"></label>
+          <h3><span aria-hidden="true">💾</span><span data-i18n="in_uni_t">Unicode-ഉം ബൈറ്റുകളും</span></h3>
+          <p data-i18n="in_uni">ഓരോ ഭാഷയിലെയും ഓരോ അക്ഷരത്തിനും ഒരു Unicode നമ്പറുണ്ട്: &quot;A&quot; എന്നത് U+0041, &quot;ക&quot; എന്നത് U+0D15. കമ്പ്യൂട്ടർ എഴുത്ത് UTF-8 ബൈറ്റുകളായി സേവ് ചെയ്യുന്നു. ഇംഗ്ലീഷ് അക്ഷരത്തിന് 1 ബൈറ്റ്, ഇന്ത്യൻ ലിപിയിലെ അക്ഷരത്തിന് 3 ബൈറ്റ്, മിക്ക ഇമോജികൾക്കും 4 ബൈറ്റ് വേണം.</p>
+          <label for="byte-in" class="lbl" data-i18n="byte_demo">പരീക്ഷിക്കൂ: കുറച്ച് അക്ഷരങ്ങൾ എഴുതൂ</label>
           <input type="text" id="byte-in" class="byte-in no-i18n" maxlength="24" autocomplete="off" spellcheck="false">
           <div class="scroll-x">
             <table class="table byte-table">
-              <thead><tr><th data-i18n="col_char"></th><th data-i18n="col_code"></th><th data-i18n="col_bytes"></th></tr></thead>
+              <thead><tr><th data-i18n="col_char">അക്ഷരം</th><th data-i18n="col_code">Unicode നമ്പർ</th><th data-i18n="col_bytes">UTF-8 ബൈറ്റ്</th></tr></thead>
               <tbody id="byte-body" class="no-i18n"></tbody>
             </table>
           </div>
           <p class="small mb0" id="byte-total" aria-live="polite"></p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">🪟</span><span data-i18n="in_ctx_t"></span></h3>
-          <p data-i18n="in_ctx"></p>
-          <label for="ctx-size" class="lbl" data-i18n="ctx_label"></label>
+          <h3><span aria-hidden="true">🪟</span><span data-i18n="in_ctx_t">കോൺടെക്സ്റ്റ് വിൻഡോ</span></h3>
+          <p data-i18n="in_ctx">ഒരു മോഡലിന് ഒരേസമയം കൈകാര്യം ചെയ്യാവുന്ന പരമാവധി ടോക്കണുകളാണ് അതിന്റെ കോൺടെക്സ്റ്റ് വിൻഡോ: നിങ്ങളുടെ ചോദ്യം, ഇതുവരെയുള്ള ചാറ്റ്, അതിന്റെ ഉത്തരം. വിൻഡോ നിറഞ്ഞാൽ ഏറ്റവും പഴയ ഭാഗം മുറിഞ്ഞുപോകും അല്ലെങ്കിൽ മറന്നുപോകും.</p>
+          <label for="ctx-size" class="lbl" data-i18n="ctx_label">കോൺടെക്സ്റ്റ് വിൻഡോയുടെ വലുപ്പം</label>
           <select id="ctx-size"></select>
           <p class="ctx-out mb0" id="ctx-out" aria-live="polite"></p>
         </div>
@@ -313,14 +313,14 @@
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">എങ്ങനെ ഉപയോഗിക്കാം / ക്ലാസ്സിനുള്ള ആശയങ്ങൾ</summary>
       <ul>
-        <li data-i18n="tip_1"></li>
-        <li data-i18n="tip_2"></li>
-        <li data-i18n="tip_3"></li>
-        <li data-i18n="tip_4"></li>
-        <li data-i18n="tip_5"></li>
-        <li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">BPE തിരഞ്ഞെടുത്ത് &quot;ചേർക്കലുകളുടെ എണ്ണം&quot; സ്ലൈഡർ 0 മുതൽ 600 വരെ നീക്കൂ. സാധാരണ വാക്കുകൾ എങ്ങനെ ഒറ്റ ടോക്കണുകളാകുന്നു എന്ന് കാണൂ.</li>
+        <li data-i18n="tip_2">സ്മാർട്ട്ബോർഡിൽ &quot;പഠിക്കുന്നത് കാണൂ&quot; അമർത്തി പകുതിയിൽ നിർത്തൂ. ക്ലാസ്സിനോട് ചോദിക്കൂ: അടുത്തതായി ഏത് ജോടി ചേരും, എന്തുകൊണ്ട്?</li>
+        <li data-i18n="tip_3">ക്ലാസ് പ്രവർത്തനം: ഓരോ ഗ്രൂപ്പിനും താരതമ്യ ചാർട്ടിൽ നിന്ന് ഒരു ഭാഷ നൽകൂ. ഓരോ ഗ്രൂപ്പും ആദ്യം തങ്ങളുടെ ടോക്കൺ എണ്ണം ഊഹിക്കട്ടെ, പിന്നെ പരിശോധിക്കട്ടെ. എന്നിട്ട് ചർച്ച ചെയ്യൂ: ചില ഭാഷകൾക്ക് കൂടുതൽ ചെലവാകുന്നത് ന്യായമാണോ?</li>
+        <li data-i18n="tip_4">&quot;വാക്കുകൾ&quot; തിരഞ്ഞെടുത്ത് ഒരു പുതിയ വാക്കോ തെറ്റായ സ്പെല്ലിംഗോ എഴുതൂ: അത് [UNK] ആകും. ഇനി BPE തിരഞ്ഞെടുക്കൂ: വാക്കിനെ ചെറിയ കഷണങ്ങളാക്കി, അത് അപ്പോഴും പ്രവർത്തിക്കും.</li>
+        <li data-i18n="tip_5">&quot;എന്റെ സ്വന്തം എഴുത്ത്&quot; തിരഞ്ഞെടുത്ത് നിങ്ങളുടെ പാഠപുസ്തകത്തിലെ ഒരു പാഠം പേസ്റ്റ് ചെയ്യൂ. നിങ്ങളുടെ വിഷയത്തിൽ നിന്ന് ആദ്യം ഏതൊക്കെ ചേർക്കലുകൾ ഉണ്ടാകുന്നു?</li>
+        <li data-i18n="tip_6">ഈ പേജ് പ്രിന്റ് ചെയ്യൂ: താരതമ്യ ചാർട്ട് കമ്പ്യൂട്ടർ ലാബിനായി ടോക്കണുകളെയും തുല്യതയെയും കുറിച്ചുള്ള നല്ലൊരു പോസ്റ്ററാകും.</li>
       </ul>
       <p class="muted small mb0" data-i18n="saved_local"></p>
     </details>

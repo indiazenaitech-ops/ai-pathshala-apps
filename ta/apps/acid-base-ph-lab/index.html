@@ -222,26 +222,26 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">24 அன்றாடப் பொருட்களின் pH ஐப் பாருங்கள், லிட்மஸ், மஞ்சள் மற்றும் பிற காட்டிகளால் சோதியுங்கள், சொட்டுச் சொட்டாக அமிலத்தை நடுநிலையாக்குங்கள், எந்த உப்பு அமிலத்தன்மை, எது காரத்தன்மை என்று கற்று வினாடி வினா விளையாடுங்கள். வகுப்பு 7 முதல் 10.</p>
 
     <div class="tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-scale" data-panel="panel-scale" aria-controls="panel-scale" aria-selected="true">🌈 <span data-i18n="tab_scale"></span></button>
-      <button type="button" role="tab" id="tab-ind" data-panel="panel-ind" aria-controls="panel-ind" aria-selected="false">🧪 <span data-i18n="tab_ind"></span></button>
-      <button type="button" role="tab" id="tab-titr" data-panel="panel-titr" aria-controls="panel-titr" aria-selected="false">⚗️ <span data-i18n="tab_titr"></span></button>
-      <button type="button" role="tab" id="tab-salts" data-panel="panel-salts" aria-controls="panel-salts" aria-selected="false">🧂 <span data-i18n="tab_salts"></span></button>
-      <button type="button" role="tab" id="tab-life" data-panel="panel-life" aria-controls="panel-life" aria-selected="false">🌍 <span data-i18n="tab_life"></span></button>
-      <button type="button" role="tab" id="tab-quiz" data-panel="panel-quiz" aria-controls="panel-quiz" aria-selected="false">📝 <span data-i18n="tab_quiz"></span></button>
+      <button type="button" role="tab" id="tab-scale" data-panel="panel-scale" aria-controls="panel-scale" aria-selected="true">🌈 <span data-i18n="tab_scale">pH அளவுகோல்</span></button>
+      <button type="button" role="tab" id="tab-ind" data-panel="panel-ind" aria-controls="panel-ind" aria-selected="false">🧪 <span data-i18n="tab_ind">காட்டிகள்</span></button>
+      <button type="button" role="tab" id="tab-titr" data-panel="panel-titr" aria-controls="panel-titr" aria-selected="false">⚗️ <span data-i18n="tab_titr">நடுநிலையாக்கல்</span></button>
+      <button type="button" role="tab" id="tab-salts" data-panel="panel-salts" aria-controls="panel-salts" aria-selected="false">🧂 <span data-i18n="tab_salts">உப்புகள்</span></button>
+      <button type="button" role="tab" id="tab-life" data-panel="panel-life" aria-controls="panel-life" aria-selected="false">🌍 <span data-i18n="tab_life">அன்றாட வாழ்க்கை</span></button>
+      <button type="button" role="tab" id="tab-quiz" data-panel="panel-quiz" aria-controls="panel-quiz" aria-selected="false">📝 <span data-i18n="tab_quiz">வினாடி வினா</span></button>
     </div>
 
     <!-- ===================== pH SCALE ===================== -->
     <section id="panel-scale" role="tabpanel" aria-labelledby="tab-scale" class="stack">
       <div class="card">
-        <h2 data-i18n="scale_title"></h2>
-        <p class="muted small" data-i18n="scale_hint"></p>
+        <h2 data-i18n="scale_title">pH அளவுகோல்: 0 முதல் 14</h2>
+        <p class="muted small" data-i18n="scale_hint">ஒரு பொருளைத் தட்டுங்கள்: அதன் pH, H⁺ அயனிச் செறிவு, மற்றவற்றுடன் ஒப்பீடு, ஒவ்வொரு காட்டியும் என்ன காட்டுகிறது என்பதைப் பாருங்கள்.</p>
         <div class="ph-wrap">
           <div class="ph-marks" id="ph-marks"></div>
           <div class="ph-bar" id="ph-bar" role="img" data-i18n-aria-label="bar_aria"></div>
-          <div class="ph-ends"><span>← <span data-i18n="scale_acid_end"></span></span><span class="mid" data-i18n="scale_neutral"></span><span><span data-i18n="scale_base_end"></span> →</span></div>
+          <div class="ph-ends"><span>← <span data-i18n="scale_acid_end">அதிக அமிலம்</span></span><span class="mid" data-i18n="scale_neutral">நடுநிலை (7)</span><span><span data-i18n="scale_base_end">அதிக காரம்</span> →</span></div>
         </div>
         <div id="sub-list"></div>
       </div>
@@ -251,19 +251,19 @@
     <!-- ===================== INDICATORS ===================== -->
     <section id="panel-ind" role="tabpanel" aria-labelledby="tab-ind" class="stack" hidden>
       <div class="card">
-        <h2 data-i18n="ind_title"></h2>
+        <h2 data-i18n="ind_title">காட்டி ஆய்வகம்: முக்கிப் பாருங்கள்</h2>
         <div class="lab-grid">
           <div class="stack">
             <div class="field">
-              <label for="ind-sub" data-i18n="ind_pick_sub"></label>
+              <label for="ind-sub" data-i18n="ind_pick_sub">ஒரு பொருளைத் தேர்ந்தெடுங்கள்</label>
               <select id="ind-sub"></select>
             </div>
             <div>
-              <span class="lbl" id="ind-pick-lbl" data-i18n="ind_pick_ind"></span>
+              <span class="lbl" id="ind-pick-lbl" data-i18n="ind_pick_ind">ஒரு காட்டியைத் தேர்ந்தெடுங்கள்</span>
               <div class="ind-chips" role="group" aria-labelledby="ind-pick-lbl" id="ind-chips" style="margin-top:6px"></div>
             </div>
             <div class="callout" id="ind-why-box">
-              <p class="lbl mb0" data-i18n="ind_why_label"></p>
+              <p class="lbl mb0" data-i18n="ind_why_label">ஏன்?</p>
               <p class="ind-why mb0" id="ind-why"></p>
             </div>
           </div>
@@ -280,34 +280,34 @@
     <!-- ===================== TITRATION ===================== -->
     <section id="panel-titr" role="tabpanel" aria-labelledby="tab-titr" class="stack" hidden>
       <div class="card">
-        <h2 data-i18n="titr_title"></h2>
-        <p class="muted small" data-i18n="titr_intro"></p>
+        <h2 data-i18n="titr_title">நடுநிலையாக்கல்: அமிலம் + காரம், சொட்டுச் சொட்டாக</h2>
+        <p class="muted small" data-i18n="titr_intro">குடுவையில் ஹைட்ரோகுளோரிக் அமிலம் (HCl) உள்ளது. பியூரெட்டிலிருந்து சோடியம் ஹைட்ராக்சைடை (NaOH) சிறிது சிறிதாகச் சேர்த்து, pH உயர்வதையும், இறுதிப் புள்ளியில் காட்டி நிறம் மாறுவதையும் பாருங்கள்.</p>
         <div class="titr-grid">
           <div class="stack">
             <div class="titr-params">
-              <label class="field"><span data-i18n="titr_va"></span><input type="number" id="t-va" min="1" max="100" step="1" inputmode="decimal" dir="ltr"></label>
-              <label class="field"><span data-i18n="titr_ca"></span><input type="number" id="t-ca" min="0.01" max="2" step="0.01" inputmode="decimal" dir="ltr"></label>
-              <label class="field"><span data-i18n="titr_cb"></span><input type="number" id="t-cb" min="0.01" max="2" step="0.01" inputmode="decimal" dir="ltr"></label>
+              <label class="field"><span data-i18n="titr_va">குடுவையில் அமிலம் (mL)</span><input type="number" id="t-va" min="1" max="100" step="1" inputmode="decimal" dir="ltr"></label>
+              <label class="field"><span data-i18n="titr_ca">அமிலச் செறிவு (mol/L)</span><input type="number" id="t-ca" min="0.01" max="2" step="0.01" inputmode="decimal" dir="ltr"></label>
+              <label class="field"><span data-i18n="titr_cb">காரச் செறிவு (mol/L)</span><input type="number" id="t-cb" min="0.01" max="2" step="0.01" inputmode="decimal" dir="ltr"></label>
             </div>
             <div class="field">
-              <label for="t-ind" data-i18n="titr_ind"></label>
+              <label for="t-ind" data-i18n="titr_ind">குடுவையில் காட்டி</label>
               <select id="t-ind"></select>
             </div>
             <div>
-              <label for="t-vb" class="lbl" data-i18n="titr_vb"></label>
+              <label for="t-vb" class="lbl" data-i18n="titr_vb">சேர்த்த NaOH (mL)</label>
               <div class="titr-vb">
                 <input type="range" id="t-vb" min="0" max="50" step="0.05" value="0">
                 <input type="number" id="t-vb-num" min="0" max="50" step="0.05" inputmode="decimal" dir="ltr" data-i18n-aria-label="titr_vb">
               </div>
             </div>
             <div class="titr-btns">
-              <button type="button" class="btn" id="t-drop" data-i18n="btn_drop"></button>
-              <button type="button" class="btn" id="t-1ml" data-i18n="btn_1ml"></button>
-              <button type="button" class="btn" id="t-5ml" data-i18n="btn_5ml"></button>
+              <button type="button" class="btn" id="t-drop" data-i18n="btn_drop">+1 சொட்டு (0.05 mL)</button>
+              <button type="button" class="btn" id="t-1ml" data-i18n="btn_1ml">+1 mL</button>
+              <button type="button" class="btn" id="t-5ml" data-i18n="btn_5ml">+5 mL</button>
             </div>
             <div class="titr-btns">
-              <button type="button" class="btn btn-primary" id="t-auto">▶ <span data-i18n="btn_auto"></span></button>
-              <button type="button" class="btn btn-ghost" id="t-empty">↺ <span data-i18n="btn_empty"></span></button>
+              <button type="button" class="btn btn-primary" id="t-auto">▶ <span data-i18n="btn_auto">நிறம் மாறும் வரை சேர்</span></button>
+              <button type="button" class="btn btn-ghost" id="t-empty">↺ <span data-i18n="btn_empty">மீண்டும் தொடங்கு</span></button>
             </div>
             <p class="callout small mb0" id="t-veq"></p>
           </div>
@@ -315,24 +315,24 @@
             <div class="flask-row">
               <div id="flask"></div>
               <div aria-live="polite">
-                <div class="muted small" data-i18n="titr_ph_now"></div>
+                <div class="muted small" data-i18n="titr_ph_now">குடுவையில் இப்போது pH</div>
                 <div class="ph-now" id="t-ph"></div>
                 <p class="ph-state" id="t-state"></p>
                 <p class="small mb0" id="t-hint"></p>
               </div>
             </div>
             <div class="curve-wrap stage"><canvas id="curve" width="600" height="300"></canvas></div>
-            <div class="eq"><span class="formula no-i18n">HCl + NaOH → NaCl + H₂O</span><small data-i18n="eq_words"></small></div>
+            <div class="eq"><span class="formula no-i18n">HCl + NaOH → NaCl + H₂O</span><small data-i18n="eq_words">அமிலம் + காரம் → உப்பு + நீர்</small></div>
           </div>
         </div>
       </div>
       <div class="card">
-        <h2 data-i18n="titr_work_title"></h2>
+        <h2 data-i18n="titr_work_title">pH க்குப் பின்னால் உள்ள கணிதம்</h2>
         <div class="scroll-x"><table class="table work-tbl" id="work"><tbody></tbody></table></div>
         <p class="small muted mb0" id="work-note"></p>
       </div>
       <div class="card">
-        <h2 data-i18n="stories_title"></h2>
+        <h2 data-i18n="stories_title">நம்மைச் சுற்றி நடுநிலையாக்கல்</h2>
         <div class="stories" id="stories"></div>
       </div>
     </section>
@@ -340,16 +340,16 @@
     <!-- ===================== SALTS ===================== -->
     <section id="panel-salts" role="tabpanel" aria-labelledby="tab-salts" class="stack" hidden>
       <div class="card">
-        <h2 data-i18n="salts_title"></h2>
-        <p class="callout" data-i18n="salts_rule"></p>
+        <h2 data-i18n="salts_title">எந்த உப்பு அமிலம், காரம் அல்லது நடுநிலை?</h2>
+        <p class="callout" data-i18n="salts_rule">விதி: வலிமையான பெற்றோர் வெல்லும். வலிமையான அமிலம் + வலிமையான காரம் → நடுநிலை உப்பு. வலிமையான அமிலம் + வலிமை குறைந்த காரம் → அமில உப்பு. வலிமை குறைந்த அமிலம் + வலிமையான காரம் → கார உப்பு.</p>
         <div class="salts-grid" id="salts-list"></div>
         <div class="row" style="margin-top:10px">
           <span class="pill" id="salts-score"></span>
-          <button type="button" class="btn btn-sm" id="salts-show" data-i18n="salts_show"></button>
+          <button type="button" class="btn btn-sm" id="salts-show" data-i18n="salts_show">எல்லா விடைகளையும் காட்டு</button>
         </div>
       </div>
       <div class="card">
-        <h2 data-i18n="uses_title"></h2>
+        <h2 data-i18n="uses_title">பயனுள்ள உப்புகள், அவை எதிலிருந்து தயாராகின்றன (வகுப்பு 10)</h2>
         <div class="uses-grid" id="uses"></div>
       </div>
     </section>
@@ -357,8 +357,8 @@
     <!-- ===================== DAILY LIFE ===================== -->
     <section id="panel-life" role="tabpanel" aria-labelledby="tab-life" class="stack" hidden>
       <div class="row spread no-print">
-        <h2 class="mb0" data-i18n="life_title"></h2>
-        <button type="button" class="btn btn-primary" id="print-summary">🖨️ <span data-i18n="print_summary"></span></button>
+        <h2 class="mb0" data-i18n="life_title">அன்றாட வாழ்க்கையில் pH</h2>
+        <button type="button" class="btn btn-primary" id="print-summary">🖨️ <span data-i18n="print_summary">ஒரு பக்கச் சுருக்கத்தை அச்சிடு</span></button>
       </div>
       <div class="life-grid" id="life"></div>
     </section>
@@ -371,30 +371,30 @@
     <section id="summary" aria-hidden="true"></section>
 
     <details class="card" id="inside" style="margin-top:18px">
-      <summary><strong data-i18n="inside_title"></strong></summary>
+      <summary><strong data-i18n="inside_title">உள்ளே என்ன நடக்கிறது?</strong></summary>
       <ol style="padding-inline-start:20px;margin:12px 0 0">
-        <li data-i18n="inside_1"></li>
-        <li data-i18n="inside_2"></li>
-        <li data-i18n="inside_3"></li>
-        <li data-i18n="inside_4"></li>
+        <li data-i18n="inside_1">pH H⁺ அயனிகளை எண்ணுகிறது. pH = −log₁₀[H⁺]: pH 2 என்றால் லிட்டருக்கு 0.01 மோல் H⁺, pH 3 என்றால் 0.001. எனவே pH 2, pH 3 ஐ விட 10 மடங்கு அதிக அமிலம்.</li>
+        <li data-i18n="inside_2">காட்டிகள் அமிலத்தில் ஒரு நிறமும் காரத்தில் வேறு நிறமும் கொண்ட சாயங்கள். ஒவ்வொன்றும் தனக்கே உரிய pH வரம்பில் நிறம் மாறும்: லிட்மஸ் சுமார் 5 முதல் 8, பீனால்ப்தலீன் 8.2 முதல், மெத்தில் ஆரஞ்சு 4.4 க்குக் கீழ்.</li>
+        <li data-i18n="inside_3">நடுநிலையாக்கல் ஆய்வகத்தில் செயலி மோல்களை எண்ணுகிறது: n = செறிவு × பருமன். மீதமுள்ள H⁺ (அல்லது மீதமுள்ள OH⁻) மொத்தப் பருமனில் பரவும், அதிலிருந்து pH கிடைக்கும். இரண்டும் சமமாகும்போது நீரும் உப்பும் மட்டுமே இருக்கும்: pH 7.</li>
+        <li data-i18n="inside_4">எல்லா மதிப்புகளும் 25 °C இல் பாடநூல் தோராய மதிப்புகள். உண்மையான எலுமிச்சைச் சாறு அல்லது சோப்பில் இந்த எண்கள் சிறிது மாறலாம்.</li>
       </ol>
     </details>
     <details class="card" id="words" style="margin-top:12px">
-      <summary><strong data-i18n="words_title"></strong></summary>
+      <summary><strong data-i18n="words_title">அறிய வேண்டிய சொற்கள்</strong></summary>
       <dl id="words-list" style="margin:12px 0 0"></dl>
     </details>
     <details class="card" id="howto" style="margin-top:12px">
-      <summary><strong data-i18n="howto_title"></strong></summary>
+      <summary><strong data-i18n="howto_title">பயன்படுத்தும் முறை / வகுப்பறைக்கான யோசனைகள்</strong></summary>
       <ul style="margin:12px 0 0">
-        <li data-i18n="how1"></li>
-        <li data-i18n="how2"></li>
-        <li data-i18n="how3"></li>
-        <li data-i18n="how4"></li>
-        <li data-i18n="how5"></li>
+        <li data-i18n="how1">pH அளவுகோலில் தொடங்குங்கள்: எலுமிச்சைச் சாற்றைத் தட்டுங்கள், பிறகு சோப்பை, அவை எத்தனை மடங்கு அதிக அமிலம் அல்லது காரம் என்று ஒப்பிடுங்கள்.</li>
+        <li data-i18n="how2">காட்டி ஆய்வகம்: காட்டியைத் தட்டும் முன் நிறத்தை ஊகியுங்கள். பிறகு இரட்டையாக நிற விளையாட்டை விளையாடி மதிப்பெண்களை ஒப்பிடுங்கள்.</li>
+        <li data-i18n="how3">நடுநிலையாக்கல்: 20 mL வரை 5 mL ஆகச் சேர்த்து, பிறகு ஒரு சொட்டாகச் சேர்க்கவும். 25 mL அருகில் pH எவ்வளவு வேகமாகத் தாவுகிறது என்று பாருங்கள். அமிலச் செறிவை மாற்றி, முதலில் புதிய இறுதிப் புள்ளியை ஊகியுங்கள்.</li>
+        <li data-i18n="how4">வகுப்பறைச் செயல்பாடு: செம்பருத்தி இதழ்கள் அல்லது சிவப்பு முட்டைக்கோசை வெதுவெதுப்பான நீரில் ஊறவைத்து உங்கள் காட்டியைத் தயாரியுங்கள். எலுமிச்சைச் சாறு, சோப்பு, சமையல் சோடா, பால், உப்புநீர் சோதித்து செயலியுடன் ஒப்பிடுங்கள்.</li>
+        <li data-i18n="how5">தேர்வுக்கு முன்: ஒரு பக்கச் சுருக்கத்தை அச்சிட்டு, 15 க்கு 15 பெறும் வரை வினாடி வினா விளையாடுங்கள்.</li>
       </ul>
     </details>
     <div class="row no-print" style="margin-top:14px">
-      <button type="button" class="btn" id="print-summary-2">🖨️ <span data-i18n="print_summary"></span></button>
+      <button type="button" class="btn" id="print-summary-2">🖨️ <span data-i18n="print_summary">ஒரு பக்கச் சுருக்கத்தை அச்சிடு</span></button>
       <button type="button" class="btn btn-danger" id="reset">↺ <span data-i18n="reset"></span></button>
       <span class="muted small" data-i18n="saved_local"></span>
     </div>

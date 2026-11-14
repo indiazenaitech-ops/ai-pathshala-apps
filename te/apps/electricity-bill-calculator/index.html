@@ -175,15 +175,15 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="eb-privacy no-print"><span aria-hidden="true">🔒</span><span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">ఏ ఉపకరణాలు ఎక్కువ కరెంటు తింటున్నాయో తెలుసుకోండి, నెల బిల్లును స్లాబ్‌ల వారీగా అంచనా వేయండి, LED, BLDC ఫ్యాన్ లేదా 24 °C వద్ద AC ఎంత ఆదా చేస్తుందో చూడండి.</p>
+    <p class="eb-privacy no-print"><span aria-hidden="true">🔒</span><span data-i18n="privacy">లెక్కలన్నీ మీ పరికరంలోనే జరుగుతాయి. ఏదీ అప్‌లోడ్ కాదు, మరెక్కడా సేవ్ కాదు.</span></p>
 
     <nav class="eb-tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-audit" data-tab="audit" aria-controls="p-audit"><span class="ic" aria-hidden="true">🔌</span><span data-i18n="tab_audit"></span></button>
-      <button type="button" role="tab" id="tab-bill" data-tab="bill" aria-controls="p-bill"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_bill"></span></button>
-      <button type="button" role="tab" id="tab-save" data-tab="save" aria-controls="p-save"><span class="ic" aria-hidden="true">🌱</span><span data-i18n="tab_save"></span></button>
-      <button type="button" role="tab" id="tab-meter" data-tab="meter" aria-controls="p-meter"><span class="ic" aria-hidden="true">☀️</span><span data-i18n="tab_meter"></span></button>
-      <button type="button" role="tab" id="tab-science" data-tab="science" aria-controls="p-science"><span class="ic" aria-hidden="true">⚡</span><span data-i18n="tab_science"></span></button>
+      <button type="button" role="tab" id="tab-audit" data-tab="audit" aria-controls="p-audit"><span class="ic" aria-hidden="true">🔌</span><span data-i18n="tab_audit">ఉపకరణాలు</span></button>
+      <button type="button" role="tab" id="tab-bill" data-tab="bill" aria-controls="p-bill"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_bill">బిల్లు అంచనా</span></button>
+      <button type="button" role="tab" id="tab-save" data-tab="save" aria-controls="p-save"><span class="ic" aria-hidden="true">🌱</span><span data-i18n="tab_save">ఆదా కోచ్</span></button>
+      <button type="button" role="tab" id="tab-meter" data-tab="meter" aria-controls="p-meter"><span class="ic" aria-hidden="true">☀️</span><span data-i18n="tab_meter">మీటర్ &amp; సోలార్</span></button>
+      <button type="button" role="tab" id="tab-science" data-tab="science" aria-controls="p-science"><span class="ic" aria-hidden="true">⚡</span><span data-i18n="tab_science">సైన్స్ మూల</span></button>
     </nav>
 
     <!-- 1. Appliance audit -->
@@ -192,33 +192,33 @@
         <div class="stack">
           <section class="card stack">
             <div class="row spread">
-              <h2 class="mb0" data-i18n="audit_title"></h2>
+              <h2 class="mb0" data-i18n="audit_title">ఇంటి శక్తి ఆడిట్</h2>
               <div class="field" style="margin:0">
-                <label for="days" class="eb-lbl" data-i18n="days_label"></label>
+                <label for="days" class="eb-lbl" data-i18n="days_label">నెలలో రోజులు</label>
                 <input id="days" class="eb-num" type="number" inputmode="numeric" min="1" max="366" step="1" style="width:110px">
               </div>
             </div>
             <div class="eb-add">
-              <label for="add-sel" class="ap-l" data-i18n="add_label"></label>
+              <label for="add-sel" class="ap-l" data-i18n="add_label">జోడించాల్సిన ఉపకరణం</label>
               <select id="add-sel"></select>
-              <button type="button" class="btn btn-primary" id="add-btn">＋ <span data-i18n="add"></span></button>
+              <button type="button" class="btn btn-primary" id="add-btn">＋ <span data-i18n="add">జోడించు</span></button>
             </div>
             <div class="ap-head" aria-hidden="true">
-              <span data-i18n="col_appliance"></span><span data-i18n="col_watts"></span><span data-i18n="col_qty"></span><span data-i18n="col_hours"></span><span class="v" data-i18n="col_units"></span><span></span>
+              <span data-i18n="col_appliance">ఉపకరణం</span><span data-i18n="col_watts">వాట్స్</span><span data-i18n="col_qty">సంఖ్య</span><span data-i18n="col_hours">గంటలు/రోజు</span><span class="v" data-i18n="col_units">యూనిట్లు</span><span></span>
             </div>
             <div class="ap-rows" id="audit-rows"></div>
-            <p class="muted eb-empty" id="audit-empty" data-i18n="audit_empty"></p>
+            <p class="muted eb-empty" id="audit-empty" data-i18n="audit_empty">ఇంకా ఉపకరణాలు లేవు. పైన జోడించండి లేదా నమూనా ఇల్లు లోడ్ చేయండి.</p>
             <div class="row">
-              <button type="button" class="btn" id="sample-btn" data-i18n="load_sample"></button>
+              <button type="button" class="btn" id="sample-btn" data-i18n="load_sample">నమూనా ఇల్లు లోడ్ చేయి</button>
               <button type="button" class="btn btn-danger" id="clear-btn" data-i18n="clear"></button>
             </div>
-            <p class="eb-note" data-i18n="audit_hint"></p>
+            <p class="eb-note" data-i18n="audit_hint">యూనిట్లు = వాట్స్ × సంఖ్య × రోజుకు గంటలు × రోజులు ÷ 1000. వాట్స్ సాధారణ విలువలు: మీ ఉపకరణం లేబుల్ చూసి మార్చండి.</p>
           </section>
         </div>
         <div class="stack">
           <section class="card eb-result" id="audit-result" aria-live="polite"></section>
           <section class="card">
-            <h2 data-i18n="rank_title"></h2>
+            <h2 data-i18n="rank_title">ఎవరు ఎక్కువ తింటారు?</h2>
             <div id="top3" class="top3"></div>
             <ol class="rk-list" id="rank-list"></ol>
           </section>
@@ -231,46 +231,46 @@
       <div class="eb-two">
         <div class="stack">
           <section class="card stack">
-            <h2 class="mb0" data-i18n="bill_inputs"></h2>
+            <h2 class="mb0" data-i18n="bill_inputs">మీ కనెక్షన్</h2>
             <div class="eb-in-row">
               <div class="field">
-                <label for="b-units" data-i18n="b_units"></label>
+                <label for="b-units" data-i18n="b_units">ఈ నెల యూనిట్లు (kWh)</label>
                 <input id="b-units" class="eb-num" type="number" inputmode="decimal" min="0" step="1">
               </div>
               <div class="field">
-                <label for="b-state" data-i18n="b_state"></label>
+                <label for="b-state" data-i18n="b_state">రాష్ట్ర రేటు (నమూనా)</label>
                 <select id="b-state"></select>
               </div>
             </div>
-            <label class="check"><input type="checkbox" id="b-use-audit"><span data-i18n="b_use_audit"></span></label>
-            <p class="eb-approx" data-i18n="approx_note"></p>
+            <label class="check"><input type="checkbox" id="b-use-audit"><span data-i18n="b_use_audit">ఉపకరణ జాబితా మొత్తం వాడు</span></label>
+            <p class="eb-approx" data-i18n="approx_note">గృహ టారిఫ్ నమూనాలు, సుమారు, అక్టోబర్ 2026. నియమాలు వేరుగా ఉండవచ్చు (రెండు నెలల బిల్లు, సబ్సిడీ షరతులు, సమయాన్ని బట్టి రేట్లు). మీ DISCOM బిల్లు చూసి అంకెలు మార్చండి.</p>
             <div class="field">
-              <span class="eb-lbl" id="tele-lbl" data-i18n="tele_label"></span>
+              <span class="eb-lbl" id="tele-lbl" data-i18n="tele_label">స్లాబ్ పద్ధతి</span>
               <div class="seg eb-seg" id="b-tele" role="group" aria-labelledby="tele-lbl">
-                <button type="button" data-v="1" data-i18n="tele_yes"></button>
-                <button type="button" data-v="0" data-i18n="tele_no"></button>
+                <button type="button" data-v="1" data-i18n="tele_yes">టెలిస్కోపిక్</button>
+                <button type="button" data-v="0" data-i18n="tele_no">నాన్-టెలిస్కోపిక్</button>
               </div>
               <p class="eb-note" id="tele-hint"></p>
             </div>
             <div>
-              <div class="sl-head" aria-hidden="true"><span data-i18n="col_upto"></span><span data-i18n="col_rate"></span><span></span></div>
+              <div class="sl-head" aria-hidden="true"><span data-i18n="col_upto">వరకు (యూనిట్లు)</span><span data-i18n="col_rate">రేటు (₹/యూనిట్)</span><span></span></div>
               <div class="sl-rows" id="slab-rows"></div>
               <div class="row" style="margin-top:10px">
-                <button type="button" class="btn btn-sm" id="slab-add">＋ <span data-i18n="slab_add"></span></button>
-                <button type="button" class="btn btn-sm" id="slab-restore" data-i18n="slab_restore"></button>
+                <button type="button" class="btn btn-sm" id="slab-add">＋ <span data-i18n="slab_add">స్లాబ్ జోడించు</span></button>
+                <button type="button" class="btn btn-sm" id="slab-restore" data-i18n="slab_restore">రాష్ట్ర పట్టిక తిరిగి తెచ్చు</button>
               </div>
             </div>
             <div class="eb-in-row">
-              <div class="field"><label for="b-load" data-i18n="b_load"></label><input id="b-load" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
-              <div class="field"><label for="b-fixed" data-i18n="b_fixed"></label><input id="b-fixed" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+              <div class="field"><label for="b-load" data-i18n="b_load">మంజూరైన లోడ్ (kW)</label><input id="b-load" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+              <div class="field"><label for="b-fixed" data-i18n="b_fixed">ఫిక్స్‌డ్ ఛార్జీ (₹ ఒక kW కు నెలకు)</label><input id="b-fixed" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
             </div>
             <div class="eb-in-row">
-              <div class="field"><label for="b-duty" data-i18n="b_duty"></label><input id="b-duty" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
-              <div class="field"><label for="b-fuel" data-i18n="b_fuel"></label><input id="b-fuel" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+              <div class="field"><label for="b-duty" data-i18n="b_duty">విద్యుత్ సుంకం / పన్ను (%)</label><input id="b-duty" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+              <div class="field"><label for="b-fuel" data-i18n="b_fuel">ఇంధన సర్‌ఛార్జీ (%)</label><input id="b-fuel" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
             </div>
             <div class="eb-in-row">
-              <label class="check" style="flex:1 1 200px"><input type="checkbox" id="b-sub"><span data-i18n="b_sub"></span></label>
-              <div class="field"><label for="b-free" data-i18n="b_free"></label><input id="b-free" class="eb-num" type="number" inputmode="numeric" min="0" step="1"></div>
+              <label class="check" style="flex:1 1 200px"><input type="checkbox" id="b-sub"><span data-i18n="b_sub">సబ్సిడీ / ఉచిత యూనిట్లు</span></label>
+              <div class="field"><label for="b-free" data-i18n="b_free">నెలకు ఉచిత యూనిట్లు</label><input id="b-free" class="eb-num" type="number" inputmode="numeric" min="0" step="1"></div>
             </div>
           </section>
         </div>
@@ -282,18 +282,18 @@
     <section id="p-save" role="tabpanel" aria-labelledby="tab-save" class="eb-panel" hidden>
       <div class="eb-two">
         <section class="card stack">
-          <h2 class="mb0" data-i18n="save_title"></h2>
-          <p class="eb-note" data-i18n="save_hint"></p>
+          <h2 class="mb0" data-i18n="save_title">ఇలా చేస్తే…</h2>
+          <p class="eb-note" data-i18n="save_hint">ఒక మార్పును టిక్ చేసి, మీ ఉపకరణ జాబితా ప్రకారం ఎన్ని యూనిట్లు, ఎంత డబ్బు ఆదా అవుతుందో చూడండి.</p>
           <div class="sw-list">
-            <label class="check"><input type="checkbox" id="sw-led"><span><span data-i18n="sw_led"></span><small data-i18n="sw_led_h"></small></span></label>
-            <label class="check"><input type="checkbox" id="sw-ac24"><span><span data-i18n="sw_ac24"></span><small data-i18n="sw_ac24_h"></small></span></label>
-            <label class="check"><input type="checkbox" id="sw-fridge5"><span><span data-i18n="sw_fridge5"></span><small data-i18n="sw_fridge5_h"></small></span></label>
-            <label class="check"><input type="checkbox" id="sw-bldc"><span><span data-i18n="sw_bldc"></span><small data-i18n="sw_bldc_h"></small></span></label>
-            <label class="check"><input type="checkbox" id="sw-standby"><span><span data-i18n="sw_standby"></span><small data-i18n="sw_standby_h"></small></span></label>
+            <label class="check"><input type="checkbox" id="sw-led"><span><span data-i18n="sw_led">బల్బులు, CFL, ట్యూబ్‌ల బదులు 9 W LED పెట్టండి</span><small data-i18n="sw_led_h">60 W బల్బు → 9 W LED ఆన్‌లో ఉన్న ప్రతి గంటకు 51 W ఆదా.</small></span></label>
+            <label class="check"><input type="checkbox" id="sw-ac24"><span><span data-i18n="sw_ac24">AC ని 18 °C బదులు 24 °C వద్ద నడపండి</span><small data-i18n="sw_ac24_h">ప్రతి డిగ్రీకి సుమారు 6 % తక్కువ కరెంటు: 6 డిగ్రీలు ≈ 36 %.</small></span></label>
+            <label class="check"><input type="checkbox" id="sw-fridge5"><span><span data-i18n="sw_fridge5">5-స్టార్ ఫ్రిజ్‌కు మారండి</span><small data-i18n="sw_fridge5_h">పాత 2-స్టార్ ఫ్రిజ్ కంటే సుమారు 30 % తక్కువ.</small></span></label>
+            <label class="check"><input type="checkbox" id="sw-bldc"><span><span data-i18n="sw_bldc">సీలింగ్ ఫ్యాన్ల బదులు BLDC ఫ్యాన్లు</span><small data-i18n="sw_bldc_h">ఒక్కో ఫ్యాన్‌కు 75 W → 30 W.</small></span></label>
+            <label class="check"><input type="checkbox" id="sw-standby"><span><span data-i18n="sw_standby">స్టాండ్‌బై కరెంటు ఆపండి</span><small data-i18n="sw_standby_h">TV, సెట్-టాప్ బాక్స్, ఛార్జర్లు, కంప్యూటర్లు ఖాళీగా ఉన్నా ఒక్కోటి సుమారు 2 W తీసుకుంటాయి.</small></span></label>
           </div>
           <div class="eb-in-row">
-            <div class="field"><label for="sv-rate" data-i18n="sv_rate"></label><input id="sv-rate" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
-            <button type="button" class="btn" id="sv-rate-auto" data-i18n="sv_rate_auto"></button>
+            <div class="field"><label for="sv-rate" data-i18n="sv_rate">వాడిన రేటు (₹ యూనిట్‌కు)</label><input id="sv-rate" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
+            <button type="button" class="btn" id="sv-rate-auto" data-i18n="sv_rate_auto">నా బిల్లు రేటు వాడు</button>
           </div>
         </section>
         <section class="card eb-result" id="save-result" aria-live="polite"></section>
@@ -304,20 +304,20 @@
     <section id="p-meter" role="tabpanel" aria-labelledby="tab-meter" class="eb-panel" hidden>
       <div class="eb-two">
         <section class="card stack">
-          <h2 class="mb0" data-i18n="meter_title"></h2>
-          <p class="eb-note" data-i18n="meter_hint"></p>
+          <h2 class="mb0" data-i18n="meter_title">మీటర్ రీడింగ్</h2>
+          <p class="eb-note" data-i18n="meter_hint">గత బిల్లులోని రీడింగ్ మరియు ఇప్పుడు మీటర్‌లోని రీడింగ్ రాయండి.</p>
           <div class="eb-in-row">
-            <div class="field"><label for="m-prev" data-i18n="m_prev"></label><input id="m-prev" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
-            <div class="field"><label for="m-cur" data-i18n="m_cur"></label><input id="m-cur" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+            <div class="field"><label for="m-prev" data-i18n="m_prev">గత రీడింగ్</label><input id="m-prev" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+            <div class="field"><label for="m-cur" data-i18n="m_cur">ప్రస్తుత రీడింగ్</label><input id="m-cur" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
           </div>
           <div id="meter-result" aria-live="polite"></div>
         </section>
         <section class="card stack">
-          <h2 class="mb0" data-i18n="solar_title"></h2>
-          <p class="eb-note" data-i18n="solar_hint"></p>
+          <h2 class="mb0" data-i18n="solar_title">రూఫ్‌టాప్ సోలార్: త్వరిత అంచనా</h2>
+          <p class="eb-note" data-i18n="solar_hint">భారతదేశంలో 1 kW రూఫ్‌టాప్ సోలార్ రోజుకు సుమారు 4 యూనిట్లు, నెలకు సుమారు 120 యూనిట్లు ఇస్తుంది (నగరం, కాలం, నీడను బట్టి మారుతుంది).</p>
           <div class="eb-in-row">
-            <div class="field"><label for="s-kw" data-i18n="s_kw"></label><input id="s-kw" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
-            <div class="field"><label for="s-per" data-i18n="s_per"></label><input id="s-per" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
+            <div class="field"><label for="s-kw" data-i18n="s_kw">సోలార్ ప్లాంట్ పరిమాణం (kW)</label><input id="s-kw" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+            <div class="field"><label for="s-per" data-i18n="s_per">kW కు రోజుకు యూనిట్లు</label><input id="s-per" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
           </div>
           <div id="solar-result" aria-live="polite"></div>
         </section>
@@ -327,51 +327,51 @@
     <!-- 5. Science corner -->
     <section id="p-science" role="tabpanel" aria-labelledby="tab-science" class="eb-panel" hidden>
       <section class="card">
-        <h2 data-i18n="sci_title"></h2>
-        <p class="eb-note" data-i18n="sci_hint"></p>
+        <h2 data-i18n="sci_title">సైన్స్ మూల (10వ తరగతి, విద్యుత్)</h2>
+        <p class="eb-note" data-i18n="sci_hint">బిల్లులో వాడే అదే లెక్క, NCERT రాసినట్లు.</p>
         <div class="sc-formulas" style="margin-top:12px">
-          <div class="sc-f"><div class="f eb-ltr">P = V × I</div><p data-i18n="f_power"></p></div>
-          <div class="sc-f"><div class="f eb-ltr">E = P × t</div><p data-i18n="f_energy"></p></div>
-          <div class="sc-f"><div class="f eb-ltr">1 kWh = 3.6 × 10<sup>6</sup> J</div><p data-i18n="f_unit"></p></div>
+          <div class="sc-f"><div class="f eb-ltr">P = V × I</div><p data-i18n="f_power">శక్తి (వాట్) = వోల్టేజి (వోల్ట్) × విద్యుత్ ప్రవాహం (ఆంపియర్).</p></div>
+          <div class="sc-f"><div class="f eb-ltr">E = P × t</div><p data-i18n="f_energy">శక్తి = పవర్ × సమయం. 1 kWh = 1000 W ఒక గంట = 1 యూనిట్.</p></div>
+          <div class="sc-f"><div class="f eb-ltr">1 kWh = 3.6 × 10<sup>6</sup> J</div><p data-i18n="f_unit">ఒక యూనిట్ కరెంటు = 36 లక్షల జౌల్.</p></div>
         </div>
       </section>
       <div class="eb-two">
         <section class="card stack">
-          <h2 class="mb0" data-i18n="sci_calc"></h2>
+          <h2 class="mb0" data-i18n="sci_calc">ప్రయత్నించండి</h2>
           <div class="eb-in-row">
-            <div class="field"><label for="sc-v" data-i18n="sc_v"></label><input id="sc-v" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
-            <div class="field"><label for="sc-i" data-i18n="sc_i"></label><input id="sc-i" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
+            <div class="field"><label for="sc-v" data-i18n="sc_v">వోల్టేజి (V)</label><input id="sc-v" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+            <div class="field"><label for="sc-i" data-i18n="sc_i">ప్రవాహం (A)</label><input id="sc-i" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
           </div>
           <p class="eb-note" id="sc-p-out" aria-live="polite"></p>
           <div class="eb-in-row">
-            <div class="field"><label for="sc-pw" data-i18n="sc_pw"></label><input id="sc-pw" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
-            <div class="field"><label for="sc-h" data-i18n="sc_h"></label><input id="sc-h" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
-            <div class="field"><label for="sc-d" data-i18n="sc_d"></label><input id="sc-d" class="eb-num" type="number" inputmode="numeric" min="1" step="1"></div>
+            <div class="field"><label for="sc-pw" data-i18n="sc_pw">పవర్ (W)</label><input id="sc-pw" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+            <div class="field"><label for="sc-h" data-i18n="sc_h">రోజుకు గంటలు</label><input id="sc-h" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+            <div class="field"><label for="sc-d" data-i18n="sc_d">రోజులు</label><input id="sc-d" class="eb-num" type="number" inputmode="numeric" min="1" step="1"></div>
           </div>
           <div id="sc-e-out" aria-live="polite"></div>
         </section>
         <section class="card">
-          <h2 data-i18n="sci_practice"></h2>
+          <h2 data-i18n="sci_practice">అభ్యాస ప్రశ్నలు</h2>
           <ol class="sc-q" id="sc-q"></ol>
         </section>
       </div>
     </section>
 
     <details class="card no-print">
-      <summary data-i18n="howto_title"></summary>
+      <summary data-i18n="howto_title">ఎలా వాడాలి / ఆలోచనలు</summary>
       <ul>
-        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li><li data-i18n="tip4"></li><li data-i18n="tip5"></li>
+        <li data-i18n="tip1">ఫోన్ పట్టుకుని ఇల్లంతా తిరిగి ప్రతి ఉపకరణాన్ని రాయండి; లేబుల్ లేదా స్టిక్కర్ నుంచి వాట్స్ చదవండి.</li><li data-i18n="tip2">ఉపకరణం నిజంగా ఆన్‌లో ఉండే గంటలే రాయండి. AC లేదా ఫ్రిజ్ కంప్రెసర్ ఆగి ఆగి నడుస్తుంది కాబట్టి &quot;ప్రభావవంత గంటలు&quot; తక్కువ.</li><li data-i18n="tip3">అంచనాను నిజమైన బిల్లుతో పోల్చండి. చాలా తేడా ఉంటే గంటలు లేదా రేటు పట్టిక సరిచేయండి, లేదా గీజర్ థర్మోస్టాట్ పాడవడం వంటి లీక్ ఉండవచ్చు.</li><li data-i18n="tip4">ఆఫీసు లేదా దుకాణం: లైట్లు, ఫ్యాన్లు, AC లు, కంప్యూటర్లు రాయండి; రాత్రి స్టాండ్‌బై ఆపడమే తరచుగా 5–10 % ఆదా చేస్తుంది.</li><li data-i18n="tip5">తరగతి: 10వ తరగతి విద్యార్థులు తమ ఇళ్లను ఆడిట్ చేసి, తరగతి మొత్తం టాప్-3 ఎక్కువ తినే ఉపకరణాలను, ఇంటింటి ఆదాను పోల్చాలి.</li>
       </ul>
     </details>
     <details class="card no-print">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">తెలుసుకోవాల్సిన పదాలు</summary>
       <ul>
-        <li data-i18n="word_unit"></li><li data-i18n="word_watt"></li><li data-i18n="word_slab"></li><li data-i18n="word_tele"></li><li data-i18n="word_load"></li><li data-i18n="word_duty"></li>
+        <li data-i18n="word_unit">యూనిట్ (kWh): 1000 W ఉపకరణం ఒక గంటలో వాడే శక్తి. బిల్లు యూనిట్లను లెక్కిస్తుంది.</li><li data-i18n="word_watt">వాట్ (W): ఉపకరణం ఎంత వేగంగా శక్తి వాడుతుందో. 1 kW = 1000 W.</li><li data-i18n="word_slab">స్లాబ్: సొంత యూనిట్ రేటు ఉన్న యూనిట్ల శ్రేణి, ఉదా. 0–100 కు ₹3.</li><li data-i18n="word_tele">టెలిస్కోపిక్: ప్రతి స్లాబ్ విడిగా లెక్కించి కూడతారు. నాన్-టెలిస్కోపిక్: మొత్తాన్ని బట్టి ఒకే రేటు అన్ని యూనిట్లకు.</li><li data-i18n="word_load">మంజూరైన లోడ్: మీ కనెక్షన్‌కు ఆమోదించిన kW; ఫిక్స్‌డ్ ఛార్జీ తరచుగా దీని ఒక్కో kW కు.</li><li data-i18n="word_duty">విద్యుత్ సుంకం: ఛార్జీల శాతంగా కలిపే రాష్ట్ర పన్ను; ఇంధన సర్‌ఛార్జీ DISCOM మారుతున్న ఇంధన ఖర్చు కోసం.</li>
       </ul>
     </details>
-    <p class="muted small no-print" data-i18n="disclaimer"></p>
+    <p class="muted small no-print" data-i18n="disclaimer">అంచనా మాత్రమే, బిల్లు కాదు. రేట్లు సుమారు నమూనాలు (అక్టోబర్ 2026), తరచుగా మారతాయి: ఎప్పుడూ మీ DISCOM బిల్లు చూడండి.</p>
     <div class="row no-print">
-      <button type="button" class="btn" id="print-btn">🖨 <span data-i18n="print_audit"></span></button>
+      <button type="button" class="btn" id="print-btn">🖨 <span data-i18n="print_audit">ఆడిట్ షీట్ ప్రింట్ చేయి</span></button>
       <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset"></button>
     </div>
     <div id="print-area" aria-hidden="true"></div>

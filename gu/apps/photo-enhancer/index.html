@@ -104,22 +104,22 @@
 </head>
 <body>
   <main id="app" data-state="empty">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">નાના, ઝાંખા કે જૂના ફોટાને AI વડે મોટા અને સ્પષ્ટ બનાવો, સીધા તમારા બ્રાઉઝરમાં. તમારો ફોટો ક્યાંય અપલોડ થતો નથી.</p>
 
     <div class="callout success pe-privacy" role="note">
       <span class="pe-ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">તમારો ફોટો તમારી પાસે જ રહે છે.</strong> <span data-i18n="privacy_body">તે આ ફોન કે કમ્પ્યુટરની બહાર જતો નથી. ફક્ત AI મોડેલ એક વાર ઇન્ટરનેટથી ડાઉનલોડ થાય છે; પછી તે ઑફલાઇન પણ ચાલે છે.</span></p>
     </div>
 
     <section class="card pe-drop" id="drop" tabindex="0" role="button" aria-labelledby="dropTitle">
       <div class="pe-drop-ico" aria-hidden="true">🖼️</div>
       <div class="pe-drop-txt">
-        <strong id="dropTitle" data-i18n="drop_title"></strong>
-        <span class="small muted" data-i18n="drop_hint"></span>
+        <strong id="dropTitle" data-i18n="drop_title">ફોટો ઉમેરો</strong>
+        <span class="small muted" data-i18n="drop_hint">ટૅપ કરીને ફોટો પસંદ કરો, અહીં ખેંચી લાવો, અથવા પેસ્ટ કરો (Ctrl+V). JPG, PNG કે WebP.</span>
       </div>
       <div class="pe-drop-btns">
-        <button class="btn btn-primary btn-lg" id="pickBtn" type="button"><span aria-hidden="true">＋</span> <span data-i18n="pick_photo"></span></button>
-        <button class="btn" id="sampleBtn" type="button" data-i18n="try_sample"></button>
+        <button class="btn btn-primary btn-lg" id="pickBtn" type="button"><span aria-hidden="true">＋</span> <span data-i18n="pick_photo">ફોટો પસંદ કરો</span></button>
+        <button class="btn" id="sampleBtn" type="button" data-i18n="try_sample">નમૂનાનો ફોટો અજમાવો</button>
       </div>
       <input type="file" id="fileInput" accept="image/*" hidden>
     </section>
@@ -130,16 +130,16 @@
       <section class="pe-col" aria-labelledby="hView">
         <div class="card" id="viewer" hidden>
           <div class="pe-vhead">
-            <h2 id="hView" data-i18n="h_view"></h2>
-            <label class="check small"><input type="checkbox" id="zoom1"> <span data-i18n="zoom_100"></span></label>
+            <h2 id="hView" data-i18n="h_view">પહેલાં અને પછી</h2>
+            <label class="check small"><input type="checkbox" id="zoom1"> <span data-i18n="zoom_100">સાચું માપ (100%)</span></label>
           </div>
           <div class="pe-cmpbox" id="cmpBox">
             <div class="pe-cmp" id="cmp" dir="ltr">
               <canvas id="cvAfter" width="10" height="10"></canvas>
               <canvas id="cvBefore" width="10" height="10"></canvas>
               <div class="pe-line" id="cmpLine"></div>
-              <span class="pe-tag b" data-i18n="before"></span>
-              <span class="pe-tag a" data-i18n="after"></span>
+              <span class="pe-tag b" data-i18n="before">પહેલાં</span>
+              <span class="pe-tag a" data-i18n="after">પછી</span>
             </div>
           </div>
           <input type="range" id="cmpRange" min="0" max="100" value="50" data-i18n-aria-label="compare_aria" aria-label="compare">
@@ -152,34 +152,34 @@
         </div>
         <div class="card pe-empty" id="empty">
           <div class="pe-big" aria-hidden="true">✨</div>
-          <p class="mb0" data-i18n="empty"></p>
+          <p class="mb0" data-i18n="empty">શરૂ કરવા માટે ફોટો ઉમેરો અથવા નમૂનો અજમાવો.</p>
         </div>
-        <p class="callout warning pe-note mb0" data-i18n="honest"></p>
+        <p class="callout warning pe-note mb0" data-i18n="honest">AI ખૂટતી બારીકીઓનો સમજદારીથી અંદાજ લગાવે છે. ચહેરા, આંકડા કે લખાણ બરાબર પહેલાં જેવા પાછા લાવી શકતું નથી, તેથી પરિણામ હંમેશા ચકાસો.</p>
       </section>
 
       <!-- ============ controls ============ -->
       <section class="card stack" id="controls" aria-label="settings" data-i18n-aria-label="settings">
         <div class="pe-sec">
-          <h2><span class="pe-num" aria-hidden="true">1</span> <span data-i18n="h_ai"></span></h2>
+          <h2><span class="pe-num" aria-hidden="true">1</span> <span data-i18n="h_ai">AI વડે મોટું કરો</span></h2>
           <div class="field">
-            <span data-i18n="scale_label"></span>
+            <span data-i18n="scale_label">કેટલું મોટું કરવું</span>
             <div class="seg pe-seg no-i18n" role="group" id="scaleSeg" aria-label="scale" data-i18n-aria-label="scale_label">
               <button type="button" id="scale-2" data-scale="2" dir="ltr">2×</button>
               <button type="button" id="scale-4" data-scale="4" dir="ltr">4×</button>
             </div>
           </div>
           <div class="field">
-            <span data-i18n="model_label"></span>
+            <span data-i18n="model_label">AI મોડેલ</span>
             <div class="seg pe-seg" role="group" id="modelSeg" aria-label="model" data-i18n-aria-label="model_label">
-              <button type="button" id="model-best" data-model="best" data-i18n="m_best"></button>
-              <button type="button" id="model-quick" data-model="quick" data-i18n="m_quick"></button>
+              <button type="button" id="model-best" data-model="best" data-i18n="m_best">ફોટા માટે સૌથી સારું</button>
+              <button type="button" id="model-quick" data-model="quick" data-i18n="m_quick">ઝડપી</button>
             </div>
             <span class="hint" id="modelHint"></span>
           </div>
           <label class="pe-check small" id="gpuRow" hidden><input type="checkbox" id="gpu"> <span id="gpuLabel"></span></label>
           <p class="callout pe-note mb0" id="aiNote"></p>
           <div class="pe-actions">
-            <button class="btn btn-primary btn-lg" id="enhanceBtn" type="button" disabled><span aria-hidden="true">✨</span> <span data-i18n="enhance_btn"></span></button>
+            <button class="btn btn-primary btn-lg" id="enhanceBtn" type="button" disabled><span aria-hidden="true">✨</span> <span data-i18n="enhance_btn">AI વડે સુધારો</span></button>
           </div>
           <div class="pe-status" id="statusBox" hidden>
             <div class="progress" id="barWrap" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="bar" style="width:0%"></span></div>
@@ -193,35 +193,35 @@
         </div>
 
         <div class="pe-sec">
-          <h2><span class="pe-num" aria-hidden="true">2</span> <span data-i18n="h_fix"></span></h2>
-          <label class="pe-check"><input type="checkbox" id="fixAuto"> <span data-i18n="fix_auto"></span></label>
-          <label class="pe-check"><input type="checkbox" id="fixOld"> <span data-i18n="fix_old"></span></label>
+          <h2><span class="pe-num" aria-hidden="true">2</span> <span data-i18n="h_fix">સરળ સુધારા (કોઈ ડાઉનલોડ નહીં)</span></h2>
+          <label class="pe-check"><input type="checkbox" id="fixAuto"> <span data-i18n="fix_auto">ઑટો સુધારો: પ્રકાશ, રંગ, દાણા અને શાર્પનેસ</span></label>
+          <label class="pe-check"><input type="checkbox" id="fixOld"> <span data-i18n="fix_old">જૂનો ફોટો: ઝાંખા રંગ અને કૉન્ટ્રાસ્ટ પાછા લાવો</span></label>
           <div class="field">
-            <span data-i18n="color_label"></span>
+            <span data-i18n="color_label">રંગ</span>
             <div class="seg pe-seg" role="group" id="colorSeg" aria-label="colour" data-i18n-aria-label="color_label">
-              <button type="button" id="color-keep" data-color="keep" data-i18n="c_keep"></button>
-              <button type="button" id="color-sepia" data-color="sepia" data-i18n="c_sepia"></button>
-              <button type="button" id="color-bw" data-color="bw" data-i18n="c_bw"></button>
+              <button type="button" id="color-keep" data-color="keep" data-i18n="c_keep">રંગીન</button>
+              <button type="button" id="color-sepia" data-color="sepia" data-i18n="c_sepia">સેપિયા</button>
+              <button type="button" id="color-bw" data-color="bw" data-i18n="c_bw">બ્લૅક ઍન્ડ વ્હાઇટ</button>
             </div>
           </div>
         </div>
 
         <div class="pe-sec">
-          <h2><span class="pe-num" aria-hidden="true">3</span> <span data-i18n="h_save"></span></h2>
+          <h2><span class="pe-num" aria-hidden="true">3</span> <span data-i18n="h_save">સેવ કરો</span></h2>
           <div class="field">
-            <span data-i18n="save_size_label"></span>
+            <span data-i18n="save_size_label">માપ</span>
             <div class="seg pe-seg" role="group" id="sizeSeg" aria-label="size" data-i18n-aria-label="save_size_label">
               <button type="button" id="size-enh" data-size="enh"></button>
               <button type="button" id="size-orig" data-size="orig"></button>
             </div>
           </div>
           <div class="field">
-            <span data-i18n="fmt_label"></span>
+            <span data-i18n="fmt_label">ફૉર્મેટ</span>
             <div class="seg pe-seg no-i18n" role="group" id="fmtSeg" aria-label="format" data-i18n-aria-label="fmt_label">
               <button type="button" id="fmt-jpg" data-fmt="jpg">JPG</button>
               <button type="button" id="fmt-png" data-fmt="png">PNG</button>
             </div>
-            <span class="hint" data-i18n="fmt_hint"></span>
+            <span class="hint" data-i18n="fmt_hint">JPG = નાની ફાઇલ, WhatsApp માટે સારી. PNG = સૌથી સારી ગુણવત્તા, મોટી ફાઇલ.</span>
           </div>
           <div class="pe-actions">
             <button class="btn btn-accent" id="dlBtn" type="button" disabled><span aria-hidden="true">⬇</span> <span data-i18n="download"></span></button>
@@ -229,30 +229,30 @@
         </div>
 
         <div class="pe-sec row spread">
-          <span class="tiny muted" data-i18n="settings_saved"></span>
-          <button type="button" class="btn btn-sm btn-danger" id="resetBtn" data-i18n="reset_settings"></button>
+          <span class="tiny muted" data-i18n="settings_saved">સેટિંગ્સ આ જ ડિવાઇસ પર સેવ રહે છે.</span>
+          <button type="button" class="btn btn-sm btn-danger" id="resetBtn" data-i18n="reset_settings">સેટિંગ્સ રીસેટ કરો</button>
         </div>
       </section>
     </div>
 
     <details class="card pe-help no-print" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">કેવી રીતે વાપરવું / વિચારો</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">ફોટો ઉમેરો (કે નમૂનો અજમાવો), 2× કે 4× પસંદ કરો અને &quot;AI વડે સુધારો&quot; દબાવો. પહેલાં-પછીની સરખામણી માટે ફોટા પરની લીટી ખસેડો.</li>
+        <li data-i18n="tip2">દુકાનો અને વેચનારા: WhatsApp Business, Instagram, Meesho કે Amazon પર મૂકતાં પહેલાં નાના પ્રોડક્ટ ફોટાને મોટો અને સ્પષ્ટ કરો.</li>
+        <li data-i18n="tip3">જૂના કુટુંબના ફોટા: પ્રિન્ટનો સીધો, અજવાળામાં ફોટો લો, પછી &quot;જૂનો ફોટો&quot; પસંદ કરો અને ગમે તો સેપિયા કે બ્લૅક ઍન્ડ વ્હાઇટ.</li>
+        <li data-i18n="tip4">મોટા ફોટાને AI ની જરૂર નથી, ફક્ત &quot;ઑટો સુધારો&quot; પૂરતું છે. &quot;મૂળ માપ&quot; માં સેવ કરો તો માપ એ જ રહેશે પણ ફોટો સ્પષ્ટ થશે.</li>
+        <li data-i18n="tip5">વર્ગ પ્રવૃત્તિ: સામાન્ય ઝૂમ અને AI ના પરિણામને 100% પર સરખાવો. AI એ ફોટામાં ન હોય એવી બારીકીઓ ક્યાં બનાવી તે શોધો, અને AI નું ચિત્ર પુરાવો કેમ નથી તેની ચર્ચા કરો.</li>
       </ul>
     </details>
     <details class="card pe-help no-print">
-      <summary data-i18n="inside_title"></summary>
+      <summary data-i18n="inside_title">અંદર શું થાય છે</summary>
       <ul>
-        <li data-i18n="inside1"></li>
-        <li data-i18n="inside2"></li>
-        <li data-i18n="inside3"></li>
+        <li data-i18n="inside1">ફોટો એટલે પિક્સેલ નામનાં નાનાં રંગીન ટપકાંની જાળી. મોટો કરવા જૂના પિક્સેલની વચ્ચે નવા પિક્સેલ બનાવવા પડે. સામાન્ય રીસાઇઝ ફક્ત નજીકના રંગ ભેળવે છે, તેથી ફોટો ઝાંખો લાગે છે.</li>
+        <li data-i18n="inside2">AI મોડેલ (Swin2SR) નાના અને મોટા ફોટાની લાખો જોડીમાંથી શીખ્યું છે કે તીક્ષ્ણ કિનારી અને ભાત સામાન્ય રીતે કેવી દેખાય. તે 8 × 8 પિક્સેલની નાની બારીઓ જુએ છે અને સૌથી શક્ય બારીકીઓ દોરે છે.</li>
+        <li data-i18n="inside3">ઓછી મેમરી વપરાય તે માટે ફોટાને એકબીજા પર થોડા ચડતા નાના ટુકડામાં કાપવામાં આવે છે. દરેક ટુકડો મોટો થાય છે અને સાંધા હળવેથી ભેળવાય છે, જેથી કોઈ સાંધો દેખાય નહીં.</li>
         <li id="inside4"></li>
-        <li data-i18n="inside5"></li>
+        <li data-i18n="inside5">સરળ સુધારા AI નહીં, સાદું ગણિત વાપરે છે: અંધારા અને ચમકતા ભાગ ફેલાવે છે, રંગોનું સંતુલન કરે છે, દાણા ઘટાડે છે અને કિનારી શાર્પ કરે છે.</li>
       </ul>
     </details>
   </main>

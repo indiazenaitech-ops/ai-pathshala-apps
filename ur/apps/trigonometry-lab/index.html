@@ -184,13 +184,13 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">یونٹ دائرے پر نقطہ کھینچیں، معیاری زاویوں کی درست قیمتوں کا جدول سیکھیں، اونچائی اور فاصلے کے سوال مرحلہ وار حل کریں اور معیاری قیمتوں کی مشق کریں۔ جماعت 9–12، آف لائن چلتا ہے۔</p>
 
     <div class="tabs" role="tablist" id="tabs">
-      <button type="button" role="tab" id="tab-circle" data-panel="panel-circle" aria-controls="panel-circle" aria-selected="true">⭕ <span data-i18n="tab_circle"></span></button>
-      <button type="button" role="tab" id="tab-table" data-panel="panel-table" aria-controls="panel-table" aria-selected="false">📋 <span data-i18n="tab_table"></span></button>
-      <button type="button" role="tab" id="tab-hd" data-panel="panel-hd" aria-controls="panel-hd" aria-selected="false">🗼 <span data-i18n="tab_hd"></span></button>
-      <button type="button" role="tab" id="tab-practice" data-panel="panel-practice" aria-controls="panel-practice" aria-selected="false">🧠 <span data-i18n="tab_practice"></span></button>
+      <button type="button" role="tab" id="tab-circle" data-panel="panel-circle" aria-controls="panel-circle" aria-selected="true">⭕ <span data-i18n="tab_circle">یونٹ دائرہ</span></button>
+      <button type="button" role="tab" id="tab-table" data-panel="panel-table" aria-controls="panel-table" aria-selected="false">📋 <span data-i18n="tab_table">جدول اور کیلکولیٹر</span></button>
+      <button type="button" role="tab" id="tab-hd" data-panel="panel-hd" aria-controls="panel-hd" aria-selected="false">🗼 <span data-i18n="tab_hd">اونچائی اور فاصلہ</span></button>
+      <button type="button" role="tab" id="tab-practice" data-panel="panel-practice" aria-controls="panel-practice" aria-selected="false">🧠 <span data-i18n="tab_practice">مشق</span></button>
     </div>
 
     <!-- ===================== UNIT CIRCLE ===================== -->
@@ -198,13 +198,13 @@
       <div class="uc-top" id="uc-top">
         <div class="card uc-stagecard">
           <div class="stage uc-stage"><canvas id="cv" dir="ltr" role="img" tabindex="0" data-i18n-aria-label="cv_aria"></canvas></div>
-          <p class="muted small uc-hint" data-i18n="uc_hint"></p>
+          <p class="muted small uc-hint" data-i18n="uc_hint">نارنجی نقطہ کھینچیں، یا تیر والی کلیدیں استعمال کریں (Shift = 15° کے قدم)۔</p>
         </div>
 
         <div class="card stack uc-ctrl">
-          <h2 data-i18n="uc_title"></h2>
+          <h2 data-i18n="uc_title">زاویہ θ</h2>
           <div class="uc-angle">
-            <label for="uc-deg" class="lbl" data-i18n="angle_label"></label>
+            <label for="uc-deg" class="lbl" data-i18n="angle_label">زاویہ ڈگری میں</label>
             <div class="row nowrap">
               <input id="uc-deg" type="number" step="any" inputmode="decimal" class="no-i18n ltr fx" autocomplete="off">
               <span class="unit" aria-hidden="true">°</span>
@@ -213,40 +213,40 @@
           </div>
           <div class="uc-nav">
             <button type="button" class="btn" id="uc-prev" data-i18n-aria-label="prev_std" data-i18n-title="prev_std"><span aria-hidden="true">◀</span></button>
-            <button type="button" class="btn" id="uc-snap" aria-pressed="true">🧲 <span data-i18n="snap"></span></button>
+            <button type="button" class="btn" id="uc-snap" aria-pressed="true">🧲 <span data-i18n="snap">معیاری زاویوں پر رکیں</span></button>
             <button type="button" class="btn" id="uc-next" data-i18n-aria-label="next_std" data-i18n-title="next_std"><span aria-hidden="true">▶</span></button>
           </div>
-          <label class="check"><input type="checkbox" id="uc-tan" checked> <span data-i18n="show_tan"></span></label>
-          <label class="check"><input type="checkbox" id="uc-labels" checked> <span data-i18n="show_values"></span></label>
+          <label class="check"><input type="checkbox" id="uc-tan" checked> <span data-i18n="show_tan">مماس لکیر دکھائیں (tan θ)</span></label>
+          <label class="check"><input type="checkbox" id="uc-labels" checked> <span data-i18n="show_values">تصویر پر قیمتیں دکھائیں</span></label>
           <div class="row">
-            <button type="button" class="btn" id="uc-fs">⛶ <span data-i18n="fullscreen"></span></button>
+            <button type="button" class="btn" id="uc-fs">⛶ <span data-i18n="fullscreen">پروجیکٹر (پوری اسکرین)</span></button>
           </div>
           <p class="callout warning small mb0" id="uc-reduced" hidden></p>
           <ul class="legend">
-            <li><span class="sw rad" aria-hidden="true"></span><span data-i18n="leg_rad"></span></li>
-            <li><span class="sw sin" aria-hidden="true"></span><span data-i18n="leg_sin"></span></li>
-            <li><span class="sw cos" aria-hidden="true"></span><span data-i18n="leg_cos"></span></li>
-            <li><span class="sw tan" aria-hidden="true"></span><span data-i18n="leg_tan"></span></li>
+            <li><span class="sw rad" aria-hidden="true"></span><span data-i18n="leg_rad">رداس OP = 1 (وتر)</span></li>
+            <li><span class="sw sin" aria-hidden="true"></span><span data-i18n="leg_sin">sin θ = P کی اونچائی (y)</span></li>
+            <li><span class="sw cos" aria-hidden="true"></span><span data-i18n="leg_cos">cos θ = x کی سمت میں فاصلہ</span></li>
+            <li><span class="sw tan" aria-hidden="true"></span><span data-i18n="leg_tan">tan θ = (1, 0) پر مماس لکیر پر لمبائی</span></li>
           </ul>
         </div>
 
         <div class="card stack uc-readout" id="uc-readout" aria-live="polite">
-          <h2 data-i18n="readout_title"></h2>
+          <h2 data-i18n="readout_title">قیمتیں</h2>
           <div class="uc-theta no-i18n ltr fx" id="uc-theta"></div>
           <dl class="uc-facts">
-            <div><dt data-i18n="quadrant"></dt><dd id="uc-quad"></dd></div>
-            <div><dt data-i18n="ref_angle"></dt><dd id="uc-ref" class="ltr fx"></dd></div>
+            <div><dt data-i18n="quadrant">ربع</dt><dd id="uc-quad"></dd></div>
+            <div><dt data-i18n="ref_angle">حوالہ زاویہ</dt><dd id="uc-ref" class="ltr fx"></dd></div>
           </dl>
           <div>
-            <span class="lbl" data-i18n="astc_title"></span>
+            <span class="lbl" data-i18n="astc_title">علامت کا اصول: All – Sin – Tan – Cos</span>
             <div class="astc" id="uc-astc">
-              <span data-q="1" data-i18n="astc_1"></span><span data-q="2" data-i18n="astc_2"></span>
-              <span data-q="3" data-i18n="astc_3"></span><span data-q="4" data-i18n="astc_4"></span>
+              <span data-q="1" data-i18n="astc_1">I: سب مثبت</span><span data-q="2" data-i18n="astc_2">II: صرف Sin (اور cosec) +</span>
+              <span data-q="3" data-i18n="astc_3">III: صرف Tan (اور cot) +</span><span data-q="4" data-i18n="astc_4">IV: صرف Cos (اور sec) +</span>
             </div>
           </div>
           <div class="scroll-x">
             <table class="table six" id="uc-six">
-              <thead><tr><th data-i18n="col_ratio"></th><th data-i18n="col_exact"></th><th data-i18n="col_decimal"></th><th data-i18n="col_sign"></th></tr></thead>
+              <thead><tr><th data-i18n="col_ratio">نسبت</th><th data-i18n="col_exact">درست</th><th data-i18n="col_decimal">اعشاریہ</th><th data-i18n="col_sign">علامت</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
@@ -254,12 +254,12 @@
       </div>
 
       <details class="card" id="inside" style="margin-top:16px">
-        <summary><strong data-i18n="inside_title"></strong></summary>
+        <summary><strong data-i18n="inside_title">اندر کیا ہو رہا ہے</strong></summary>
         <ol class="stack" style="padding-inline-start:20px;margin-top:12px">
-          <li data-i18n="inside_1"></li>
-          <li data-i18n="inside_2"></li>
-          <li data-i18n="inside_3"></li>
-          <li data-i18n="inside_4"></li>
+          <li data-i18n="inside_1">P رداس 1 والے دائرے پر ایک نقطہ ہے۔ اس کا x-محدد cos θ اور y-محدد sin θ ہے: وتر 1 والی قائمہ زاویہ مثلث۔</li>
+          <li data-i18n="inside_2">tan θ = sin θ / cos θ۔ رداس کو (1, 0) پر کھڑی لکیر تک بڑھائیں: جو ٹکڑا کٹتا ہے اس کی لمبائی tan θ ہے۔ 90° اور 270° پر cos θ = 0، اس لیے tan θ غیر متعین ہے۔</li>
+          <li data-i18n="inside_3">cosec، sec اور cot بس 1 ÷ sin، 1 ÷ cos اور 1 ÷ tan ہیں۔</li>
+          <li data-i18n="inside_4">حوالہ زاویہ OP اور x-محور کے درمیان حادہ زاویہ ہے۔ θ کی نسبتوں کا سائز حوالہ زاویے جتنا ہی ہوتا ہے؛ ربع کے مطابق صرف علامت بدلتی ہے (All-Sin-Tan-Cos)۔</li>
         </ol>
       </details>
     </section>
@@ -269,62 +269,62 @@
       <div class="tbl-grid">
         <div class="stack">
           <div class="card stack">
-            <h2 data-i18n="table_title"></h2>
+            <h2 data-i18n="table_title">معیاری زاویوں کی درست قیمتیں</h2>
             <div class="scroll-x"><table class="table std-table no-i18n" id="std-table"></table></div>
-            <p class="small muted mb0" data-i18n="table_note"></p>
+            <p class="small muted mb0" data-i18n="table_note">وہ زاویہ یونٹ دائرے پر دیکھنے کے لیے کالم کے عنوان پر ٹیپ کریں۔</p>
           </div>
           <div class="card stack">
-            <h3 data-i18n="trick_title"></h3>
-            <p class="mb0" data-i18n="trick_text"></p>
+            <h3 data-i18n="trick_title">یاد رکھنے کی ترکیب: √0/2 سے √4/2</h3>
+            <p class="mb0" data-i18n="trick_text">sin کے لیے 0°، 30°، 45°، 60°، 90° کے نیچے √0/2، √1/2، √2/2، √3/2، √4/2 لکھیں: یہی 0، 1/2، 1/√2، √3/2، 1 ہیں۔ cos وہی قطار الٹی ہے، اور tan = sin ÷ cos۔</p>
           </div>
           <div class="card stack">
-            <h3 data-i18n="comp_title"></h3>
-            <p class="mb0" data-i18n="comp_text"></p>
+            <h3 data-i18n="comp_title">متمم زاویے</h3>
+            <p class="mb0" data-i18n="comp_text">sin (90° − θ) = cos θ، tan (90° − θ) = cot θ، sec (90° − θ) = cosec θ۔ اسی لیے sin کا کالم نیچے سے اوپر پڑھنے پر cos کا کالم بن جاتا ہے۔</p>
             <div class="comp-f no-i18n ltr fx" id="comp-list"></div>
           </div>
         </div>
         <div class="stack">
           <div class="card stack">
-            <h2 data-i18n="calc_title"></h2>
-            <label for="calc-in" class="lbl" data-i18n="calc_label"></label>
+            <h2 data-i18n="calc_title">نسبت کیلکولیٹر</h2>
+            <label for="calc-in" class="lbl" data-i18n="calc_label">زاویہ</label>
             <div class="row">
               <input id="calc-in" type="text" class="no-i18n ltr fx grow" data-i18n-placeholder="calc_ph" autocomplete="off" spellcheck="false" style="min-width:9rem">
               <div class="seg" role="group" id="calc-unit" data-i18n-aria-label="calc_unit">
-                <button type="button" id="calc-deg" data-v="deg" aria-pressed="true" data-i18n="unit_deg"></button>
-                <button type="button" id="calc-rad" data-v="rad" aria-pressed="false" data-i18n="unit_rad"></button>
+                <button type="button" id="calc-deg" data-v="deg" aria-pressed="true" data-i18n="unit_deg">ڈگری</button>
+                <button type="button" id="calc-rad" data-v="rad" aria-pressed="false" data-i18n="unit_rad">ریڈین</button>
               </div>
             </div>
             <div class="chips no-i18n" id="calc-examples"></div>
             <div id="calc-out" class="stack" aria-live="polite"></div>
           </div>
           <div class="card stack">
-            <h2 data-i18n="inv_title"></h2>
+            <h2 data-i18n="inv_title">معکوس تفاعل (بنیادی قیمت)</h2>
             <div class="row">
               <div class="field">
-                <label for="inv-fn" data-i18n="inv_fn"></label>
+                <label for="inv-fn" data-i18n="inv_fn">تفاعل</label>
                 <select id="inv-fn" class="no-i18n ltr fx">
                   <option value="sin">sin⁻¹</option><option value="cos">cos⁻¹</option><option value="tan">tan⁻¹</option>
                   <option value="cosec">cosec⁻¹</option><option value="sec">sec⁻¹</option><option value="cot">cot⁻¹</option>
                 </select>
               </div>
               <div class="field grow">
-                <label for="inv-val" data-i18n="inv_val"></label>
+                <label for="inv-val" data-i18n="inv_val">قیمت</label>
                 <input id="inv-val" type="text" class="no-i18n ltr fx" data-i18n-placeholder="inv_ph" autocomplete="off" spellcheck="false">
               </div>
             </div>
             <div class="chips no-i18n" id="inv-examples"></div>
             <div id="inv-out" aria-live="polite"></div>
-            <p class="small muted mb0" data-i18n="inv_note"></p>
+            <p class="small muted mb0" data-i18n="inv_note">بنیادی قیمتیں: sin⁻¹، tan⁻¹، cosec⁻¹ دیتے ہیں −90° سے 90°؛ cos⁻¹، sec⁻¹ دیتے ہیں 0° سے 180°؛ cot⁻¹ دیتا ہے 0° سے 180° (NCERT جماعت 12)۔</p>
           </div>
           <div class="card stack">
-            <h2 data-i18n="conv_title"></h2>
+            <h2 data-i18n="conv_title">ڈگری ↔ ریڈین</h2>
             <div class="conv-row">
-              <div class="field"><label for="conv-deg" data-i18n="conv_deg"></label><input id="conv-deg" type="number" step="any" inputmode="decimal" class="no-i18n ltr fx" autocomplete="off"></div>
+              <div class="field"><label for="conv-deg" data-i18n="conv_deg">ڈگری</label><input id="conv-deg" type="number" step="any" inputmode="decimal" class="no-i18n ltr fx" autocomplete="off"></div>
               <span class="conv-arrow" aria-hidden="true">⇄</span>
-              <div class="field"><label for="conv-rad" data-i18n="conv_rad"></label><input id="conv-rad" type="text" inputmode="decimal" class="no-i18n ltr fx" data-i18n-placeholder="conv_rad_ph" autocomplete="off" spellcheck="false"></div>
+              <div class="field"><label for="conv-rad" data-i18n="conv_rad">ریڈین</label><input id="conv-rad" type="text" inputmode="decimal" class="no-i18n ltr fx" data-i18n-placeholder="conv_rad_ph" autocomplete="off" spellcheck="false"></div>
             </div>
             <p class="conv-note no-i18n ltr fx mb0" id="conv-note" aria-live="polite"></p>
-            <p class="small muted mb0" data-i18n="conv_formula"></p>
+            <p class="small muted mb0" data-i18n="conv_formula">π ریڈین = 180°، اس لیے 1 ریڈین ≈ 57.3° اور 1° = π/180 ریڈین۔</p>
           </div>
         </div>
       </div>
@@ -334,19 +334,19 @@
     <section id="panel-hd" role="tabpanel" aria-labelledby="tab-hd" hidden>
       <div class="hd-grid">
         <div class="card stack hd-form">
-          <h2 data-i18n="hd_title"></h2>
+          <h2 data-i18n="hd_title">اونچائی اور فاصلہ</h2>
           <div class="field">
-            <label for="hd-case" data-i18n="hd_case"></label>
+            <label for="hd-case" data-i18n="hd_case">سوال کی قسم</label>
             <select id="hd-case">
-              <option value="a" data-i18n="case_a"></option>
-              <option value="b" data-i18n="case_b"></option>
-              <option value="c" data-i18n="case_c"></option>
-              <option value="d" data-i18n="case_d"></option>
-              <option value="e" data-i18n="case_e"></option>
+              <option value="a" data-i18n="case_a">(a) معلوم فاصلے سے زاویۂ ارتفاع → اونچائی</option>
+              <option value="b" data-i18n="case_b">(b) معلوم اونچائی سے زاویۂ انحطاط → فاصلہ</option>
+              <option value="c" data-i18n="case_c">(c) دو نقطوں سے دو زاویۂ ارتفاع → اونچائی</option>
+              <option value="d" data-i18n="case_d">(d) مینار پر جھنڈے کا ڈنڈا (دو زاویے)</option>
+              <option value="e" data-i18n="case_e">(e) دیوار سے لگی سیڑھی</option>
             </select>
           </div>
           <div class="hd-inputs" id="hd-inputs"></div>
-          <p class="small muted mb0" data-i18n="hd_exact_note"></p>
+          <p class="small muted mb0" data-i18n="hd_exact_note">معیاری زاویہ (30°، 45°، 60°) ہونے پر جواب جذر کے ساتھ درست شکل میں بھی دکھتا ہے، جیسے NCERT میں لکھا جاتا ہے۔</p>
         </div>
         <div class="stack hd-out">
           <div class="card"><svg id="hd-svg" class="hd-svg" viewBox="0 0 420 250" role="img" data-i18n-aria-label="hd_svg_aria"></svg></div>
@@ -354,8 +354,8 @@
         </div>
       </div>
       <section class="card stack" id="problems" style="margin-top:16px">
-        <h2 data-i18n="problems_title"></h2>
-        <p class="muted small" data-i18n="problems_hint"></p>
+        <h2 data-i18n="problems_title">لفظی سوالات (NCERT انداز)</h2>
+        <p class="muted small" data-i18n="problems_hint">پہلے ہر سوال کاغذ پر کریں، پھر جواب کھولیں یا مراحل دیکھنے کے لیے حل کنندہ میں لوڈ کریں۔</p>
         <div class="grid" id="problem-list"></div>
       </section>
     </section>
@@ -365,19 +365,19 @@
       <div class="pr-grid">
         <div class="card stack" id="iq"></div>
         <div class="card stack">
-          <h2 data-i18n="dr_title"></h2>
-          <p class="muted mb0" data-i18n="dr_intro"></p>
+          <h2 data-i18n="dr_title">وقت والی مشق: معیاری قیمتیں</h2>
+          <p class="muted mb0" data-i18n="dr_intro">معیاری زاویوں کے sin، cos، tan، cosec، sec اور cot پر 10 تیز سوالات۔ جلدی جواب دیں، گھڑی چل رہی ہے!</p>
           <div class="row">
-            <span class="lbl" id="lbl-level" data-i18n="dr_level"></span>
+            <span class="lbl" id="lbl-level" data-i18n="dr_level">درجہ</span>
             <div class="seg" role="group" aria-labelledby="lbl-level" id="dr-level">
-              <button type="button" id="dr-l1" data-v="1" data-i18n="dr_lvl1"></button>
-              <button type="button" id="dr-l2" data-v="2" data-i18n="dr_lvl2"></button>
+              <button type="button" id="dr-l1" data-v="1" data-i18n="dr_lvl1">0°–90° (جماعت 10)</button>
+              <button type="button" id="dr-l2" data-v="2" data-i18n="dr_lvl2">0°–360° (جماعت 11)</button>
             </div>
           </div>
           <div id="dr-box" class="stack"></div>
           <p class="muted small mb0" id="dr-best"></p>
           <div class="row no-print">
-            <button type="button" class="btn" id="ws-print">🖨 <span data-i18n="ws_print"></span></button>
+            <button type="button" class="btn" id="ws-print">🖨 <span data-i18n="ws_print">ورک شیٹ پرنٹ کریں (12 سوالات + جوابی کلید)</span></button>
           </div>
         </div>
       </div>
@@ -386,22 +386,22 @@
     <div id="worksheet" aria-hidden="true"></div>
 
     <details class="card" id="howto" style="margin-top:16px">
-      <summary><strong data-i18n="howto_title"></strong></summary>
+      <summary><strong data-i18n="howto_title">استعمال کا طریقہ / کلاس کے لیے خیالات</strong></summary>
       <ol class="stack" style="padding-inline-start:20px;margin-top:12px">
-        <li data-i18n="how1"></li><li data-i18n="how2"></li><li data-i18n="how3"></li>
-        <li data-i18n="how4"></li><li data-i18n="how5"></li><li data-i18n="how6"></li>
+        <li data-i18n="how1">یونٹ دائرہ: نقطے کو آہستہ آہستہ 0° سے 360° تک کھینچیں اور دیکھیں sin θ کیسے 0 → 1 → 0 → −1 → 0 جاتا ہے۔ معیاری زاویوں پر ٹھیک رکنے کے لیے اسنیپ آن کریں۔</li><li data-i18n="how2">پروجیکٹر: پوری اسکرین کریں اور دکھانے سے پہلے کلاس سے ربع اور ہر نسبت کی علامت بلوائیں۔</li><li data-i18n="how3">جدول: جدول ڈھانپ کر √0/2 … √4/2 کی ترکیب سنائیں، پھر جانچیں۔ عنوان پر ٹیپ کر کے وہ زاویہ بنا ہوا دیکھیں۔</li>
+        <li data-i18n="how4">کیلکولیٹر: 150، 210 یا -45 لکھیں اور دیکھیں کہ حوالہ زاویہ قیمت دیتا ہے اور ربع علامت۔ ریڈین کے لیے pi/6 یا 2pi/3 آزمائیں۔</li><li data-i18n="how5">اونچائی اور فاصلہ: کوئی لفظی سوال لوڈ کریں، ایک عدد بدلیں اور دیکھنے سے پہلے جواب کا اندازہ لگائیں۔ مراحل ویسے ہی اتاریں جیسے امتحان میں لکھے جاتے ہیں۔</li><li data-i18n="how6">کلاس سرگرمی: زاویہ پیما اور اسٹرا سے اپنے اسکول کی عمارت کا زاویۂ ارتفاع ناپیں، قدموں سے فاصلہ گنیں، اور حل کنندہ سے اونچائی نکلوائیں۔</li>
       </ol>
     </details>
     <details class="card" id="words" style="margin-top:16px">
-      <summary><strong data-i18n="words_title"></strong></summary>
+      <summary><strong data-i18n="words_title">جاننے کے الفاظ</strong></summary>
       <dl class="stack" style="margin:12px 0 0">
-        <div><dt data-i18n="w1_t"></dt><dd data-i18n="w1_d"></dd></div>
-        <div><dt data-i18n="w2_t"></dt><dd data-i18n="w2_d"></dd></div>
-        <div><dt data-i18n="w3_t"></dt><dd data-i18n="w3_d"></dd></div>
-        <div><dt data-i18n="w4_t"></dt><dd data-i18n="w4_d"></dd></div>
-        <div><dt data-i18n="w5_t"></dt><dd data-i18n="w5_d"></dd></div>
-        <div><dt data-i18n="w6_t"></dt><dd data-i18n="w6_d"></dd></div>
-        <div><dt data-i18n="w7_t"></dt><dd data-i18n="w7_d"></dd></div>
+        <div><dt data-i18n="w1_t">یونٹ دائرہ</dt><dd data-i18n="w1_d">رداس 1 کا دائرہ جس کا مرکز مبدا پر ہے۔ اس پر ہر نقطہ (cos θ, sin θ) ہے۔</dd></div>
+        <div><dt data-i18n="w2_t">ریڈین</dt><dd data-i18n="w2_d">رداس جتنی لمبی قوس سے مرکز پر بننے والا زاویہ۔ π ریڈین = 180°۔</dd></div>
+        <div><dt data-i18n="w3_t">حوالہ زاویہ</dt><dd data-i18n="w3_d">رداس اور x-محور کے درمیان حادہ زاویہ؛ یہ نسبتوں کا سائز دیتا ہے، ربع علامت دیتا ہے۔</dd></div>
+        <div><dt data-i18n="w4_t">زاویۂ ارتفاع</dt><dd data-i18n="w4_d">کسی چیز کو اوپر دیکھتے وقت افقی سے اوپر بننے والا زاویہ۔</dd></div>
+        <div><dt data-i18n="w5_t">زاویۂ انحطاط</dt><dd data-i18n="w5_d">کسی چیز کو نیچے دیکھتے وقت افقی سے نیچے بننے والا زاویہ۔</dd></div>
+        <div><dt data-i18n="w6_t">متماثلہ</dt><dd data-i18n="w6_d">ایسی مساوات جو ہر زاویے کے لیے درست ہو، جیسے sin²θ + cos²θ = 1۔</dd></div>
+        <div><dt data-i18n="w7_t">بنیادی قیمت</dt><dd data-i18n="w7_d">معکوس تفاعل کا ایک طے شدہ جواب، جیسے sin⁻¹(1/2) = 30°، نہ کہ 150°۔</dd></div>
       </dl>
     </details>
     <div class="row no-print" style="margin-top:16px">

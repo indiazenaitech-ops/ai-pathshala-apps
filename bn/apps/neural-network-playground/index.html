@@ -192,14 +192,14 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">দেখুন, একটি ছোট্ট নিউরাল নেটওয়ার্ক কীভাবে কমলা আর নীল বিন্দু আলাদা করতে শেখে। এর লেয়ার, নিউরন আর সেটিং বদলে বুঝুন মেশিন কীভাবে উদাহরণ থেকে শেখে।</p>
 
     <div class="print-only ws-head">
       <h1 id="ws-title"></h1>
       <div class="ws-fields">
-        <span><span data-i18n="ws_name"></span>:</span>
-        <span><span data-i18n="ws_class"></span>:</span>
-        <span><span data-i18n="ws_date"></span>:</span>
+        <span><span data-i18n="ws_name">নাম</span>:</span>
+        <span><span data-i18n="ws_class">শ্রেণি</span>:</span>
+        <span><span data-i18n="ws_date">তারিখ</span>:</span>
       </div>
     </div>
 
@@ -208,19 +208,19 @@
       <div class="card nnp-tool">
         <div class="tool-row">
           <button class="btn btn-primary btn-lg" id="play" type="button" aria-pressed="false"><span id="play-ico" aria-hidden="true">▶</span> <span id="play-lbl"></span></button>
-          <button class="btn btn-lg" id="step" type="button" data-i18n-title="step_title"><span aria-hidden="true">⏭</span> <span data-i18n="step"></span></button>
+          <button class="btn btn-lg" id="step" type="button" data-i18n-title="step_title"><span aria-hidden="true">⏭</span> <span data-i18n="step">এক ধাপ</span></button>
           <button class="btn btn-lg" id="reset" type="button" data-i18n-title="reset_title"><span aria-hidden="true">↺</span> <span data-i18n="reset"></span></button>
           <div class="epoch-box">
-            <span class="lbl" data-i18n="epoch"></span>
+            <span class="lbl" data-i18n="epoch">এপক</span>
             <span class="num" id="epoch" data-value="0">0</span>
           </div>
           <div class="grow"></div>
           <div class="speed-wrap">
-            <span class="lbl" id="speed-lbl" data-i18n="speed"></span>
+            <span class="lbl" id="speed-lbl" data-i18n="speed">গতি</span>
             <div class="seg" role="group" aria-labelledby="speed-lbl" id="speed">
-              <button type="button" data-speed="slow" data-i18n="speed_slow"></button>
-              <button type="button" data-speed="normal" data-i18n="speed_normal"></button>
-              <button type="button" data-speed="fast" data-i18n="speed_fast"></button>
+              <button type="button" data-speed="slow" data-i18n="speed_slow">ধীর</button>
+              <button type="button" data-speed="normal" data-i18n="speed_normal">সাধারণ</button>
+              <button type="button" data-speed="fast" data-i18n="speed_fast">দ্রুত</button>
             </div>
           </div>
           <button class="btn btn-ghost" id="fs" type="button" data-i18n-aria-label="fullscreen"><span aria-hidden="true">⛶</span> <span class="fs-lbl" data-i18n="fullscreen"></span></button>
@@ -231,52 +231,52 @@
       <div class="nnp-col nnp-col-a">
         <!-- data -->
         <div class="card nnp-data stack">
-          <h2 data-i18n="data"></h2>
+          <h2 data-i18n="data">ডেটা</h2>
           <div class="ds-grid" id="ds-grid" role="group" data-i18n-aria-label="dataset"></div>
           <div id="draw-box" class="panel stack" hidden>
-            <p class="hint mt0" data-i18n="draw_hint"></p>
+            <p class="hint mt0" data-i18n="draw_hint">একটি রং বাছুন, তারপর ছবিতে ট্যাপ করুন বা আঙুল টেনে বিন্দু যোগ করুন। আপনার সব বিন্দু ট্রেনিংয়ে ব্যবহার হয়।</p>
             <div class="draw-tools">
               <div class="seg" role="group" id="tools" data-i18n-aria-label="ds_draw">
-                <button type="button" data-tool="orange" id="tool-orange"><span class="swatch sw-orange" aria-hidden="true"></span> <span data-i18n="tool_orange"></span></button>
-                <button type="button" data-tool="blue" id="tool-blue"><span class="swatch sw-blue" aria-hidden="true"></span> <span data-i18n="tool_blue"></span></button>
-                <button type="button" data-tool="erase" id="tool-erase"><span aria-hidden="true">⌫</span> <span data-i18n="tool_erase"></span></button>
+                <button type="button" data-tool="orange" id="tool-orange"><span class="swatch sw-orange" aria-hidden="true"></span> <span data-i18n="tool_orange">কমলা</span></button>
+                <button type="button" data-tool="blue" id="tool-blue"><span class="swatch sw-blue" aria-hidden="true"></span> <span data-i18n="tool_blue">নীল</span></button>
+                <button type="button" data-tool="erase" id="tool-erase"><span aria-hidden="true">⌫</span> <span data-i18n="tool_erase">ইরেজার</span></button>
               </div>
             </div>
             <div class="row spread">
               <span class="badge" id="point-count" data-value="0"></span>
-              <button class="btn btn-sm btn-danger" type="button" id="clear-points" data-i18n="clear_points"></button>
+              <button class="btn btn-sm btn-danger" type="button" id="clear-points" data-i18n="clear_points">বিন্দু মুছুন</button>
             </div>
           </div>
           <div id="gen-box" class="stack">
             <div class="field slider-field">
               <label for="noise" id="noise-lbl"></label>
               <input type="range" id="noise" min="0" max="50" step="5">
-              <p class="hint" data-i18n="noise_hint"></p>
+              <p class="hint" data-i18n="noise_hint">বেশি নয়েজ মানে বেশি এলোমেলো, মিশে যাওয়া বিন্দু।</p>
             </div>
             <div class="field slider-field">
               <label for="split" id="split-lbl"></label>
               <input type="range" id="split" min="10" max="90" step="10">
               <p class="hint" id="split-hint"></p>
             </div>
-            <button class="btn btn-sm" type="button" id="new-data"><span aria-hidden="true">🎲</span> <span data-i18n="new_data"></span></button>
+            <button class="btn btn-sm" type="button" id="new-data"><span aria-hidden="true">🎲</span> <span data-i18n="new_data">নতুন ডেটা</span></button>
           </div>
           <div class="checks">
-            <label class="check" id="show-test-lbl"><input type="checkbox" id="show-test"> <span data-i18n="show_test"></span></label>
-            <label class="check"><input type="checkbox" id="sharp"> <span data-i18n="sharp"></span></label>
+            <label class="check" id="show-test-lbl"><input type="checkbox" id="show-test"> <span data-i18n="show_test">টেস্ট বিন্দু দেখান</span></label>
+            <label class="check"><input type="checkbox" id="sharp"> <span data-i18n="sharp">স্পষ্ট সীমারেখা</span></label>
           </div>
         </div>
 
         <!-- network settings -->
         <div class="card nnp-model stack">
-          <h2 data-i18n="network"></h2>
+          <h2 data-i18n="network">নেটওয়ার্ক</h2>
           <div class="field">
-            <span class="lbl-strong"><strong data-i18n="inputs"></strong></span>
+            <span class="lbl-strong"><strong data-i18n="inputs">ইনপুট (ফিচার)</strong></span>
             <div class="feat-chips no-i18n" id="feats" role="group" data-i18n-aria-label="inputs"></div>
-            <p class="hint" data-i18n="inputs_hint"></p>
+            <p class="hint" data-i18n="inputs_hint">বাড়তি ইনপুট নেটওয়ার্ককে বাড়তি সূত্র দেয়।</p>
           </div>
           <div>
             <div class="row spread">
-              <strong id="layers-lbl" data-i18n="hidden_layers"></strong>
+              <strong id="layers-lbl" data-i18n="hidden_layers">হিডেন লেয়ার</strong>
               <div class="stepper">
                 <button class="btn" type="button" id="layers-minus" data-i18n-aria-label="remove_layer">−</button>
                 <output id="layers-count" aria-live="polite" aria-labelledby="layers-lbl">0</output>
@@ -287,22 +287,22 @@
           </div>
           <div class="two">
             <div class="field">
-              <label for="act" data-i18n="activation"></label>
+              <label for="act" data-i18n="activation">অ্যাক্টিভেশন</label>
               <select id="act">
-                <option value="relu" data-i18n="act_relu"></option>
-                <option value="tanh" data-i18n="act_tanh"></option>
-                <option value="sigmoid" data-i18n="act_sigmoid"></option>
-                <option value="linear" data-i18n="act_linear"></option>
+                <option value="relu" data-i18n="act_relu">ReLU</option>
+                <option value="tanh" data-i18n="act_tanh">tanh</option>
+                <option value="sigmoid" data-i18n="act_sigmoid">সিগময়েড</option>
+                <option value="linear" data-i18n="act_linear">লিনিয়ার (কিছু নয়)</option>
               </select>
             </div>
             <div class="field">
-              <label for="lr" data-i18n="lr"></label>
+              <label for="lr" data-i18n="lr">লার্নিং রেট</label>
               <select id="lr" class="no-i18n"></select>
             </div>
           </div>
           <div class="row">
-            <button class="btn btn-sm" type="button" id="share"><span aria-hidden="true">🔗</span> <span data-i18n="share_setup"></span></button>
-            <button class="btn btn-sm btn-danger" type="button" id="defaults"><span aria-hidden="true">⟲</span> <span data-i18n="defaults"></span></button>
+            <button class="btn btn-sm" type="button" id="share"><span aria-hidden="true">🔗</span> <span data-i18n="share_setup">এই সেটআপ শেয়ার করুন</span></button>
+            <button class="btn btn-sm btn-danger" type="button" id="defaults"><span aria-hidden="true">⟲</span> <span data-i18n="defaults">শুরুর সেটিং ফিরিয়ে আনুন</span></button>
           </div>
         </div>
 
@@ -310,13 +310,13 @@
       <div class="nnp-col nnp-col-b">
         <!-- network diagram -->
         <div class="card nnp-net">
-          <h2 data-i18n="inside"></h2>
-          <p class="hint mt0" data-i18n="inside_hint"></p>
+          <h2 data-i18n="inside">নেটওয়ার্কের ভেতরে</h2>
+          <p class="hint mt0" data-i18n="inside_hint">প্রতিটি ঘর দেখায় একটি নিউরন পুরো ছবিতে কী &quot;দেখে&quot;। বড় করে দেখতে কোনো ঘরে ট্যাপ করুন।</p>
           <div class="net-wrap" id="net-wrap" dir="ltr"></div>
           <div class="legend" style="margin-top:8px">
-            <span class="it"><span class="line-sw" style="border-color: var(--c7)"></span><span data-i18n="w_pos"></span></span>
-            <span class="it"><span class="line-sw" style="border-color: var(--c2)"></span><span data-i18n="w_neg"></span></span>
-            <span class="it" data-i18n="w_thick"></span>
+            <span class="it"><span class="line-sw" style="border-color: var(--c7)"></span><span data-i18n="w_pos">পজিটিভ ওয়েট</span></span>
+            <span class="it"><span class="line-sw" style="border-color: var(--c2)"></span><span data-i18n="w_neg">নেগেটিভ ওয়েট</span></span>
+            <span class="it" data-i18n="w_thick">মোটা লাইন = বেশি শক্তিশালী ওয়েট</span>
           </div>
           <div class="inspector" aria-live="off">
             <div class="ins-name" id="ins-name"></div>
@@ -328,37 +328,37 @@
         <!-- loss chart -->
         <div class="card nnp-chart">
           <div class="chart-head">
-            <h2 data-i18n="loss_chart"></h2>
+            <h2 data-i18n="loss_chart">সময়ের সাথে লস</h2>
             <div class="legend">
-              <span class="it"><span class="line-sw" style="border-color: var(--c1)"></span><span data-i18n="legend_train"></span></span>
-              <span class="it"><span class="line-sw dash" style="border-color: var(--c5)"></span><span data-i18n="legend_test"></span></span>
+              <span class="it"><span class="line-sw" style="border-color: var(--c1)"></span><span data-i18n="legend_train">ট্রেনিং</span></span>
+              <span class="it"><span class="line-sw dash" style="border-color: var(--c5)"></span><span data-i18n="legend_test">টেস্ট</span></span>
             </div>
           </div>
           <canvas id="chart" role="img" data-i18n-aria-label="chart_label"></canvas>
-          <p class="hint" data-i18n="chart_hint"></p>
+          <p class="hint" data-i18n="chart_hint">যত কম, তত ভালো। ট্রেনিং লাইন নামতে থাকলেও টেস্ট লাইন যদি উঠতে থাকে, তাহলে নেটওয়ার্ক ওভারফিটিং করছে।</p>
         </div>
       </div>
       <div class="nnp-col nnp-col-c">
         <!-- output -->
         <div class="card nnp-out stack">
-          <h2 data-i18n="output"></h2>
+          <h2 data-i18n="output">আউটপুট</h2>
           <div class="out-wrap">
             <div class="preview-bar" id="preview-bar" hidden>
               <span id="preview-txt"></span>
-              <button class="btn btn-sm" type="button" id="preview-close" data-i18n="show_output"></button>
+              <button class="btn btn-sm" type="button" id="preview-close" data-i18n="show_output">আউটপুট দেখান</button>
             </div>
             <canvas id="out" width="400" height="400" role="img" data-i18n-aria-label="canvas_label"></canvas>
           </div>
           <div class="legend">
-            <span class="it"><span class="swatch sw-orange"></span><span data-i18n="tool_orange"></span></span>
-            <span class="it"><span class="swatch sw-blue"></span><span data-i18n="tool_blue"></span></span>
-            <span data-i18n="output_hint"></span>
+            <span class="it"><span class="swatch sw-orange"></span><span data-i18n="tool_orange">কমলা</span></span>
+            <span class="it"><span class="swatch sw-blue"></span><span data-i18n="tool_blue">নীল</span></span>
+            <span data-i18n="output_hint">পেছনের রং = প্রতিটি জায়গার জন্য নেটওয়ার্কের অনুমান। গাঢ় রং = বেশি নিশ্চিত।</span>
           </div>
           <div class="stats" aria-live="off">
-            <div class="stat"><span class="lbl" data-i18n="train_loss"></span><span class="val" id="train-loss" data-value="">–</span></div>
-            <div class="stat"><span class="lbl" data-i18n="test_loss"></span><span class="val" id="test-loss" data-value="">–</span></div>
-            <div class="stat"><span class="lbl" data-i18n="train_acc"></span><span class="val" id="train-acc" data-value="">–</span></div>
-            <div class="stat"><span class="lbl" data-i18n="test_acc"></span><span class="val" id="test-acc" data-value="">–</span></div>
+            <div class="stat"><span class="lbl" data-i18n="train_loss">ট্রেনিং লস</span><span class="val" id="train-loss" data-value="">–</span></div>
+            <div class="stat"><span class="lbl" data-i18n="test_loss">টেস্ট লস</span><span class="val" id="test-loss" data-value="">–</span></div>
+            <div class="stat"><span class="lbl" data-i18n="train_acc">ট্রেনিং নির্ভুলতা</span><span class="val" id="train-acc" data-value="">–</span></div>
+            <div class="stat"><span class="lbl" data-i18n="test_acc">টেস্ট নির্ভুলতা</span><span class="val" id="test-acc" data-value="">–</span></div>
           </div>
         </div>
       </div>
@@ -367,22 +367,22 @@
     <!-- challenges -->
     <section class="card section-gap" id="challenges">
       <div class="head-row">
-        <h2 data-i18n="challenges"></h2>
-        <button class="btn btn-sm no-print" type="button" id="print"><span aria-hidden="true">🖨</span> <span data-i18n="print_ws"></span></button>
+        <h2 data-i18n="challenges">চ্যালেঞ্জ</h2>
+        <button class="btn btn-sm no-print" type="button" id="print"><span aria-hidden="true">🖨</span> <span data-i18n="print_ws">ওয়ার্কশিট প্রিন্ট করুন</span></button>
       </div>
-      <p class="muted" data-i18n="challenges_intro"></p>
+      <p class="muted" data-i18n="challenges_intro">আগে অনুমান করুন, তারপর &quot;চেষ্টা করুন&quot; চেপে শেখান। আপনার অনুমান কি ঠিক হল?</p>
       <div class="ch-grid grid-3" id="ch-grid"></div>
     </section>
 
     <!-- explanations -->
     <section class="card section-gap" id="explain">
-      <h2 data-i18n="explain"></h2>
+      <h2 data-i18n="explain">ভেতরে কী হচ্ছে?</h2>
       <div class="ex-grid grid-3" id="ex-grid"></div>
     </section>
 
     <!-- help -->
     <details class="card section-gap help no-print">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">কীভাবে ব্যবহার করবেন / ক্লাসের জন্য আইডিয়া</summary>
       <ul>
         <li data-i18n-html="tip1"></li>
         <li data-i18n-html="tip2"></li>

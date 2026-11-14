@@ -186,18 +186,18 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">विद्यार्थ्यांची नावे निःपक्षपणे रँडम निवडा आणि काही सेकंदांत समान गट तयार करा — प्रश्न, पाळी आणि गटकार्यासाठी.</p>
 
     <div class="topline">
       <div class="classbox">
-        <label for="classSel" data-i18n="class_label"></label>
+        <label for="classSel" data-i18n="class_label">वर्ग</label>
         <select id="classSel" class="no-i18n"></select>
         <span class="badge primary" id="classInfo"></span>
       </div>
       <div class="tabs" role="tablist" id="tabs">
-        <button type="button" role="tab" id="tab-pick" data-tab="pick" aria-controls="panel-pick" aria-selected="true"><span aria-hidden="true">🎡</span><span data-i18n="tab_pick"></span></button>
-        <button type="button" role="tab" id="tab-groups" data-tab="groups" aria-controls="panel-groups" aria-selected="false" tabindex="-1"><span aria-hidden="true">👥</span><span data-i18n="tab_groups"></span></button>
-        <button type="button" role="tab" id="tab-list" data-tab="list" aria-controls="panel-list" aria-selected="false" tabindex="-1"><span aria-hidden="true">📋</span><span data-i18n="tab_list"></span></button>
+        <button type="button" role="tab" id="tab-pick" data-tab="pick" aria-controls="panel-pick" aria-selected="true"><span aria-hidden="true">🎡</span><span data-i18n="tab_pick">नावे निवडा</span></button>
+        <button type="button" role="tab" id="tab-groups" data-tab="groups" aria-controls="panel-groups" aria-selected="false" tabindex="-1"><span aria-hidden="true">👥</span><span data-i18n="tab_groups">गट तयार करा</span></button>
+        <button type="button" role="tab" id="tab-list" data-tab="list" aria-controls="panel-list" aria-selected="false" tabindex="-1"><span aria-hidden="true">📋</span><span data-i18n="tab_list">वर्गाची यादी</span></button>
       </div>
     </div>
 
@@ -208,7 +208,7 @@
           <div class="pick-stage">
             <div class="wheel-wrap" id="wheelWrap">
               <canvas id="wheel" width="560" height="560" role="img"></canvas>
-              <button type="button" class="hub" id="hubBtn" tabindex="-1" data-i18n="spin"></button>
+              <button type="button" class="hub" id="hubBtn" tabindex="-1" data-i18n="spin">फिरवा!</button>
             </div>
             <div class="cards one" id="cardsWrap" hidden></div>
           </div>
@@ -218,7 +218,7 @@
               <button type="button" class="btn btn-sm" id="soundBtn" aria-pressed="true">
                 <svg class="ic-on" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
                 <svg class="ic-off" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m16 9 6 6"/><path d="m22 9-6 6"/></svg>
-                <span data-i18n="sound"></span>
+                <span data-i18n="sound">आवाज</span>
               </button>
               <button type="button" class="btn btn-sm" id="fsBtn" data-i18n-title="fullscreen">
                 <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg>
@@ -228,39 +228,39 @@
 
             <div class="winner" id="winner" aria-live="polite" aria-atomic="true"></div>
 
-            <button type="button" class="btn btn-primary btn-lg spin-btn" id="spinBtn"><span aria-hidden="true" id="spinIc">🎡</span><span id="spinLbl" data-i18n="spin"></span></button>
-            <p class="muted tiny mb0 center" id="wheelTip" data-i18n="wheel_tip"></p>
+            <button type="button" class="btn btn-primary btn-lg spin-btn" id="spinBtn"><span aria-hidden="true" id="spinIc">🎡</span><span id="spinLbl" data-i18n="spin">फिरवा!</span></button>
+            <p class="muted tiny mb0 center" id="wheelTip" data-i18n="wheel_tip">टीप: फिरवण्यासाठी चक्रावर टॅप करा किंवा Space बटण दाबा.</p>
 
             <div class="remain">
               <div class="small" id="remaining" aria-live="polite"></div>
               <div class="progress" id="remainBar"><span style="width:100%"></span></div>
-              <div><button type="button" class="btn btn-sm" id="restoreBtn"><span aria-hidden="true">↺</span><span id="restoreLbl" data-i18n="restore"></span></button></div>
+              <div><button type="button" class="btn btn-sm" id="restoreBtn"><span aria-hidden="true">↺</span><span id="restoreLbl" data-i18n="restore">सर्व नावे परत आणा</span></button></div>
             </div>
 
             <div class="pick-settings">
               <div class="field">
-                <span class="lbl" id="modeLbl" data-i18n="mode_label"></span>
+                <span class="lbl" id="modeLbl" data-i18n="mode_label">निवडण्याची पद्धत</span>
                 <div class="seg" role="group" aria-labelledby="modeLbl" id="modeSeg">
-                  <button type="button" data-mode="wheel" aria-pressed="true"><span aria-hidden="true">🎡 </span><span data-i18n="mode_wheel"></span></button>
-                  <button type="button" data-mode="cards" aria-pressed="false"><span aria-hidden="true">🃏 </span><span data-i18n="mode_cards"></span></button>
+                  <button type="button" data-mode="wheel" aria-pressed="true"><span aria-hidden="true">🎡 </span><span data-i18n="mode_wheel">चक्र</span></button>
+                  <button type="button" data-mode="cards" aria-pressed="false"><span aria-hidden="true">🃏 </span><span data-i18n="mode_cards">कार्ड उलटा</span></button>
                 </div>
               </div>
               <div class="field">
-                <label for="pickN" data-i18n="how_many"></label>
+                <label for="pickN" data-i18n="how_many">एका वेळी किती</label>
                 <div class="stepper">
                   <button type="button" class="btn" data-step="-1" data-for="pickN" aria-label="−">−</button>
                   <input type="number" id="pickN" min="1" max="20" step="1" value="1" inputmode="numeric">
                   <button type="button" class="btn" data-step="1" data-for="pickN" aria-label="+">+</button>
                 </div>
               </div>
-              <label class="check"><input type="checkbox" id="noRepeat" checked> <span data-i18n="no_repeat"></span></label>
+              <label class="check"><input type="checkbox" id="noRepeat" checked> <span data-i18n="no_repeat">निवडलेली नावे काढा (पुन्हा नाही)</span></label>
             </div>
           </div>
         </div>
       </div>
 
       <div class="card">
-        <h2 class="h-sm" data-i18n="picked_so_far"></h2>
+        <h2 class="h-sm" data-i18n="picked_so_far">आतापर्यंत निवडलेले</h2>
         <div class="chips" id="history"></div>
       </div>
     </section>
@@ -270,10 +270,10 @@
       <div class="split">
         <div class="card stack" id="groupSettings">
           <div class="field">
-            <span class="lbl" id="groupByLbl" data-i18n="group_by"></span>
+            <span class="lbl" id="groupByLbl" data-i18n="group_by">गट कसे करायचे</span>
             <div class="seg" role="group" aria-labelledby="groupByLbl" id="groupBySeg">
-              <button type="button" data-by="count" aria-pressed="true" data-i18n="by_count"></button>
-              <button type="button" data-by="size" aria-pressed="false" data-i18n="by_size"></button>
+              <button type="button" data-by="count" aria-pressed="true" data-i18n="by_count">गटांची संख्या</button>
+              <button type="button" data-by="size" aria-pressed="false" data-i18n="by_size">गटाचा आकार</button>
             </div>
           </div>
           <div class="field">
@@ -283,21 +283,21 @@
               <input type="number" id="groupVal" min="2" max="60" step="1" value="4" inputmode="numeric">
               <button type="button" class="btn" data-step="1" data-for="groupVal" aria-label="+">+</button>
             </div>
-            <span class="hint" data-i18n="size_hint"></span>
+            <span class="hint" data-i18n="size_hint">गट समान होतात: कोणत्याही दोन गटांत जास्तीत जास्त एकाचाच फरक असतो.</span>
           </div>
           <div class="field">
-            <label for="groupTheme" data-i18n="group_names"></label>
+            <label for="groupTheme" data-i18n="group_names">गटांची नावे</label>
             <select id="groupTheme"></select>
           </div>
-          <button type="button" class="btn btn-primary btn-lg w100" id="makeGroups"><span aria-hidden="true">👥</span><span data-i18n="make_groups"></span></button>
+          <button type="button" class="btn btn-primary btn-lg w100" id="makeGroups"><span aria-hidden="true">👥</span><span data-i18n="make_groups">गट तयार करा</span></button>
 
           <details class="apart" id="apartBox">
-            <summary data-i18n="apart_title"></summary>
+            <summary data-i18n="apart_title">वेगळे ठेवा (ऐच्छिक)</summary>
             <div class="stack">
-              <p class="muted small mb0" data-i18n="apart_hint"></p>
-              <div class="field"><label for="apartA" data-i18n="student_a"></label><select id="apartA" class="no-i18n"></select></div>
-              <div class="field"><label for="apartB" data-i18n="student_b"></label><select id="apartB" class="no-i18n"></select></div>
-              <button type="button" class="btn" id="addPair"><span aria-hidden="true">＋</span><span data-i18n="add_pair"></span></button>
+              <p class="muted small mb0" data-i18n="apart_hint">एकाच गटात नसावेत असे दोन विद्यार्थी निवडा.</p>
+              <div class="field"><label for="apartA" data-i18n="student_a">पहिला विद्यार्थी</label><select id="apartA" class="no-i18n"></select></div>
+              <div class="field"><label for="apartB" data-i18n="student_b">दुसरा विद्यार्थी</label><select id="apartB" class="no-i18n"></select></div>
+              <button type="button" class="btn" id="addPair"><span aria-hidden="true">＋</span><span data-i18n="add_pair">जोडी जोडा</span></button>
               <ul class="pairs" id="pairs"></ul>
             </div>
           </details>
@@ -308,15 +308,15 @@
           <div class="row spread no-print">
             <strong id="groupsSummary" aria-live="polite"></strong>
             <div class="group-actions" id="groupActions">
-              <button type="button" class="btn btn-sm" id="reshuffleBtn"><span aria-hidden="true">🔀</span><span data-i18n="reshuffle"></span></button>
+              <button type="button" class="btn btn-sm" id="reshuffleBtn"><span aria-hidden="true">🔀</span><span data-i18n="reshuffle">पुन्हा मिसळा</span></button>
               <button type="button" class="btn btn-sm" id="copyGroups"><span aria-hidden="true">📋</span><span data-i18n="copy"></span></button>
               <button type="button" class="btn btn-sm" id="printGroups"><span aria-hidden="true">🖨</span><span data-i18n="print"></span></button>
-              <button type="button" class="btn btn-sm" id="csvGroups"><span aria-hidden="true">⬇</span><span data-i18n="download_csv"></span></button>
+              <button type="button" class="btn btn-sm" id="csvGroups"><span aria-hidden="true">⬇</span><span data-i18n="download_csv">CSV डाउनलोड करा</span></button>
               <button type="button" class="btn btn-sm" id="fsGroups"><span data-i18n="fullscreen"></span></button>
             </div>
           </div>
-          <div class="callout warning no-print" id="apartWarn" hidden data-i18n="apart_failed"></div>
-          <p class="muted" id="groupsEmpty" data-i18n="groups_empty"></p>
+          <div class="callout warning no-print" id="apartWarn" hidden data-i18n="apart_failed">प्रत्येक जोडी वेगळी ठेवता आली नाही. जास्त गट करा किंवा जोड्या कमी करा.</div>
+          <p class="muted" id="groupsEmpty" data-i18n="groups_empty">सेटिंग निवडा आणि &quot;गट तयार करा&quot; दाबा.</p>
           <div class="groups" id="groups"></div>
         </div>
       </div>
@@ -327,56 +327,56 @@
       <div class="grid-2">
         <div class="card stack">
           <div class="row">
-            <button type="button" class="btn" id="newClass"><span aria-hidden="true">＋</span><span data-i18n="new_class"></span></button>
-            <button type="button" class="btn btn-danger" id="delClass"><span aria-hidden="true">🗑</span><span data-i18n="delete_class"></span></button>
+            <button type="button" class="btn" id="newClass"><span aria-hidden="true">＋</span><span data-i18n="new_class">नवीन वर्ग</span></button>
+            <button type="button" class="btn btn-danger" id="delClass"><span aria-hidden="true">🗑</span><span data-i18n="delete_class">वर्ग काढून टाका</span></button>
           </div>
           <div class="field">
-            <label for="className" data-i18n="class_name"></label>
+            <label for="className" data-i18n="class_name">वर्गाचे नाव</label>
             <input type="text" id="className" maxlength="40" data-i18n-placeholder="class_name_ph" autocomplete="off">
           </div>
           <div class="field">
-            <label for="namesInput" data-i18n="names_label"></label>
+            <label for="namesInput" data-i18n="names_label">विद्यार्थ्यांची नावे (प्रत्येक ओळीत एक)</label>
             <textarea id="namesInput" rows="12" data-i18n-placeholder="names_ph" spellcheck="false"></textarea>
           </div>
           <div class="row">
-            <button type="button" class="btn btn-primary" id="saveList"><span aria-hidden="true">💾</span><span data-i18n="save_list"></span></button>
-            <button type="button" class="btn" id="importBtn"><span aria-hidden="true">📄</span><span data-i18n="import_csv"></span></button>
-            <button type="button" class="btn btn-ghost" id="sampleBtn" data-i18n="load_sample"></button>
+            <button type="button" class="btn btn-primary" id="saveList"><span aria-hidden="true">💾</span><span data-i18n="save_list">यादी सेव्ह करा</span></button>
+            <button type="button" class="btn" id="importBtn"><span aria-hidden="true">📄</span><span data-i18n="import_csv">CSV इम्पोर्ट करा</span></button>
+            <button type="button" class="btn btn-ghost" id="sampleBtn" data-i18n="load_sample">नमुना नावे वापरा</button>
           </div>
           <p class="small muted mb0" id="listStatus" aria-live="polite"></p>
           <div class="roll">
             <div class="field">
-              <label for="rollN" data-i18n="roll_label"></label>
+              <label for="rollN" data-i18n="roll_label">किंवा रोल नंबर वापरा: किती विद्यार्थी आहेत?</label>
               <div class="stepper">
                 <button type="button" class="btn" data-step="-1" data-for="rollN" aria-label="−">−</button>
                 <input type="number" id="rollN" min="1" max="500" step="1" value="40" inputmode="numeric">
                 <button type="button" class="btn" data-step="1" data-for="rollN" aria-label="+">+</button>
               </div>
             </div>
-            <button type="button" class="btn" id="rollFill" data-i18n="roll_fill"></button>
+            <button type="button" class="btn" id="rollFill" data-i18n="roll_fill">रोल नंबर भरा</button>
           </div>
-          <p class="small muted mb0" data-i18n="import_hint"></p>
+          <p class="small muted mb0" data-i18n="import_hint">Excel किंवा Google Sheets मधून वर्गाचे रजिस्टर CSV फाइल म्हणून सेव्ह करा आणि इम्पोर्ट करा. &quot;Name&quot; नावाचा कॉलम किंवा नावे असलेला पहिला कॉलम घेतला जातो.</p>
           <p class="tiny muted mb0"><span aria-hidden="true">🔒 </span><span data-i18n="saved_local"></span></p>
         </div>
 
         <div class="card stack">
-          <h2 data-i18n="attendance_title"></h2>
-          <p class="muted small" data-i18n="attendance_hint"></p>
+          <h2 data-i18n="attendance_title">आज कोण आले आहे?</h2>
+          <p class="muted small" data-i18n="attendance_hint">विद्यार्थ्याला गैरहजर करण्यासाठी त्याच्या नावावर टॅप करा. गैरहजर विद्यार्थी निवडले जात नाहीत आणि गटात येत नाहीत. हे दररोज आपोआप रीसेट होते.</p>
           <div class="chips" id="attendance"></div>
-          <div><button type="button" class="btn btn-sm" id="allPresent"><span aria-hidden="true">✓</span><span data-i18n="all_present"></span></button></div>
+          <div><button type="button" class="btn btn-sm" id="allPresent"><span aria-hidden="true">✓</span><span data-i18n="all_present">सर्वांना हजर करा</span></button></div>
         </div>
       </div>
     </section>
 
     <details class="card help no-print" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">कसे वापरायचे / वर्गासाठी कल्पना</strong></summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">&quot;वर्गाची यादी&quot; टॅब उघडा, विद्यार्थ्यांची नावे पेस्ट करा (प्रत्येक ओळीत एक) किंवा CSV फाइल इम्पोर्ट करा, मग &quot;यादी सेव्ह करा&quot; दाबा. अनेक वर्ग सेव्ह करता येतात.</li>
+        <li data-i18n="help_2">तास सुरू होताना गैरहजर विद्यार्थ्यांच्या नावांवर टॅप करा, म्हणजे ते निवडले जाणार नाहीत.</li>
+        <li data-i18n="help_3">&quot;निवडलेली नावे काढा&quot; चालू ठेवा, म्हणजे कोणाचीही दुसरी पाळी येण्याआधी प्रत्येकाची एक पाळी येईल.</li>
+        <li data-i18n="help_4">स्मार्टबोर्डवर &quot;पूर्ण स्क्रीन&quot; वापरा. पटकन नाव दाखवण्यासाठी &quot;कार्ड उलटा&quot; निवडा, किंवा जोडीकामासाठी एकाच वेळी 2–4 नावे निवडा.</li>
+        <li data-i18n="help_5">वर्गातील उपक्रम: &quot;आजचा प्रश्न&quot; यासाठी चक्र फिरवा. निवडलेला विद्यार्थी उत्तर देतो आणि मग पुढच्या प्रश्नासाठी चक्र फिरवतो.</li>
+        <li data-i18n="help_6">सर्वांना समान संधी: हे ॲप तुमच्या डिव्हाइसचे सुरक्षित रँडम नंबर वापरते, म्हणून प्रत्येक नावाला अगदी समान संधी मिळते. नावे या डिव्हाइसबाहेर जात नाहीत.</li>
       </ul>
     </details>
   </main>

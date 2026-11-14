@@ -217,13 +217,13 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">নবম–দ্বাদশ শ্রেণি ও কলেজের জন্য বিনামূল্যের সায়েন্টিফিক ক্যালকুলেটর: ত্রিকোণমিতি, log, ঘাত, মূল, nCr, ভগ্নাংশ ও হিস্ট্রি, সঙ্গে ধাপে ধাপে সমীকরণ সমাধান।</p>
 
     <div class="sc-top">
       <div class="tabs sc-tabs" role="tablist" data-i18n-aria-label="tabs_label">
-        <button type="button" role="tab" id="tab-calc" aria-controls="pane-calc" aria-selected="true" data-i18n="tab_calc"></button>
-        <button type="button" role="tab" id="tab-eq" aria-controls="pane-eq" aria-selected="false" data-i18n="tab_eq"></button>
-        <button type="button" role="tab" id="tab-stats" aria-controls="pane-stats" aria-selected="false" data-i18n="tab_stats"></button>
+        <button type="button" role="tab" id="tab-calc" aria-controls="pane-calc" aria-selected="true" data-i18n="tab_calc">ক্যালকুলেটর</button>
+        <button type="button" role="tab" id="tab-eq" aria-controls="pane-eq" aria-selected="false" data-i18n="tab_eq">সমীকরণ সমাধান</button>
+        <button type="button" role="tab" id="tab-stats" aria-controls="pane-stats" aria-selected="false" data-i18n="tab_stats">পরিসংখ্যান</button>
       </div>
       <button type="button" class="btn btn-ghost sc-fs" id="fs-btn" data-i18n-title="fs_t" data-i18n-aria-label="fs_t">
         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
@@ -246,7 +246,7 @@
                 <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" focusable="false"><rect x="8.5" y="8.5" width="11" height="11" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 5.5v-.3A1.7 1.7 0 0 0 13.8 3.5H5.2A1.7 1.7 0 0 0 3.5 5.2v8.6a1.7 1.7 0 0 0 1.7 1.7h.3" fill="none" stroke="currentColor" stroke-width="2"/></svg>
               </button>
             </div>
-            <label class="edu-sr" for="expr" data-i18n="expr_label"></label>
+            <label class="edu-sr" for="expr" data-i18n="expr_label">হিসাব লিখুন</label>
             <input id="expr" class="sc-expr no-i18n" type="text" inputmode="none" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="400" data-i18n-placeholder="expr_ph">
             <div class="sc-out sc-ltr">
               <div class="sc-preview no-i18n" id="preview" aria-hidden="true"></div>
@@ -258,11 +258,11 @@
           <div class="sc-keys sc-memk no-i18n" id="keys-mem" role="group" data-i18n-aria-label="keys_mem"></div>
           <div class="sc-keys sc-num no-i18n" id="keys-num" role="group" data-i18n-aria-label="keys_num"></div>
           <div class="sc-foot">
-            <label><span data-i18n="group_label"></span>
+            <label><span data-i18n="group_label">সংখ্যায় কমা</span>
               <select id="group-sel">
-                <option value="in" data-i18n="grp_in"></option>
-                <option value="intl" data-i18n="grp_intl"></option>
-                <option value="off" data-i18n="grp_off"></option>
+                <option value="in" data-i18n="grp_in">ভারতীয় 12,34,567</option>
+                <option value="intl" data-i18n="grp_intl">আন্তর্জাতিক 1,234,567</option>
+                <option value="off" data-i18n="grp_off">কমা ছাড়া</option>
               </select>
             </label>
             <button type="button" class="btn btn-sm btn-danger" id="reset-btn" data-i18n="reset"></button>
@@ -271,11 +271,11 @@
 
         <section class="card sc-hist" aria-labelledby="hist-h">
           <div class="sc-hhead">
-            <h2 id="hist-h" data-i18n="hist_h"></h2>
-            <button type="button" class="btn btn-sm" id="hist-clear" data-i18n="hist_clear"></button>
+            <h2 id="hist-h" data-i18n="hist_h">হিস্ট্রি</h2>
+            <button type="button" class="btn btn-sm" id="hist-clear" data-i18n="hist_clear">হিস্ট্রি মুছুন</button>
           </div>
           <div id="hist-empty">
-            <p class="sc-empty" data-i18n="hist_empty"></p>
+            <p class="sc-empty" data-i18n="hist_empty">আপনার উত্তর এখানে দেখাবে। চেষ্টা করতে এর একটি চাপুন:</p>
             <div class="sc-tries" id="tries"></div>
           </div>
           <ol class="sc-hlist" id="hist-list"></ol>
@@ -287,29 +287,29 @@
     <section id="pane-eq" role="tabpanel" aria-labelledby="tab-eq" hidden>
       <div class="sc-eq-grid">
         <section class="card sc-eq" aria-labelledby="eq-h">
-          <h2 id="eq-h" data-i18n="eq_h"></h2>
+          <h2 id="eq-h" data-i18n="eq_h">সমীকরণ সমাধান করুন</h2>
           <div class="seg" role="group" data-i18n-aria-label="eq_type">
-            <button type="button" id="eqt-quad" aria-pressed="true" data-i18n="eqt_quad"></button>
-            <button type="button" id="eqt-lin2" aria-pressed="false" data-i18n="eqt_lin2"></button>
-            <button type="button" id="eqt-lin3" aria-pressed="false" data-i18n="eqt_lin3"></button>
+            <button type="button" id="eqt-quad" aria-pressed="true" data-i18n="eqt_quad">দ্বিঘাত</button>
+            <button type="button" id="eqt-lin2" aria-pressed="false" data-i18n="eqt_lin2">2টি চলক</button>
+            <button type="button" id="eqt-lin3" aria-pressed="false" data-i18n="eqt_lin3">3টি চলক</button>
           </div>
           <p class="small muted" id="eq-form-hint"></p>
           <div class="sc-eqrows no-i18n" id="eq-rows"></div>
           <p class="sc-eqerr" id="eq-err" role="alert"></p>
           <div class="sc-eqprev sc-math no-i18n" id="eq-prev"></div>
-          <p class="tiny muted" style="margin-top:8px" data-i18n="eq_input_hint"></p>
-          <h3 class="sc-ex-h" data-i18n="examples_h"></h3>
+          <p class="tiny muted" style="margin-top:8px" data-i18n="eq_input_hint">প্রতিটি ঘরে সংখ্যা বা হিসাব লেখা যায়, যেমন −3, 1/2 বা √5। খালি ঘর 0 ধরা হবে।</p>
+          <h3 class="sc-ex-h" data-i18n="examples_h">উদাহরণ</h3>
           <div class="chips" id="eq-examples"></div>
         </section>
         <section class="card sc-eq" aria-labelledby="sol-h">
           <div class="sc-hhead">
-            <h2 id="sol-h" data-i18n="sol_h"></h2>
+            <h2 id="sol-h" data-i18n="sol_h">সমাধান</h2>
             <button type="button" class="btn btn-sm no-print" id="eq-print" data-i18n="print"></button>
           </div>
           <div id="eq-out" aria-live="polite">
             <div class="sc-answer" id="eq-answer"></div>
             <p class="sc-verdict" id="eq-verdict"></p>
-            <h3 class="sc-steps-h" data-i18n="steps_h"></h3>
+            <h3 class="sc-steps-h" data-i18n="steps_h">ধাপ</h3>
             <ol class="sc-steps" id="eq-steps"></ol>
           </div>
         </section>
@@ -320,21 +320,21 @@
     <section id="pane-stats" role="tabpanel" aria-labelledby="tab-stats" hidden>
       <div class="sc-st-grid">
         <section class="card sc-st" aria-labelledby="st-h">
-          <h2 id="st-h" data-i18n="st_h" style="margin-bottom:10px"></h2>
-          <label class="field"><span data-i18n="st_label"></span>
+          <h2 id="st-h" data-i18n="st_h" style="margin-bottom:10px">চটজলদি পরিসংখ্যান</h2>
+          <label class="field"><span data-i18n="st_label">সংখ্যা (কমা, স্পেস বা নতুন লাইন দিয়ে আলাদা করুন)</span>
             <textarea id="st-in" class="no-i18n" spellcheck="false" rows="5"></textarea>
           </label>
           <p class="sc-stbad" id="st-bad"></p>
           <div class="row">
-            <button type="button" class="btn" id="st-example" data-i18n="st_example"></button>
+            <button type="button" class="btn" id="st-example" data-i18n="st_example">উদাহরণ নম্বর</button>
             <button type="button" class="btn" id="st-clear" data-i18n="clear"></button>
           </div>
-          <p class="small muted" style="margin-top:10px" data-i18n="st_note"></p>
+          <p class="small muted" style="margin-top:10px" data-i18n="st_note">সমগ্রক SD (σ)-তে n দিয়ে ভাগ করা হয়, যেমন NCERT একাদশ শ্রেণিতে। নমুনা SD (s)-তে n − 1 দিয়ে।</p>
         </section>
         <section class="card sc-st" aria-labelledby="st-res-h">
           <div class="sc-hhead">
-            <h2 id="st-res-h" data-i18n="st_res_h"></h2>
-            <button type="button" class="btn btn-sm no-print" id="st-copy" data-i18n="st_copy"></button>
+            <h2 id="st-res-h" data-i18n="st_res_h">ফলাফল</h2>
+            <button type="button" class="btn btn-sm no-print" id="st-copy" data-i18n="st_copy">ফলাফল কপি করুন</button>
           </div>
           <div aria-live="polite" id="st-out">
             <div class="scroll-x"><table class="table" id="st-table"><tbody id="st-body"></tbody></table></div>
@@ -347,12 +347,12 @@
     <details class="card">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">কীবোর্ডে লিখুন বা বোতাম চাপুন। উত্তরের জন্য Enter বা = চাপুন। বাদ পড়া বন্ধনী নিজে থেকেই বসে যায়।</li>
+        <li data-i18n="tip2">ত্রিকোণমিতির আগে DEG / RAD / GRAD দেখে নিন: sin(30) শুধু ডিগ্রিতে 0.5। sin⁻¹-এর জন্য SHIFT, sinh-এর জন্য HYP চাপুন।</li>
+        <li data-i18n="tip3">× চিহ্ন বাদ দিতে পারেন: 2π, 3(4+5) ও 2sin(30) সব চলে। nCr-এর জন্য 10C3, ভিত্তি 2-এ 8-এর log-এর জন্য log(2, 8), আর 6.02 × 10²³-এর মতো সংখ্যার জন্য ×10ⁿ ব্যবহার করুন।</li>
+        <li data-i18n="tip4">উত্তর ভগ্নাংশ বা মিশ্র সংখ্যায় দেখতে a/b চাপুন, আর দশমিক ডিগ্রিকে ডিগ্রি, মিনিট, সেকেন্ডে বদলাতে °′″ চাপুন।</li>
+        <li data-i18n="tip5">হিস্ট্রিতে কোনো হিসাব চেপে আবার ব্যবহার করুন, বা তার উত্তর চেপে লাইনে বসান। হিস্ট্রি এই ডিভাইসেই থাকে।</li>
+        <li data-i18n="tip6">ক্লাসের কাজ: সমীকরণ সমাধান স্মার্টবোর্ডে খুলুন, দলগুলি হাতে দ্বিঘাত সমীকরণ সমাধান করুক, তারপর প্রতিটি ধাপ (D, বীজের প্রকৃতি, বীজ) মিলিয়ে নিন।</li>
       </ul>
       <p class="tiny muted mb0" style="margin-top:10px" data-i18n="saved_local"></p>
     </details>

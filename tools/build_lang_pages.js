@@ -56,6 +56,20 @@ function localize(html, l, prefix, headLines, title) {
   return h;
 }
 
+/* Static text for search engines: fill every empty element that carries data-i18n="key" with this language's string, so the
+ * HTML of each language page differs from the English page before any script runs (Google was treating the language pages
+ * as duplicates of the English ones: same body, text only filled in by JavaScript). shared/edu.js sets the same text again
+ * on load, so visitors see no change. */
+function prefill(html, S) {
+  if (!S) return html;
+  return html.replace(/(<([a-z][a-z0-9]*)\b[^>]*\sdata-i18n="([^"]+)"[^>]*>)\s*(<\/\2>)/gi,
+    (m, open, tag, key, close) => (typeof S[key] === 'string' && S[key]) ? open + esc(S[key]) + close : m);
+}
+const appStrings = slug => {
+  try { const sb = { window: {} }; sb.self = sb.window; vm.runInNewContext(fs.readFileSync(path.join(ROOT, 'apps', slug, 'strings.js'), 'utf8'), sb, { timeout: 2000 }); return sb.window.APP_STRINGS || null; }
+  catch (e) { return null; }
+};
+
 function writeFile(rel, content) {
   const f = path.join(ROOT, rel); fs.mkdirSync(path.dirname(f), { recursive: true });
   let old = null; try { old = fs.readFileSync(f, 'utf8'); } catch (e) { }
@@ -72,6 +86,7 @@ for (const a of apps) {
   if (!fs.existsSync(srcFile)) continue;
   const src = fs.readFileSync(srcFile, 'utf8');
   const L = langLinks(`apps/${a.slug}/`);
+  const AS = appStrings(a.slug);
   for (const l of OTHER) {
     const name = (a.title && a.title[l]) || a.title.en, desc = (a.desc && a.desc[l]) || a.desc.en;
     const title = `${name} · ${brandOf[l]}`;
@@ -91,7 +106,7 @@ for (const a of apps) {
       `<script type="application/ld+json">${json(ld)}</script>`, `<script type="application/ld+json">${json(crumbs)}</script>`,
       `<script>window.EDU_PAGE_LANG = ${json(l)}; window.EDU_LANG_URLS = ${json(L.map)};</script>`
     ];
-    written += writeFile(`${l}/apps/${a.slug}/index.html`, localize(src, l, `../../../apps/${a.slug}/`, head, title)); pages++;
+    written += writeFile(`${l}/apps/${a.slug}/index.html`, prefill(localize(src, l, `../../../apps/${a.slug}/`, head, title), AS && AS[l])); pages++;
   }
 }
 
@@ -110,7 +125,7 @@ for (const a of apps) {
       `<meta property="og:locale" content="${LOCALE[l]}">`, `<meta name="twitter:card" content="summary_large_image">`,
       `<script>window.EDU_PAGE_LANG = ${json(l)}; window.EDU_LANG_URLS = ${json(L.map)};</script>`
     ];
-    let h = localize(src, l, '../', head, title);
+    let h = prefill(localize(src, l, '../', head, title), S);
     /* the crawlable app grid: this language's names and descriptions, linking to this language's app pages */
     const cards = apps.map(a => `<a class="app-card" href="apps/${a.slug}/"><div class="app-name"><span class="ic" aria-hidden="true">${esc(a.icon)}</span><h3>${esc((a.title && a.title[l]) || a.title.en)}</h3></div><p>${esc((a.desc && a.desc[l]) || a.desc.en)}</p></a>`).join('\n      ');
     h = h.replace(/(<!-- build:apps-static[^>]*-->)[\s\S]*?(<!-- \/build:apps-static -->)/, (m, a, b) => a + '\n      ' + cards + '\n      ' + b);
@@ -142,7 +157,7 @@ for (const [file, global, strFile] of SITE_PAGES) {
       `<meta property="og:locale" content="${LOCALE[l]}">`, `<meta name="twitter:card" content="summary_large_image">`,
       `<script>window.EDU_PAGE_LANG = ${json(l)}; window.EDU_LANG_URLS = ${json(L.map)};</script>`
     ];
-    const h = localize(src.replace(re, ''), l, '../', head, title);
+    const h = prefill(localize(src.replace(re, ''), l, '../', head, title), S);
     written += writeFile(`${l}/${file}`, h); pages++;
   }
 }

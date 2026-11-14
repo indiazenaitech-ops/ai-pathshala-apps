@@ -139,42 +139,42 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">کون کہاں بیٹھے گا، آسانی سے طے کریں: کلاس کی فہرست پیسٹ کریں، کمرے کا لے آؤٹ چنیں، رول نمبر، نام، قرعہ یا ملی جلی صلاحیت سے بٹھائیں، کچھ بچوں کو الگ رکھیں، پھر چارٹ، ڈیسک پرچیاں اور نام کے لیبل پرنٹ کریں۔ کلاس اور امتحان ہال دونوں کے لیے۔</p>
 
     <div class="topline">
       <div class="pickers">
-        <label class="field"><span data-i18n="class_label"></span>
-          <span class="inline"><select id="classSel" class="no-i18n"></select><button class="btn btn-sm" id="newClass" type="button">+ <span data-i18n="new_class"></span></button></span>
+        <label class="field"><span data-i18n="class_label">کلاس</span>
+          <span class="inline"><select id="classSel" class="no-i18n"></select><button class="btn btn-sm" id="newClass" type="button">+ <span data-i18n="new_class">نئی کلاس</span></button></span>
         </label>
-        <label class="field"><span data-i18n="room_label"></span>
-          <span class="inline"><select id="roomSel" class="no-i18n"></select><button class="btn btn-sm" id="newRoom" type="button">+ <span data-i18n="new_room"></span></button></span>
+        <label class="field"><span data-i18n="room_label">کمرہ</span>
+          <span class="inline"><select id="roomSel" class="no-i18n"></select><button class="btn btn-sm" id="newRoom" type="button">+ <span data-i18n="new_room">نیا کمرہ</span></button></span>
         </label>
       </div>
       <div class="tabs" role="tablist">
-        <button type="button" role="tab" id="tabChart" data-tab="chart" data-i18n="tab_chart"></button>
-        <button type="button" role="tab" id="tabStudents" data-tab="students" data-i18n="tab_students"></button>
+        <button type="button" role="tab" id="tabChart" data-tab="chart" data-i18n="tab_chart">نشست چارٹ</button>
+        <button type="button" role="tab" id="tabStudents" data-tab="students" data-i18n="tab_students">طلبہ</button>
       </div>
     </div>
 
-    <p class="callout small" id="sampleNote" data-i18n="sample_note"></p>
+    <p class="callout small" id="sampleNote" data-i18n="sample_note">یہ فرضی ناموں والی ایک مثالی کلاس ہے تاکہ آپ سب کچھ آزما سکیں۔ اپنی فہرست ”طلبہ“ ٹیب میں پیسٹ کریں۔</p>
 
     <!-- ===== chart view ===== -->
     <div id="viewChart" class="layout">
       <section class="card chart-card" id="chartCard">
         <div class="chart-head">
-          <h2 data-i18n="chart_title"></h2>
+          <h2 data-i18n="chart_title">نشست چارٹ</h2>
           <div class="row">
-            <button class="btn btn-sm" id="undoBtn" type="button">↶ <span data-i18n="undo"></span></button>
+            <button class="btn btn-sm" id="undoBtn" type="button">↶ <span data-i18n="undo">واپس کریں</span></button>
             <button class="btn btn-sm" id="fsBtn" type="button">⛶ <span data-i18n="fullscreen"></span></button>
           </div>
         </div>
-        <p class="small muted" data-i18n="swap_help"></p>
+        <p class="small muted" data-i18n="swap_help">نام کو دوسری نشست پر گھسیٹیں، یا ایک نشست پھر دوسری پر ٹیپ کر کے بدلیں۔ کی بورڈ: تیر والی کلیدیں ہلاتی ہیں، Enter چنتا ہے، Delete نشست سے ہٹاتا ہے۔</p>
         <div class="room-scroll" id="roomScroll">
-          <div class="board" data-i18n="board_label"></div>
+          <div class="board" data-i18n="board_label">بورڈ · استاد</div>
           <div class="room" id="room" role="group"></div>
         </div>
         <div class="unseated" id="unseatedBox" hidden>
-          <strong data-i18n="unseated_title"></strong> <span class="small muted" data-i18n="unseated_help"></span>
+          <strong data-i18n="unseated_title">بغیر نشست</strong> <span class="small muted" data-i18n="unseated_help">ایک نام ٹیپ کریں، پھر خالی نشست۔</span>
           <div class="chips no-i18n" id="unseated"></div>
         </div>
         <div class="legend" id="legend"></div>
@@ -184,60 +184,60 @@
 
       <div class="side">
         <section class="card">
-          <h2 data-i18n="arrange_title"></h2>
+          <h2 data-i18n="arrange_title">ترتیب</h2>
           <div class="stack">
-            <label class="field"><span data-i18n="order_label"></span>
+            <label class="field"><span data-i18n="order_label">ترتیب کا طریقہ</span>
               <select id="orderSel">
-                <option value="roll" data-i18n="ord_roll"></option>
-                <option value="alpha" data-i18n="ord_alpha"></option>
-                <option value="random" data-i18n="ord_random"></option>
-                <option value="mixed" data-i18n="ord_mixed"></option>
+                <option value="roll" data-i18n="ord_roll">رول نمبر</option>
+                <option value="alpha" data-i18n="ord_alpha">حروفِ تہجی</option>
+                <option value="random" data-i18n="ord_random">قرعہ (منصفانہ)</option>
+                <option value="mixed" data-i18n="ord_mixed">ملی جلی صلاحیت</option>
               </select>
             </label>
-            <label class="check"><input type="checkbox" id="optBoyGirl"> <span data-i18n="opt_boygirl"></span></label>
-            <label class="check"><input type="checkbox" id="optFront"> <span data-i18n="opt_front"></span></label>
+            <label class="check"><input type="checkbox" id="optBoyGirl"> <span data-i18n="opt_boygirl">لڑکا–لڑکی باری باری</span></label>
+            <label class="check"><input type="checkbox" id="optFront"> <span data-i18n="opt_front">آگے بیٹھنے والے آگے</span></label>
             <div class="row">
-              <button class="btn btn-primary" id="arrangeBtn" type="button" data-i18n="arrange_btn"></button>
-              <button class="btn" id="clearBtn" type="button" data-i18n="clear_seats"></button>
+              <button class="btn btn-primary" id="arrangeBtn" type="button" data-i18n="arrange_btn">نشستیں ترتیب دیں</button>
+              <button class="btn" id="clearBtn" type="button" data-i18n="clear_seats">نشستیں خالی کریں</button>
             </div>
           </div>
         </section>
 
         <section class="card">
-          <h2 data-i18n="room_title"></h2>
+          <h2 data-i18n="room_title">کمرہ</h2>
           <div class="stack">
-            <label class="field"><span data-i18n="room_name"></span><input id="roomName" class="no-i18n" data-i18n-placeholder="room_name_ph"></label>
-            <div class="field"><span data-i18n="layout_label"></span>
+            <label class="field"><span data-i18n="room_name">کمرے کا نام</span><input id="roomName" class="no-i18n" data-i18n-placeholder="room_name_ph"></label>
+            <div class="field"><span data-i18n="layout_label">لے آؤٹ</span>
               <div class="seg" id="layoutSeg">
-                <button type="button" data-lay="pairs" data-i18n="lay_pairs"></button>
-                <button type="button" data-lay="rows" data-i18n="lay_rows"></button>
-                <button type="button" data-lay="groups" data-i18n="lay_groups"></button>
-                <button type="button" data-lay="ushape" data-i18n="lay_ushape"></button>
-                <button type="button" data-lay="exam" data-i18n="lay_exam"></button>
+                <button type="button" data-lay="pairs" data-i18n="lay_pairs">جوڑے (بینچ)</button>
+                <button type="button" data-lay="rows" data-i18n="lay_rows">قطاریں</button>
+                <button type="button" data-lay="groups" data-i18n="lay_groups">4 کے گروپ</button>
+                <button type="button" data-lay="ushape" data-i18n="lay_ushape">U شکل</button>
+                <button type="button" data-lay="exam" data-i18n="lay_exam">امتحان ہال (فاصلے کے ساتھ)</button>
               </div>
             </div>
             <div class="num-row">
-              <label class="field"><span data-i18n="rows_label"></span><input type="number" id="rowsIn" min="1" max="20"></label>
-              <label class="field"><span data-i18n="cols_label"></span><input type="number" id="colsIn" min="1" max="14"></label>
+              <label class="field"><span data-i18n="rows_label">قطاریں</span><input type="number" id="rowsIn" min="1" max="20"></label>
+              <label class="field"><span data-i18n="cols_label">ہر قطار میں نشستیں</span><input type="number" id="colsIn" min="1" max="14"></label>
             </div>
             <p class="small muted" id="capacity"></p>
-            <label class="check"><input type="checkbox" id="setsChk"> <span data-i18n="sets_label"></span></label>
-            <p class="small muted" data-i18n="sets_hint"></p>
-            <div><button class="btn btn-danger btn-sm" id="delRoom" type="button" data-i18n="delete_room"></button></div>
+            <label class="check"><input type="checkbox" id="setsChk"> <span data-i18n="sets_label">سوالیہ پرچے کے سیٹ A / B</span></label>
+            <p class="small muted" data-i18n="sets_hint">آگے، پیچھے اور برابر والوں کو الگ سیٹ ملے گا۔</p>
+            <div><button class="btn btn-danger btn-sm" id="delRoom" type="button" data-i18n="delete_room">کمرہ حذف کریں</button></div>
           </div>
         </section>
 
         <section class="card">
-          <h2 data-i18n="print_title"></h2>
+          <h2 data-i18n="print_title">پرنٹ اور شیئر</h2>
           <div class="row">
-            <button class="btn" id="prChart" type="button" data-i18n="print_chart"></button>
-            <button class="btn" id="prSlips" type="button" data-i18n="print_slips"></button>
-            <button class="btn" id="prLabels" type="button" data-i18n="print_labels"></button>
-            <button class="btn" id="prList" type="button" data-i18n="print_list"></button>
-            <button class="btn" id="csvBtn" type="button" data-i18n="export_csv"></button>
-            <button class="btn" id="copyBtn" type="button" data-i18n="copy_text"></button>
+            <button class="btn" id="prChart" type="button" data-i18n="print_chart">چارٹ پرنٹ (A4)</button>
+            <button class="btn" id="prSlips" type="button" data-i18n="print_slips">ڈیسک پرچیاں پرنٹ</button>
+            <button class="btn" id="prLabels" type="button" data-i18n="print_labels">نام کے لیبل پرنٹ</button>
+            <button class="btn" id="prList" type="button" data-i18n="print_list">نگراں کی فہرست پرنٹ</button>
+            <button class="btn" id="csvBtn" type="button" data-i18n="export_csv">CSV ڈاؤن لوڈ</button>
+            <button class="btn" id="copyBtn" type="button" data-i18n="copy_text">متن کے طور پر کاپی</button>
           </div>
-          <p class="small muted" data-i18n="print_help"></p>
+          <p class="small muted" data-i18n="print_help">چارٹ: نوٹس بورڈ کے لیے بڑے ناموں والا ایک A4 صفحہ۔ ڈیسک پرچی: امتحانی ڈیسک کے لیے رول نمبر، نام، نشست اور سیٹ۔ لیبل: ڈیسک پر چسپاں کرنے کے نام۔ نگراں کی فہرست: دستخط کے کالم کے ساتھ نشست وار فہرست۔</p>
         </section>
       </div>
     </div>
@@ -246,34 +246,34 @@
     <div id="viewStudents" hidden>
       <div class="layout">
         <section class="card">
-          <h2 data-i18n="students_title"></h2>
+          <h2 data-i18n="students_title">کلاس کی فہرست</h2>
           <div class="stack">
-            <label class="field"><span data-i18n="class_name"></span><input id="className" class="no-i18n" data-i18n-placeholder="class_name_ph"></label>
-            <label class="field"><span data-i18n="names_label"></span>
+            <label class="field"><span data-i18n="class_name">کلاس کا نام</span><input id="className" class="no-i18n" data-i18n-placeholder="class_name_ph"></label>
+            <label class="field"><span data-i18n="names_label">طلبہ (ہر سطر میں ایک)</span>
               <textarea id="names" class="no-i18n" data-i18n-placeholder="names_ph" spellcheck="false"></textarea>
-              <span class="hint" data-i18n="names_hint"></span>
+              <span class="hint" data-i18n="names_hint">ہر سطر میں ایک طالب علم۔ چاہیں تو کاما کے بعد: رول نمبر، جنس (M/F)، نمبر، ضرورت (آگے، عینک، بایاں ہاتھ)۔ Excel یا Google Sheets سے ٹیبل بھی پیسٹ کر سکتے ہیں۔</span>
             </label>
             <div class="row">
-              <button class="btn btn-primary" id="useList" type="button" data-i18n="use_list"></button>
-              <button class="btn" id="importCsv" type="button" data-i18n="import_csv"></button>
-              <button class="btn" id="addStudent" type="button">+ <span data-i18n="add_student"></span></button>
-              <button class="btn" id="loadSample" type="button" data-i18n="load_sample"></button>
+              <button class="btn btn-primary" id="useList" type="button" data-i18n="use_list">یہ فہرست استعمال کریں</button>
+              <button class="btn" id="importCsv" type="button" data-i18n="import_csv">CSV درآمد</button>
+              <button class="btn" id="addStudent" type="button">+ <span data-i18n="add_student">طالب علم شامل کریں</span></button>
+              <button class="btn" id="loadSample" type="button" data-i18n="load_sample">مثالی کلاس کھولیں</button>
             </div>
             <p class="small" id="stuCount" aria-live="polite"></p>
             <div class="scroll-x"><table class="stu-table" id="stuTable">
-              <thead><tr><th>#</th><th data-i18n="col_name"></th><th data-i18n="col_roll"></th><th data-i18n="col_gender"></th><th data-i18n="col_marks"></th><th data-i18n="col_needs"></th></tr></thead>
+              <thead><tr><th>#</th><th data-i18n="col_name">نام</th><th data-i18n="col_roll">رول</th><th data-i18n="col_gender">جنس</th><th data-i18n="col_marks">نمبر</th><th data-i18n="col_needs">ضرورت</th></tr></thead>
               <tbody></tbody>
             </table></div>
-            <div><button class="btn btn-danger btn-sm" id="delClass" type="button" data-i18n="delete_class"></button></div>
+            <div><button class="btn btn-danger btn-sm" id="delClass" type="button" data-i18n="delete_class">کلاس حذف کریں</button></div>
           </div>
         </section>
         <section class="card">
-          <h2 data-i18n="apart_title"></h2>
-          <p class="small muted" data-i18n="apart_hint"></p>
+          <h2 data-i18n="apart_title">الگ رکھیں</h2>
+          <p class="small muted" data-i18n="apart_hint">یہ دونوں ساتھ ساتھ (برابر، آگے یا پیچھے) نہیں بیٹھیں گے۔</p>
           <div class="apart-row">
-            <label class="field"><span data-i18n="student_a"></span><select id="apartA" class="no-i18n"></select></label>
-            <label class="field"><span data-i18n="student_b"></span><select id="apartB" class="no-i18n"></select></label>
-            <button class="btn" id="addPair" type="button" data-i18n="add_pair"></button>
+            <label class="field"><span data-i18n="student_a">طالب علم 1</span><select id="apartA" class="no-i18n"></select></label>
+            <label class="field"><span data-i18n="student_b">طالب علم 2</span><select id="apartB" class="no-i18n"></select></label>
+            <button class="btn" id="addPair" type="button" data-i18n="add_pair">جوڑا شامل کریں</button>
           </div>
           <ul class="pairs" id="pairs"></ul>
         </section>
@@ -281,16 +281,16 @@
     </div>
 
     <details class="card help no-print" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">استعمال کا طریقہ / کلاس کے لیے خیالات</summary>
       <ul>
-        <li data-i18n="help_1"></li><li data-i18n="help_2"></li><li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li><li data-i18n="help_5"></li><li data-i18n="help_6"></li>
+        <li data-i18n="help_1">طلبہ ٹیب: رجسٹر یا شیٹ سے نام پیسٹ کریں۔ کاما کے بعد رول نمبر، M/F، نمبر اور ضرورت (آگے، عینک، بایاں ہاتھ) لکھیں، یا سطر پر ٹیپ کر کے ترمیم کریں۔</li><li data-i18n="help_2">کمرے کا لے آؤٹ چنیں (جوڑا بینچ، 4 کے گروپ، U شکل یا فاصلے والا امتحان ہال) اور قطاریں اور نشستیں طے کریں۔ کئی کمرے اور کلاسیں بنائیں؛ سب اسی ڈیوائس پر محفوظ رہتا ہے۔</li><li data-i18n="help_3">امتحان کے لیے رول نمبر، نئی کلاس کے لیے حروفِ تہجی، یا منصفانہ نئی شروعات کے لیے قرعہ۔ ”ملی جلی صلاحیت“ تیز طالب علم کو مدد کے ضرورت مند کے پاس بٹھاتی ہے تاکہ دونوں ایک دوسرے سے سیکھیں۔</li>
+        <li data-i18n="help_4">زیادہ باتیں کرنے والوں کے لیے ”الگ رکھیں“ اور عینک یا کم سننے والوں کے لیے ”آگے بیٹھنے والے“ استعمال کریں۔ پھر نام گھسیٹ کر چھوٹی تبدیلیاں کریں۔</li><li data-i18n="help_5">امتحان ہال: امتحانی لے آؤٹ چنیں، سیٹ A/B چالو کریں، رول نمبر والی ڈیسک پرچیاں اور دستخط کالم والی نگراں فہرست پرنٹ کریں۔</li><li data-i18n="help_6">کلاس کا خیال: ہر مہینے قرعہ سے نشستیں بدلیں اور ہر طالب علم اپنے نئے ساتھی کا کلاس سے تعارف کرائے۔</li>
       </ul>
     </details>
-    <p class="small muted no-print">🔒 <span data-i18n="privacy_note"></span></p>
+    <p class="small muted no-print">🔒 <span data-i18n="privacy_note">طلبہ کے نام اور نمبر اسی ڈیوائس کے براؤزر میں رہتے ہیں۔ کچھ بھی اپ لوڈ نہیں ہوتا۔</span></p>
     <section class="card no-print">
-      <h2 data-i18n="reset_title"></h2>
-      <p class="small muted" data-i18n="reset_help"></p>
+      <h2 data-i18n="reset_title">نئے سرے سے شروع</h2>
+      <p class="small muted" data-i18n="reset_help">اس ڈیوائس پر محفوظ ہر کلاس، کمرہ اور چارٹ حذف ہو جائے گا۔</p>
       <button class="btn btn-danger" id="resetAll" type="button" data-i18n="reset"></button>
     </section>
 

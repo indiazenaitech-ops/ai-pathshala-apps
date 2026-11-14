@@ -103,7 +103,49 @@ const SHOTS = [
     clip: async (p) => p.evaluate(() => { const a = document.querySelector('#ctc').closest('.card, section').getBoundingClientRect(); return { x: a.left - 8, y: a.top + scrollY - 8, width: a.width + 16, height: a.height + 16 }; }), maxH: 640 },
   { name: 'in-hand-salary-calculator-2', app: 'salary-tax-calculator', w: 390,
     run: async (p) => { await p.fill('#ctc', '15L'); await p.waitForTimeout(400); await p.click('#tab-compare'); await p.waitForTimeout(900); },
-    clip: '#results', maxH: 760 }
+    clip: '#results', maxH: 760 },
+  /* ---- added 14 Nov 2026 ---- */
+  { name: 'photo-signature-resize-for-exam-forms-1', app: 'form-photo-resizer', w: 390, run: async (p) => { await p.waitForTimeout(400); }, clip: '#setupCard', maxH: 760 },
+  { name: 'photo-signature-resize-for-exam-forms-2', app: 'form-photo-resizer', w: 390,
+    run: async (p) => { await p.click('#sample'); await p.waitForSelector('#result:not([hidden])', { timeout: 30000 }); await p.waitForTimeout(1500); },
+    clip: '#resultCard', maxH: 760 },
+  { name: 'compress-image-to-20kb-50kb-1', app: 'image-compressor', w: 390,
+    run: async (p) => { await p.click('#cm-size'); await p.fill('#targetKB', '50'); await p.dispatchEvent('#targetKB', 'change'); await p.waitForTimeout(500); },
+    clip: async (p) => p.evaluate(() => { const a = document.querySelector('#sizeBox').closest('.ic-sec').getBoundingClientRect(); return { x: a.left - 8, y: a.top + scrollY - 8, width: a.width + 16, height: a.height + 16 }; }), maxH: 700 },
+  { name: 'compress-image-to-20kb-50kb-2', app: 'image-compressor', w: 390,
+    run: async (p) => {
+      await p.click('#cm-size'); await p.fill('#targetKB', '50'); await p.dispatchEvent('#targetKB', 'change');
+      await p.click('#sampleBtn'); await p.waitForFunction(() => !document.querySelector('#zipBtn').disabled && document.querySelector('#app').dataset.busy === '0', null, { timeout: 90000 }); await p.waitForTimeout(1200);
+    },
+    clip: async (p) => p.evaluate(() => { const a = document.querySelector('#summary').getBoundingClientRect(), b = document.querySelector('#list').getBoundingClientRect(); return { x: a.left - 8, y: a.top + scrollY - 8, width: a.width + 16, height: b.bottom - a.top + 16 }; }), maxH: 760 },
+  { name: 'remove-background-from-photo-1', app: 'background-remover', w: 390, run: async (p) => { await p.waitForTimeout(400); }, clip: '#photoCard', maxH: 760 },
+  { name: 'remove-background-from-photo-2', app: 'background-remover', w: 390,   /* runs the AI model: slow the first time */
+    run: async (p) => {
+      await p.click('#samplePerson'); await p.waitForTimeout(1500);
+      if (await p.evaluate(() => document.querySelector('#resultCard').dataset.state === 'photo')) await p.click('#runBtn');
+      await p.waitForFunction(() => document.querySelector('#resultCard').dataset.state === 'done', null, { timeout: 300000 }); await p.waitForTimeout(1500);
+    },
+    clip: '#resultCard', maxH: 760 },
+  { name: 'blur-faces-in-photo-1', app: 'face-blur', w: 390,   /* runs the face-finding AI */
+    run: async (p) => { await p.click('#sampleBtn'); await p.waitForSelector('#saveCard:not([hidden])', { timeout: 240000 }); await p.waitForFunction(() => document.querySelectorAll('#layer .fb-box').length > 3 && document.querySelector('#stopBtn').hidden, null, { timeout: 240000 }); await p.waitForTimeout(1500); },
+    clip: async (p) => p.evaluate(() => { const a = document.querySelector('#counts').getBoundingClientRect(), b = document.querySelector('#stage').getBoundingClientRect(); const top = Math.min(a.top, b.top); return { x: b.left - 8, y: top + scrollY - 8, width: b.width + 16, height: Math.max(a.bottom, b.bottom) - top + 16 }; }), maxH: 640 },
+  { name: 'blur-faces-in-photo-2', app: 'face-blur', w: 390,
+    run: async (p) => { await p.waitForTimeout(600); },
+    clip: async (p) => p.evaluate(() => { const a = document.querySelector('#styles').closest('.card, section').getBoundingClientRect(); return { x: a.left - 8, y: a.top + scrollY - 8, width: a.width + 16, height: a.height + 16 }; }), maxH: 640 },
+  { name: 'hindi-voice-typing-speech-to-text-1', app: 'voice-to-text', w: 390,
+    run: async (p) => { await p.selectOption('#langSel', 'hi'); await p.click('#models button[data-model="small"]'); await p.waitForTimeout(600); },
+    clip: '#setCard', maxH: 820 },
+  { name: 'hindi-voice-typing-speech-to-text-2', app: 'voice-to-text', w: 390,   /* runs Whisper on the app's own sample clip */
+    run: async (p, L) => {
+      await p.click(L === 'hi' ? '#sampleHi' : '#sampleEn'); await p.waitForFunction(() => !document.querySelector('#runBtn').disabled, null, { timeout: 60000 });
+      await p.selectOption('#langSel', L === 'hi' ? 'hi' : 'en'); await p.click('#models button[data-model="' + (L === 'hi' ? 'small' : 'base') + '"]');
+      await p.click('#runBtn'); await p.waitForFunction(() => document.querySelector('#stopBtn').hidden && !document.querySelector('#resCard').hidden && document.querySelector('#segs').children.length > 0, null, { timeout: 480000 }); await p.waitForTimeout(1500);
+    },
+    clip: '#resCard', maxH: 700 },
+  { name: 'resume-format-for-freshers-1', app: 'resume-builder', w: 390,
+    run: async (p) => { await p.click('label[for="tpl-fresher"]'); await p.waitForTimeout(600); }, clip: '#designCard', maxH: 760 },
+  { name: 'resume-format-for-freshers-2', app: 'resume-builder', w: 390,
+    run: async (p) => { await p.click('label[for="tpl-fresher"]'); await p.waitForTimeout(300); await p.click('#viewPreview'); await p.waitForTimeout(1500); }, clip: '#stage', maxH: 820 }
 ];
 
 async function rectOf(page, clip) {

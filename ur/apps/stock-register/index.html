@@ -149,48 +149,48 @@
 <body>
   <main id="app">
     <div id="ui">
-      <p class="edu-intro" data-i18n="intro"></p>
-      <p class="privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+      <p class="edu-intro" data-i18n="intro">دکان، گودام یا اسٹور روم کے لیے آسان اسٹاک رجسٹر: سامان، اسٹاک کی آمد و روانگی، کم اسٹاک اور میعاد کی اطلاع، روزانہ اور ماہانہ رپورٹ، CSV اور بیک اپ۔ سب کچھ آپ کے آلے پر ہی رہتا ہے۔</p>
+      <p class="privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">آپ کا اسٹاک ڈیٹا صرف اس آلے کے اس براؤزر میں محفوظ ہوتا ہے۔ کچھ بھی اپ لوڈ نہیں ہوتا۔ ہر ہفتے بیک اپ ڈاؤن لوڈ کریں۔</span></p>
 
       <div id="remind" class="callout warning row spread banner no-print" hidden>
         <span id="remind-txt" class="grow"></span>
         <span class="row">
-          <button type="button" class="btn btn-sm btn-primary" id="remind-backup" data-i18n="backup_now"></button>
-          <button type="button" class="btn btn-sm" id="remind-later" data-i18n="later"></button>
+          <button type="button" class="btn btn-sm btn-primary" id="remind-backup" data-i18n="backup_now">ابھی بیک اپ</button>
+          <button type="button" class="btn btn-sm" id="remind-later" data-i18n="later">بعد میں</button>
         </span>
       </div>
       <div id="quota" class="callout danger row spread banner no-print" hidden>
         <span id="quota-txt" class="grow"></span>
-        <button type="button" class="btn btn-sm btn-primary" id="quota-backup" data-i18n="backup_dl"></button>
+        <button type="button" class="btn btn-sm btn-primary" id="quota-backup" data-i18n="backup_dl">بیک اپ ڈاؤن لوڈ</button>
       </div>
       <div id="sample-banner" class="callout accent row spread banner no-print" hidden>
-        <span class="grow" data-i18n="sample_note"></span>
-        <button type="button" class="btn btn-sm" id="remove-samples" data-i18n="remove_samples"></button>
+        <span class="grow" data-i18n="sample_note">یہ مثال کا سامان ہے تاکہ آپ ایپ آزما سکیں۔ اپنا سامان شامل کرتے وقت انہیں ہٹا دیں۔</span>
+        <button type="button" class="btn btn-sm" id="remove-samples" data-i18n="remove_samples">مثالیں ہٹائیں</button>
       </div>
       <div id="undo-bar" class="callout success row spread banner no-print" role="status" aria-live="polite" hidden>
         <span id="undo-txt" class="grow"></span>
-        <button type="button" class="btn btn-sm btn-primary" id="undo-btn" data-i18n="undo"></button>
+        <button type="button" class="btn btn-sm btn-primary" id="undo-btn" data-i18n="undo">واپس لیں</button>
       </div>
 
       <nav class="tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-        <button type="button" role="tab" id="tab-stock" aria-selected="true" aria-controls="pane-stock" data-tab="stock"><span aria-hidden="true">📦</span> <span data-i18n="tab_stock"></span></button>
-        <button type="button" role="tab" id="tab-moves" aria-selected="false" aria-controls="pane-moves" data-tab="moves"><span aria-hidden="true">🔁</span> <span data-i18n="tab_moves"></span></button>
-        <button type="button" role="tab" id="tab-expiry" aria-selected="false" aria-controls="pane-expiry" data-tab="expiry"><span aria-hidden="true">⏳</span> <span data-i18n="tab_expiry"></span></button>
-        <button type="button" role="tab" id="tab-data" aria-selected="false" aria-controls="pane-data" data-tab="data"><span aria-hidden="true">💾</span> <span data-i18n="tab_data"></span></button>
+        <button type="button" role="tab" id="tab-stock" aria-selected="true" aria-controls="pane-stock" data-tab="stock"><span aria-hidden="true">📦</span> <span data-i18n="tab_stock">اسٹاک</span></button>
+        <button type="button" role="tab" id="tab-moves" aria-selected="false" aria-controls="pane-moves" data-tab="moves"><span aria-hidden="true">🔁</span> <span data-i18n="tab_moves">آمد و روانگی اور رپورٹ</span></button>
+        <button type="button" role="tab" id="tab-expiry" aria-selected="false" aria-controls="pane-expiry" data-tab="expiry"><span aria-hidden="true">⏳</span> <span data-i18n="tab_expiry">میعاد</span></button>
+        <button type="button" role="tab" id="tab-data" aria-selected="false" aria-controls="pane-data" data-tab="data"><span aria-hidden="true">💾</span> <span data-i18n="tab_data">ڈیٹا اور بیک اپ</span></button>
       </nav>
 
       <!-- ===================== STOCK ===================== -->
       <section id="pane-stock" role="tabpanel" aria-labelledby="tab-stock">
         <div class="card scan-card stack no-print">
           <div class="scanrow">
-            <label class="field grow"><span data-i18n="scan_label"></span>
+            <label class="field grow"><span data-i18n="scan_label">بارکوڈ اسکینر / فوری تلاش</span>
               <input id="scan" type="search" dir="auto" autocomplete="off" spellcheck="false" enterkeyhint="go" data-i18n-placeholder="scan_ph">
             </label>
-            <div class="field"><span data-i18n="scan_mode"></span>
+            <div class="field"><span data-i18n="scan_mode">اسکین پر</span>
               <div class="seg" id="scan-mode" role="group">
-                <button type="button" data-mode="find" aria-pressed="true" data-i18n="mode_find"></button>
-                <button type="button" data-mode="in" aria-pressed="false" data-i18n="mode_in"></button>
-                <button type="button" data-mode="out" aria-pressed="false" data-i18n="mode_out"></button>
+                <button type="button" data-mode="find" aria-pressed="true" data-i18n="mode_find">تلاش</button>
+                <button type="button" data-mode="in" aria-pressed="false" data-i18n="mode_in">اسٹاک آمد +1</button>
+                <button type="button" data-mode="out" aria-pressed="false" data-i18n="mode_out">اسٹاک روانگی −1</button>
               </div>
             </div>
           </div>
@@ -202,49 +202,49 @@
         <div class="card stack">
           <div class="filters no-print">
             <label class="field wide"><span data-i18n="search"></span><input id="search" type="search" dir="auto" autocomplete="off" data-i18n-placeholder="search"></label>
-            <label class="field"><span data-i18n="category"></span><select id="f-cat"></select></label>
-            <label class="field"><span data-i18n="status"></span>
+            <label class="field"><span data-i18n="category">زمرہ</span><select id="f-cat"></select></label>
+            <label class="field"><span data-i18n="status">حالت</span>
               <select id="f-status">
-                <option value="" data-i18n="all_status"></option>
-                <option value="low" data-i18n="f_low"></option>
-                <option value="out" data-i18n="f_out"></option>
-                <option value="neg" data-i18n="f_neg"></option>
-                <option value="exp" data-i18n="f_exp"></option>
-                <option value="expired" data-i18n="f_expired"></option>
+                <option value="" data-i18n="all_status">تمام سامان</option>
+                <option value="low" data-i18n="f_low">کم اسٹاک</option>
+                <option value="out" data-i18n="f_out">ختم / منفی</option>
+                <option value="neg" data-i18n="f_neg">منفی اسٹاک</option>
+                <option value="exp" data-i18n="f_exp">جلد میعاد ختم</option>
+                <option value="expired" data-i18n="f_expired">میعاد ختم</option>
               </select>
             </label>
-            <label class="field"><span data-i18n="sort"></span>
+            <label class="field"><span data-i18n="sort">ترتیب</span>
               <select id="sort">
-                <option value="name" data-i18n="sort_name"></option>
-                <option value="stock" data-i18n="sort_stock"></option>
-                <option value="value" data-i18n="sort_value"></option>
-                <option value="expiry" data-i18n="sort_expiry"></option>
-                <option value="new" data-i18n="sort_new"></option>
+                <option value="name" data-i18n="sort_name">نام (A سے Z)</option>
+                <option value="stock" data-i18n="sort_stock">اسٹاک (کم پہلے)</option>
+                <option value="value" data-i18n="sort_value">مالیت (زیادہ پہلے)</option>
+                <option value="expiry" data-i18n="sort_expiry">میعاد (قریب پہلے)</option>
+                <option value="new" data-i18n="sort_new">حال ہی میں شامل</option>
               </select>
             </label>
           </div>
           <div class="row no-print">
-            <button type="button" class="btn btn-primary" id="add-item"><span aria-hidden="true">＋</span> <span data-i18n="add_item"></span></button>
-            <button type="button" class="btn" id="print-sheet"><span aria-hidden="true">🖨</span> <span data-i18n="print_sheet"></span></button>
-            <button type="button" class="btn" id="export-items"><span aria-hidden="true">⬇</span> <span data-i18n="export_items"></span></button>
+            <button type="button" class="btn btn-primary" id="add-item"><span aria-hidden="true">＋</span> <span data-i18n="add_item">سامان شامل کریں</span></button>
+            <button type="button" class="btn" id="print-sheet"><span aria-hidden="true">🖨</span> <span data-i18n="print_sheet">اسٹاک گنتی شیٹ پرنٹ کریں</span></button>
+            <button type="button" class="btn" id="export-items"><span aria-hidden="true">⬇</span> <span data-i18n="export_items">سامان CSV</span></button>
             <span class="muted small grow" id="count-txt" aria-live="polite"></span>
           </div>
           <div class="scroll-x">
             <table class="table stock" id="stock-table">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="col_name"></th>
-                  <th scope="col" data-i18n="col_sku"></th>
-                  <th scope="col" data-i18n="col_cat"></th>
-                  <th scope="col" class="num" data-i18n="col_stock"></th>
-                  <th scope="col" class="num" data-i18n="col_min"></th>
-                  <th scope="col" data-i18n="col_status"></th>
-                  <th scope="col" class="num" data-i18n="col_buy"></th>
-                  <th scope="col" class="num" data-i18n="col_sell"></th>
-                  <th scope="col" class="num" data-i18n="col_gst"></th>
-                  <th scope="col" class="num" data-i18n="col_value"></th>
-                  <th scope="col" data-i18n="col_expiry"></th>
-                  <th scope="col" class="no-print" data-i18n="col_actions"></th>
+                  <th scope="col" data-i18n="col_name">سامان</th>
+                  <th scope="col" data-i18n="col_sku">کوڈ / بارکوڈ</th>
+                  <th scope="col" data-i18n="col_cat">زمرہ</th>
+                  <th scope="col" class="num" data-i18n="col_stock">اسٹاک</th>
+                  <th scope="col" class="num" data-i18n="col_min">کم از کم</th>
+                  <th scope="col" data-i18n="col_status">حالت</th>
+                  <th scope="col" class="num" data-i18n="col_buy">خرید ₹</th>
+                  <th scope="col" class="num" data-i18n="col_sell">فروخت ₹</th>
+                  <th scope="col" class="num" data-i18n="col_gst">GST %</th>
+                  <th scope="col" class="num" data-i18n="col_value">خرید قیمت پر مالیت ₹</th>
+                  <th scope="col" data-i18n="col_expiry">میعاد</th>
+                  <th scope="col" class="no-print" data-i18n="col_actions">کارروائی</th>
                 </tr>
               </thead>
               <tbody id="stock-body"></tbody>
@@ -252,14 +252,14 @@
           </div>
           <div class="empty center" id="empty" hidden>
             <div class="big" aria-hidden="true">📦</div>
-            <h2 class="mt0" data-i18n="empty_title"></h2>
-            <p class="muted" data-i18n="empty_help"></p>
+            <h2 class="mt0" data-i18n="empty_title">ابھی کوئی سامان نہیں</h2>
+            <p class="muted" data-i18n="empty_help">پہلا سامان شامل کریں، CSV امپورٹ کریں، یا مثال کا سامان لا کر دیکھیں۔</p>
             <div class="row" style="justify-content:center">
-              <button type="button" class="btn btn-primary" id="empty-add" data-i18n="add_item"></button>
-              <button type="button" class="btn" id="load-samples" data-i18n="load_samples"></button>
+              <button type="button" class="btn btn-primary" id="empty-add" data-i18n="add_item">سامان شامل کریں</button>
+              <button type="button" class="btn" id="load-samples" data-i18n="load_samples">مثال کا سامان لائیں</button>
             </div>
           </div>
-          <div class="center no-print"><button type="button" class="btn" id="more" data-i18n="show_more" hidden></button></div>
+          <div class="center no-print"><button type="button" class="btn" id="more" data-i18n="show_more" hidden>مزید دکھائیں</button></div>
         </div>
       </section>
 
@@ -268,32 +268,32 @@
         <div class="card stack">
           <div class="row no-print">
             <div class="seg" id="view-seg" role="group">
-              <button type="button" data-view="ledger" aria-pressed="true" data-i18n="view_ledger"></button>
-              <button type="button" data-view="daily" aria-pressed="false" data-i18n="view_daily"></button>
-              <button type="button" data-view="monthly" aria-pressed="false" data-i18n="view_monthly"></button>
+              <button type="button" data-view="ledger" aria-pressed="true" data-i18n="view_ledger">کھاتہ</button>
+              <button type="button" data-view="daily" aria-pressed="false" data-i18n="view_daily">روزانہ رپورٹ</button>
+              <button type="button" data-view="monthly" aria-pressed="false" data-i18n="view_monthly">ماہانہ رپورٹ</button>
             </div>
-            <button type="button" class="btn" id="export-moves"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves"></span></button>
+            <button type="button" class="btn" id="export-moves"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves">آمد و روانگی CSV</span></button>
           </div>
           <div class="filters no-print">
-            <label class="field"><span data-i18n="period"></span>
+            <label class="field"><span data-i18n="period">مدت</span>
               <select id="period">
-                <option value="today" data-i18n="p_today"></option>
-                <option value="7" data-i18n="p_7"></option>
-                <option value="month" selected data-i18n="p_month"></option>
-                <option value="last" data-i18n="p_last"></option>
-                <option value="year" data-i18n="p_year"></option>
-                <option value="all" data-i18n="p_all"></option>
-                <option value="custom" data-i18n="p_custom"></option>
+                <option value="today" data-i18n="p_today">آج</option>
+                <option value="7" data-i18n="p_7">پچھلے 7 دن</option>
+                <option value="month" selected data-i18n="p_month">یہ مہینہ</option>
+                <option value="last" data-i18n="p_last">پچھلا مہینہ</option>
+                <option value="year" data-i18n="p_year">یہ سال</option>
+                <option value="all" data-i18n="p_all">پورا عرصہ</option>
+                <option value="custom" data-i18n="p_custom">اپنی تاریخیں</option>
               </select>
             </label>
-            <label class="field" id="from-field" hidden><span data-i18n="from"></span><input type="date" id="from"></label>
-            <label class="field" id="to-field" hidden><span data-i18n="to"></span><input type="date" id="to"></label>
-            <label class="field"><span data-i18n="type"></span>
+            <label class="field" id="from-field" hidden><span data-i18n="from">سے</span><input type="date" id="from"></label>
+            <label class="field" id="to-field" hidden><span data-i18n="to">تک</span><input type="date" id="to"></label>
+            <label class="field"><span data-i18n="type">قسم</span>
               <select id="m-type">
-                <option value="" data-i18n="all_types"></option>
-                <option value="in" data-i18n="type_in"></option>
-                <option value="out" data-i18n="type_out"></option>
-                <option value="adj" data-i18n="type_adj"></option>
+                <option value="" data-i18n="all_types">تمام اقسام</option>
+                <option value="in" data-i18n="type_in">آمد</option>
+                <option value="out" data-i18n="type_out">روانگی</option>
+                <option value="adj" data-i18n="type_adj">درستی</option>
               </select>
             </label>
             <label class="field"><span data-i18n="search"></span><input id="m-search" type="search" dir="auto" autocomplete="off" data-i18n-placeholder="search"></label>
@@ -303,12 +303,12 @@
             <table class="table ledger">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="col_date"></th>
-                  <th scope="col" data-i18n="col_item"></th>
-                  <th scope="col" data-i18n="col_type"></th>
-                  <th scope="col" class="num" data-i18n="col_qty"></th>
-                  <th scope="col" data-i18n="col_note"></th>
-                  <th scope="col" class="no-print" data-i18n="col_actions"></th>
+                  <th scope="col" data-i18n="col_date">تاریخ</th>
+                  <th scope="col" data-i18n="col_item">سامان</th>
+                  <th scope="col" data-i18n="col_type">قسم</th>
+                  <th scope="col" class="num" data-i18n="col_qty">مقدار</th>
+                  <th scope="col" data-i18n="col_note">نوٹ</th>
+                  <th scope="col" class="no-print" data-i18n="col_actions">کارروائی</th>
                 </tr>
               </thead>
               <tbody id="ledger-body"></tbody>
@@ -319,19 +319,19 @@
               <thead>
                 <tr>
                   <th scope="col" id="rep-h1"></th>
-                  <th scope="col" class="num" data-i18n="col_moves"></th>
-                  <th scope="col" class="num" data-i18n="col_in"></th>
-                  <th scope="col" class="num" data-i18n="col_out"></th>
-                  <th scope="col" class="num" data-i18n="col_purchase"></th>
-                  <th scope="col" class="num" data-i18n="col_sales"></th>
+                  <th scope="col" class="num" data-i18n="col_moves">اندراجات</th>
+                  <th scope="col" class="num" data-i18n="col_in">آمد (مقدار)</th>
+                  <th scope="col" class="num" data-i18n="col_out">روانگی (مقدار)</th>
+                  <th scope="col" class="num" data-i18n="col_purchase">خرید ₹ (خرید قیمت پر)</th>
+                  <th scope="col" class="num" data-i18n="col_sales">فروخت ₹ (فروخت قیمت پر)</th>
                 </tr>
               </thead>
               <tbody id="report-body"></tbody>
               <tfoot id="report-foot"></tfoot>
             </table>
           </div>
-          <p class="muted center" id="m-empty" hidden data-i18n="no_moves"></p>
-          <div class="center no-print"><button type="button" class="btn" id="m-more" data-i18n="show_more" hidden></button></div>
+          <p class="muted center" id="m-empty" hidden data-i18n="no_moves">اس مدت میں کوئی آمد و روانگی نہیں۔</p>
+          <div class="center no-print"><button type="button" class="btn" id="m-more" data-i18n="show_more" hidden>مزید دکھائیں</button></div>
         </div>
       </section>
 
@@ -339,33 +339,33 @@
       <section id="pane-expiry" role="tabpanel" aria-labelledby="tab-expiry" hidden>
         <div class="card stack">
           <div class="row no-print">
-            <label class="field"><span data-i18n="exp_window"></span>
+            <label class="field"><span data-i18n="exp_window">اتنے دنوں میں میعاد ختم ہونے والا سامان دکھائیں</span>
               <select id="exp-days">
-                <option value="7" data-i18n="days_7"></option>
-                <option value="30" selected data-i18n="days_30"></option>
-                <option value="60" data-i18n="days_60"></option>
-                <option value="90" data-i18n="days_90"></option>
+                <option value="7" data-i18n="days_7">7 دن</option>
+                <option value="30" selected data-i18n="days_30">30 دن</option>
+                <option value="60" data-i18n="days_60">60 دن</option>
+                <option value="90" data-i18n="days_90">90 دن</option>
               </select>
             </label>
             <span class="badge primary" id="exp-count" aria-live="polite"></span>
           </div>
-          <p class="muted small mb0" data-i18n="exp_help"></p>
+          <p class="muted small mb0" data-i18n="exp_help">صرف وہ سامان دکھایا گیا ہے جس کی میعاد کی تاریخ ہو اور اسٹاک صفر سے زیادہ ہو۔ انہیں پہلے بیچیں یا واپس کریں۔</p>
           <div class="scroll-x">
             <table class="table exp">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="col_name"></th>
-                  <th scope="col" data-i18n="col_sku"></th>
-                  <th scope="col" class="num" data-i18n="col_stock"></th>
-                  <th scope="col" data-i18n="col_expiry"></th>
-                  <th scope="col" data-i18n="col_days"></th>
-                  <th scope="col" class="no-print" data-i18n="col_actions"></th>
+                  <th scope="col" data-i18n="col_name">سامان</th>
+                  <th scope="col" data-i18n="col_sku">کوڈ / بارکوڈ</th>
+                  <th scope="col" class="num" data-i18n="col_stock">اسٹاک</th>
+                  <th scope="col" data-i18n="col_expiry">میعاد</th>
+                  <th scope="col" data-i18n="col_days">باقی دن</th>
+                  <th scope="col" class="no-print" data-i18n="col_actions">کارروائی</th>
                 </tr>
               </thead>
               <tbody id="exp-body"></tbody>
             </table>
           </div>
-          <p class="muted center" id="exp-empty" hidden data-i18n="no_expiry"></p>
+          <p class="muted center" id="exp-empty" hidden data-i18n="no_expiry">اس مدت میں کسی کی میعاد ختم نہیں ہو رہی۔ یہاں دیکھنے کے لیے سامان میں میعاد کی تاریخ لکھیں۔</p>
         </div>
       </section>
 
@@ -374,41 +374,41 @@
         <div class="grid-2">
           <div class="card stack">
             <h2 data-i18n="settings"></h2>
-            <label class="field"><span data-i18n="shop_name"></span><input type="text" id="shop" maxlength="80" dir="auto" autocomplete="off" data-i18n-placeholder="shop_ph"></label>
-            <label class="field"><span data-i18n="default_gst"></span><input type="text" id="default-gst" inputmode="decimal" dir="ltr" list="gst-list" autocomplete="off" class="tnum"></label>
+            <label class="field"><span data-i18n="shop_name">دکان / گودام کا نام (شیٹ پر چھپے گا)</span><input type="text" id="shop" maxlength="80" dir="auto" autocomplete="off" data-i18n-placeholder="shop_ph"></label>
+            <label class="field"><span data-i18n="default_gst">نئے سامان کے لیے عام GST %</span><input type="text" id="default-gst" inputmode="decimal" dir="ltr" list="gst-list" autocomplete="off" class="tnum"></label>
           </div>
           <div class="card stack">
-            <h2 data-i18n="csv_title"></h2>
-            <p class="muted small mb0" data-i18n="csv_help"></p>
-            <code class="cols" data-i18n="csv_cols"></code>
-            <label class="check"><input type="checkbox" id="csv-update" checked> <span data-i18n="csv_update"></span></label>
+            <h2 data-i18n="csv_title">CSV امپورٹ اور ایکسپورٹ</h2>
+            <p class="muted small mb0" data-i18n="csv_help">CSV فائل Excel یا Google Sheets میں کھلتی ہے۔ امپورٹ کے لیے پہلی قطار میں یہ کالم نام ہوں (کسی بھی ترتیب میں؛ صرف &quot;name&quot; ضروری ہے):</p>
+            <code class="cols" data-i18n="csv_cols">name, sku, category, unit, purchase_price, selling_price, gst_percent, min_stock, supplier, expiry, stock</code>
+            <label class="check"><input type="checkbox" id="csv-update" checked> <span data-i18n="csv_update">اسی کوڈ والے موجودہ سامان کو اپ ڈیٹ کریں</span></label>
             <div class="row">
-              <button type="button" class="btn btn-primary" id="import-csv"><span aria-hidden="true">⬆</span> <span data-i18n="import_items"></span></button>
-              <button type="button" class="btn" id="export-items-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_items"></span></button>
-              <button type="button" class="btn" id="export-moves-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves"></span></button>
+              <button type="button" class="btn btn-primary" id="import-csv"><span aria-hidden="true">⬆</span> <span data-i18n="import_items">سامان CSV امپورٹ</span></button>
+              <button type="button" class="btn" id="export-items-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_items">سامان CSV</span></button>
+              <button type="button" class="btn" id="export-moves-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves">آمد و روانگی CSV</span></button>
             </div>
           </div>
           <div class="card stack">
-            <h2 data-i18n="backup_title"></h2>
-            <p class="muted small mb0" data-i18n="backup_help"></p>
+            <h2 data-i18n="backup_title">بیک اپ اور بحالی</h2>
+            <p class="muted small mb0" data-i18n="backup_help">بیک اپ ایک JSON فائل ہے جس میں تمام سامان، آمد و روانگی اور سیٹنگز ہیں۔ اسے Google Drive، WhatsApp یا پین ڈرائیو میں رکھیں۔ بحالی سے موجودہ ڈیٹا بدل جاتا ہے۔</p>
             <div class="row">
-              <button type="button" class="btn btn-primary" id="backup-btn"><span aria-hidden="true">💾</span> <span data-i18n="backup_dl"></span></button>
-              <button type="button" class="btn" id="restore-btn"><span aria-hidden="true">📂</span> <span data-i18n="restore"></span></button>
+              <button type="button" class="btn btn-primary" id="backup-btn"><span aria-hidden="true">💾</span> <span data-i18n="backup_dl">بیک اپ ڈاؤن لوڈ</span></button>
+              <button type="button" class="btn" id="restore-btn"><span aria-hidden="true">📂</span> <span data-i18n="restore">بیک اپ سے بحال کریں</span></button>
             </div>
             <p class="small mb0" id="last-backup" aria-live="polite"></p>
           </div>
           <div class="card stack">
-            <h2 data-i18n="storage_title"></h2>
+            <h2 data-i18n="storage_title">اس آلے پر اسٹوریج</h2>
             <p class="small mb0 tnum" id="storage-txt"></p>
             <div class="progress" aria-hidden="true"><span id="storage-bar" style="width:0%"></span></div>
             <p class="muted small mb0" id="persist-txt"></p>
           </div>
           <div class="card stack dz">
-            <h2 data-i18n="danger_title"></h2>
-            <label class="field"><span data-i18n="clear_old"></span><input type="date" id="old-date"></label>
+            <h2 data-i18n="danger_title">احتیاط والا حصہ</h2>
+            <label class="field"><span data-i18n="clear_old">اس تاریخ سے پہلے کے اندراجات ہٹائیں (اسٹاک وہی رہے گا)</span><input type="date" id="old-date"></label>
             <div class="row">
-              <button type="button" class="btn btn-danger" id="clear-old" data-i18n="clear_old_btn"></button>
-              <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset_all"></button>
+              <button type="button" class="btn btn-danger" id="clear-old" data-i18n="clear_old_btn">پرانے اندراجات ہٹائیں</button>
+              <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset_all">سب کچھ ہٹائیں</button>
             </div>
           </div>
         </div>
@@ -417,18 +417,18 @@
       <details class="card help" style="margin-top:16px">
         <summary data-i18n="help"></summary>
         <ul>
-          <li data-i18n="tip1"></li>
-          <li data-i18n="tip2"></li>
-          <li data-i18n="tip3"></li>
-          <li data-i18n="tip4"></li>
-          <li data-i18n="tip5"></li>
-          <li data-i18n="tip6"></li>
+          <li data-i18n="tip1">ہر سامان ایک بار اس کے بارکوڈ، اکائی، قیمت اور کم از کم اسٹاک کے ساتھ شامل کریں۔ گنتی رجسٹر خود رکھے گا۔</li>
+          <li data-i18n="tip2">اسکینر خانے میں کلک کریں، &quot;اسٹاک روانگی −1&quot; چنیں، اور بیچتے وقت سامان اسکین کریں؛ ہر اسکین سے اسٹاک ایک کم ہوگا۔ زیادہ مقدار کے لیے آمد / روانگی بٹن استعمال کریں۔</li>
+          <li data-i18n="tip3">&quot;کم اسٹاک&quot; خانہ بتاتا ہے کہ سپلائر سے کیا منگوانا ہے۔ سامان CSV ایکسپورٹ کر کے WhatsApp پر بھیجیں۔</li>
+          <li data-i18n="tip4">میڈیکل، ڈیری اور کاسمیٹک دکانیں: میعاد کی تاریخ لکھیں اور ہر ہفتے میعاد والا حصہ دیکھیں۔</li>
+          <li data-i18n="tip5">اسٹاک گنتی شیٹ پرنٹ کریں، گودام گنیں، پھر فرق کو درستی کے طور پر لکھیں۔</li>
+          <li data-i18n="tip6">ہر ہفتے بیک اپ ڈاؤن لوڈ کر کے Google Drive یا پین ڈرائیو میں رکھیں۔ براؤزر ڈیٹا مٹا سکتے ہیں۔</li>
         </ul>
-        <h3 data-i18n="ideas_title"></h3>
+        <h3 data-i18n="ideas_title">کام کے لیے خیالات</h3>
         <ul>
-          <li data-i18n="idea1"></li>
-          <li data-i18n="idea2"></li>
-          <li data-i18n="idea3"></li>
+          <li data-i18n="idea1">کریانہ یا میڈیکل اسٹور: روزانہ فروخت روانگی، ہفتہ وار خرید آمد، کم اسٹاک کی آرڈر فہرست۔</li>
+          <li data-i18n="idea2">اسکول یا دفتر کا اسٹور روم: کلاسوں کو دی گئی اسٹیشنری، لیب کا سامان اور کھیل کا سامان۔</li>
+          <li data-i18n="idea3">چھوٹا گودام یا ورکشاپ: خام مال آمد، تیار مال روانگی، اکاؤنٹنٹ کے لیے ماہانہ رپورٹ۔</li>
         </ul>
       </details>
 

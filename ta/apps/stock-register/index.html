@@ -149,48 +149,48 @@
 <body>
   <main id="app">
     <div id="ui">
-      <p class="edu-intro" data-i18n="intro"></p>
-      <p class="privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+      <p class="edu-intro" data-i18n="intro">கடை, கிடங்கு அல்லது ஸ்டோர் அறைக்கான எளிய ஸ்டாக் பதிவேடு: பொருட்கள், சரக்கு வரவு-விடுவிப்பு, குறைந்த ஸ்டாக் மற்றும் காலாவதி எச்சரிக்கை, தினசரி மற்றும் மாத அறிக்கைகள், CSV மற்றும் பேக்அப். எல்லாம் உங்கள் சாதனத்திலேயே இருக்கும்.</p>
+      <p class="privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">உங்கள் ஸ்டாக் தரவு இந்த உலாவியில், இந்த சாதனத்தில் மட்டுமே சேமிக்கப்படும். எதுவும் பதிவேற்றப்படாது. வாரம் ஒருமுறை பேக்அப் பதிவிறக்கவும்.</span></p>
 
       <div id="remind" class="callout warning row spread banner no-print" hidden>
         <span id="remind-txt" class="grow"></span>
         <span class="row">
-          <button type="button" class="btn btn-sm btn-primary" id="remind-backup" data-i18n="backup_now"></button>
-          <button type="button" class="btn btn-sm" id="remind-later" data-i18n="later"></button>
+          <button type="button" class="btn btn-sm btn-primary" id="remind-backup" data-i18n="backup_now">இப்போதே பேக்அப்</button>
+          <button type="button" class="btn btn-sm" id="remind-later" data-i18n="later">பிறகு</button>
         </span>
       </div>
       <div id="quota" class="callout danger row spread banner no-print" hidden>
         <span id="quota-txt" class="grow"></span>
-        <button type="button" class="btn btn-sm btn-primary" id="quota-backup" data-i18n="backup_dl"></button>
+        <button type="button" class="btn btn-sm btn-primary" id="quota-backup" data-i18n="backup_dl">பேக்அப் பதிவிறக்கு</button>
       </div>
       <div id="sample-banner" class="callout accent row spread banner no-print" hidden>
-        <span class="grow" data-i18n="sample_note"></span>
-        <button type="button" class="btn btn-sm" id="remove-samples" data-i18n="remove_samples"></button>
+        <span class="grow" data-i18n="sample_note">இவை செயலியை முயன்று பார்க்க உதாரணப் பொருட்கள். உங்கள் பொருட்களைச் சேர்க்கும்போது இவற்றை நீக்கவும்.</span>
+        <button type="button" class="btn btn-sm" id="remove-samples" data-i18n="remove_samples">உதாரணங்களை நீக்கு</button>
       </div>
       <div id="undo-bar" class="callout success row spread banner no-print" role="status" aria-live="polite" hidden>
         <span id="undo-txt" class="grow"></span>
-        <button type="button" class="btn btn-sm btn-primary" id="undo-btn" data-i18n="undo"></button>
+        <button type="button" class="btn btn-sm btn-primary" id="undo-btn" data-i18n="undo">மீட்டெடு</button>
       </div>
 
       <nav class="tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-        <button type="button" role="tab" id="tab-stock" aria-selected="true" aria-controls="pane-stock" data-tab="stock"><span aria-hidden="true">📦</span> <span data-i18n="tab_stock"></span></button>
-        <button type="button" role="tab" id="tab-moves" aria-selected="false" aria-controls="pane-moves" data-tab="moves"><span aria-hidden="true">🔁</span> <span data-i18n="tab_moves"></span></button>
-        <button type="button" role="tab" id="tab-expiry" aria-selected="false" aria-controls="pane-expiry" data-tab="expiry"><span aria-hidden="true">⏳</span> <span data-i18n="tab_expiry"></span></button>
-        <button type="button" role="tab" id="tab-data" aria-selected="false" aria-controls="pane-data" data-tab="data"><span aria-hidden="true">💾</span> <span data-i18n="tab_data"></span></button>
+        <button type="button" role="tab" id="tab-stock" aria-selected="true" aria-controls="pane-stock" data-tab="stock"><span aria-hidden="true">📦</span> <span data-i18n="tab_stock">ஸ்டாக்</span></button>
+        <button type="button" role="tab" id="tab-moves" aria-selected="false" aria-controls="pane-moves" data-tab="moves"><span aria-hidden="true">🔁</span> <span data-i18n="tab_moves">வரவு-விடுவிப்பு &amp; அறிக்கைகள்</span></button>
+        <button type="button" role="tab" id="tab-expiry" aria-selected="false" aria-controls="pane-expiry" data-tab="expiry"><span aria-hidden="true">⏳</span> <span data-i18n="tab_expiry">காலாவதி</span></button>
+        <button type="button" role="tab" id="tab-data" aria-selected="false" aria-controls="pane-data" data-tab="data"><span aria-hidden="true">💾</span> <span data-i18n="tab_data">தரவு &amp; பேக்அப்</span></button>
       </nav>
 
       <!-- ===================== STOCK ===================== -->
       <section id="pane-stock" role="tabpanel" aria-labelledby="tab-stock">
         <div class="card scan-card stack no-print">
           <div class="scanrow">
-            <label class="field grow"><span data-i18n="scan_label"></span>
+            <label class="field grow"><span data-i18n="scan_label">பார்கோடு ஸ்கேனர் / விரைவுத் தேடல்</span>
               <input id="scan" type="search" dir="auto" autocomplete="off" spellcheck="false" enterkeyhint="go" data-i18n-placeholder="scan_ph">
             </label>
-            <div class="field"><span data-i18n="scan_mode"></span>
+            <div class="field"><span data-i18n="scan_mode">ஸ்கேன் செய்தால்</span>
               <div class="seg" id="scan-mode" role="group">
-                <button type="button" data-mode="find" aria-pressed="true" data-i18n="mode_find"></button>
-                <button type="button" data-mode="in" aria-pressed="false" data-i18n="mode_in"></button>
-                <button type="button" data-mode="out" aria-pressed="false" data-i18n="mode_out"></button>
+                <button type="button" data-mode="find" aria-pressed="true" data-i18n="mode_find">கண்டுபிடி</button>
+                <button type="button" data-mode="in" aria-pressed="false" data-i18n="mode_in">சரக்கு வரவு +1</button>
+                <button type="button" data-mode="out" aria-pressed="false" data-i18n="mode_out">சரக்கு விடுவிப்பு −1</button>
               </div>
             </div>
           </div>
@@ -202,49 +202,49 @@
         <div class="card stack">
           <div class="filters no-print">
             <label class="field wide"><span data-i18n="search"></span><input id="search" type="search" dir="auto" autocomplete="off" data-i18n-placeholder="search"></label>
-            <label class="field"><span data-i18n="category"></span><select id="f-cat"></select></label>
-            <label class="field"><span data-i18n="status"></span>
+            <label class="field"><span data-i18n="category">வகை</span><select id="f-cat"></select></label>
+            <label class="field"><span data-i18n="status">நிலை</span>
               <select id="f-status">
-                <option value="" data-i18n="all_status"></option>
-                <option value="low" data-i18n="f_low"></option>
-                <option value="out" data-i18n="f_out"></option>
-                <option value="neg" data-i18n="f_neg"></option>
-                <option value="exp" data-i18n="f_exp"></option>
-                <option value="expired" data-i18n="f_expired"></option>
+                <option value="" data-i18n="all_status">எல்லாப் பொருட்களும்</option>
+                <option value="low" data-i18n="f_low">குறைந்த ஸ்டாக்</option>
+                <option value="out" data-i18n="f_out">தீர்ந்தது / எதிர்மறை</option>
+                <option value="neg" data-i18n="f_neg">எதிர்மறை ஸ்டாக்</option>
+                <option value="exp" data-i18n="f_exp">விரைவில் காலாவதி</option>
+                <option value="expired" data-i18n="f_expired">காலாவதியானவை</option>
               </select>
             </label>
-            <label class="field"><span data-i18n="sort"></span>
+            <label class="field"><span data-i18n="sort">வரிசை</span>
               <select id="sort">
-                <option value="name" data-i18n="sort_name"></option>
-                <option value="stock" data-i18n="sort_stock"></option>
-                <option value="value" data-i18n="sort_value"></option>
-                <option value="expiry" data-i18n="sort_expiry"></option>
-                <option value="new" data-i18n="sort_new"></option>
+                <option value="name" data-i18n="sort_name">பெயர் (A முதல் Z)</option>
+                <option value="stock" data-i18n="sort_stock">ஸ்டாக் (குறைவு முதல் அதிகம்)</option>
+                <option value="value" data-i18n="sort_value">மதிப்பு (அதிகம் முதல் குறைவு)</option>
+                <option value="expiry" data-i18n="sort_expiry">காலாவதி (முதலில் வருவது)</option>
+                <option value="new" data-i18n="sort_new">சமீபத்தில் சேர்த்தவை</option>
               </select>
             </label>
           </div>
           <div class="row no-print">
-            <button type="button" class="btn btn-primary" id="add-item"><span aria-hidden="true">＋</span> <span data-i18n="add_item"></span></button>
-            <button type="button" class="btn" id="print-sheet"><span aria-hidden="true">🖨</span> <span data-i18n="print_sheet"></span></button>
-            <button type="button" class="btn" id="export-items"><span aria-hidden="true">⬇</span> <span data-i18n="export_items"></span></button>
+            <button type="button" class="btn btn-primary" id="add-item"><span aria-hidden="true">＋</span> <span data-i18n="add_item">பொருள் சேர்</span></button>
+            <button type="button" class="btn" id="print-sheet"><span aria-hidden="true">🖨</span> <span data-i18n="print_sheet">ஸ்டாக் எண்ணிக்கைத் தாளை அச்சிடு</span></button>
+            <button type="button" class="btn" id="export-items"><span aria-hidden="true">⬇</span> <span data-i18n="export_items">பொருட்கள் CSV</span></button>
             <span class="muted small grow" id="count-txt" aria-live="polite"></span>
           </div>
           <div class="scroll-x">
             <table class="table stock" id="stock-table">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="col_name"></th>
-                  <th scope="col" data-i18n="col_sku"></th>
-                  <th scope="col" data-i18n="col_cat"></th>
-                  <th scope="col" class="num" data-i18n="col_stock"></th>
-                  <th scope="col" class="num" data-i18n="col_min"></th>
-                  <th scope="col" data-i18n="col_status"></th>
-                  <th scope="col" class="num" data-i18n="col_buy"></th>
-                  <th scope="col" class="num" data-i18n="col_sell"></th>
-                  <th scope="col" class="num" data-i18n="col_gst"></th>
-                  <th scope="col" class="num" data-i18n="col_value"></th>
-                  <th scope="col" data-i18n="col_expiry"></th>
-                  <th scope="col" class="no-print" data-i18n="col_actions"></th>
+                  <th scope="col" data-i18n="col_name">பொருள்</th>
+                  <th scope="col" data-i18n="col_sku">குறியீடு / பார்கோடு</th>
+                  <th scope="col" data-i18n="col_cat">வகை</th>
+                  <th scope="col" class="num" data-i18n="col_stock">ஸ்டாக்</th>
+                  <th scope="col" class="num" data-i18n="col_min">குறைந்தபட்சம்</th>
+                  <th scope="col" data-i18n="col_status">நிலை</th>
+                  <th scope="col" class="num" data-i18n="col_buy">வாங்கிய ₹</th>
+                  <th scope="col" class="num" data-i18n="col_sell">விற்பனை ₹</th>
+                  <th scope="col" class="num" data-i18n="col_gst">GST %</th>
+                  <th scope="col" class="num" data-i18n="col_value">மதிப்பு (வாங்கிய விலை) ₹</th>
+                  <th scope="col" data-i18n="col_expiry">காலாவதி</th>
+                  <th scope="col" class="no-print" data-i18n="col_actions">செயல்கள்</th>
                 </tr>
               </thead>
               <tbody id="stock-body"></tbody>
@@ -252,14 +252,14 @@
           </div>
           <div class="empty center" id="empty" hidden>
             <div class="big" aria-hidden="true">📦</div>
-            <h2 class="mt0" data-i18n="empty_title"></h2>
-            <p class="muted" data-i18n="empty_help"></p>
+            <h2 class="mt0" data-i18n="empty_title">இன்னும் பொருட்கள் இல்லை</h2>
+            <p class="muted" data-i18n="empty_help">முதல் பொருளைச் சேர்க்கவும், CSV இறக்குமதி செய்யவும், அல்லது எப்படி வேலை செய்கிறது என்று பார்க்க உதாரணப் பொருட்களை ஏற்றவும்.</p>
             <div class="row" style="justify-content:center">
-              <button type="button" class="btn btn-primary" id="empty-add" data-i18n="add_item"></button>
-              <button type="button" class="btn" id="load-samples" data-i18n="load_samples"></button>
+              <button type="button" class="btn btn-primary" id="empty-add" data-i18n="add_item">பொருள் சேர்</button>
+              <button type="button" class="btn" id="load-samples" data-i18n="load_samples">உதாரணப் பொருட்களை ஏற்று</button>
             </div>
           </div>
-          <div class="center no-print"><button type="button" class="btn" id="more" data-i18n="show_more" hidden></button></div>
+          <div class="center no-print"><button type="button" class="btn" id="more" data-i18n="show_more" hidden>மேலும் காட்டு</button></div>
         </div>
       </section>
 
@@ -268,32 +268,32 @@
         <div class="card stack">
           <div class="row no-print">
             <div class="seg" id="view-seg" role="group">
-              <button type="button" data-view="ledger" aria-pressed="true" data-i18n="view_ledger"></button>
-              <button type="button" data-view="daily" aria-pressed="false" data-i18n="view_daily"></button>
-              <button type="button" data-view="monthly" aria-pressed="false" data-i18n="view_monthly"></button>
+              <button type="button" data-view="ledger" aria-pressed="true" data-i18n="view_ledger">கணக்கு</button>
+              <button type="button" data-view="daily" aria-pressed="false" data-i18n="view_daily">தினசரி அறிக்கை</button>
+              <button type="button" data-view="monthly" aria-pressed="false" data-i18n="view_monthly">மாத அறிக்கை</button>
             </div>
-            <button type="button" class="btn" id="export-moves"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves"></span></button>
+            <button type="button" class="btn" id="export-moves"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves">வரவு-விடுவிப்பு CSV</span></button>
           </div>
           <div class="filters no-print">
-            <label class="field"><span data-i18n="period"></span>
+            <label class="field"><span data-i18n="period">காலம்</span>
               <select id="period">
-                <option value="today" data-i18n="p_today"></option>
-                <option value="7" data-i18n="p_7"></option>
-                <option value="month" selected data-i18n="p_month"></option>
-                <option value="last" data-i18n="p_last"></option>
-                <option value="year" data-i18n="p_year"></option>
-                <option value="all" data-i18n="p_all"></option>
-                <option value="custom" data-i18n="p_custom"></option>
+                <option value="today" data-i18n="p_today">இன்று</option>
+                <option value="7" data-i18n="p_7">கடந்த 7 நாட்கள்</option>
+                <option value="month" selected data-i18n="p_month">இந்த மாதம்</option>
+                <option value="last" data-i18n="p_last">கடந்த மாதம்</option>
+                <option value="year" data-i18n="p_year">இந்த ஆண்டு</option>
+                <option value="all" data-i18n="p_all">எல்லா காலமும்</option>
+                <option value="custom" data-i18n="p_custom">சொந்தத் தேதிகள்</option>
               </select>
             </label>
-            <label class="field" id="from-field" hidden><span data-i18n="from"></span><input type="date" id="from"></label>
-            <label class="field" id="to-field" hidden><span data-i18n="to"></span><input type="date" id="to"></label>
-            <label class="field"><span data-i18n="type"></span>
+            <label class="field" id="from-field" hidden><span data-i18n="from">முதல்</span><input type="date" id="from"></label>
+            <label class="field" id="to-field" hidden><span data-i18n="to">வரை</span><input type="date" id="to"></label>
+            <label class="field"><span data-i18n="type">வகை</span>
               <select id="m-type">
-                <option value="" data-i18n="all_types"></option>
-                <option value="in" data-i18n="type_in"></option>
-                <option value="out" data-i18n="type_out"></option>
-                <option value="adj" data-i18n="type_adj"></option>
+                <option value="" data-i18n="all_types">எல்லா வகைகளும்</option>
+                <option value="in" data-i18n="type_in">வரவு</option>
+                <option value="out" data-i18n="type_out">விடுவிப்பு</option>
+                <option value="adj" data-i18n="type_adj">சரிசெய்தல்</option>
               </select>
             </label>
             <label class="field"><span data-i18n="search"></span><input id="m-search" type="search" dir="auto" autocomplete="off" data-i18n-placeholder="search"></label>
@@ -303,12 +303,12 @@
             <table class="table ledger">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="col_date"></th>
-                  <th scope="col" data-i18n="col_item"></th>
-                  <th scope="col" data-i18n="col_type"></th>
-                  <th scope="col" class="num" data-i18n="col_qty"></th>
-                  <th scope="col" data-i18n="col_note"></th>
-                  <th scope="col" class="no-print" data-i18n="col_actions"></th>
+                  <th scope="col" data-i18n="col_date">தேதி</th>
+                  <th scope="col" data-i18n="col_item">பொருள்</th>
+                  <th scope="col" data-i18n="col_type">வகை</th>
+                  <th scope="col" class="num" data-i18n="col_qty">அளவு</th>
+                  <th scope="col" data-i18n="col_note">குறிப்பு</th>
+                  <th scope="col" class="no-print" data-i18n="col_actions">செயல்கள்</th>
                 </tr>
               </thead>
               <tbody id="ledger-body"></tbody>
@@ -319,19 +319,19 @@
               <thead>
                 <tr>
                   <th scope="col" id="rep-h1"></th>
-                  <th scope="col" class="num" data-i18n="col_moves"></th>
-                  <th scope="col" class="num" data-i18n="col_in"></th>
-                  <th scope="col" class="num" data-i18n="col_out"></th>
-                  <th scope="col" class="num" data-i18n="col_purchase"></th>
-                  <th scope="col" class="num" data-i18n="col_sales"></th>
+                  <th scope="col" class="num" data-i18n="col_moves">பதிவுகள்</th>
+                  <th scope="col" class="num" data-i18n="col_in">வரவு (அளவு)</th>
+                  <th scope="col" class="num" data-i18n="col_out">விடுவிப்பு (அளவு)</th>
+                  <th scope="col" class="num" data-i18n="col_purchase">கொள்முதல் ₹ (வாங்கிய விலை)</th>
+                  <th scope="col" class="num" data-i18n="col_sales">விற்பனை ₹ (விற்பனை விலை)</th>
                 </tr>
               </thead>
               <tbody id="report-body"></tbody>
               <tfoot id="report-foot"></tfoot>
             </table>
           </div>
-          <p class="muted center" id="m-empty" hidden data-i18n="no_moves"></p>
-          <div class="center no-print"><button type="button" class="btn" id="m-more" data-i18n="show_more" hidden></button></div>
+          <p class="muted center" id="m-empty" hidden data-i18n="no_moves">இந்தக் காலத்தில் வரவு-விடுவிப்பு இல்லை.</p>
+          <div class="center no-print"><button type="button" class="btn" id="m-more" data-i18n="show_more" hidden>மேலும் காட்டு</button></div>
         </div>
       </section>
 
@@ -339,33 +339,33 @@
       <section id="pane-expiry" role="tabpanel" aria-labelledby="tab-expiry" hidden>
         <div class="card stack">
           <div class="row no-print">
-            <label class="field"><span data-i18n="exp_window"></span>
+            <label class="field"><span data-i18n="exp_window">இத்தனை நாட்களில் காலாவதியாகும் பொருட்களைக் காட்டு</span>
               <select id="exp-days">
-                <option value="7" data-i18n="days_7"></option>
-                <option value="30" selected data-i18n="days_30"></option>
-                <option value="60" data-i18n="days_60"></option>
-                <option value="90" data-i18n="days_90"></option>
+                <option value="7" data-i18n="days_7">7 நாட்கள்</option>
+                <option value="30" selected data-i18n="days_30">30 நாட்கள்</option>
+                <option value="60" data-i18n="days_60">60 நாட்கள்</option>
+                <option value="90" data-i18n="days_90">90 நாட்கள்</option>
               </select>
             </label>
             <span class="badge primary" id="exp-count" aria-live="polite"></span>
           </div>
-          <p class="muted small mb0" data-i18n="exp_help"></p>
+          <p class="muted small mb0" data-i18n="exp_help">காலாவதி தேதி உள்ள, ஸ்டாக் 0 க்கு மேல் உள்ள பொருட்கள் மட்டுமே பட்டியலிடப்படும். இவற்றை முதலில் விற்கவும் அல்லது திருப்பவும்.</p>
           <div class="scroll-x">
             <table class="table exp">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="col_name"></th>
-                  <th scope="col" data-i18n="col_sku"></th>
-                  <th scope="col" class="num" data-i18n="col_stock"></th>
-                  <th scope="col" data-i18n="col_expiry"></th>
-                  <th scope="col" data-i18n="col_days"></th>
-                  <th scope="col" class="no-print" data-i18n="col_actions"></th>
+                  <th scope="col" data-i18n="col_name">பொருள்</th>
+                  <th scope="col" data-i18n="col_sku">குறியீடு / பார்கோடு</th>
+                  <th scope="col" class="num" data-i18n="col_stock">ஸ்டாக்</th>
+                  <th scope="col" data-i18n="col_expiry">காலாவதி</th>
+                  <th scope="col" data-i18n="col_days">மீதி நாட்கள்</th>
+                  <th scope="col" class="no-print" data-i18n="col_actions">செயல்கள்</th>
                 </tr>
               </thead>
               <tbody id="exp-body"></tbody>
             </table>
           </div>
-          <p class="muted center" id="exp-empty" hidden data-i18n="no_expiry"></p>
+          <p class="muted center" id="exp-empty" hidden data-i18n="no_expiry">இந்தக் காலத்தில் எதுவும் காலாவதியாகவில்லை. இங்கே பார்க்க பொருட்களுக்குக் காலாவதி தேதி சேர்க்கவும்.</p>
         </div>
       </section>
 
@@ -374,41 +374,41 @@
         <div class="grid-2">
           <div class="card stack">
             <h2 data-i18n="settings"></h2>
-            <label class="field"><span data-i18n="shop_name"></span><input type="text" id="shop" maxlength="80" dir="auto" autocomplete="off" data-i18n-placeholder="shop_ph"></label>
-            <label class="field"><span data-i18n="default_gst"></span><input type="text" id="default-gst" inputmode="decimal" dir="ltr" list="gst-list" autocomplete="off" class="tnum"></label>
+            <label class="field"><span data-i18n="shop_name">கடை / கிடங்கின் பெயர் (தாளில் அச்சிடப்படும்)</span><input type="text" id="shop" maxlength="80" dir="auto" autocomplete="off" data-i18n-placeholder="shop_ph"></label>
+            <label class="field"><span data-i18n="default_gst">புதிய பொருட்களுக்கான இயல்புநிலை GST %</span><input type="text" id="default-gst" inputmode="decimal" dir="ltr" list="gst-list" autocomplete="off" class="tnum"></label>
           </div>
           <div class="card stack">
-            <h2 data-i18n="csv_title"></h2>
-            <p class="muted small mb0" data-i18n="csv_help"></p>
-            <code class="cols" data-i18n="csv_cols"></code>
-            <label class="check"><input type="checkbox" id="csv-update" checked> <span data-i18n="csv_update"></span></label>
+            <h2 data-i18n="csv_title">CSV இறக்குமதி மற்றும் ஏற்றுமதி</h2>
+            <p class="muted small mb0" data-i18n="csv_help">CSV கோப்பு Excel அல்லது Google Sheets இல் திறக்கும். இறக்குமதிக்கு முதல் வரிசையில் இந்த நெடுவரிசைப் பெயர்கள் இருக்க வேண்டும் (எந்த வரிசையிலும்; &quot;name&quot; மட்டும் அவசியம்):</p>
+            <code class="cols" data-i18n="csv_cols">name, sku, category, unit, purchase_price, selling_price, gst_percent, min_stock, supplier, expiry, stock</code>
+            <label class="check"><input type="checkbox" id="csv-update" checked> <span data-i18n="csv_update">ஒரே குறியீடு உள்ள பழைய பொருட்களைப் புதுப்பி</span></label>
             <div class="row">
-              <button type="button" class="btn btn-primary" id="import-csv"><span aria-hidden="true">⬆</span> <span data-i18n="import_items"></span></button>
-              <button type="button" class="btn" id="export-items-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_items"></span></button>
-              <button type="button" class="btn" id="export-moves-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves"></span></button>
+              <button type="button" class="btn btn-primary" id="import-csv"><span aria-hidden="true">⬆</span> <span data-i18n="import_items">பொருட்கள் CSV இறக்குமதி</span></button>
+              <button type="button" class="btn" id="export-items-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_items">பொருட்கள் CSV</span></button>
+              <button type="button" class="btn" id="export-moves-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves">வரவு-விடுவிப்பு CSV</span></button>
             </div>
           </div>
           <div class="card stack">
-            <h2 data-i18n="backup_title"></h2>
-            <p class="muted small mb0" data-i18n="backup_help"></p>
+            <h2 data-i18n="backup_title">பேக்அப் மற்றும் மீட்டெடுப்பு</h2>
+            <p class="muted small mb0" data-i18n="backup_help">பேக்அப் என்பது எல்லாப் பொருட்கள், வரவு-விடுவிப்புகள் மற்றும் அமைப்புகளைக் கொண்ட ஒரு JSON கோப்பு. இதை Google Drive, WhatsApp அல்லது பென் டிரைவில் வைக்கவும். மீட்டெடுத்தால் தற்போதைய தரவு மாற்றப்படும்.</p>
             <div class="row">
-              <button type="button" class="btn btn-primary" id="backup-btn"><span aria-hidden="true">💾</span> <span data-i18n="backup_dl"></span></button>
-              <button type="button" class="btn" id="restore-btn"><span aria-hidden="true">📂</span> <span data-i18n="restore"></span></button>
+              <button type="button" class="btn btn-primary" id="backup-btn"><span aria-hidden="true">💾</span> <span data-i18n="backup_dl">பேக்அப் பதிவிறக்கு</span></button>
+              <button type="button" class="btn" id="restore-btn"><span aria-hidden="true">📂</span> <span data-i18n="restore">பேக்அப்பிலிருந்து மீட்டெடு</span></button>
             </div>
             <p class="small mb0" id="last-backup" aria-live="polite"></p>
           </div>
           <div class="card stack">
-            <h2 data-i18n="storage_title"></h2>
+            <h2 data-i18n="storage_title">இந்த சாதனத்தில் சேமிப்பகம்</h2>
             <p class="small mb0 tnum" id="storage-txt"></p>
             <div class="progress" aria-hidden="true"><span id="storage-bar" style="width:0%"></span></div>
             <p class="muted small mb0" id="persist-txt"></p>
           </div>
           <div class="card stack dz">
-            <h2 data-i18n="danger_title"></h2>
-            <label class="field"><span data-i18n="clear_old"></span><input type="date" id="old-date"></label>
+            <h2 data-i18n="danger_title">ஆபத்துப் பகுதி</h2>
+            <label class="field"><span data-i18n="clear_old">இந்தத் தேதிக்கு முந்தைய பதிவுகளை நீக்கு (ஸ்டாக் மாறாது)</span><input type="date" id="old-date"></label>
             <div class="row">
-              <button type="button" class="btn btn-danger" id="clear-old" data-i18n="clear_old_btn"></button>
-              <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset_all"></button>
+              <button type="button" class="btn btn-danger" id="clear-old" data-i18n="clear_old_btn">பழைய பதிவுகளை நீக்கு</button>
+              <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset_all">எல்லாவற்றையும் நீக்கு</button>
             </div>
           </div>
         </div>
@@ -417,18 +417,18 @@
       <details class="card help" style="margin-top:16px">
         <summary data-i18n="help"></summary>
         <ul>
-          <li data-i18n="tip1"></li>
-          <li data-i18n="tip2"></li>
-          <li data-i18n="tip3"></li>
-          <li data-i18n="tip4"></li>
-          <li data-i18n="tip5"></li>
-          <li data-i18n="tip6"></li>
+          <li data-i18n="tip1">ஒவ்வொரு பொருளையும் ஒருமுறை சேர்க்கவும்: பார்கோடு, அலகு, விலைகள், குறைந்தபட்ச ஸ்டாக். எண்ணிக்கையைப் பதிவேடு பார்த்துக்கொள்ளும்.</li>
+          <li data-i18n="tip2">ஸ்கேனர் பெட்டியில் கிளிக் செய்து, &quot;சரக்கு விடுவிப்பு −1&quot; ஐத் தேர்ந்தெடுத்து, விற்கும்போது பொருட்களை ஸ்கேன் செய்யவும்; ஒவ்வொரு ஸ்கேனும் ஸ்டாக்கை ஒன்று குறைக்கும். பெரிய அளவுக்கு வரவு / விடுவிப்பு பொத்தான்களைப் பயன்படுத்தவும்.</li>
+          <li data-i18n="tip3">&quot;குறைந்த ஸ்டாக்&quot; டைல் சப்ளையரிடம் என்ன ஆர்டர் செய்ய வேண்டும் என்று காட்டும். பொருட்கள் CSV ஐ ஏற்றுமதி செய்து WhatsApp இல் அனுப்பவும்.</li>
+          <li data-i18n="tip4">மருந்து, பால், அழகுசாதனக் கடைகள்: காலாவதி தேதிகளைச் சேர்த்து, வாரம் ஒருமுறை காலாவதிப் பிரிவைப் பார்க்கவும்.</li>
+          <li data-i18n="tip5">ஸ்டாக் எண்ணிக்கைத் தாளை அச்சிட்டு, கிடங்கை எண்ணி, வேறுபாடுகளைச் சரிசெய்தலாகப் பதிவு செய்யவும்.</li>
+          <li data-i18n="tip6">வாரம் ஒருமுறை பேக்அப் பதிவிறக்கி Google Drive அல்லது பென் டிரைவில் வைக்கவும். உலாவிகள் தரவை அழிக்கலாம்.</li>
         </ul>
-        <h3 data-i18n="ideas_title"></h3>
+        <h3 data-i18n="ideas_title">வேலைக்கான யோசனைகள்</h3>
         <ul>
-          <li data-i18n="idea1"></li>
-          <li data-i18n="idea2"></li>
-          <li data-i18n="idea3"></li>
+          <li data-i18n="idea1">மளிகை அல்லது மருந்துக் கடை: தினசரி விற்பனை விடுவிப்பு, வாராந்திரக் கொள்முதல் வரவு, குறைந்த ஸ்டாக் ஆர்டர் பட்டியல்.</li>
+          <li data-i18n="idea2">பள்ளி அல்லது அலுவலக ஸ்டோர் அறை: வகுப்புகளுக்கு வழங்கிய எழுதுபொருள், ஆய்வகப் பொருட்கள், விளையாட்டு உபகரணங்கள்.</li>
+          <li data-i18n="idea3">சிறிய கிடங்கு அல்லது பட்டறை: மூலப்பொருள் வரவு, முடிக்கப்பட்ட பொருள் விடுவிப்பு, கணக்காளருக்கான மாத அறிக்கை.</li>
         </ul>
       </details>
 

@@ -127,35 +127,35 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">குழப்பமான பட்டியலைப் படிப்படியாகச் சுத்தம் செய்யுங்கள்: கூடுதல் இடைவெளி, இருமுறை வந்த வரிசைகள், பல வகைத் தேதிகள், மொபைல் எண்கள், ₹ தொகைகள். படிகளை ஒரு ரெசிபியாகச் சேமித்து, அடுத்த மாதக் கோப்பில் மீண்டும் இயக்குங்கள்.</p>
 
     <section class="card" aria-labelledby="h-load">
-      <h2 class="dc-h" id="h-load" data-i18n="h_load"></h2>
+      <h2 class="dc-h" id="h-load" data-i18n="h_load">1. உங்கள் தரவைத் திறக்கவும்</h2>
       <div class="row">
-        <button class="btn" id="load-sample" type="button" data-i18n="load_sample"></button>
-        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file"></button>
+        <button class="btn" id="load-sample" type="button" data-i18n="load_sample">குழப்பமான மாதிரி</button>
+        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file">CSV கோப்பைத் திற</button>
         <button class="btn btn-danger" id="reset" type="button" data-i18n="reset"></button>
       </div>
       <details id="paste-box">
-        <summary data-i18n="paste_data"></summary>
+        <summary data-i18n="paste_data">தரவை ஒட்டு</summary>
         <textarea id="paste" class="no-i18n" data-i18n-placeholder="paste_ph" aria-label="CSV" data-i18n-aria-label="paste_data"></textarea>
-        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste"></button>
+        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste">ஒட்டிய தரவைப் பயன்படுத்து</button>
       </details>
-      <p class="dc-drop small muted" data-i18n="drop_hint"></p>
+      <p class="dc-drop small muted" data-i18n="drop_hint">CSV கோப்பை இந்தப் பக்கத்தில் இழுத்து விடலாம். Excel-இல்: File → Save as → CSV. உங்கள் கோப்பு இந்தச் சாதனத்திலேயே இருக்கும்.</p>
       <p id="data-info" class="no-i18n" aria-live="polite"></p>
       <p id="busy" class="muted" hidden data-i18n="loading"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-quality">
-      <h2 class="dc-h" id="h-quality" data-i18n="h_quality"></h2>
+      <h2 class="dc-h" id="h-quality" data-i18n="h_quality">2. தரவின் தரம்</h2>
       <div class="dc-scores" aria-live="polite">
         <div class="dc-score">
-          <span class="lbl" data-i18n="score_before"></span>
+          <span class="lbl" data-i18n="score_before">சுத்தத்துக்கு முன் மதிப்பெண்</span>
           <span class="big"><span id="score-before"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-before"></span></div>
         </div>
         <div class="dc-score after">
-          <span class="lbl" data-i18n="score_after"></span>
+          <span class="lbl" data-i18n="score_after">சுத்தத்துக்குப் பின் மதிப்பெண்</span>
           <span class="big"><span id="score-after"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-after"></span></div>
         </div>
@@ -164,56 +164,56 @@
       <div class="scroll-x">
         <table class="table dc-qt">
           <thead><tr>
-            <th scope="col" data-i18n="th_column"></th><th scope="col" data-i18n="th_type"></th>
-            <th scope="col" data-i18n="q_missing"></th><th scope="col" data-i18n="q_invalid"></th><th scope="col" data-i18n="q_spaces"></th>
+            <th scope="col" data-i18n="th_column">நெடுவரிசை</th><th scope="col" data-i18n="th_type">எப்படித் தெரிகிறது</th>
+            <th scope="col" data-i18n="q_missing">காலி</th><th scope="col" data-i18n="q_invalid">சரியான வடிவில் இல்லை</th><th scope="col" data-i18n="q_spaces">கூடுதல் இடைவெளி</th>
           </tr></thead>
           <tbody id="q-body"></tbody>
         </table>
       </div>
-      <p class="tiny muted" data-i18n="quality_note"></p>
+      <p class="tiny muted" data-i18n="quality_note">மதிப்பெண் = பிரச்சினை இல்லாத கலங்களின் பங்கு. பிரச்சினை என்றால் காலி மதிப்பு, கூடுதல் இடைவெளி, சரியான வடிவில் இல்லாத மதிப்பு, அல்லது முழுதாக இருமுறை வந்த வரிசை.</p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-steps">
-      <h2 class="dc-h" id="h-steps" data-i18n="h_steps"></h2>
+      <h2 class="dc-h" id="h-steps" data-i18n="h_steps">3. சுத்தம் செய்யும் படிகள் (உங்கள் ரெசிபி)</h2>
       <div class="panel stack">
         <div class="dc-add">
-          <label class="field"><span data-i18n="step_type"></span><select id="step-type"></select></label>
+          <label class="field"><span data-i18n="step_type">படியைச் சேர்</span><select id="step-type"></select></label>
         </div>
         <div id="step-form"></div>
         <div class="dc-actions">
-          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step"></button>
-          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest"></button>
+          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step">படியைச் சேர்</button>
+          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest">படிகளைப் பரிந்துரை</button>
         </div>
       </div>
       <ol id="recipe" aria-live="polite"></ol>
-      <p id="recipe-empty" class="muted" data-i18n="recipe_empty"></p>
+      <p id="recipe-empty" class="muted" data-i18n="recipe_empty">இன்னும் படிகள் இல்லை. மேலே ஒரு படியைத் தேர்ந்தெடுத்து &quot;படியைச் சேர்&quot; அழுத்துங்கள், அல்லது &quot;படிகளைப் பரிந்துரை&quot; அழுத்துங்கள்.</p>
       <div class="dc-actions" style="margin-top:12px">
-        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo"></button>
-        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe"></button>
-        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe"></button>
-        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps"></button>
+        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo">செயல்தவிர்</button>
+        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe">ரெசிபி ஏற்றுமதி</button>
+        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe">ரெசிபி இறக்குமதி</button>
+        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps">எல்லாப் படிகளையும் நீக்கு</button>
       </div>
       <p class="callout small" style="margin-top:12px" data-i18n-html="pipeline_note"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-preview">
-      <h2 class="dc-h" id="h-preview" data-i18n="h_preview"></h2>
+      <h2 class="dc-h" id="h-preview" data-i18n="h_preview">4. சுத்தமான தரவு</h2>
       <div class="dc-bar">
         <div class="seg" id="view-seg" role="group">
-          <button type="button" data-v="clean" data-i18n="view_clean"></button>
-          <button type="button" data-v="orig" data-i18n="view_orig"></button>
+          <button type="button" data-v="clean" data-i18n="view_clean">சுத்தம்</button>
+          <button type="button" data-v="orig" data-i18n="view_orig">அசல்</button>
         </div>
-        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show"></span>
+        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show">காட்டு</span>
           <select id="filter">
-            <option value="all" data-i18n="show_all"></option>
-            <option value="changed" data-i18n="show_changed"></option>
-            <option value="problems" data-i18n="show_problems"></option>
+            <option value="all" data-i18n="show_all">எல்லா வரிசைகளும்</option>
+            <option value="changed" data-i18n="show_changed">மாறிய வரிசைகள்</option>
+            <option value="problems" data-i18n="show_problems">பிரச்சினை உள்ள வரிசைகள்</option>
           </select>
         </label>
       </div>
-      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed"></span><span class="lg-bad" data-i18n="legend_bad"></span></div>
+      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed">ஒரு படியால் மாறியது</span><span class="lg-bad" data-i18n="legend_bad">காலி அல்லது சரியான வடிவில் இல்லை</span></div>
       <div class="dc-gridwrap no-i18n"><table class="table" id="grid"></table></div>
-      <p id="no-rows" class="muted" hidden data-i18n="no_rows"></p>
+      <p id="no-rows" class="muted" hidden data-i18n="no_rows">காட்ட வரிசைகள் இல்லை.</p>
       <div class="dc-pager" id="pager">
         <button class="btn btn-sm" id="pg-prev" type="button" data-i18n="previous"></button>
         <span id="page-info" class="small"></span>
@@ -221,23 +221,23 @@
       </div>
       <div class="dc-foot">
         <span id="out-count" class="small muted"></span>
-        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv"></button>
+        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv">சுத்தமான CSV பதிவிறக்கு</button>
       </div>
     </section>
 
     <details class="card dc-sec">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">குழப்பமான மாதிரியுடன் தொடங்குங்கள்: &quot;படிகளைப் பரிந்துரை&quot; அழுத்தி, அட்டவணையில் பச்சை (மாறியவை) மற்றும் சிவப்பு (பிரச்சினை) கலங்களைப் பாருங்கள்.</li>
+        <li data-i18n="tip2">அலுவலக வேலைக்கு: மாதாமாதம் வரும் வாடிக்கையாளர் அல்லது பணியாளர் பட்டியலுக்கு ஒருமுறை ரெசிபி உருவாக்கி ஏற்றுமதி செய்யுங்கள். அடுத்த மாதம் புதிய கோப்பைத் திறந்து, ரெசிபியை இறக்குமதி செய்து, ஒரு நிமிடத்தில் சுத்தமான CSV பதிவிறக்குங்கள்.</li>
+        <li data-i18n="tip3">வரிசை முக்கியம்: இருமுறை வந்த வரிசைகளை நீக்கும் முன் இடைவெளியையும் பெரிய-சிறிய எழுத்தையும் சரிசெய்யுங்கள்; அப்போதுதான் &quot;பிரியா  சர்மா&quot;, &quot;பிரியா சர்மா&quot; ஒரே நபர் எனத் தெரியும்.</li>
+        <li data-i18n="tip4">வகுப்புச் செயல்பாடு: ஒவ்வொரு குழுவுக்கும் ஒரே குழப்பமான பட்டியலைக் கொடுங்கள். குழுக்கள் முதலில் தாளில் சுத்தம் செய்யும் படிகளை எழுதி, பிறகு இங்கே முயலட்டும். குறைந்த படிகளில் அதிக மதிப்பெண் பெற்றது யார்?</li>
+        <li data-i18n="tip5">ஒரு படியை அணைத்து, அது என்ன செய்தது என்று பாருங்கள். ↑ ↓ மூலம் வரிசையை மாற்றுங்கள்; தவறு நடந்தால் &quot;செயல்தவிர்&quot; அழுத்துங்கள்.</li>
+        <li data-i18n="tip6">சுத்தத்துக்குப் பிறகும் உள்ள சிவப்புக் கலங்களைப் பாருங்கள்: சில மதிப்புகளை (5 இலக்க மொபைல் எண் போல) கணினியால் சரிசெய்ய முடியாது. ஒருவர் அவற்றைச் சரிபார்க்க வேண்டும்.</li>
       </ul>
     </details>
     <details class="card dc-sec">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">தெரிந்துகொள்ள வேண்டிய சொற்கள்: உள்ளே என்ன நடக்கிறது</summary>
       <ul>
         <li data-i18n-html="w_dataset"></li>
         <li data-i18n-html="w_missing"></li>

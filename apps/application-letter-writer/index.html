@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Application & Letter Writer · AI Pathshala</title>
+  <meta name="description" content="Free ready formats for leave applications, bank letters, TC and fee concession requests, complaints, job applications and resignation letters in 12 Indian languages. Private, works offline.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .alw-priv { margin: 0 0 14px; }
+    .alw-priv .badge { white-space: normal; font-size: .84rem; padding: 5px 10px; line-height: 1.4; }
+    .alw-split { display: grid; gap: 16px; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); align-items: start; }
+    @media (max-width: 900px) { .alw-split { grid-template-columns: minmax(0, 1fr); } }
+    .alw-split h2 { font-size: 1.1rem; margin: 0; }
+    .alw-form h2 { margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .alw-form select, .alw-form input, .alw-form textarea { width: 100%; min-width: 0; box-sizing: border-box; }
+    .alw-form textarea { min-height: 64px; }
+    .alw-fields { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .alw-fields .field { grid-column: 1 / -1; }
+    .alw-fields .field.half { grid-column: auto; }
+    @media (max-width: 480px) { .alw-fields .field.half { grid-column: 1 / -1; } }
+    .alw-preview { min-width: 0; }
+    @media (min-width: 901px) { .alw-preview { position: sticky; top: 12px; } }
+    /* the letter is always dark ink on white paper, in both themes */
+    .alw-paper {
+      background: #fff; color: #16181a; border: 1px solid var(--border); border-radius: 10px;
+      padding: 28px 30px; box-shadow: var(--shadow); font-size: 1rem; line-height: 1.7;
+      overflow-wrap: anywhere; word-break: break-word; text-align: start; min-width: 0;
+    }
+    .alw-paper { font-family: "Noto Sans", "Nirmala UI", "Segoe UI", system-ui, -apple-system, "Noto Sans Devanagari", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Oriya", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", sans-serif; }
+    .alw-paper[lang="ur"] { line-height: 2.3; font-family: "Noto Nastaliq Urdu", "Jameel Noori Nastaleeq", "Urdu Typesetting", "Noto Naskh Arabic", "Segoe UI", serif; }
+    .alw-paper .lt { margin: 0 0 1.1em; }
+    .alw-paper .lt:last-child { margin-bottom: 0; }
+    .alw-paper .lt-subj { font-weight: 700; }
+    .alw-paper .lt-sign { margin-top: 1.6em; }
+    @media (max-width: 480px) { .alw-paper { padding: 18px 16px; font-size: .95rem; } }
+    .alw-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .alw-actions .btn { flex: 1 1 auto; justify-content: center; min-height: 44px; white-space: normal; }
+    .alw-notes p { margin: 0 0 6px; }
+    #printRoot { display: none; }
+    @media print {
+      @page { size: A4; margin: 20mm 18mm; }
+      #app > *:not(#printRoot) { display: none !important; }
+      #printRoot { display: block !important; }
+      #printRoot .alw-paper { border: 0; box-shadow: none; padding: 0; border-radius: 0; font-size: 12.5pt; line-height: 1.6; color: #000; }
+      #printRoot .alw-paper[lang="ur"] { line-height: 2.2; }
+      #printRoot .lt { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="alw-priv"><span class="badge success" data-i18n="privacy"></span></p>
+
+    <div class="alw-split">
+      <section class="card stack alw-form" id="formCard">
+        <label class="field" for="type"><span data-i18n="f_type"></span>
+          <select id="type"></select>
+        </label>
+        <label class="field" for="letterLang"><span data-i18n="f_letter_lang"></span>
+          <select id="letterLang" class="no-i18n"></select>
+          <span class="hint" data-i18n="letter_lang_hint"></span>
+        </label>
+        <h2 data-i18n="h_details"></h2>
+        <p class="muted small" style="margin-top:4px" data-i18n="type_hint"></p>
+        <div class="alw-fields" id="fields"></div>
+        <div class="row">
+          <button type="button" class="btn btn-ghost btn-sm" id="clearBtn" data-i18n="btn_clear"></button>
+        </div>
+      </section>
+
+      <section class="stack alw-preview" id="previewCol">
+        <h2 data-i18n="h_preview"></h2>
+        <div id="sampleBanner" class="callout accent" role="note" hidden><span data-i18n="sample_banner"></span></div>
+        <div id="dateWarn" class="callout warning" role="status" hidden><span data-i18n="warn_dates"></span></div>
+        <div id="letter" class="alw-paper no-i18n" aria-live="polite"></div>
+        <div class="alw-actions">
+          <button type="button" class="btn btn-primary" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
+          <button type="button" class="btn" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="btn_print"></span></button>
+          <button type="button" class="btn" id="downloadBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="btn_download"></span></button>
+        </div>
+        <div class="alw-notes muted small">
+          <p id="blankNote" hidden data-i18n="blank_note"></p>
+          <p data-i18n="check_note"></p>
+        </div>
+      </section>
+    </div>
+
+    <details class="card" style="margin-top:16px">
+      <summary><strong data-i18n="help_title"></strong></summary>
+      <ul class="stack" style="margin-top:10px">
+        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li><li data-i18n="tip4"></li><li data-i18n="tip5"></li>
+      </ul>
+    </details>
+
+    <div id="printRoot" class="no-i18n" aria-hidden="true"></div>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -177,23 +177,23 @@
 </head>
 <body>
   <main id="app">
-    <div class="print-only print-head"><h2 class="mb0" data-i18n="app_title"></h2><p class="mb0" id="print-sum"></p></div>
-    <p class="edu-intro" data-i18n="intro"></p>
+    <div class="print-only print-head"><h2 class="mb0" data-i18n="app_title">క్లస్టరింగ్ ల్యాబ్ (k-means)</h2><p class="mb0" id="print-sum"></p></div>
+    <p class="edu-intro" data-i18n="intro">ఏ లేబుల్ లేకుండా కంప్యూటర్ తనంతట తానే డేటాలో గుంపులను ఎలా కనుగొంటుందో చూడండి: k-means పద్ధతి, ఒక్కో అడుగుగా.</p>
 
     <div class="km" id="km">
       <!-- ============ the board ============ -->
       <section class="card km-stage" aria-labelledby="board-h">
-        <h2 id="board-h" class="mb0" hidden data-i18n="board_title"></h2>
+        <h2 id="board-h" class="mb0" hidden data-i18n="board_title">డేటా చిత్రం</h2>
         <div class="km-stats">
-          <div class="stat"><span class="lbl" data-i18n="stat_round"></span><span class="num" id="round" data-value="0">0</span></div>
-          <div class="stat" data-i18n-title="inertia_tip"><span class="lbl" data-i18n="stat_inertia"></span><span class="num" id="inertia" data-value="">–</span></div>
-          <div class="stat"><span class="lbl" data-i18n="stat_points"></span><span class="num" id="npoints" data-value="0">0</span></div>
+          <div class="stat"><span class="lbl" data-i18n="stat_round">రౌండ్</span><span class="num" id="round" data-value="0">0</span></div>
+          <div class="stat" data-i18n-title="inertia_tip"><span class="lbl" data-i18n="stat_inertia">ఇనర్షియా</span><span class="num" id="inertia" data-value="">–</span></div>
+          <div class="stat"><span class="lbl" data-i18n="stat_points">బిందువులు</span><span class="num" id="npoints" data-value="0">0</span></div>
           <div class="phase-box">
-            <span class="lbl" id="next-lbl" data-i18n="next_step"></span>
+            <span class="lbl" id="next-lbl" data-i18n="next_step">తదుపరి అడుగు</span>
             <div class="phases" role="group" aria-labelledby="next-lbl">
-              <span class="phase" id="ph-assign" data-i18n="phase_assign"></span>
+              <span class="phase" id="ph-assign" data-i18n="phase_assign">① కేటాయించు</span>
               <span class="phase-arrow" aria-hidden="true">→</span>
-              <span class="phase" id="ph-update" data-i18n="phase_update"></span>
+              <span class="phase" id="ph-update" data-i18n="phase_update">② కేంద్రం కదుపు</span>
             </div>
           </div>
         </div>
@@ -203,14 +203,14 @@
         <div class="km-ctrl no-print">
           <button type="button" class="btn btn-primary btn-lg" id="step"></button>
           <button type="button" class="btn btn-lg" id="run" aria-pressed="false"><span aria-hidden="true" id="run-ico">▶</span> <span id="run-txt"></span></button>
-          <button type="button" class="btn btn-lg" id="new-start" data-i18n-title="new_start_tip"><span aria-hidden="true">🎲</span> <span data-i18n="new_start"></span></button>
+          <button type="button" class="btn btn-lg" id="new-start" data-i18n-title="new_start_tip"><span aria-hidden="true">🎲</span> <span data-i18n="new_start">కొత్త ప్రారంభం</span></button>
         </div>
         <div class="km-ctrl2 no-print">
-          <span class="lbl" id="speed-lbl" data-i18n="speed"></span>
+          <span class="lbl" id="speed-lbl" data-i18n="speed">వేగం</span>
           <div class="seg" id="speed" role="group" aria-labelledby="speed-lbl">
-            <button type="button" data-speed="slow" data-i18n="speed_slow"></button>
-            <button type="button" data-speed="normal" data-i18n="speed_normal"></button>
-            <button type="button" data-speed="fast" data-i18n="speed_fast"></button>
+            <button type="button" data-speed="slow" data-i18n="speed_slow">నెమ్మది</button>
+            <button type="button" data-speed="normal" data-i18n="speed_normal">సాధారణం</button>
+            <button type="button" data-speed="fast" data-i18n="speed_fast">వేగంగా</button>
           </div>
           <div class="push">
             <button type="button" class="btn btn-sm" id="fs-btn"><span aria-hidden="true">⛶</span> <span data-i18n="fullscreen"></span></button>
@@ -223,33 +223,33 @@
       <!-- ============ side panel ============ -->
       <aside class="km-side">
         <section class="card stack" aria-labelledby="data-h">
-          <h2 id="data-h" data-i18n="data_title"></h2>
+          <h2 id="data-h" data-i18n="data_title">డేటా</h2>
           <div class="ds-grid" id="ds-grid" role="group" aria-labelledby="data-h">
-            <button type="button" class="ds-btn" id="ds-blobs3" data-ds="blobs3"><canvas width="104" height="104" aria-hidden="true"></canvas><span data-i18n="ds_blobs3"></span></button>
-            <button type="button" class="ds-btn" id="ds-blobs5" data-ds="blobs5"><canvas width="104" height="104" aria-hidden="true"></canvas><span data-i18n="ds_blobs5"></span></button>
-            <button type="button" class="ds-btn" id="ds-ring" data-ds="ring"><canvas width="104" height="104" aria-hidden="true"></canvas><span data-i18n="ds_ring"></span></button>
-            <button type="button" class="ds-btn" id="ds-random" data-ds="random"><canvas width="104" height="104" aria-hidden="true"></canvas><span data-i18n="ds_random"></span></button>
-            <button type="button" class="ds-btn" id="ds-customers" data-ds="customers"><canvas width="104" height="104" aria-hidden="true"></canvas><span data-i18n="ds_customers"></span></button>
+            <button type="button" class="ds-btn" id="ds-blobs3" data-ds="blobs3"><canvas width="104" height="104" aria-hidden="true"></canvas><span data-i18n="ds_blobs3">3 గుత్తులు</span></button>
+            <button type="button" class="ds-btn" id="ds-blobs5" data-ds="blobs5"><canvas width="104" height="104" aria-hidden="true"></canvas><span data-i18n="ds_blobs5">5 గుత్తులు</span></button>
+            <button type="button" class="ds-btn" id="ds-ring" data-ds="ring"><canvas width="104" height="104" aria-hidden="true"></canvas><span data-i18n="ds_ring">వలయం</span></button>
+            <button type="button" class="ds-btn" id="ds-random" data-ds="random"><canvas width="104" height="104" aria-hidden="true"></canvas><span data-i18n="ds_random">యాదృచ్ఛికం</span></button>
+            <button type="button" class="ds-btn" id="ds-customers" data-ds="customers"><canvas width="104" height="104" aria-hidden="true"></canvas><span data-i18n="ds_customers">దుకాణ కస్టమర్లు</span></button>
           </div>
           <p class="callout small mb0" id="cust-note" hidden></p>
           <div>
-            <p class="sub-lbl" id="tool-lbl" data-i18n="tool_title"></p>
+            <p class="sub-lbl" id="tool-lbl" data-i18n="tool_title">చిత్రంపై తట్టి లేదా లాగి</p>
             <div class="seg full" id="tools" role="group" aria-labelledby="tool-lbl">
-              <button type="button" id="tool-add" data-tool="add"><span aria-hidden="true">➕</span> <span data-i18n="tool_add"></span></button>
-              <button type="button" id="tool-erase" data-tool="erase"><span aria-hidden="true">🧽</span> <span data-i18n="tool_erase"></span></button>
+              <button type="button" id="tool-add" data-tool="add"><span aria-hidden="true">➕</span> <span data-i18n="tool_add">బిందువులు జోడించు</span></button>
+              <button type="button" id="tool-erase" data-tool="erase"><span aria-hidden="true">🧽</span> <span data-i18n="tool_erase">చెరిపివేయి</span></button>
             </div>
-            <p class="hint" data-i18n="drag_tip"></p>
+            <p class="hint" data-i18n="drag_tip">చిట్కా: పెద్ద క్రాస్‌ను లాగి కేంద్రాన్ని మీరే కదపండి.</p>
           </div>
           <div class="count-line">
             <span class="small muted" id="count-line"></span>
-            <button type="button" class="btn btn-sm btn-danger" id="clear-pts" data-i18n="clear_all"></button>
+            <button type="button" class="btn btn-sm btn-danger" id="clear-pts" data-i18n="clear_all">అన్ని బిందువులూ తీసేయి</button>
           </div>
         </section>
 
         <section class="card stack" aria-labelledby="set-h">
-          <h2 id="set-h" data-i18n="settings_title"></h2>
+          <h2 id="set-h" data-i18n="settings_title">సెట్టింగ్‌లు</h2>
           <div>
-            <p class="sub-lbl" id="k-lbl" data-i18n="k_label"></p>
+            <p class="sub-lbl" id="k-lbl" data-i18n="k_label">క్లస్టర్ల సంఖ్య (k)</p>
             <div class="stepper" role="group" aria-labelledby="k-lbl">
               <button type="button" class="btn" id="k-minus" data-i18n-aria-label="k_less" data-i18n-title="k_less">−</button>
               <output id="k-val" aria-live="polite">3</output>
@@ -258,19 +258,19 @@
             </div>
           </div>
           <div>
-            <p class="sub-lbl" id="init-lbl" data-i18n="init_label"></p>
+            <p class="sub-lbl" id="init-lbl" data-i18n="init_label">ప్రారంభ కేంద్రాలు</p>
             <div class="seg full" id="init" role="group" aria-labelledby="init-lbl">
-              <button type="button" id="init-random" data-init="random" data-i18n="init_random"></button>
-              <button type="button" id="init-pp" data-init="pp" data-i18n="init_pp"></button>
+              <button type="button" id="init-random" data-init="random" data-i18n="init_random">యాదృచ్ఛికం</button>
+              <button type="button" id="init-pp" data-init="pp" data-i18n="init_pp">k-means++</button>
             </div>
             <p class="hint" id="init-hint"></p>
           </div>
           <div class="checks">
-            <label class="check"><input type="checkbox" id="opt-regions"> <span data-i18n="show_regions"></span></label>
-            <label class="check"><input type="checkbox" id="opt-lines"> <span data-i18n="show_lines"></span></label>
-            <label class="check"><input type="checkbox" id="opt-trails"> <span data-i18n="show_trails"></span></label>
+            <label class="check"><input type="checkbox" id="opt-regions"> <span data-i18n="show_regions">ప్రతి కేంద్రం ప్రాంతానికి రంగు వేయి</span></label>
+            <label class="check"><input type="checkbox" id="opt-lines"> <span data-i18n="show_lines">బిందువుల నుండి వాటి కేంద్రానికి గీతలు</span></label>
+            <label class="check"><input type="checkbox" id="opt-trails"> <span data-i18n="show_trails">ప్రతి కేంద్రం దారి చూపించు</span></label>
           </div>
-          <div><button type="button" class="btn btn-sm btn-danger" id="reset-all"><span aria-hidden="true">↺</span> <span data-i18n="reset_all"></span></button></div>
+          <div><button type="button" class="btn btn-sm btn-danger" id="reset-all"><span aria-hidden="true">↺</span> <span data-i18n="reset_all">యాప్ రీసెట్ చేయి</span></button></div>
         </section>
       </aside>
     </div>
@@ -278,28 +278,28 @@
     <!-- ============ results ============ -->
     <div class="grid-2 km-results">
       <section class="card stack" aria-labelledby="groups-h">
-        <h2 id="groups-h" data-i18n="groups_title"></h2>
-        <p class="small muted mb0" id="groups-empty" data-i18n="groups_empty"></p>
+        <h2 id="groups-h" data-i18n="groups_title">కనుగొన్న క్లస్టర్లు</h2>
+        <p class="small muted mb0" id="groups-empty" data-i18n="groups_empty">క్లస్టర్లు చేయడానికి &quot;అడుగు&quot; నొక్కండి.</p>
         <div class="scroll-x"><table class="table" id="groups"></table></div>
-        <p class="small muted mb0" data-i18n="names_hint"></p>
+        <p class="small muted mb0" data-i18n="names_hint">k-means గుంపులను మాత్రమే కనుగొంటుంది. ప్రతి గుంపు అర్థం చెప్పడం మనుషుల పని!</p>
         <div id="history-box" class="stack">
-          <h3 data-i18n="history_title"></h3>
+          <h3 data-i18n="history_title">ప్రతి రౌండ్ తర్వాత ఇనర్షియా</h3>
           <canvas id="history" class="chart" role="img" data-i18n-aria-label="history_title"></canvas>
         </div>
       </section>
 
       <section class="card stack" id="elbow-card" aria-labelledby="elbow-h">
-        <h2 id="elbow-h" data-i18n="elbow_title"></h2>
-        <p class="small mb0" data-i18n="elbow_desc"></p>
+        <h2 id="elbow-h" data-i18n="elbow_title">ఎల్బో చార్ట్: ఎన్ని క్లస్టర్లు?</h2>
+        <p class="small mb0" data-i18n="elbow_desc">ఎక్కువ గుంపులు అంటే ఎప్పుడూ తక్కువ ఇనర్షియా, కాబట్టి అతి చిన్న విలువ జవాబు కాదు. ఇది k = 1 నుండి 8 వరకు నడుపుతుంది (ప్రతి దానికీ 10 ప్రారంభాల్లో ఉత్తమమైనది). గీత వేగంగా పడిపోవడం ఆగే మలుపును, అంటే &quot;మోచేయి&quot; (elbow)ని, వెతకండి.</p>
         <div class="row">
-          <button type="button" class="btn btn-accent" id="elbow-btn"><span aria-hidden="true">📉</span> <span data-i18n="elbow_btn"></span></button>
+          <button type="button" class="btn btn-accent" id="elbow-btn"><span aria-hidden="true">📉</span> <span data-i18n="elbow_btn">ఎల్బో చార్ట్ గీయి</span></button>
           <button type="button" class="btn btn-primary" id="use-k" hidden></button>
         </div>
         <canvas id="elbow" class="chart" role="img" data-i18n-aria-label="elbow_title"></canvas>
         <p class="elbow-out" id="elbow-out" aria-live="polite"></p>
-        <p class="tiny muted mb0" id="elbow-tip" data-i18n="elbow_click" hidden></p>
+        <p class="tiny muted mb0" id="elbow-tip" data-i18n="elbow_click" hidden>చిట్కా: చార్ట్‌లో ఒక బిందువును తట్టి ఆ k వాడండి.</p>
         <details class="nums" id="elbow-nums" hidden>
-          <summary data-i18n="show_numbers"></summary>
+          <summary data-i18n="show_numbers">సంఖ్యలు చూపించు</summary>
           <div class="scroll-x"><table class="table" id="elbow-table"></table></div>
         </details>
       </section>
@@ -307,22 +307,22 @@
 
     <!-- ============ learn ============ -->
     <section class="card stack page-sec" aria-labelledby="learn-h">
-      <h2 id="learn-h" data-i18n="learn_title"></h2>
+      <h2 id="learn-h" data-i18n="learn_title">లోపల ఏం జరుగుతోంది?</h2>
       <div class="learn-grid">
-        <div class="learn-box"><h3><span aria-hidden="true">🏷️</span> <span data-i18n="l1_t"></span></h3><p data-i18n-html="l1"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🔁</span> <span data-i18n="l2_t"></span></h3><p data-i18n-html="l2"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">📏</span> <span data-i18n="l3_t"></span></h3><p data-i18n-html="l3"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🔢</span> <span data-i18n="l4_t"></span></h3><p data-i18n-html="l4"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🎲</span> <span data-i18n="l5_t"></span></h3><p data-i18n-html="l5"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">⚠️</span> <span data-i18n="l6_t"></span></h3><p data-i18n-html="l6"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🛒</span> <span data-i18n="l7_t"></span></h3><p data-i18n-html="l7"></p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🏷️</span> <span data-i18n="l1_t">లేబుల్స్ లేకుండా నేర్చుకోవడం</span></h3><p data-i18n-html="l1"></p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🔁</span> <span data-i18n="l2_t">రెండు అడుగులు, మళ్ళీ మళ్ళీ</span></h3><p data-i18n-html="l2"></p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">📏</span> <span data-i18n="l3_t">ఇనర్షియా: గుంపులు ఎంత దగ్గరగా ఉన్నాయి?</span></h3><p data-i18n-html="l3"></p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🔢</span> <span data-i18n="l4_t">k ఎలా ఎంచుకోవాలి?</span></h3><p data-i18n-html="l4"></p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🎲</span> <span data-i18n="l5_t">చెడ్డ ప్రారంభం</span></h3><p data-i18n-html="l5"></p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">⚠️</span> <span data-i18n="l6_t">పరిమితులు</span></h3><p data-i18n-html="l6"></p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🛒</span> <span data-i18n="l7_t">ఇది ఎక్కడ వాడతారు?</span></h3><p data-i18n-html="l7"></p></div>
       </div>
     </section>
 
     <!-- ============ quiz ============ -->
     <section class="card stack page-sec" id="quiz" aria-labelledby="quiz-h">
       <div class="row spread">
-        <h2 id="quiz-h" class="mb0" data-i18n="quiz_title"></h2>
+        <h2 id="quiz-h" class="mb0" data-i18n="quiz_title">మిమ్మల్ని మీరు పరీక్షించుకోండి</h2>
         <div class="row">
           <span class="badge primary" id="quiz-score" aria-live="polite"></span>
           <button type="button" class="btn btn-sm" id="quiz-again" data-i18n="try_again"></button>
@@ -332,7 +332,7 @@
     </section>
 
     <details class="card help page-sec">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">ఎలా వాడాలి / తరగతి గదికి ఆలోచనలు</summary>
       <ul>
         <li data-i18n-html="tip1"></li>
         <li data-i18n-html="tip2"></li>

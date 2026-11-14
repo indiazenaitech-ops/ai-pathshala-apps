@@ -165,27 +165,27 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">PDF-இல் இங்கேயே கையொப்பமிடுங்கள், நிரப்புங்கள், முத்திரை வையுங்கள்: உங்கள் கையொப்பத்தை வரையுங்கள் அல்லது தட்டச்சு செய்யுங்கள், எழுத்து, தேதி, டிக், “Self attested” குறிப்பு அல்லது முத்திரை சேர்த்து, படிவக் கட்டங்களை நிரப்புங்கள். கோப்பு உங்கள் சாதனத்தை விட்டு வெளியே போகாது.</p>
 
     <div class="callout success sf-privacy" id="privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong><span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">உங்கள் PDF இந்தச் சாதனத்தை விட்டு வெளியே போகாது.</strong><span data-i18n="privacy_body">வேலை வாய்ப்புக் கடிதம், ஒப்பந்தம், KYC நகல்கள், படிவங்கள் எல்லாம் உங்கள் உலாவிக்குள்ளேயே கையொப்பமிடப்படுகின்றன. எதுவும் பதிவேற்றப்படாது; இந்தப் பக்கத்தை மூடியதும் கோப்பு போய்விடும்.</span></p>
     </div>
 
     <div id="engine" class="sf-engine small" role="status" aria-live="polite">
       <span class="sf-spin" id="engSpin" aria-hidden="true"></span>
       <span id="engMsg"></span>
-      <button class="btn btn-sm" id="engRetry" type="button" data-i18n="retry" hidden></button>
+      <button class="btn btn-sm" id="engRetry" type="button" data-i18n="retry" hidden>மீண்டும் முயல்</button>
     </div>
 
     <div class="card sf-drop" id="drop">
       <div class="big" aria-hidden="true">✍️</div>
-      <h2 id="dropTitle" data-i18n="drop_title"></h2>
-      <p class="muted small mb0 sf-drop-hint" data-i18n="drop_hint"></p>
+      <h2 id="dropTitle" data-i18n="drop_title">PDF-ஐ இங்கே போடுங்கள்</h2>
+      <p class="muted small mb0 sf-drop-hint" data-i18n="drop_hint">அல்லது உங்கள் போன் அல்லது கணினியிலிருந்து திறங்கள். வேலை வாய்ப்புக் கடிதம், ஒப்பந்தம், விண்ணப்பப் படிவம், ஆதார் அல்லது PAN நகல்.</p>
       <span class="sf-fname no-i18n" id="fname"><span aria-hidden="true">📄</span><span class="nm" id="fnameTxt"></span><span class="inf" id="fnameInf"></span></span>
       <div class="row">
-        <button class="btn btn-primary btn-lg" id="openBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="open_pdf"></span></button>
-        <button class="btn" id="sampleBtn" type="button" data-i18n="try_sample"></button>
+        <button class="btn btn-primary btn-lg" id="openBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="open_pdf">PDF திற</span></button>
+        <button class="btn" id="sampleBtn" type="button" data-i18n="try_sample">மாதிரிக் கடிதத்தை முயலுங்கள்</button>
       </div>
       <input type="file" id="fileInput" accept=".pdf,application/pdf" hidden>
     </div>
@@ -198,15 +198,15 @@
         <div class="card sf-bar" id="bar">
           <div class="grp">
             <button class="tb" type="button" id="prevBtn" data-i18n-title="prev_page" data-i18n-aria-label="prev_page"><span class="i flipx" aria-hidden="true">◀</span></button>
-            <label class="sf-pageno"><span class="sr-only" data-i18n="goto_page"></span><input type="number" id="pageNo" min="1" step="1" inputmode="numeric" value="1"><span id="pageTotal" class="no-i18n"></span></label>
+            <label class="sf-pageno"><span class="sr-only" data-i18n="goto_page">பக்கத்துக்குச் செல்</span><input type="number" id="pageNo" min="1" step="1" inputmode="numeric" value="1"><span id="pageTotal" class="no-i18n"></span></label>
             <button class="tb" type="button" id="nextBtn" data-i18n-title="next_page" data-i18n-aria-label="next_page"><span class="i flipx" aria-hidden="true">▶</span></button>
           </div>
           <span class="sep" aria-hidden="true"></span>
           <div class="grp">
-            <button class="tb" type="button" id="undoBtn" data-i18n-title="undo" data-i18n-aria-label="undo"><span class="i flipx" aria-hidden="true">↶</span><span class="lbl" data-i18n="undo"></span></button>
+            <button class="tb" type="button" id="undoBtn" data-i18n-title="undo" data-i18n-aria-label="undo"><span class="i flipx" aria-hidden="true">↶</span><span class="lbl" data-i18n="undo">செயல்தவிர்</span></button>
             <button class="tb" type="button" id="redoBtn" data-i18n-title="redo" data-i18n-aria-label="redo"><span class="i flipx" aria-hidden="true">↷</span></button>
-            <button class="tb danger" type="button" id="delBtn" data-i18n-title="it_delete" data-i18n-aria-label="it_delete"><span class="i" aria-hidden="true">🗑</span><span class="lbl" data-i18n="it_delete"></span></button>
-            <button class="tb" type="button" id="clearPageBtn" data-i18n-title="clear_page" data-i18n-aria-label="clear_page"><span class="i" aria-hidden="true">⌫</span><span class="lbl" data-i18n="clear_page"></span></button>
+            <button class="tb danger" type="button" id="delBtn" data-i18n-title="it_delete" data-i18n-aria-label="it_delete"><span class="i" aria-hidden="true">🗑</span><span class="lbl" data-i18n="it_delete">நீக்கு</span></button>
+            <button class="tb" type="button" id="clearPageBtn" data-i18n-title="clear_page" data-i18n-aria-label="clear_page"><span class="i" aria-hidden="true">⌫</span><span class="lbl" data-i18n="clear_page">இந்தப் பக்கத்தைச் சுத்தம் செய்</span></button>
           </div>
           <span class="sf-count" id="countTxt" aria-live="polite"></span>
         </div>
@@ -217,29 +217,29 @@
             <div id="overlay" class="sf-overlay no-i18n" data-i18n-aria-label="items_label" role="group"></div>
           </div>
         </div>
-        <p class="small muted sf-stage-hint" data-i18n="stage_hint"></p>
+        <p class="small muted sf-stage-hint" data-i18n="stage_hint">ஒன்றைத் தேர்ந்தெடுக்கத் தட்டுங்கள், நகர்த்த இழுங்கள், அளவை மாற்ற நீல மூலையை இழுங்கள். அம்புக்குறி விசைகளாலும் நகர்த்தலாம்.</p>
         <p id="live" class="sr-only" aria-live="polite"></p>
       </section>
 
       <aside class="sf-side" id="side">
         <div class="card stack">
           <div class="sf-tools" role="tablist" data-i18n-aria-label="tools_label">
-            <button type="button" role="tab" data-tool="sign" aria-controls="pSign"><span class="i" aria-hidden="true">✍️</span><span data-i18n="tool_sign"></span></button>
-            <button type="button" role="tab" data-tool="text" aria-controls="pText"><span class="i" aria-hidden="true">🔤</span><span data-i18n="tool_text"></span></button>
-            <button type="button" role="tab" data-tool="date" aria-controls="pDate"><span class="i" aria-hidden="true">📅</span><span data-i18n="tool_date"></span></button>
-            <button type="button" role="tab" data-tool="mark" aria-controls="pMark"><span class="i" aria-hidden="true">✅</span><span data-i18n="tool_mark"></span></button>
-            <button type="button" role="tab" data-tool="self" aria-controls="pSelf"><span class="i" aria-hidden="true">🪪</span><span data-i18n="tool_self"></span></button>
-            <button type="button" role="tab" data-tool="stamp" aria-controls="pStamp"><span class="i" aria-hidden="true">📮</span><span data-i18n="tool_stamp"></span></button>
-            <button type="button" role="tab" data-tool="hide" aria-controls="pHide"><span class="i" aria-hidden="true">⬜</span><span data-i18n="tool_hide"></span></button>
-            <button type="button" role="tab" data-tool="form" aria-controls="pForm"><span class="i" aria-hidden="true">📝</span><span data-i18n="tool_form"></span></button>
+            <button type="button" role="tab" data-tool="sign" aria-controls="pSign"><span class="i" aria-hidden="true">✍️</span><span data-i18n="tool_sign">கையொப்பம்</span></button>
+            <button type="button" role="tab" data-tool="text" aria-controls="pText"><span class="i" aria-hidden="true">🔤</span><span data-i18n="tool_text">எழுத்து</span></button>
+            <button type="button" role="tab" data-tool="date" aria-controls="pDate"><span class="i" aria-hidden="true">📅</span><span data-i18n="tool_date">தேதி</span></button>
+            <button type="button" role="tab" data-tool="mark" aria-controls="pMark"><span class="i" aria-hidden="true">✅</span><span data-i18n="tool_mark">டிக் / பெருக்கல்</span></button>
+            <button type="button" role="tab" data-tool="self" aria-controls="pSelf"><span class="i" aria-hidden="true">🪪</span><span data-i18n="tool_self">Self attested</span></button>
+            <button type="button" role="tab" data-tool="stamp" aria-controls="pStamp"><span class="i" aria-hidden="true">📮</span><span data-i18n="tool_stamp">முத்திரை</span></button>
+            <button type="button" role="tab" data-tool="hide" aria-controls="pHide"><span class="i" aria-hidden="true">⬜</span><span data-i18n="tool_hide">வெள்ளை மறைப்பு</span></button>
+            <button type="button" role="tab" data-tool="form" aria-controls="pForm"><span class="i" aria-hidden="true">📝</span><span data-i18n="tool_form">படிவக் கட்டங்கள்</span></button>
           </div>
 
           <!-- Signature -->
           <div class="sf-panel" id="pSign" role="tabpanel">
             <div class="seg w100" role="group" id="sigModeSeg">
-              <button type="button" data-val="draw" data-i18n="sig_draw"></button>
-              <button type="button" data-val="type" data-i18n="sig_type"></button>
-              <button type="button" data-val="photo" data-i18n="sig_photo"></button>
+              <button type="button" data-val="draw" data-i18n="sig_draw">வரை</button>
+              <button type="button" data-val="type" data-i18n="sig_type">தட்டச்சு</button>
+              <button type="button" data-val="photo" data-i18n="sig_photo">புகைப்படம்</button>
             </div>
             <div id="sigDrawBox" class="stack">
               <div class="sf-pad-wrap">
@@ -247,115 +247,115 @@
                 <span class="sf-pad-line" aria-hidden="true"></span><span class="sf-pad-x" aria-hidden="true">✕</span>
               </div>
               <div class="row spread">
-                <span class="tiny muted" data-i18n="sig_pad_hint"></span>
+                <span class="tiny muted" data-i18n="sig_pad_hint">உங்கள் விரல், ஸ்டைலஸ் அல்லது மவுஸால் இங்கே கையொப்பமிடுங்கள்.</span>
                 <button class="btn btn-sm" type="button" id="sigClear" data-i18n="clear"></button>
               </div>
             </div>
             <div id="sigTypeBox" class="stack" hidden>
-              <label class="field"><span data-i18n="sig_type_label"></span><input type="text" id="sigTypeText" class="no-i18n" maxlength="60" autocomplete="name" data-i18n-placeholder="sig_type_ph"></label>
+              <label class="field"><span data-i18n="sig_type_label">உங்கள் பெயர்</span><input type="text" id="sigTypeText" class="no-i18n" maxlength="60" autocomplete="name" data-i18n-placeholder="sig_type_ph"></label>
               <div class="sf-type-prev no-i18n" id="sigTypePrev" aria-hidden="true"></div>
             </div>
             <div id="sigPhotoBox" class="stack" hidden>
-              <button class="btn" type="button" id="sigPhotoBtn"><span aria-hidden="true">🖼</span> <span data-i18n="sig_photo_pick"></span></button>
+              <button class="btn" type="button" id="sigPhotoBtn"><span aria-hidden="true">🖼</span> <span data-i18n="sig_photo_pick">உங்கள் கையொப்பப் புகைப்படத்தைத் தேர்ந்தெடுங்கள்</span></button>
               <input type="file" id="sigPhotoInput" accept="image/*" hidden>
               <img id="sigPhotoPrev" class="sf-photo-prev" alt="" hidden>
-              <p class="tiny muted mb0" data-i18n="sig_photo_hint"></p>
+              <p class="tiny muted mb0" data-i18n="sig_photo_hint">வெள்ளைத் தாளில் அடர் நிறப் பேனாவால் கையொப்பமிட்டுத் தெளிவான புகைப்படம் எடுங்கள். தாள் தானாகவே ஒளிபுகும்படி ஆகிவிடும்.</p>
             </div>
-            <div class="field"><span data-i18n="ink"></span>
+            <div class="field"><span data-i18n="ink">மை நிறம்</span>
               <div class="sf-colors" role="group" id="inkColors">
-                <button type="button" data-val="#1a3fb5" aria-pressed="true"><i style="background:#1a3fb5"></i><span data-i18n="col_blue"></span></button>
-                <button type="button" data-val="#111111"><i style="background:#111"></i><span data-i18n="col_black"></span></button>
-                <button type="button" data-val="#c81e1e"><i style="background:#c81e1e"></i><span data-i18n="col_red"></span></button>
-                <button type="button" data-val="#1b7f3b"><i style="background:#1b7f3b"></i><span data-i18n="col_green"></span></button>
+                <button type="button" data-val="#1a3fb5" aria-pressed="true"><i style="background:#1a3fb5"></i><span data-i18n="col_blue">நீலம்</span></button>
+                <button type="button" data-val="#111111"><i style="background:#111"></i><span data-i18n="col_black">கருப்பு</span></button>
+                <button type="button" data-val="#c81e1e"><i style="background:#c81e1e"></i><span data-i18n="col_red">சிவப்பு</span></button>
+                <button type="button" data-val="#1b7f3b"><i style="background:#1b7f3b"></i><span data-i18n="col_green">பச்சை</span></button>
               </div>
             </div>
             <div class="row">
-              <button class="btn btn-primary" type="button" id="sigUse"><span aria-hidden="true">＋</span> <span data-i18n="sig_use"></span></button>
-              <button class="btn" type="button" id="sigUseInit" data-i18n="sig_use_init"></button>
+              <button class="btn btn-primary" type="button" id="sigUse"><span aria-hidden="true">＋</span> <span data-i18n="sig_use">கையொப்பமாகச் சேர்</span></button>
+              <button class="btn" type="button" id="sigUseInit" data-i18n="sig_use_init">சுருக்கக் கையொப்பமாகச் சேர்</button>
             </div>
             <div id="savedBox" class="stack" hidden>
-              <p class="small muted mb0" data-i18n="sig_saved_title"></p>
+              <p class="small muted mb0" data-i18n="sig_saved_title">இந்தச் சாதனத்தில் சேமித்தவை</p>
               <div class="sf-saved" id="savedSig" hidden>
                 <img alt="" id="savedSigImg">
-                <div><strong data-i18n="sig_saved_sig"></strong>
+                <div><strong data-i18n="sig_saved_sig">கையொப்பம்</strong>
                   <div class="acts">
-                    <button class="btn btn-sm btn-primary" type="button" data-slot="sig" data-act="add" data-i18n="sig_add"></button>
-                    <button class="btn btn-sm" type="button" data-slot="sig" data-act="all" data-i18n="sig_add_all"></button>
-                    <button class="btn btn-sm btn-ghost" type="button" data-slot="sig" data-act="forget" data-i18n="sig_forget"></button>
+                    <button class="btn btn-sm btn-primary" type="button" data-slot="sig" data-act="add" data-i18n="sig_add">பக்கத்தில் சேர்</button>
+                    <button class="btn btn-sm" type="button" data-slot="sig" data-act="all" data-i18n="sig_add_all">எல்லாப் பக்கங்களிலும்</button>
+                    <button class="btn btn-sm btn-ghost" type="button" data-slot="sig" data-act="forget" data-i18n="sig_forget">மற</button>
                   </div>
                 </div>
               </div>
               <div class="sf-saved" id="savedInit" hidden>
                 <img alt="" id="savedInitImg">
-                <div><strong data-i18n="sig_saved_init"></strong>
+                <div><strong data-i18n="sig_saved_init">சுருக்கக் கையொப்பம்</strong>
                   <div class="acts">
-                    <button class="btn btn-sm btn-primary" type="button" data-slot="init" data-act="add" data-i18n="sig_add"></button>
-                    <button class="btn btn-sm" type="button" data-slot="init" data-act="all" data-i18n="sig_add_all"></button>
-                    <button class="btn btn-sm btn-ghost" type="button" data-slot="init" data-act="forget" data-i18n="sig_forget"></button>
+                    <button class="btn btn-sm btn-primary" type="button" data-slot="init" data-act="add" data-i18n="sig_add">பக்கத்தில் சேர்</button>
+                    <button class="btn btn-sm" type="button" data-slot="init" data-act="all" data-i18n="sig_add_all">எல்லாப் பக்கங்களிலும்</button>
+                    <button class="btn btn-sm btn-ghost" type="button" data-slot="init" data-act="forget" data-i18n="sig_forget">மற</button>
                   </div>
                 </div>
               </div>
-              <p class="tiny muted mb0" data-i18n="sig_saved_note"></p>
+              <p class="tiny muted mb0" data-i18n="sig_saved_note">மீண்டும் பயன்படுத்த இந்த உலாவியில் மட்டுமே சேமிக்கப்பட்டுள்ளது. பகிரப்பட்ட கணினியில் வேலை முடிந்ததும் “மற” அழுத்துங்கள்.</p>
             </div>
           </div>
 
           <!-- Text -->
           <div class="sf-panel" id="pText" role="tabpanel" hidden>
-            <label class="field"><span data-i18n="text_label"></span><input type="text" id="textIn" class="no-i18n" dir="auto" maxlength="200" data-i18n-placeholder="text_ph"></label>
+            <label class="field"><span data-i18n="text_label">எழுத்து</span><input type="text" id="textIn" class="no-i18n" dir="auto" maxlength="200" data-i18n-placeholder="text_ph"></label>
             <div class="sf-two">
-              <label class="field"><span data-i18n="text_size"></span><input type="number" id="textSize" min="6" max="72" step="1" inputmode="numeric" value="14"></label>
-              <div class="field"><span data-i18n="text_style"></span>
+              <label class="field"><span data-i18n="text_size">அளவு</span><input type="number" id="textSize" min="6" max="72" step="1" inputmode="numeric" value="14"></label>
+              <div class="field"><span data-i18n="text_style">பாணி</span>
                 <div class="seg w100" role="group" id="fontSeg">
-                  <button type="button" data-val="sans" data-i18n="font_normal"></button>
-                  <button type="button" data-val="hand" data-i18n="font_hand"></button>
+                  <button type="button" data-val="sans" data-i18n="font_normal">சாதாரணம்</button>
+                  <button type="button" data-val="hand" data-i18n="font_hand">கையெழுத்து</button>
                 </div>
               </div>
             </div>
-            <p class="tiny muted mb0" data-i18n="text_ink_note"></p>
-            <button class="btn btn-primary" type="button" id="textAdd"><span aria-hidden="true">＋</span> <span data-i18n="text_add"></span></button>
+            <p class="tiny muted mb0" data-i18n="text_ink_note">கையொப்பத்தில் தேர்ந்த மை நிறமே பயன்படும்.</p>
+            <button class="btn btn-primary" type="button" id="textAdd"><span aria-hidden="true">＋</span> <span data-i18n="text_add">எழுத்தைச் சேர்</span></button>
           </div>
 
           <!-- Date -->
           <div class="sf-panel" id="pDate" role="tabpanel" hidden>
             <div class="sf-two">
-              <label class="field"><span data-i18n="date_label"></span><input type="date" id="dateIn"></label>
-              <label class="field"><span data-i18n="date_fmt"></span><select id="dateFmt" class="no-i18n"></select></label>
+              <label class="field"><span data-i18n="date_label">தேதி</span><input type="date" id="dateIn"></label>
+              <label class="field"><span data-i18n="date_fmt">வடிவம்</span><select id="dateFmt" class="no-i18n"></select></label>
             </div>
-            <label class="field"><span data-i18n="text_size"></span><input type="number" id="dateSize" min="6" max="72" step="1" inputmode="numeric" value="12"></label>
-            <button class="btn btn-primary" type="button" id="dateAdd"><span aria-hidden="true">＋</span> <span data-i18n="date_add"></span></button>
+            <label class="field"><span data-i18n="text_size">அளவு</span><input type="number" id="dateSize" min="6" max="72" step="1" inputmode="numeric" value="12"></label>
+            <button class="btn btn-primary" type="button" id="dateAdd"><span aria-hidden="true">＋</span> <span data-i18n="date_add">தேதியைச் சேர்</span></button>
           </div>
 
           <!-- Tick / cross -->
           <div class="sf-panel" id="pMark" role="tabpanel" hidden>
-            <p class="small muted mb0" data-i18n="mark_help"></p>
+            <p class="small muted mb0" data-i18n="mark_help">ஒரு கட்டத்தில் டிக் போடுங்கள் அல்லது ஒரு விருப்பத்தை அடித்துவிடுங்கள். பெரிதாக்க மூலையை இழுங்கள்.</p>
             <div class="sf-marks">
-              <button class="btn btn-primary" type="button" id="tickAdd"><span aria-hidden="true">✔</span> <span data-i18n="mark_tick"></span></button>
-              <button class="btn" type="button" id="crossAdd"><span aria-hidden="true">✘</span> <span data-i18n="mark_cross"></span></button>
+              <button class="btn btn-primary" type="button" id="tickAdd"><span aria-hidden="true">✔</span> <span data-i18n="mark_tick">டிக்</span></button>
+              <button class="btn" type="button" id="crossAdd"><span aria-hidden="true">✘</span> <span data-i18n="mark_cross">பெருக்கல் குறி</span></button>
             </div>
           </div>
 
           <!-- Self attested -->
           <div class="sf-panel" id="pSelf" role="tabpanel" hidden>
-            <p class="small mb0" data-i18n="self_help"></p>
-            <label class="field"><span data-i18n="self_text_label"></span><input type="text" id="selfText" class="no-i18n" dir="auto" maxlength="80"></label>
-            <p class="tiny muted mb0" id="selfNeed" data-i18n="self_need_sig" hidden></p>
+            <p class="small mb0" data-i18n="self_help">அலுவலகங்கள் ஆதார், PAN, மதிப்பெண் சான்றிதழ், சான்றிதழ்களின் “Self attested” நகல்களைக் கேட்கும்: ஒவ்வொரு நகலிலும் அதை எழுதி, கையொப்பமிட்டு, தேதி போடுங்கள். இது மூன்றையும் ஒன்றாகச் சேர்க்கும்.</p>
+            <label class="field"><span data-i18n="self_text_label">எழுத்து</span><input type="text" id="selfText" class="no-i18n" dir="auto" maxlength="80"></label>
+            <p class="tiny muted mb0" id="selfNeed" data-i18n="self_need_sig" hidden>முதலில் ஒரு கையொப்பம் உருவாக்குங்கள் (வரை, தட்டச்சு அல்லது புகைப்படம்). அது எழுத்துடனும் இன்றைய தேதியுடனும் சேர்த்து வைக்கப்படும்.</p>
             <div class="row">
-              <button class="btn btn-primary" type="button" id="selfAdd"><span aria-hidden="true">＋</span> <span data-i18n="self_add"></span></button>
-              <button class="btn" type="button" id="selfAddAll" data-i18n="self_add_all"></button>
+              <button class="btn btn-primary" type="button" id="selfAdd"><span aria-hidden="true">＋</span> <span data-i18n="self_add">இந்தப் பக்கத்தில் சேர்</span></button>
+              <button class="btn" type="button" id="selfAddAll" data-i18n="self_add_all">எல்லாப் பக்கங்களிலும்</button>
             </div>
           </div>
 
           <!-- Stamp / seal -->
           <div class="sf-panel" id="pStamp" role="tabpanel" hidden>
-            <p class="small muted mb0" data-i18n="stamp_help"></p>
-            <button class="btn btn-primary" type="button" id="stampBtn"><span aria-hidden="true">🖼</span> <span data-i18n="stamp_pick"></span></button>
+            <p class="small muted mb0" data-i18n="stamp_help">நிறுவன முத்திரை, “PAID”, “RECEIVED”, பள்ளி முத்திரை. ஒளிபுகும் பின்னணி கொண்ட PNG மிக அழகாகத் தெரியும்.</p>
+            <button class="btn btn-primary" type="button" id="stampBtn"><span aria-hidden="true">🖼</span> <span data-i18n="stamp_pick">முத்திரைப் படத்தைத் தேர்ந்தெடு</span></button>
             <input type="file" id="stampInput" accept="image/*" hidden>
             <div class="sf-saved" id="stampBox" hidden>
               <img alt="" id="stampImg">
-              <div><strong data-i18n="stamp_last"></strong>
+              <div><strong data-i18n="stamp_last">முத்திரை</strong>
                 <div class="acts">
-                  <button class="btn btn-sm btn-primary" type="button" id="stampAdd" data-i18n="sig_add"></button>
-                  <button class="btn btn-sm" type="button" id="stampAddAll" data-i18n="sig_add_all"></button>
+                  <button class="btn btn-sm btn-primary" type="button" id="stampAdd" data-i18n="sig_add">பக்கத்தில் சேர்</button>
+                  <button class="btn btn-sm" type="button" id="stampAddAll" data-i18n="sig_add_all">எல்லாப் பக்கங்களிலும்</button>
                 </div>
               </div>
             </div>
@@ -363,29 +363,29 @@
 
           <!-- White-out -->
           <div class="sf-panel" id="pHide" role="tabpanel" hidden>
-            <p class="small mb0" data-i18n="hide_help"></p>
-            <button class="btn btn-primary" type="button" id="hideAdd"><span aria-hidden="true">＋</span> <span data-i18n="hide_add"></span></button>
+            <p class="small mb0" data-i18n="hide_help">பக்கத்தின் ஒரு பகுதியை வெள்ளைப் பெட்டியால் மூடும், எ.கா. பழைய தேதி அல்லது தவறான பதிவு. அதன் கீழுள்ள எழுத்து கோப்பில் இன்னும் இருக்கும், எனவே ரகசியங்களை மறைக்க இதைப் பயன்படுத்தாதீர்கள்.</p>
+            <button class="btn btn-primary" type="button" id="hideAdd"><span aria-hidden="true">＋</span> <span data-i18n="hide_add">வெள்ளைப் பெட்டியைச் சேர்</span></button>
           </div>
 
           <!-- Form fields -->
           <div class="sf-panel" id="pForm" role="tabpanel" hidden>
             <p class="small muted mb0" id="formHelp"></p>
             <div class="sf-form-list no-i18n" id="formList"></div>
-            <label class="check" id="flattenBox" hidden><input type="checkbox" id="flatten" checked> <span data-i18n="form_flatten"></span></label>
+            <label class="check" id="flattenBox" hidden><input type="checkbox" id="flatten" checked> <span data-i18n="form_flatten">சேமித்த பிறகு கட்டங்களைப் பூட்டு (flatten)</span></label>
           </div>
         </div>
 
         <div class="card stack sf-save">
           <label class="field">
-            <span data-i18n="out_name"></span>
+            <span data-i18n="out_name">கோப்பின் பெயர்</span>
             <input type="text" id="outName" maxlength="80" autocomplete="off" spellcheck="false">
           </label>
-          <button class="btn btn-primary btn-lg" id="saveBtn" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="save_btn"></span></button>
+          <button class="btn btn-primary btn-lg" id="saveBtn" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="save_btn">கையொப்பமிட்ட PDF-ஐச் சேமி</span></button>
           <div id="progBox" class="row" hidden><span class="sf-spin" aria-hidden="true"></span><span class="small muted" id="progMsg" aria-live="polite"></span></div>
           <div class="callout success sf-result" id="result" role="status" hidden>
             <p class="mb0" id="resultMsg"></p>
             <div class="row">
-              <button class="btn btn-sm" type="button" id="againBtn"><span aria-hidden="true">⬇</span> <span data-i18n="download_again"></span></button>
+              <button class="btn btn-sm" type="button" id="againBtn"><span aria-hidden="true">⬇</span> <span data-i18n="download_again">மீண்டும் பதிவிறக்கு</span></button>
             </div>
           </div>
         </div>
@@ -393,28 +393,28 @@
     </div>
 
     <div class="callout warning sf-legal" id="legal">
-      <p><strong data-i18n="legal_title"></strong><span data-i18n="legal_body"></span></p>
+      <p><strong data-i18n="legal_title">கவனிக்கவும்</strong><span data-i18n="legal_body">இது உங்கள் கையொப்பத்தின் படத்தை PDF-இல் வைக்கிறது. இது IT Act-இன் கீழ் வரும் Digital Signature Certificate (DSC) அல்லது ஆதார் eSign அல்ல. அன்றாடக் காகிதங்களுக்குப் பல அலுவலகங்கள் இதை ஏற்கும், ஆனால் சில தாக்கல்களுக்கு (GST, MCA, வருமான வரி, டெண்டர்) DSC அல்லது eSign தேவை. பெறுபவருக்கு என்ன தேவை என்று கேட்டுக்கொள்ளுங்கள்.</span></p>
     </div>
 
     <details class="card" id="helpBox">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">எப்படிப் பயன்படுத்துவது · வேலைக்கான யோசனைகள்</strong></summary>
       <ul class="stack">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">PDF-ஐத் திறந்து, ஒருமுறை கையொப்பம் வரைந்து “கையொப்பமாகச் சேர்” அழுத்துங்கள். அது இந்தச் சாதனத்தில் சேமிக்கப்படும், அடுத்த முறை “பக்கத்தில் சேர்” அழுத்தினால் போதும்.</li>
+        <li data-i18n="tip2">வேலை வாய்ப்புக் கடிதம் அல்லது ஒப்பந்தம்: கையொப்பம் சேருங்கள், பிறகு “தேதி”, பிறகு “எழுத்து” கருவியால் உங்கள் பெயரைத் தட்டச்சு செய்யுங்கள். சேமித்துப் புதிய கோப்பைத் திருப்பி அனுப்புங்கள்.</li>
+        <li data-i18n="tip3">வங்கி, பள்ளி அல்லது வேலைக்கான ஆவண நகல்கள்: ஒவ்வொரு பக்கத்திலும் “Self attested” பயன்படுத்துங்கள். வங்கி கேட்டால் PDF Merge செயலியில் KYC நீர்க்குறியைச் சேருங்கள்.</li>
+        <li data-i18n="tip4">கடை அல்லது அலுவலகம்: உங்கள் ரப்பர் முத்திரையின் PNG உருவாக்குங்கள் (வெள்ளைத் தாளில் புகைப்படம், புகைப்படக் கருவி), பில்கள், ரசீதுகளில் “முத்திரை” பயன்படுத்துங்கள்.</li>
+        <li data-i18n="tip5">கட்டங்கள் உள்ள படிவங்கள்: “படிவக் கட்டங்கள்” கருவி அவற்றைப் பட்டியலிடும்; நேரடியாக நிரப்பி டிக் போடுங்கள். ஸ்கேன் செய்த படிவங்களுக்கு எழுத்து, டிக், பெருக்கல் குறி பயன்படுத்துங்கள்.</li>
+        <li data-i18n="tip6">காகிதத்தில் தவறு செய்துவிட்டீர்களா? ஸ்கேன் செய்து, தவற்றை வெள்ளைப் பெட்டியால் மூடி, திருத்தத்தை “எழுத்து” மூலம் எழுதுங்கள்.</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="keys_title"></h3>
+      <h3 style="margin-top:14px" data-i18n="keys_title">விசைப்பலகை</h3>
       <ul class="sf-keys small">
-        <li data-i18n="key1"></li>
-        <li data-i18n="key2"></li>
-        <li data-i18n="key3"></li>
-        <li data-i18n="key4"></li>
+        <li data-i18n="key1">Tab மூலம் ஒன்றுக்குச் சென்று, அம்புக்குறி விசைகளால் நகர்த்துங்கள்; Shift + அம்புக்குறி வேகமாக நகர்த்தும்.</li>
+        <li data-i18n="key2">+ மற்றும் − தேர்ந்தெடுத்ததைப் பெரிதாக்கும் அல்லது சிறிதாக்கும்.</li>
+        <li data-i18n="key3">Delete அதை நீக்கும்; Esc தேர்வை நீக்கும்.</li>
+        <li data-i18n="key4">Ctrl+Z செயல்தவிர், Ctrl+Y மீண்டும் செய்.</li>
       </ul>
       <div class="row spread" style="margin-top:12px">
-        <span class="small muted" data-i18n="reset_help"></span>
+        <span class="small muted" data-i18n="reset_help">இந்தச் சாதனத்தில் சேமித்த கையொப்பத்தையும் அமைப்புகளையும் மறந்துவிடு.</span>
         <button class="btn btn-sm btn-danger" id="resetAll" type="button" data-i18n="reset"></button>
       </div>
     </details>

@@ -139,14 +139,14 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="rr-priv"><span class="badge success" data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">HRA-র জন্য সারা বছরের মাসিক ভাড়ার রসিদ একসঙ্গে বানান: ভাড়া বদল, বাড়িওয়ালার PAN, কথায় টাকার অঙ্ক আর রেভিনিউ স্ট্যাম্পের ঘর সহ। একটি A4 পাতায় 3টি রসিদ প্রিন্ট করুন বা PDF সেভ করুন, আর দেখুন আপনার HRA-র কতটা করমুক্ত।</p>
+    <p class="rr-priv"><span class="badge success" data-i18n="privacy">🔒 নাম, ঠিকানা আর টাকার অঙ্ক এই ডিভাইস থেকে বাইরে যায় না। আপনার তথ্য শুধু এই ব্রাউজারেই সেভ হয়।</span></p>
 
-    <div id="sampleBanner" class="callout accent no-print" hidden><span data-i18n="sample_banner"></span></div>
+    <div id="sampleBanner" class="callout accent no-print" hidden><span data-i18n="sample_banner">এগুলো নমুনা তথ্য। নিচে নিজের নাম, ঠিকানা আর ভাড়া লিখুন।</span></div>
 
     <div class="rr-tabs no-print" role="tablist" id="tabs" style="margin-top:12px">
-      <button type="button" role="tab" id="tab-rec" data-tab="rec" aria-controls="p-rec"><span aria-hidden="true">🧾</span><span data-i18n="tab_rec"></span></button>
-      <button type="button" role="tab" id="tab-hra" data-tab="hra" aria-controls="p-hra"><span aria-hidden="true">🧮</span><span data-i18n="tab_hra"></span></button>
+      <button type="button" role="tab" id="tab-rec" data-tab="rec" aria-controls="p-rec"><span aria-hidden="true">🧾</span><span data-i18n="tab_rec">ভাড়ার রসিদ</span></button>
+      <button type="button" role="tab" id="tab-hra" data-tab="hra" aria-controls="p-hra"><span aria-hidden="true">🧮</span><span data-i18n="tab_hra">HRA ক্যালকুলেটর</span></button>
     </div>
 
     <!-- ================= RECEIPTS ================= -->
@@ -155,110 +155,110 @@
         <div class="stack">
           <section class="card form">
             <div class="grp">
-              <h2 data-i18n="sec_people"></h2>
+              <h2 data-i18n="sec_people">ভাড়াটে ও বাড়িওয়ালা</h2>
               <div class="set-pick">
-                <label class="f"><span class="lbl" data-i18n="saved_sets"></span><select id="setPick" class="no-i18n"></select></label>
+                <label class="f"><span class="lbl" data-i18n="saved_sets">সেভ করা ভাড়াটে</span><select id="setPick" class="no-i18n"></select></label>
                 <button type="button" class="btn btn-danger" id="setDel" data-i18n="delete" hidden></button>
               </div>
-              <label class="f"><span class="lbl" data-i18n="tenant"></span><input type="text" id="tenant" data-k="tenant" maxlength="90" autocomplete="off" dir="auto" data-i18n-placeholder="s_tenant"></label>
-              <label class="f"><span class="lbl" data-i18n="landlord"></span><input type="text" id="landlord" data-k="landlord" maxlength="90" autocomplete="off" dir="auto" data-i18n-placeholder="s_landlord"></label>
-              <label class="f"><span class="lbl" data-i18n="pan"></span><input type="text" id="pan" data-k="pan" maxlength="12" autocomplete="off" class="mono-in no-i18n" placeholder="ABCDE1234F" spellcheck="false"></label>
-              <p class="warn-txt" id="panBad" role="status" hidden data-i18n="pan_bad"></p>
-              <label class="f"><span class="lbl" data-i18n="address"></span><textarea id="address" data-k="address" rows="2" maxlength="260" dir="auto" data-i18n-placeholder="s_address"></textarea></label>
-              <label class="f"><span class="lbl" data-i18n="org"></span><input type="text" id="org" data-k="org" maxlength="90" autocomplete="off" dir="auto" data-i18n-placeholder="s_org"></label>
+              <label class="f"><span class="lbl" data-i18n="tenant">ভাড়াটের নাম (যিনি ভাড়া দেন)</span><input type="text" id="tenant" data-k="tenant" maxlength="90" autocomplete="off" dir="auto" data-i18n-placeholder="s_tenant"></label>
+              <label class="f"><span class="lbl" data-i18n="landlord">বাড়িওয়ালার নাম (যিনি ভাড়া নেন)</span><input type="text" id="landlord" data-k="landlord" maxlength="90" autocomplete="off" dir="auto" data-i18n-placeholder="s_landlord"></label>
+              <label class="f"><span class="lbl" data-i18n="pan">বাড়িওয়ালার PAN (ঐচ্ছিক)</span><input type="text" id="pan" data-k="pan" maxlength="12" autocomplete="off" class="mono-in no-i18n" placeholder="ABCDE1234F" spellcheck="false"></label>
+              <p class="warn-txt" id="panBad" role="status" hidden data-i18n="pan_bad">এটি PAN-এর মতো দেখাচ্ছে না। PAN-এ 5টি অক্ষর, 4টি সংখ্যা আর 1টি অক্ষর থাকে, যেমন ABCDE1234F। আপনি যেমন লিখেছেন তেমনই ছাপা হবে।</p>
+              <label class="f"><span class="lbl" data-i18n="address">ভাড়া বাড়ির ঠিকানা</span><textarea id="address" data-k="address" rows="2" maxlength="260" dir="auto" data-i18n-placeholder="s_address"></textarea></label>
+              <label class="f"><span class="lbl" data-i18n="org">উপরে ছাপার জন্য কোম্পানি / PG-র নাম (ঐচ্ছিক)</span><input type="text" id="org" data-k="org" maxlength="90" autocomplete="off" dir="auto" data-i18n-placeholder="s_org"></label>
               <div class="row">
-                <button type="button" class="btn" id="setSave"><span aria-hidden="true">💾</span> <span data-i18n="save_set"></span></button>
+                <button type="button" class="btn" id="setSave"><span aria-hidden="true">💾</span> <span data-i18n="save_set">এই তথ্য সেভ করুন</span></button>
                 <span class="muted small" data-i18n="saved_local"></span>
               </div>
             </div>
 
             <div class="grp">
-              <h2 data-i18n="sec_period"></h2>
-              <label class="f"><span class="lbl" data-i18n="tax_year"></span><select id="ty"></select></label>
+              <h2 data-i18n="sec_period">মাস ও ভাড়া</h2>
+              <label class="f"><span class="lbl" data-i18n="tax_year">কর বছর</span><select id="ty"></select></label>
               <div class="two">
-                <label class="f"><span class="lbl" data-i18n="from_month"></span><select id="fromM"></select></label>
-                <label class="f"><span class="lbl" data-i18n="to_month"></span><select id="toM"></select></label>
+                <label class="f"><span class="lbl" data-i18n="from_month">কোন মাস থেকে</span><select id="fromM"></select></label>
+                <label class="f"><span class="lbl" data-i18n="to_month">কোন মাস পর্যন্ত</span><select id="toM"></select></label>
               </div>
-              <label class="f"><span class="lbl" data-i18n="rent"></span><input type="text" id="rent" inputmode="numeric" autocomplete="off" class="num-in" data-i18n-placeholder="rent_ph"></label>
+              <label class="f"><span class="lbl" data-i18n="rent">মাসিক ভাড়া (₹)</span><input type="text" id="rent" inputmode="numeric" autocomplete="off" class="num-in" data-i18n-placeholder="rent_ph"></label>
               <div id="changes" class="stack"></div>
-              <button type="button" class="btn btn-sm" id="addChange">＋ <span data-i18n="add_change"></span></button>
-              <span class="hint" data-i18n="change_hint"></span>
+              <button type="button" class="btn btn-sm" id="addChange">＋ <span data-i18n="add_change">ভাড়া বদল যোগ করুন</span></button>
+              <span class="hint" data-i18n="change_hint">বছরের মাঝে ভাড়া বেড়েছে (বা কমেছে)? বদল যোগ করুন: সেই মাস থেকে প্রতি মাসে নতুন ভাড়া ধরা হবে।</span>
             </div>
 
             <div class="grp">
-              <h2 data-i18n="sec_pay"></h2>
+              <h2 data-i18n="sec_pay">পেমেন্ট ও রসিদ</h2>
               <div class="f">
-                <span class="lbl" id="modeLbl" data-i18n="mode"></span>
+                <span class="lbl" id="modeLbl" data-i18n="mode">ভাড়া কীভাবে দেওয়া</span>
                 <div class="seg full" role="group" aria-labelledby="modeLbl" id="modeSeg">
-                  <button type="button" data-mode="upi" data-i18n="mode_upi"></button>
-                  <button type="button" data-mode="bank" data-i18n="mode_bank"></button>
-                  <button type="button" data-mode="cheque" data-i18n="mode_cheque"></button>
-                  <button type="button" data-mode="cash" data-i18n="mode_cash"></button>
+                  <button type="button" data-mode="upi" data-i18n="mode_upi">UPI</button>
+                  <button type="button" data-mode="bank" data-i18n="mode_bank">ব্যাংক ট্রান্সফার</button>
+                  <button type="button" data-mode="cheque" data-i18n="mode_cheque">চেক</button>
+                  <button type="button" data-mode="cash" data-i18n="mode_cash">নগদ</button>
                 </div>
               </div>
               <div id="chequeBox" class="stack" hidden>
                 <div class="two">
-                  <label class="f"><span class="lbl" data-i18n="cheque_no"></span><input type="text" id="chqNo" data-k="chqNo" maxlength="12" inputmode="numeric" autocomplete="off" class="num-in no-i18n" placeholder="000451"></label>
-                  <label class="f"><span class="lbl" data-i18n="cheque_bank"></span><input type="text" id="chqBank" data-k="chqBank" maxlength="40" autocomplete="off" dir="auto"></label>
+                  <label class="f"><span class="lbl" data-i18n="cheque_no">চেক নম্বর (প্রথম মাসের)</span><input type="text" id="chqNo" data-k="chqNo" maxlength="12" inputmode="numeric" autocomplete="off" class="num-in no-i18n" placeholder="000451"></label>
+                  <label class="f"><span class="lbl" data-i18n="cheque_bank">ব্যাংকের নাম (ঐচ্ছিক)</span><input type="text" id="chqBank" data-k="chqBank" maxlength="40" autocomplete="off" dir="auto"></label>
                 </div>
-                <label class="check-wrap"><input type="checkbox" id="chqSeries"> <span data-i18n="cheque_series"></span></label>
+                <label class="check-wrap"><input type="checkbox" id="chqSeries"> <span data-i18n="cheque_series">পরের মাসগুলোতে পরের চেক নম্বর (প্রতি মাসে +1)</span></label>
               </div>
               <div class="f">
-                <span class="lbl" id="rdLbl" data-i18n="rdate"></span>
+                <span class="lbl" id="rdLbl" data-i18n="rdate">রসিদের তারিখ</span>
                 <div class="seg full" role="group" aria-labelledby="rdLbl">
-                  <button type="button" data-rd="last" data-i18n="rdate_last"></button>
-                  <button type="button" data-rd="day" data-i18n="rdate_day"></button>
+                  <button type="button" data-rd="last" data-i18n="rdate_last">মাসের শেষ দিন</button>
+                  <button type="button" data-rd="day" data-i18n="rdate_day">বেছে নেওয়া দিন</button>
                 </div>
               </div>
               <div id="dayBox" hidden>
-                <label class="f"><span class="lbl" data-i18n="day_lbl"></span><input type="number" id="rday" min="1" max="31" step="1" inputmode="numeric" class="num-in"></label>
-                <span class="hint" data-i18n="day_hint"></span>
+                <label class="f"><span class="lbl" data-i18n="day_lbl">প্রতি মাসের দিন (1–31)</span><input type="number" id="rday" min="1" max="31" step="1" inputmode="numeric" class="num-in"></label>
+                <span class="hint" data-i18n="day_hint">ছোট মাসে শেষ দিনটি ধরা হয় (ফেব্রুয়ারিতে 31-এর জায়গায় 28 বা 29)।</span>
               </div>
               <div class="two">
-                <label class="f"><span class="lbl" data-i18n="num_prefix"></span><input type="text" id="prefix" data-k="prefix" maxlength="16" autocomplete="off" class="no-i18n" dir="ltr"></label>
-                <label class="f"><span class="lbl" data-i18n="num_start"></span><input type="number" id="startNo" min="1" max="99999" step="1" inputmode="numeric" class="num-in"></label>
+                <label class="f"><span class="lbl" data-i18n="num_prefix">রসিদ নম্বরের শুরু</span><input type="text" id="prefix" data-k="prefix" maxlength="16" autocomplete="off" class="no-i18n" dir="ltr"></label>
+                <label class="f"><span class="lbl" data-i18n="num_start">প্রথম নম্বর</span><input type="number" id="startNo" min="1" max="99999" step="1" inputmode="numeric" class="num-in"></label>
               </div>
               <div class="f">
-                <span class="lbl" id="stLbl" data-i18n="stamp"></span>
+                <span class="lbl" id="stLbl" data-i18n="stamp">রেভিনিউ স্ট্যাম্পের ঘর</span>
                 <div class="seg full" role="group" aria-labelledby="stLbl">
                   <button type="button" data-stamp="auto" id="stampAutoBtn"></button>
-                  <button type="button" data-stamp="all" data-i18n="stamp_all"></button>
-                  <button type="button" data-stamp="none" data-i18n="stamp_none"></button>
+                  <button type="button" data-stamp="all" data-i18n="stamp_all">প্রতিটি রসিদে</button>
+                  <button type="button" data-stamp="none" data-i18n="stamp_none">কোথাও না</button>
                 </div>
                 <span class="hint" id="stampHint"></span>
               </div>
               <div class="two">
                 <div class="f">
-                  <span class="lbl" id="lyLbl" data-i18n="layout"></span>
+                  <span class="lbl" id="lyLbl" data-i18n="layout">প্রিন্টের ধরন</span>
                   <div class="seg full" role="group" aria-labelledby="lyLbl">
-                    <button type="button" data-layout="3" data-i18n="per3"></button>
-                    <button type="button" data-layout="1" data-i18n="per1"></button>
+                    <button type="button" data-layout="3" data-i18n="per3">একটি A4-এ 3টি</button>
+                    <button type="button" data-layout="1" data-i18n="per1">একটি A4-এ 1টি</button>
                   </div>
                 </div>
-                <label class="f"><span class="lbl" data-i18n="rlang"></span><select id="rlang"><option value="page" data-i18n="rlang_page"></option><option value="en" data-i18n="rlang_en"></option></select></label>
+                <label class="f"><span class="lbl" data-i18n="rlang">রসিদের ভাষা</span><select id="rlang"><option value="page" data-i18n="rlang_page">বাংলা (এই পেজের ভাষা)</option><option value="en" data-i18n="rlang_en">ইংরেজি</option></select></label>
               </div>
-              <span class="hint" data-i18n="rlang_hint"></span>
+              <span class="hint" data-i18n="rlang_hint">কথায় টাকার অঙ্ক সবসময় ইংরেজিতে থাকে, বেশিরভাগ অফিস এটাই চায়।</span>
             </div>
           </section>
 
           <section class="card sum-card stack" aria-live="polite" id="sumCard">
             <p class="cnt" id="sumCount"></p>
-            <div><span class="muted" data-i18n="sum_total"></span><div class="big" id="sumTotal"></div></div>
+            <div><span class="muted" data-i18n="sum_total">মোট ভাড়া</span><div class="big" id="sumTotal"></div></div>
             <div class="w no-i18n" id="sumWords"></div>
-            <div class="callout danger small" id="rentZero" hidden data-i18n="rent_zero"></div>
+            <div class="callout danger small" id="rentZero" hidden data-i18n="rent_zero">রসিদ বানাতে ₹0-এর বেশি মাসিক ভাড়া লিখুন।</div>
             <p class="small muted mb0" id="skipped" hidden></p>
             <div class="callout small" id="panNote"></div>
             <div class="actions no-print">
-              <button type="button" class="btn btn-primary" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print_btn"></span></button>
-              <button type="button" class="btn" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy_sum"></span></button>
-              <button type="button" class="btn btn-danger" id="resetBtn" data-i18n="reset_all"></button>
+              <button type="button" class="btn btn-primary" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print_btn">প্রিন্ট / PDF সেভ করুন</span></button>
+              <button type="button" class="btn" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy_sum">WhatsApp-এর জন্য সারাংশ কপি করুন</span></button>
+              <button type="button" class="btn btn-danger" id="resetBtn" data-i18n="reset_all">সব রিসেট করুন</button>
             </div>
-            <span class="hint" data-i18n="print_hint"></span>
+            <span class="hint" data-i18n="print_hint">প্রিন্ট ডায়ালগে প্রিন্টার হিসেবে &quot;Save as PDF&quot; বেছে নিলে PDF ফাইল পাবেন। কাগজ A4 আর স্কেল 100% রাখুন।</span>
           </section>
         </div>
 
         <div class="pv-col" id="preview">
-          <h2 class="small muted" style="margin:0 0 6px" data-i18n="preview_title"></h2>
+          <h2 class="small muted" style="margin:0 0 6px" data-i18n="preview_title">রসিদের প্রিভিউ</h2>
           <div class="pv-wrap" id="pvWrap"><div class="pages no-i18n" id="pages"></div></div>
         </div>
       </div>
@@ -268,21 +268,21 @@
     <section id="p-hra" role="tabpanel" aria-labelledby="tab-hra" hidden>
       <div class="hra-grid">
         <section class="card form stack">
-          <h2 data-i18n="tab_hra"></h2>
-          <p class="muted small mb0" data-i18n="h_intro"></p>
-          <label class="f"><span class="lbl" data-i18n="h_basic"></span><input type="text" id="hBasic" inputmode="numeric" autocomplete="off" class="num-in"></label>
-          <span class="hint" data-i18n="h_basic_hint"></span>
-          <label class="f"><span class="lbl" data-i18n="h_hra"></span><input type="text" id="hHra" inputmode="numeric" autocomplete="off" class="num-in"></label>
-          <label class="f"><span class="lbl" data-i18n="h_rent"></span><input type="text" id="hRent" inputmode="numeric" autocomplete="off" class="num-in"></label>
-          <button type="button" class="btn btn-sm" id="hUseRec"><span aria-hidden="true">🧾</span> <span data-i18n="h_use_rec"></span></button>
-          <label class="f"><span class="lbl" data-i18n="h_city"></span><select id="hCity"></select></label>
+          <h2 data-i18n="tab_hra">HRA ক্যালকুলেটর</h2>
+          <p class="muted small mb0" data-i18n="h_intro">শুধু পুরোনো ব্যবস্থার জন্য। স্যালারি স্লিপ থেকে সারা বছরের অঙ্ক লিখুন (বা মাসিক × 12)।</p>
+          <label class="f"><span class="lbl" data-i18n="h_basic">বছরের বেসিক + DA (₹)</span><input type="text" id="hBasic" inputmode="numeric" autocomplete="off" class="num-in"></label>
+          <span class="hint" data-i18n="h_basic_hint">কমিশন যোগ করুন শুধু যদি তা বিক্রির নির্দিষ্ট % হয়। অন্য ভাতা যোগ করবেন না।</span>
+          <label class="f"><span class="lbl" data-i18n="h_hra">বছরে পাওয়া HRA (₹)</span><input type="text" id="hHra" inputmode="numeric" autocomplete="off" class="num-in"></label>
+          <label class="f"><span class="lbl" data-i18n="h_rent">বছরে দেওয়া ভাড়া (₹)</span><input type="text" id="hRent" inputmode="numeric" autocomplete="off" class="num-in"></label>
+          <button type="button" class="btn btn-sm" id="hUseRec"><span aria-hidden="true">🧾</span> <span data-i18n="h_use_rec">আমার রসিদের মোট ভাড়া নিন</span></button>
+          <label class="f"><span class="lbl" data-i18n="h_city">আপনি কোন শহরে থাকেন</span><select id="hCity"></select></label>
         </section>
         <section class="card hra-res stack" aria-live="polite">
-          <div><span class="muted" data-i18n="h_exempt"></span><div class="big" id="hExempt"></div></div>
+          <div><span class="muted" data-i18n="h_exempt">করমুক্ত HRA</span><div class="big" id="hExempt"></div></div>
           <p class="tax mb0" id="hTaxable"></p>
-          <p class="small mb0" data-i18n="h_work"></p>
+          <p class="small mb0" data-i18n="h_work">হিসাব কীভাবে: করমুক্ত অংশ এই তিনটির মধ্যে সবচেয়ে ছোট অঙ্ক</p>
           <div class="scroll-x"><table class="work"><tbody id="hWork"></tbody></table></div>
-          <div class="callout warning small" id="hNone" hidden data-i18n="h_none"></div>
+          <div class="callout warning small" id="hNone" hidden data-i18n="h_none">ভাড়া বেতনের 10%-এর বেশি নয়, তাই কোনো HRA করমুক্ত নয়।</div>
         </section>
       </div>
     </section>
@@ -291,11 +291,11 @@
     <section class="card rules no-print" style="margin-top:16px" id="rules">
       <h2 id="rulesTitle"></h2>
       <ul>
-        <li data-i18n="rule_regime"></li>
+        <li data-i18n="rule_regime">HRA শুধু পুরোনো ব্যবস্থায় করমুক্ত। নতুন (ডিফল্ট) ব্যবস্থায় পুরো HRA-তে কর লাগে, তাই রসিদ কাজে লাগে শুধু পুরোনো ব্যবস্থা বেছে নিলে।</li>
         <li id="rulePan"></li>
-        <li data-i18n="rule_metro"></li>
-        <li data-i18n="rule_family"></li>
-        <li data-i18n="rule_form"></li>
+        <li data-i18n="rule_metro">দিল্লি, মুম্বাই, কলকাতা, চেন্নাই আর এ বছর থেকে বেঙ্গালুরু, হায়দরাবাদ, পুনে ও আহমেদাবাদে বেতনের 50% পর্যন্ত করমুক্ত। অন্য শহরে 40%।</li>
+        <li data-i18n="rule_family">বাবা-মাকে দেওয়া ভাড়া চলে, যদি বাড়ি তাঁদের হয়, টাকা সত্যিই দেওয়া হয় (ব্যাংক বা UPI সবচেয়ে ভালো) আর তাঁরা নিজের কর রিটার্নে তা দেখান। স্বামী বা স্ত্রীকে দেওয়া ভাড়া সাধারণত মানা হয় না।</li>
+        <li data-i18n="rule_form">রসিদগুলো অফিসে Form 124-এর সঙ্গে দিন (এটি Form 12BB-র জায়গা নিয়েছে)। এতে বাড়িওয়ালার সঙ্গে আপনার সম্পর্কও জানতে চাওয়া হয়।</li>
         <li id="ruleStamp"></li>
       </ul>
       <p class="small muted src" id="ruleSrc"></p>
@@ -304,7 +304,7 @@
     <details class="card no-print" style="margin-top:16px">
       <summary><strong data-i18n="help"></strong></summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li><li data-i18n="tip4"></li><li data-i18n="tip5"></li>
+        <li data-i18n="tip1">কর বছর আর মাস বাছুন, ভাড়া একবার লিখুন, সব রসিদ নম্বর, তারিখ আর কথায় অঙ্ক সহ তৈরি হবে।</li><li data-i18n="tip2">ধরুন নভেম্বর থেকে ভাড়া বেড়েছে? &quot;ভাড়া বদল যোগ করুন&quot; টিপুন, যাতে রসিদ আর মোট অঙ্ক আসল পেমেন্টের সঙ্গে মেলে।</li><li data-i18n="tip3">একটি A4 পাতায় 3টি রসিদ প্রিন্ট করুন, ডট লাইনে কাটুন, আর প্রতিটিতে বাড়িওয়ালার সই নিন। ₹5,000-এর বেশি নগদে ঘরে ₹1-এর রেভিনিউ স্ট্যাম্প লাগিয়ে তার উপর সই করান।</li><li data-i18n="tip4">বাড়িওয়ালা ও PG মালিক: প্রত্যেক ভাড়াটের তথ্য সেভ করুন, তারপর প্রতি মাসে বা বছরে তালিকা থেকে ভাড়াটে বেছে প্রিন্ট করুন।</li><li data-i18n="tip5">প্রমাণ জমা দেওয়ার আগে &quot;HRA ক্যালকুলেটর&quot; খুলে দেখুন কতটা HRA করমুক্ত। নতুন ব্যবস্থা আপনার জন্য ভালো হলে রসিদ লাগবেই না।</li>
       </ul>
     </details>
 

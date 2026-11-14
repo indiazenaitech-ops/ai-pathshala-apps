@@ -127,35 +127,35 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ਗੜਬੜ ਵਾਲੀ ਸੂਚੀ ਨੂੰ ਕਦਮ-ਦਰ-ਕਦਮ ਸਾਫ਼ ਕਰੋ: ਵਾਧੂ ਸਪੇਸ, ਦੁਹਰਾਈਆਂ ਕਤਾਰਾਂ, ਵੱਖ-ਵੱਖ ਤਾਰੀਖ਼ਾਂ, ਮੋਬਾਈਲ ਨੰਬਰ ਅਤੇ ₹ ਰਕਮ। ਕਦਮਾਂ ਨੂੰ ਇੱਕ ਰੈਸਿਪੀ ਵਾਂਗ ਸੇਵ ਕਰੋ ਅਤੇ ਅਗਲੇ ਮਹੀਨੇ ਦੀ ਫ਼ਾਈਲ ਉੱਤੇ ਦੁਬਾਰਾ ਚਲਾਓ।</p>
 
     <section class="card" aria-labelledby="h-load">
-      <h2 class="dc-h" id="h-load" data-i18n="h_load"></h2>
+      <h2 class="dc-h" id="h-load" data-i18n="h_load">1. ਆਪਣਾ ਡਾਟਾ ਖੋਲ੍ਹੋ</h2>
       <div class="row">
-        <button class="btn" id="load-sample" type="button" data-i18n="load_sample"></button>
-        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file"></button>
+        <button class="btn" id="load-sample" type="button" data-i18n="load_sample">ਗੜਬੜ ਵਾਲਾ ਨਮੂਨਾ</button>
+        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file">CSV ਫ਼ਾਈਲ ਖੋਲ੍ਹੋ</button>
         <button class="btn btn-danger" id="reset" type="button" data-i18n="reset"></button>
       </div>
       <details id="paste-box">
-        <summary data-i18n="paste_data"></summary>
+        <summary data-i18n="paste_data">ਡਾਟਾ ਪੇਸਟ ਕਰੋ</summary>
         <textarea id="paste" class="no-i18n" data-i18n-placeholder="paste_ph" aria-label="CSV" data-i18n-aria-label="paste_data"></textarea>
-        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste"></button>
+        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste">ਪੇਸਟ ਕੀਤਾ ਡਾਟਾ ਵਰਤੋ</button>
       </details>
-      <p class="dc-drop small muted" data-i18n="drop_hint"></p>
+      <p class="dc-drop small muted" data-i18n="drop_hint">CSV ਫ਼ਾਈਲ ਨੂੰ ਇਸ ਪੰਨੇ ਉੱਤੇ ਖਿੱਚ ਕੇ ਵੀ ਛੱਡ ਸਕਦੇ ਹੋ। Excel ਵਿੱਚ: File → Save as → CSV। ਤੁਹਾਡੀ ਫ਼ਾਈਲ ਇਸੇ ਡਿਵਾਈਸ ਉੱਤੇ ਰਹਿੰਦੀ ਹੈ।</p>
       <p id="data-info" class="no-i18n" aria-live="polite"></p>
       <p id="busy" class="muted" hidden data-i18n="loading"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-quality">
-      <h2 class="dc-h" id="h-quality" data-i18n="h_quality"></h2>
+      <h2 class="dc-h" id="h-quality" data-i18n="h_quality">2. ਡਾਟੇ ਦੀ ਗੁਣਵੱਤਾ</h2>
       <div class="dc-scores" aria-live="polite">
         <div class="dc-score">
-          <span class="lbl" data-i18n="score_before"></span>
+          <span class="lbl" data-i18n="score_before">ਸਫ਼ਾਈ ਤੋਂ ਪਹਿਲਾਂ ਸਕੋਰ</span>
           <span class="big"><span id="score-before"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-before"></span></div>
         </div>
         <div class="dc-score after">
-          <span class="lbl" data-i18n="score_after"></span>
+          <span class="lbl" data-i18n="score_after">ਸਫ਼ਾਈ ਤੋਂ ਬਾਅਦ ਸਕੋਰ</span>
           <span class="big"><span id="score-after"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-after"></span></div>
         </div>
@@ -164,56 +164,56 @@
       <div class="scroll-x">
         <table class="table dc-qt">
           <thead><tr>
-            <th scope="col" data-i18n="th_column"></th><th scope="col" data-i18n="th_type"></th>
-            <th scope="col" data-i18n="q_missing"></th><th scope="col" data-i18n="q_invalid"></th><th scope="col" data-i18n="q_spaces"></th>
+            <th scope="col" data-i18n="th_column">ਕਾਲਮ</th><th scope="col" data-i18n="th_type">ਕਿਹੋ ਜਿਹਾ ਲੱਗਦਾ ਹੈ</th>
+            <th scope="col" data-i18n="q_missing">ਖ਼ਾਲੀ</th><th scope="col" data-i18n="q_invalid">ਸਹੀ ਰੂਪ ਵਿੱਚ ਨਹੀਂ</th><th scope="col" data-i18n="q_spaces">ਵਾਧੂ ਸਪੇਸ</th>
           </tr></thead>
           <tbody id="q-body"></tbody>
         </table>
       </div>
-      <p class="tiny muted" data-i18n="quality_note"></p>
+      <p class="tiny muted" data-i18n="quality_note">ਸਕੋਰ = ਬਿਨਾਂ ਕਿਸੇ ਗੜਬੜ ਵਾਲੇ ਸੈੱਲਾਂ ਦਾ ਹਿੱਸਾ। ਗੜਬੜ ਯਾਨੀ ਖ਼ਾਲੀ ਮੁੱਲ, ਵਾਧੂ ਸਪੇਸ, ਸਹੀ ਰੂਪ ਵਿੱਚ ਨਾ ਲਿਖਿਆ ਮੁੱਲ, ਜਾਂ ਪੂਰੀ ਦੁਹਰਾਈ ਕਤਾਰ।</p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-steps">
-      <h2 class="dc-h" id="h-steps" data-i18n="h_steps"></h2>
+      <h2 class="dc-h" id="h-steps" data-i18n="h_steps">3. ਸਫ਼ਾਈ ਦੇ ਕਦਮ (ਤੁਹਾਡੀ ਰੈਸਿਪੀ)</h2>
       <div class="panel stack">
         <div class="dc-add">
-          <label class="field"><span data-i18n="step_type"></span><select id="step-type"></select></label>
+          <label class="field"><span data-i18n="step_type">ਕਦਮ ਜੋੜੋ</span><select id="step-type"></select></label>
         </div>
         <div id="step-form"></div>
         <div class="dc-actions">
-          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step"></button>
-          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest"></button>
+          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step">ਕਦਮ ਜੋੜੋ</button>
+          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest">ਕਦਮ ਸੁਝਾਓ</button>
         </div>
       </div>
       <ol id="recipe" aria-live="polite"></ol>
-      <p id="recipe-empty" class="muted" data-i18n="recipe_empty"></p>
+      <p id="recipe-empty" class="muted" data-i18n="recipe_empty">ਅਜੇ ਕੋਈ ਕਦਮ ਨਹੀਂ। ਉੱਪਰ ਕੋਈ ਕਦਮ ਚੁਣ ਕੇ &quot;ਕਦਮ ਜੋੜੋ&quot; ਦਬਾਓ, ਜਾਂ &quot;ਕਦਮ ਸੁਝਾਓ&quot; ਦਬਾਓ।</p>
       <div class="dc-actions" style="margin-top:12px">
-        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo"></button>
-        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe"></button>
-        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe"></button>
-        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps"></button>
+        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo">ਵਾਪਸ ਲਓ</button>
+        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe">ਰੈਸਿਪੀ ਐਕਸਪੋਰਟ</button>
+        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe">ਰੈਸਿਪੀ ਇੰਪੋਰਟ</button>
+        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps">ਸਾਰੇ ਕਦਮ ਹਟਾਓ</button>
       </div>
       <p class="callout small" style="margin-top:12px" data-i18n-html="pipeline_note"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-preview">
-      <h2 class="dc-h" id="h-preview" data-i18n="h_preview"></h2>
+      <h2 class="dc-h" id="h-preview" data-i18n="h_preview">4. ਸਾਫ਼ ਡਾਟਾ</h2>
       <div class="dc-bar">
         <div class="seg" id="view-seg" role="group">
-          <button type="button" data-v="clean" data-i18n="view_clean"></button>
-          <button type="button" data-v="orig" data-i18n="view_orig"></button>
+          <button type="button" data-v="clean" data-i18n="view_clean">ਸਾਫ਼</button>
+          <button type="button" data-v="orig" data-i18n="view_orig">ਮੂਲ</button>
         </div>
-        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show"></span>
+        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show">ਦਿਖਾਓ</span>
           <select id="filter">
-            <option value="all" data-i18n="show_all"></option>
-            <option value="changed" data-i18n="show_changed"></option>
-            <option value="problems" data-i18n="show_problems"></option>
+            <option value="all" data-i18n="show_all">ਸਾਰੀਆਂ ਕਤਾਰਾਂ</option>
+            <option value="changed" data-i18n="show_changed">ਬਦਲੀਆਂ ਕਤਾਰਾਂ</option>
+            <option value="problems" data-i18n="show_problems">ਗੜਬੜ ਵਾਲੀਆਂ ਕਤਾਰਾਂ</option>
           </select>
         </label>
       </div>
-      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed"></span><span class="lg-bad" data-i18n="legend_bad"></span></div>
+      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed">ਕਿਸੇ ਕਦਮ ਨੇ ਬਦਲਿਆ</span><span class="lg-bad" data-i18n="legend_bad">ਖ਼ਾਲੀ ਜਾਂ ਸਹੀ ਰੂਪ ਵਿੱਚ ਨਹੀਂ</span></div>
       <div class="dc-gridwrap no-i18n"><table class="table" id="grid"></table></div>
-      <p id="no-rows" class="muted" hidden data-i18n="no_rows"></p>
+      <p id="no-rows" class="muted" hidden data-i18n="no_rows">ਦਿਖਾਉਣ ਲਈ ਕੋਈ ਕਤਾਰ ਨਹੀਂ।</p>
       <div class="dc-pager" id="pager">
         <button class="btn btn-sm" id="pg-prev" type="button" data-i18n="previous"></button>
         <span id="page-info" class="small"></span>
@@ -221,23 +221,23 @@
       </div>
       <div class="dc-foot">
         <span id="out-count" class="small muted"></span>
-        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv"></button>
+        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv">ਸਾਫ਼ CSV ਡਾਊਨਲੋਡ ਕਰੋ</button>
       </div>
     </section>
 
     <details class="card dc-sec">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">ਗੜਬੜ ਵਾਲੇ ਨਮੂਨੇ ਨਾਲ ਸ਼ੁਰੂ ਕਰੋ: &quot;ਕਦਮ ਸੁਝਾਓ&quot; ਦਬਾਓ, ਫਿਰ ਟੇਬਲ ਵਿੱਚ ਹਰੇ (ਬਦਲੇ) ਅਤੇ ਲਾਲ (ਗੜਬੜ ਵਾਲੇ) ਸੈੱਲ ਦੇਖੋ।</li>
+        <li data-i18n="tip2">ਦਫ਼ਤਰ ਦੇ ਕੰਮ ਲਈ: ਹਰ ਮਹੀਨੇ ਦੀ ਗਾਹਕ ਜਾਂ ਸਟਾਫ਼ ਸੂਚੀ ਲਈ ਇੱਕ ਵਾਰ ਰੈਸਿਪੀ ਬਣਾ ਕੇ ਐਕਸਪੋਰਟ ਕਰੋ। ਅਗਲੇ ਮਹੀਨੇ ਨਵੀਂ ਫ਼ਾਈਲ ਖੋਲ੍ਹੋ, ਰੈਸਿਪੀ ਇੰਪੋਰਟ ਕਰੋ ਅਤੇ ਇੱਕ ਮਿੰਟ ਵਿੱਚ ਸਾਫ਼ CSV ਡਾਊਨਲੋਡ ਕਰੋ।</li>
+        <li data-i18n="tip3">ਕ੍ਰਮ ਮਾਇਨੇ ਰੱਖਦਾ ਹੈ: ਦੁਹਰਾਈਆਂ ਕਤਾਰਾਂ ਹਟਾਉਣ ਤੋਂ ਪਹਿਲਾਂ ਸਪੇਸ ਅਤੇ ਵੱਡੇ-ਛੋਟੇ ਅੱਖਰ ਠੀਕ ਕਰੋ, ਤਾਂ ਜੋ &quot;ਪ੍ਰਿਆ  ਸ਼ਰਮਾ&quot; ਅਤੇ &quot;ਪ੍ਰਿਆ ਸ਼ਰਮਾ&quot; ਇੱਕੋ ਵਿਅਕਤੀ ਮੰਨੇ ਜਾਣ।</li>
+        <li data-i18n="tip4">ਜਮਾਤ ਦੀ ਗਤੀਵਿਧੀ: ਹਰ ਟੋਲੀ ਨੂੰ ਇੱਕੋ ਗੜਬੜ ਵਾਲੀ ਸੂਚੀ ਦਿਓ। ਟੋਲੀਆਂ ਪਹਿਲਾਂ ਕਾਗ਼ਜ਼ ਉੱਤੇ ਸਫ਼ਾਈ ਦੇ ਕਦਮ ਲਿਖਣ, ਫਿਰ ਇੱਥੇ ਅਜ਼ਮਾਉਣ। ਸਭ ਤੋਂ ਘੱਟ ਕਦਮਾਂ ਵਿੱਚ ਸਭ ਤੋਂ ਵੱਧ ਸਕੋਰ ਕਿਸ ਦਾ ਆਇਆ?</li>
+        <li data-i18n="tip5">ਕੋਈ ਕਦਮ ਬੰਦ ਕਰਕੇ ਦੇਖੋ ਕਿ ਉਹ ਕੀ ਕਰ ਰਿਹਾ ਸੀ। ↑ ↓ ਨਾਲ ਕ੍ਰਮ ਬਦਲੋ, ਅਤੇ ਗ਼ਲਤੀ ਹੋਵੇ ਤਾਂ &quot;ਵਾਪਸ ਲਓ&quot; ਦਬਾਓ।</li>
+        <li data-i18n="tip6">ਸਫ਼ਾਈ ਤੋਂ ਬਾਅਦ ਬਚੇ ਲਾਲ ਸੈੱਲ ਦੇਖੋ: ਕੁਝ ਮੁੱਲ (ਜਿਵੇਂ 5 ਅੰਕਾਂ ਦਾ ਮੋਬਾਈਲ ਨੰਬਰ) ਕੰਪਿਊਟਰ ਠੀਕ ਨਹੀਂ ਕਰ ਸਕਦਾ। ਕਿਸੇ ਵਿਅਕਤੀ ਨੂੰ ਉਹ ਜਾਂਚਣੇ ਪੈਣਗੇ।</li>
       </ul>
     </details>
     <details class="card dc-sec">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">ਜ਼ਰੂਰੀ ਸ਼ਬਦ: ਅੰਦਰ ਕੀ ਹੋ ਰਿਹਾ ਹੈ</summary>
       <ul>
         <li data-i18n-html="w_dataset"></li>
         <li data-i18n-html="w_missing"></li>

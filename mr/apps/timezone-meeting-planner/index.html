@@ -149,117 +149,117 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">भारतातून वेगवेगळ्या टाइम झोनमध्ये मीटिंग ठरवा: प्रत्येक शहराची स्थानिक वेळ पाहा, सर्वांना सोयीचे तास शोधा, आणि इनव्हाइट किंवा कॅलेंडर फाइल शेअर करा. सगळे तुमच्या डिव्हाइसवरच चालते.</p>
     <div class="tz-top no-print">
-      <span class="badge success"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></span>
+      <span class="badge success"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">ऑफलाइन चालते · कॅलेंडरचा वापर नाही · काहीही डिव्हाइसबाहेर जात नाही</span></span>
     </div>
-    <p class="callout warning small no-print" id="fallback-note" hidden data-i18n="fallback_note"></p>
+    <p class="callout warning small no-print" id="fallback-note" hidden data-i18n="fallback_note">या ब्राउझरमध्ये टाइम झोनची यादी छोटी आहे; शहर न सापडल्यास Europe/Paris सारखे नेमके झोनचे नाव लिहा.</p>
 
     <div class="tz-layout">
       <div class="tz-col">
         <!-- meeting time -->
         <section class="card stack" id="time-card">
-          <h2 data-i18n="sec_time"></h2>
+          <h2 data-i18n="sec_time">मीटिंगची वेळ</h2>
           <div class="ctl-grid">
-            <div class="field"><label for="date" data-i18n="date"></label><input type="date" id="date"></div>
-            <div class="field"><label for="dur" data-i18n="duration"></label>
+            <div class="field"><label for="date" data-i18n="date">तारीख</label><input type="date" id="date"></div>
+            <div class="field"><label for="dur" data-i18n="duration">कालावधी</label>
               <select id="dur">
-                <option value="30" data-i18n="dur_30"></option>
-                <option value="45" data-i18n="dur_45"></option>
-                <option value="60" data-i18n="dur_60"></option>
-                <option value="90" data-i18n="dur_90"></option>
-                <option value="120" data-i18n="dur_120"></option>
-                <option value="180" data-i18n="dur_180"></option>
+                <option value="30" data-i18n="dur_30">30 मिनिटे</option>
+                <option value="45" data-i18n="dur_45">45 मिनिटे</option>
+                <option value="60" data-i18n="dur_60">1 तास</option>
+                <option value="90" data-i18n="dur_90">1½ तास</option>
+                <option value="120" data-i18n="dur_120">2 तास</option>
+                <option value="180" data-i18n="dur_180">3 तास</option>
               </select>
             </div>
-            <div class="field"><label for="time" data-i18n="start_time"></label><input type="time" id="time" step="300"></div>
-            <div class="field"><label for="from" data-i18n="in_zone"></label><select id="from"></select></div>
+            <div class="field"><label for="time" data-i18n="start_time">सुरू होण्याची वेळ</label><input type="time" id="time" step="300"></div>
+            <div class="field"><label for="from" data-i18n="in_zone">या शहराच्या वेळेत</label><select id="from"></select></div>
             <div class="field wide">
-              <span class="lbl" id="clock-lbl" data-i18n="clock_fmt"></span>
+              <span class="lbl" id="clock-lbl" data-i18n="clock_fmt">घड्याळ</span>
               <div class="seg fill" role="group" aria-labelledby="clock-lbl" id="hseg">
-                <button type="button" data-h="12" data-i18n="h12"></button>
-                <button type="button" data-h="24" data-i18n="h24"></button>
+                <button type="button" data-h="12" data-i18n="h12">12 तास</button>
+                <button type="button" data-h="24" data-i18n="h24">24 तास</button>
               </div>
             </div>
           </div>
-          <p class="small err mb0" id="time-err" hidden data-i18n="err_time"></p>
+          <p class="small err mb0" id="time-err" hidden data-i18n="err_time">योग्य तारीख आणि वेळ टाका.</p>
         </section>
 
         <!-- people -->
         <section class="card stack" id="people-card">
-          <h2 data-i18n="sec_people"></h2>
+          <h2 data-i18n="sec_people">लोक आणि शहरे</h2>
           <div class="field no-print">
-            <label for="city-q" data-i18n="search_label"></label>
+            <label for="city-q" data-i18n="search_label">शहर किंवा टाइम झोन जोडा</label>
             <input type="search" id="city-q" autocomplete="off" data-i18n-placeholder="search_ph" aria-controls="city-results" aria-autocomplete="list">
             <div id="city-results" class="no-i18n" role="group" data-i18n-aria-label="search_label"></div>
-            <p class="tiny muted mb0" id="no-match" hidden data-i18n="no_match"></p>
+            <p class="tiny muted mb0" id="no-match" hidden data-i18n="no_match">काही सापडले नाही. इंग्रजीत शहराचे नाव, EST सारखे लघुरूप, किंवा Europe/Paris सारखा झोन लिहून पाहा.</p>
           </div>
           <div class="quick no-print" id="quick"></div>
           <ul class="plist" id="people"></ul>
-          <p class="tiny muted mb0" data-i18n="wh_help"></p>
+          <p class="tiny muted mb0" data-i18n="wh_help">प्रत्येकाचे कामाचे तास सेट करा. हिरवा = कामाच्या तासांत, पिवळा = त्याआधी किंवा नंतर 2 तासांपर्यंत, राखाडी = रात्र.</p>
         </section>
       </div>
 
       <div class="tz-col">
         <!-- results -->
         <section class="card stack" id="res-card">
-          <h2 data-i18n="sec_results"></h2>
+          <h2 data-i18n="sec_results">सर्वांची स्थानिक वेळ</h2>
           <p class="small muted mb0 num" id="res-date"></p>
           <ul class="res" id="results" aria-live="polite"></ul>
         </section>
 
         <!-- 24-hour strip -->
         <section class="card stack no-print" id="strip-card">
-          <h2 data-i18n="sec_strip"></h2>
-          <p class="small muted mb0" data-i18n="strip_help"></p>
+          <h2 data-i18n="sec_strip">IST दिवसाचे 24 तासांचे चित्र</h2>
+          <p class="small muted mb0" data-i18n="strip_help">कोणत्याही तासावर टॅप करा, मीटिंग तिथून सुरू होईल; माउसने तासांवर ओढून कालावधी ठरवा. ही पट्टी बाजूला स्क्रोल होते.</p>
           <div class="legend">
-            <span class="rate good" data-i18n="good"></span>
-            <span class="rate ok" data-i18n="ok"></span>
-            <span class="rate bad" data-i18n="bad"></span>
+            <span class="rate good" data-i18n="good">कामाचे तास</span>
+            <span class="rate ok" data-i18n="ok">लवकर / उशिरा</span>
+            <span class="rate bad" data-i18n="bad">रात्र</span>
           </div>
           <div class="scroll-x strip-wrap" id="strip-wrap"></div>
         </section>
 
         <!-- best slots -->
         <section class="card stack no-print" id="best-card">
-          <h2 data-i18n="sec_best"></h2>
-          <p class="small muted mb0" data-i18n="best_help"></p>
+          <h2 data-i18n="sec_best">सर्वांसाठी सर्वोत्तम वेळ</h2>
+          <p class="small muted mb0" data-i18n="best_help">या IST दिवसातील अशा सुरुवातीच्या वेळा जेव्हा सर्वाधिक लोक कामावर असतात, सर्वोत्तम प्रथम.</p>
           <div id="best"></div>
         </section>
 
         <!-- invite -->
         <section class="card stack" id="invite-card">
-          <h2 id="invite-h" data-i18n="sec_invite"></h2>
-          <div class="field no-print"><label for="title" data-i18n="title_label"></label><input type="text" id="title" maxlength="80" data-i18n-placeholder="title_ph"></div>
+          <h2 id="invite-h" data-i18n="sec_invite">इनव्हाइटचा मजकूर</h2>
+          <div class="field no-print"><label for="title" data-i18n="title_label">मीटिंगचे नाव</label><input type="text" id="title" maxlength="80" data-i18n-placeholder="title_ph"></div>
           <textarea id="invite" class="no-i18n" readonly rows="9" aria-labelledby="invite-h"></textarea>
           <div class="row no-print">
-            <button type="button" class="btn btn-primary" id="copy-invite"><span aria-hidden="true">📋</span> <span data-i18n="copy_text"></span></button>
-            <a class="btn btn-wa" id="wa" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="wa_send"></span></a>
-            <button type="button" class="btn" id="ics"><span aria-hidden="true">📅</span> <span data-i18n="ics_dl"></span></button>
-            <button type="button" class="btn" id="share"><span aria-hidden="true">🔗</span> <span data-i18n="share_link"></span></button>
+            <button type="button" class="btn btn-primary" id="copy-invite"><span aria-hidden="true">📋</span> <span data-i18n="copy_text">मजकूर कॉपी करा</span></button>
+            <a class="btn btn-wa" id="wa" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="wa_send">WhatsApp वर पाठवा</span></a>
+            <button type="button" class="btn" id="ics"><span aria-hidden="true">📅</span> <span data-i18n="ics_dl">.ics डाउनलोड</span></button>
+            <button type="button" class="btn" id="share"><span aria-hidden="true">🔗</span> <span data-i18n="share_link">शेअर लिंक कॉपी करा</span></button>
             <input type="text" id="share-url" class="no-i18n" readonly tabindex="-1" aria-hidden="true">
           </div>
-          <p class="tiny muted mb0" data-i18n="invite_help"></p>
+          <p class="tiny muted mb0" data-i18n="invite_help">WhatsApp किंवा ईमेलमध्ये पेस्ट करायला तयार. .ics कॅलेंडर फाइल Google Calendar, Outlook आणि फोनच्या कॅलेंडरमध्ये उघडते; वेळ UTC मध्ये सेव्ह होते, त्यामुळे प्रत्येक देशात बरोबर दिसते.</p>
         </section>
       </div>
     </div>
 
     <!-- world clock -->
     <section class="card stack no-print" id="clock-card" style="margin-top:16px">
-      <h2 data-i18n="sec_clock"></h2>
-      <p class="small muted mb0" data-i18n="clock_help"></p>
+      <h2 data-i18n="sec_clock">जागतिक घड्याळ</h2>
+      <p class="small muted mb0" data-i18n="clock_help">जोडलेल्या प्रत्येक शहरात आत्ता किती वाजले आहेत.</p>
       <div class="clocks" id="clocks"></div>
     </section>
 
     <details class="card no-print" id="help" style="margin-top:16px">
-      <summary data-i18n="how_title"></summary>
+      <summary data-i18n="how_title">कसे वापरावे / कल्पना</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">कॉलमधील सर्वांची शहरे जोडा आणि त्यांचे कामाचे तास सेट करा; हिरवे चौकोन हेच मीटिंगसाठी योग्य तास.</li>
+        <li data-i18n="tip2">वेळ लिहा आणि ती कोणत्या शहराची आहे ते निवडा: उदा. न्यूयॉर्कमध्ये 3 pm लिहिल्यावर लगेच IST वेळ दिसते. हे IST ते EST चे झटपट कन्व्हर्टर म्हणूनही चालते.</li>
+        <li data-i18n="tip3">अमेरिका व युरोपमधील डेलाइट सेव्हिंग बदल निवडलेल्या तारखेनुसार आपोआप लागू होतात, म्हणून मार्च, ऑक्टोबर व नोव्हेंबरमध्ये पुन्हा होणाऱ्या मीटिंग पुन्हा तपासा.</li>
+        <li data-i18n="tip4">नेपाळ (+5:45) किंवा ॲडलेड (+9:30) सारखे वेगळे टाइम झोनही चालतात. कोणते शहर पुढच्या तारखेत गेले असेल तर &quot;पुढचा दिवस&quot; बॅज दिसतो.</li>
+        <li data-i18n="tip5">WhatsApp साठी इनव्हाइट मजकूर कॉपी करा, कोणत्याही कॅलेंडरमध्ये जोडण्यासाठी .ics फाइल डाउनलोड करा, किंवा शेअर लिंक कॉपी करा म्हणजे सहकारी तोच प्लॅन उघडू शकेल.</li>
+        <li data-i18n="tip6">दोन देशांतील क्लायंटसाठी दोन्ही शहरे जोडा आणि &quot;सर्वांसाठी सर्वोत्तम वेळ&quot; मधून एकाच मेसेजमध्ये दोन-तीन पर्याय सुचवा.</li>
       </ul>
       <div class="row spread" style="margin-top:12px">
         <span class="small muted"><span aria-hidden="true">🔒</span> <span data-i18n="saved_local"></span></span>

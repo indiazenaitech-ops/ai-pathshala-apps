@@ -209,9 +209,9 @@
 </head>
 <body>
   <main id="app">
-    <h1 class="print-title" data-i18n="app_title"></h1>
+    <h1 class="print-title" data-i18n="app_title">মুড চেনার AI শেখান</h1>
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">শুধু শব্দ গুনে কম্পিউটারকে খুশি, দুঃখের বা রাগের বাক্য আলাদা করতে শেখান, তারপর দেখুন তাকে কত সহজে বোকা বানানো যায়।</p>
       <div class="row no-print">
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm" id="fs-btn" data-i18n="fullscreen"></button>
@@ -221,89 +221,89 @@
 
     <!-- 1. Teach -->
     <section class="card stack" id="data-card">
-      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1"></span></h2>
-      <p class="muted small mb0 no-print" data-i18n="step1_hint"></p>
+      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1">উদাহরণ দিয়ে শেখান</span></h2>
+      <p class="muted small mb0 no-print" data-i18n="step1_hint">প্রতিটি বাক্স একটি লেবেল (একটি মুড)। সেই মুডের ছোট ছোট বাক্য যোগ করুন। যত বেশি আর যত রকমের উদাহরণ, মডেল তত বুদ্ধিমান।</p>
       <p class="callout warning small mb0 no-print" id="lang-note" hidden></p>
       <div class="labs" id="labs"></div>
       <div class="row data-tools no-print">
-        <button type="button" class="btn btn-accent" id="add-label-btn" data-i18n="add_label"></button>
+        <button type="button" class="btn btn-accent" id="add-label-btn" data-i18n="add_label">+ নতুন লেবেল যোগ করুন</button>
         <div class="row">
-          <button type="button" class="btn btn-sm" id="samples-btn" data-i18n="load_samples"></button>
-          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv"></button>
-          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv"></button>
-          <button type="button" class="btn btn-sm btn-danger" id="clear-all-btn" data-i18n="clear_all"></button>
+          <button type="button" class="btn btn-sm" id="samples-btn" data-i18n="load_samples">নমুনা বাক্য</button>
+          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv">CSV ইমপোর্ট</button>
+          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv">CSV এক্সপোর্ট</button>
+          <button type="button" class="btn btn-sm btn-danger" id="clear-all-btn" data-i18n="clear_all">সব বাক্য মুছুন</button>
         </div>
       </div>
-      <p class="muted tiny mb0 no-print" data-i18n="csv_hint"></p>
+      <p class="muted tiny mb0 no-print" data-i18n="csv_hint">CSV ফাইলে দুটি কলাম থাকে: text আর label। এটি Excel বা Google Sheets-এ খোলে।</p>
     </section>
 
     <div class="grid-2 main-grid">
       <!-- 2. Train -->
       <section class="card stack" id="train-card">
-        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2">মডেলকে ট্রেন করুন</span></h2>
         <div class="row train-row no-print">
-          <button type="button" class="btn btn-primary btn-lg" id="train-btn"><span aria-hidden="true">🧠</span><span data-i18n="train_btn"></span></button>
-          <label class="check"><input type="checkbox" id="pairs-chk"><span data-i18n="pairs_label"></span></label>
+          <button type="button" class="btn btn-primary btn-lg" id="train-btn"><span aria-hidden="true">🧠</span><span data-i18n="train_btn">ট্রেন করুন</span></button>
+          <label class="check"><input type="checkbox" id="pairs-chk"><span data-i18n="pairs_label">শব্দজোড়াও গুনুন (“খুশি নই”-এর মতো বাক্যে কাজে লাগে)</span></label>
         </div>
         <p class="callout small mb0" id="train-status" aria-live="polite"></p>
         <div id="model-view" class="stack" hidden>
           <div class="stats">
-            <div class="stat"><b id="st-sentences">0</b><span data-i18n="st_sentences"></span></div>
-            <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab"></span></div>
-            <div class="stat"><b id="st-train-acc">0</b><span data-i18n="st_train_acc"></span></div>
-            <div class="stat"><b id="st-fair-acc">0</b><span data-i18n="st_fair_acc"></span></div>
+            <div class="stat"><b id="st-sentences">0</b><span data-i18n="st_sentences">বাক্য</span></div>
+            <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab">যতগুলো আলাদা শব্দ চেনে</span></div>
+            <div class="stat"><b id="st-train-acc">0</b><span data-i18n="st_train_acc">নিজের উদাহরণে সঠিক</span></div>
+            <div class="stat"><b id="st-fair-acc">0</b><span data-i18n="st_fair_acc">ন্যায্য পরীক্ষায় সঠিক</span></div>
           </div>
-          <p class="muted tiny mb0" data-i18n="fair_hint"></p>
+          <p class="muted tiny mb0" data-i18n="fair_hint">ন্যায্য পরীক্ষা: একটি বাক্য লুকিয়ে রাখুন, বাকি সব থেকে শিখুন, তারপর লুকোনো বাক্যটি আন্দাজ করুন। প্রতিটি বাক্যের জন্য এটা করুন।</p>
           <div class="lab-stats" id="lab-stats"></div>
           <details class="sub" id="mistakes">
             <summary id="mist-sum"></summary>
             <ul class="mist-list no-i18n" id="mist-list"></ul>
           </details>
           <div class="stack" id="peek">
-            <h3 class="mb0" data-i18n="peek_t"></h3>
-            <p class="muted small mb0" data-i18n="peek_note"></p>
+            <h3 class="mb0" data-i18n="peek_t">ভেতরে উঁকি দিন: মডেলের শব্দ-গণনা</h3>
+            <p class="muted small mb0" data-i18n="peek_note">এই টেবিলটাই পুরো মডেল! ট্রেনিংয়ে শুধু গোনা হয়েছে কোন শব্দ কোন লেবেলে কতবার এসেছে।</p>
             <div class="peek-tools no-print">
               <input type="search" id="peek-filter" class="no-i18n" data-i18n-placeholder="peek_filter" data-i18n-aria-label="peek_filter" autocomplete="off">
               <div class="seg" role="group" data-i18n-aria-label="sort_by">
-                <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common"></button>
-                <button type="button" id="sort-clue" aria-pressed="false" data-i18n="sort_clue"></button>
+                <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common">সবচেয়ে বেশি এসেছে</button>
+                <button type="button" id="sort-clue" aria-pressed="false" data-i18n="sort_clue">সবচেয়ে জোরালো সূত্র</button>
               </div>
             </div>
             <div class="peek-tools">
               <span class="muted small" id="peek-count"></span>
             </div>
             <div class="scroll-x"><table class="table peek" id="peek-table"></table></div>
-            <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more"></button>
+            <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more">আরও শব্দ দেখান</button>
           </div>
         </div>
       </section>
 
       <!-- 3. Test -->
       <section class="card stack" id="test-card">
-        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3">পরীক্ষা করুন</span></h2>
         <div>
-          <label for="test-input" class="lbl" data-i18n="test_label"></label>
+          <label for="test-input" class="lbl" data-i18n="test_label">যেকোনো বাক্য লিখুন</label>
           <div class="test-row">
             <input type="text" id="test-input" class="no-i18n" maxlength="300" autocomplete="off" spellcheck="false" data-i18n-placeholder="test_ph">
             <button type="button" class="btn no-print" id="test-clear" data-i18n-aria-label="clear" data-i18n-title="clear">✕</button>
           </div>
         </div>
         <div class="no-print" id="tries-wrap">
-          <span class="lbl" data-i18n="try_t"></span>
+          <span class="lbl" data-i18n="try_t">অথবা এগুলোর একটি চেষ্টা করুন:</span>
           <div class="tries no-i18n" id="tries"></div>
         </div>
         <div id="result" class="stack" aria-live="polite"></div>
         <div id="explain" class="stack" hidden>
-          <h3 class="mb0" data-i18n="words_t"></h3>
-          <p class="muted small mb0" data-i18n="words_hint"></p>
+          <h3 class="mb0" data-i18n="words_t">প্রতিটি শব্দ আন্দাজকে কোন দিকে ঠেলল</h3>
+          <p class="muted small mb0" data-i18n="words_hint">রং = শব্দটি কোন লেবেলের দিকে ইঙ্গিত করে। গাঢ় রং = বেশি জোর। সংখ্যা দেখতে শব্দে ট্যাপ করুন।</p>
           <div class="words no-i18n" id="words"></div>
           <div class="legend" id="legend"></div>
           <div class="pairs-used no-i18n" id="pairs-used" hidden></div>
           <div class="panel wd" id="word-detail" aria-live="polite"></div>
           <details class="sub" id="maths">
-            <summary data-i18n="maths_t"></summary>
+            <summary data-i18n="maths_t">অঙ্কটা দেখান</summary>
             <div class="scroll-x"><table class="table maths no-i18n" id="maths-table"></table></div>
-            <p class="muted small" data-i18n="maths_note" style="margin-top:8px"></p>
+            <p class="muted small" data-i18n="maths_note" style="margin-top:8px">প্রতিটি ভগ্নাংশ = (শব্দটি কতবার এসেছে + 1) ÷ (ওই লেবেলের মোট শব্দ + আলাদা শব্দের সংখ্যা)। “+1-এর কৌশল” আগে না-দেখা শব্দকে পুরো গুণফল শূন্য করতে দেয় না।</p>
           </details>
         </div>
       </section>
@@ -311,14 +311,14 @@
 
     <!-- 4. Experiments -->
     <section class="card stack" id="exp-card">
-      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="step4"></span></h2>
-      <p class="muted small mb0" data-i18n="step4_hint"></p>
+      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="step4">পরীক্ষা-নিরীক্ষা: একে বোকা বানান</span></h2>
+      <p class="muted small mb0" data-i18n="step4_hint">প্রতিটি পরীক্ষা উদাহরণ বদলায়, আবার ট্রেন করে আর আগে-পরের আন্দাজ দেখায়। ফিরে যেতে “পরীক্ষা ফিরিয়ে নিন” চাপুন।</p>
       <div class="grid-3 exps">
         <div class="panel exp" id="exp1">
-          <h3><span aria-hidden="true">✂️</span><span data-i18n="exp1_t"></span></h3>
-          <p class="small" data-i18n="exp1_d"></p>
+          <h3><span aria-hidden="true">✂️</span><span data-i18n="exp1_t">একটি শব্দ সরান</span></h3>
+          <p class="small" data-i18n="exp1_d">যে সব উদাহরণ-বাক্যে একটি নির্দিষ্ট শব্দ আছে, সেগুলো মুছে দিন। আপনার পরীক্ষার বাক্যের আন্দাজ কতটা বদলায়?</p>
           <div>
-            <label for="exp1-word" class="lbl" data-i18n="exp1_word"></label>
+            <label for="exp1-word" class="lbl" data-i18n="exp1_word">যে শব্দ সরাবেন</label>
             <div class="exp-word-row">
               <input type="text" id="exp1-word" class="no-i18n" maxlength="60" autocomplete="off" spellcheck="false">
             </div>
@@ -329,53 +329,53 @@
           <div id="exp1-res" aria-live="polite"></div>
         </div>
         <div class="panel exp" id="exp2">
-          <h3><span aria-hidden="true">⚖️</span><span data-i18n="exp2_t"></span></h3>
+          <h3><span aria-hidden="true">⚖️</span><span data-i18n="exp2_t">পক্ষপাতদুষ্ট ডেটা যোগ করুন</span></h3>
           <p class="small" id="exp2-d"></p>
           <ul class="small no-i18n mb0" id="exp2-list" style="margin:0;padding-inline-start:1.2em"></ul>
           <p class="callout warning small exp-need" hidden></p>
           <div class="grow-space"></div>
-          <div class="exp-btns"><button type="button" class="btn btn-accent" id="exp2-btn" data-i18n="exp2_btn"></button></div>
+          <div class="exp-btns"><button type="button" class="btn btn-accent" id="exp2-btn" data-i18n="exp2_btn">পক্ষপাতদুষ্ট বাক্য যোগ করুন</button></div>
           <div id="exp2-res" aria-live="polite"></div>
         </div>
         <div class="panel exp" id="exp3">
-          <h3><span aria-hidden="true">🚫</span><span data-i18n="exp3_t"></span></h3>
+          <h3><span aria-hidden="true">🚫</span><span data-i18n="exp3_t">“না”-এর সমস্যা</span></h3>
           <p class="small" id="exp3-d"></p>
           <p class="callout warning small exp-need" hidden></p>
           <div class="grow-space"></div>
           <div class="exp-btns">
-            <button type="button" class="btn" id="exp3-try" data-i18n="exp3_try"></button>
+            <button type="button" class="btn" id="exp3-try" data-i18n="exp3_try">বাক্যটি পরীক্ষা করুন</button>
             <button type="button" class="btn btn-accent" id="exp3-btn"></button>
           </div>
           <div id="exp3-res" aria-live="polite"></div>
         </div>
       </div>
       <div class="row">
-        <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩</span><span data-i18n="undo_exp"></span></button>
+        <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩</span><span data-i18n="undo_exp">পরীক্ষা ফিরিয়ে নিন</span></button>
       </div>
     </section>
 
     <!-- inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside_t"></h2>
+      <h2 data-i18n="inside_t">ভেতরে কী হচ্ছে?</h2>
       <div class="grid-3 inside-grid">
-        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t"></span></h3><p data-i18n="in1"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t"></span></h3><p data-i18n="in2"></p><p class="formula" data-i18n="formula"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in3_t"></span></h3><p data-i18n="in3"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🙃</span><span data-i18n="in4_t"></span></h3><p data-i18n="in4"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">⚖️</span><span data-i18n="in5_t"></span></h3><p data-i18n="in5"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🔤</span><span data-i18n="in6_t"></span></h3><p data-i18n="in6"></p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t">এটি শব্দ গোনে</span></h3><p data-i18n="in1">ট্রেনিং মানে শুধু গোনা: প্রতিটি শব্দ প্রতিটি লেবেলের বাক্যে কতবার এসেছে। “জিতেছি” আসে খুশিতে, “হেরে” আসে দুঃখীতে।</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t">এটি সম্ভাবনা গুণ করে</span></h3><p data-i18n="in2">নতুন বাক্যের জন্য এটি প্রতিটি লেবেলের শুরুর সম্ভাবনাকে প্রতিটি শব্দের সম্ভাবনা দিয়ে গুণ করে। যার ফল সবচেয়ে বড়, সে জেতে। এই পদ্ধতির নাম Naive Bayes।</p><p class="formula" data-i18n="formula">P(খুশি | বাক্য) ∝ P(খুশি) × P(শব্দ₁ | খুশি) × P(শব্দ₂ | খুশি) × …</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in3_t">কেন “Naive” বা সরল?</span></h3><p data-i18n="in3">এটি প্রতিটি শব্দকে আলাদা করে দেখে আর শব্দের ক্রম মানে না। তাই “খুশি নই” এর কাছে শুধু “খুশি” + “নই”, আর প্রায়ই “খুশি” জিতে যায়।</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🙃</span><span data-i18n="in4_t">ব্যঙ্গে ধোঁকা খায়</span></h3><p data-i18n="in4">“বাহ, দারুণ! আমার জন্মদিনের পার্টিতেই বৃষ্টি নামল!” বাক্যে খুশির শব্দ আছে, কিন্তু মানে বিরক্তি। শব্দ গুনে কথার সুর ধরা যায় না।</p></div>
+        <div class="panel"><h3><span aria-hidden="true">⚖️</span><span data-i18n="in5_t">সবকিছু ঠিক করে ডেটা</span></h3><p data-i18n="in5">কম, একপেশে বা পক্ষপাতদুষ্ট উদাহরণ ভুল শিক্ষা দেয়। চাকরি, ঋণ বা খবরে ব্যবহৃত AI-ও এভাবে অন্যায় করতে পারে, তাই মানুষকে ডেটা যাচাই করতে হয়।</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🔤</span><span data-i18n="in6_t">একই শব্দের নানা রূপ</span></h3><p data-i18n="in6">মডেলের কাছে “খুশি” আর “খুশিতে” সম্পূর্ণ আলাদা শব্দ। বড় AI মডেল শব্দকে ছোট ছোট টুকরোয় ভাঙে আর পুরো বাক্য পড়ে, তাই “খুশি নই” অনেক ভালো বোঝে।</p></div>
       </div>
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">কীভাবে ব্যবহার করবেন · ক্লাসের জন্য আইডিয়া</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">নমুনা বাক্য দিয়ে শুরু করুন, “ট্রেন করুন” চাপুন, তারপর “পরীক্ষা করুন”-এ নিজের বাক্য লিখুন।</li>
+        <li data-i18n="tip2">রঙিন শব্দে ট্যাপ করে তার পেছনের গণনা দেখুন। ক্লাসকে জিজ্ঞেস করুন: এই শব্দটি দুঃখীর দিকে কেন ইঙ্গিত করছে?</li>
+        <li data-i18n="tip3">ক্লাস অ্যাক্টিভিটি: প্রতিটি দল একটি নতুন লেবেল (যেমন ভয় 😨) আর 8–10টি বাক্য যোগ করুক, তারপর অন্য দলকে তাদের মডেলকে বোকা বানানোর চ্যালেঞ্জ দিক।</li>
+        <li data-i18n="tip4">শব্দ-গণনার টেবিল প্রিন্ট করুন আর ছাত্রছাত্রীদের দিয়ে 3 শব্দের একটি বাক্যের সম্ভাবনা হাতে গুণ করান, তারপর “অঙ্কটা দেখান” দিয়ে মিলিয়ে নিন।</li>
+        <li data-i18n="tip5">বাক্যগুলো CSV-তে এক্সপোর্ট করে সেভ করুন বা অন্য ক্লাসের সঙ্গে শেয়ার করুন। কিছুই আপলোড হয় না: সব এই ডিভাইসেই থাকে।</li>
+        <li data-i18n="tip6">আলোচনা করুন: মুড চেনা কোথায় কাজে লাগে (প্রোডাক্ট রিভিউ, ফিডব্যাক ফর্ম)? কোথায় এটা ভুল বা অন্যায্য হতে পারে?</li>
       </ul>
     </details>
   </main>

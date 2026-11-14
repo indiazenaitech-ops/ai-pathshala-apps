@@ -209,9 +209,9 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" id="intro" data-i18n="intro"></p>
-    <div class="callout warning lq-banner" id="demoBanner" hidden><span aria-hidden="true">🧪 </span><span data-i18n="demo_banner"></span></div>
-    <div class="callout danger lq-banner" id="offlineBanner" role="status" hidden><span data-i18n="offline_banner"></span></div>
+    <p class="edu-intro" id="intro" data-i18n="intro">प्रोजेक्टर पर लाइव क्विज़ चलाइए। ऑनलाइन चलाने के लिए Google से साइन इन करें। विद्यार्थी अपने फ़ोन पर कोड और निकनेम डालकर जुड़ते हैं (कोई साइन-अप नहीं), हर सवाल का जवाब देते हैं और देखते हैं कि कौन सबसे आगे है।</p>
+    <div class="callout warning lq-banner" id="demoBanner" hidden><span aria-hidden="true">🧪 </span><span data-i18n="demo_banner">डेमो मोड: यह सिर्फ़ इसी एक डिवाइस पर चलता है। आज़माने के लिए विद्यार्थी वाला पेज दूसरे टैब में खोलें। विद्यार्थियों के फ़ोन पर खेलने के लिए apnipathshala.ai/teacher खोलें और Google से साइन इन करें।</span></div>
+    <div class="callout danger lq-banner" id="offlineBanner" role="status" hidden><span data-i18n="offline_banner">इंटरनेट कनेक्शन नहीं है। विद्यार्थियों के जवाब शायद न पहुँचें।</span></div>
 
     <section id="v-loading" class="card center muted" aria-busy="true"><span data-i18n="loading"></span></section>
 
@@ -219,12 +219,12 @@
     <section id="v-signin" hidden>
       <div class="card signin">
         <div class="signin-icon" aria-hidden="true">📡</div>
-        <h2 data-i18n="signin_title"></h2>
-        <p class="muted" data-i18n="signin_text"></p>
+        <h2 data-i18n="signin_title">Google से साइन इन करें — शिक्षकों के लिए मुफ़्त</h2>
+        <p class="muted" data-i18n="signin_text">आपकी क्विज़ ऑनलाइन सेव होती हैं, इसलिए आप उन्हें किसी भी कंप्यूटर पर इस्तेमाल कर सकते हैं। विद्यार्थी कभी साइन इन नहीं करते: वे कोड और निकनेम से जुड़ते हैं।</p>
         <button class="btn btn-lg signin-btn" id="signIn" type="button"></button>
-        <p class="callout warning" id="inappHint" hidden data-i18n="inapp_hint"></p>
+        <p class="callout warning" id="inappHint" hidden data-i18n="inapp_hint">WhatsApp जैसे ऐप के अंदर Google साइन-इन नहीं चलता। यह पेज Chrome में खोलें।</p>
         <div class="callout danger" id="signinErr" role="alert" hidden></div>
-        <p class="small muted legal-links"><a class="lnk-privacy" href="../../../apps/live-quiz/../../legal/privacy.html" data-i18n="privacy"></a> · <a class="lnk-terms" href="../../../apps/live-quiz/../../legal/terms.html" data-i18n="terms"></a></p>
+        <p class="small muted legal-links"><a class="lnk-privacy" href="../../../apps/live-quiz/../../legal/privacy.html" data-i18n="privacy">प्राइवेसी नीति</a> · <a class="lnk-terms" href="../../../apps/live-quiz/../../legal/terms.html" data-i18n="terms">इस्तेमाल की शर्तें</a></p>
       </div>
     </section>
 
@@ -233,39 +233,39 @@
       <div class="dash-top">
         <div class="who"><span class="avatar" id="avatar" aria-hidden="true"></span><h2 id="hello"></h2></div>
         <div class="dash-acts">
-          <button class="btn btn-primary" id="newQuiz" type="button"><span aria-hidden="true">+</span><span data-i18n="new_quiz"></span></button>
-          <button class="btn" id="importQm" type="button"><span aria-hidden="true">❓</span><span data-i18n="import_qm"></span></button>
-          <button class="btn" id="importFile" type="button"><span aria-hidden="true">📄</span><span data-i18n="import_file"></span></button>
+          <button class="btn btn-primary" id="newQuiz" type="button"><span aria-hidden="true">+</span><span data-i18n="new_quiz">नई क्विज़</span></button>
+          <button class="btn" id="importQm" type="button"><span aria-hidden="true">❓</span><span data-i18n="import_qm">इस डिवाइस के क्विज़ मेकर से लाएँ</span></button>
+          <button class="btn" id="importFile" type="button"><span aria-hidden="true">📄</span><span data-i18n="import_file">JSON / CSV इम्पोर्ट करें</span></button>
         </div>
       </div>
-      <p class="tiny muted import-hint" data-i18n="import_hint"></p>
+      <p class="tiny muted import-hint" data-i18n="import_hint">CSV के कॉलम: सवाल, विकल्प 1 से विकल्प 6, सही उत्तर (1–6 या A–F), व्याख्या।</p>
       <div class="dash-grid">
         <section class="card stack" id="quizCard">
-          <h2 data-i18n="my_quizzes"></h2>
+          <h2 data-i18n="my_quizzes">मेरी क्विज़</h2>
           <div id="quizList" aria-live="polite"></div>
         </section>
         <div>
           <section class="card stack dash-card" id="settingsCard">
-            <h3 data-i18n="settings_title"></h3>
-            <div class="field"><span data-i18n="time_per_q"></span><div class="seg" id="timeSeg" role="group"></div></div>
-            <label class="check"><input type="checkbox" id="shufQ"><span data-i18n="shuffle_q"></span></label>
-            <label class="check"><input type="checkbox" id="shufO"><span data-i18n="shuffle_o"></span></label>
+            <h3 data-i18n="settings_title">लाइव क्विज़ की सेटिंग्स</h3>
+            <div class="field"><span data-i18n="time_per_q">हर सवाल का समय</span><div class="seg" id="timeSeg" role="group"></div></div>
+            <label class="check"><input type="checkbox" id="shufQ"><span data-i18n="shuffle_q">सवालों का क्रम बदलें</span></label>
+            <label class="check"><input type="checkbox" id="shufO"><span data-i18n="shuffle_o">विकल्पों का क्रम बदलें</span></label>
           </section>
           <section class="card stack dash-card" id="accountCard">
-            <h3 data-i18n="account"></h3>
+            <h3 data-i18n="account">आपका अकाउंट</h3>
             <div class="acc-row"><span class="avatar" id="avatar2" aria-hidden="true"></span><div><b id="accName"></b><div class="small muted no-i18n" id="accEmail"></div></div></div>
             <p class="small muted mb0" id="dataNote"></p>
             <div class="row">
-              <button class="btn" id="signOut" type="button" data-i18n="sign_out"></button>
-              <button class="btn btn-danger" id="deleteAccount" type="button" data-i18n="delete_account"></button>
+              <button class="btn" id="signOut" type="button" data-i18n="sign_out">साइन आउट</button>
+              <button class="btn btn-danger" id="deleteAccount" type="button" data-i18n="delete_account">मेरा अकाउंट और डेटा मिटाएँ</button>
             </div>
-            <p class="small mb0 legal-links"><a class="lnk-privacy" href="../../../apps/live-quiz/../../legal/privacy.html" data-i18n="privacy"></a> · <a class="lnk-terms" href="../../../apps/live-quiz/../../legal/terms.html" data-i18n="terms"></a></p>
+            <p class="small mb0 legal-links"><a class="lnk-privacy" href="../../../apps/live-quiz/../../legal/privacy.html" data-i18n="privacy">प्राइवेसी नीति</a> · <a class="lnk-terms" href="../../../apps/live-quiz/../../legal/terms.html" data-i18n="terms">इस्तेमाल की शर्तें</a></p>
           </section>
         </div>
       </div>
       <section class="card stack" id="sessCard">
-        <h2 data-i18n="past_sessions"></h2>
-        <p class="small muted mb0" data-i18n="keep_note"></p>
+        <h2 data-i18n="past_sessions">पिछले सेशन</h2>
+        <p class="small muted mb0" data-i18n="keep_note">नतीजे 30 दिन बाद मिट जाते हैं। रखने के लिए CSV डाउनलोड कर लें।</p>
         <div id="sessList" aria-live="polite"></div>
       </section>
     </section>
@@ -281,15 +281,15 @@
           <span class="badge primary hcode" id="hCode"></span>
           <span class="grow"></span>
           <button class="btn btn-sm" id="fsBtn" type="button"><span aria-hidden="true">⛶</span><span data-i18n="fullscreen"></span></button>
-          <button class="btn btn-sm" id="hBack" type="button" data-i18n="back_dash"></button>
+          <button class="btn btn-sm" id="hBack" type="button" data-i18n="back_dash">मेरी क्विज़ पर वापस</button>
         </div>
         <div class="callout danger" id="hMsg" role="alert" hidden></div>
         <div class="hstage" id="hStage" aria-live="polite"></div>
         <div class="hctrl">
-          <span class="small muted" id="hKeys" data-i18n="keys_hint"></span>
+          <span class="small muted" id="hKeys" data-i18n="keys_hint">कीबोर्ड: आगे के लिए Space या →</span>
           <span class="grow"></span>
-          <button class="btn btn-danger" id="endBtn" type="button" data-i18n="end_quiz" hidden></button>
-          <button class="btn" id="skipBtn" type="button" data-i18n="skip_q" hidden></button>
+          <button class="btn btn-danger" id="endBtn" type="button" data-i18n="end_quiz" hidden>क्विज़ ख़त्म करें</button>
+          <button class="btn" id="skipBtn" type="button" data-i18n="skip_q" hidden>सवाल छोड़ें</button>
           <button class="btn btn-primary btn-lg" id="nextBtn" type="button"></button>
         </div>
       </div>
@@ -299,14 +299,14 @@
     <section id="v-results" hidden></section>
 
     <details class="card" id="howto">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">कैसे इस्तेमाल करें · कक्षा के लिए आइडिया</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">साइन इन करें और नमूना क्विज़ पर &quot;लाइव चलाएँ&quot; दबाएँ, 10 सेकंड में समझ आ जाएगा कि यह कैसे चलता है।</li>
+        <li data-i18n="help_2">स्क्रीन प्रोजेक्टर पर दिखाएँ। विद्यार्थी फ़ोन पर apnipathshala.ai/join खोलकर कोड और निकनेम डालें।</li>
+        <li data-i18n="help_3">विद्यार्थियों से कहें कि पूरा नाम नहीं, निकनेम लिखें। ✕ से किसी को भी हटा सकते हैं, और सब आ जाएँ तो लॉक दबाएँ।</li>
+        <li data-i18n="help_4">सही जवाब पर 500 से 1000 अंक मिलते हैं: जितना जल्दी, उतने ज़्यादा। गलत जवाब पर 0।</li>
+        <li data-i18n="help_5">कक्षा के लिए आइडिया: अध्याय के अंत में 3-3 के समूह एक फ़ोन पर मिलकर सोचें, फिर जवाब दें।</li>
+        <li data-i18n="help_6">क्विज़ मेकर में क्विज़ बनाकर यहाँ इम्पोर्ट करें, या नई क्विज़ टाइप करें। नतीजे CSV में एक्सपोर्ट करके रिकॉर्ड रखें।</li>
       </ul>
     </details>
   </main>

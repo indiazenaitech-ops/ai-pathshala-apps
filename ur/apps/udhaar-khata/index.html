@@ -247,43 +247,43 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="callout success small privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">آپ کی دکان کا نجی ادھار کھاتہ: کس کا کتنا باقی ہے، آپ کو کسے دینا ہے، روز کی نقدی، اور آپ کی UPI ID کے ساتھ WhatsApp یاد دہانی۔ نہ اکاؤنٹ، نہ OTP، نہ قرض کی پیشکش۔</p>
+    <p class="callout success small privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">آپ کا کھاتہ اس ڈیوائس سے باہر کبھی نہیں جاتا۔ اسے کوئی اور نہیں دیکھ سکتا، اس لیے ہر ہفتے بیک اپ لیں (بیک اپ ٹیب)۔</span></p>
 
     <div class="callout warning remind" id="bk-remind" hidden>
       <div class="row spread">
         <span id="bk-remind-txt"></span>
         <span class="row">
-          <button type="button" class="btn btn-sm btn-primary" id="bk-remind-go" data-i18n="backup_now"></button>
-          <button type="button" class="btn btn-sm" id="bk-remind-later" data-i18n="later"></button>
+          <button type="button" class="btn btn-sm btn-primary" id="bk-remind-go" data-i18n="backup_now">ابھی بیک اپ</button>
+          <button type="button" class="btn btn-sm" id="bk-remind-later" data-i18n="later">بعد میں</button>
         </span>
       </div>
     </div>
     <div class="callout danger remind" id="quota-warn" hidden>
       <div class="row spread">
         <span id="quota-txt"></span>
-        <button type="button" class="btn btn-sm btn-primary" id="quota-go" data-i18n="backup_now"></button>
+        <button type="button" class="btn btn-sm btn-primary" id="quota-go" data-i18n="backup_now">ابھی بیک اپ</button>
       </div>
     </div>
 
     <!-- dashboard -->
     <section class="card dash" aria-live="polite">
       <div class="tiles">
-        <div class="stat get"><div class="stat-l" data-i18n="to_collect"></div><div class="stat-v" id="d-collect"></div><div class="stat-s" id="d-collect-n"></div></div>
-        <div class="stat give"><div class="stat-l" data-i18n="to_pay"></div><div class="stat-v" id="d-pay"></div><div class="stat-s" id="d-pay-n"></div></div>
-        <div class="stat warn"><div class="stat-l" data-i18n="overdue"></div><div class="stat-v" id="d-overdue"></div><div class="stat-s" id="d-overdue-n"></div></div>
+        <div class="stat get"><div class="stat-l" data-i18n="to_collect">لینے ہیں</div><div class="stat-v" id="d-collect"></div><div class="stat-s" id="d-collect-n"></div></div>
+        <div class="stat give"><div class="stat-l" data-i18n="to_pay">دینے ہیں</div><div class="stat-v" id="d-pay"></div><div class="stat-s" id="d-pay-n"></div></div>
+        <div class="stat warn"><div class="stat-l" data-i18n="overdue">تاریخ گزر گئی</div><div class="stat-v" id="d-overdue"></div><div class="stat-s" id="d-overdue-n"></div></div>
       </div>
       <div class="dash-foot">
         <p class="tiny muted">🔒 <span data-i18n="saved_local"></span></p>
-        <button type="button" class="btn btn-sm" id="lock-btn" hidden><span aria-hidden="true">🔒</span> <span data-i18n="lock_now"></span></button>
+        <button type="button" class="btn btn-sm" id="lock-btn" hidden><span aria-hidden="true">🔒</span> <span data-i18n="lock_now">لاک</span></button>
       </div>
     </section>
 
     <div class="tabs" role="tablist">
-      <button type="button" role="tab" id="tab-khata" data-tab="khata" aria-controls="p-khata"><span class="ti" aria-hidden="true">📒</span><span data-i18n="tab_khata"></span></button>
-      <button type="button" role="tab" id="tab-cash" data-tab="cash" aria-controls="p-cash"><span class="ti" aria-hidden="true">💵</span><span data-i18n="tab_cash"></span></button>
-      <button type="button" role="tab" id="tab-sum" data-tab="sum" aria-controls="p-sum"><span class="ti" aria-hidden="true">📊</span><span data-i18n="tab_sum"></span></button>
-      <button type="button" role="tab" id="tab-set" data-tab="set" aria-controls="p-set"><span class="ti" aria-hidden="true">💾</span><span data-i18n="tab_set"></span></button>
+      <button type="button" role="tab" id="tab-khata" data-tab="khata" aria-controls="p-khata"><span class="ti" aria-hidden="true">📒</span><span data-i18n="tab_khata">کھاتہ</span></button>
+      <button type="button" role="tab" id="tab-cash" data-tab="cash" aria-controls="p-cash"><span class="ti" aria-hidden="true">💵</span><span data-i18n="tab_cash">کیش بک</span></button>
+      <button type="button" role="tab" id="tab-sum" data-tab="sum" aria-controls="p-sum"><span class="ti" aria-hidden="true">📊</span><span data-i18n="tab_sum">خلاصہ</span></button>
+      <button type="button" role="tab" id="tab-set" data-tab="set" aria-controls="p-set"><span class="ti" aria-hidden="true">💾</span><span data-i18n="tab_set">بیک اپ اور سیٹنگ</span></button>
     </div>
 
     <!-- KHATA -->
@@ -291,20 +291,20 @@
       <div id="k-list" class="card stack">
         <div class="k-top">
           <div class="search"><input type="search" id="k-search" class="no-i18n" data-i18n-placeholder="search_ph" data-i18n-aria-label="search"></div>
-          <button type="button" class="btn btn-primary" id="k-add"><span aria-hidden="true">＋</span> <span data-i18n="add_party"></span></button>
+          <button type="button" class="btn btn-primary" id="k-add"><span aria-hidden="true">＋</span> <span data-i18n="add_party">گاہک / سپلائر شامل کریں</span></button>
         </div>
         <div class="k-opts">
           <div class="seg" id="k-filter" role="group" data-i18n-aria-label="filter">
-            <button type="button" data-v="all" data-i18n="f_all"></button><button type="button" data-v="customer" data-i18n="f_customers"></button><button type="button" data-v="supplier" data-i18n="f_suppliers"></button><button type="button" data-v="overdue" data-i18n="f_overdue"></button>
+            <button type="button" data-v="all" data-i18n="f_all">سب</button><button type="button" data-v="customer" data-i18n="f_customers">گاہک</button><button type="button" data-v="supplier" data-i18n="f_suppliers">سپلائر</button><button type="button" data-v="overdue" data-i18n="f_overdue">تاریخ گزر گئی</button>
           </div>
-          <label class="small muted"><span class="sr-only" data-i18n="sort"></span><select id="k-sort" data-i18n-aria-label="sort">
-            <option value="recent" data-i18n="sort_recent"></option>
-            <option value="name" data-i18n="sort_name"></option>
-            <option value="bal" data-i18n="sort_bal"></option>
+          <label class="small muted"><span class="sr-only" data-i18n="sort">ترتیب</span><select id="k-sort" data-i18n-aria-label="sort">
+            <option value="recent" data-i18n="sort_recent">نیا پہلے</option>
+            <option value="name" data-i18n="sort_name">نام سے</option>
+            <option value="bal" data-i18n="sort_bal">سب سے بڑا بقایا</option>
           </select></label>
         </div>
         <div class="callout" id="sample-note" hidden>
-          <div class="row spread"><span data-i18n="sample_note"></span><button type="button" class="btn btn-sm" id="sample-remove" data-i18n="remove_samples"></button></div>
+          <div class="row spread"><span data-i18n="sample_note">یہ مثالیں ہیں تاکہ آپ ایپ آزما سکیں۔ اپنے گاہک شامل کرتے وقت انھیں ہٹا دیں۔</span><button type="button" class="btn btn-sm" id="sample-remove" data-i18n="remove_samples">مثالیں ہٹائیں</button></div>
         </div>
         <div class="plist" id="k-rows"></div>
         <p class="muted" id="k-empty" hidden></p>
@@ -313,16 +313,16 @@
 
       <div id="k-detail" class="card stack" hidden>
         <div class="row spread no-print">
-          <button type="button" class="btn" id="k-back"><span class="flip" aria-hidden="true">‹</span> <span data-i18n="back"></span></button>
+          <button type="button" class="btn" id="k-back"><span class="flip" aria-hidden="true">‹</span> <span data-i18n="back">واپس</span></button>
           <span class="row">
-            <button type="button" class="btn btn-sm" id="k-edit"><span aria-hidden="true">✎</span> <span data-i18n="edit_party"></span></button>
+            <button type="button" class="btn btn-sm" id="k-edit"><span aria-hidden="true">✎</span> <span data-i18n="edit_party">تفصیل بدلیں</span></button>
             <button type="button" class="btn btn-sm btn-danger" id="k-del" data-i18n="delete"></button>
           </span>
         </div>
         <div class="print-head">
           <div class="ph-shop no-i18n" id="ph-shop"></div>
           <p id="ph-phone" class="no-i18n"></p>
-          <p><strong data-i18n="statement_title"></strong> · <span id="ph-date"></span></p>
+          <p><strong data-i18n="statement_title">اسٹیٹمنٹ</strong> · <span id="ph-date"></span></p>
         </div>
         <div class="party-head">
           <h2><span id="pd-name" class="no-i18n"></span> <span class="badge ex" id="pd-ex" data-i18n="example" hidden></span></h2>
@@ -330,32 +330,32 @@
           <div class="bal-big" id="pd-balbox"><span class="lbl" id="pd-bal-l"></span><b id="pd-bal" class="no-i18n"></b></div>
           <p class="due-line" id="pd-due" hidden></p>
         </div>
-        <div class="callout small no-print" id="sup-hint" data-i18n="supplier_hint" hidden></div>
+        <div class="callout small no-print" id="sup-hint" data-i18n="supplier_hint" hidden>سپلائر کے لیے: &quot;آپ کو ملے&quot; = ادھار پر لیا مال، &quot;آپ نے دیے&quot; = انھیں کی گئی ادائیگی۔</div>
         <div class="act-row no-print">
-          <button type="button" class="btn gave" id="e-gave"><span aria-hidden="true">↑</span> <span data-i18n="gave_btn"></span></button>
-          <button type="button" class="btn got" id="e-got"><span aria-hidden="true">↓</span> <span data-i18n="got_btn"></span></button>
+          <button type="button" class="btn gave" id="e-gave"><span aria-hidden="true">↑</span> <span data-i18n="gave_btn">آپ نے دیے ₹</span></button>
+          <button type="button" class="btn got" id="e-got"><span aria-hidden="true">↓</span> <span data-i18n="got_btn">آپ کو ملے ₹</span></button>
         </div>
         <div class="tool-row no-print">
-          <button type="button" class="btn btn-wa" id="k-wa"><span aria-hidden="true">💬</span> <span data-i18n="wa_btn"></span></button>
-          <button type="button" class="btn" id="k-qr"><span aria-hidden="true">▦</span> <span data-i18n="qr_btn"></span></button>
-          <button type="button" class="btn" id="k-print"><span aria-hidden="true">🖨</span> <span data-i18n="print_statement"></span></button>
-          <button type="button" class="btn" id="k-csv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_statement"></span></button>
+          <button type="button" class="btn btn-wa" id="k-wa"><span aria-hidden="true">💬</span> <span data-i18n="wa_btn">WhatsApp یاد دہانی</span></button>
+          <button type="button" class="btn" id="k-qr"><span aria-hidden="true">▦</span> <span data-i18n="qr_btn">UPI QR دکھائیں</span></button>
+          <button type="button" class="btn" id="k-print"><span aria-hidden="true">🖨</span> <span data-i18n="print_statement">اسٹیٹمنٹ پرنٹ</span></button>
+          <button type="button" class="btn" id="k-csv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_statement">اسٹیٹمنٹ CSV</span></button>
         </div>
 
         <form id="e-form" class="panel stack e-form no-print" hidden>
           <div class="form-head">
             <h3 id="e-title"></h3>
             <div class="seg kind" id="e-kind" role="group" data-i18n-aria-label="col_kind">
-              <button type="button" data-v="gave" data-i18n="kind_gave"></button><button type="button" data-v="got" data-i18n="kind_got"></button>
+              <button type="button" data-v="gave" data-i18n="kind_gave">آپ نے دیے</button><button type="button" data-v="got" data-i18n="kind_got">آپ کو ملے</button>
             </div>
           </div>
           <div class="two">
-            <label class="field"><span data-i18n="amount"></span><input type="text" id="e-amt" class="no-i18n" inputmode="decimal" dir="ltr" autocomplete="off" maxlength="18" placeholder="250"></label>
-            <label class="field"><span data-i18n="date"></span><input type="date" id="e-date"></label>
+            <label class="field"><span data-i18n="amount">رقم (₹)</span><input type="text" id="e-amt" class="no-i18n" inputmode="decimal" dir="ltr" autocomplete="off" maxlength="18" placeholder="250"></label>
+            <label class="field"><span data-i18n="date">تاریخ</span><input type="date" id="e-date"></label>
           </div>
           <div class="two">
-            <label class="field"><span data-i18n="note_label"></span><input type="text" id="e-note" class="no-i18n" maxlength="120" data-i18n-placeholder="note_ph"></label>
-            <label class="field" id="e-due-f"><span data-i18n="due_date"></span><input type="date" id="e-due"></label>
+            <label class="field"><span data-i18n="note_label">نوٹ</span><input type="text" id="e-note" class="no-i18n" maxlength="120" data-i18n-placeholder="note_ph"></label>
+            <label class="field" id="e-due-f"><span data-i18n="due_date">ادائیگی کی تاریخ (اختیاری)</span><input type="date" id="e-due"></label>
           </div>
           <div class="callout danger small" id="e-err" hidden></div>
           <div class="row">
@@ -365,9 +365,9 @@
           </div>
         </form>
 
-        <p class="muted" id="pd-empty" hidden data-i18n="no_entries"></p>
+        <p class="muted" id="pd-empty" hidden data-i18n="no_entries">ابھی کوئی اندراج نہیں۔ &quot;آپ نے دیے ₹&quot; یا &quot;آپ کو ملے ₹&quot; دبائیں۔</p>
         <div class="ledger-wrap" id="pd-wrap"><table class="ledger" id="pd-table"></table></div>
-        <div class="print-foot"><span data-i18n="sign_shop"></span><span data-i18n="sign_customer"></span></div>
+        <div class="print-foot"><span data-i18n="sign_shop">دکان کے دستخط</span><span data-i18n="sign_customer">گاہک کے دستخط</span></div>
       </div>
     </section>
 
@@ -376,40 +376,40 @@
       <div class="card stack">
         <div class="print-head">
           <div class="ph-shop no-i18n" id="cph-shop"></div>
-          <p><strong data-i18n="cash_title"></strong> · <span id="cph-date"></span></p>
+          <p><strong data-i18n="cash_title">روز کی کیش بک</strong> · <span id="cph-date"></span></p>
         </div>
         <div class="day-nav no-print">
           <button type="button" class="btn navbtn" id="c-prev" data-i18n-aria-label="prev_day" data-i18n-title="prev_day"><span class="flip" aria-hidden="true">‹</span></button>
           <input type="date" id="c-date" data-i18n-aria-label="date">
           <button type="button" class="btn navbtn" id="c-next" data-i18n-aria-label="next_day" data-i18n-title="next_day"><span class="flip" aria-hidden="true">›</span></button>
-          <button type="button" class="btn" id="c-today" data-i18n="today"></button>
+          <button type="button" class="btn" id="c-today" data-i18n="today">آج</button>
         </div>
         <p class="day-long" id="c-long"></p>
         <div class="tiles" aria-live="polite">
-          <div class="stat"><div class="stat-l" data-i18n="opening"></div><div class="stat-v" id="c-open-v"></div></div>
-          <div class="stat get"><div class="stat-l" data-i18n="cash_in"></div><div class="stat-v" id="c-in-v"></div></div>
-          <div class="stat give"><div class="stat-l" data-i18n="cash_out"></div><div class="stat-v" id="c-out-v"></div></div>
-          <div class="stat"><div class="stat-l" data-i18n="closing"></div><div class="stat-v" id="c-close-v"></div></div>
+          <div class="stat"><div class="stat-l" data-i18n="opening">ابتدائی</div><div class="stat-v" id="c-open-v"></div></div>
+          <div class="stat get"><div class="stat-l" data-i18n="cash_in">نقدی آئی</div><div class="stat-v" id="c-in-v"></div></div>
+          <div class="stat give"><div class="stat-l" data-i18n="cash_out">نقدی گئی</div><div class="stat-v" id="c-out-v"></div></div>
+          <div class="stat"><div class="stat-l" data-i18n="closing">آخری</div><div class="stat-v" id="c-close-v"></div></div>
         </div>
         <div class="act-row no-print">
-          <button type="button" class="btn got" id="c-in"><span aria-hidden="true">＋</span> <span data-i18n="cash_in"></span></button>
-          <button type="button" class="btn gave" id="c-out"><span aria-hidden="true">－</span> <span data-i18n="cash_out"></span></button>
+          <button type="button" class="btn got" id="c-in"><span aria-hidden="true">＋</span> <span data-i18n="cash_in">نقدی آئی</span></button>
+          <button type="button" class="btn gave" id="c-out"><span aria-hidden="true">－</span> <span data-i18n="cash_out">نقدی گئی</span></button>
         </div>
         <div class="tool-row no-print">
-          <button type="button" class="btn" id="c-open" data-i18n="set_opening"></button>
-          <button type="button" class="btn" id="c-csv"><span aria-hidden="true">⬇</span> <span data-i18n="cash_csv"></span></button>
-          <button type="button" class="btn" id="c-print"><span aria-hidden="true">🖨</span> <span data-i18n="print_cash"></span></button>
+          <button type="button" class="btn" id="c-open" data-i18n="set_opening">ابتدائی بقایا مقرر کریں</button>
+          <button type="button" class="btn" id="c-csv"><span aria-hidden="true">⬇</span> <span data-i18n="cash_csv">مہینے کی CSV</span></button>
+          <button type="button" class="btn" id="c-print"><span aria-hidden="true">🖨</span> <span data-i18n="print_cash">دن پرنٹ کریں</span></button>
         </div>
         <form id="c-form" class="panel stack e-form no-print" hidden>
           <div class="form-head">
             <h3 id="c-title"></h3>
             <div class="seg kind" id="c-kind" role="group" data-i18n-aria-label="col_kind">
-              <button type="button" data-v="in" data-i18n="cash_in"></button><button type="button" data-v="out" data-i18n="cash_out"></button>
+              <button type="button" data-v="in" data-i18n="cash_in">نقدی آئی</button><button type="button" data-v="out" data-i18n="cash_out">نقدی گئی</button>
             </div>
           </div>
           <div class="two">
-            <label class="field"><span data-i18n="amount"></span><input type="text" id="c-amt" class="no-i18n" inputmode="decimal" dir="ltr" autocomplete="off" maxlength="18" placeholder="500"></label>
-            <label class="field"><span data-i18n="note_label"></span><input type="text" id="c-note" class="no-i18n" maxlength="120" data-i18n-placeholder="cash_ph"></label>
+            <label class="field"><span data-i18n="amount">رقم (₹)</span><input type="text" id="c-amt" class="no-i18n" inputmode="decimal" dir="ltr" autocomplete="off" maxlength="18" placeholder="500"></label>
+            <label class="field"><span data-i18n="note_label">نوٹ</span><input type="text" id="c-note" class="no-i18n" maxlength="120" data-i18n-placeholder="cash_ph"></label>
           </div>
           <div class="callout danger small" id="c-err" hidden></div>
           <div class="row">
@@ -419,13 +419,13 @@
           </div>
         </form>
         <form id="o-form" class="panel stack e-form no-print" hidden>
-          <h3 data-i18n="set_opening"></h3>
+          <h3 data-i18n="set_opening">ابتدائی بقایا مقرر کریں</h3>
           <p class="small muted mb0" id="o-hint"></p>
-          <label class="field"><span data-i18n="amount"></span><input type="text" id="o-amt" class="no-i18n" inputmode="decimal" dir="ltr" autocomplete="off" maxlength="18"></label>
+          <label class="field"><span data-i18n="amount">رقم (₹)</span><input type="text" id="o-amt" class="no-i18n" inputmode="decimal" dir="ltr" autocomplete="off" maxlength="18"></label>
           <div class="callout danger small" id="o-err" hidden></div>
           <div class="row"><button type="submit" class="btn btn-primary" data-i18n="save"></button><button type="button" class="btn" id="o-cancel" data-i18n="cancel"></button></div>
         </form>
-        <p class="muted" id="c-empty" hidden data-i18n="no_cash"></p>
+        <p class="muted" id="c-empty" hidden data-i18n="no_cash">اس دن کا کوئی نقدی اندراج نہیں۔</p>
         <div class="ledger-wrap"><table class="ledger" id="c-table"></table></div>
       </div>
     </section>
@@ -440,29 +440,29 @@
             <button type="button" class="btn navbtn no-print" id="s-next" data-i18n-aria-label="next_month" data-i18n-title="next_month"><span class="flip" aria-hidden="true">›</span></button>
           </div>
           <div class="row no-print">
-            <button type="button" class="btn" id="s-csv"><span aria-hidden="true">⬇</span> <span data-i18n="s_csv"></span></button>
+            <button type="button" class="btn" id="s-csv"><span aria-hidden="true">⬇</span> <span data-i18n="s_csv">مہینے کی CSV</span></button>
             <button type="button" class="btn" id="s-print"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
           </div>
         </div>
         <div class="tiles" aria-live="polite">
-          <div class="stat give"><div class="stat-l" data-i18n="s_gave"></div><div class="stat-v" id="s-gave"></div><div class="stat-s" id="s-gave-n"></div></div>
-          <div class="stat get"><div class="stat-l" data-i18n="s_got"></div><div class="stat-v" id="s-got"></div><div class="stat-s" id="s-got-n"></div></div>
-          <div class="stat"><div class="stat-l" data-i18n="s_net"></div><div class="stat-v" id="s-net"></div></div>
-          <div class="stat get"><div class="stat-l" data-i18n="s_cin"></div><div class="stat-v" id="s-cin"></div></div>
-          <div class="stat give"><div class="stat-l" data-i18n="s_cout"></div><div class="stat-v" id="s-cout"></div></div>
+          <div class="stat give"><div class="stat-l" data-i18n="s_gave">ادھار دیا</div><div class="stat-v" id="s-gave"></div><div class="stat-s" id="s-gave-n"></div></div>
+          <div class="stat get"><div class="stat-l" data-i18n="s_got">ادائیگی ملی</div><div class="stat-v" id="s-got"></div><div class="stat-s" id="s-got-n"></div></div>
+          <div class="stat"><div class="stat-l" data-i18n="s_net">ادھار میں کل تبدیلی</div><div class="stat-v" id="s-net"></div></div>
+          <div class="stat get"><div class="stat-l" data-i18n="s_cin">نقدی آئی</div><div class="stat-v" id="s-cin"></div></div>
+          <div class="stat give"><div class="stat-l" data-i18n="s_cout">نقدی گئی</div><div class="stat-v" id="s-cout"></div></div>
         </div>
         <div class="two">
           <div>
-            <div class="list-h"><h3 data-i18n="s_overdue"></h3><span class="badge" id="s-overdue-n"></span></div>
+            <div class="list-h"><h3 data-i18n="s_overdue">تاریخ گزر گئی</h3><span class="badge" id="s-overdue-n"></span></div>
             <div class="mini" id="s-overdue"></div>
           </div>
           <div>
-            <div class="list-h"><h3 data-i18n="s_top"></h3></div>
+            <div class="list-h"><h3 data-i18n="s_top">سب سے بڑے بقایا</h3></div>
             <div class="mini" id="s-top"></div>
           </div>
         </div>
-        <h3 data-i18n="s_entries"></h3>
-        <p class="muted" id="s-empty" hidden data-i18n="s_none"></p>
+        <h3 data-i18n="s_entries">اس مہینے کے اندراج</h3>
+        <p class="muted" id="s-empty" hidden data-i18n="s_none">اس مہینے یہاں کچھ نہیں۔</p>
         <div class="ledger-wrap"><table class="ledger" id="s-table"></table></div>
       </div>
     </section>
@@ -472,47 +472,47 @@
       <div class="st-grid">
         <div class="stack">
           <div class="card stack">
-            <h2 data-i18n="bk_title"></h2>
-            <p class="small muted mb0" data-i18n="bk_help"></p>
+            <h2 data-i18n="bk_title">بیک اپ اور بحالی</h2>
+            <p class="small muted mb0" data-i18n="bk_help">آپ کا کھاتہ صرف اسی براؤزر میں ہے۔ براؤزر کا ڈیٹا صاف ہو جائے یا فون گم ہو جائے تو یہ چلا جائے گا۔ ہر ہفتے بیک اپ لیں اور فائل Google Drive، ای میل یا WhatsApp (خود کو) میں رکھیں۔</p>
             <p class="small" id="bk-last"></p>
             <div class="row">
-              <button type="button" class="btn btn-primary" id="bk-json"><span aria-hidden="true">💾</span> <span data-i18n="bk_json"></span></button>
-              <button type="button" class="btn" id="bk-enc"><span aria-hidden="true">🔐</span> <span data-i18n="bk_enc"></span></button>
-              <button type="button" class="btn" id="bk-restore" data-i18n="bk_restore"></button>
-              <button type="button" class="btn" id="bk-csv-all"><span aria-hidden="true">⬇</span> <span data-i18n="bk_csv_all"></span></button>
+              <button type="button" class="btn btn-primary" id="bk-json"><span aria-hidden="true">💾</span> <span data-i18n="bk_json">بیک اپ (JSON فائل)</span></button>
+              <button type="button" class="btn" id="bk-enc"><span aria-hidden="true">🔐</span> <span data-i18n="bk_enc">انکرپٹڈ بیک اپ</span></button>
+              <button type="button" class="btn" id="bk-restore" data-i18n="bk_restore">بیک اپ سے بحال کریں</button>
+              <button type="button" class="btn" id="bk-csv-all"><span aria-hidden="true">⬇</span> <span data-i18n="bk_csv_all">سب اندراج CSV</span></button>
             </div>
-            <p class="tiny muted mb0" data-i18n="enc_note"></p>
+            <p class="tiny muted mb0" data-i18n="enc_note">انکرپٹڈ بیک اپ AES-GCM سے بنتا ہے، جس کی کنجی آپ کے پاس فریز سے (PBKDF2) بنتی ہے۔ اسے صرف یہی ایپ، پاس فریز کے ساتھ، کھول سکتی ہے۔</p>
           </div>
           <div class="card stack">
-            <h2 data-i18n="store_title"></h2>
+            <h2 data-i18n="store_title">اس ڈیوائس پر جگہ</h2>
             <div class="meter" id="store-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span></span></div>
             <p class="small mb0" id="store-txt"></p>
             <p class="small muted mb0" id="persist-txt"></p>
           </div>
           <div class="card stack">
-            <h2 data-i18n="pin_title"></h2>
-            <p class="small muted mb0" data-i18n="pin_help"></p>
+            <h2 data-i18n="pin_title">ایپ PIN (پردے جیسا)</h2>
+            <p class="small muted mb0" data-i18n="pin_help">PIN ان لوگوں سے اسکرین چھپاتا ہے جو آپ کا فون اٹھا لیں۔ یہ انکرپشن نہیں: ڈیٹا اس براؤزر میں بغیر لاک کے ہی رہتا ہے، اور ڈیوائس والا کوئی بھی تھوڑی کوشش سے اسے پڑھ سکتا ہے۔ اصل حفاظت کے لیے انکرپٹڈ بیک اپ لیں۔</p>
             <p class="small mb0" id="pin-status"></p>
             <div class="row">
               <button type="button" class="btn" id="pin-set"></button>
-              <button type="button" class="btn btn-danger" id="pin-remove" data-i18n="pin_remove" hidden></button>
+              <button type="button" class="btn btn-danger" id="pin-remove" data-i18n="pin_remove" hidden>PIN ہٹائیں</button>
             </div>
           </div>
         </div>
         <div class="stack">
           <div class="card stack">
-            <h2 data-i18n="st_shop_title"></h2>
-            <label class="field"><span data-i18n="st_shop"></span><input type="text" id="st-shop" class="no-i18n" maxlength="60" data-i18n-placeholder="st_shop_ph"></label>
-            <label class="field"><span data-i18n="st_upi"></span><input type="text" id="st-upi" class="no-i18n" dir="ltr" inputmode="email" autocapitalize="off" spellcheck="false" maxlength="100" placeholder="name@bank"><span class="hint" data-i18n="st_upi_hint"></span></label>
-            <div class="callout warning small" id="st-upi-warn" data-i18n="st_upi_bad" hidden></div>
-            <label class="field"><span data-i18n="st_phone"></span><input type="text" id="st-phone" class="no-i18n" dir="ltr" inputmode="tel" maxlength="20"></label>
-            <label class="field"><span data-i18n="st_lang"></span><select id="st-lang"></select></label>
+            <h2 data-i18n="st_shop_title">دکان کی تفصیل</h2>
+            <label class="field"><span data-i18n="st_shop">دکان / کاروبار کا نام</span><input type="text" id="st-shop" class="no-i18n" maxlength="60" data-i18n-placeholder="st_shop_ph"></label>
+            <label class="field"><span data-i18n="st_upi">UPI ID (یاد دہانی اور QR کے لیے)</span><input type="text" id="st-upi" class="no-i18n" dir="ltr" inputmode="email" autocapitalize="off" spellcheck="false" maxlength="100" placeholder="name@bank"><span class="hint" data-i18n="st_upi_hint">name@bank جیسی ہوتی ہے۔ یاد دہانی میں دکھائی جاتی ہے اور QR کے لیے استعمال ہوتی ہے۔</span></label>
+            <div class="callout warning small" id="st-upi-warn" data-i18n="st_upi_bad" hidden>یہ UPI ID جیسی نہیں لگتی (name@bank)۔</div>
+            <label class="field"><span data-i18n="st_phone">آپ کا فون (اسٹیٹمنٹ پر چھپے گا)</span><input type="text" id="st-phone" class="no-i18n" dir="ltr" inputmode="tel" maxlength="20"></label>
+            <label class="field"><span data-i18n="st_lang">یاد دہانی کی ڈیفالٹ زبان</span><select id="st-lang"></select></label>
           </div>
           <div class="card stack">
-            <h2 data-i18n="danger_title"></h2>
-            <p class="small muted mb0" data-i18n="reset_help"></p>
+            <h2 data-i18n="danger_title">نئے سرے سے</h2>
+            <p class="small muted mb0" data-i18n="reset_help">اس ڈیوائس پر اس ایپ کا سب کچھ مٹا دیتا ہے۔ پہلے بیک اپ لیں۔</p>
             <div class="row">
-              <button type="button" class="btn" id="rm-samples" data-i18n="remove_samples"></button>
+              <button type="button" class="btn" id="rm-samples" data-i18n="remove_samples">مثالیں ہٹائیں</button>
               <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset"></button>
             </div>
           </div>
@@ -523,30 +523,30 @@
     <details class="card help" style="margin-top:16px">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">گاہک شامل کریں، پھر ادھار پر مال دینے پر &quot;آپ نے دیے ₹&quot; اور ادائیگی ملنے پر &quot;آپ کو ملے ₹&quot; دبائیں۔ بقایا پیسے پیسے تک درست رہتا ہے۔</li>
+        <li data-i18n="help_2">ادھار کے اندراج پر ادائیگی کی تاریخ ڈالیں۔ جن کی تاریخ گزر گئی، وہ ڈیش بورڈ اور خلاصہ ٹیب میں نظر آتے ہیں۔</li>
+        <li data-i18n="help_3">&quot;بیک اپ اور سیٹنگ&quot; میں اپنی UPI ID ڈالیں۔ پھر &quot;WhatsApp یاد دہانی&quot; گاہک کی زبان میں رقم اور UPI ID کے ساتھ شائستہ پیغام بھیجتی ہے، اور &quot;UPI QR دکھائیں&quot; سے وہ کاؤنٹر پر ادائیگی کر سکتے ہیں۔</li>
+        <li data-i18n="help_4">کیش بک: روز آئی اور گئی نقدی لکھیں؛ ابتدائی اور آخری بقایا خود بن جاتا ہے۔ اکاؤنٹنٹ کے لیے مہینہ پرنٹ کریں یا CSV نکالیں۔</li>
+        <li data-i18n="help_5">سب کچھ صرف اس فون میں ہے۔ ہر ہفتے بیک اپ (JSON) لیں اور Google Drive میں رکھیں یا WhatsApp پر خود کو بھیجیں۔ دوسرے فون پر جانا ہو: یہاں بیک اپ، وہاں بحالی۔</li>
+        <li data-i18n="help_6">غلطی ہو گئی؟ بدلنے یا حذف کرنے کے فوراً بعد Undo دبائیں۔ اختیاری PIN صرف اسکرین چھپاتا ہے؛ اصل حفاظت کے لیے انکرپٹڈ بیک اپ استعمال کریں۔</li>
       </ul>
     </details>
   </main>
 
-  <div class="undo-bar" id="undo-bar" hidden><div><span id="undo-txt"></span><button type="button" class="btn btn-sm btn-primary" id="undo-btn" data-i18n="undo"></button></div></div>
+  <div class="undo-bar" id="undo-bar" hidden><div><span id="undo-txt"></span><button type="button" class="btn btn-sm btn-primary" id="undo-btn" data-i18n="undo">Undo</button></div></div>
 
   <div class="lock" id="lock" role="dialog" aria-modal="true" aria-labelledby="lock-title" hidden>
     <div class="card stack">
-      <h2 id="lock-title"><span aria-hidden="true">🔒</span> <span data-i18n="lock_title"></span></h2>
+      <h2 id="lock-title"><span aria-hidden="true">🔒</span> <span data-i18n="lock_title">PIN لکھیں</span></h2>
       <form id="lock-form" class="stack">
         <div class="row"><input type="password" id="lock-pin" class="pin-in no-i18n" inputmode="numeric" maxlength="6" autocomplete="off" data-i18n-aria-label="lock_title"></div>
         <p class="small mb0" id="lock-err" aria-live="polite" style="color:var(--danger)"></p>
-        <div class="row"><button type="submit" class="btn btn-primary btn-lg" id="lock-ok" data-i18n="unlock"></button></div>
+        <div class="row"><button type="submit" class="btn btn-primary btn-lg" id="lock-ok" data-i18n="unlock">کھولیں</button></div>
       </form>
       <details>
-        <summary data-i18n="lock_forgot"></summary>
-        <p class="small muted" data-i18n="lock_forgot_help"></p>
-        <button type="button" class="btn btn-danger btn-sm" id="lock-erase" data-i18n="lock_erase"></button>
+        <summary data-i18n="lock_forgot">PIN بھول گئے؟</summary>
+        <p class="small muted" data-i18n="lock_forgot_help">PIN واپس نہیں مل سکتا۔ آپ سب مٹا کر اپنا آخری بیک اپ بحال کر سکتے ہیں۔</p>
+        <button type="button" class="btn btn-danger btn-sm" id="lock-erase" data-i18n="lock_erase">سارا ڈیٹا مٹائیں</button>
       </details>
     </div>
   </div>

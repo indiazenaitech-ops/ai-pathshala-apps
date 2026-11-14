@@ -219,10 +219,10 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">कक्षा के लिए लाइव शोर मीटर। बच्चे देखते हैं कि वे कितना शोर कर रहे हैं और अपनी आवाज़ पर काबू रखना सीखते हैं: हरा मतलब बढ़िया, लाल मतलब बहुत ज़्यादा शोर।</p>
 
     <div class="print-only nm-print-head">
-      <h2 data-i18n="report_title"></h2>
+      <h2 data-i18n="report_title">कक्षा शोर रिपोर्ट</h2>
       <p id="nm-print-meta"></p>
     </div>
 
@@ -232,8 +232,8 @@
         <div class="nm-stage-top">
           <span class="nm-status" role="status"><span class="nm-dot" aria-hidden="true"></span><span id="nm-status-txt"></span></span>
           <div class="seg" id="nm-view" role="group" data-i18n-aria-label="view_label">
-            <button type="button" data-view="meter" aria-pressed="true"><span aria-hidden="true">🎯</span> <span data-i18n="view_meter"></span></button>
-            <button type="button" data-view="balls" aria-pressed="false"><span aria-hidden="true">⚽</span> <span data-i18n="view_balls"></span></button>
+            <button type="button" data-view="meter" aria-pressed="true"><span aria-hidden="true">🎯</span> <span data-i18n="view_meter">मीटर</span></button>
+            <button type="button" data-view="balls" aria-pressed="false"><span aria-hidden="true">⚽</span> <span data-i18n="view_balls">उछलती गेंदें</span></button>
           </div>
           <button type="button" class="btn btn-sm" id="nm-fs"><span aria-hidden="true">⛶</span> <span id="nm-fs-txt"></span></button>
         </div>
@@ -260,16 +260,16 @@
               <text class="nm-scale" x="216" y="142" text-anchor="middle">100</text>
             </svg>
             <div class="nm-num" id="nm-level">0</div>
-            <div class="nm-unit" data-i18n="level_label"></div>
+            <div class="nm-unit" data-i18n="level_label">शोर का स्तर (0–100)</div>
           </div>
           <div class="nm-balls-view" id="nm-balls-view" hidden>
             <canvas id="nm-balls" aria-hidden="true"></canvas>
-            <div class="nm-balls-foot"><span data-i18n="balls_hint"></span><b id="nm-level2">0</b></div>
+            <div class="nm-balls-foot"><span data-i18n="balls_hint">गेंदों को लाल रेखा से नीचे रखो!</span><b id="nm-level2">0</b></div>
           </div>
         </div>
 
         <div class="nm-strip">
-          <div class="nm-pill" id="nm-counter"><span aria-hidden="true">🔔</span> <span data-i18n="times_loud"></span> <b id="nm-count">0</b></div>
+          <div class="nm-pill" id="nm-counter"><span aria-hidden="true">🔔</span> <span data-i18n="times_loud">कितनी बार ज़्यादा शोर</span> <b id="nm-count">0</b></div>
           <div class="nm-pill nm-chstrip" id="nm-chstrip" data-sec="0" hidden>
             <div class="nm-stars" id="nm-stars" aria-hidden="true"></div>
             <div class="nm-chline"><span id="nm-stars-txt"></span><span id="nm-ch-next"></span></div>
@@ -283,41 +283,41 @@
           <button type="button" class="btn btn-lg btn-primary nm-mic" id="nm-mic"><span id="nm-mic-ico" aria-hidden="true">🎤</span> <span id="nm-mic-txt"></span></button>
         </div>
         <div class="callout warning nm-msg" id="nm-msg" role="alert" hidden></div>
-        <p class="nm-hint muted small" id="nm-perm" data-i18n="perm_hint"></p>
-        <p class="nm-privacy small"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+        <p class="nm-hint muted small" id="nm-perm" data-i18n="perm_hint">ब्राउज़र माइक्रोफ़ोन की अनुमति माँगेगा। &quot;Allow&quot; (अनुमति दें) पर क्लिक करें।</p>
+        <p class="nm-privacy small"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">कुछ भी रिकॉर्ड, सेव या कहीं भेजा नहीं जाता। ऐप सिर्फ़ इसी डिवाइस पर, उसी पल, यह नापता है कि कमरे में कितना शोर है।</span></p>
       </section>
 
       <!-- teacher settings -->
       <section class="card stack nm-settings" id="nm-settings">
-        <h2>⚙️ <span data-i18n="set_title"></span></h2>
+        <h2>⚙️ <span data-i18n="set_title">सेटिंग्स</span></h2>
         <div class="field">
-          <label id="nm-act-lbl"><span data-i18n="activity"></span><span class="nm-val" id="nm-act-val"></span></label>
+          <label id="nm-act-lbl"><span data-i18n="activity">गतिविधि</span><span class="nm-val" id="nm-act-val"></span></label>
           <div class="nm-presets" id="nm-presets" role="group" aria-labelledby="nm-act-lbl"></div>
         </div>
         <div class="field">
-          <label for="nm-threshold"><span data-i18n="threshold"></span><b class="nm-val" id="nm-threshold-val"></b></label>
+          <label for="nm-threshold"><span data-i18n="threshold">ज़्यादा-शोर रेखा</span><b class="nm-val" id="nm-threshold-val"></b></label>
           <input type="range" id="nm-threshold" min="20" max="95" step="5">
-          <span class="hint" data-i18n="threshold_hint"></span>
+          <span class="hint" data-i18n="threshold_hint">इस संख्या से ऊपर मीटर लाल हो जाता है।</span>
         </div>
         <div class="field">
-          <label for="nm-sens"><span data-i18n="sens"></span><b class="nm-val" id="nm-sens-val"></b></label>
+          <label for="nm-sens"><span data-i18n="sens">माइक्रोफ़ोन संवेदनशीलता</span><b class="nm-val" id="nm-sens-val"></b></label>
           <input type="range" id="nm-sens" min="1" max="20" step="1">
-          <span class="hint" data-i18n="sens_hint"></span>
+          <span class="hint" data-i18n="sens_hint">ज़्यादा = धीमी आवाज़ भी पकड़ेगा। बड़ा कमरा हो या डिवाइस दूर रखा हो तो बढ़ाएँ।</span>
         </div>
         <div class="panel stack">
-          <button type="button" class="btn" id="nm-calib"><span aria-hidden="true">🎚️</span> <span data-i18n="calib"></span></button>
+          <button type="button" class="btn" id="nm-calib"><span aria-hidden="true">🎚️</span> <span data-i18n="calib">शांति का स्तर सेट करें</span></button>
           <p class="small muted mb0" id="nm-calib-msg" aria-live="polite"></p>
         </div>
         <div class="field">
-          <label for="nm-delay"><span data-i18n="delay"></span><b class="nm-val" id="nm-delay-val"></b></label>
+          <label for="nm-delay"><span data-i18n="delay">इतनी देर ज़्यादा शोर रहे तो चेतावनी</span><b class="nm-val" id="nm-delay-val"></b></label>
           <input type="range" id="nm-delay" min="1" max="10" step="1">
         </div>
         <div class="nm-checks">
-          <label class="check"><input type="checkbox" id="nm-sound"> <span data-i18n="opt_sound"></span></label>
-          <label class="check"><input type="checkbox" id="nm-flash"> <span data-i18n="opt_flash"></span></label>
+          <label class="check"><input type="checkbox" id="nm-sound"> <span data-i18n="opt_sound">हल्की घंटी बजाएँ</span></label>
+          <label class="check"><input type="checkbox" id="nm-flash"> <span data-i18n="opt_flash">स्क्रीन चमकाएँ</span></label>
         </div>
         <div class="field" id="nm-device-field" hidden>
-          <label for="nm-device" data-i18n="mic_pick"></label>
+          <label for="nm-device" data-i18n="mic_pick">माइक्रोफ़ोन</label>
           <select id="nm-device" class="no-i18n"></select>
         </div>
       </section>
@@ -326,10 +326,10 @@
     <div class="grid-2 nm-lower">
       <!-- quiet challenge -->
       <section class="card stack nm-challenge" id="nm-challenge">
-        <h2>⭐ <span data-i18n="ch_title"></span></h2>
-        <p class="small muted mb0" data-i18n="ch_desc"></p>
+        <h2>⭐ <span data-i18n="ch_title">शांति चुनौती</span></h2>
+        <p class="small muted mb0" data-i18n="ch_desc">ज़्यादा-शोर रेखा से नीचे बिताया हर पूरा मिनट एक तारा ⭐ दिलाता है। शोर बढ़ा तो वह मिनट फिर से शुरू होगा।</p>
         <div class="nm-chrow">
-          <label for="nm-goal" data-i18n="ch_goal"></label>
+          <label for="nm-goal" data-i18n="ch_goal">लक्ष्य</label>
           <select id="nm-goal"></select>
           <button type="button" class="btn btn-accent" id="nm-ch-btn"></button>
         </div>
@@ -337,42 +337,42 @@
         <p class="print-only mb0" id="nm-ch-print"></p>
         <div class="panel nm-jar">
           <div>
-            <div class="small muted" data-i18n="jar"></div>
+            <div class="small muted" data-i18n="jar">कक्षा का तारों वाला जार</div>
             <div class="nm-jar-num"><span aria-hidden="true">⭐</span> <span id="nm-jar">0</span></div>
           </div>
-          <button type="button" class="btn btn-sm btn-danger" id="nm-jar-empty" data-i18n="jar_empty"></button>
+          <button type="button" class="btn btn-sm btn-danger" id="nm-jar-empty" data-i18n="jar_empty">जार खाली करें</button>
         </div>
       </section>
 
       <!-- this session -->
       <section class="card stack nm-session" id="nm-session">
         <div>
-          <h2 class="mb0">📊 <span data-i18n="sess_title"></span></h2>
+          <h2 class="mb0">📊 <span data-i18n="sess_title">यह सत्र</span></h2>
           <div class="muted small" id="nm-s-when"></div>
         </div>
         <div class="nm-stats">
-          <div class="nm-tile"><b id="nm-s-time">0:00</b><span data-i18n="s_time"></span></div>
-          <div class="nm-tile"><b id="nm-s-alerts">0</b><span data-i18n="times_loud"></span></div>
-          <div class="nm-tile"><b id="nm-s-avg">–</b><span data-i18n="s_avg"></span></div>
-          <div class="nm-tile"><b id="nm-s-peak">–</b><span data-i18n="s_peak"></span></div>
-          <div class="nm-tile"><b id="nm-s-stars">0</b><span data-i18n="s_stars"></span></div>
+          <div class="nm-tile"><b id="nm-s-time">0:00</b><span data-i18n="s_time">सुनने का समय</span></div>
+          <div class="nm-tile"><b id="nm-s-alerts">0</b><span data-i18n="times_loud">कितनी बार ज़्यादा शोर</span></div>
+          <div class="nm-tile"><b id="nm-s-avg">–</b><span data-i18n="s_avg">औसत स्तर</span></div>
+          <div class="nm-tile"><b id="nm-s-peak">–</b><span data-i18n="s_peak">सबसे ज़्यादा</span></div>
+          <div class="nm-tile"><b id="nm-s-stars">0</b><span data-i18n="s_stars">जीते गए तारे</span></div>
         </div>
         <div class="nm-zonebar" id="nm-zonebar" aria-hidden="true"><span class="g" id="nm-zb-g"></span><span class="y" id="nm-zb-y"></span><span class="r" id="nm-zb-r"></span></div>
         <div class="nm-legend" id="nm-legend"></div>
-        <h3 class="nm-sub" data-i18n="chart_title"></h3>
+        <h3 class="nm-sub" data-i18n="chart_title">पिछले 2 मिनट</h3>
         <div>
           <div class="nm-chart-wrap"><canvas id="nm-chart" aria-hidden="true"></canvas></div>
-          <div class="nm-axis tiny muted"><span data-i18n="chart_ago"></span><span data-i18n="chart_now"></span></div>
+          <div class="nm-axis tiny muted"><span data-i18n="chart_ago">2 मिनट पहले</span><span data-i18n="chart_now">अभी</span></div>
         </div>
         <div class="row no-print">
-          <button type="button" class="btn" id="nm-print"><span aria-hidden="true">🖨️</span> <span data-i18n="print_report"></span></button>
-          <button type="button" class="btn btn-danger" id="nm-new"><span aria-hidden="true">↺</span> <span data-i18n="new_session"></span></button>
+          <button type="button" class="btn" id="nm-print"><span aria-hidden="true">🖨️</span> <span data-i18n="print_report">रिपोर्ट प्रिंट करें</span></button>
+          <button type="button" class="btn btn-danger" id="nm-new"><span aria-hidden="true">↺</span> <span data-i18n="new_session">नया सत्र</span></button>
         </div>
       </section>
     </div>
 
     <details class="card nm-help">
-      <summary><b data-i18n="how_title"></b></summary>
+      <summary><b data-i18n="how_title">कैसे इस्तेमाल करें · कक्षा के लिए सुझाव</b></summary>
       <ul>
         <li data-i18n-html="tip1"></li>
         <li data-i18n-html="tip2"></li>
@@ -384,23 +384,23 @@
     </details>
 
     <details class="card nm-help">
-      <summary><b data-i18n="about_title"></b></summary>
-      <p data-i18n="about_p1"></p>
-      <p class="callout warning" data-i18n="about_p2"></p>
-      <h3 class="nm-sub" data-i18n="db_title"></h3>
+      <summary><b data-i18n="about_title">यह संख्या क्या बताती है? (ध्वनि और डेसिबल)</b></summary>
+      <p data-i18n="about_p1">ध्वनि हवा के दबाव की छोटी-छोटी तरंगों के रूप में माइक्रोफ़ोन तक पहुँचती है। ऐप हर सेकंड कई बार नापता है कि ये तरंगें कितनी बड़ी हैं (इनका औसत आकार, जिसे RMS कहते हैं) और उसे 0 से 100 की संख्या में बदल देता है।</p>
+      <p class="callout warning" data-i18n="about_p2">यह संख्या असली डेसिबल (dB) नहीं है। हर माइक्रोफ़ोन अलग होता है, इसलिए यह पैमाना सिर्फ़ तुलना के लिए है: एक ही कमरे में, एक ही डिवाइस से &quot;ज़्यादा&quot; और &quot;कम&quot; शोर की तुलना करें।</p>
+      <h3 class="nm-sub" data-i18n="db_title">असली ध्वनि स्तर (NCERT कक्षा 8 विज्ञान)</h3>
       <div class="scroll-x">
         <table class="table nm-db">
-          <thead><tr><th data-i18n="db_src"></th><th data-i18n="db_level"></th></tr></thead>
+          <thead><tr><th data-i18n="db_src">ध्वनि का स्रोत</th><th data-i18n="db_level">प्रबलता</th></tr></thead>
           <tbody>
-            <tr><td data-i18n="db_breath"></td><td><div class="nm-dbcell"><span class="nm-dbbar" style="--w:10"></span><span>10 dB</span></div></td></tr>
-            <tr><td data-i18n="db_whisper"></td><td><div class="nm-dbcell"><span class="nm-dbbar" style="--w:30"></span><span>30 dB</span></div></td></tr>
-            <tr><td data-i18n="db_talk"></td><td><div class="nm-dbcell"><span class="nm-dbbar" style="--w:60"></span><span>60 dB</span></div></td></tr>
-            <tr><td data-i18n="db_traffic"></td><td><div class="nm-dbcell"><span class="nm-dbbar" style="--w:70"></span><span>70 dB</span></div></td></tr>
-            <tr><td data-i18n="db_factory"></td><td><div class="nm-dbcell"><span class="nm-dbbar hot" style="--w:80"></span><span>80 dB</span></div></td></tr>
+            <tr><td data-i18n="db_breath">सामान्य साँस लेना</td><td><div class="nm-dbcell"><span class="nm-dbbar" style="--w:10"></span><span>10 dB</span></div></td></tr>
+            <tr><td data-i18n="db_whisper">धीमी फुसफुसाहट (5 m दूर से)</td><td><div class="nm-dbcell"><span class="nm-dbbar" style="--w:30"></span><span>30 dB</span></div></td></tr>
+            <tr><td data-i18n="db_talk">सामान्य बातचीत</td><td><div class="nm-dbcell"><span class="nm-dbbar" style="--w:60"></span><span>60 dB</span></div></td></tr>
+            <tr><td data-i18n="db_traffic">भारी ट्रैफ़िक</td><td><div class="nm-dbcell"><span class="nm-dbbar" style="--w:70"></span><span>70 dB</span></div></td></tr>
+            <tr><td data-i18n="db_factory">औसत कारखाना</td><td><div class="nm-dbcell"><span class="nm-dbbar hot" style="--w:80"></span><span>80 dB</span></div></td></tr>
           </tbody>
         </table>
       </div>
-      <p class="small" data-i18n="db_note"></p>
+      <p class="small" data-i18n="db_note">80 dB से ज़्यादा शोर शरीर के लिए कष्टदायक होता है, और लंबे समय तक सुनने से सुनने की शक्ति को नुकसान हो सकता है। पढ़ाई के लिए WHO का सुझाव है कि कक्षा में पीछे का शोर लगभग 35 dB रहे।</p>
     </details>
   </main>
   <script src="../../../apps/noise-meter/../../shared/edu.js"></script>

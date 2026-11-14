@@ -199,65 +199,65 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="callout success small privacy no-print"><span class="ic" aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">உங்கள் உணவகம், தாபா, கஃபே, கேன்டீன், டிபன் சேவை அல்லது பேக்கரிக்கு அச்சிட்ட மெனு கார்டு, WhatsApp ஸ்டேட்டஸுக்கான மெனு படம் அல்லது &quot;மெனுவுக்கு ஸ்கேன் செய்யுங்கள்&quot; போஸ்டர் உருவாக்குங்கள், FSSAI வெஜ்/நான்-வெஜ் குறிகள் மற்றும் UPI ஸ்கேன்-பே QR உடன்.</p>
+    <p class="callout success small privacy no-print"><span class="ic" aria-hidden="true">🔒</span> <span data-i18n="privacy">எல்லாம் இந்தச் சாதனத்திலேயே இருக்கும். உங்கள் மெனு, லோகோ, ஃபோன் எண், UPI ID எதுவும் பதிவேற்றப்படாது.</span></p>
 
     <section class="card no-print" style="margin-bottom:16px" aria-labelledby="hMenus">
-      <h2 id="hMenus" data-i18n="h_menus"></h2>
+      <h2 id="hMenus" data-i18n="h_menus">சேமித்த மெனுக்கள்</h2>
       <div class="toolbar">
-        <label class="field"><span data-i18n="lbl_menu"></span><select id="menuSel" class="no-i18n"></select></label>
-        <button type="button" class="btn" id="btnNewMenu"><span class="ic" aria-hidden="true">＋</span> <span data-i18n="btn_new_menu"></span></button>
-        <button type="button" class="btn" id="btnRenameMenu" data-i18n="btn_rename_menu"></button>
-        <button type="button" class="btn" id="btnDupMenu" data-i18n="btn_dup_menu"></button>
-        <button type="button" class="btn btn-danger" id="btnDelMenu" data-i18n="btn_del_menu"></button>
+        <label class="field"><span data-i18n="lbl_menu">மெனு</span><select id="menuSel" class="no-i18n"></select></label>
+        <button type="button" class="btn" id="btnNewMenu"><span class="ic" aria-hidden="true">＋</span> <span data-i18n="btn_new_menu">புதிய மெனு</span></button>
+        <button type="button" class="btn" id="btnRenameMenu" data-i18n="btn_rename_menu">பெயர் மாற்று</button>
+        <button type="button" class="btn" id="btnDupMenu" data-i18n="btn_dup_menu">நகல் எடு</button>
+        <button type="button" class="btn btn-danger" id="btnDelMenu" data-i18n="btn_del_menu">மெனுவை நீக்கு</button>
       </div>
       <div class="toolbar" style="margin-top:10px">
-        <button type="button" class="btn" id="btnSample"><span class="ic" aria-hidden="true">🍛</span> <span data-i18n="btn_sample"></span></button>
-        <button type="button" class="btn" id="btnImportCsv"><span class="ic" aria-hidden="true">📥</span> <span data-i18n="btn_import_csv"></span></button>
-        <button type="button" class="btn" id="btnExportCsv"><span class="ic" aria-hidden="true">📤</span> <span data-i18n="btn_export_csv"></span></button>
+        <button type="button" class="btn" id="btnSample"><span class="ic" aria-hidden="true">🍛</span> <span data-i18n="btn_sample">மாதிரி மெனுவை ஏற்று</span></button>
+        <button type="button" class="btn" id="btnImportCsv"><span class="ic" aria-hidden="true">📥</span> <span data-i18n="btn_import_csv">CSV இறக்குமதி</span></button>
+        <button type="button" class="btn" id="btnExportCsv"><span class="ic" aria-hidden="true">📤</span> <span data-i18n="btn_export_csv">CSV ஏற்றுமதி</span></button>
         <button type="button" class="btn btn-danger" id="btnReset" data-i18n="reset"></button>
       </div>
-      <p class="hint" style="margin:8px 0 0" data-i18n="csv_hint"></p>
+      <p class="hint" style="margin:8px 0 0" data-i18n="csv_hint">CSV நெடுவரிசைகள்: name, category, price, veg (veg / non-veg), half price, description. Excel மற்றும் Google Sheets-இல் CSV ஆகச் சேமிக்கலாம்.</p>
       <p class="msg callout small" id="msg" aria-live="polite" style="margin:8px 0 0"></p>
     </section>
 
     <div class="mc-layout">
       <section class="card no-print" aria-label="Editor">
         <div class="tabs" role="tablist">
-          <button type="button" role="tab" id="tab-details" aria-selected="true" aria-controls="panel-details" data-i18n="tab_details"></button>
-          <button type="button" role="tab" id="tab-items" aria-selected="false" aria-controls="panel-items" data-i18n="tab_items"></button>
-          <button type="button" role="tab" id="tab-design" aria-selected="false" aria-controls="panel-design" data-i18n="tab_design"></button>
+          <button type="button" role="tab" id="tab-details" aria-selected="true" aria-controls="panel-details" data-i18n="tab_details">விவரங்கள்</button>
+          <button type="button" role="tab" id="tab-items" aria-selected="false" aria-controls="panel-items" data-i18n="tab_items">உணவுகள்</button>
+          <button type="button" role="tab" id="tab-design" aria-selected="false" aria-controls="panel-design" data-i18n="tab_design">வடிவமைப்பு &amp; அமைப்பு</button>
         </div>
 
         <div class="tabpanel stack" id="panel-details" role="tabpanel" aria-labelledby="tab-details">
-          <label class="field"><span data-i18n="lbl_biz"></span><input id="fBiz" type="text" class="no-i18n" maxlength="60" data-i18n-placeholder="ph_biz"></label>
-          <label class="field"><span data-i18n="lbl_tagline"></span><input id="fTag" type="text" class="no-i18n" maxlength="90" data-i18n-placeholder="ph_tagline"></label>
-          <div class="field"><span data-i18n="lbl_logo"></span>
-            <div class="row"><img id="logoPrev" class="logo-prev" alt="" hidden><button type="button" class="btn" id="btnLogo" data-i18n="btn_logo"></button><button type="button" class="btn btn-ghost" id="btnLogoRm" data-i18n="btn_logo_remove" hidden></button></div>
+          <label class="field"><span data-i18n="lbl_biz">கடை / உணவகத்தின் பெயர்</span><input id="fBiz" type="text" class="no-i18n" maxlength="60" data-i18n-placeholder="ph_biz"></label>
+          <label class="field"><span data-i18n="lbl_tagline">டேக்லைன்</span><input id="fTag" type="text" class="no-i18n" maxlength="90" data-i18n-placeholder="ph_tagline"></label>
+          <div class="field"><span data-i18n="lbl_logo">லோகோ</span>
+            <div class="row"><img id="logoPrev" class="logo-prev" alt="" hidden><button type="button" class="btn" id="btnLogo" data-i18n="btn_logo">லோகோ படத்தைத் தேர்வு செய்</button><button type="button" class="btn btn-ghost" id="btnLogoRm" data-i18n="btn_logo_remove" hidden>லோகோவை நீக்கு</button></div>
           </div>
           <div class="two">
-            <label class="field"><span data-i18n="lbl_phone"></span><input id="fPhone" type="tel" class="no-i18n" dir="ltr" inputmode="tel" maxlength="20" data-i18n-placeholder="ph_phone"></label>
-            <label class="field"><span data-i18n="lbl_fssai"></span><input id="fFssai" type="text" class="no-i18n" dir="ltr" inputmode="numeric" maxlength="14" data-i18n-placeholder="ph_fssai"><span class="hint" data-i18n="fssai_hint"></span><span class="hint" id="fssaiMsg" aria-live="polite"></span></label>
+            <label class="field"><span data-i18n="lbl_phone">ஃபோன் / WhatsApp எண்</span><input id="fPhone" type="tel" class="no-i18n" dir="ltr" inputmode="tel" maxlength="20" data-i18n-placeholder="ph_phone"></label>
+            <label class="field"><span data-i18n="lbl_fssai">FSSAI உரிம எண்</span><input id="fFssai" type="text" class="no-i18n" dir="ltr" inputmode="numeric" maxlength="14" data-i18n-placeholder="ph_fssai"><span class="hint" data-i18n="fssai_hint">விருப்பத்தேர்வு. FSSAI உணவு வணிகங்களை மெனு கார்டில் உரிம எண்ணைக் காட்டச் சொல்கிறது. இதில் 14 இலக்கங்கள் இருக்கும்.</span><span class="hint" id="fssaiMsg" aria-live="polite"></span></label>
           </div>
-          <label class="field"><span data-i18n="lbl_address"></span><input id="fAddr" type="text" class="no-i18n" maxlength="120" data-i18n-placeholder="ph_address"></label>
-          <label class="field"><span data-i18n="lbl_upi"></span><input id="fUpi" type="text" class="no-i18n" dir="ltr" inputmode="email" autocapitalize="off" spellcheck="false" maxlength="80" data-i18n-placeholder="ph_upi"><span class="hint" data-i18n="upi_hint"></span><span class="hint" id="upiMsg" aria-live="polite"></span></label>
-          <label class="check"><input type="checkbox" id="fWaQr"> <span data-i18n="chk_wa_qr"></span></label>
-          <p class="hint" style="margin:-6px 0 0 26px" data-i18n="wa_qr_hint"></p>
-          <label class="check"><input type="checkbox" id="fGst"> <span data-i18n="chk_gst"></span></label>
-          <label class="field"><span data-i18n="lbl_menu_link"></span><input id="fLink" type="url" class="no-i18n" dir="ltr" inputmode="url" maxlength="300" data-i18n-placeholder="ph_menu_link"><span class="hint" data-i18n="link_hint"></span></label>
-          <label class="field"><span data-i18n="lbl_note"></span><input id="fNote" type="text" class="no-i18n" maxlength="120" data-i18n-placeholder="ph_note"></label>
+          <label class="field"><span data-i18n="lbl_address">முகவரி</span><input id="fAddr" type="text" class="no-i18n" maxlength="120" data-i18n-placeholder="ph_address"></label>
+          <label class="field"><span data-i18n="lbl_upi">ஸ்கேன்-பே-க்கான UPI ID</span><input id="fUpi" type="text" class="no-i18n" dir="ltr" inputmode="email" autocapitalize="off" spellcheck="false" maxlength="80" data-i18n-placeholder="ph_upi"><span class="hint" data-i18n="upi_hint">மெனுவில் UPI QR குறியீடு சேர்க்கப்படும்; வாடிக்கையாளர் ஸ்கேன் செய்து பணம் செலுத்தலாம். QR வேண்டாமெனில் காலியாக விடுங்கள்.</span><span class="hint" id="upiMsg" aria-live="polite"></span></label>
+          <label class="check"><input type="checkbox" id="fWaQr"> <span data-i18n="chk_wa_qr">WhatsApp ஆர்டர் QR / இணைப்பு சேர்</span></label>
+          <p class="hint" style="margin:-6px 0 0 26px" data-i18n="wa_qr_hint">மேலே உள்ள ஃபோன் எண் பயன்படும். ஸ்கேன் செய்தால் உங்கள் எண்ணுக்கு WhatsApp அரட்டை திறக்கும்.</p>
+          <label class="check"><input type="checkbox" id="fGst"> <span data-i18n="chk_gst">&quot;எல்லா விலைகளும் GST உட்பட&quot; வரியைக் காட்டு</span></label>
+          <label class="field"><span data-i18n="lbl_menu_link">ஆன்லைன் மெனு இணைப்பு (விருப்பத்தேர்வு)</span><input id="fLink" type="url" class="no-i18n" dir="ltr" inputmode="url" maxlength="300" data-i18n-placeholder="ph_menu_link"><span class="hint" data-i18n="link_hint">&quot;மெனுவுக்கு ஸ்கேன் செய்யுங்கள்&quot; போஸ்டரில் பயன்படும். காலியாக இருந்தால் போஸ்டர் QR-இல் மெனு உரையே (அல்லது உங்கள் WhatsApp இணைப்பு) இருக்கும்.</span></label>
+          <label class="field"><span data-i18n="lbl_note">அடிக்குறிப்பு</span><input id="fNote" type="text" class="no-i18n" maxlength="120" data-i18n-placeholder="ph_note"></label>
         </div>
 
         <div class="tabpanel stack" id="panel-items" role="tabpanel" aria-labelledby="tab-items" hidden>
-          <div class="row" style="justify-content:space-between"><h3 data-i18n="h_cats"></h3><span class="muted small" id="itemsStatus" aria-live="polite"></span></div>
+          <div class="row" style="justify-content:space-between"><h3 data-i18n="h_cats">பிரிவுகள் மற்றும் உணவுகள்</h3><span class="muted small" id="itemsStatus" aria-live="polite"></span></div>
           <div id="catList" class="stack"></div>
-          <div class="row"><button type="button" class="btn" id="btnAddCat"><span class="ic" aria-hidden="true">＋</span> <span data-i18n="btn_add_cat"></span></button></div>
+          <div class="row"><button type="button" class="btn" id="btnAddCat"><span class="ic" aria-hidden="true">＋</span> <span data-i18n="btn_add_cat">பிரிவு சேர்</span></button></div>
         </div>
 
         <div class="tabpanel stack" id="panel-design" role="tabpanel" aria-labelledby="tab-design" hidden>
-          <h3 data-i18n="h_design"></h3>
+          <h3 data-i18n="h_design">வடிவமைப்பு</h3>
           <div class="designs" id="designList" role="group"></div>
-          <h3 data-i18n="h_layout"></h3>
+          <h3 data-i18n="h_layout">அமைப்பு</h3>
           <div class="seg layouts" id="layoutSeg" role="group"></div>
           <p class="hint" id="layoutHint"></p>
         </div>
@@ -265,29 +265,29 @@
 
       <section class="card pv-card pv-sticky" aria-labelledby="hPreview">
         <div class="pv-bar no-print">
-          <h2 id="hPreview" style="margin:0" data-i18n="h_preview"></h2>
+          <h2 id="hPreview" style="margin:0" data-i18n="h_preview">முன்னோட்டம்</h2>
           <span class="muted small" id="pageInfo" aria-live="polite"></span>
         </div>
         <div class="pv-wrap" id="pvWrap"><div class="pv-scale" id="pvScale"></div></div>
         <div class="pv-pages" id="pvPages" hidden></div>
-        <p class="hint no-print" style="margin:8px 0 0" data-i18n="preview_hint"></p>
+        <p class="hint no-print" style="margin:8px 0 0" data-i18n="preview_hint">முன்னோட்டம் சிறிதாகக் காட்டப்பட்டுள்ளது. முழு அளவுக்கு அச்சிடுங்கள் அல்லது பதிவிறக்குங்கள்.</p>
         <div class="export no-print">
           <button type="button" class="btn btn-primary" id="btnPrint"><span class="ic" aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
-          <button type="button" class="btn" id="btnPng"><span class="ic" aria-hidden="true">🖼️</span> <span data-i18n="btn_png"></span></button>
-          <button type="button" class="btn" id="btnJpg" data-i18n="btn_jpg"></button>
-          <a class="btn btn-wa" id="btnWa" href="#" target="_blank" rel="noopener"><span class="ic" aria-hidden="true">💬</span> <span data-i18n="btn_wa_text"></span></a>
-          <button type="button" class="btn" id="btnCopy"><span class="ic" aria-hidden="true">⧉</span> <span data-i18n="btn_copy_text"></span></button>
+          <button type="button" class="btn" id="btnPng"><span class="ic" aria-hidden="true">🖼️</span> <span data-i18n="btn_png">PNG பதிவிறக்கு</span></button>
+          <button type="button" class="btn" id="btnJpg" data-i18n="btn_jpg">JPG பதிவிறக்கு</button>
+          <a class="btn btn-wa" id="btnWa" href="#" target="_blank" rel="noopener"><span class="ic" aria-hidden="true">💬</span> <span data-i18n="btn_wa_text">மெனுவை WhatsApp-இல் பகிர்</span></a>
+          <button type="button" class="btn" id="btnCopy"><span class="ic" aria-hidden="true">⧉</span> <span data-i18n="btn_copy_text">மெனு உரையை நகலெடு</span></button>
         </div>
-        <p class="hint no-print" style="margin:8px 0 0" data-i18n="print_hint"></p>
+        <p class="hint no-print" style="margin:8px 0 0" data-i18n="print_hint">அச்சிட: இங்கே காட்டிய காகித அளவைத் தேர்வு செய்யுங்கள், ஓரம் பூஜ்யம், &quot;Background graphics&quot; ஆன் செய்யுங்கள். PDF-க்கு &quot;Save as PDF&quot; தேர்வு செய்யுங்கள்.</p>
       </section>
     </div>
 
     <details class="card help no-print">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">பயன்படுத்தும் முறை / யோசனைகள்</summary>
       <ul class="stack" style="margin:10px 0 0; padding-inline-start:20px">
-        <li data-i18n="tip_1"></li><li data-i18n="tip_2"></li><li data-i18n="tip_3"></li><li data-i18n="tip_4"></li><li data-i18n="tip_5"></li><li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">மாதிரி மெனுவில் தொடங்கி, பிரிவுகளின் பெயர்களை மாற்றி, விலைகளை மாற்றி, நீங்கள் செய்யாதவற்றை நீக்குங்கள். உணவுப் பெயர்களை எந்த மொழியிலும் தட்டச்சு செய்யலாம்.</li><li data-i18n="tip_2">வெஜ் மற்றும் நான்-வெஜ் குறிகள் FSSAI பாணியில்: பச்சைச் சதுரத்தில் பச்சை வட்டம், பழுப்புச் சதுரத்தில் பழுப்பு முக்கோணம். ஒரு நாள் உணவு இல்லையெனில் நீக்காமல் &quot;ஸ்டாக் இல்லை&quot; என்று குறியுங்கள்.</li><li data-i18n="tip_3">உங்கள் UPI ID-ஐச் சேர்த்தால் ஒவ்வொரு மெனுவிலும் ஸ்கேன்-பே QR வரும்; ஃபோன் எண்ணால் &quot;WhatsApp-இல் ஆர்டர்&quot; QR. இரண்டும் ஆஃப்லைனில் வேலை செய்யும்; QR உங்கள் சாதனத்திலேயே வரையப்படும்.</li><li data-i18n="tip_4">விலைகளை Excel அல்லது Google Sheets-இல் வைத்திருக்கிறீர்களா? ஒருமுறை CSV ஏற்றுமதி செய்து, அங்கே விலைகளை மாற்றி, மாற்றம் வரும்போது மீண்டும் இறக்குமதி செய்யுங்கள்.</li><li data-i18n="tip_5">ஸ்டோரி படம்: தினமும் காலை &quot;இன்றைய ஸ்பெஷல்&quot; உடன் 1080×1920 படங்களை WhatsApp ஸ்டேட்டஸ் அல்லது Instagram ஸ்டோரியாகப் போடுங்கள். டென்ட் கார்டு: அச்சிட்டு, மடித்து ஒவ்வொரு மேசையிலும் வையுங்கள்.</li><li data-i18n="tip_6">காலை உணவு, மதிய உணவு, விருந்து கேட்டரிங் அல்லது பண்டிகை ஸ்பெஷலுக்கு தனித்தனி மெனுக்களைச் சேமித்து, &quot;சேமித்த மெனுக்கள்&quot; பட்டியலில் மாறிக்கொள்ளுங்கள்.</li>
       </ul>
-      <p class="callout warning small" style="margin:12px 0 0" data-i18n="fssai_note"></p>
+      <p class="callout warning small" style="margin:12px 0 0" data-i18n="fssai_note">FSSAI விதிகள் (அக்டோபர் 2026, கையால் சரிபார்த்தது): உரிம எண்ணை மெனு கார்டில் காட்ட வேண்டும்; வெஜ் / நான்-வெஜ் குறிகள் பச்சை வட்டமும் பழுப்பு முக்கோணமும். உங்கள் வணிக வகைக்கான சமீபத்திய FSSAI அறிவிப்பைப் பாருங்கள்.</p>
     </details>
   </main>
   <script src="../../../apps/menu-card-maker/../../shared/edu.js"></script>

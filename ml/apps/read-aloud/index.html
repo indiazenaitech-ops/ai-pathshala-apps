@@ -152,27 +152,27 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ഏത് വാചകവും നിങ്ങളുടെ ഭാഷയിൽ ഉറക്കെ കേൾക്കൂ, തിളങ്ങുന്ന വാക്കുകൾ നോക്കി വായിക്കൂ, ഓരോ വാക്യവും ആവർത്തിച്ച് വായന പരിശീലിക്കൂ.</p>
 
     <div class="ra-layout">
       <div class="ra-main">
         <!-- 1) text to read -->
         <section class="card stack" id="text-card">
           <div class="card-head">
-            <h2 data-i18n="text_h"></h2>
+            <h2 data-i18n="text_h">വായിക്കാനുള്ള പാഠം</h2>
             <button class="btn btn-sm btn-ghost" id="clear-btn" type="button"><span aria-hidden="true">✕</span> <span data-i18n="clear"></span></button>
           </div>
           <div class="samples-row">
-            <span class="lbl" data-i18n="samples"></span>
+            <span class="lbl" data-i18n="samples">ഒരു മാതൃക നോക്കൂ</span>
             <div class="sample-btns" id="sample-btns"></div>
             <select id="sample-lang" data-i18n-aria-label="sample_lang" data-i18n-title="sample_lang"></select>
           </div>
           <div class="field">
-            <label for="text" data-i18n="text_label"></label>
+            <label for="text" data-i18n="text_label">ഏത് വാചകവും ടൈപ്പ് ചെയ്യുക അല്ലെങ്കിൽ പേസ്റ്റ് ചെയ്യുക</label>
             <textarea id="text" class="no-i18n" rows="4" dir="auto" maxlength="30000" spellcheck="false" data-i18n-placeholder="text_ph"></textarea>
           </div>
           <div class="detect-row">
-            <label for="read-as" data-i18n="read_as"></label>
+            <label for="read-as" data-i18n="read_as">ഏത് ഭാഷയിൽ വായിക്കണം</label>
             <select id="read-as"></select>
             <span class="muted small" id="counts"></span>
           </div>
@@ -181,21 +181,21 @@
         <!-- 2) reading view + player -->
         <section class="card stack reader-card" id="reader-card">
           <div class="print-only print-head">
-            <h2 data-i18n="print_h"></h2>
-            <p><span data-i18n="print_name"></span>: ______________________ &nbsp; <span data-i18n="print_date"></span>: ____________</p>
+            <h2 data-i18n="print_h">വായനാ പരിശീലനം</h2>
+            <p><span data-i18n="print_name">പേര്</span>: ______________________ &nbsp; <span data-i18n="print_date">തീയതി</span>: ____________</p>
           </div>
           <div class="transport no-print" id="transport">
-            <button class="btn btn-primary tbtn" id="play-btn" type="button"><span class="ic" id="play-ic" aria-hidden="true">▶</span><span id="play-lbl" data-i18n="b_play"></span></button>
-            <button class="btn tbtn" id="stop-btn" type="button"><span class="ic" aria-hidden="true">■</span><span data-i18n="b_stop"></span></button>
-            <button class="btn tbtn" id="prev-btn" type="button" data-i18n-title="prev_s" data-i18n-aria-label="prev_s"><span class="ic" aria-hidden="true">⏮</span><span data-i18n="b_back"></span></button>
-            <button class="btn tbtn" id="repeat-btn" type="button" data-i18n-title="repeat_s" data-i18n-aria-label="repeat_s"><span class="ic" aria-hidden="true">↻</span><span data-i18n="b_again"></span></button>
-            <button class="btn tbtn" id="next-btn" type="button" data-i18n-title="next_s" data-i18n-aria-label="next_s"><span class="ic" aria-hidden="true">⏭</span><span data-i18n="b_next"></span></button>
+            <button class="btn btn-primary tbtn" id="play-btn" type="button"><span class="ic" id="play-ic" aria-hidden="true">▶</span><span id="play-lbl" data-i18n="b_play">പ്ലേ</span></button>
+            <button class="btn tbtn" id="stop-btn" type="button"><span class="ic" aria-hidden="true">■</span><span data-i18n="b_stop">നിർത്തുക</span></button>
+            <button class="btn tbtn" id="prev-btn" type="button" data-i18n-title="prev_s" data-i18n-aria-label="prev_s"><span class="ic" aria-hidden="true">⏮</span><span data-i18n="b_back">പിന്നോട്ട്</span></button>
+            <button class="btn tbtn" id="repeat-btn" type="button" data-i18n-title="repeat_s" data-i18n-aria-label="repeat_s"><span class="ic" aria-hidden="true">↻</span><span data-i18n="b_again">വീണ്ടും</span></button>
+            <button class="btn tbtn" id="next-btn" type="button" data-i18n-title="next_s" data-i18n-aria-label="next_s"><span class="ic" aria-hidden="true">⏭</span><span data-i18n="b_next">അടുത്തത്</span></button>
           </div>
           <div class="tools-row no-print">
-            <button class="btn btn-sm" id="echo-btn" type="button" aria-pressed="false"><span aria-hidden="true">🗣️</span> <span data-i18n="echo_mode"></span></button>
+            <button class="btn btn-sm" id="echo-btn" type="button" aria-pressed="false"><span aria-hidden="true">🗣️</span> <span data-i18n="echo_mode">കേട്ട് ആവർത്തിക്കൂ</span></button>
             <span class="sp"></span>
             <button class="btn btn-sm" id="fs-btn" type="button" aria-pressed="false"><span aria-hidden="true">⛶</span> <span id="fs-lbl" data-i18n="fullscreen"></span></button>
-            <button class="btn btn-sm" id="print-btn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_passage"></span></button>
+            <button class="btn btn-sm" id="print-btn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_passage">പാഠം പ്രിന്റ് ചെയ്യുക</span></button>
           </div>
           <div class="progress no-print" aria-hidden="true"><span id="prog" style="width:0%"></span></div>
           <div id="voice-note" class="no-print" hidden></div>
@@ -203,17 +203,17 @@
           <div id="echo-box" class="echo-box no-print" hidden>
             <div class="echo-ic" aria-hidden="true">🗣️</div>
             <div class="echo-main">
-              <strong class="echo-msg" id="echo-msg" data-i18n="your_turn"></strong>
+              <strong class="echo-msg" id="echo-msg" data-i18n="your_turn">ഇനി നിന്റെ ഊഴം! ഈ വാക്യം ഉറക്കെ വായിക്കൂ.</strong>
               <div class="progress" id="echo-prog-wrap"><span id="echo-prog"></span></div>
             </div>
-            <button class="btn btn-accent" id="echo-next" type="button"><span data-i18n="b_next"></span> <span class="ic" aria-hidden="true">⏭</span></button>
+            <button class="btn btn-accent" id="echo-next" type="button"><span data-i18n="b_next">അടുത്തത്</span> <span class="ic" aria-hidden="true">⏭</span></button>
           </div>
           <p id="status" class="status no-print" aria-live="polite"></p>
-          <p id="boundary-note" class="muted small no-print mb0" hidden data-i18n="no_boundary"></p>
+          <p id="boundary-note" class="muted small no-print mb0" hidden data-i18n="no_boundary">ഈ ശബ്ദം ഓരോ വാക്കും അറിയിക്കുന്നില്ല, അതിനാൽ വാക്യം മുഴുവൻ ഹൈലൈറ്റ് ചെയ്യുന്നു.</p>
         </section>
 
         <details class="card help no-print" id="help">
-          <summary><strong data-i18n="help_h"></strong></summary>
+          <summary><strong data-i18n="help_h">എങ്ങനെ ഉപയോഗിക്കാം · ക്ലാസിനുള്ള ആശയങ്ങൾ</strong></summary>
           <ul>
             <li data-i18n-html="tip1"></li>
             <li data-i18n-html="tip2"></li>
@@ -229,57 +229,57 @@
       <!-- 3) settings -->
       <aside class="ra-side no-print">
         <section class="card stack" id="voice-card">
-          <h2 data-i18n="voice_h"></h2>
+          <h2 data-i18n="voice_h">ശബ്ദവും വേഗവും</h2>
           <div class="field">
-            <label for="voice-sel" data-i18n="voice"></label>
+            <label for="voice-sel" data-i18n="voice">ശബ്ദം</label>
             <select id="voice-sel" class="no-i18n"></select>
             <p class="muted tiny no-i18n" id="voice-info"></p>
           </div>
-          <label class="check"><input type="checkbox" id="all-voices"> <span data-i18n="all_voices"></span></label>
+          <label class="check"><input type="checkbox" id="all-voices"> <span data-i18n="all_voices">എല്ലാ ഭാഷകളുടെയും ശബ്ദങ്ങൾ കാണിക്കുക</span></label>
           <div class="field">
-            <label for="rate" class="range-lbl"><span data-i18n="speed"></span><output id="rate-out" for="rate"></output></label>
+            <label for="rate" class="range-lbl"><span data-i18n="speed">വേഗം</span><output id="rate-out" for="rate"></output></label>
             <input type="range" id="rate" min="0.5" max="1.5" step="0.05" value="1">
           </div>
           <div class="field">
-            <label for="pitch" class="range-lbl"><span data-i18n="pitch"></span><output id="pitch-out" for="pitch"></output></label>
+            <label for="pitch" class="range-lbl"><span data-i18n="pitch">സ്വരസ്ഥായി</span><output id="pitch-out" for="pitch"></output></label>
             <input type="range" id="pitch" min="0.5" max="1.5" step="0.05" value="1">
           </div>
         </section>
 
         <section class="card stack" id="look-card">
-          <h2 data-i18n="look_h"></h2>
+          <h2 data-i18n="look_h">അക്ഷര വലുപ്പവും ഹൈലൈറ്റും</h2>
           <div class="field">
-            <label for="font" class="range-lbl"><span data-i18n="font_size"></span><output id="font-out" for="font"></output></label>
+            <label for="font" class="range-lbl"><span data-i18n="font_size">അക്ഷര വലുപ്പം</span><output id="font-out" for="font"></output></label>
             <input type="range" id="font" min="16" max="72" step="2" value="28">
           </div>
           <div class="field">
-            <label for="line" class="range-lbl"><span data-i18n="line_space"></span><output id="line-out" for="line"></output></label>
+            <label for="line" class="range-lbl"><span data-i18n="line_space">വരികൾക്കിടയിലെ അകലം</span><output id="line-out" for="line"></output></label>
             <input type="range" id="line" min="1.2" max="2.8" step="0.1" value="1.8">
           </div>
           <div class="field">
-            <span class="lbl" id="hl-lbl" data-i18n="highlight"></span>
+            <span class="lbl" id="hl-lbl" data-i18n="highlight">ഹൈലൈറ്റ്</span>
             <div class="seg" role="group" aria-labelledby="hl-lbl" id="hl-seg">
-              <button type="button" data-hl="word" data-i18n="hl_word"></button>
-              <button type="button" data-hl="sentence" data-i18n="hl_sentence"></button>
+              <button type="button" data-hl="word" data-i18n="hl_word">വാക്ക്</button>
+              <button type="button" data-hl="sentence" data-i18n="hl_sentence">വാക്യം</button>
             </div>
           </div>
           <div class="field">
-            <span class="lbl" id="tap-lbl" data-i18n="tap_word"></span>
+            <span class="lbl" id="tap-lbl" data-i18n="tap_word">വാക്കിൽ തൊട്ടാൽ</span>
             <div class="seg" role="group" aria-labelledby="tap-lbl" id="tap-seg">
-              <button type="button" data-tap="hear" data-i18n="tap_hear"></button>
-              <button type="button" data-tap="from" data-i18n="tap_from"></button>
+              <button type="button" data-tap="hear" data-i18n="tap_hear">ആ വാക്ക് കേൾക്കുക</button>
+              <button type="button" data-tap="from" data-i18n="tap_from">അവിടെനിന്ന് വായിക്കുക</button>
             </div>
           </div>
         </section>
 
         <section class="card stack" id="echo-card">
-          <h2><span aria-hidden="true">🗣️</span> <span data-i18n="echo_mode"></span></h2>
-          <p class="muted small mb0" data-i18n="echo_help"></p>
+          <h2><span aria-hidden="true">🗣️</span> <span data-i18n="echo_mode">കേട്ട് ആവർത്തിക്കൂ</span></h2>
+          <p class="muted small mb0" data-i18n="echo_help">ശബ്ദം ഒരു വാക്യം വായിക്കും, പിന്നെ നിന്ന് കുട്ടിക്ക് അത് ആവർത്തിക്കാൻ സമയം കൊടുക്കും.</p>
           <div class="field">
-            <span class="lbl" id="wait-lbl" data-i18n="echo_wait"></span>
+            <span class="lbl" id="wait-lbl" data-i18n="echo_wait">കുട്ടിക്കായി കാത്തിരിക്കുക</span>
             <div class="seg" role="group" aria-labelledby="wait-lbl" id="wait-seg">
-              <button type="button" data-wait="auto" data-i18n="echo_auto"></button>
-              <button type="button" data-wait="tap" data-i18n="echo_tap"></button>
+              <button type="button" data-wait="auto" data-i18n="echo_auto">സ്വയം</button>
+              <button type="button" data-wait="tap" data-i18n="echo_tap">ഞാൻ ‘അടുത്തത്’ അമർത്തുന്നതുവരെ</button>
             </div>
           </div>
         </section>

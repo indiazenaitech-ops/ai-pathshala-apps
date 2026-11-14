@@ -126,30 +126,30 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">WhatsApp ভয়েস নোট, রেকর্ডিং বা ভিডিওকে লেখা আর সাবটাইটেলে বদলান: ইংরেজি, হিন্দি আর আরও ভারতীয় ভাষায়। AI আপনার নিজের ডিভাইসে চলে, আপনার অডিও কোথাও আপলোড হয় না।</p>
 
     <div class="callout success vt-privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">আপনার অডিও আপনার ডিভাইসেই থাকে।</strong> <span data-i18n="privacy_body">শুধু AI মডেলটি একবার ডাউনলোড হয়। ভয়েস নোট কখনও আপলোড হয় না, তাই ব্যক্তিগত মেসেজ আর মিটিংয়েও ব্যবহার করতে পারেন।</span></p>
     </div>
 
     <div class="vt-grid">
       <!-- 1. audio -->
       <section class="card stack" id="inCard" aria-labelledby="hIn">
-        <h2 class="vt-step" id="hIn" data-i18n="step_add"></h2>
+        <h2 class="vt-step" id="hIn" data-i18n="step_add">১. ভয়েস নোট যোগ করুন</h2>
         <div class="vt-drop" id="drop" tabindex="0" role="button" aria-describedby="dropHint">
           <span class="vt-drop-ic" aria-hidden="true">🎧</span>
-          <strong data-i18n="drop_title"></strong>
-          <span class="small muted" id="dropHint" data-i18n="drop_hint"></span>
+          <strong data-i18n="drop_title">অডিও বা ভিডিও ফাইল এখানে ছাড়ুন</strong>
+          <span class="small muted" id="dropHint" data-i18n="drop_hint">অথবা ট্যাপ করে বেছে নিন: WhatsApp ভয়েস নোট (.opus), mp3, m4a, wav, mp4, webm · 30 মিনিট পর্যন্ত</span>
         </div>
         <div class="vt-add">
-          <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_file"></span></button>
-          <button class="btn" id="recBtn" type="button"><span aria-hidden="true">🎙️</span> <span data-i18n="record"></span></button>
+          <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_file">ফাইল বেছে নিন</span></button>
+          <button class="btn" id="recBtn" type="button"><span aria-hidden="true">🎙️</span> <span data-i18n="record">মাইকে রেকর্ড করুন</span></button>
         </div>
         <div class="vt-samples">
-          <span class="lbl" data-i18n="try_sample"></span>
-          <button class="btn btn-sm" id="sampleHi" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_hi"></span></button>
-          <button class="btn btn-sm" id="sampleEn" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_en"></span></button>
+          <span class="lbl" data-i18n="try_sample">নমুনা চালিয়ে দেখুন:</span>
+          <button class="btn btn-sm" id="sampleHi" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_hi">হিন্দি</span></button>
+          <button class="btn btn-sm" id="sampleEn" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_en">ইংরেজি</span></button>
         </div>
         <input type="file" id="fileInput" class="vt-hidden-input" accept="audio/*,video/*,.opus,.ogg,.oga,.m4a,.mp3,.wav,.aac,.flac,.webm,.mp4,.mov,.3gp" tabindex="-1" aria-hidden="true">
 
@@ -157,7 +157,7 @@
           <span class="dot" aria-hidden="true"></span>
           <span class="time no-i18n" id="recTime" aria-live="off">0:00</span>
           <span class="lvl" aria-hidden="true"><span id="recLvl"></span></span>
-          <button class="btn btn-danger btn-sm" id="recStop" type="button"><span aria-hidden="true">⏹</span> <span data-i18n="rec_stop"></span></button>
+          <button class="btn btn-danger btn-sm" id="recStop" type="button"><span aria-hidden="true">⏹</span> <span data-i18n="rec_stop">থামিয়ে ব্যবহার করুন</span></button>
           <button class="btn btn-ghost btn-sm" id="recCancel" type="button" data-i18n="cancel"></button>
         </div>
 
@@ -168,33 +168,33 @@
           </div>
           <audio id="player" controls preload="metadata"></audio>
           <p class="small muted mb0" id="fileNote" hidden></p>
-          <div><button class="btn btn-sm btn-ghost" id="clearFile" type="button" data-i18n="remove_audio"></button></div>
+          <div><button class="btn btn-sm btn-ghost" id="clearFile" type="button" data-i18n="remove_audio">এই অডিও সরান</button></div>
         </div>
         <div class="callout danger" id="fileErr" role="alert" hidden></div>
       </section>
 
       <!-- 2. settings + run -->
       <section class="card stack" id="setCard" aria-labelledby="hSet">
-        <h2 class="vt-step" id="hSet" data-i18n="step_settings"></h2>
+        <h2 class="vt-step" id="hSet" data-i18n="step_settings">২. বেছে নিয়ে শুরু করুন</h2>
         <label class="field">
-          <span data-i18n="spoken_lang"></span>
+          <span data-i18n="spoken_lang">অডিওতে কোন ভাষা বলা হয়েছে</span>
           <select id="langSel"></select>
         </label>
         <p class="small muted mb0" id="langNote"></p>
         <div class="field">
-          <span id="modeLbl" data-i18n="mode_label"></span>
+          <span id="modeLbl" data-i18n="mode_label">আপনি কী চান?</span>
           <div class="seg" role="group" aria-labelledby="modeLbl" id="modeSeg">
-            <button type="button" data-mode="transcribe" data-i18n="mode_transcribe"></button>
-            <button type="button" data-mode="translate" data-i18n="mode_translate"></button>
+            <button type="button" data-mode="transcribe" data-i18n="mode_transcribe">যা বলা হয়েছে তা লিখুন</button>
+            <button type="button" data-mode="translate" data-i18n="mode_translate">ইংরেজিতে অনুবাদ</button>
           </div>
         </div>
         <div class="field">
-          <span id="modelLbl" data-i18n="model_label"></span>
+          <span id="modelLbl" data-i18n="model_label">AI মডেল (বড় মডেল ভালো, কিন্তু ধীর)</span>
           <div class="vt-models" id="models" role="group" aria-labelledby="modelLbl"></div>
         </div>
         <p class="callout warning small mb0" id="scriptNote" hidden></p>
         <div class="vt-run">
-          <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled><span aria-hidden="true">📝</span> <span data-i18n="run_btn"></span></button>
+          <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled><span aria-hidden="true">📝</span> <span data-i18n="run_btn">লেখায় বদলান</span></button>
           <button class="btn btn-danger" id="stopBtn" type="button" data-i18n="stop" hidden></button>
         </div>
         <div class="vt-status" id="statusBox" hidden>
@@ -207,59 +207,59 @@
           <div><button class="btn btn-sm" id="retryBtn" type="button" data-i18n="try_again"></button></div>
         </div>
         <p class="small muted mb0" id="firstNote"></p>
-        <p class="small muted mb0" data-i18n="phone_note"></p>
+        <p class="small muted mb0" data-i18n="phone_note">ফোনে এক মিনিটের অডিওতে কয়েক মিনিট লাগতে পারে। কাজ শেষ না হওয়া পর্যন্ত পেজটি খোলা রাখুন।</p>
       </section>
     </div>
 
     <!-- 3. result -->
     <section class="card stack" id="resCard" aria-labelledby="hRes" style="margin-top:16px" hidden>
       <div class="vt-resbar">
-        <h2 class="vt-step" id="hRes" data-i18n="step_result"></h2>
+        <h2 class="vt-step" id="hRes" data-i18n="step_result">৩. আপনার লেখা</h2>
         <div class="vt-stats" id="stats"></div>
       </div>
-      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden></p>
+      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden>এটা আগের বারের লেখা। শুনতে হলে অডিওটি আবার যোগ করুন।</p>
       <div class="row spread">
         <div class="seg" role="group" data-i18n-aria-label="view_label" id="viewSeg">
-          <button type="button" data-view="times" data-i18n="view_times"></button>
-          <button type="button" data-view="plain" data-i18n="view_plain"></button>
+          <button type="button" data-view="times" data-i18n="view_times">সময়সহ</button>
+          <button type="button" data-view="plain" data-i18n="view_plain">শুধু লেখা</button>
         </div>
-        <span class="small muted" id="editHint" data-i18n="edit_hint"></span>
+        <span class="small muted" id="editHint" data-i18n="edit_hint">শুনতে সময়ে ট্যাপ করুন। কোনো শব্দ ঠিক করতে লেখায় ট্যাপ করুন।</span>
       </div>
       <div class="vt-segs no-i18n" id="segs" aria-live="polite"></div>
       <div class="vt-plain no-i18n" id="plain" tabindex="0" hidden></div>
       <div class="vt-actions">
         <button class="btn btn-primary" id="copyBtn" type="button"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
-        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt"></span></button>
-        <button class="btn" id="dlSrt" type="button"><span aria-hidden="true">🎬</span> <span data-i18n="dl_srt"></span></button>
-        <button class="btn" id="dlVtt" type="button"><span aria-hidden="true">🌐</span> <span data-i18n="dl_vtt"></span></button>
-        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text"></button>
+        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt">লেখা (.txt)</span></button>
+        <button class="btn" id="dlSrt" type="button"><span aria-hidden="true">🎬</span> <span data-i18n="dl_srt">সাবটাইটেল (.srt)</span></button>
+        <button class="btn" id="dlVtt" type="button"><span aria-hidden="true">🌐</span> <span data-i18n="dl_vtt">ওয়েব সাবটাইটেল (.vtt)</span></button>
+        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text">লেখা মুছুন</button>
       </div>
     </section>
 
     <details class="card vt-help no-print" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">কীভাবে ব্যবহার করবেন / আইডিয়া</strong></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">WhatsApp ভয়েস নোট: চেপে ধরে Share-এ ট্যাপ করুন আর ফোনে সেভ করুন (যেমন Files-এ)। তারপর এখানে &quot;ফাইল বেছে নিন&quot; দিয়ে সেটি বাছুন।</li>
+        <li data-i18n="tip2">যে ভাষায় কথা বলা হয়েছে সেটাই বাছুন। &quot;নিজে থেকে চিনুক&quot; কাজ করে, তবে নিজে ভাষা বাছাই বেশি নির্ভরযোগ্য।</li>
+        <li data-i18n="tip3">ইংরেজি সব মডেলেই ভালো চলে। হিন্দি, মারাঠি, তামিল আর উর্দু তাদের নিজের লিপিতে পেতে স্মল বাছুন। বাংলা সহ অন্য ভারতীয় ভাষা ইংরেজি অক্ষরে আসে।</li>
+        <li data-i18n="tip4">YouTube বা Instagram ভিডিওর জন্য সাবটাইটেল (.srt) ডাউনলোড করে ভিডিওর সঙ্গে আপলোড করুন। আগে শব্দ আর সময় মিলিয়ে নিন।</li>
+        <li data-i18n="tip5">পরিষ্কার কথা, একবারে একজন আর কম আওয়াজে সবচেয়ে ভালো লেখা পাওয়া যায়। ব্যবহারের আগে লেখাটি অবশ্যই পড়ে নিন।</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="ideas_title"></h3>
-      <p class="mb0" data-i18n="ideas_body"></p>
-      <h3 style="margin-top:14px" data-i18n="inside_title"></h3>
+      <h3 style="margin-top:14px" data-i18n="ideas_title">কাজ আর ক্লাসের জন্য আইডিয়া</h3>
+      <p class="mb0" data-i18n="ideas_body">মিটিং বা লেকচারের রেকর্ডিং থেকে নোট বানান, ভিডিওর সাবটাইটেল তৈরি করুন, সাক্ষাৎকার লিখে ফেলুন, অথবা ছাত্রছাত্রীদের ছোট বক্তৃতা রেকর্ড করিয়ে দেখুন তারা কী বলেছে আর AI কী শুনেছে।</p>
+      <h3 style="margin-top:14px" data-i18n="inside_title">ভেতরে কী হচ্ছে</h3>
       <div class="vt-steps" aria-hidden="true">
-        <span class="chip" data-i18n="in_sound"></span><span class="arr">→</span>
-        <span class="chip" data-i18n="in_picture"></span><span class="arr">→</span>
-        <span class="chip" data-i18n="in_tokens"></span><span class="arr">→</span>
-        <span class="chip" data-i18n="in_text"></span>
+        <span class="chip" data-i18n="in_sound">শব্দ</span><span class="arr">→</span>
+        <span class="chip" data-i18n="in_picture">শব্দের ছবি</span><span class="arr">→</span>
+        <span class="chip" data-i18n="in_tokens">শব্দের টুকরো</span><span class="arr">→</span>
+        <span class="chip" data-i18n="in_text">লেখা</span>
       </div>
-      <p data-i18n="inside_body"></p>
-      <p data-i18n="inside_mistakes"></p>
-      <p class="small muted mb0" data-i18n="inside_models"></p>
+      <p data-i18n="inside_body">অডিওকে চুপচাপ মুহূর্তে কেটে 30 সেকেন্ড পর্যন্ত টুকরো করা হয়। প্রতিটি টুকরো একটি &quot;শব্দের ছবি&quot; (স্পেকট্রোগ্রাম) হয়, যা দেখায় প্রতি মুহূর্তে কোন সুর জোরে বাজছে। Whisper নামের AI এই ছবি দেখে একটা একটা ছোট শব্দের টুকরো (টোকেন) আন্দাজ করে লেখে, সঙ্গে সময়ও।</p>
+      <p data-i18n="inside_mistakes">ছোট মডেল কম ডেটা থেকে শিখেছে, বিশেষ করে ভারতীয় ভাষায়। তাই নাম ভুল শুনতে পারে, কাছাকাছি শব্দ গুলিয়ে ফেলতে পারে বা একটা লাইন বারবার লিখতে পারে। বড় মডেল কম ভুল করে কিন্তু ধীর। আওয়াজ, গান আর একসঙ্গে অনেকে কথা বললেও ভুল হয়।</p>
+      <p class="small muted mb0" data-i18n="inside_models">মডেল: OpenAI-এর Whisper টাইনি (41 MB), বেস (77 MB) আর স্মল (249 MB), MIT লাইসেন্স, ব্রাউজারে Transformers.js (Apache-2.0) দিয়ে চলে। AI ইঞ্জিনও (27 MB) একবার ডাউনলোড হয়। Whisper-এ এখনও ওড়িয়া নেই।</p>
       <div class="vt-storage">
         <span class="small muted" id="storageText"></span>
-        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden></button>
+        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden>ডাউনলোড করা AI ফাইল মুছুন</button>
       </div>
       <div class="row spread" style="margin-top:12px">
         <span class="small muted" data-i18n="saved_local"></span>

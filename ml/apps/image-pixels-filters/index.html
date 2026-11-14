@@ -222,38 +222,38 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">കമ്പ്യൂട്ടർ ഒരു ചിത്രത്തെ സംഖ്യകളുടെ വലയായാണ് കാണുന്നത്. പിക്സലുകളിൽ തൊട്ട് അവയുടെ സംഖ്യകൾ വായിക്കൂ, അരികുകൾ കണ്ടെത്തുന്ന ഫിൽട്ടറുകൾ പരീക്ഷിക്കൂ, CNN (ഫോട്ടോ തിരിച്ചറിയുന്ന AI) ന്റെ ആദ്യ പാളി എന്താണ് പിടിക്കുന്നതെന്ന് കാണൂ.</p>
 
     <!-- 1. choose a picture -->
     <section class="card no-print" id="src-card">
       <div class="src-head">
-        <h2 data-i18n="src_title"></h2>
+        <h2 data-i18n="src_title">ഒരു ചിത്രം തിരഞ്ഞെടുക്കൂ</h2>
         <button class="btn btn-sm btn-danger" id="reset-btn" type="button" data-i18n="reset"></button>
       </div>
       <div class="src-grid">
       <div>
       <div class="samples" id="samples" role="group" data-i18n-aria-label="samples_label"></div>
       <div class="row src-actions">
-        <button class="btn" id="upload-btn" type="button"><span aria-hidden="true">🖼️</span> <span data-i18n="upload_photo"></span></button>
+        <button class="btn" id="upload-btn" type="button"><span aria-hidden="true">🖼️</span> <span data-i18n="upload_photo">ഫോട്ടോ ഉപയോഗിക്കൂ</span></button>
         <input type="file" id="upload-input" accept="image/*" hidden>
-        <button class="btn" id="cam-btn" type="button"><span aria-hidden="true">📷</span> <span data-i18n="camera"></span></button>
+        <button class="btn" id="cam-btn" type="button"><span aria-hidden="true">📷</span> <span data-i18n="camera">ക്യാമറ</span></button>
         <span id="src-name" class="small" aria-live="polite"></span>
       </div>
-      <p class="tiny muted mb0" style="margin-top:8px" data-i18n="src_note"></p>
+      <p class="tiny muted mb0" style="margin-top:8px" data-i18n="src_note">നിങ്ങളുടെ ഫോട്ടോ ഈ ഉപകരണത്തിൽ തന്നെ നിൽക്കും, എവിടേക്കും അയയ്ക്കില്ല. ഫോട്ടോ ചതുരമായി മുറിക്കും.</p>
       <div class="cam-box" id="cam-box" hidden>
         <video id="cam-video" playsinline muted autoplay></video>
         <div class="row">
-          <button class="btn btn-primary" id="cam-snap" type="button" disabled><span aria-hidden="true">📸</span> <span data-i18n="cam_snap"></span></button>
+          <button class="btn btn-primary" id="cam-snap" type="button" disabled><span aria-hidden="true">📸</span> <span data-i18n="cam_snap">ഫോട്ടോ എടുക്കൂ</span></button>
           <button class="btn" id="cam-close" type="button" data-i18n="close"></button>
         </div>
         <p class="small mb0" id="cam-msg" aria-live="polite"></p>
       </div>
       </div>
       <div class="res-field">
-        <label for="res" data-i18n="res_label"></label>
+        <label for="res" data-i18n="res_label">ഒരു വരിയിലെ പിക്സലുകൾ</label>
         <input type="range" id="res" min="0" max="9" step="1" value="5">
         <output id="res-out" for="res" class="no-i18n"></output>
-        <p class="hint" data-i18n="res_hint"></p>
+        <p class="hint" data-i18n="res_hint">പിക്സലുകൾ കുറഞ്ഞാൽ ചിത്രം കൂടുതൽ കള്ളികളായി കാണും. ഓരോ വലിയ പിക്സലും അത് മൂടുന്ന ഭാഗത്തെ നിറങ്ങളുടെ ശരാശരിയാണ്.</p>
       </div>
       </div>
     </section>
@@ -261,10 +261,10 @@
     <div id="workspace">
       <div class="tab-bar">
         <div class="tabs" role="tablist" id="tabs">
-          <button role="tab" id="tab-pixels" data-tab="pixels" aria-controls="panel-pixels" type="button"><span aria-hidden="true">🔍</span> <span data-i18n="tab_pixels"></span></button>
-          <button role="tab" id="tab-filters" data-tab="filters" aria-controls="panel-filters" type="button"><span aria-hidden="true">🧮</span> <span data-i18n="tab_filters"></span></button>
-          <button role="tab" id="tab-cnn" data-tab="cnn" aria-controls="panel-cnn" type="button"><span aria-hidden="true">🧠</span> <span data-i18n="tab_cnn"></span></button>
-          <button role="tab" id="tab-game" data-tab="game" aria-controls="panel-game" type="button"><span aria-hidden="true">🎯</span> <span data-i18n="tab_game"></span></button>
+          <button role="tab" id="tab-pixels" data-tab="pixels" aria-controls="panel-pixels" type="button"><span aria-hidden="true">🔍</span> <span data-i18n="tab_pixels">പിക്സൽ എന്നാൽ സംഖ്യ</span></button>
+          <button role="tab" id="tab-filters" data-tab="filters" aria-controls="panel-filters" type="button"><span aria-hidden="true">🧮</span> <span data-i18n="tab_filters">ഫിൽട്ടറുകൾ</span></button>
+          <button role="tab" id="tab-cnn" data-tab="cnn" aria-controls="panel-cnn" type="button"><span aria-hidden="true">🧠</span> <span data-i18n="tab_cnn">CNN എന്ത് കാണുന്നു</span></button>
+          <button role="tab" id="tab-game" data-tab="game" aria-controls="panel-game" type="button"><span aria-hidden="true">🎯</span> <span data-i18n="tab_game">ഫിൽട്ടർ ഊഹിക്കൂ</span></button>
         </div>
         <button class="btn btn-sm tool" id="fs-btn" type="button" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen"><span aria-hidden="true">⛶</span> <span class="fs-lbl" data-i18n="fullscreen"></span></button>
       </div>
@@ -273,71 +273,71 @@
       <section id="panel-pixels" role="tabpanel" aria-labelledby="tab-pixels">
         <div class="panel-grid">
           <div class="card">
-            <h2 data-i18n="px_title"></h2>
+            <h2 data-i18n="px_title">ഏതെങ്കിലും പിക്സലിൽ തൊടൂ</h2>
             <canvas id="px-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="px_canvas_label"></canvas>
             <div class="opts">
-              <span class="small muted" data-i18n="ch_label"></span>
+              <span class="small muted" data-i18n="ch_label">കാണിക്കുക</span>
               <div class="seg" id="ch-seg" role="group" data-i18n-aria-label="ch_label">
-                <button type="button" data-ch="rgb" data-i18n="ch_rgb"></button>
-                <button type="button" data-ch="grey" data-i18n="ch_grey"></button>
-                <button type="button" data-ch="r" data-i18n="ch_r"></button>
-                <button type="button" data-ch="g" data-i18n="ch_g"></button>
-                <button type="button" data-ch="b" data-i18n="ch_b"></button>
+                <button type="button" data-ch="rgb" data-i18n="ch_rgb">നിറം</button>
+                <button type="button" data-ch="grey" data-i18n="ch_grey">ചാരനിറം</button>
+                <button type="button" data-ch="r" data-i18n="ch_r">ചുവപ്പ്</button>
+                <button type="button" data-ch="g" data-i18n="ch_g">പച്ച</button>
+                <button type="button" data-ch="b" data-i18n="ch_b">നീല</button>
               </div>
             </div>
             <div class="opts">
-              <label class="check"><input type="checkbox" id="opt-grid"> <span data-i18n="opt_grid"></span></label>
-              <label class="check"><input type="checkbox" id="opt-nums"> <span data-i18n="opt_nums"></span></label>
+              <label class="check"><input type="checkbox" id="opt-grid"> <span data-i18n="opt_grid">കള്ളി വരകൾ</span></label>
+              <label class="check"><input type="checkbox" id="opt-nums"> <span data-i18n="opt_nums">ചിത്രത്തിൽ സംഖ്യകൾ</span></label>
             </div>
-            <p class="hint" id="nums-hint" data-i18n="nums_hint"></p>
+            <p class="hint" id="nums-hint" data-i18n="nums_hint">ചിത്രത്തിൽ സംഖ്യകൾ എഴുതാൻ ഒരു വരിയിൽ 16 അല്ലെങ്കിൽ കുറവ് പിക്സലുകൾ തിരഞ്ഞെടുക്കൂ.</p>
           </div>
 
           <div class="card" aria-live="polite" id="sel-card">
-            <h2 data-i18n="sel_title"></h2>
+            <h2 data-i18n="sel_title">തിരഞ്ഞെടുത്ത പിക്സൽ</h2>
             <div class="sel-top">
               <div class="swatch" id="swatch"></div>
               <div>
                 <div class="sel-pos" id="sel-pos"></div>
-                <div class="small muted"><span data-i18n="hex_label"></span>: <span class="hex" id="hex"></span></div>
+                <div class="small muted"><span data-i18n="hex_label">നിറ കോഡ്</span>: <span class="hex" id="hex"></span></div>
               </div>
             </div>
             <div class="rgb-rows">
-              <div class="rgb-row"><span class="nm" data-i18n="ch_r"></span><span class="bar"><span id="bar-r" style="background:#e03131"></span></span><span class="num" id="val-r"></span></div>
-              <div class="rgb-row"><span class="nm" data-i18n="ch_g"></span><span class="bar"><span id="bar-g" style="background:#2f9e44"></span></span><span class="num" id="val-g"></span></div>
-              <div class="rgb-row"><span class="nm" data-i18n="ch_b"></span><span class="bar"><span id="bar-b" style="background:#1c7ed6"></span></span><span class="num" id="val-b"></span></div>
+              <div class="rgb-row"><span class="nm" data-i18n="ch_r">ചുവപ്പ്</span><span class="bar"><span id="bar-r" style="background:#e03131"></span></span><span class="num" id="val-r"></span></div>
+              <div class="rgb-row"><span class="nm" data-i18n="ch_g">പച്ച</span><span class="bar"><span id="bar-g" style="background:#2f9e44"></span></span><span class="num" id="val-g"></span></div>
+              <div class="rgb-row"><span class="nm" data-i18n="ch_b">നീല</span><span class="bar"><span id="bar-b" style="background:#1c7ed6"></span></span><span class="num" id="val-b"></span></div>
             </div>
-            <p class="formula-lbl" data-i18n="grey_formula"></p>
+            <p class="formula-lbl" data-i18n="grey_formula">ചാരനിറം (തെളിച്ചം) = 0.299 × ചുവപ്പ് + 0.587 × പച്ച + 0.114 × നീല</p>
             <div class="formula no-i18n" id="val-grey"></div>
             <div class="nb-wrap">
-              <h3 class="mb0" data-i18n="nb_title"></h3>
+              <h3 class="mb0" data-i18n="nb_title">അതിന്റെ അയൽക്കാർ (7 × 7)</h3>
               <p class="hint" id="nb-hint"></p>
               <div class="nb-grid no-i18n" id="nb-grid"></div>
             </div>
             <div class="tool-row">
-              <button class="btn btn-sm" id="dl-csv" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_csv"></span></button>
+              <button class="btn btn-sm" id="dl-csv" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_csv">സംഖ്യകൾ ഡൗൺലോഡ് ചെയ്യുക (CSV)</span></button>
             </div>
           </div>
         </div>
         <div class="callout count-box">
           <p id="count-line"></p>
-          <p class="small" data-i18n="count_fact"></p>
+          <p class="small" data-i18n="count_fact">12 മെഗാപിക്സൽ മൊബൈൽ ഫോട്ടോയിൽ ഏകദേശം 3.6 കോടി സംഖ്യകളുണ്ട്!</p>
         </div>
         <details class="card inside">
-          <summary data-i18n="inside_title"></summary>
-          <p class="mt0" data-i18n="px_inside"></p>
+          <summary data-i18n="inside_title">ഉള്ളിൽ എന്താണ് നടക്കുന്നത്?</summary>
+          <p class="mt0" data-i18n="px_inside">സ്ക്രീൻ ചുവപ്പ്, പച്ച, നീല വെളിച്ചങ്ങൾ കലർത്തിയാണ് ഓരോ നിറവും ഉണ്ടാക്കുന്നത്. 0 മുതൽ 255 വരെയുള്ള ഓരോ സംഖ്യയും ആ വെളിച്ചം എത്ര ഉപയോഗിക്കണമെന്ന് പറയുന്നു: (0, 0, 0) കറുപ്പ്, (255, 255, 255) വെളുപ്പ്, (255, 0, 0) മുഴുവൻ ചുവപ്പ്. കമ്പ്യൂട്ടർ സ്മൈലിയെയോ മാമ്പഴത്തെയോ &quot;കാണുന്നില്ല&quot;, അതിന് ഈ വലിയ സംഖ്യാ പട്ടിക മാത്രമേ കിട്ടുന്നുള്ളൂ. ചിത്രങ്ങളുമായി പ്രവർത്തിക്കുന്ന ഓരോ AI യും ഈ സംഖ്യകളിൽ നിന്നാണ് തുടങ്ങുന്നത്.</p>
         </details>
       </section>
 
       <!-- Panel 2: filters -->
       <section id="panel-filters" role="tabpanel" aria-labelledby="tab-filters" hidden>
         <div class="card">
-          <h2 data-i18n="f_title"></h2>
+          <h2 data-i18n="f_title">ഒരു ഫിൽട്ടർ തിരഞ്ഞെടുക്കൂ</h2>
           <div class="chips" id="f-chips" role="group" data-i18n-aria-label="f_title"></div>
           <div class="opts">
-            <span class="small muted" data-i18n="work_on"></span>
+            <span class="small muted" data-i18n="work_on">എന്തിന്മേൽ</span>
             <div class="seg" id="mode-seg" role="group" data-i18n-aria-label="work_on">
-              <button type="button" data-mode="grey" data-i18n="ch_grey"></button>
-              <button type="button" data-mode="rgb" data-i18n="ch_rgb"></button>
+              <button type="button" data-mode="grey" data-i18n="ch_grey">ചാരനിറം</button>
+              <button type="button" data-mode="rgb" data-i18n="ch_rgb">നിറം</button>
             </div>
           </div>
           <p class="callout f-desc mb0" id="f-desc"></p>
@@ -345,26 +345,26 @@
         <div class="panel-grid" style="margin-top:16px">
           <div class="card">
             <div class="pair">
-              <figure><figcaption data-i18n="in_label"></figcaption><canvas id="in-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="in_label"></canvas></figure>
-              <figure><figcaption data-i18n="out_label"></figcaption><canvas id="out-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="out_label"></canvas></figure>
+              <figure><figcaption data-i18n="in_label">ഇൻപുട്ട്</figcaption><canvas id="in-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="in_label"></canvas></figure>
+              <figure><figcaption data-i18n="out_label">ഔട്ട്പുട്ട്</figcaption><canvas id="out-canvas" class="pic" width="512" height="512" tabindex="0" role="img" data-i18n-aria-label="out_label"></canvas></figure>
             </div>
-            <p class="hint" data-i18n="tap_hint"></p>
+            <p class="hint" data-i18n="tap_hint">പിക്സൽ തിരഞ്ഞെടുത്ത് അതിന്റെ കണക്ക് കാണാൻ ഏത് ചിത്രത്തിലും തൊടൂ.</p>
             <div class="tool-row">
               <button class="btn btn-accent" id="slide-btn" type="button" aria-pressed="false"><span aria-hidden="true">▶</span> <span id="slide-lbl"></span></button>
-              <button class="btn" id="print-btn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_ws"></span></button>
-              <label class="check"><input type="checkbox" id="ws-answers"> <span data-i18n="ws_answers"></span></label>
-              <button class="btn btn-sm" id="dl-png" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_png"></span></button>
+              <button class="btn" id="print-btn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_ws">വർക്ക്ഷീറ്റ് പ്രിന്റ് ചെയ്യുക</span></button>
+              <label class="check"><input type="checkbox" id="ws-answers"> <span data-i18n="ws_answers">ഉത്തരങ്ങളോടെ</span></label>
+              <button class="btn btn-sm" id="dl-png" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="dl_png">ഔട്ട്പുട്ട് ഡൗൺലോഡ് ചെയ്യുക (PNG)</span></button>
             </div>
-            <p class="hint" data-i18n="slide_hint"></p>
+            <p class="hint" data-i18n="slide_hint">3 × 3 ജനൽ ഓരോ പിക്സലായി ചിത്രത്തിന് മുകളിലൂടെ എങ്ങനെ നീങ്ങുന്നുവെന്ന് കാണൂ. എല്ലായിടത്തും അതേ 9 സംഖ്യകളാണ് ഉപയോഗിക്കുന്നത്.</p>
           </div>
           <div class="card">
-            <h2 data-i18n="kernel_title"></h2>
+            <h2 data-i18n="kernel_title">ഫിൽട്ടർ: 3 × 3 സംഖ്യകൾ</h2>
             <div id="kernel-area"></div>
             <hr class="divider">
-            <h2 class="mb0" data-i18n="math_title"></h2>
+            <h2 class="mb0" data-i18n="math_title">തിരഞ്ഞെടുത്ത പിക്സലിന്റെ ഘട്ടം ഘട്ടമായ കണക്ക്</h2>
             <p class="small muted" id="math-pos"></p>
             <div id="math-area" aria-live="polite"></div>
-            <p class="tiny muted" data-i18n="m_border"></p>
+            <p class="tiny muted" data-i18n="m_border">അരികിൽ ഇല്ലാത്ത അയൽക്കാർ ഏറ്റവും അടുത്ത അരിക് പിക്സലിന്റെ പകർപ്പ് എടുക്കുന്നു.</p>
           </div>
         </div>
       </section>
@@ -372,30 +372,30 @@
       <!-- Panel 3: what a CNN sees -->
       <section id="panel-cnn" role="tabpanel" aria-labelledby="tab-cnn" hidden>
         <div class="card">
-          <h2 data-i18n="cnn_title"></h2>
-          <p data-i18n="cnn_intro"></p>
+          <h2 data-i18n="cnn_title">ഫീച്ചർ മാപ്പുകൾ: CNN ന്റെ ആദ്യ പാളി എന്ത് കണ്ടെത്തുന്നു</h2>
+          <p data-i18n="cnn_intro">ഫോട്ടോകളും മുഖങ്ങളും കൈയക്ഷരവും തിരിച്ചറിയുന്ന AI ആണ് CNN (കൺവല്യൂഷണൽ ന്യൂറൽ നെറ്റ്‌വർക്ക്). അതിന്റെ ആദ്യ പാളി ചിത്രത്തിന് മുകളിലൂടെ പല ചെറിയ ഫിൽട്ടറുകൾ നീക്കുന്നു, ഫിൽട്ടറുകൾ ടാബിലേതുപോലെ തന്നെ. ഓരോ ഫിൽട്ടറും ഫീച്ചർ മാപ്പ് എന്ന പുതിയ ചിത്രം ഉണ്ടാക്കുന്നു: അതിന്റെ പാറ്റേൺ കണ്ടിടത്ത് തിളക്കം, കാണാത്തിടത്ത് ഇരുട്ട്.</p>
           <div class="opts">
-            <span class="small muted" data-i18n="act_label"></span>
+            <span class="small muted" data-i18n="act_label">ഫിൽട്ടറിന് ശേഷം</span>
             <div class="seg" id="act-seg" role="group" data-i18n-aria-label="act_label">
-              <button type="button" data-act="relu" data-i18n="act_relu"></button>
-              <button type="button" data-act="abs" data-i18n="act_abs"></button>
+              <button type="button" data-act="relu" data-i18n="act_relu">ReLU (ധനം മാത്രം)</button>
+              <button type="button" data-act="abs" data-i18n="act_abs">വലിപ്പം (രണ്ട് ദിശയും)</button>
             </div>
-            <label class="check"><input type="checkbox" id="opt-pool"> <span data-i18n="pool_opt"></span></label>
+            <label class="check"><input type="checkbox" id="opt-pool"> <span data-i18n="pool_opt">മാക്സ് പൂളിംഗ് 2 × 2 (ഓരോ 4 ലും ഏറ്റവും വലുത് വയ്ക്കുക: വലിപ്പം പകുതി)</span></label>
           </div>
           <p class="hint" id="act-hint"></p>
           <div class="fm-grid" id="fm-grid"></div>
-          <p class="small muted" style="margin-top:10px"><span class="legend-sw" style="background:var(--c7)"></span> / <span class="legend-sw" style="background:var(--c2)"></span> <span data-i18n="kernel_legend"></span></p>
+          <p class="small muted" style="margin-top:10px"><span class="legend-sw" style="background:var(--c7)"></span> / <span class="legend-sw" style="background:var(--c2)"></span> <span data-i18n="kernel_legend">ഫിൽട്ടർ നിറങ്ങൾ: നീല = ധന സംഖ്യകൾ, ഓറഞ്ച് = ന്യൂന സംഖ്യകൾ. മാപ്പ് എത്ര തിളങ്ങുന്നുവോ, പൊരുത്തം അത്ര ശക്തം.</span></p>
         </div>
         <div class="card" style="margin-top:16px">
-          <h2 data-i18n="pipe_title"></h2>
+          <h2 data-i18n="pipe_title">പിക്സലുകളിൽ നിന്ന് ഉത്തരത്തിലേക്ക്</h2>
           <div class="pipe" id="pipe">
-            <div class="box"><span class="ico" aria-hidden="true">🔢</span><span data-i18n="pipe_1"></span></div><span class="arr" aria-hidden="true">→</span>
-            <div class="box"><span class="ico" aria-hidden="true">📐</span><span data-i18n="pipe_2"></span></div><span class="arr" aria-hidden="true">→</span>
-            <div class="box"><span class="ico" aria-hidden="true">◐</span><span data-i18n="pipe_3"></span></div><span class="arr" aria-hidden="true">→</span>
-            <div class="box"><span class="ico" aria-hidden="true">👁️</span><span data-i18n="pipe_4"></span></div><span class="arr" aria-hidden="true">→</span>
-            <div class="box last"><span class="ico" aria-hidden="true">🥭</span><span data-i18n="pipe_5"></span></div>
+            <div class="box"><span class="ico" aria-hidden="true">🔢</span><span data-i18n="pipe_1">ചിത്രം = സംഖ്യകൾ</span></div><span class="arr" aria-hidden="true">→</span>
+            <div class="box"><span class="ico" aria-hidden="true">📐</span><span data-i18n="pipe_2">പാളി 1: അരികുകൾ</span></div><span class="arr" aria-hidden="true">→</span>
+            <div class="box"><span class="ico" aria-hidden="true">◐</span><span data-i18n="pipe_3">പാളി 2: മൂലകളും വളവുകളും</span></div><span class="arr" aria-hidden="true">→</span>
+            <div class="box"><span class="ico" aria-hidden="true">👁️</span><span data-i18n="pipe_4">പാളി 3: കണ്ണ്, ഇല, ചക്രം പോലുള്ള ഭാഗങ്ങൾ</span></div><span class="arr" aria-hidden="true">→</span>
+            <div class="box last"><span class="ico" aria-hidden="true">🥭</span><span data-i18n="pipe_5">ഉത്തരം: &quot;മാമ്പഴം&quot; 92%</span></div>
           </div>
-          <p class="callout accent" style="margin-top:12px" data-i18n="pipe_note"></p>
+          <p class="callout accent" style="margin-top:12px" data-i18n="pipe_note">ആഴത്തിലുള്ള പാളികൾ ചെറിയ പാറ്റേണുകൾ ചേർത്ത് വലിയ പാറ്റേണുകൾ ഉണ്ടാക്കുന്നു. ഈ ഫിൽട്ടർ സംഖ്യകൾ ആരും ടൈപ്പ് ചെയ്യുന്നില്ല: ആയിരക്കണക്കിന് ലേബൽ ചെയ്ത ഫോട്ടോകളിൽ നിന്ന് CNN അവ സ്വയം പഠിക്കുന്നു. അതിശയകരമെന്നു പറയട്ടെ, അത് പഠിക്കുന്ന ആദ്യ പാളി ഫിൽട്ടറുകൾ ഈ പേജിലെ അരിക് ഫിൽട്ടറുകളെപ്പോലെ തന്നെയാണ്!</p>
         </div>
       </section>
 
@@ -403,35 +403,35 @@
       <section id="panel-game" role="tabpanel" aria-labelledby="tab-game" hidden>
         <div class="card" id="g-card">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="g_title"></h2>
+            <h2 class="mb0" data-i18n="g_title">ഇത് ഏത് ഫിൽട്ടർ കൊണ്ടാണ് ഉണ്ടായത്?</h2>
             <span class="g-score" id="g-score" aria-live="polite"></span>
           </div>
-          <p data-i18n="g_intro"></p>
+          <p data-i18n="g_intro">കമ്പ്യൂട്ടർ ചിത്രത്തിൽ ഒരു രഹസ്യ ഫിൽട്ടർ പ്രയോഗിച്ചു. രണ്ട് ചിത്രങ്ങളും താരതമ്യം ചെയ്ത് ഫിൽട്ടർ തിരഞ്ഞെടുക്കൂ.</p>
           <div class="g-layout">
             <div class="pair">
-              <figure><figcaption data-i18n="in_label"></figcaption><canvas id="g-in" class="pic" width="512" height="512" role="img" data-i18n-aria-label="in_label"></canvas></figure>
-              <figure><figcaption data-i18n="g_mystery"></figcaption><canvas id="g-out" class="pic" width="512" height="512" role="img" data-i18n-aria-label="g_mystery"></canvas></figure>
+              <figure><figcaption data-i18n="in_label">ഇൻപുട്ട്</figcaption><canvas id="g-in" class="pic" width="512" height="512" role="img" data-i18n-aria-label="in_label"></canvas></figure>
+              <figure><figcaption data-i18n="g_mystery">രഹസ്യ ഔട്ട്പുട്ട്</figcaption><canvas id="g-out" class="pic" width="512" height="512" role="img" data-i18n-aria-label="g_mystery"></canvas></figure>
             </div>
             <div class="g-opts" id="g-options"></div>
           </div>
           <p class="callout" id="g-feedback" aria-live="polite" style="margin-top:12px"></p>
           <div class="row" style="margin-top:12px">
             <button class="btn btn-primary" id="g-next" type="button" data-i18n="next"></button>
-            <span class="small muted" data-i18n="g_tip"></span>
+            <span class="small muted" data-i18n="g_tip">നിർദ്ദേശം: പുതിയ വെല്ലുവിളിക്കായി മുകളിൽ ചിത്രമോ പിക്സലുകളുടെ എണ്ണമോ മാറ്റൂ.</span>
           </div>
         </div>
       </section>
     </div>
 
     <details class="card help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">എങ്ങനെ ഉപയോഗിക്കാം / ക്ലാസ് മുറിക്കുള്ള ആശയങ്ങൾ</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">&quot;അക്കം 7&quot; ഒരു വരിയിൽ 8 അല്ലെങ്കിൽ 16 പിക്സലുകളിൽ എടുത്ത് &quot;ചിത്രത്തിൽ സംഖ്യകൾ&quot; ഓണാക്കൂ. ക്ലാസിനോട് ചോദിക്കൂ: സംഖ്യകൾ മാത്രം നോക്കി അക്കം വായിക്കാമോ? (പ്രശസ്ത കൈയക്ഷര ഡാറ്റാസെറ്റുകൾ 28 × 28 പിക്സലുകളാണ്.)</li>
+        <li data-i18n="help_2">സ്മൈലിയുടെ അരികിലെ ഒരു പിക്സലിൽ തൊട്ട് അതിന്റെ 7 × 7 അയൽക്കാരെ നോക്കൂ: സംഖ്യകളിൽ പെട്ടെന്നുള്ള വലിയ ചാട്ടം എന്നാൽ അരിക്.</li>
+        <li data-i18n="help_3">ഫിൽട്ടറുകൾ ടാബിൽ വലിയ സ്ക്രീനിൽ &quot;ഫിൽട്ടർ നീക്കൂ&quot; അമർത്തി, എല്ലായിടത്തും അതേ 9 സംഖ്യകളാണ് ഉപയോഗിക്കുന്നതെന്ന് കാണിക്കൂ.</li>
+        <li data-i18n="help_4">ക്ലാസ് പ്രവർത്തനം &quot;കമ്പ്യൂട്ടറാകൂ&quot;: വർക്ക്ഷീറ്റ് പ്രിന്റ് ചെയ്യൂ (അധ്യാപകർക്ക് ഉത്തരങ്ങളോടെ), വിദ്യാർത്ഥികൾ ജോഡികളായി കൈകൊണ്ട് 5 × 5 ഔട്ട്പുട്ട് കണ്ടെത്തട്ടെ, പിന്നെ ആപ്പിൽ ഒത്തുനോക്കട്ടെ.</li>
+        <li data-i18n="help_5">വെല്ലുവിളി: ചരിഞ്ഞ വരകൾ മാത്രം കണ്ടെത്തുന്ന രീതിയിൽ &quot;എന്റെ ഫിൽട്ടർ&quot; ഉണ്ടാക്കി, രൂപങ്ങൾ അല്ലെങ്കിൽ ത്രിവർണ പതാക ചിത്രത്തിൽ പരീക്ഷിക്കൂ.</li>
+        <li data-i18n="help_6">സ്മാർട്ട്ബോർഡിൽ &quot;പൂർണ്ണ സ്ക്രീൻ&quot; ഉപയോഗിക്കൂ. ഒരിക്കൽ തുറന്നാൽ ആപ്പ് ഇന്റർനെറ്റ് ഇല്ലാതെയും പ്രവർത്തിക്കും.</li>
       </ul>
     </details>
 

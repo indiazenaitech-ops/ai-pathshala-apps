@@ -128,28 +128,28 @@
 </head>
 <body>
   <main id="app" class="rl">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="callout small"><span data-i18n="fiction_note"></span> 🔒 <span data-i18n="privacy_line"></span></p>
+    <p class="edu-intro" data-i18n="intro">कोई वीडियो ऐप आपको वही वीडियो क्यों सुझाता है? कुछ वीडियो को स्टार दें, तीन रिकमेंडर सिस्टम की आमने-सामने तुलना करें (गणित के साथ), और देखें फ़िल्टर बबल कैसे बनता है।</p>
+    <p class="callout small"><span data-i18n="fiction_note">30 वीडियो और 40 यूज़र इस लैब के लिए काल्पनिक हैं। सिर्फ़ गणित असली है।</span> 🔒 <span data-i18n="privacy_line">सब कुछ इसी डिवाइस पर चलता है। आपके स्टार सिर्फ़ इस ब्राउज़र में सेव होते हैं और कहीं नहीं भेजे जाते।</span></p>
 
     <!-- 1. rate -->
     <section class="card" id="rateCard">
-      <h2 data-i18n="step1"></h2>
-      <p class="hint" data-i18n="step1_hint"></p>
+      <h2 data-i18n="step1">1. कुछ वीडियो को स्टार दें</h2>
+      <p class="hint" data-i18n="step1_hint">स्टार पर टैप करें: 1 = बोरिंग, 5 = बहुत पसंद। रेटिंग हटाने के लिए उसी स्टार पर फिर टैप करें। कम से कम 3 वीडियो रेट करें; 10 या ज़्यादा से नतीजे बेहतर होते हैं।</p>
       <div class="bar">
-        <div class="field"><span data-i18n="rater_label"></span>
+        <div class="field"><span data-i18n="rater_label">कौन रेट कर रहा है?</span>
           <div class="seg" id="raterSeg">
-            <button type="button" data-rater="you" data-i18n="rater_you"></button>
-            <button type="button" data-rater="friend" data-i18n="rater_friend"></button>
+            <button type="button" data-rater="you" data-i18n="rater_you">आप</button>
+            <button type="button" data-rater="friend" data-i18n="rater_friend">एक दोस्त</button>
           </div>
         </div>
-        <label class="field"><span data-i18n="filter_label"></span><select id="filterSel"></select></label>
-        <label class="check"><input type="checkbox" id="onlyRated"> <span data-i18n="only_rated"></span></label>
+        <label class="field"><span data-i18n="filter_label">दिखाएँ</span><select id="filterSel"></select></label>
+        <label class="check"><input type="checkbox" id="onlyRated"> <span data-i18n="only_rated">सिर्फ़ रेट किए हुए</span></label>
         <div class="push">
-          <button class="btn btn-sm" id="exampleBtn" type="button" data-i18n="example_btn"></button>
-          <button class="btn btn-sm" id="clearBtn" type="button" data-i18n="clear_btn"></button>
+          <button class="btn btn-sm" id="exampleBtn" type="button" data-i18n="example_btn">उदाहरण रेटिंग</button>
+          <button class="btn btn-sm" id="clearBtn" type="button" data-i18n="clear_btn">ये रेटिंग साफ़ करें</button>
         </div>
       </div>
-      <p class="small muted" id="friendHint" data-i18n="friend_hint"></p>
+      <p class="small muted" id="friendHint" data-i18n="friend_hint">“एक दोस्त” चुनें और उसके लिए स्टार दें। दोस्त 40 यूज़र में शामिल हो जाता है, इसलिए वह “आपके जैसे लोग” में दिख सकता है।</p>
       <p class="rated-line" id="ratedLine" aria-live="polite"></p>
       <ul class="vlist" id="vlist"></ul>
     </section>
@@ -157,94 +157,94 @@
     <!-- 2. compare -->
     <section class="card" id="cmpCard">
       <div class="row spread">
-        <h2 data-i18n="step2"></h2>
+        <h2 data-i18n="step2">2. तीन रिकमेंडर की तुलना करें</h2>
         <button class="btn btn-sm no-print" id="fsBtn" type="button">⛶ <span data-i18n="fullscreen"></span></button>
       </div>
-      <p class="hint" data-i18n="step2_hint"></p>
+      <p class="hint" data-i18n="step2_hint">हर सूची में वे 5 सबसे अच्छे वीडियो हैं जिन्हें रेट करने वाले ने अभी रेट नहीं किया। किसी सुझाव का हिसाब देखने के लिए “क्यों?” पर टैप करें।</p>
       <h3 id="forWho" style="margin-bottom:10px"></h3>
       <div class="cmp" aria-live="polite">
         <div class="col pop" id="colPop">
-          <h3>📈 <span data-i18n="rec_pop"></span></h3><p class="sub" data-i18n="rec_pop_sub"></p>
+          <h3>📈 <span data-i18n="rec_pop">लोकप्रिय</span></h3><p class="sub" data-i18n="rec_pop_sub">जो 40 यूज़र में से ज़्यादातर को पसंद आया</p>
           <ol class="recs" id="recPop"></ol>
         </div>
         <div class="col cb" id="colCb">
-          <h3>🏷️ <span data-i18n="rec_content"></span></h3><p class="sub" data-i18n="rec_content_sub"></p>
+          <h3>🏷️ <span data-i18n="rec_content">मिलते-जुलते वीडियो</span></h3><p class="sub" data-i18n="rec_content_sub">आपके पसंदीदा वीडियो जैसे टैग (कंटेंट-आधारित)</p>
           <div id="cbNeed" class="callout warning need" hidden></div>
           <ol class="recs" id="recCb"></ol>
           <div class="extra">
-            <h4 data-i18n="profile_title"></h4>
+            <h4 data-i18n="profile_title">पसंद प्रोफ़ाइल</h4>
             <div class="profile" id="profile"></div>
-            <p class="small muted" data-i18n="profile_hint"></p>
+            <p class="small muted" data-i18n="profile_hint">हर रेट किए वीडियो के हर टैग को (स्टार − 3) मिलता है: 5★ से +2, 4★ से +1, 3★ से कुछ नहीं, 1★ से −2। लंबाई = वर्गों के योग का वर्गमूल।</p>
           </div>
         </div>
         <div class="col cf" id="colCf">
-          <h3>👥 <span data-i18n="rec_cf"></span></h3><p class="sub" data-i18n="rec_cf_sub"></p>
+          <h3>👥 <span data-i18n="rec_cf">आपके जैसे लोग</span></h3><p class="sub" data-i18n="rec_cf_sub">आपकी जैसी रेटिंग देने वाले यूज़र को जो पसंद आया (कोलैबोरेटिव फ़िल्टरिंग)</p>
           <div id="cfNeed" class="callout warning need" hidden></div>
           <ol class="recs" id="recCf"></ol>
           <div class="extra">
-            <h4 data-i18n="neighbours_title"></h4>
-            <p class="small muted" data-i18n="neighbours_hint"></p>
+            <h4 data-i18n="neighbours_title">आपसे सबसे मिलते-जुलते यूज़र</h4>
+            <p class="small muted" data-i18n="neighbours_hint">समानता उन वीडियो की तुलना करती है जो आप दोनों ने रेट किए (कम से कम 2): पसंद-नापसंद पर सहमति इसे बढ़ाती है; 1.00 = पूरी सहमति।</p>
             <ul class="nlist" id="neighbours"></ul>
           </div>
         </div>
       </div>
-      <p class="tie-hint" id="tieHint" data-i18n="tie_hint" hidden></p>
+      <p class="tie-hint" id="tieHint" data-i18n="tie_hint" hidden>“=” का मतलब बराबरी: ऊपर वाले वीडियो जितना ही स्कोर, कैटलॉग के क्रम में दिखाया गया।</p>
     </section>
 
     <!-- 3. filter bubble -->
     <section class="card" id="bubCard">
-      <h2 data-i18n="step3"></h2>
-      <p class="hint" data-i18n="step3_hint"></p>
+      <h2 data-i18n="step3">3. फ़िल्टर बबल: ऑटोप्ले सिम्युलेटर</h2>
+      <p class="hint" data-i18n="step3_hint">मान लें आप बिलकुल नए यूज़र हैं। यह फ़ीड सिर्फ़ वही जानती है जो आप यहाँ देखते हैं। एक ही विषय पर टैप करते रहें और विविधता मीटर को गिरते देखें।</p>
       <div class="bub">
         <div>
           <div class="now" id="now"></div>
-          <h3 style="margin-top:12px" data-i18n="up_next"></h3>
+          <h3 style="margin-top:12px" data-i18n="up_next">अगला</h3>
           <ul class="next" id="next"></ul>
-          <label class="check" style="margin-top:10px"><input type="checkbox" id="exploreChk"> <span data-i18n="explore"></span></label>
+          <label class="check" style="margin-top:10px"><input type="checkbox" id="exploreChk"> <span data-i18n="explore">एक्सप्लोर मोड: दो दूसरे विषय मिलाएँ</span></label>
         </div>
         <div>
-          <h3 data-i18n="variety"></h3>
+          <h3 data-i18n="variety">“अगला” में विविधता</h3>
           <div class="meter" role="meter" aria-valuemin="0" aria-valuemax="5" id="meter"><span id="meterFill"></span></div>
           <div><span class="meter-num" id="varietyNum"></span> <span id="varietyTxt"></span></div>
           <p class="feed-msg callout" id="feedMsg" aria-live="polite"></p>
-          <h3 data-i18n="history"></h3>
+          <h3 data-i18n="history">देखे गए वीडियो</h3>
           <p class="small muted" id="histCount"></p>
           <div class="hist" id="hist" aria-hidden="true"></div>
           <div class="gbar" id="gbar"></div>
-          <p><button class="btn btn-sm" id="clearHist" type="button" data-i18n="clear_history"></button></p>
-          <p class="small muted" data-i18n="feed_how"></p>
+          <p><button class="btn btn-sm" id="clearHist" type="button" data-i18n="clear_history">नए यूज़र के रूप में फिर शुरू करें</button></p>
+          <p class="small muted" data-i18n="feed_how">यह फ़ीड ऐसे काम करती है: आप जो वीडियो देखते हैं, उसके हर टैग को वॉच प्रोफ़ाइल में +3 मिलता है। “अगला” = उस प्रोफ़ाइल से सबसे ज़्यादा कोसाइन समानता वाले 5 वीडियो (बराबरी पर लोकप्रियता)। पहले देखे वीडियो फिर आ सकते हैं, जैसे असली ऐप में।</p>
         </div>
       </div>
     </section>
 
     <!-- learn -->
     <section class="card">
-      <h2 data-i18n="learn_title"></h2>
+      <h2 data-i18n="learn_title">अंदर क्या हो रहा है?</h2>
       <div class="learn">
-        <div><h3 data-i18n="l1_t"></h3><p data-i18n="l1"></p></div>
-        <div><h3 data-i18n="l2_t"></h3><p data-i18n="l2"></p></div>
-        <div><h3 data-i18n="l3_t"></h3><p data-i18n="l3"></p></div>
-        <div><h3 data-i18n="l4_t"></h3><p data-i18n="l4"></p></div>
-        <div><h3 data-i18n="l5_t"></h3><p data-i18n="l5"></p></div>
-        <div><h3 data-i18n="l6_t"></h3><p data-i18n="l6"></p></div>
+        <div><h3 data-i18n="l1_t">लोकप्रिय</h3><p data-i18n="l1">सबसे आसान रिकमेंडर: गिनें कि हर वीडियो कितने लोगों को पसंद आया और ऊपर वाले दिखाएँ। सबको एक ही सूची मिलती है। बिलकुल नए यूज़र के लिए अच्छा, आपकी ख़ास रुचियों के लिए बेकार।</p></div>
+        <div><h3 data-i18n="l2_t">कंटेंट-आधारित (मिलते-जुलते वीडियो)</h3><p data-i18n="l2">हर वीडियो टैग की एक सूची है। आपकी पसंद प्रोफ़ाइल पसंदीदा वीडियो के टैग जोड़ती है और नापसंद वाले घटाती है। कोसाइन समानता आपकी प्रोफ़ाइल और वीडियो के बीच का कोण मापती है: 100% = एक ही दिशा, 0% = कुछ भी साझा नहीं।</p></div>
+        <div><h3 data-i18n="l3_t">कोलैबोरेटिव फ़िल्टरिंग (आपके जैसे लोग)</h3><p data-i18n="l3">“आपकी तरह रेट करने वालों को यह भी पसंद आया…”। ऐप ऐसे यूज़र ढूँढता है जिनकी रेटिंग आपसे मिलती है और उनके स्टार से आपके स्टार का अनुमान लगाता है। इसे टैग की ज़रूरत ही नहीं, बस बहुत सारी रेटिंग चाहिए; इसीलिए असली प्लैटफ़ॉर्म आपका इतना डेटा जमा करते हैं।</p></div>
+        <div><h3 data-i18n="l4_t">फ़िल्टर बबल</h3><p data-i18n="l4">हर क्लिक सिस्टम को सिखाता है, और सिस्टम आपको वैसा ही और दिखाता है। जल्दी ही आपको एक ही विषय दिखता है। प्लैटफ़ॉर्म यह चक्र तोड़ने के लिए “एक्सप्लोर” वीडियो जोड़ते हैं, पर वे देखने का समय भी बढ़ाना चाहते हैं, जो आपको अंदर ही रखता है।</p></div>
+        <div><h3 data-i18n="l5_t">पूर्वाग्रह (बायस)</h3><p data-i18n="l5">लोकप्रिय सूची उसी को आगे रखती है जो पहले से लोकप्रिय है। कोलैबोरेटिव फ़िल्टरिंग बहुमत की पसंद को आगे रखती है और छोटी भाषाओं या इलाक़ों के वीडियो छिपा सकती है। सिस्टम जिस डेटा से सीखता है, वही तय करता है कि वह किसकी अच्छी सेवा करेगा।</p></div>
+        <div><h3 data-i18n="l6_t">निजता</h3><p data-i18n="l6">सुझाव देने के लिए प्लैटफ़ॉर्म यह सब रखता है: आपने क्या देखा, कितनी देर, क्या छोड़ा, कब और कहाँ। यह लैब आपके स्टार सिर्फ़ इस ब्राउज़र में रखती है। सोचिए: आपकी असली वॉच हिस्ट्री और कौन देख सकता है?</p></div>
       </div>
     </section>
 
     <section class="card disc">
-      <h2 data-i18n="disc_title"></h2>
+      <h2 data-i18n="disc_title">चर्चा के सवाल: पूर्वाग्रह और निजता</h2>
       <ol>
-        <li data-i18n="q1"></li><li data-i18n="q2"></li><li data-i18n="q3"></li><li data-i18n="q4"></li><li data-i18n="q5"></li>
+        <li data-i18n="q1">लोकप्रिय सूची सबको एक ही वीडियो दिखाती है। कौन कभी नहीं दिखता? किसी नए क्रिएटर या छोटी भाषा का क्या होता है?</li><li data-i18n="q2">“आपके जैसे लोग” ने 40 यूज़र से सीखा। अगर उनमें से 30 को क्रिकेट पसंद है, तो संगीत प्रेमी को क्या दिखेगा? यह पूर्वाग्रह कैसे है?</li><li data-i18n="q3">असली प्लैटफ़ॉर्म यह भी रखता है कि आपने कितनी देर देखा, क्या छोड़ा, आपकी लोकेशन और दिन का समय। इनमें से आप क्या साझा करेंगे, और किसके साथ?</li><li data-i18n="q4">रिकमेंडर के लिए “अच्छा” का मतलब कौन तय करता है: ज़्यादा खुश यूज़र, या ज़्यादा घंटे देखना? दोनों फ़ीड कैसे अलग होंगी?</li><li data-i18n="q5">फ़िल्टर बबल डेमो के बाद: प्लैटफ़ॉर्म आपको नई चीज़ें खोजने में कैसे मदद कर सकता है? क्या क़ानून को इसे अनिवार्य करना चाहिए?</li>
       </ol>
     </section>
 
     <details class="card">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">कैसे इस्तेमाल करें / कक्षा के लिए आइडिया</summary>
       <ul>
-        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li><li data-i18n="tip5"></li><li data-i18n="tip6"></li>
+        <li data-i18n="tip1">उदाहरण रेटिंग से शुरू करें, फिर कुछ स्टार बदलें और तीनों सूचियों को बदलते देखें।</li><li data-i18n="tip2">एक विषय के 3 वीडियो को 5 स्टार दें: “मिलते-जुलते वीडियो” टैग के पीछे जाता है, “आपके जैसे लोग” दूसरे यूज़र के पीछे, और “लोकप्रिय” को आपकी परवाह ही नहीं।</li><li data-i18n="tip3">किसी भी सुझाव पर “क्यों?” टैप करें और हिसाब ज़ोर से पढ़ें। छात्र काग़ज़ पर कोसाइन जाँच सकते हैं।</li>
+        <li data-i18n="tip4">एक दोस्त की रेटिंग जोड़ें और तुलना करें: एक जैसे 3 पसंदीदा वीडियो पर क्या दोनों को एक ही सूची मिलती है? कहाँ फ़र्क है, और क्यों?</li><li data-i18n="tip5">कक्षा गतिविधि: कक्षा को “लोकप्रिय”, “मिलते-जुलते वीडियो” और “आपके जैसे लोग” टीमों में बाँटें। हर टीम एक वॉलंटियर की रेटिंग के लिए टॉप वीडियो का अनुमान ऐप से पहले लगाती है, फिर बताती है कि उसकी विधि किसकी अच्छी सेवा करती है और किसे छोड़ देती है।</li><li data-i18n="tip6">प्रोजेक्टर: तुलना पर पूरी स्क्रीन करें और छात्रों से उनकी स्टार रेटिंग बोलने को कहें।</li>
       </ul>
     </details>
-    <p class="no-print" style="margin-top:16px"><button class="btn btn-danger" id="resetAll" type="button" data-i18n="reset_all"></button></p>
+    <p class="no-print" style="margin-top:16px"><button class="btn btn-danger" id="resetAll" type="button" data-i18n="reset_all">सब कुछ रीसेट करें</button></p>
   </main>
   <script src="../../../apps/recommendation-lab/../../shared/edu.js"></script>
   <script src="../../../apps/recommendation-lab/strings.js"></script>

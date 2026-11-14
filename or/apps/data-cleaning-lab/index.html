@@ -127,35 +127,35 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ଅସଜଡ଼ା ତାଲିକାକୁ ପାଦେ ପାଦେ ସଫା କରନ୍ତୁ: ଅତିରିକ୍ତ ସ୍ପେସ, ଦୁଇଥର ଆସିଥିବା ଧାଡ଼ି, ଭିନ୍ନ ଭିନ୍ନ ତାରିଖ, ମୋବାଇଲ ନମ୍ବର ଓ ₹ ରାଶି। ପାଦଗୁଡ଼ିକୁ ଏକ ରେସିପି ଭାବେ ସେଭ କରନ୍ତୁ ଓ ଆସନ୍ତା ମାସର ଫାଇଲରେ ପୁଣି ଚଳାନ୍ତୁ।</p>
 
     <section class="card" aria-labelledby="h-load">
-      <h2 class="dc-h" id="h-load" data-i18n="h_load"></h2>
+      <h2 class="dc-h" id="h-load" data-i18n="h_load">1. ଆପଣଙ୍କ ଡାଟା ଖୋଲନ୍ତୁ</h2>
       <div class="row">
-        <button class="btn" id="load-sample" type="button" data-i18n="load_sample"></button>
-        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file"></button>
+        <button class="btn" id="load-sample" type="button" data-i18n="load_sample">ଅସଜଡ଼ା ନମୁନା</button>
+        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file">CSV ଫାଇଲ ଖୋଲନ୍ତୁ</button>
         <button class="btn btn-danger" id="reset" type="button" data-i18n="reset"></button>
       </div>
       <details id="paste-box">
-        <summary data-i18n="paste_data"></summary>
+        <summary data-i18n="paste_data">ଡାଟା ପେଷ୍ଟ କରନ୍ତୁ</summary>
         <textarea id="paste" class="no-i18n" data-i18n-placeholder="paste_ph" aria-label="CSV" data-i18n-aria-label="paste_data"></textarea>
-        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste"></button>
+        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste">ପେଷ୍ଟ କରିଥିବା ଡାଟା ବ୍ୟବହାର କରନ୍ତୁ</button>
       </details>
-      <p class="dc-drop small muted" data-i18n="drop_hint"></p>
+      <p class="dc-drop small muted" data-i18n="drop_hint">CSV ଫାଇଲକୁ ଏହି ପୃଷ୍ଠାରେ ଟାଣି ଆଣି ମଧ୍ୟ ଛାଡ଼ିପାରିବେ। Excel ରେ: File → Save as → CSV। ଆପଣଙ୍କ ଫାଇଲ ଏହି ଡିଭାଇସରେ ହିଁ ରହେ।</p>
       <p id="data-info" class="no-i18n" aria-live="polite"></p>
       <p id="busy" class="muted" hidden data-i18n="loading"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-quality">
-      <h2 class="dc-h" id="h-quality" data-i18n="h_quality"></h2>
+      <h2 class="dc-h" id="h-quality" data-i18n="h_quality">2. ଡାଟାର ଗୁଣବତ୍ତା</h2>
       <div class="dc-scores" aria-live="polite">
         <div class="dc-score">
-          <span class="lbl" data-i18n="score_before"></span>
+          <span class="lbl" data-i18n="score_before">ସଫା ପୂର୍ବରୁ ସ୍କୋର</span>
           <span class="big"><span id="score-before"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-before"></span></div>
         </div>
         <div class="dc-score after">
-          <span class="lbl" data-i18n="score_after"></span>
+          <span class="lbl" data-i18n="score_after">ସଫା ପରେ ସ୍କୋର</span>
           <span class="big"><span id="score-after"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-after"></span></div>
         </div>
@@ -164,56 +164,56 @@
       <div class="scroll-x">
         <table class="table dc-qt">
           <thead><tr>
-            <th scope="col" data-i18n="th_column"></th><th scope="col" data-i18n="th_type"></th>
-            <th scope="col" data-i18n="q_missing"></th><th scope="col" data-i18n="q_invalid"></th><th scope="col" data-i18n="q_spaces"></th>
+            <th scope="col" data-i18n="th_column">ସ୍ତମ୍ଭ</th><th scope="col" data-i18n="th_type">କେମିତି ଦେଖାଯାଏ</th>
+            <th scope="col" data-i18n="q_missing">ଖାଲି</th><th scope="col" data-i18n="q_invalid">ଠିକ୍ ରୂପରେ ନାହିଁ</th><th scope="col" data-i18n="q_spaces">ଅତିରିକ୍ତ ସ୍ପେସ</th>
           </tr></thead>
           <tbody id="q-body"></tbody>
         </table>
       </div>
-      <p class="tiny muted" data-i18n="quality_note"></p>
+      <p class="tiny muted" data-i18n="quality_note">ସ୍କୋର = କୌଣସି ସମସ୍ୟା ନଥିବା ସେଲର ଭାଗ। ସମସ୍ୟା ମାନେ ଖାଲି ମୂଲ୍ୟ, ଅତିରିକ୍ତ ସ୍ପେସ, ଠିକ୍ ରୂପରେ ନଥିବା ମୂଲ୍ୟ, କିମ୍ବା ପୂରା ଦୁଇଥର ଆସିଥିବା ଧାଡ଼ି।</p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-steps">
-      <h2 class="dc-h" id="h-steps" data-i18n="h_steps"></h2>
+      <h2 class="dc-h" id="h-steps" data-i18n="h_steps">3. ସଫା କରିବାର ପାଦ (ଆପଣଙ୍କ ରେସିପି)</h2>
       <div class="panel stack">
         <div class="dc-add">
-          <label class="field"><span data-i18n="step_type"></span><select id="step-type"></select></label>
+          <label class="field"><span data-i18n="step_type">ପାଦ ଯୋଡ଼ନ୍ତୁ</span><select id="step-type"></select></label>
         </div>
         <div id="step-form"></div>
         <div class="dc-actions">
-          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step"></button>
-          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest"></button>
+          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step">ପାଦ ଯୋଡ଼ନ୍ତୁ</button>
+          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest">ପାଦ ପରାମର୍ଶ</button>
         </div>
       </div>
       <ol id="recipe" aria-live="polite"></ol>
-      <p id="recipe-empty" class="muted" data-i18n="recipe_empty"></p>
+      <p id="recipe-empty" class="muted" data-i18n="recipe_empty">ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ପାଦ ନାହିଁ। ଉପରେ ଗୋଟିଏ ପାଦ ବାଛି &quot;ପାଦ ଯୋଡ଼ନ୍ତୁ&quot; ଦବାନ୍ତୁ, କିମ୍ବା &quot;ପାଦ ପରାମର୍ଶ&quot; ଦବାନ୍ତୁ।</p>
       <div class="dc-actions" style="margin-top:12px">
-        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo"></button>
-        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe"></button>
-        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe"></button>
-        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps"></button>
+        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo">ପଛକୁ ଫେରନ୍ତୁ</button>
+        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe">ରେସିପି ଏକ୍ସପୋର୍ଟ</button>
+        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe">ରେସିପି ଇମ୍ପୋର୍ଟ</button>
+        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps">ସବୁ ପାଦ ହଟାନ୍ତୁ</button>
       </div>
       <p class="callout small" style="margin-top:12px" data-i18n-html="pipeline_note"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-preview">
-      <h2 class="dc-h" id="h-preview" data-i18n="h_preview"></h2>
+      <h2 class="dc-h" id="h-preview" data-i18n="h_preview">4. ସଫା ଡାଟା</h2>
       <div class="dc-bar">
         <div class="seg" id="view-seg" role="group">
-          <button type="button" data-v="clean" data-i18n="view_clean"></button>
-          <button type="button" data-v="orig" data-i18n="view_orig"></button>
+          <button type="button" data-v="clean" data-i18n="view_clean">ସଫା</button>
+          <button type="button" data-v="orig" data-i18n="view_orig">ମୂଳ</button>
         </div>
-        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show"></span>
+        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show">ଦେଖାନ୍ତୁ</span>
           <select id="filter">
-            <option value="all" data-i18n="show_all"></option>
-            <option value="changed" data-i18n="show_changed"></option>
-            <option value="problems" data-i18n="show_problems"></option>
+            <option value="all" data-i18n="show_all">ସବୁ ଧାଡ଼ି</option>
+            <option value="changed" data-i18n="show_changed">ବଦଳିଥିବା ଧାଡ଼ି</option>
+            <option value="problems" data-i18n="show_problems">ସମସ୍ୟା ଥିବା ଧାଡ଼ି</option>
           </select>
         </label>
       </div>
-      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed"></span><span class="lg-bad" data-i18n="legend_bad"></span></div>
+      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed">କୌଣସି ପାଦ ବଦଳାଇଛି</span><span class="lg-bad" data-i18n="legend_bad">ଖାଲି ବା ଠିକ୍ ରୂପରେ ନାହିଁ</span></div>
       <div class="dc-gridwrap no-i18n"><table class="table" id="grid"></table></div>
-      <p id="no-rows" class="muted" hidden data-i18n="no_rows"></p>
+      <p id="no-rows" class="muted" hidden data-i18n="no_rows">ଦେଖାଇବାକୁ କୌଣସି ଧାଡ଼ି ନାହିଁ।</p>
       <div class="dc-pager" id="pager">
         <button class="btn btn-sm" id="pg-prev" type="button" data-i18n="previous"></button>
         <span id="page-info" class="small"></span>
@@ -221,23 +221,23 @@
       </div>
       <div class="dc-foot">
         <span id="out-count" class="small muted"></span>
-        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv"></button>
+        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv">ସଫା CSV ଡାଉନଲୋଡ</button>
       </div>
     </section>
 
     <details class="card dc-sec">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">ଅସଜଡ଼ା ନମୁନାରୁ ଆରମ୍ଭ କରନ୍ତୁ: &quot;ପାଦ ପରାମର୍ଶ&quot; ଦବାନ୍ତୁ, ତା'ପରେ ଟେବୁଲରେ ସବୁଜ (ବଦଳିଥିବା) ଓ ଲାଲ (ସମସ୍ୟା ଥିବା) ସେଲ ଦେଖନ୍ତୁ।</li>
+        <li data-i18n="tip2">ଅଫିସ କାମ ପାଇଁ: ପ୍ରତି ମାସର ଗ୍ରାହକ ବା କର୍ମଚାରୀ ତାଲିକା ପାଇଁ ଥରେ ରେସିପି ତିଆରି କରି ଏକ୍ସପୋର୍ଟ କରନ୍ତୁ। ଆସନ୍ତା ମାସରେ ନୂଆ ଫାଇଲ ଖୋଲନ୍ତୁ, ରେସିପି ଇମ୍ପୋର୍ଟ କରନ୍ତୁ ଓ ଏକ ମିନିଟରେ ସଫା CSV ଡାଉନଲୋଡ କରନ୍ତୁ।</li>
+        <li data-i18n="tip3">କ୍ରମ ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ: ଦୁଇଥର ଆସିଥିବା ଧାଡ଼ି କାଢ଼ିବା ପୂର୍ବରୁ ସ୍ପେସ ଓ ବଡ଼-ଛୋଟ ଅକ୍ଷର ଠିକ୍ କରନ୍ତୁ, ଯାହାଫଳରେ &quot;ପ୍ରିୟା  ଶର୍ମା&quot; ଓ &quot;ପ୍ରିୟା ଶର୍ମା&quot; ଜଣେ ବ୍ୟକ୍ତି ବୋଲି ଜଣାପଡ଼ିବ।</li>
+        <li data-i18n="tip4">ଶ୍ରେଣୀ କାର୍ଯ୍ୟ: ପ୍ରତ୍ୟେକ ଦଳକୁ ସମାନ ଅସଜଡ଼ା ତାଲିକା ଦିଅନ୍ତୁ। ଦଳମାନେ ପ୍ରଥମେ କାଗଜରେ ସଫା କରିବାର ପାଦ ଲେଖିବେ, ତା'ପରେ ଏଠାରେ ଚେଷ୍ଟା କରିବେ। ସବୁଠୁ କମ ପାଦରେ କାହାର ସବୁଠୁ ଅଧିକ ସ୍କୋର?</li>
+        <li data-i18n="tip5">କୌଣସି ପାଦ ବନ୍ଦ କରି ଦେଖନ୍ତୁ ତାହା କ'ଣ କରୁଥିଲା। ↑ ↓ ରେ କ୍ରମ ବଦଳାନ୍ତୁ, ଭୁଲ ହେଲେ &quot;ପଛକୁ ଫେରନ୍ତୁ&quot; ଦବାନ୍ତୁ।</li>
+        <li data-i18n="tip6">ସଫା ପରେ ବାକି ଥିବା ଲାଲ ସେଲ ଦେଖନ୍ତୁ: କିଛି ମୂଲ୍ୟ (ଯେପରି 5 ଅଙ୍କର ମୋବାଇଲ ନମ୍ବର) କମ୍ପ୍ୟୁଟର ଠିକ୍ କରିପାରେ ନାହିଁ। ଜଣେ ବ୍ୟକ୍ତି ସେଗୁଡ଼ିକ ଯାଞ୍ଚ କରିବା ଦରକାର।</li>
       </ul>
     </details>
     <details class="card dc-sec">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">ଜାଣିବା ଦରକାରୀ ଶବ୍ଦ: ଭିତରେ କ'ଣ ହେଉଛି</summary>
       <ul>
         <li data-i18n-html="w_dataset"></li>
         <li data-i18n-html="w_missing"></li>

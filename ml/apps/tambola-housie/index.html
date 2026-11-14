@@ -297,14 +297,14 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">പ്രിന്റ് ചെയ്യാനോ പങ്കിടാനോ ശരിയായ തംബോല (ഹൗസി) ടിക്കറ്റുകൾ ഉണ്ടാക്കൂ, വലിയ സ്ക്രീനിൽ 1–90 നമ്പറുകൾ ഉറക്കെ വിളിക്കൂ, ഓരോ ക്ലെയിമും നിമിഷങ്ങൾക്കകം പരിശോധിക്കൂ.</p>
 
     <div class="tb-tabs" role="tablist" id="tabs" data-i18n-aria-label="app_title">
-      <button type="button" role="tab" id="tab-tickets" data-tab="tickets" aria-controls="panel-tickets" aria-selected="true"><span class="ic" aria-hidden="true">🎟️</span><span data-i18n="tab_tickets"></span></button>
-      <button type="button" role="tab" id="tab-caller" data-tab="caller" aria-controls="panel-caller" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">📢</span><span data-i18n="tab_caller"></span></button>
-      <button type="button" role="tab" id="tab-check" data-tab="check" aria-controls="panel-check" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">✅</span><span data-i18n="tab_check"></span></button>
-      <button type="button" role="tab" id="tab-prizes" data-tab="prizes" aria-controls="panel-prizes" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">🏆</span><span data-i18n="tab_prizes"></span></button>
-      <button type="button" role="tab" id="tab-play" data-tab="play" aria-controls="panel-play" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">📱</span><span data-i18n="tab_play"></span></button>
+      <button type="button" role="tab" id="tab-tickets" data-tab="tickets" aria-controls="panel-tickets" aria-selected="true"><span class="ic" aria-hidden="true">🎟️</span><span data-i18n="tab_tickets">ടിക്കറ്റുകൾ</span></button>
+      <button type="button" role="tab" id="tab-caller" data-tab="caller" aria-controls="panel-caller" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">📢</span><span data-i18n="tab_caller">നമ്പർ കോളർ</span></button>
+      <button type="button" role="tab" id="tab-check" data-tab="check" aria-controls="panel-check" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">✅</span><span data-i18n="tab_check">ക്ലെയിം പരിശോധന</span></button>
+      <button type="button" role="tab" id="tab-prizes" data-tab="prizes" aria-controls="panel-prizes" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">🏆</span><span data-i18n="tab_prizes">സമ്മാനങ്ങൾ &amp; നിയമങ്ങൾ</span></button>
+      <button type="button" role="tab" id="tab-play" data-tab="play" aria-controls="panel-play" aria-selected="false" tabindex="-1"><span class="ic" aria-hidden="true">📱</span><span data-i18n="tab_play">ഫോണിൽ കളിക്കൂ</span></button>
     </div>
 
     <!-- ===================== TICKETS ===================== -->
@@ -312,70 +312,70 @@
       <div class="tk-layout">
         <div class="stack">
           <div class="card stack">
-            <h2 data-i18n="h_make"></h2>
+            <h2 data-i18n="h_make">ടിക്കറ്റുകൾ ഉണ്ടാക്കൂ</h2>
             <div class="field">
-              <label for="party" data-i18n="f_party"></label>
+              <label for="party" data-i18n="f_party">പാർട്ടിയുടെയോ പരിപാടിയുടെയോ പേര്</label>
               <input type="text" id="party" class="no-i18n" maxlength="80" autocomplete="off">
             </div>
             <div class="two">
               <div class="field">
-                <label for="pdate" data-i18n="f_date"></label>
+                <label for="pdate" data-i18n="f_date">തീയതി</label>
                 <input type="date" id="pdate">
               </div>
               <div class="field">
-                <label for="code" data-i18n="f_code"></label>
+                <label for="code" data-i18n="f_code">ഗെയിം കോഡ്</label>
                 <input type="text" id="code" class="no-i18n code-in" maxlength="16" autocomplete="off" spellcheck="false" autocapitalize="characters" aria-describedby="codeHint">
               </div>
             </div>
-            <div><button type="button" class="btn btn-sm" id="newCode"><span aria-hidden="true">🎲</span><span data-i18n="new_code"></span></button></div>
-            <p class="hint" id="codeHint" data-i18n="code_hint"></p>
-            <p class="callout danger small mb0" id="codeErr" role="alert" hidden data-i18n="code_bad"></p>
+            <div><button type="button" class="btn btn-sm" id="newCode"><span aria-hidden="true">🎲</span><span data-i18n="new_code">പുതിയ കോഡ്</span></button></div>
+            <p class="hint" id="codeHint" data-i18n="code_hint">ഒരേ കോഡ് എപ്പോഴും അതേ ടിക്കറ്റുകൾ തരും. കോഡും ടിക്കറ്റ് നമ്പറും ഉണ്ടെങ്കിൽ ഏത് ക്ലെയിമും പരിശോധിക്കാം.</p>
+            <p class="callout danger small mb0" id="codeErr" role="alert" hidden data-i18n="code_bad">ഗെയിം കോഡിൽ 3 മുതൽ 16 വരെ അക്ഷരങ്ങളോ അക്കങ്ങളോ വേണം.</p>
             <div class="field">
-              <label for="count" data-i18n="f_count"></label>
+              <label for="count" data-i18n="f_count">എത്ര ടിക്കറ്റുകൾ?</label>
               <div class="row count-row">
                 <input type="number" id="count" min="1" max="600" step="1" inputmode="numeric">
                 <div class="chips" id="countChips"></div>
               </div>
-              <span class="hint" data-i18n="count_hint"></span>
+              <span class="hint" data-i18n="count_hint">1 മുതൽ 600 വരെ.</span>
             </div>
-            <label class="check"><input type="checkbox" id="strips"> <span data-i18n="f_strips"></span></label>
+            <label class="check"><input type="checkbox" id="strips"> <span data-i18n="f_strips">6 ടിക്കറ്റിന്റെ മുഴുവൻ ഷീറ്റ് (ഓരോ ഷീറ്റിലും 1–90 ഓരോ നമ്പറും ഒരിക്കൽ, സാധാരണ രീതി)</span></label>
             <div class="field">
-              <label for="start" data-i18n="f_start"></label>
+              <label for="start" data-i18n="f_start">ആദ്യ ടിക്കറ്റ് നമ്പർ</label>
               <input type="number" id="start" class="w-num" min="1" max="99996" step="1" inputmode="numeric">
-              <span class="hint" data-i18n="start_hint"></span>
+              <span class="hint" data-i18n="start_hint">പിന്നീട് കൂടുതൽ പ്രിന്റ് ചെയ്യണോ? അടുത്ത നമ്പറിൽ നിന്ന് തുടങ്ങൂ, ഉദാ. 25.</span>
             </div>
             <div class="field">
-              <span class="lbl" id="ppLbl" data-i18n="f_perpage"></span>
+              <span class="lbl" id="ppLbl" data-i18n="f_perpage">ഒരു A4 പേജിൽ ടിക്കറ്റുകൾ</span>
               <div class="seg" role="group" aria-labelledby="ppLbl" id="perPage">
-                <button type="button" data-pp="6" aria-pressed="true" data-i18n="pp_6"></button>
-                <button type="button" data-pp="12" aria-pressed="false" data-i18n="pp_12"></button>
+                <button type="button" data-pp="6" aria-pressed="true" data-i18n="pp_6">6 (വലുത്)</button>
+                <button type="button" data-pp="12" aria-pressed="false" data-i18n="pp_12">12 (ചെറുത്)</button>
               </div>
             </div>
             <div class="sum" id="tkSummary" aria-live="polite"></div>
             <div class="row">
-              <button type="button" class="btn btn-primary btn-lg" id="printTk"><span aria-hidden="true">🖨</span><span data-i18n="btn_print_tk"></span></button>
-              <button type="button" class="btn" id="csvTk"><span aria-hidden="true">⬇</span><span data-i18n="btn_csv"></span></button>
+              <button type="button" class="btn btn-primary btn-lg" id="printTk"><span aria-hidden="true">🖨</span><span data-i18n="btn_print_tk">ടിക്കറ്റ് പ്രിന്റ് ചെയ്യൂ</span></button>
+              <button type="button" class="btn" id="csvTk"><span aria-hidden="true">⬇</span><span data-i18n="btn_csv">CSV ഡൗൺലോഡ്</span></button>
             </div>
-            <p class="tiny muted mb0" data-i18n="print_tip"></p>
+            <p class="tiny muted mb0" data-i18n="print_tip">നിർദേശം: പ്രിന്റ് വിൻഡോയിൽ A4 തിരഞ്ഞെടുക്കൂ, &quot;Fit to page&quot; ഓഫ് ചെയ്യൂ, കുത്തുവരകളിലൂടെ മുറിക്കൂ. കറുപ്പും വെളുപ്പിലും ടിക്കറ്റ് വ്യക്തമായി കാണാം.</p>
           </div>
 
           <div class="card stack">
-            <h2 class="h-sm" data-i18n="h_send"></h2>
-            <p class="hint" data-i18n="send_hint"></p>
+            <h2 class="h-sm" data-i18n="h_send">ടിക്കറ്റ് ഫോണിലേക്ക് അയയ്ക്കൂ</h2>
+            <p class="hint" data-i18n="send_hint">അതിഥികൾക്ക് സ്വന്തം ഫോണിൽ കളിക്കാം: അവർക്ക് ടിക്കറ്റ് നമ്പറും ലിങ്കും അയയ്ക്കൂ. ഒന്നും അപ്‌ലോഡ് ചെയ്യില്ല; കോഡിൽ നിന്ന് ടിക്കറ്റ് വീണ്ടും ഉണ്ടാകും.</p>
             <div class="row send-row">
               <div class="field">
-                <label for="sendNo" data-i18n="f_ticket"></label>
+                <label for="sendNo" data-i18n="f_ticket">ടിക്കറ്റ് നമ്പർ</label>
                 <input type="number" id="sendNo" min="1" max="99996" step="1" inputmode="numeric">
               </div>
-              <a class="btn btn-wa" id="sendWa" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span><span data-i18n="btn_wa_ticket"></span></a>
-              <button type="button" class="btn" id="sendCopy"><span aria-hidden="true">🔗</span><span data-i18n="btn_copy_link"></span></button>
+              <a class="btn btn-wa" id="sendWa" href="#" target="_blank" rel="noopener"><span aria-hidden="true">💬</span><span data-i18n="btn_wa_ticket">WhatsApp-ൽ അയയ്ക്കൂ</span></a>
+              <button type="button" class="btn" id="sendCopy"><span aria-hidden="true">🔗</span><span data-i18n="btn_copy_link">ലിങ്ക് പകർത്തൂ</span></button>
             </div>
           </div>
         </div>
 
         <div class="card stack" id="previewCard">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="h_preview"></h2>
+            <h2 class="mb0" data-i18n="h_preview">പ്രിവ്യൂ</h2>
             <div class="pg-nav">
               <button type="button" class="btn btn-sm" id="pgPrev" data-i18n-aria-label="previous" data-i18n-title="previous"><span class="flip" aria-hidden="true">◀</span></button>
               <span id="pgLbl" class="pg-lbl" aria-live="polite"></span>
@@ -383,7 +383,7 @@
             </div>
           </div>
           <div class="tk-list" id="tkList"></div>
-          <p class="hint" data-i18n="preview_hint"></p>
+          <p class="hint" data-i18n="preview_hint">ചാര കള്ളികൾ ശൂന്യമാണ്. ഓരോ ടിക്കറ്റിലും 15 നമ്പർ: ഓരോ വരിയിലും 5.</p>
         </div>
       </div>
     </section>
@@ -405,44 +405,44 @@
               <p class="cl-info" id="callInfo"></p>
             </div>
             <div class="cl-last" id="lastWrap">
-              <span class="lbl small" data-i18n="h_last"></span>
+              <span class="lbl small" data-i18n="h_last">മുമ്പത്തെ നമ്പറുകൾ</span>
               <div class="coins" id="last5" dir="ltr"></div>
             </div>
-            <button type="button" class="btn btn-primary btn-lg cl-next" id="nextBtn"><span aria-hidden="true">🎱</span><span data-i18n="btn_next"></span></button>
+            <button type="button" class="btn btn-primary btn-lg cl-next" id="nextBtn"><span aria-hidden="true">🎱</span><span data-i18n="btn_next">അടുത്ത നമ്പർ</span></button>
             <div class="cl-btns">
               <button type="button" class="btn" id="autoBtn" aria-pressed="false"><span aria-hidden="true" id="autoIc">▶</span><span id="autoLbl"></span></button>
-              <button type="button" class="btn" id="undoBtn"><span aria-hidden="true">↶</span><span data-i18n="btn_undo"></span></button>
-              <button type="button" class="btn" id="repeatBtn"><span aria-hidden="true">🔊</span><span data-i18n="btn_repeat"></span></button>
+              <button type="button" class="btn" id="undoBtn"><span aria-hidden="true">↶</span><span data-i18n="btn_undo">തിരിച്ചെടുക്കൂ</span></button>
+              <button type="button" class="btn" id="repeatBtn"><span aria-hidden="true">🔊</span><span data-i18n="btn_repeat">വീണ്ടും പറയൂ</span></button>
             </div>
             <div class="progress auto-bar" id="autoBar" hidden><span id="autoFill" style="width:0"></span></div>
             <div class="cl-counts"><span id="calledN"></span><span id="leftN"></span></div>
             <div class="progress"><span id="callBar" style="width:0"></span></div>
-            <button type="button" class="btn btn-accent" id="claimBtn"><span aria-hidden="true">🙋</span><span data-i18n="btn_claim"></span></button>
+            <button type="button" class="btn btn-accent" id="claimBtn"><span aria-hidden="true">🙋</span><span data-i18n="btn_claim">ആരോ ക്ലെയിം ചെയ്തു! പരിശോധിക്കൂ</span></button>
           </div>
           <div class="cl-right">
             <div class="board" id="board" dir="ltr" role="group" data-i18n-aria-label="board_label"></div>
-            <p class="small muted" id="manualHint" data-i18n="manual_hint" hidden></p>
+            <p class="small muted" id="manualHint" data-i18n="manual_hint" hidden>സ്വന്തം സഞ്ചിയിൽ നിന്ന് നമ്പർ എടുക്കുകയാണോ? വിളിക്കുന്ന ഓരോ നമ്പറും ബോർഡിൽ ടാപ്പ് ചെയ്യൂ. തിരിച്ചെടുക്കാൻ വീണ്ടും ടാപ്പ് ചെയ്യൂ.</p>
             <div class="won" id="wonMini" aria-live="polite"></div>
             <details class="order no-print-fs">
-              <summary data-i18n="h_order"></summary>
+              <summary data-i18n="h_order">വിളിച്ച ക്രമത്തിൽ എല്ലാ നമ്പറുകളും</summary>
               <p class="order-list mb0" id="orderList" dir="ltr"></p>
             </details>
           </div>
         </div>
         <div class="cl-settings" id="clSettings">
           <div class="set-grid">
-            <div class="field"><label for="every" data-i18n="f_every"></label><select id="every"></select></div>
-            <div class="field"><label for="vlang" data-i18n="f_vlang"></label><select id="vlang"></select></div>
+            <div class="field"><label for="every" data-i18n="f_every">തനിയെ ഓരോ</label><select id="every"></select></div>
+            <div class="field"><label for="vlang" data-i18n="f_vlang">ശബ്ദത്തിന്റെ ഭാഷ</label><select id="vlang"></select></div>
           </div>
           <div class="checks">
-            <label class="check"><input type="checkbox" id="voice"> <span data-i18n="f_voice"></span></label>
-            <label class="check"><input type="checkbox" id="digits"> <span data-i18n="f_digits"></span></label>
-            <label class="check"><input type="checkbox" id="slow"> <span data-i18n="f_slow"></span></label>
-            <label class="check"><input type="checkbox" id="manual"> <span data-i18n="f_manual"></span></label>
+            <label class="check"><input type="checkbox" id="voice"> <span data-i18n="f_voice">ഓരോ നമ്പറും ഉറക്കെ പറയൂ</span></label>
+            <label class="check"><input type="checkbox" id="digits"> <span data-i18n="f_digits">അക്കങ്ങളും പറയൂ (&quot;4, 5, 45&quot;)</span></label>
+            <label class="check"><input type="checkbox" id="slow"> <span data-i18n="f_slow">പതുക്കെയുള്ള ശബ്ദം</span></label>
+            <label class="check"><input type="checkbox" id="manual"> <span data-i18n="f_manual">നമ്പറുകൾ ഞാൻ തന്നെ എടുക്കും (ബോർഡിൽ ടാപ്പ്)</span></label>
           </div>
           <p class="callout warning small mb0" id="voiceNote" hidden></p>
-          <p class="tiny muted mb0" data-i18n="keys_tip"></p>
-          <button type="button" class="btn btn-danger" id="newGameBtn"><span aria-hidden="true">🔄</span><span data-i18n="btn_new_game"></span></button>
+          <p class="tiny muted mb0" data-i18n="keys_tip">കീകൾ: സ്പേസ് അല്ലെങ്കിൽ N = അടുത്ത നമ്പർ, A = തനിയെ ഓൺ/ഓഫ്, R = വീണ്ടും പറയൂ, F = പൂർണ്ണ സ്ക്രീൻ.</p>
+          <button type="button" class="btn btn-danger" id="newGameBtn"><span aria-hidden="true">🔄</span><span data-i18n="btn_new_game">പുതിയ ഗെയിം (വിളിച്ച നമ്പറുകൾ മായ്ക്കൂ)</span></button>
         </div>
       </div>
     </section>
@@ -451,40 +451,40 @@
     <section id="panel-check" role="tabpanel" aria-labelledby="tab-check" hidden>
       <div class="split ck-split">
         <div class="card stack">
-          <h2 data-i18n="h_check"></h2>
+          <h2 data-i18n="h_check">ക്ലെയിം പരിശോധിക്കൂ</h2>
           <div class="seg" role="group" id="srcSeg" data-i18n-aria-label="h_check">
-            <button type="button" data-src="game" aria-pressed="true" data-i18n="src_game"></button>
-            <button type="button" data-src="typed" aria-pressed="false" data-i18n="src_typed"></button>
+            <button type="button" data-src="game" aria-pressed="true" data-i18n="src_game">ഈ ആപ്പിലെ ടിക്കറ്റ്</button>
+            <button type="button" data-src="typed" aria-pressed="false" data-i18n="src_typed">മറ്റെവിടെയോ അച്ചടിച്ച ടിക്കറ്റ്</button>
           </div>
           <div class="two" id="srcGame">
             <div class="field">
-              <label for="chkCode" data-i18n="f_code"></label>
+              <label for="chkCode" data-i18n="f_code">ഗെയിം കോഡ്</label>
               <input type="text" id="chkCode" class="no-i18n code-in" maxlength="16" autocomplete="off" spellcheck="false" autocapitalize="characters">
             </div>
             <div class="field">
-              <label for="chkNo" data-i18n="f_ticket"></label>
+              <label for="chkNo" data-i18n="f_ticket">ടിക്കറ്റ് നമ്പർ</label>
               <input type="number" id="chkNo" min="1" max="99996" step="1" inputmode="numeric">
             </div>
           </div>
           <div class="field" id="srcTyped" hidden>
-            <label for="typed" data-i18n="f_typed"></label>
+            <label for="typed" data-i18n="f_typed">ടിക്കറ്റിലെ നമ്പറുകൾ ടൈപ്പ് ചെയ്യൂ</label>
             <textarea id="typed" class="no-i18n" rows="3" spellcheck="false" placeholder="4 23 37 61 85&#10;9 15 42 56 77&#10;18 29 49 68 90"></textarea>
-            <span class="hint" data-i18n="typed_hint"></span>
+            <span class="hint" data-i18n="typed_hint">ഓരോ വരിക്കും ഓരോ ലൈൻ (മുകളിൽ, നടുവിൽ, താഴെ), അല്ലെങ്കിൽ 15 നമ്പറുകളും ക്രമത്തിൽ.</span>
           </div>
           <div class="field">
-            <label for="claim" data-i18n="f_claim"></label>
+            <label for="claim" data-i18n="f_claim">എന്തിനാണ് ക്ലെയിം?</label>
             <select id="claim"></select>
             <span class="hint" id="claimDesc"></span>
           </div>
           <div class="row">
-            <button type="button" class="btn btn-primary btn-lg" id="checkBtn"><span aria-hidden="true">🔍</span><span data-i18n="btn_check"></span></button>
-            <button type="button" class="btn" id="findBtn"><span aria-hidden="true">🔎</span><span data-i18n="btn_find"></span></button>
+            <button type="button" class="btn btn-primary btn-lg" id="checkBtn"><span aria-hidden="true">🔍</span><span data-i18n="btn_check">പരിശോധിക്കൂ</span></button>
+            <button type="button" class="btn" id="findBtn"><span aria-hidden="true">🔎</span><span data-i18n="btn_find">ജയിച്ച എല്ലാ ടിക്കറ്റും കണ്ടെത്തൂ</span></button>
           </div>
         </div>
         <div class="card stack" id="checkOut" aria-live="polite"></div>
       </div>
       <div class="card stack" style="margin-top:16px">
-        <h2 class="h-sm" data-i18n="h_winners"></h2>
+        <h2 class="h-sm" data-i18n="h_winners">ഈ ഗെയിമിലെ വിജയികൾ</h2>
         <ul class="winners" id="winners"></ul>
       </div>
     </section>
@@ -493,21 +493,21 @@
     <section id="panel-prizes" role="tabpanel" aria-labelledby="tab-prizes" hidden>
       <div class="grid-2">
         <div class="card stack">
-          <h2 data-i18n="h_prizes"></h2>
-          <p class="hint" data-i18n="prizes_hint"></p>
-          <div class="pz-head" aria-hidden="true"><span data-i18n="col_play"></span><span data-i18n="col_name"></span><span data-i18n="col_win"></span></div>
+          <h2 data-i18n="h_prizes">സമ്മാനങ്ങൾ</h2>
+          <p class="hint" data-i18n="prizes_hint">കളിക്കുന്ന സമ്മാനങ്ങൾ ടിക്ക് ചെയ്യൂ, നിങ്ങളുടെ വാക്കുകളിൽ പേരിടൂ, ഓരോന്നിനും എന്ത് കിട്ടുമെന്ന് എഴുതൂ.</p>
+          <div class="pz-head" aria-hidden="true"><span data-i18n="col_play">കളിക്കൂ</span><span data-i18n="col_name">പേര്</span><span data-i18n="col_win">സമ്മാനം</span></div>
           <div class="pz-list" id="prizeList"></div>
           <div class="field">
-            <label for="notes" data-i18n="f_notes"></label>
+            <label for="notes" data-i18n="f_notes">നിങ്ങളുടെ സ്വന്തം നിയമങ്ങളോ കുറിപ്പുകളോ (ഐച്ഛികം)</label>
             <textarea id="notes" class="no-i18n" rows="3" maxlength="1000" data-i18n-placeholder="notes_ph"></textarea>
           </div>
           <div class="row">
-            <button type="button" class="btn btn-primary" id="printRules"><span aria-hidden="true">🖨</span><span data-i18n="btn_print_rules"></span></button>
-            <button type="button" class="btn btn-ghost" id="defPrizes"><span aria-hidden="true">↺</span><span data-i18n="btn_default_prizes"></span></button>
+            <button type="button" class="btn btn-primary" id="printRules"><span aria-hidden="true">🖨</span><span data-i18n="btn_print_rules">നിയമ ഷീറ്റ് പ്രിന്റ് ചെയ്യൂ</span></button>
+            <button type="button" class="btn btn-ghost" id="defPrizes"><span aria-hidden="true">↺</span><span data-i18n="btn_default_prizes">ആദ്യത്തെ സമ്മാനങ്ങൾ</span></button>
           </div>
         </div>
         <div class="card stack">
-          <h2 data-i18n="h_rules"></h2>
+          <h2 data-i18n="h_rules">നിയമ ഷീറ്റ്</h2>
           <div class="rules-paper" id="rulesPreview"></div>
         </div>
       </div>
@@ -516,18 +516,18 @@
     <!-- ===================== PLAY ON PHONE ===================== -->
     <section id="panel-play" role="tabpanel" aria-labelledby="tab-play" hidden>
       <div class="card stack">
-        <h2 data-i18n="h_play"></h2>
-        <p class="hint" data-i18n="play_hint"></p>
+        <h2 data-i18n="h_play">നിങ്ങളുടെ ഫോണിൽ കളിക്കൂ</h2>
+        <p class="hint" data-i18n="play_hint">ആതിഥേയനിൽ നിന്ന് ടിക്കറ്റ് നമ്പർ കിട്ടിയോ? ഗെയിം കോഡും ടിക്കറ്റ് നമ്പറും നൽകി, വിളിക്കുന്ന നമ്പറുകൾ ടാപ്പ് ചെയ്യൂ.</p>
         <div class="row play-form">
           <div class="field">
-            <label for="playCode" data-i18n="f_code"></label>
+            <label for="playCode" data-i18n="f_code">ഗെയിം കോഡ്</label>
             <input type="text" id="playCode" class="no-i18n code-in" maxlength="16" autocomplete="off" spellcheck="false" autocapitalize="characters" data-i18n-placeholder="code_ph">
           </div>
           <div class="field">
-            <label for="playNo" data-i18n="f_ticket"></label>
+            <label for="playNo" data-i18n="f_ticket">ടിക്കറ്റ് നമ്പർ</label>
             <input type="number" id="playNo" min="1" max="99996" step="1" inputmode="numeric">
           </div>
-          <button type="button" class="btn btn-primary" id="openBtn"><span aria-hidden="true">🎟️</span><span data-i18n="btn_open"></span></button>
+          <button type="button" class="btn btn-primary" id="openBtn"><span aria-hidden="true">🎟️</span><span data-i18n="btn_open">എന്റെ ടിക്കറ്റ് തുറക്കൂ</span></button>
         </div>
         <p class="callout danger small mb0" id="playErr" role="alert" hidden></p>
       </div>
@@ -537,12 +537,12 @@
     <details class="card help">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">ആതിഥേയർ: ടിക്കറ്റുകളുടെ എണ്ണം തിരഞ്ഞെടുത്ത് പ്രിന്റ് ചെയ്ത് (പേജിൽ 6) മുറിക്കൂ. ഗെയിം കോഡ് സൂക്ഷിക്കൂ; അത് ഓരോ ടിക്കറ്റിലും അച്ചടിച്ചിട്ടുണ്ട്.</li>
+        <li data-i18n="help_2">കളിദിവസം ലാപ്‌ടോപ്പിലോ ടിവിയിലോ &quot;നമ്പർ കോളർ&quot; തുറന്ന്, പൂർണ്ണ സ്ക്രീൻ അമർത്തി &quot;തനിയെ&quot; ഉപയോഗിക്കൂ. എല്ലാവരും കേൾക്കാൻ സ്പീക്കർ ഘടിപ്പിക്കൂ.</li>
+        <li data-i18n="help_3">ആരെങ്കിലും ക്ലെയിം ചെയ്താൽ &quot;ആരോ ക്ലെയിം ചെയ്തു! പരിശോധിക്കൂ&quot; അമർത്തി, ടിക്കറ്റ് നമ്പർ നൽകി ക്ലെയിം തിരഞ്ഞെടുക്കൂ. ബാക്കി നമ്പറുകൾ ആപ്പ് കാണിക്കും.</li>
+        <li data-i18n="help_4">പ്രിന്റർ ഇല്ലേ? ഓരോ അതിഥിക്കും WhatsApp-ൽ ഒരു ടിക്കറ്റ് നമ്പർ അയയ്ക്കൂ. അവർ ഫോണിൽ തുറന്ന് വിളിക്കുന്ന നമ്പറുകൾ ടാപ്പ് ചെയ്യും.</li>
+        <li data-i18n="help_5">ക്ലാസ്സിൽ: ചെറിയ കുട്ടികൾക്ക് നമ്പർ തിരിച്ചറിയൽ കളി. പേജിൽ 12 ചെറിയ ടിക്കറ്റ് പ്രിന്റ് ചെയ്ത്, &quot;അക്കങ്ങളും പറയൂ&quot; ഓണാക്കി പതുക്കെ വിളിക്കൂ.</li>
+        <li data-i18n="help_6">കിറ്റി പാർട്ടിയോ ഓഫീസ് പരിപാടിയോ: സമ്മാനങ്ങൾക്ക് സ്വന്തം പേരിടൂ, തുക എഴുതൂ, മേശയ്ക്കായി നിയമ ഷീറ്റ് പ്രിന്റ് ചെയ്യൂ.</li>
       </ul>
     </details>
 

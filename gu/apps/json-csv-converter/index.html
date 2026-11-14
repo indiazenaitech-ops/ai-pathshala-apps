@@ -81,11 +81,11 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ઍપ અને API માંથી આવેલા JSON ને Excel માટે CSV ટેબલમાં ફેરવો, CSV ને JSON માં ફેરવો, અને JSON ની ભૂલ ચોક્કસ લાઇન અને કૉલમ સાથે શોધો.</p>
     <div class="tabs" id="mode-tabs" role="tablist">
-      <button type="button" role="tab" data-mode="j2c" data-i18n="mode_j2c"></button>
-      <button type="button" role="tab" data-mode="c2j" data-i18n="mode_c2j"></button>
-      <button type="button" role="tab" data-mode="fmt" data-i18n="mode_fmt"></button>
+      <button type="button" role="tab" data-mode="j2c" data-i18n="mode_j2c">JSON → CSV</button>
+      <button type="button" role="tab" data-mode="c2j" data-i18n="mode_c2j">CSV → JSON</button>
+      <button type="button" role="tab" data-mode="fmt" data-i18n="mode_fmt">JSON તપાસો અને ગોઠવો</button>
     </div>
     <p class="muted small" id="mode-help"></p>
 
@@ -95,49 +95,49 @@
           <h2 class="jc-h" id="in-label"></h2>
           <div class="row" style="gap:6px">
             <button class="btn btn-sm" id="load-sample" type="button"></button>
-            <button class="btn btn-sm btn-primary" id="open-file" type="button" data-i18n="open_file"></button>
+            <button class="btn btn-sm btn-primary" id="open-file" type="button" data-i18n="open_file">ફાઇલ ખોલો</button>
             <button class="btn btn-sm" id="clear-in" type="button" data-i18n="clear"></button>
           </div>
         </div>
         <textarea id="input" class="jc-code no-i18n" spellcheck="false" autocomplete="off" data-i18n-aria-label="in_label" data-i18n-placeholder="in_ph"></textarea>
         <div class="jc-meta small muted">
           <span id="in-size"></span>
-          <span data-i18n="drop_hint"></span>
+          <span data-i18n="drop_hint">ફાઇલો આ ડિવાઇસ પર જ રહે છે.</span>
           <span id="busy" hidden data-i18n="loading"></span>
-          <span id="big-note" hidden data-i18n="big_view"></span>
+          <span id="big-note" hidden data-i18n="big_view">બહુ મોટી ફાઇલ: અહીં ફક્ત શરૂઆતનો ભાગ દેખાય છે, પણ આખી ફાઇલ ફેરવાય છે.</span>
         </div>
-        <button class="btn btn-primary" id="convert" type="button" hidden data-i18n="convert" style="margin-top:8px"></button>
+        <button class="btn btn-primary" id="convert" type="button" hidden data-i18n="convert" style="margin-top:8px">ફેરવો</button>
 
         <div class="jc-opts" id="opts-j2c">
-          <label class="field"><span data-i18n="rec_path"></span><select id="rec-path" class="no-i18n"></select></label>
-          <label class="field"><span data-i18n="arr_mode"></span>
+          <label class="field"><span data-i18n="rec_path">હરોળ ક્યાંથી આવે</span><select id="rec-path" class="no-i18n"></select></label>
+          <label class="field"><span data-i18n="arr_mode">રેકૉર્ડની અંદરની યાદીઓ</span>
             <select id="arr-mode">
-              <option value="join" data-i18n="arr_join"></option>
-              <option value="explode" data-i18n="arr_explode"></option>
-              <option value="json" data-i18n="arr_json"></option>
+              <option value="join" data-i18n="arr_join">એક સેલમાં જોડો (&quot;a; b&quot;)</option>
+              <option value="explode" data-i18n="arr_explode">દરેક આઇટમની જુદી હરોળ</option>
+              <option value="json" data-i18n="arr_json">JSON લખાણ તરીકે જ રાખો</option>
             </select></label>
         </div>
         <div class="jc-opts" id="opts-c2j" hidden>
-          <label class="check"><input type="checkbox" id="opt-text"> <span data-i18n="opt_text"></span></label>
-          <label class="check"><input type="checkbox" id="opt-nest"> <span data-i18n="opt_nest"></span></label>
-          <label class="field"><span data-i18n="out_fmt"></span>
+          <label class="check"><input type="checkbox" id="opt-text"> <span data-i18n="opt_text">દરેક મૂલ્ય લખાણ તરીકે જ રાખો</span></label>
+          <label class="check"><input type="checkbox" id="opt-nest"> <span data-i18n="opt_nest">address.city જેવા કૉલમને અંદરના ઑબ્જેક્ટમાં ફેરવો</span></label>
+          <label class="field"><span data-i18n="out_fmt">આઉટપુટ</span>
             <select id="out-fmt">
-              <option value="pretty" data-i18n="fmt_pretty"></option>
-              <option value="compact" data-i18n="fmt_compact"></option>
-              <option value="jsonl" data-i18n="fmt_jsonl"></option>
+              <option value="pretty" data-i18n="fmt_pretty">JSON, વાંચવામાં સરળ</option>
+              <option value="compact" data-i18n="fmt_compact">JSON, એક લાઇનમાં (નાનો)</option>
+              <option value="jsonl" data-i18n="fmt_jsonl">JSON Lines (દરેક લાઇનમાં એક ઑબ્જેક્ટ)</option>
             </select></label>
         </div>
         <div class="jc-opts" id="opts-fmt" hidden>
-          <label class="field"><span data-i18n="indent"></span>
+          <label class="field"><span data-i18n="indent">ઇન્ડેન્ટ</span>
             <select id="indent">
-              <option value="2" data-i18n="indent_2"></option>
-              <option value="4" data-i18n="indent_4"></option>
-              <option value="tab" data-i18n="indent_tab"></option>
+              <option value="2" data-i18n="indent_2">2 સ્પેસ</option>
+              <option value="4" data-i18n="indent_4">4 સ્પેસ</option>
+              <option value="tab" data-i18n="indent_tab">ટૅબ</option>
             </select></label>
           <div class="row" style="gap:6px">
-            <button class="btn" id="btn-pretty" type="button" data-i18n="btn_pretty"></button>
-            <button class="btn" id="btn-min" type="button" data-i18n="btn_min"></button>
-            <button class="btn btn-sm btn-ghost" id="btn-use" type="button" data-i18n="btn_use"></button>
+            <button class="btn" id="btn-pretty" type="button" data-i18n="btn_pretty">ગોઠવીને બતાવો</button>
+            <button class="btn" id="btn-min" type="button" data-i18n="btn_min">નાનો કરો</button>
+            <button class="btn btn-sm btn-ghost" id="btn-use" type="button" data-i18n="btn_use">પરિણામને ઇનપુટ બનાવો</button>
           </div>
         </div>
 
@@ -146,35 +146,35 @@
           <p class="msg" id="err-msg"></p>
           <p class="small" id="err-where" style="margin:0"></p>
           <pre id="err-code" class="no-i18n"></pre>
-          <button class="btn btn-sm" id="goto-err" type="button" data-i18n="goto_err"></button>
+          <button class="btn btn-sm" id="goto-err" type="button" data-i18n="goto_err">ઇનપુટમાં બતાવો</button>
         </div>
         <p id="notes" class="callout warning small" hidden></p>
       </section>
 
       <section class="card" aria-labelledby="out-h">
         <div class="jc-bar-top">
-          <h2 class="jc-h" id="out-h" data-i18n="out_title"></h2>
+          <h2 class="jc-h" id="out-h" data-i18n="out_title">પરિણામ</h2>
           <span class="small muted" id="timing"></span>
         </div>
         <div class="tabs" id="out-tabs" role="tablist">
-          <button type="button" role="tab" data-tab="table" data-i18n="tab_table"></button>
+          <button type="button" role="tab" data-tab="table" data-i18n="tab_table">ટેબલ</button>
           <button type="button" role="tab" data-tab="text" id="tab-text"></button>
-          <button type="button" role="tab" data-tab="schema" data-i18n="tab_schema"></button>
+          <button type="button" role="tab" data-tab="schema" data-i18n="tab_schema">સ્કીમા</button>
         </div>
-        <p id="out-empty" class="muted" data-i18n="out_empty"></p>
+        <p id="out-empty" class="muted" data-i18n="out_empty">હજી બતાવવા માટે કંઈ નથી.</p>
         <div id="out-table" hidden>
           <div class="jc-gridwrap no-i18n"><table class="table" id="grid"></table></div>
           <div class="jc-pager" id="pager"><button class="btn btn-sm" id="pg-prev" type="button" data-i18n="previous"></button><span id="page-info" class="small"></span><button class="btn btn-sm" id="pg-next" type="button" data-i18n="next"></button></div>
         </div>
         <div id="out-text" hidden>
           <textarea id="output" class="jc-code no-i18n" readonly spellcheck="false" data-i18n-aria-label="out_title"></textarea>
-          <div class="jc-meta small muted"><span id="out-size"></span><span id="text-cut" hidden data-i18n="text_cut"></span></div>
+          <div class="jc-meta small muted"><span id="out-size"></span><span id="text-cut" hidden data-i18n="text_cut">અહીં ફક્ત પહેલો ભાગ દેખાય છે. ડાઉનલોડ કે કૉપિથી બધું મળશે.</span></div>
         </div>
         <div id="out-schema" hidden>
           <p class="small muted" id="schema-info"></p>
           <div class="scroll-x">
             <table class="table jc-schema">
-              <thead><tr><th scope="col" data-i18n="sc_field"></th><th scope="col" data-i18n="sc_type"></th><th scope="col" data-i18n="sc_present"></th><th scope="col" data-i18n="sc_example"></th></tr></thead>
+              <thead><tr><th scope="col" data-i18n="sc_field">ફીલ્ડ</th><th scope="col" data-i18n="sc_type">પ્રકાર</th><th scope="col" data-i18n="sc_present">ભરેલું</th><th scope="col" data-i18n="sc_example">ઉદાહરણ</th></tr></thead>
               <tbody id="schema-body"></tbody>
             </table>
           </div>
@@ -190,15 +190,15 @@
     <details class="card jc-sec">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">નમૂનાના API જવાબથી શરૂ કરો: ટેબલ જુઓ, પછી &quot;રેકૉર્ડની અંદરની યાદીઓ&quot; ને &quot;દરેક આઇટમની જુદી હરોળ&quot; કરો અને 3 ઓર્ડરની 6 હરોળ બનતી જુઓ.</li>
+        <li data-i18n="tip2">ઑફિસ: ઘણી ઍપ અને વેબસાઇટ JSON એક્સપોર્ટ કરે છે. તેને અહીં CSV બનાવી Excel કે Google Sheets માં ખોલો. અથવા શીટને CSV તરીકે સેવ કરી વેબસાઇટ કે ઍપ માટે JSON બનાવો.</li>
+        <li data-i18n="tip3">09876543210 જેવા ફોન નંબર અને 007 જેવા કોડ લખાણ જ રહે છે, કારણ કે સંખ્યા બને તો શરૂઆતનો 0 જતો રહે.</li>
+        <li data-i18n="tip4">વર્ગ પ્રવૃત્તિ: બોર્ડ પર તમારા વર્ગ વિશે નાનો JSON લખો (નામ, ઉંમર, શોખની યાદી) જેમાં એક ભૂલ હોય. વિદ્યાર્થીઓ તે શોધે, પછી &quot;JSON તપાસો અને ગોઠવો&quot; થી તપાસે.</li>
+        <li data-i18n="tip5">મોટી ફાઇલો (10 MB કે વધુ) પણ ચાલે છે. તમારી ફાઇલ આ ડિવાઇસ પર જ વંચાય છે; કંઈ અપલોડ થતું નથી.</li>
       </ul>
     </details>
     <details class="card jc-sec">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">જાણવા જેવા શબ્દો: અંદર શું થાય છે</summary>
       <ul>
         <li data-i18n-html="w_json"></li>
         <li data-i18n-html="w_csv"></li>

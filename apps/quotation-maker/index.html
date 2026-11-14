@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quotation Maker · AI Pathshala</title>
+  <meta name="description" content="Free quotation and estimate maker for small shops and freelancers in India: items, discount, CGST/SGST/IGST, round-off, amount in words (lakh, crore), A4 PDF. Works offline, data stays on your device.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .qm-privacy { display: flex; gap: 8px; align-items: flex-start; margin: -6px 0 6px; font-weight: 600; color: var(--success); max-width: 75ch; }
+    .qm-disc { margin: 0 0 14px; max-width: 90ch; }
+    .h-sec { font-size: 1.12rem; margin: 0; }
+    .qm-grid { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+    @media (min-width: 1180px) { .qm-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .qm-side { position: sticky; top: 72px; } }
+    .fgrid { display: grid; gap: 10px 12px; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); align-items: end; }
+    .fgrid .wide { grid-column: 1 / -1; }
+    .fgrid input, .fgrid textarea, .fgrid select { width: 100%; }
+    .fgrid textarea { min-height: 64px; }
+    input[type="tel"] { font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 11px; min-height: 40px; max-width: 100%; }
+    .num-in { font-variant-numeric: tabular-nums; }
+    .up { text-transform: uppercase; }
+    .logo-row img { max-height: 54px; max-width: 150px; border: 1px solid var(--border); border-radius: 8px; background: #fff; padding: 3px; }
+    .seg.full { display: flex; }
+    .seg.full button { flex: 1 1 0; min-height: 40px; }
+
+    /* line items */
+    .ln { border: 1px solid var(--border); border-radius: 12px; padding: 10px; background: var(--surface-2); display: grid; gap: 8px 10px;
+      grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: end; }
+    .ln + .ln { margin-top: 10px; }
+    .ln label { display: flex; flex-direction: column; gap: 3px; min-width: 0; font-weight: 400; font-size: .8rem; color: var(--muted); }
+    .ln input { width: 100%; min-width: 0; }
+    .ln .c-desc { grid-column: 1 / -1; }
+    .ln .c-foot { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .ln .amt { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .ln input[aria-invalid="true"] { border-color: var(--danger); outline: 1px solid var(--danger); }
+    .ln .c-no { font-weight: 700; color: var(--muted); }
+    @media (min-width: 620px) { .ln .c-qty, .ln .c-unit, .ln .c-rate, .ln .c-dsc, .ln .c-gst { grid-column: span 1; } .ln { grid-template-columns: 1fr 1fr 1.3fr 1.2fr 1fr; } }
+    @media (max-width: 619px) { .ln .c-qty, .ln .c-unit, .ln .c-rate { grid-column: span 2; } .ln .c-dsc, .ln .c-gst { grid-column: span 3; } }
+    .sum { display: grid; gap: 4px; justify-content: end; font-variant-numeric: tabular-nums; }
+    .sum div { display: flex; gap: 18px; justify-content: space-between; min-width: min(280px, 100%); }
+    .sum .g { font-weight: 800; font-size: 1.15rem; border-top: 2px solid var(--border); padding-top: 4px; }
+    .sum span:last-child, #sheet .q-tot span:last-child, .ln .amt { direction: ltr; }   /* +0.40 and ₹ amounts read left to right in Urdu too */
+    #errs:empty { display: none; }
+    #errs p { margin: 0; }
+    .acts .btn { flex: 1 1 150px; }
+
+    /* the quotation itself: always black on white paper */
+    #prevWrap { overflow: hidden; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
+    #sheet { width: 794px; min-height: 1000px; transform-origin: 0 0; background: #fff; color: #111; padding: 44px 46px; font-size: 13px; line-height: 1.45;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .1); font-family: system-ui, -apple-system, "Segoe UI", "Nirmala UI", "Noto Sans", sans-serif; position: relative; }
+    [dir="rtl"] #sheet { transform-origin: 100% 0; }
+    #sheet .q-head { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; border-bottom: 2px solid #1d4f5c; padding-bottom: 12px; }
+    #sheet .q-biz { display: flex; gap: 12px; align-items: flex-start; min-width: 0; flex: 1 1 auto; }
+    #sheet .q-biz img { max-height: 64px; max-width: 150px; flex: none; }
+    #sheet .q-name { font-size: 1.5em; font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; }
+    #sheet .q-small { color: #333; white-space: pre-line; overflow-wrap: anywhere; }
+    #sheet .q-doc { flex: none; text-align: end; max-width: 46%; }
+    #sheet .q-title { font-size: 1.7em; font-weight: 800; color: #1d4f5c; letter-spacing: .04em; text-transform: uppercase; line-height: 1.2; }
+    #sheet .q-meta { margin-top: 6px; display: grid; grid-template-columns: auto auto; gap: 1px 10px; justify-content: end; }
+    #sheet .q-meta b { font-weight: 600; color: #444; text-align: start; }
+    #sheet .q-meta span { text-align: end; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    #sheet .q-to { margin: 14px 0; }
+    #sheet .q-lbl { font-size: .82em; font-weight: 700; color: #1d4f5c; text-transform: uppercase; letter-spacing: .05em; }
+    #sheet .q-cname { font-weight: 700; font-size: 1.1em; overflow-wrap: anywhere; }
+    #sheet table { width: 100%; border-collapse: collapse; table-layout: auto; }
+    #sheet th { background: #1d4f5c; color: #fff; font-weight: 700; font-size: .9em; padding: 6px 7px; text-align: start; vertical-align: bottom; }
+    #sheet td { padding: 6px 7px; border-bottom: 1px solid #d5d9de; vertical-align: top; overflow-wrap: anywhere; }
+    #sheet th.r, #sheet td.r { text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    #sheet td.u { white-space: nowrap; }
+    #sheet td.d { white-space: pre-line; min-width: 180px; }
+    #sheet tr { break-inside: avoid; }
+    #sheet thead { display: table-header-group; }
+    #sheet .q-bottom { display: flex; justify-content: space-between; gap: 24px; margin-top: 12px; align-items: flex-start; break-inside: avoid; }
+    #sheet .q-words { flex: 1 1 auto; min-width: 0; }
+    #sheet .q-tot { flex: none; min-width: 270px; }
+    #sheet .q-tot div { display: flex; justify-content: space-between; gap: 22px; padding: 3px 7px; font-variant-numeric: tabular-nums; }
+    #sheet .q-tot .g { background: #1d4f5c; color: #fff; font-weight: 800; font-size: 1.15em; padding: 7px; margin-top: 4px; }
+    #sheet .q-sec { margin-top: 14px; break-inside: avoid; }
+    #sheet .q-sign { display: flex; justify-content: space-between; gap: 30px; margin-top: 34px; break-inside: avoid; }
+    #sheet .q-sign > div { min-width: 200px; max-width: 48%; text-align: center; }
+    #sheet .q-sign .sp { height: 46px; border-bottom: 1px solid #555; margin-bottom: 4px; }
+    #sheet .q-sign .for { font-weight: 600; overflow-wrap: anywhere; min-height: 1.45em; }
+    #sheet .q-mark { position: absolute; inset-inline-end: 46px; top: 8px; font-size: .8em; font-weight: 800; letter-spacing: .2em; color: #c2410c; border: 1px solid #c2410c; border-radius: 4px; padding: 1px 8px; }
+    @media print {
+      #app > *:not(.qm-grid), .qm-form, .qm-side > *:not(#prevWrap) { display: none !important; }
+      .qm-grid { display: block; }
+      .qm-side { position: static; }
+      #prevWrap { border: 0; padding: 0; background: #fff; height: auto !important; overflow: visible; }
+      #sheet { width: auto; min-height: 0; transform: none !important; box-shadow: none; padding: 0; font-size: 12px; }
+      #sheet .q-mark { inset-inline-end: 0; top: -2px; }
+      html, body { background: #fff; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+    @page { size: A4; margin: 12mm; }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="qm-privacy no-print"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+    <p class="qm-disc small muted" data-i18n="disclaimer"></p>
+
+    <div id="sampleBanner" class="callout accent row spread no-print" hidden style="margin-bottom:14px">
+      <span class="grow" data-i18n="sample_banner"></span>
+      <button class="btn btn-sm btn-primary" id="newBtn2" type="button" data-i18n="new_blank"></button>
+    </div>
+
+    <div class="qm-grid">
+      <div class="qm-form stack no-print">
+        <section class="card stack">
+          <h2 class="h-sec" data-i18n="biz_title"></h2>
+          <div class="fgrid">
+            <label class="field wide"><span data-i18n="biz_name"></span><input type="text" id="bName" class="no-i18n" maxlength="80" autocomplete="off" dir="auto"></label>
+            <label class="field wide"><span data-i18n="address"></span><textarea id="bAddr" class="no-i18n" rows="2" maxlength="240" dir="auto"></textarea></label>
+            <label class="field"><span data-i18n="phone"></span><input type="tel" id="bPhone" class="no-i18n" maxlength="30" autocomplete="off" dir="ltr"></label>
+            <label class="field"><span data-i18n="email"></span><input type="email" id="bEmail" class="no-i18n" maxlength="80" autocomplete="off" dir="ltr"></label>
+            <label class="field"><span><span data-i18n="gstin"></span> (<span data-i18n="optional"></span>)</span><input type="text" id="bGstin" class="no-i18n up" maxlength="15" autocomplete="off" dir="ltr"></label>
+          </div>
+          <div class="row logo-row">
+            <strong class="small"><span data-i18n="logo"></span> (<span data-i18n="optional"></span>)</strong>
+            <img id="logoThumb" alt="" hidden>
+            <button type="button" class="btn btn-sm" id="logoPick" data-i18n="pick_image"></button>
+            <button type="button" class="btn btn-sm btn-danger" id="logoDel" data-i18n="remove" hidden></button>
+          </div>
+          <p class="muted small" data-i18n="img_hint" style="margin:0"></p>
+        </section>
+
+        <section class="card stack">
+          <h2 class="h-sec" data-i18n="cust_title"></h2>
+          <div class="fgrid">
+            <label class="field wide"><span data-i18n="cust_name"></span><input type="text" id="cName" class="no-i18n" maxlength="80" autocomplete="off" dir="auto"></label>
+            <label class="field wide"><span data-i18n="address"></span><textarea id="cAddr" class="no-i18n" rows="2" maxlength="240" dir="auto"></textarea></label>
+            <label class="field"><span data-i18n="phone"></span><input type="tel" id="cPhone" class="no-i18n" maxlength="30" autocomplete="off" dir="ltr"></label>
+            <label class="field"><span><span data-i18n="gstin"></span> (<span data-i18n="optional"></span>)</span><input type="text" id="cGstin" class="no-i18n up" maxlength="15" autocomplete="off" dir="ltr"></label>
+          </div>
+        </section>
+
+        <section class="card stack">
+          <h2 class="h-sec" data-i18n="quote_title"></h2>
+          <div class="fgrid">
+            <label class="field"><span data-i18n="doc_no"></span><input type="text" id="qNo" class="no-i18n" maxlength="24" autocomplete="off" dir="ltr"></label>
+            <label class="field"><span data-i18n="doc_date"></span><input type="date" id="qDate" class="no-i18n"></label>
+            <label class="field"><span data-i18n="valid_till"></span><input type="date" id="qValid" class="no-i18n"></label>
+          </div>
+          <div class="field"><span id="modeLbl" data-i18n="tax_type"></span>
+            <div class="seg full" id="mode" role="group" aria-labelledby="modeLbl">
+              <button type="button" data-v="intra" data-i18n="mode_intra"></button>
+              <button type="button" data-v="inter" data-i18n="mode_inter"></button>
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" id="round"> <span data-i18n="opt_round"></span></label>
+          <label class="check" id="enBox"><input type="checkbox" id="enLabels"> <span data-i18n="en_labels"></span></label>
+        </section>
+
+        <section class="card stack">
+          <h2 class="h-sec" data-i18n="items"></h2>
+          <p class="muted small" data-i18n="line_hint" style="margin:0"></p>
+          <div id="lines"></div>
+          <div><button type="button" class="btn" id="addLine">＋ <span data-i18n="add_line"></span></button></div>
+          <div id="errs" class="callout danger small stack" role="alert"></div>
+          <div class="sum" id="sum" aria-live="polite">
+            <div><span data-i18n="subtotal"></span><span id="tSub" class="no-i18n"></span></div>
+            <div id="rowC"><span data-i18n="cgst"></span><span id="tC" class="no-i18n"></span></div>
+            <div id="rowS"><span data-i18n="sgst"></span><span id="tS" class="no-i18n"></span></div>
+            <div id="rowI"><span data-i18n="igst"></span><span id="tI" class="no-i18n"></span></div>
+            <div id="rowR"><span data-i18n="round_off"></span><span id="tR" class="no-i18n"></span></div>
+            <div class="g"><span data-i18n="grand"></span><span id="tTotal" class="no-i18n"></span></div>
+          </div>
+          <p class="small" id="tWords" style="margin:0"></p>
+        </section>
+
+        <section class="card stack">
+          <label class="field"><span data-i18n="terms"></span><textarea id="terms" class="no-i18n" rows="4" maxlength="1500" dir="auto"></textarea></label>
+          <label class="field"><span data-i18n="notes"></span><textarea id="notes" class="no-i18n" rows="2" maxlength="600" dir="auto"></textarea></label>
+        </section>
+      </div>
+
+      <div class="qm-side stack">
+        <section class="card stack no-print">
+          <div class="row acts">
+            <button type="button" class="btn btn-primary btn-lg" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print_pdf"></span></button>
+            <button type="button" class="btn" id="saveFile"><span aria-hidden="true">💾</span> <span data-i18n="save_file"></span></button>
+            <button type="button" class="btn" id="openFile"><span aria-hidden="true">📂</span> <span data-i18n="open_file"></span></button>
+          </div>
+          <div class="row acts">
+            <button type="button" class="btn btn-sm" id="newBtn" data-i18n="new_blank"></button>
+            <button type="button" class="btn btn-sm" id="sampleBtn" data-i18n="show_sample"></button>
+          </div>
+          <p class="muted small" style="margin:0"><span data-i18n="file_hint"></span> <span data-i18n="autosave"></span></p>
+        </section>
+        <h2 class="h-sec no-print" data-i18n="preview"></h2>
+        <div id="prevWrap"><div id="sheet"></div></div>
+      </div>
+    </div>
+
+    <details class="card no-print" style="margin-top:16px">
+      <summary><strong data-i18n="help_title"></strong></summary>
+      <ul class="stack" style="margin-top:10px">
+        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li><li data-i18n="tip4"></li><li data-i18n="tip5"></li>
+      </ul>
+    </details>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="words.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

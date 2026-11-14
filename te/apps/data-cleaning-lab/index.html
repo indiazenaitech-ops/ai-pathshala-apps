@@ -127,35 +127,35 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">గజిబిజి జాబితాను దశలవారీగా శుభ్రం చేయండి: అదనపు ఖాళీలు, రెండుసార్లు వచ్చిన వరుసలు, రకరకాల తేదీలు, మొబైల్ నంబర్లు, ₹ మొత్తాలు. దశలను రెసిపీగా సేవ్ చేసి, వచ్చే నెల ఫైల్‌పై మళ్లీ నడపండి.</p>
 
     <section class="card" aria-labelledby="h-load">
-      <h2 class="dc-h" id="h-load" data-i18n="h_load"></h2>
+      <h2 class="dc-h" id="h-load" data-i18n="h_load">1. మీ డేటాను తెరవండి</h2>
       <div class="row">
-        <button class="btn" id="load-sample" type="button" data-i18n="load_sample"></button>
-        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file"></button>
+        <button class="btn" id="load-sample" type="button" data-i18n="load_sample">గజిబిజి నమూనా</button>
+        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file">CSV ఫైల్ తెరవండి</button>
         <button class="btn btn-danger" id="reset" type="button" data-i18n="reset"></button>
       </div>
       <details id="paste-box">
-        <summary data-i18n="paste_data"></summary>
+        <summary data-i18n="paste_data">డేటా పేస్ట్ చేయండి</summary>
         <textarea id="paste" class="no-i18n" data-i18n-placeholder="paste_ph" aria-label="CSV" data-i18n-aria-label="paste_data"></textarea>
-        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste"></button>
+        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste">పేస్ట్ చేసిన డేటా వాడండి</button>
       </details>
-      <p class="dc-drop small muted" data-i18n="drop_hint"></p>
+      <p class="dc-drop small muted" data-i18n="drop_hint">CSV ఫైల్‌ను ఈ పేజీపైకి లాగి వదలవచ్చు. Excel లో: File → Save as → CSV. మీ ఫైల్ ఈ పరికరంలోనే ఉంటుంది.</p>
       <p id="data-info" class="no-i18n" aria-live="polite"></p>
       <p id="busy" class="muted" hidden data-i18n="loading"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-quality">
-      <h2 class="dc-h" id="h-quality" data-i18n="h_quality"></h2>
+      <h2 class="dc-h" id="h-quality" data-i18n="h_quality">2. డేటా నాణ్యత</h2>
       <div class="dc-scores" aria-live="polite">
         <div class="dc-score">
-          <span class="lbl" data-i18n="score_before"></span>
+          <span class="lbl" data-i18n="score_before">శుభ్రతకు ముందు స్కోర్</span>
           <span class="big"><span id="score-before"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-before"></span></div>
         </div>
         <div class="dc-score after">
-          <span class="lbl" data-i18n="score_after"></span>
+          <span class="lbl" data-i18n="score_after">శుభ్రత తర్వాత స్కోర్</span>
           <span class="big"><span id="score-after"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-after"></span></div>
         </div>
@@ -164,56 +164,56 @@
       <div class="scroll-x">
         <table class="table dc-qt">
           <thead><tr>
-            <th scope="col" data-i18n="th_column"></th><th scope="col" data-i18n="th_type"></th>
-            <th scope="col" data-i18n="q_missing"></th><th scope="col" data-i18n="q_invalid"></th><th scope="col" data-i18n="q_spaces"></th>
+            <th scope="col" data-i18n="th_column">నిలువు వరుస</th><th scope="col" data-i18n="th_type">ఎలా కనిపిస్తోంది</th>
+            <th scope="col" data-i18n="q_missing">ఖాళీ</th><th scope="col" data-i18n="q_invalid">సరైన రూపంలో లేదు</th><th scope="col" data-i18n="q_spaces">అదనపు ఖాళీలు</th>
           </tr></thead>
           <tbody id="q-body"></tbody>
         </table>
       </div>
-      <p class="tiny muted" data-i18n="quality_note"></p>
+      <p class="tiny muted" data-i18n="quality_note">స్కోర్ = ఏ సమస్యా లేని గడుల వాటా. సమస్య అంటే ఖాళీ విలువ, అదనపు ఖాళీలు, సరైన రూపంలో లేని విలువ, లేదా పూర్తిగా రెండుసార్లు వచ్చిన వరుస.</p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-steps">
-      <h2 class="dc-h" id="h-steps" data-i18n="h_steps"></h2>
+      <h2 class="dc-h" id="h-steps" data-i18n="h_steps">3. శుభ్రత దశలు (మీ రెసిపీ)</h2>
       <div class="panel stack">
         <div class="dc-add">
-          <label class="field"><span data-i18n="step_type"></span><select id="step-type"></select></label>
+          <label class="field"><span data-i18n="step_type">దశను జోడించండి</span><select id="step-type"></select></label>
         </div>
         <div id="step-form"></div>
         <div class="dc-actions">
-          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step"></button>
-          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest"></button>
+          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step">దశను జోడించండి</button>
+          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest">దశలు సూచించు</button>
         </div>
       </div>
       <ol id="recipe" aria-live="polite"></ol>
-      <p id="recipe-empty" class="muted" data-i18n="recipe_empty"></p>
+      <p id="recipe-empty" class="muted" data-i18n="recipe_empty">ఇంకా దశలు లేవు. పైన ఒక దశను ఎంచుకుని &quot;దశను జోడించండి&quot; నొక్కండి, లేదా &quot;దశలు సూచించు&quot; నొక్కండి.</p>
       <div class="dc-actions" style="margin-top:12px">
-        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo"></button>
-        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe"></button>
-        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe"></button>
-        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps"></button>
+        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo">రద్దు చేయి</button>
+        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe">రెసిపీ ఎగుమతి</button>
+        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe">రెసిపీ దిగుమతి</button>
+        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps">అన్ని దశలూ తొలగించు</button>
       </div>
       <p class="callout small" style="margin-top:12px" data-i18n-html="pipeline_note"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-preview">
-      <h2 class="dc-h" id="h-preview" data-i18n="h_preview"></h2>
+      <h2 class="dc-h" id="h-preview" data-i18n="h_preview">4. శుభ్రమైన డేటా</h2>
       <div class="dc-bar">
         <div class="seg" id="view-seg" role="group">
-          <button type="button" data-v="clean" data-i18n="view_clean"></button>
-          <button type="button" data-v="orig" data-i18n="view_orig"></button>
+          <button type="button" data-v="clean" data-i18n="view_clean">శుభ్రం</button>
+          <button type="button" data-v="orig" data-i18n="view_orig">అసలు</button>
         </div>
-        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show"></span>
+        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show">చూపు</span>
           <select id="filter">
-            <option value="all" data-i18n="show_all"></option>
-            <option value="changed" data-i18n="show_changed"></option>
-            <option value="problems" data-i18n="show_problems"></option>
+            <option value="all" data-i18n="show_all">అన్ని వరుసలు</option>
+            <option value="changed" data-i18n="show_changed">మారిన వరుసలు</option>
+            <option value="problems" data-i18n="show_problems">సమస్య ఉన్న వరుసలు</option>
           </select>
         </label>
       </div>
-      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed"></span><span class="lg-bad" data-i18n="legend_bad"></span></div>
+      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed">ఏదో దశ మార్చింది</span><span class="lg-bad" data-i18n="legend_bad">ఖాళీ లేదా సరైన రూపంలో లేదు</span></div>
       <div class="dc-gridwrap no-i18n"><table class="table" id="grid"></table></div>
-      <p id="no-rows" class="muted" hidden data-i18n="no_rows"></p>
+      <p id="no-rows" class="muted" hidden data-i18n="no_rows">చూపడానికి వరుసలు లేవు.</p>
       <div class="dc-pager" id="pager">
         <button class="btn btn-sm" id="pg-prev" type="button" data-i18n="previous"></button>
         <span id="page-info" class="small"></span>
@@ -221,23 +221,23 @@
       </div>
       <div class="dc-foot">
         <span id="out-count" class="small muted"></span>
-        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv"></button>
+        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv">శుభ్రమైన CSV డౌన్‌లోడ్</button>
       </div>
     </section>
 
     <details class="card dc-sec">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">గజిబిజి నమూనాతో మొదలుపెట్టండి: &quot;దశలు సూచించు&quot; నొక్కి, పట్టికలో ఆకుపచ్చ (మారినవి), ఎరుపు (సమస్య) గడులను చూడండి.</li>
+        <li data-i18n="tip2">ఆఫీసు పనికి: ప్రతి నెల వచ్చే కస్టమర్ లేదా సిబ్బంది జాబితా కోసం ఒకసారి రెసిపీ తయారు చేసి ఎగుమతి చేయండి. వచ్చే నెల కొత్త ఫైల్ తెరిచి, రెసిపీ దిగుమతి చేసి, ఒక్క నిమిషంలో శుభ్రమైన CSV డౌన్‌లోడ్ చేయండి.</li>
+        <li data-i18n="tip3">క్రమం ముఖ్యం: రెండుసార్లు వచ్చిన వరుసలు తీసే ముందు ఖాళీలు, పెద్ద-చిన్న అక్షరాలు సరిచేయండి; అప్పుడే &quot;ప్రియా  శర్మ&quot;, &quot;ప్రియా శర్మ&quot; ఒకే వ్యక్తి అని తెలుస్తుంది.</li>
+        <li data-i18n="tip4">తరగతి కార్యకలాపం: ప్రతి బృందానికీ ఒకే గజిబిజి జాబితా ఇవ్వండి. బృందాలు ముందు కాగితంపై శుభ్రత దశలు రాసి, తర్వాత ఇక్కడ ప్రయత్నించాలి. తక్కువ దశల్లో ఎక్కువ స్కోర్ ఎవరికి?</li>
+        <li data-i18n="tip5">ఒక దశను ఆపి అది ఏం చేస్తోందో చూడండి. ↑ ↓ తో క్రమం మార్చండి; పొరపాటు జరిగితే &quot;రద్దు చేయి&quot; నొక్కండి.</li>
+        <li data-i18n="tip6">శుభ్రత తర్వాత మిగిలిన ఎరుపు గడులను చూడండి: కొన్ని విలువలను (5 అంకెల మొబైల్ నంబర్ లాంటివి) కంప్యూటర్ సరిచేయలేదు. ఎవరైనా వాటిని తనిఖీ చేయాలి.</li>
       </ul>
     </details>
     <details class="card dc-sec">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">తెలుసుకోవాల్సిన పదాలు: లోపల ఏం జరుగుతోంది</summary>
       <ul>
         <li data-i18n-html="w_dataset"></li>
         <li data-i18n-html="w_missing"></li>

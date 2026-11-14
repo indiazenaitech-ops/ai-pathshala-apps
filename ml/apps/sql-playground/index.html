@@ -145,11 +145,11 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">CBSE 11–12 ക്ലാസുകൾക്കായി തയ്യാറാക്കിയ സ്കൂൾ ഡാറ്റാബേസിൽ SQL പരിശീലിക്കൂ. ക്വറി എഴുതി, റൺ ചെയ്ത്, ഉടൻ ഉത്തരം കാണൂ.</p>
 
     <div id="loadBox" class="callout sqlp-loading" role="status" aria-live="polite">
       <span class="sqlp-spinner" id="loadSpin" aria-hidden="true"></span>
-      <span id="loadMsg" data-i18n="loading_engine"></span>
+      <span id="loadMsg" data-i18n="loading_engine">SQL എഞ്ചിൻ ലോഡ് ചെയ്യുന്നു… (ആദ്യമായി ഇന്റർനെറ്റ് വേണം)</span>
       <button class="btn btn-sm" id="retryBtn" type="button" data-i18n="try_again" hidden></button>
     </div>
 
@@ -158,7 +158,7 @@
         <div class="card">
           <div class="sqlp-toolbar no-print">
             <div class="sqlp-actions">
-              <button class="btn btn-primary btn-lg sqlp-run" id="runBtn" type="button" disabled><span aria-hidden="true">▶</span> <span data-i18n="run"></span></button>
+              <button class="btn btn-primary btn-lg sqlp-run" id="runBtn" type="button" disabled><span aria-hidden="true">▶</span> <span data-i18n="run">റൺ ചെയ്യുക</span></button>
               <button class="btn" id="clearBtn" type="button" data-i18n="clear"></button>
               <button class="edu-iconbtn sqlp-iconbtn" id="sizeBtn" type="button" data-i18n-title="text_size" data-i18n-aria-label="text_size">A+</button>
               <button class="edu-iconbtn" id="fsBtn" type="button" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen">⛶</button>
@@ -176,36 +176,36 @@
             </div>
             <p id="taskText"></p>
             <div class="row">
-              <button class="btn btn-accent" id="checkBtn" type="button" data-i18n="check" disabled></button>
-              <button class="btn" id="answerBtn" type="button" data-i18n="show_answer"></button>
+              <button class="btn btn-accent" id="checkBtn" type="button" data-i18n="check" disabled>എന്റെ ഉത്തരം പരിശോധിക്കുക</button>
+              <button class="btn" id="answerBtn" type="button" data-i18n="show_answer">ഉത്തരം കാണിക്കുക</button>
             </div>
             <pre id="answerCode" class="sqlp-answer no-i18n" hidden></pre>
             <p id="checkMsg" aria-live="polite" class="mb0"></p>
           </div>
 
-          <label for="editor" class="sqlp-label" data-i18n="editor_label"></label>
+          <label for="editor" class="sqlp-label" data-i18n="editor_label">നിങ്ങളുടെ SQL ഇവിടെ എഴുതുക</label>
           <textarea id="editor" class="sqlp-editor no-i18n" dir="ltr" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" rows="7"></textarea>
           <pre id="printSql" class="sqlp-code no-i18n" hidden></pre>
-          <p class="muted small sqlp-hint-line" data-i18n="run_hint"></p>
+          <p class="muted small sqlp-hint-line" data-i18n="run_hint">റൺ ചെയ്യാൻ Ctrl + Enter അമർത്തുക. കോഡിന്റെ ഒരു ഭാഗം തിരഞ്ഞെടുത്താൽ അതു മാത്രം റൺ ആകും.</p>
         </div>
 
         <div class="card">
-          <h2 data-i18n="results"></h2>
+          <h2 data-i18n="results">ഫലങ്ങൾ</h2>
           <div id="results" aria-live="polite"></div>
         </div>
       </section>
 
       <aside class="card sqlp-side no-print">
         <div class="tabs" role="tablist">
-          <button type="button" role="tab" id="tabTables" aria-controls="paneTables" aria-selected="true" data-i18n="tables"></button>
-          <button type="button" role="tab" id="tabPractice" aria-controls="panePractice" aria-selected="false" data-i18n="practice"></button>
+          <button type="button" role="tab" id="tabTables" aria-controls="paneTables" aria-selected="true" data-i18n="tables">ടേബിളുകൾ</button>
+          <button type="button" role="tab" id="tabPractice" aria-controls="panePractice" aria-selected="false" data-i18n="practice">പരിശീലനം</button>
         </div>
         <div id="paneTables" role="tabpanel" aria-labelledby="tabTables">
-          <p class="muted small" data-i18n="tap_to_insert"></p>
+          <p class="muted small" data-i18n="tap_to_insert">ഒരു പേരിൽ തൊട്ടാൽ അത് എഡിറ്ററിൽ ചേരും.</p>
           <div id="schema"></div>
         </div>
         <div id="panePractice" role="tabpanel" aria-labelledby="tabPractice" hidden>
-          <p class="muted small" data-i18n="practice_intro"></p>
+          <p class="muted small" data-i18n="practice_intro">ഒരു ചോദ്യം തിരഞ്ഞെടുക്കുക, എഡിറ്ററിൽ ക്വറി എഴുതി പരിശോധിക്കുക അമർത്തുക. നിങ്ങളുടെ ക്വറി സ്കൂൾ ഡാറ്റാബേസിന്റെ പുതിയ പകർപ്പിൽ പരിശോധിക്കും.</p>
           <div class="progress" aria-hidden="true"><span id="solvedBar" style="width:0"></span></div>
           <p class="small mb0" id="solvedTxt" style="margin-top:6px"></p>
           <ol class="sqlp-tasks" id="taskList"></ol>
@@ -214,24 +214,24 @@
     </div>
 
     <div class="card row sqlp-more no-print">
-      <h2 data-i18n="more_tools"></h2>
-      <button class="btn" id="printBtn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_sheet"></span></button>
-      <button class="btn" id="dumpBtn" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="download_sql"></span></button>
-      <button class="btn" id="csvImportBtn" type="button"><span aria-hidden="true">⬆</span> <span data-i18n="import_csv"></span></button>
-      <button class="btn btn-danger" id="resetBtn" type="button"><span aria-hidden="true">↺</span> <span data-i18n="reset_db"></span></button>
+      <h2 data-i18n="more_tools">കൂടുതൽ ടൂളുകൾ</h2>
+      <button class="btn" id="printBtn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_sheet">വർക്ക്ഷീറ്റ് പ്രിന്റ് ചെയ്യുക</span></button>
+      <button class="btn" id="dumpBtn" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="download_sql">SQL ഡൗൺലോഡ് ചെയ്യുക</span></button>
+      <button class="btn" id="csvImportBtn" type="button"><span aria-hidden="true">⬆</span> <span data-i18n="import_csv">CSV ടേബിളായി കൊണ്ടുവരിക</span></button>
+      <button class="btn btn-danger" id="resetBtn" type="button"><span aria-hidden="true">↺</span> <span data-i18n="reset_db">ഡാറ്റാബേസ് റീസെറ്റ് ചെയ്യുക</span></button>
       <span class="muted small" data-i18n="saved_local"></span>
     </div>
 
     <details class="card" id="helpBox">
       <summary data-i18n="help"></summary>
       <ul id="tipsList"></ul>
-      <h3 data-i18n="about_inside"></h3>
-      <p class="mb0" data-i18n="inside_text"></p>
+      <h3 data-i18n="about_inside">ഉള്ളിൽ എന്തു സംഭവിക്കുന്നു?</h3>
+      <p class="mb0" data-i18n="inside_text">SQLite ഡാറ്റാബേസ് എഞ്ചിന്റെ (sql.js) ഒരു ചെറിയ രൂപം നിങ്ങളുടെ ബ്രൗസറിനുള്ളിൽത്തന്നെ പ്രവർത്തിക്കുന്നു. നിങ്ങളുടെ ക്വറികളും ടേബിളുകളും ഈ ഉപകരണം വിട്ട് പുറത്തുപോകില്ല.</p>
     </details>
 
     <details class="card" id="mysqlBox">
-      <summary data-i18n="mysql_title"></summary>
-      <p data-i18n="mysql_intro"></p>
+      <summary data-i18n="mysql_title">SQLite-ഉം MySQL-ഉം: ചെറിയ വ്യത്യാസങ്ങൾ</summary>
+      <p data-i18n="mysql_intro">ഈ പ്ലേഗ്രൗണ്ട് SQLite-ൽ പ്രവർത്തിക്കുന്നു. CBSE പ്രാക്ടിക്കലിൽ MySQL ആണ് ഉപയോഗിക്കുന്നത്. മിക്കവാറും എല്ലാം ഒരുപോലെയാണ്. വ്യത്യാസങ്ങൾ ഇവയാണ്:</p>
       <ul id="mysqlList" class="mb0"></ul>
     </details>
 

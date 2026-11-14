@@ -169,46 +169,46 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">چند منٹ میں اپنا کوئز بنائیے۔ پروجیکٹر پر ٹیموں کے ساتھ کھیلیے، یا لنک بھیجیے تاکہ طلبہ اپنے فون پر مشق کریں۔</p>
 
     <div id="sharedBanner" class="callout accent stack" hidden>
-      <p class="mb0" style="font-weight:700" data-i18n="shared_banner"></p>
+      <p class="mb0" style="font-weight:700" data-i18n="shared_banner">آپ کے استاد نے یہ کوئز بھیجا ہے۔ سوالوں کے جواب دیں اور اپنا اسکور دیکھیں۔</p>
       <div class="row">
-        <button class="btn btn-sm" id="saveShared" type="button" data-i18n="save_shared"></button>
-        <button class="btn btn-sm btn-ghost" id="leaveShared" type="button" data-i18n="leave_shared"></button>
+        <button class="btn btn-sm" id="saveShared" type="button" data-i18n="save_shared">میرے کوئز میں محفوظ کریں</button>
+        <button class="btn btn-sm btn-ghost" id="leaveShared" type="button" data-i18n="leave_shared">کوئز میکر کھولیں</button>
       </div>
     </div>
-    <div id="badLink" class="callout danger" hidden><p class="mb0" data-i18n="bad_link"></p></div>
+    <div id="badLink" class="callout danger" hidden><p class="mb0" data-i18n="bad_link">یہ کوئز لنک ٹوٹا ہوا یا نامکمل ہے۔ استاد سے دوبارہ بھیجنے کو کہیں۔</p></div>
 
     <section class="card qm-bar no-print" id="quizBar">
       <label class="field">
-        <span data-i18n="my_quizzes"></span>
+        <span data-i18n="my_quizzes">میرے کوئز</span>
         <select id="quizSel" class="no-i18n"></select>
       </label>
       <div class="qm-actions">
-        <button class="btn" id="newQuiz" type="button"><span aria-hidden="true">＋</span> <span data-i18n="new_quiz"></span></button>
-        <button class="btn" id="dupQuiz" type="button" data-i18n="duplicate"></button>
-        <button class="btn btn-danger" id="delQuiz" type="button" data-i18n="delete_quiz"></button>
+        <button class="btn" id="newQuiz" type="button"><span aria-hidden="true">＋</span> <span data-i18n="new_quiz">نیا کوئز</span></button>
+        <button class="btn" id="dupQuiz" type="button" data-i18n="duplicate">کاپی بنائیں</button>
+        <button class="btn btn-danger" id="delQuiz" type="button" data-i18n="delete_quiz">کوئز حذف کریں</button>
       </div>
     </section>
 
     <nav class="qm-tabs no-print" role="tablist" id="tabs">
-      <button type="button" role="tab" id="tab-edit" data-tab="edit" aria-controls="p-edit"><span class="ic" aria-hidden="true">✏️</span><span data-i18n="tab_edit"></span></button>
-      <button type="button" role="tab" id="tab-class" data-tab="class" aria-controls="p-class"><span class="ic" aria-hidden="true">📽️</span><span data-i18n="tab_class"></span></button>
-      <button type="button" role="tab" id="tab-practice" data-tab="practice" aria-controls="p-practice"><span class="ic" aria-hidden="true">📱</span><span data-i18n="tab_practice"></span></button>
-      <button type="button" role="tab" id="tab-share" data-tab="share" aria-controls="p-share"><span class="ic" aria-hidden="true">🔗</span><span data-i18n="tab_share"></span></button>
+      <button type="button" role="tab" id="tab-edit" data-tab="edit" aria-controls="p-edit"><span class="ic" aria-hidden="true">✏️</span><span data-i18n="tab_edit">کوئز بنائیں</span></button>
+      <button type="button" role="tab" id="tab-class" data-tab="class" aria-controls="p-class"><span class="ic" aria-hidden="true">📽️</span><span data-i18n="tab_class">کلاس کوئز</span></button>
+      <button type="button" role="tab" id="tab-practice" data-tab="practice" aria-controls="p-practice"><span class="ic" aria-hidden="true">📱</span><span data-i18n="tab_practice">مشق</span></button>
+      <button type="button" role="tab" id="tab-share" data-tab="share" aria-controls="p-share"><span class="ic" aria-hidden="true">🔗</span><span data-i18n="tab_share">شیئر اور پرنٹ</span></button>
     </nav>
 
     <!-- ============ MAKE QUIZ ============ -->
     <section id="p-edit" role="tabpanel" aria-labelledby="tab-edit" class="stack" hidden>
       <div class="card stack">
         <label class="field">
-          <span data-i18n="quiz_title"></span>
+          <span data-i18n="quiz_title">کوئز کا نام</span>
           <input type="text" id="quizTitle" dir="auto" maxlength="120" data-i18n-placeholder="untitled">
         </label>
         <div class="row spread">
-          <div class="row"><h2 class="mb0" data-i18n="questions"></h2><span class="badge primary" id="qCount"></span></div>
-          <button class="btn btn-sm" id="jumpAdd" type="button"><span aria-hidden="true">＋</span> <span data-i18n="add_question"></span></button>
+          <div class="row"><h2 class="mb0" data-i18n="questions">سوالات</h2><span class="badge primary" id="qCount"></span></div>
+          <button class="btn btn-sm" id="jumpAdd" type="button"><span aria-hidden="true">＋</span> <span data-i18n="add_question">نیا سوال شامل کریں</span></button>
         </div>
         <div id="qList" class="stack"></div>
       </div>
@@ -216,29 +216,29 @@
       <div class="card stack" id="editor">
         <h2 class="mb0" id="edHead"></h2>
         <div class="seg" role="group" id="typeSeg">
-          <button type="button" id="typeMcq" data-i18n="type_mcq"></button>
-          <button type="button" id="typeTf" data-i18n="type_tf"></button>
+          <button type="button" id="typeMcq" data-i18n="type_mcq">کثیر انتخابی</button>
+          <button type="button" id="typeTf" data-i18n="type_tf">صحیح / غلط</button>
         </div>
         <label class="field">
-          <span data-i18n="question_text"></span>
+          <span data-i18n="question_text">سوال</span>
           <textarea id="qText" dir="auto" rows="2" maxlength="1000" data-i18n-placeholder="question_ph"></textarea>
         </label>
         <div id="mcqBox" class="stack">
           <div class="field">
-            <span data-i18n="options_hint"></span>
+            <span data-i18n="options_hint">آپشن: صحیح جواب کے ساتھ والے دائرے پر نشان لگائیں</span>
             <div id="optList" class="stack"></div>
           </div>
-          <button class="btn btn-sm" id="addOpt" type="button"><span aria-hidden="true">＋</span> <span data-i18n="add_option"></span></button>
+          <button class="btn btn-sm" id="addOpt" type="button"><span aria-hidden="true">＋</span> <span data-i18n="add_option">آپشن شامل کریں</span></button>
         </div>
         <div id="tfBox" class="field" hidden>
-          <span data-i18n="correct_answer"></span>
+          <span data-i18n="correct_answer">صحیح جواب</span>
           <div class="tfpick">
-            <label><input type="radio" name="tfAns" id="tfTrue" value="0" checked> <span data-i18n="true"></span></label>
-            <label><input type="radio" name="tfAns" id="tfFalse" value="1"> <span data-i18n="false"></span></label>
+            <label><input type="radio" name="tfAns" id="tfTrue" value="0" checked> <span data-i18n="true">صحیح</span></label>
+            <label><input type="radio" name="tfAns" id="tfFalse" value="1"> <span data-i18n="false">غلط</span></label>
           </div>
         </div>
         <label class="field">
-          <span data-i18n="explanation"></span>
+          <span data-i18n="explanation">وضاحت (اختیاری)</span>
           <textarea id="qExplain" dir="auto" rows="2" maxlength="600" data-i18n-placeholder="explanation_ph"></textarea>
         </label>
         <p id="edMsg" class="small bad mb0" role="alert" aria-live="polite"></p>
@@ -249,13 +249,13 @@
       </div>
 
       <div class="card stack">
-        <h2 class="mb0" data-i18n="files_title"></h2>
-        <p class="small muted mb0" data-i18n="import_hint"></p>
+        <h2 class="mb0" data-i18n="files_title">امپورٹ اور ایکسپورٹ</h2>
+        <p class="small muted mb0" data-i18n="import_hint">اسی ایپ کی JSON فائل کھولیں، یا Excel / Google Sheets کی CSV فائل جس میں یہ کالم ہوں: question, option1 … option6, correct (1–6), explanation.</p>
         <div class="row">
           <button class="btn" id="importBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="import"></span></button>
-          <button class="btn" id="exportJson" type="button" data-i18n="export_json"></button>
-          <button class="btn" id="exportCsv" type="button" data-i18n="export_csv"></button>
-          <button class="btn btn-ghost" id="csvTemplate" type="button" data-i18n="csv_template"></button>
+          <button class="btn" id="exportJson" type="button" data-i18n="export_json">JSON ایکسپورٹ</button>
+          <button class="btn" id="exportCsv" type="button" data-i18n="export_csv">CSV ایکسپورٹ</button>
+          <button class="btn btn-ghost" id="csvTemplate" type="button" data-i18n="csv_template">CSV نمونہ ڈاؤن لوڈ کریں</button>
         </div>
       </div>
     </section>
@@ -263,28 +263,28 @@
     <!-- ============ CLASS QUIZ ============ -->
     <section id="p-class" role="tabpanel" aria-labelledby="tab-class" class="stack" hidden>
       <div class="card stack" id="classSetup">
-        <h2 class="mb0" data-i18n="class_setup"></h2>
+        <h2 class="mb0" data-i18n="class_setup">پروجیکٹر پر کلاس کوئز</h2>
         <p class="muted mb0" id="classQuizName"></p>
         <div class="setup-grid">
-          <div class="field"><span data-i18n="timer"></span><div class="seg" role="group" id="timerSeg"></div></div>
-          <div class="field"><span data-i18n="teams"></span><div class="seg" role="group" id="teamSeg"></div></div>
+          <div class="field"><span data-i18n="timer">ہر سوال کا ٹائمر</span><div class="seg" role="group" id="timerSeg"></div></div>
+          <div class="field"><span data-i18n="teams">ٹیمیں</span><div class="seg" role="group" id="teamSeg"></div></div>
         </div>
         <details>
-          <summary data-i18n="team_names"></summary>
+          <summary data-i18n="team_names">ٹیموں کے نام (اختیاری)</summary>
           <div class="team-inputs" id="teamInputs"></div>
         </details>
         <div class="row" id="oldScoresRow" hidden>
           <span class="small muted" id="oldScores"></span>
-          <button class="btn btn-sm" id="resetScores2" type="button" data-i18n="reset_scores"></button>
+          <button class="btn btn-sm" id="resetScores2" type="button" data-i18n="reset_scores">اسکور ری سیٹ کریں</button>
         </div>
         <div class="row">
-          <label class="check"><input type="checkbox" id="shufQ"> <span data-i18n="shuffle_q"></span></label>
-          <label class="check"><input type="checkbox" id="shufO"> <span data-i18n="shuffle_o"></span></label>
+          <label class="check"><input type="checkbox" id="shufQ"> <span data-i18n="shuffle_q">سوال ملا دیں</span></label>
+          <label class="check"><input type="checkbox" id="shufO"> <span data-i18n="shuffle_o">آپشن ملا دیں</span></label>
         </div>
         <div class="row">
-          <button class="btn btn-primary btn-lg" id="startClass" type="button"><span aria-hidden="true">▶</span> <span data-i18n="start_class"></span></button>
+          <button class="btn btn-primary btn-lg" id="startClass" type="button"><span aria-hidden="true">▶</span> <span data-i18n="start_class">کلاس کوئز شروع کریں</span></button>
         </div>
-        <p class="small muted mb0" data-i18n="keys_hint"></p>
+        <p class="small muted mb0" data-i18n="keys_hint">کی بورڈ: Space = جواب دکھائیں · → اگلا · ← پچھلا · F = پوری اسکرین · 1–4 = ٹیم کو +1 نمبر۔ پریزنٹیشن کلکر بھی چلتا ہے۔</p>
       </div>
 
       <div class="card present" id="classStage" hidden>
@@ -294,7 +294,7 @@
           <div class="row">
             <button class="edu-iconbtn" id="cqRestartTimer" type="button" data-i18n-aria-label="restart_timer" data-i18n-title="restart_timer">↻</button>
             <button class="edu-iconbtn" id="cqFull" type="button" data-i18n-aria-label="fullscreen" data-i18n-title="fullscreen">⛶</button>
-            <button class="btn btn-sm" id="cqExit" type="button" data-i18n="back_setup"></button>
+            <button class="btn btn-sm" id="cqExit" type="button" data-i18n="back_setup">سیٹ اپ پر واپس</button>
           </div>
         </div>
         <div class="progress" style="margin-top:10px"><span id="cqBar"></span></div>
@@ -304,14 +304,14 @@
           <div class="callout success" id="cqAnswer" aria-live="polite" style="margin-top:14px" hidden></div>
           <div class="cq-nav">
             <button class="btn btn-lg" id="cqPrev" type="button"><span class="arr" aria-hidden="true">◀</span> <span data-i18n="previous"></span></button>
-            <button class="btn btn-accent btn-lg" id="cqReveal" type="button" data-i18n="reveal"></button>
+            <button class="btn btn-accent btn-lg" id="cqReveal" type="button" data-i18n="reveal">جواب دکھائیں</button>
             <button class="btn btn-primary btn-lg" id="cqNext" type="button"><span data-i18n="next"></span> <span class="arr" aria-hidden="true">▶</span></button>
           </div>
         </div>
         <div id="cqFinish" class="finish" hidden></div>
         <div class="scoreboard" id="scoreboard"></div>
         <div class="row" style="justify-content:center;margin-top:10px" id="scoreTools">
-          <button class="btn btn-sm btn-ghost" id="resetScores" type="button" data-i18n="reset_scores"></button>
+          <button class="btn btn-sm btn-ghost" id="resetScores" type="button" data-i18n="reset_scores">اسکور ری سیٹ کریں</button>
         </div>
       </div>
     </section>
@@ -321,12 +321,12 @@
       <div class="card stack" id="prStart">
         <h2 class="mb0 no-i18n" id="prTitle" dir="auto"></h2>
         <p class="mb0"><span class="badge primary" id="prCount"></span></p>
-        <p class="muted mb0" data-i18n="practice_intro"></p>
+        <p class="muted mb0" data-i18n="practice_intro">ایک وقت میں ایک سوال کا جواب دیں۔ فوراً پتا چلے گا کہ جواب صحیح ہے یا نہیں، وضاحت کے ساتھ۔</p>
         <div class="row">
-          <label class="check"><input type="checkbox" id="prShufQ"> <span data-i18n="shuffle_q"></span></label>
-          <label class="check"><input type="checkbox" id="prShufO"> <span data-i18n="shuffle_o"></span></label>
+          <label class="check"><input type="checkbox" id="prShufQ"> <span data-i18n="shuffle_q">سوال ملا دیں</span></label>
+          <label class="check"><input type="checkbox" id="prShufO"> <span data-i18n="shuffle_o">آپشن ملا دیں</span></label>
         </div>
-        <div class="row"><button class="btn btn-primary btn-lg" id="prStartBtn" type="button"><span aria-hidden="true">▶</span> <span data-i18n="start_practice"></span></button></div>
+        <div class="row"><button class="btn btn-primary btn-lg" id="prStartBtn" type="button"><span aria-hidden="true">▶</span> <span data-i18n="start_practice">مشق شروع کریں</span></button></div>
       </div>
 
       <div class="card stack" id="prQ" hidden>
@@ -350,8 +350,8 @@
         <div id="prReview" class="stack"></div>
         <div class="row">
           <button class="btn btn-primary" id="prAgain" type="button" data-i18n="try_again"></button>
-          <button class="btn" id="prMistakes" type="button" data-i18n="practice_wrong"></button>
-          <a class="btn btn-accent" id="prShareScore" target="_blank" rel="noopener" data-i18n="share_score"></a>
+          <button class="btn" id="prMistakes" type="button" data-i18n="practice_wrong">صرف غلط سوالوں کی مشق</button>
+          <a class="btn btn-accent" id="prShareScore" target="_blank" rel="noopener" data-i18n="share_score">میرا اسکور WhatsApp پر بھیجیں</a>
         </div>
       </div>
     </section>
@@ -359,41 +359,41 @@
     <!-- ============ SHARE & PRINT ============ -->
     <section id="p-share" role="tabpanel" aria-labelledby="tab-share" class="stack" hidden>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="share_title"></h2>
-        <p class="muted mb0" data-i18n="share_help"></p>
+        <h2 class="mb0" data-i18n="share_title">طلبہ کے ساتھ شیئر کریں</h2>
+        <p class="muted mb0" data-i18n="share_help">طلبہ یہ لنک کسی بھی فون پر کھول کر مشق کر سکتے ہیں۔ کچھ بھی اپ لوڈ نہیں ہوتا: پورا کوئز لنک کے اندر ہی ہے۔</p>
         <label class="field">
-          <span data-i18n="share_link"></span>
+          <span data-i18n="share_link">کوئز لنک</span>
           <input type="text" id="shareUrl" readonly>
         </label>
         <p class="tiny muted mb0 linklen" id="linkLen"></p>
         <div class="row">
           <button class="btn btn-primary" id="copyLink" type="button" data-i18n="copy"></button>
-          <a class="btn btn-accent" id="waLink" target="_blank" rel="noopener" data-i18n="whatsapp"></a>
+          <a class="btn btn-accent" id="waLink" target="_blank" rel="noopener" data-i18n="whatsapp">WhatsApp پر بھیجیں</a>
           <button class="btn" id="nativeShare" type="button" data-i18n="share"></button>
-          <a class="btn btn-ghost" id="openLink" target="_blank" rel="noopener" data-i18n="open_student"></a>
+          <a class="btn btn-ghost" id="openLink" target="_blank" rel="noopener" data-i18n="open_student">طالب علم کی طرح کھولیں</a>
         </div>
         <p class="callout warning small mb0" id="shareNote" hidden></p>
         <p class="callout warning small mb0" id="longNote" hidden></p>
       </div>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="print_title"></h2>
-        <p class="muted mb0" data-i18n="print_help"></p>
-        <label class="check"><input type="checkbox" id="pKey"> <span data-i18n="print_answer_key"></span></label>
-        <label class="check"><input type="checkbox" id="pLines"> <span data-i18n="print_name_lines"></span></label>
-        <label class="check"><input type="checkbox" id="pExpl"> <span data-i18n="print_expl"></span></label>
-        <div class="row"><button class="btn btn-primary" id="printBtn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_btn"></span></button></div>
+        <h2 class="mb0" data-i18n="print_title">ورک شیٹ پرنٹ کریں</h2>
+        <p class="muted mb0" data-i18n="print_help">طلبہ کو سوال ملتے ہیں۔ جوابی کلید استاد کے لیے الگ صفحے پر چھپتی ہے۔</p>
+        <label class="check"><input type="checkbox" id="pKey"> <span data-i18n="print_answer_key">جوابی کلید الگ صفحے پر شامل کریں</span></label>
+        <label class="check"><input type="checkbox" id="pLines"> <span data-i18n="print_name_lines">نام / جماعت / رول نمبر کی لائنیں شامل کریں</span></label>
+        <label class="check"><input type="checkbox" id="pExpl"> <span data-i18n="print_expl">جوابی کلید میں وضاحت بھی دکھائیں</span></label>
+        <div class="row"><button class="btn btn-primary" id="printBtn" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_btn">ورک شیٹ پرنٹ کریں</span></button></div>
       </div>
     </section>
 
     <details class="card no-print" id="helpBox" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">استعمال کا طریقہ / کلاس کے لیے خیالات</strong></summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">کوئز بنائیں: کثیر انتخابی یا صحیح / غلط چنیں، سوال لکھیں، صحیح جواب پر نشان لگائیں اور مختصر وضاحت شامل کریں۔ ترتیب بدلنے کے لیے ↑ ↓ استعمال کریں۔</li>
+        <li data-i18n="tip2">کلاس کوئز: کلاس کو A–D ٹیموں میں بانٹیں۔ پروجیکٹر پر ایک سوال دکھائیں، ٹائمر ختم ہونے تک ٹیمیں آپس میں مشورہ کریں، پھر جواب دکھائیں اور صحیح ٹیموں کو +1 دیں۔</li>
+        <li data-i18n="tip3">فون پر ہوم ورک: &quot;شیئر اور پرنٹ&quot; میں جا کر لنک کلاس کے WhatsApp گروپ میں بھیجیں۔ پورا کوئز لنک میں ہی ہے، اس لیے نہ لاگ اِن چاہیے نہ سرور۔</li>
+        <li data-i18n="tip4">فون نہیں ہیں؟ ورک شیٹ پرنٹ کریں۔ جوابی کلید الگ صفحے پر چھپتی ہے، وہ صفحہ اپنے پاس رکھیں۔</li>
+        <li data-i18n="tip5">سوال پہلے سے Excel یا Google Sheets میں ہیں؟ question, option1 … option6, correct (1–6), explanation کالم رکھیں، CSV کے طور پر محفوظ کریں اور امپورٹ کر لیں۔</li>
+        <li data-i18n="tip6">کلاس سرگرمی: ہر گروپ آج کے سبق پر وضاحت کے ساتھ 3 سوال لکھے۔ سب کو ایک کوئز میں جوڑیں اور پوری کلاس کا مقابلہ کھیلیں۔</li>
       </ul>
       <div class="row spread" style="margin-top:10px">
         <span class="small muted" data-i18n="saved_local"></span>

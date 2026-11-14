@@ -276,20 +276,20 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="gi-privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
-    <p class="gi-disc small muted" data-i18n="disclaimer"></p>
+    <p class="edu-intro" data-i18n="intro">GST टैक्स इनवॉइस, कोटेशन, प्रोफ़ॉर्मा इनवॉइस, डिलीवरी चालान, बिल ऑफ़ सप्लाई और भुगतान रसीद बनाएँ। प्लेस ऑफ़ सप्लाई से CGST + SGST या IGST अपने-आप लगता है, और UPI QR ठीक उतनी ही रकम माँगता है।</p>
+    <p class="gi-privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">आपकी फ़ाइलें इस डिवाइस से बाहर नहीं जातीं। ग्राहकों की सूची, दाम और GSTIN सिर्फ़ इसी ब्राउज़र में सेव होते हैं।</span></p>
+    <p class="gi-disc small muted" data-i18n="disclaimer">यह बिल का फ़ॉर्मेट बनाने में मदद करता है, टैक्स या कानूनी सलाह नहीं है। यह ई-इनवॉइस IRN (₹5 करोड़ से ज़्यादा टर्नओवर पर ज़रूरी) या ई-वे बिल नहीं बनाता। रेट और HSN कोड अपने अकाउंटेंट से जाँच लें।</p>
 
     <div id="sampleBanner" class="callout accent row spread no-print" hidden>
-      <span class="grow" data-i18n="sample_banner"></span>
-      <button class="btn btn-sm btn-primary" id="goProfile" type="button" data-i18n="go_profile"></button>
+      <span class="grow" data-i18n="sample_banner">इस इनवॉइस पर विक्रेता का नमूना दिखाया गया है। अपने कारोबार की जानकारी एक बार भरें, फिर हर दस्तावेज़ में वही आएगी।</span>
+      <button class="btn btn-sm btn-primary" id="goProfile" type="button" data-i18n="go_profile">मेरा कारोबार जोड़ें</button>
     </div>
 
     <nav class="gi-tabs no-print" role="tablist" id="tabs">
-      <button type="button" role="tab" id="tab-make" data-tab="make" aria-controls="p-make"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_make"></span></button>
-      <button type="button" role="tab" id="tab-docs" data-tab="docs" aria-controls="p-docs"><span class="ic" aria-hidden="true">📂</span><span data-i18n="tab_docs"></span><span class="badge" id="docCount"></span></button>
-      <button type="button" role="tab" id="tab-masters" data-tab="masters" aria-controls="p-masters"><span class="ic" aria-hidden="true">👥</span><span data-i18n="tab_masters"></span></button>
-      <button type="button" role="tab" id="tab-profile" data-tab="profile" aria-controls="p-profile"><span class="ic" aria-hidden="true">🏪</span><span data-i18n="tab_profile"></span></button>
+      <button type="button" role="tab" id="tab-make" data-tab="make" aria-controls="p-make"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_make">बनाएँ</span></button>
+      <button type="button" role="tab" id="tab-docs" data-tab="docs" aria-controls="p-docs"><span class="ic" aria-hidden="true">📂</span><span data-i18n="tab_docs">मेरे दस्तावेज़</span><span class="badge" id="docCount"></span></button>
+      <button type="button" role="tab" id="tab-masters" data-tab="masters" aria-controls="p-masters"><span class="ic" aria-hidden="true">👥</span><span data-i18n="tab_masters">ग्राहक और सामान</span></button>
+      <button type="button" role="tab" id="tab-profile" data-tab="profile" aria-controls="p-profile"><span class="ic" aria-hidden="true">🏪</span><span data-i18n="tab_profile">मेरा कारोबार</span></button>
     </nav>
 
     <!-- ================= CREATE ================= -->
@@ -298,97 +298,97 @@
         <div class="mk-form stack">
           <section class="card stack" id="docCard">
             <div class="types" role="group" id="typeSeg" data-i18n-aria-label="doc_type">
-              <button type="button" data-type="inv" id="type-inv" data-i18n="dt_inv"></button>
-              <button type="button" data-type="bos" id="type-bos" data-i18n="dt_bos"></button>
-              <button type="button" data-type="qtn" id="type-qtn" data-i18n="dt_qtn"></button>
-              <button type="button" data-type="pi" id="type-pi" data-i18n="dt_pi"></button>
-              <button type="button" data-type="dc" id="type-dc" data-i18n="dt_dc"></button>
-              <button type="button" data-type="rcpt" id="type-rcpt" data-i18n="dt_rcpt"></button>
+              <button type="button" data-type="inv" id="type-inv" data-i18n="dt_inv">टैक्स इनवॉइस</button>
+              <button type="button" data-type="bos" id="type-bos" data-i18n="dt_bos">बिल ऑफ़ सप्लाई</button>
+              <button type="button" data-type="qtn" id="type-qtn" data-i18n="dt_qtn">कोटेशन</button>
+              <button type="button" data-type="pi" id="type-pi" data-i18n="dt_pi">प्रोफ़ॉर्मा इनवॉइस</button>
+              <button type="button" data-type="dc" id="type-dc" data-i18n="dt_dc">डिलीवरी चालान</button>
+              <button type="button" data-type="rcpt" id="type-rcpt" data-i18n="dt_rcpt">भुगतान रसीद</button>
             </div>
             <div class="fgrid">
-              <label class="field"><span data-i18n="doc_no"></span><input type="text" id="docNo" class="mono-in" dir="ltr" maxlength="40" autocomplete="off" spellcheck="false"></label>
-              <label class="field"><span data-i18n="doc_date"></span><input type="date" id="docDate"></label>
+              <label class="field"><span data-i18n="doc_no">नंबर</span><input type="text" id="docNo" class="mono-in" dir="ltr" maxlength="40" autocomplete="off" spellcheck="false"></label>
+              <label class="field"><span data-i18n="doc_date">तारीख</span><input type="date" id="docDate"></label>
               <label class="field" id="dueField"><span id="dueLabel"></span><input type="date" id="docDue"></label>
-              <label class="field" id="refField"><span data-i18n="ref_no"></span><input type="text" id="docRef" dir="auto" maxlength="60" autocomplete="off"></label>
+              <label class="field" id="refField"><span data-i18n="ref_no">PO / रेफ़रेंस नंबर</span><input type="text" id="docRef" dir="auto" maxlength="60" autocomplete="off"></label>
             </div>
             <p class="msg" id="noMsg" aria-live="polite"></p>
             <div class="fgrid" id="supplyRow">
-              <label class="field"><span data-i18n="pos"></span><select id="docPos"></select></label>
-              <label class="field"><span data-i18n="supply_type"></span>
+              <label class="field"><span data-i18n="pos">प्लेस ऑफ़ सप्लाई</span><select id="docPos"></select></label>
+              <label class="field"><span data-i18n="supply_type">सप्लाई का प्रकार</span>
                 <select id="docSupply">
-                  <option value="normal" data-i18n="sup_normal"></option>
-                  <option value="lut" data-i18n="sup_lut"></option>
-                  <option value="igst" data-i18n="sup_igst"></option>
+                  <option value="normal" data-i18n="sup_normal">सामान्य (भारत के अंदर)</option>
+                  <option value="lut" data-i18n="sup_lut">निर्यात / SEZ, LUT के तहत (IGST नहीं)</option>
+                  <option value="igst" data-i18n="sup_igst">निर्यात / SEZ, IGST चुकाकर</option>
                 </select>
               </label>
-              <label class="check" id="rcmField"><input type="checkbox" id="docRcm"> <span data-i18n="rcm"></span></label>
+              <label class="check" id="rcmField"><input type="checkbox" id="docRcm"> <span data-i18n="rcm">टैक्स रिवर्स चार्ज पर देय है</span></label>
             </div>
           </section>
 
           <section class="card stack" id="partyCard">
-            <h2 class="h-sec" data-i18n="bill_to"></h2>
+            <h2 class="h-sec" data-i18n="bill_to">बिल किसके नाम</h2>
             <div class="fgrid">
-              <label class="field wide"><span data-i18n="cust_name"></span><input type="text" id="custName" list="custList" dir="auto" maxlength="120" autocomplete="off"></label>
-              <label class="field"><span data-i18n="gstin"></span><input type="text" id="custGstin" class="mono-in up" dir="ltr" maxlength="15" autocomplete="off" spellcheck="false"></label>
-              <label class="field"><span data-i18n="state"></span><select id="custState"></select></label>
-              <label class="field"><span data-i18n="phone"></span><input type="tel" id="custPhone" dir="ltr" maxlength="20" autocomplete="off"></label>
-              <label class="field"><span data-i18n="email"></span><input type="email" id="custEmail" dir="ltr" maxlength="80" autocomplete="off"></label>
-              <label class="field wide"><span data-i18n="address"></span><textarea id="custAddr" rows="2" dir="auto" maxlength="300"></textarea></label>
+              <label class="field wide"><span data-i18n="cust_name">ग्राहक का नाम</span><input type="text" id="custName" list="custList" dir="auto" maxlength="120" autocomplete="off"></label>
+              <label class="field"><span data-i18n="gstin">GSTIN</span><input type="text" id="custGstin" class="mono-in up" dir="ltr" maxlength="15" autocomplete="off" spellcheck="false"></label>
+              <label class="field"><span data-i18n="state">राज्य</span><select id="custState"></select></label>
+              <label class="field"><span data-i18n="phone">फ़ोन</span><input type="tel" id="custPhone" dir="ltr" maxlength="20" autocomplete="off"></label>
+              <label class="field"><span data-i18n="email">ईमेल</span><input type="email" id="custEmail" dir="ltr" maxlength="80" autocomplete="off"></label>
+              <label class="field wide"><span data-i18n="address">पता</span><textarea id="custAddr" rows="2" dir="auto" maxlength="300"></textarea></label>
             </div>
             <p class="msg" id="custGstinMsg" aria-live="polite"></p>
-            <label class="check"><input type="checkbox" id="shipOn"> <span data-i18n="ship_diff"></span></label>
+            <label class="check"><input type="checkbox" id="shipOn"> <span data-i18n="ship_diff">माल किसी दूसरे पते पर भेजना है</span></label>
             <div class="fgrid" id="shipBox" hidden>
-              <label class="field"><span data-i18n="ship_name"></span><input type="text" id="shipName" dir="auto" maxlength="120" autocomplete="off"></label>
-              <label class="field"><span data-i18n="state"></span><select id="shipState"></select></label>
-              <label class="field wide"><span data-i18n="address"></span><textarea id="shipAddr" rows="2" dir="auto" maxlength="300"></textarea></label>
+              <label class="field"><span data-i18n="ship_name">डिलीवरी पते पर नाम</span><input type="text" id="shipName" dir="auto" maxlength="120" autocomplete="off"></label>
+              <label class="field"><span data-i18n="state">राज्य</span><select id="shipState"></select></label>
+              <label class="field wide"><span data-i18n="address">पता</span><textarea id="shipAddr" rows="2" dir="auto" maxlength="300"></textarea></label>
             </div>
           </section>
 
           <section class="card stack" id="itemsCard">
             <div class="ln-tools">
-              <h2 class="h-sec" data-i18n="items"></h2>
+              <h2 class="h-sec" data-i18n="items">सामान</h2>
               <div class="chkrow">
-                <label class="check"><input type="checkbox" id="optIncl"> <span data-i18n="incl_tax"></span></label>
-                <label class="check"><input type="checkbox" id="optCess"> <span data-i18n="show_cess"></span></label>
+                <label class="check"><input type="checkbox" id="optIncl"> <span data-i18n="incl_tax">दरों में GST शामिल है</span></label>
+                <label class="check"><input type="checkbox" id="optCess"> <span data-i18n="show_cess">सेस का कॉलम</span></label>
               </div>
             </div>
             <div class="lines-wrap"><div class="lines" id="lines"></div></div>
             <div class="ln-tools">
-              <button class="btn" id="addLine" type="button"><span aria-hidden="true">＋</span> <span data-i18n="add_line"></span></button>
-              <span class="tiny muted" data-i18n="keys_hint"></span>
+              <button class="btn" id="addLine" type="button"><span aria-hidden="true">＋</span> <span data-i18n="add_line">लाइन जोड़ें</span></button>
+              <span class="tiny muted" data-i18n="keys_hint">Enter: अगली लाइन · Ctrl+S: सेव · Ctrl+P: प्रिंट</span>
             </div>
-            <p class="tiny muted mb0" data-i18n="disc_hint"></p>
+            <p class="tiny muted mb0" data-i18n="disc_hint">छूट: 10% लिखें या ₹ में रकम। इकाई के कोड GST सूची वाले हैं (NOS, KGS, PCS, BOX…)।</p>
           </section>
 
           <section class="card stack" id="rcptCard" hidden>
-            <h2 class="h-sec" data-i18n="rc_title"></h2>
+            <h2 class="h-sec" data-i18n="rc_title">मिला हुआ भुगतान</h2>
             <div class="fgrid">
-              <label class="field"><span data-i18n="rc_amount"></span><input type="text" id="rcAmount" inputmode="decimal" dir="ltr" class="tnum" autocomplete="off"></label>
-              <label class="field"><span data-i18n="rc_mode"></span>
+              <label class="field"><span data-i18n="rc_amount">मिली रकम ₹</span><input type="text" id="rcAmount" inputmode="decimal" dir="ltr" class="tnum" autocomplete="off"></label>
+              <label class="field"><span data-i18n="rc_mode">भुगतान का तरीका</span>
                 <select id="rcMode">
-                  <option value="upi" data-i18n="mode_upi"></option>
-                  <option value="cash" data-i18n="mode_cash"></option>
-                  <option value="bank" data-i18n="mode_bank"></option>
-                  <option value="cheque" data-i18n="mode_cheque"></option>
-                  <option value="card" data-i18n="mode_card"></option>
+                  <option value="upi" data-i18n="mode_upi">UPI</option>
+                  <option value="cash" data-i18n="mode_cash">नकद</option>
+                  <option value="bank" data-i18n="mode_bank">बैंक ट्रांसफ़र (NEFT/RTGS/IMPS)</option>
+                  <option value="cheque" data-i18n="mode_cheque">चेक</option>
+                  <option value="card" data-i18n="mode_card">कार्ड</option>
                 </select>
               </label>
-              <label class="field"><span data-i18n="rc_ref"></span><input type="text" id="rcRef" dir="ltr" maxlength="40" autocomplete="off"></label>
-              <label class="field"><span data-i18n="rc_against"></span><input type="text" id="rcAgainst" list="invList" dir="ltr" maxlength="40" autocomplete="off"></label>
+              <label class="field"><span data-i18n="rc_ref">UTR / चेक नंबर</span><input type="text" id="rcRef" dir="ltr" maxlength="40" autocomplete="off"></label>
+              <label class="field"><span data-i18n="rc_against">किस इनवॉइस के बदले</span><input type="text" id="rcAgainst" list="invList" dir="ltr" maxlength="40" autocomplete="off"></label>
             </div>
           </section>
 
           <section class="card stack" id="extraCard">
             <div class="grid-2">
-              <label class="field"><span data-i18n="notes"></span><textarea id="docNotes" rows="2" dir="auto" maxlength="600" data-i18n-placeholder="notes_ph"></textarea></label>
-              <label class="field"><span data-i18n="terms"></span><textarea id="docTerms" rows="3" dir="auto" maxlength="1200"></textarea></label>
+              <label class="field"><span data-i18n="notes">नोट</span><textarea id="docNotes" rows="2" dir="auto" maxlength="600" data-i18n-placeholder="notes_ph"></textarea></label>
+              <label class="field"><span data-i18n="terms">नियम और शर्तें</span><textarea id="docTerms" rows="3" dir="auto" maxlength="1200"></textarea></label>
             </div>
             <details id="moreBox">
-              <summary data-i18n="more_details"></summary>
+              <summary data-i18n="more_details">ट्रांसपोर्ट और दूसरी जानकारी</summary>
               <div class="fgrid" style="margin-top:10px">
-                <label class="field"><span data-i18n="vehicle"></span><input type="text" id="trVehicle" class="up" dir="ltr" maxlength="20" autocomplete="off"></label>
-                <label class="field"><span data-i18n="transporter"></span><input type="text" id="trName" dir="auto" maxlength="80" autocomplete="off"></label>
-                <label class="field"><span data-i18n="ewb"></span><input type="text" id="trEwb" dir="ltr" inputmode="numeric" maxlength="14" autocomplete="off"></label>
+                <label class="field"><span data-i18n="vehicle">गाड़ी नंबर</span><input type="text" id="trVehicle" class="up" dir="ltr" maxlength="20" autocomplete="off"></label>
+                <label class="field"><span data-i18n="transporter">ट्रांसपोर्टर</span><input type="text" id="trName" dir="auto" maxlength="80" autocomplete="off"></label>
+                <label class="field"><span data-i18n="ewb">ई-वे बिल नंबर</span><input type="text" id="trEwb" dir="ltr" inputmode="numeric" maxlength="14" autocomplete="off"></label>
               </div>
             </details>
           </section>
@@ -403,35 +403,35 @@
             <span class="badge primary modeb" id="modeBadge"></span>
             <table class="sumt" id="sumTable">
               <tbody>
-                <tr id="rowTaxable"><th data-i18n="taxable"></th><td id="sumTaxable"></td></tr>
-                <tr id="rowCgst"><th data-i18n="cgst"></th><td id="sumCgst"></td></tr>
-                <tr id="rowSgst"><th data-i18n="sgst"></th><td id="sumSgst"></td></tr>
-                <tr id="rowIgst"><th data-i18n="igst"></th><td id="sumIgst"></td></tr>
-                <tr id="rowCess"><th data-i18n="cess"></th><td id="sumCess"></td></tr>
-                <tr id="rowRound"><th data-i18n="round_off"></th><td id="sumRound"></td></tr>
+                <tr id="rowTaxable"><th data-i18n="taxable">टैक्स योग्य मूल्य</th><td id="sumTaxable"></td></tr>
+                <tr id="rowCgst"><th data-i18n="cgst">CGST</th><td id="sumCgst"></td></tr>
+                <tr id="rowSgst"><th data-i18n="sgst">SGST</th><td id="sumSgst"></td></tr>
+                <tr id="rowIgst"><th data-i18n="igst">IGST</th><td id="sumIgst"></td></tr>
+                <tr id="rowCess"><th data-i18n="cess">सेस</th><td id="sumCess"></td></tr>
+                <tr id="rowRound"><th data-i18n="round_off">राउंड ऑफ़</th><td id="sumRound"></td></tr>
               </tbody>
             </table>
-            <div class="total-big"><span data-i18n="grand_total"></span><span class="big" id="sumTotal"></span></div>
+            <div class="total-big"><span data-i18n="grand_total">कुल</span><span class="big" id="sumTotal"></span></div>
             <p class="words en no-i18n" id="wordsEn"></p>
             <p class="words" id="wordsLocal"></p>
             <p class="callout warning small mb0" id="rcmNote" hidden></p>
             <div class="stack" id="optBox">
-              <label class="check"><input type="checkbox" id="optRound"> <span data-i18n="opt_round"></span></label>
-              <label class="check"><input type="checkbox" id="optUpi"> <span data-i18n="opt_upi"></span></label>
-              <label class="check"><input type="checkbox" id="optBank"> <span data-i18n="opt_bank"></span></label>
+              <label class="check"><input type="checkbox" id="optRound"> <span data-i18n="opt_round">पूरे रुपये में राउंड ऑफ़ करें</span></label>
+              <label class="check"><input type="checkbox" id="optUpi"> <span data-i18n="opt_upi">ठीक रकम वाला UPI QR</span></label>
+              <label class="check"><input type="checkbox" id="optBank"> <span data-i18n="opt_bank">बैंक की जानकारी</span></label>
             </div>
             <div class="acts">
               <button class="btn btn-primary full" id="saveDoc" type="button"><span aria-hidden="true">💾</span> <span data-i18n="save"></span></button>
-              <button class="btn btn-accent" id="printDoc" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_pdf"></span></button>
-              <a class="btn btn-wa" id="waDoc" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="whatsapp"></span></a>
-              <button class="btn" id="copyDoc" type="button" data-i18n="copy_text"></button>
-              <button class="btn" id="newDoc" type="button"><span aria-hidden="true">＋</span> <span data-i18n="new_doc"></span></button>
-              <button class="btn" id="dupDoc" type="button" data-i18n="dup_doc"></button>
-              <button class="btn" id="toInvoice" type="button" data-i18n="to_invoice"></button>
-              <button class="btn" id="toReceipt" type="button" data-i18n="to_receipt"></button>
+              <button class="btn btn-accent" id="printDoc" type="button"><span aria-hidden="true">🖨</span> <span data-i18n="print_pdf">प्रिंट / PDF</span></button>
+              <a class="btn btn-wa" id="waDoc" target="_blank" rel="noopener"><span aria-hidden="true">💬</span> <span data-i18n="whatsapp">WhatsApp</span></a>
+              <button class="btn" id="copyDoc" type="button" data-i18n="copy_text">टेक्स्ट कॉपी करें</button>
+              <button class="btn" id="newDoc" type="button"><span aria-hidden="true">＋</span> <span data-i18n="new_doc">नया</span></button>
+              <button class="btn" id="dupDoc" type="button" data-i18n="dup_doc">कॉपी बनाएँ</button>
+              <button class="btn" id="toInvoice" type="button" data-i18n="to_invoice">इनवॉइस बनाएँ</button>
+              <button class="btn" id="toReceipt" type="button" data-i18n="to_receipt">भुगतान दर्ज करें</button>
             </div>
             <details id="checksBox" open>
-              <summary><strong data-i18n="checks"></strong> <span class="badge" id="checksCount"></span></summary>
+              <summary><strong data-i18n="checks">जाँच</strong> <span class="badge" id="checksCount"></span></summary>
               <ul class="checks" id="checks" aria-live="polite"></ul>
             </details>
           </section>
@@ -440,7 +440,7 @@
 
       <section class="card stack" id="pvCard">
         <div class="row spread">
-          <div class="row"><h2 class="h-sec" data-i18n="preview"></h2>
+          <div class="row"><h2 class="h-sec" data-i18n="preview">झलक</h2>
             <button class="btn btn-sm" id="pvZoom" type="button" aria-pressed="false"><span aria-hidden="true">🔍</span> <span id="pvZoomLbl"></span></button></div>
           <div class="copies" id="copyChecks" role="group" data-i18n-aria-label="copies"></div>
         </div>
@@ -451,37 +451,37 @@
     <!-- ================= SAVED DOCUMENTS ================= -->
     <section id="p-docs" role="tabpanel" aria-labelledby="tab-docs" class="stack" hidden>
       <div class="card stack">
-        <h2 class="h-sec" data-i18n="docs_title"></h2>
+        <h2 class="h-sec" data-i18n="docs_title">सेव किए गए दस्तावेज़</h2>
         <div class="fgrid">
-          <label class="field"><span data-i18n="doc_type"></span><select id="fType"></select></label>
-          <label class="field"><span data-i18n="fy"></span><select id="fFy" class="no-i18n"></select></label>
-          <label class="field"><span data-i18n="month"></span><select id="fMonth"></select></label>
+          <label class="field"><span data-i18n="doc_type">दस्तावेज़ का प्रकार</span><select id="fType"></select></label>
+          <label class="field"><span data-i18n="fy">वित्त वर्ष</span><select id="fFy" class="no-i18n"></select></label>
+          <label class="field"><span data-i18n="month">महीना</span><select id="fMonth"></select></label>
           <label class="field"><span data-i18n="search"></span><input type="search" id="fSearch" dir="auto" data-i18n-placeholder="search_docs" autocomplete="off"></label>
         </div>
         <div class="stats" id="docStats" aria-live="polite"></div>
         <div class="scroll-x">
           <table class="table doc-table" id="docTable">
             <thead><tr>
-              <th data-i18n="doc_no"></th><th data-i18n="doc_date"></th><th data-i18n="col_customer"></th><th data-i18n="doc_type"></th>
-              <th class="num" data-i18n="grand_total"></th><th data-i18n="col_status"></th><th><span class="sr" data-i18n="col_actions"></span></th>
+              <th data-i18n="doc_no">नंबर</th><th data-i18n="doc_date">तारीख</th><th data-i18n="col_customer">ग्राहक</th><th data-i18n="doc_type">दस्तावेज़ का प्रकार</th>
+              <th class="num" data-i18n="grand_total">कुल</th><th data-i18n="col_status">भुगतान</th><th><span class="sr" data-i18n="col_actions">काम</span></th>
             </tr></thead>
             <tbody id="docBody"></tbody>
           </table>
         </div>
-        <p class="empty" id="noDocs" data-i18n="no_docs" hidden></p>
+        <p class="empty" id="noDocs" data-i18n="no_docs" hidden>अभी यहाँ कुछ सेव नहीं है। &quot;बनाएँ&quot; में दस्तावेज़ बनाकर सेव दबाएँ।</p>
       </div>
       <div class="grid-2">
         <div class="card stack">
-          <h2 class="h-sec" data-i18n="register_csv"></h2>
-          <p class="small muted mb0" data-i18n="register_hint"></p>
-          <div class="row"><button class="btn btn-primary" id="regCsv" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="register_csv"></span></button></div>
+          <h2 class="h-sec" data-i18n="register_csv">इनवॉइस रजिस्टर (CSV)</h2>
+          <p class="small muted mb0" data-i18n="register_hint">चुने गए साल और महीने के टैक्स इनवॉइस और बिल ऑफ़ सप्लाई: नंबर, तारीख, GSTIN, प्लेस ऑफ़ सप्लाई, टैक्स योग्य मूल्य, IGST, CGST, SGST और कुल। GSTR-1 के लिए अपने अकाउंटेंट को भेजें।</p>
+          <div class="row"><button class="btn btn-primary" id="regCsv" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="register_csv">इनवॉइस रजिस्टर (CSV)</span></button></div>
         </div>
         <div class="card stack">
-          <h2 class="h-sec" data-i18n="backup_title"></h2>
-          <p class="small muted mb0" data-i18n="backup_hint"></p>
+          <h2 class="h-sec" data-i18n="backup_title">बैकअप</h2>
+          <p class="small muted mb0" data-i18n="backup_hint">एक JSON फ़ाइल जिसमें कारोबार की जानकारी, ग्राहक, सामान और दस्तावेज़ हैं। इसे सँभालकर रखें, या दूसरे फ़ोन या कंप्यूटर पर वापस लाएँ।</p>
           <div class="row">
-            <button class="btn" id="backupJson" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="backup"></span></button>
-            <button class="btn" id="restoreJson" type="button"><span aria-hidden="true">📂</span> <span data-i18n="restore"></span></button>
+            <button class="btn" id="backupJson" type="button"><span aria-hidden="true">⬇</span> <span data-i18n="backup">बैकअप डाउनलोड करें</span></button>
+            <button class="btn" id="restoreJson" type="button"><span aria-hidden="true">📂</span> <span data-i18n="restore">बैकअप वापस लाएँ</span></button>
           </div>
         </div>
       </div>
@@ -489,53 +489,53 @@
 
     <!-- ================= CUSTOMERS & ITEMS ================= -->
     <section id="p-masters" role="tabpanel" aria-labelledby="tab-masters" class="stack" hidden>
-      <label class="check card"><input type="checkbox" id="remember"> <span data-i18n="remember"></span></label>
+      <label class="check card"><input type="checkbox" id="remember"> <span data-i18n="remember">दस्तावेज़ सेव करते समय ग्राहक और सामान याद रखें</span></label>
       <div class="grid-2">
         <div class="card stack" id="custCard">
-          <h2 class="h-sec" data-i18n="customers"></h2>
+          <h2 class="h-sec" data-i18n="customers">ग्राहक</h2>
           <div class="fgrid">
-            <label class="field wide"><span data-i18n="cust_name"></span><input type="text" id="mcName" dir="auto" maxlength="120" autocomplete="off"></label>
-            <label class="field"><span data-i18n="gstin"></span><input type="text" id="mcGstin" class="mono-in up" dir="ltr" maxlength="15" autocomplete="off" spellcheck="false"></label>
-            <label class="field"><span data-i18n="state"></span><select id="mcState"></select></label>
-            <label class="field"><span data-i18n="phone"></span><input type="tel" id="mcPhone" dir="ltr" maxlength="20" autocomplete="off"></label>
-            <label class="field"><span data-i18n="email"></span><input type="email" id="mcEmail" dir="ltr" maxlength="80" autocomplete="off"></label>
-            <label class="field wide"><span data-i18n="address"></span><textarea id="mcAddr" rows="2" dir="auto" maxlength="300"></textarea></label>
+            <label class="field wide"><span data-i18n="cust_name">ग्राहक का नाम</span><input type="text" id="mcName" dir="auto" maxlength="120" autocomplete="off"></label>
+            <label class="field"><span data-i18n="gstin">GSTIN</span><input type="text" id="mcGstin" class="mono-in up" dir="ltr" maxlength="15" autocomplete="off" spellcheck="false"></label>
+            <label class="field"><span data-i18n="state">राज्य</span><select id="mcState"></select></label>
+            <label class="field"><span data-i18n="phone">फ़ोन</span><input type="tel" id="mcPhone" dir="ltr" maxlength="20" autocomplete="off"></label>
+            <label class="field"><span data-i18n="email">ईमेल</span><input type="email" id="mcEmail" dir="ltr" maxlength="80" autocomplete="off"></label>
+            <label class="field wide"><span data-i18n="address">पता</span><textarea id="mcAddr" rows="2" dir="auto" maxlength="300"></textarea></label>
           </div>
           <p class="msg" id="mcMsg" aria-live="polite"></p>
           <div class="row">
-            <button class="btn btn-primary" id="mcSave" type="button" data-i18n="save_customer"></button>
+            <button class="btn btn-primary" id="mcSave" type="button" data-i18n="save_customer">ग्राहक सेव करें</button>
             <button class="btn btn-ghost" id="mcClear" type="button" data-i18n="clear"></button>
           </div>
           <div class="m-list scroll-x"><table class="table m-table"><tbody id="custBody"></tbody></table></div>
-          <p class="empty" id="noCust" data-i18n="no_customers" hidden></p>
+          <p class="empty" id="noCust" data-i18n="no_customers" hidden>अभी कोई ग्राहक नहीं। दस्तावेज़ सेव करने पर वे यहाँ जुड़ जाते हैं।</p>
           <div class="row">
-            <button class="btn btn-sm" id="mcImport" type="button" data-i18n="import_csv"></button>
-            <button class="btn btn-sm" id="mcExport" type="button" data-i18n="export_csv"></button>
+            <button class="btn btn-sm" id="mcImport" type="button" data-i18n="import_csv">CSV से लाएँ</button>
+            <button class="btn btn-sm" id="mcExport" type="button" data-i18n="export_csv">CSV डाउनलोड करें</button>
           </div>
-          <p class="tiny muted mb0" data-i18n="csv_cust_hint"></p>
+          <p class="tiny muted mb0" data-i18n="csv_cust_hint">CSV के कॉलम: नाम, GSTIN, राज्य कोड, पता, फ़ोन, ईमेल।</p>
         </div>
         <div class="card stack" id="itemCard">
-          <h2 class="h-sec" data-i18n="saved_items"></h2>
+          <h2 class="h-sec" data-i18n="saved_items">सामान और सेवाएँ</h2>
           <div class="fgrid">
-            <label class="field wide"><span data-i18n="item_name"></span><input type="text" id="miName" dir="auto" maxlength="160" autocomplete="off"></label>
-            <label class="field"><span data-i18n="col_hsn"></span><input type="text" id="miHsn" dir="ltr" inputmode="numeric" maxlength="8" autocomplete="off"></label>
-            <label class="field"><span data-i18n="col_unit"></span><input type="text" id="miUnit" class="up" list="uqcList" dir="ltr" maxlength="3" autocomplete="off"></label>
-            <label class="field"><span data-i18n="col_rate"></span><input type="text" id="miRate" dir="ltr" inputmode="decimal" autocomplete="off"></label>
-            <label class="field"><span data-i18n="col_gst"></span><input type="text" id="miGst" list="rateList" dir="ltr" inputmode="decimal" autocomplete="off"></label>
-            <label class="field"><span data-i18n="col_cess"></span><input type="text" id="miCess" dir="ltr" inputmode="decimal" autocomplete="off"></label>
+            <label class="field wide"><span data-i18n="item_name">सामान या सेवा का नाम</span><input type="text" id="miName" dir="auto" maxlength="160" autocomplete="off"></label>
+            <label class="field"><span data-i18n="col_hsn">HSN/SAC</span><input type="text" id="miHsn" dir="ltr" inputmode="numeric" maxlength="8" autocomplete="off"></label>
+            <label class="field"><span data-i18n="col_unit">इकाई</span><input type="text" id="miUnit" class="up" list="uqcList" dir="ltr" maxlength="3" autocomplete="off"></label>
+            <label class="field"><span data-i18n="col_rate">दर ₹</span><input type="text" id="miRate" dir="ltr" inputmode="decimal" autocomplete="off"></label>
+            <label class="field"><span data-i18n="col_gst">GST %</span><input type="text" id="miGst" list="rateList" dir="ltr" inputmode="decimal" autocomplete="off"></label>
+            <label class="field"><span data-i18n="col_cess">सेस %</span><input type="text" id="miCess" dir="ltr" inputmode="decimal" autocomplete="off"></label>
           </div>
           <p class="msg" id="miMsg" aria-live="polite"></p>
           <div class="row">
-            <button class="btn btn-primary" id="miSave" type="button" data-i18n="save_item"></button>
+            <button class="btn btn-primary" id="miSave" type="button" data-i18n="save_item">सामान सेव करें</button>
             <button class="btn btn-ghost" id="miClear" type="button" data-i18n="clear"></button>
           </div>
           <div class="m-list scroll-x"><table class="table m-table"><tbody id="itemBody"></tbody></table></div>
-          <p class="empty" id="noItems" data-i18n="no_items" hidden></p>
+          <p class="empty" id="noItems" data-i18n="no_items" hidden>अभी कोई सामान नहीं। दस्तावेज़ सेव करने पर वे यहाँ जुड़ जाते हैं।</p>
           <div class="row">
-            <button class="btn btn-sm" id="miImport" type="button" data-i18n="import_csv"></button>
-            <button class="btn btn-sm" id="miExport" type="button" data-i18n="export_csv"></button>
+            <button class="btn btn-sm" id="miImport" type="button" data-i18n="import_csv">CSV से लाएँ</button>
+            <button class="btn btn-sm" id="miExport" type="button" data-i18n="export_csv">CSV डाउनलोड करें</button>
           </div>
-          <p class="tiny muted mb0" data-i18n="csv_items_hint"></p>
+          <p class="tiny muted mb0" data-i18n="csv_items_hint">CSV के कॉलम: नाम, HSN/SAC, इकाई, दर, GST %, सेस %।</p>
         </div>
       </div>
     </section>
@@ -544,71 +544,71 @@
     <section id="p-profile" role="tabpanel" aria-labelledby="tab-profile" class="stack" hidden>
       <div class="grid-2">
         <div class="card stack">
-          <h2 class="h-sec" data-i18n="biz_title"></h2>
+          <h2 class="h-sec" data-i18n="biz_title">कारोबार की जानकारी</h2>
           <div class="fgrid">
-            <label class="field wide"><span data-i18n="biz_name"></span><input type="text" id="pfName" data-p="name" dir="auto" maxlength="120" autocomplete="organization"></label>
-            <label class="field"><span data-i18n="gstin"></span><input type="text" id="pfGstin" data-p="gstin" class="mono-in up" dir="ltr" maxlength="15" autocomplete="off" spellcheck="false"></label>
-            <label class="field"><span data-i18n="state"></span><select id="pfState" data-p="state"></select></label>
-            <label class="field"><span data-i18n="pan"></span><input type="text" id="pfPan" data-p="pan" class="mono-in up" dir="ltr" maxlength="10" autocomplete="off" spellcheck="false"></label>
-            <label class="field"><span data-i18n="phone"></span><input type="tel" id="pfPhone" data-p="phone" dir="ltr" maxlength="40" autocomplete="off"></label>
-            <label class="field"><span data-i18n="email"></span><input type="email" id="pfEmail" data-p="email" dir="ltr" maxlength="80" autocomplete="off"></label>
-            <label class="field wide"><span data-i18n="address"></span><textarea id="pfAddr" data-p="address" rows="3" dir="auto" maxlength="300"></textarea></label>
+            <label class="field wide"><span data-i18n="biz_name">कारोबार का नाम</span><input type="text" id="pfName" data-p="name" dir="auto" maxlength="120" autocomplete="organization"></label>
+            <label class="field"><span data-i18n="gstin">GSTIN</span><input type="text" id="pfGstin" data-p="gstin" class="mono-in up" dir="ltr" maxlength="15" autocomplete="off" spellcheck="false"></label>
+            <label class="field"><span data-i18n="state">राज्य</span><select id="pfState" data-p="state"></select></label>
+            <label class="field"><span data-i18n="pan">PAN</span><input type="text" id="pfPan" data-p="pan" class="mono-in up" dir="ltr" maxlength="10" autocomplete="off" spellcheck="false"></label>
+            <label class="field"><span data-i18n="phone">फ़ोन</span><input type="tel" id="pfPhone" data-p="phone" dir="ltr" maxlength="40" autocomplete="off"></label>
+            <label class="field"><span data-i18n="email">ईमेल</span><input type="email" id="pfEmail" data-p="email" dir="ltr" maxlength="80" autocomplete="off"></label>
+            <label class="field wide"><span data-i18n="address">पता</span><textarea id="pfAddr" data-p="address" rows="3" dir="auto" maxlength="300"></textarea></label>
           </div>
           <p class="msg" id="pfGstinMsg" aria-live="polite"></p>
-          <label class="check"><input type="checkbox" id="pfCompo" data-p="composition"> <span data-i18n="composition"></span></label>
-          <label class="field"><span data-i18n="lut_arn"></span><input type="text" id="pfLut" data-p="lut" class="mono-in up" dir="ltr" maxlength="20" autocomplete="off"></label>
+          <label class="check"><input type="checkbox" id="pfCompo" data-p="composition"> <span data-i18n="composition">मैं GST कंपोज़िशन स्कीम में हूँ</span></label>
+          <label class="field"><span data-i18n="lut_arn">LUT ARN (निर्यात के लिए)</span><input type="text" id="pfLut" data-p="lut" class="mono-in up" dir="ltr" maxlength="20" autocomplete="off"></label>
         </div>
         <div class="card stack">
-          <h2 class="h-sec" data-i18n="bank_title"></h2>
+          <h2 class="h-sec" data-i18n="bank_title">बैंक और UPI</h2>
           <div class="fgrid">
-            <label class="field wide"><span data-i18n="bank_name"></span><input type="text" id="pfBank" data-p="bankName" dir="auto" maxlength="80" autocomplete="off"></label>
-            <label class="field"><span data-i18n="acc_name"></span><input type="text" id="pfAccName" data-p="accName" dir="auto" maxlength="80" autocomplete="off"></label>
-            <label class="field"><span data-i18n="acc_no"></span><input type="text" id="pfAccNo" data-p="accNo" class="mono-in" dir="ltr" inputmode="numeric" maxlength="20" autocomplete="off"></label>
-            <label class="field"><span data-i18n="ifsc"></span><input type="text" id="pfIfsc" data-p="ifsc" class="mono-in up" dir="ltr" maxlength="11" autocomplete="off" spellcheck="false"></label>
-            <label class="field"><span data-i18n="upi_id"></span><input type="text" id="pfUpi" data-p="upi" dir="ltr" maxlength="60" autocomplete="off" spellcheck="false"></label>
+            <label class="field wide"><span data-i18n="bank_name">बैंक और शाखा</span><input type="text" id="pfBank" data-p="bankName" dir="auto" maxlength="80" autocomplete="off"></label>
+            <label class="field"><span data-i18n="acc_name">खाते का नाम</span><input type="text" id="pfAccName" data-p="accName" dir="auto" maxlength="80" autocomplete="off"></label>
+            <label class="field"><span data-i18n="acc_no">खाता नंबर</span><input type="text" id="pfAccNo" data-p="accNo" class="mono-in" dir="ltr" inputmode="numeric" maxlength="20" autocomplete="off"></label>
+            <label class="field"><span data-i18n="ifsc">IFSC</span><input type="text" id="pfIfsc" data-p="ifsc" class="mono-in up" dir="ltr" maxlength="11" autocomplete="off" spellcheck="false"></label>
+            <label class="field"><span data-i18n="upi_id">UPI ID</span><input type="text" id="pfUpi" data-p="upi" dir="ltr" maxlength="60" autocomplete="off" spellcheck="false"></label>
           </div>
           <p class="msg" id="pfBankMsg" aria-live="polite"></p>
-          <div class="field"><span data-i18n="logo"></span>
+          <div class="field"><span data-i18n="logo">लोगो</span>
             <div class="imgbox"><div class="thumb" id="logoThumb"></div>
-              <button class="btn btn-sm" id="logoPick" type="button" data-i18n="pick_image"></button>
-              <button class="btn btn-sm btn-ghost" id="logoDel" type="button" data-i18n="remove"></button></div>
+              <button class="btn btn-sm" id="logoPick" type="button" data-i18n="pick_image">तस्वीर चुनें</button>
+              <button class="btn btn-sm btn-ghost" id="logoDel" type="button" data-i18n="remove">हटाएँ</button></div>
           </div>
-          <div class="field"><span data-i18n="signature"></span>
+          <div class="field"><span data-i18n="signature">हस्ताक्षर</span>
             <div class="imgbox"><div class="thumb" id="signThumb"></div>
-              <button class="btn btn-sm" id="signPick" type="button" data-i18n="pick_image"></button>
-              <button class="btn btn-sm btn-ghost" id="signDel" type="button" data-i18n="remove"></button></div>
+              <button class="btn btn-sm" id="signPick" type="button" data-i18n="pick_image">तस्वीर चुनें</button>
+              <button class="btn btn-sm btn-ghost" id="signDel" type="button" data-i18n="remove">हटाएँ</button></div>
           </div>
-          <p class="tiny muted mb0" data-i18n="img_hint"></p>
+          <p class="tiny muted mb0" data-i18n="img_hint">PNG या JPG। इसे छोटा करके सिर्फ़ इसी डिवाइस पर रखा जाता है।</p>
         </div>
       </div>
       <div class="card stack">
-        <h2 class="h-sec" data-i18n="doc_settings"></h2>
-        <div class="field"><span data-i18n="prefixes"></span>
+        <h2 class="h-sec" data-i18n="doc_settings">दस्तावेज़ की सेटिंग</h2>
+        <div class="field"><span data-i18n="prefixes">नंबर सीरीज़</span>
           <div class="pref-grid" id="prefGrid"></div>
-          <span class="tiny muted" data-i18n="fy_hint"></span>
+          <span class="tiny muted" data-i18n="fy_hint">नंबर INV/26-27/0001 जैसे बनते हैं और हर 1 अप्रैल को फिर 0001 से शुरू होते हैं।</span>
         </div>
         <div class="fgrid">
-          <label class="field"><span data-i18n="doc_lang"></span><select id="docLang"></select></label>
+          <label class="field"><span data-i18n="doc_lang">प्रिंट होने वाले दस्तावेज़ की भाषा</span><select id="docLang"></select></label>
         </div>
-        <label class="field"><span data-i18n="def_terms"></span><textarea id="pfTerms" data-p="terms" rows="4" dir="auto" maxlength="1200"></textarea></label>
+        <label class="field"><span data-i18n="def_terms">नए दस्तावेज़ों के लिए नियम और शर्तें</span><textarea id="pfTerms" data-p="terms" rows="4" dir="auto" maxlength="1200"></textarea></label>
       </div>
       <div class="card row spread">
         <span class="small muted"><span aria-hidden="true">🔒</span> <span data-i18n="saved_local"></span></span>
-        <button class="btn btn-danger" id="resetAll" type="button" data-i18n="reset_all"></button>
+        <button class="btn btn-danger" id="resetAll" type="button" data-i18n="reset_all">सारा डेटा हटाएँ</button>
       </div>
     </section>
 
     <details class="card no-print" id="helpBox" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">कैसे इस्तेमाल करें · काम के लिए सुझाव</strong></summary>
       <ul class="tip-list" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">&quot;मेरा कारोबार&quot; एक बार भरें: GSTIN, पता, बैंक, UPI ID, लोगो और हस्ताक्षर। हर दस्तावेज़ में यही आएँगे।</li>
+        <li data-i18n="tip2">ग्राहक का GSTIN लिखें या राज्य चुनें। ऐप ख़ुद तय करता है कि CGST + SGST (एक ही राज्य) लगेगा या IGST (दूसरा राज्य)।</li>
+        <li data-i18n="tip3">सेव किए सामान का नाम लिखना शुरू करें, उसका HSN, इकाई, दर और GST अपने-आप भर जाएँगे। Enter से मात्रा पर जाएँ, फिर Enter से अगली लाइन।</li>
+        <li data-i18n="tip4">&quot;प्रिंट / PDF&quot; दबाकर &quot;Save as PDF&quot; चुनें और इनवॉइस ईमेल या WhatsApp पर भेजें। सभी प्रतियाँ एक साथ छापने के लिए दूसरी और तीसरी प्रति पर टिक करें।</li>
+        <li data-i18n="tip5">पहले कोटेशन भेजें, फिर एक क्लिक में उसे इनवॉइस बनाएँ। ग्राहक भुगतान करे तो &quot;भुगतान दर्ज करें&quot; से रसीद बनाएँ।</li>
+        <li data-i18n="tip6">महीने के आख़िर में अकाउंटेंट के लिए इनवॉइस रजिस्टर (CSV) डाउनलोड करें, और बैकअप फ़ाइल किसी सुरक्षित जगह रखें।</li>
       </ul>
-      <p class="callout warning small mb0" data-i18n="disclaimer"></p>
+      <p class="callout warning small mb0" data-i18n="disclaimer">यह बिल का फ़ॉर्मेट बनाने में मदद करता है, टैक्स या कानूनी सलाह नहीं है। यह ई-इनवॉइस IRN (₹5 करोड़ से ज़्यादा टर्नओवर पर ज़रूरी) या ई-वे बिल नहीं बनाता। रेट और HSN कोड अपने अकाउंटेंट से जाँच लें।</p>
     </details>
 
     <datalist id="custList"></datalist>

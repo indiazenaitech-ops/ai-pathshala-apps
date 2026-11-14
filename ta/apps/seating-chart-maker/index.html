@@ -139,42 +139,42 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">யார் எங்கே அமர்வது என்று எளிதாகத் திட்டமிடுங்கள்: வகுப்புப் பட்டியலை ஒட்டுங்கள், அறை அமைப்பைத் தேர்ந்தெடுங்கள், பதிவு எண், பெயர், குலுக்கல் அல்லது கலப்புத் திறன்படி அமர வையுங்கள், சிலரைத் தனியாகப் பிரியுங்கள், பிறகு வரைபடம், மேசைச் சீட்டு, பெயர் லேபிள் அச்சிடுங்கள். வகுப்பறைக்கும் தேர்வு அறைக்கும்.</p>
 
     <div class="topline">
       <div class="pickers">
-        <label class="field"><span data-i18n="class_label"></span>
-          <span class="inline"><select id="classSel" class="no-i18n"></select><button class="btn btn-sm" id="newClass" type="button">+ <span data-i18n="new_class"></span></button></span>
+        <label class="field"><span data-i18n="class_label">வகுப்பு</span>
+          <span class="inline"><select id="classSel" class="no-i18n"></select><button class="btn btn-sm" id="newClass" type="button">+ <span data-i18n="new_class">புதிய வகுப்பு</span></button></span>
         </label>
-        <label class="field"><span data-i18n="room_label"></span>
-          <span class="inline"><select id="roomSel" class="no-i18n"></select><button class="btn btn-sm" id="newRoom" type="button">+ <span data-i18n="new_room"></span></button></span>
+        <label class="field"><span data-i18n="room_label">அறை</span>
+          <span class="inline"><select id="roomSel" class="no-i18n"></select><button class="btn btn-sm" id="newRoom" type="button">+ <span data-i18n="new_room">புதிய அறை</span></button></span>
         </label>
       </div>
       <div class="tabs" role="tablist">
-        <button type="button" role="tab" id="tabChart" data-tab="chart" data-i18n="tab_chart"></button>
-        <button type="button" role="tab" id="tabStudents" data-tab="students" data-i18n="tab_students"></button>
+        <button type="button" role="tab" id="tabChart" data-tab="chart" data-i18n="tab_chart">இருக்கை வரைபடம்</button>
+        <button type="button" role="tab" id="tabStudents" data-tab="students" data-i18n="tab_students">மாணவர்கள்</button>
       </div>
     </div>
 
-    <p class="callout small" id="sampleNote" data-i18n="sample_note"></p>
+    <p class="callout small" id="sampleNote" data-i18n="sample_note">இது கற்பனைப் பெயர்கள் கொண்ட எடுத்துக்காட்டு வகுப்பு; எல்லாவற்றையும் முயன்று பாருங்கள். உங்கள் பட்டியலை “மாணவர்கள்” தாவலில் ஒட்டுங்கள்.</p>
 
     <!-- ===== chart view ===== -->
     <div id="viewChart" class="layout">
       <section class="card chart-card" id="chartCard">
         <div class="chart-head">
-          <h2 data-i18n="chart_title"></h2>
+          <h2 data-i18n="chart_title">இருக்கை வரைபடம்</h2>
           <div class="row">
-            <button class="btn btn-sm" id="undoBtn" type="button">↶ <span data-i18n="undo"></span></button>
+            <button class="btn btn-sm" id="undoBtn" type="button">↶ <span data-i18n="undo">செயல்தவிர்</span></button>
             <button class="btn btn-sm" id="fsBtn" type="button">⛶ <span data-i18n="fullscreen"></span></button>
           </div>
         </div>
-        <p class="small muted" data-i18n="swap_help"></p>
+        <p class="small muted" data-i18n="swap_help">ஒரு பெயரை வேறு இருக்கைக்கு இழுங்கள், அல்லது ஒரு இருக்கையைத் தொட்டு பிறகு இன்னொன்றைத் தொட்டு இடம் மாற்றுங்கள். விசைப்பலகை: அம்புக்குறி நகர்த்தும், Enter தேர்ந்தெடுக்கும், Delete இருக்கையிலிருந்து நீக்கும்.</p>
         <div class="room-scroll" id="roomScroll">
-          <div class="board" data-i18n="board_label"></div>
+          <div class="board" data-i18n="board_label">கரும்பலகை · ஆசிரியர்</div>
           <div class="room" id="room" role="group"></div>
         </div>
         <div class="unseated" id="unseatedBox" hidden>
-          <strong data-i18n="unseated_title"></strong> <span class="small muted" data-i18n="unseated_help"></span>
+          <strong data-i18n="unseated_title">இருக்கை இல்லாதவர்கள்</strong> <span class="small muted" data-i18n="unseated_help">ஒரு பெயரைத் தொட்டு, பிறகு காலி இருக்கையைத் தொடுங்கள்.</span>
           <div class="chips no-i18n" id="unseated"></div>
         </div>
         <div class="legend" id="legend"></div>
@@ -184,60 +184,60 @@
 
       <div class="side">
         <section class="card">
-          <h2 data-i18n="arrange_title"></h2>
+          <h2 data-i18n="arrange_title">அமர வைத்தல்</h2>
           <div class="stack">
-            <label class="field"><span data-i18n="order_label"></span>
+            <label class="field"><span data-i18n="order_label">வரிசை முறை</span>
               <select id="orderSel">
-                <option value="roll" data-i18n="ord_roll"></option>
-                <option value="alpha" data-i18n="ord_alpha"></option>
-                <option value="random" data-i18n="ord_random"></option>
-                <option value="mixed" data-i18n="ord_mixed"></option>
+                <option value="roll" data-i18n="ord_roll">பதிவு எண்</option>
+                <option value="alpha" data-i18n="ord_alpha">அகர வரிசை</option>
+                <option value="random" data-i18n="ord_random">குலுக்கல் (நியாயமாக)</option>
+                <option value="mixed" data-i18n="ord_mixed">கலப்புத் திறன்</option>
               </select>
             </label>
-            <label class="check"><input type="checkbox" id="optBoyGirl"> <span data-i18n="opt_boygirl"></span></label>
-            <label class="check"><input type="checkbox" id="optFront"> <span data-i18n="opt_front"></span></label>
+            <label class="check"><input type="checkbox" id="optBoyGirl"> <span data-i18n="opt_boygirl">ஆண்–பெண் மாறி மாறி</span></label>
+            <label class="check"><input type="checkbox" id="optFront"> <span data-i18n="opt_front">முன்னால் தேவைப்படுவோர் முன்னால்</span></label>
             <div class="row">
-              <button class="btn btn-primary" id="arrangeBtn" type="button" data-i18n="arrange_btn"></button>
-              <button class="btn" id="clearBtn" type="button" data-i18n="clear_seats"></button>
+              <button class="btn btn-primary" id="arrangeBtn" type="button" data-i18n="arrange_btn">இருக்கைகளை அமை</button>
+              <button class="btn" id="clearBtn" type="button" data-i18n="clear_seats">இருக்கைகளை காலி செய்</button>
             </div>
           </div>
         </section>
 
         <section class="card">
-          <h2 data-i18n="room_title"></h2>
+          <h2 data-i18n="room_title">அறை</h2>
           <div class="stack">
-            <label class="field"><span data-i18n="room_name"></span><input id="roomName" class="no-i18n" data-i18n-placeholder="room_name_ph"></label>
-            <div class="field"><span data-i18n="layout_label"></span>
+            <label class="field"><span data-i18n="room_name">அறையின் பெயர்</span><input id="roomName" class="no-i18n" data-i18n-placeholder="room_name_ph"></label>
+            <div class="field"><span data-i18n="layout_label">அமைப்பு</span>
               <div class="seg" id="layoutSeg">
-                <button type="button" data-lay="pairs" data-i18n="lay_pairs"></button>
-                <button type="button" data-lay="rows" data-i18n="lay_rows"></button>
-                <button type="button" data-lay="groups" data-i18n="lay_groups"></button>
-                <button type="button" data-lay="ushape" data-i18n="lay_ushape"></button>
-                <button type="button" data-lay="exam" data-i18n="lay_exam"></button>
+                <button type="button" data-lay="pairs" data-i18n="lay_pairs">இணைகள் (பெஞ்ச்)</button>
+                <button type="button" data-lay="rows" data-i18n="lay_rows">வரிசைகள்</button>
+                <button type="button" data-lay="groups" data-i18n="lay_groups">4 பேர் குழுக்கள்</button>
+                <button type="button" data-lay="ushape" data-i18n="lay_ushape">U வடிவம்</button>
+                <button type="button" data-lay="exam" data-i18n="lay_exam">தேர்வு அறை (இடைவெளியுடன்)</button>
               </div>
             </div>
             <div class="num-row">
-              <label class="field"><span data-i18n="rows_label"></span><input type="number" id="rowsIn" min="1" max="20"></label>
-              <label class="field"><span data-i18n="cols_label"></span><input type="number" id="colsIn" min="1" max="14"></label>
+              <label class="field"><span data-i18n="rows_label">வரிசைகள்</span><input type="number" id="rowsIn" min="1" max="20"></label>
+              <label class="field"><span data-i18n="cols_label">ஒரு வரிசையில் இருக்கைகள்</span><input type="number" id="colsIn" min="1" max="14"></label>
             </div>
             <p class="small muted" id="capacity"></p>
-            <label class="check"><input type="checkbox" id="setsChk"> <span data-i18n="sets_label"></span></label>
-            <p class="small muted" data-i18n="sets_hint"></p>
-            <div><button class="btn btn-danger btn-sm" id="delRoom" type="button" data-i18n="delete_room"></button></div>
+            <label class="check"><input type="checkbox" id="setsChk"> <span data-i18n="sets_label">வினாத்தாள் தொகுப்பு A / B</span></label>
+            <p class="small muted" data-i18n="sets_hint">முன், பின், பக்கத்தில் இருப்பவர்களுக்கு வேறு தொகுப்பு கிடைக்கும்.</p>
+            <div><button class="btn btn-danger btn-sm" id="delRoom" type="button" data-i18n="delete_room">அறையை நீக்கு</button></div>
           </div>
         </section>
 
         <section class="card">
-          <h2 data-i18n="print_title"></h2>
+          <h2 data-i18n="print_title">அச்சிடு &amp; பகிர்</h2>
           <div class="row">
-            <button class="btn" id="prChart" type="button" data-i18n="print_chart"></button>
-            <button class="btn" id="prSlips" type="button" data-i18n="print_slips"></button>
-            <button class="btn" id="prLabels" type="button" data-i18n="print_labels"></button>
-            <button class="btn" id="prList" type="button" data-i18n="print_list"></button>
-            <button class="btn" id="csvBtn" type="button" data-i18n="export_csv"></button>
-            <button class="btn" id="copyBtn" type="button" data-i18n="copy_text"></button>
+            <button class="btn" id="prChart" type="button" data-i18n="print_chart">வரைபடம் அச்சிடு (A4)</button>
+            <button class="btn" id="prSlips" type="button" data-i18n="print_slips">மேசைச் சீட்டு அச்சிடு</button>
+            <button class="btn" id="prLabels" type="button" data-i18n="print_labels">பெயர் லேபிள் அச்சிடு</button>
+            <button class="btn" id="prList" type="button" data-i18n="print_list">கண்காணிப்பாளர் பட்டியல் அச்சிடு</button>
+            <button class="btn" id="csvBtn" type="button" data-i18n="export_csv">CSV பதிவிறக்கு</button>
+            <button class="btn" id="copyBtn" type="button" data-i18n="copy_text">உரையாக நகலெடு</button>
           </div>
-          <p class="small muted" data-i18n="print_help"></p>
+          <p class="small muted" data-i18n="print_help">வரைபடம்: அறிவிப்புப் பலகைக்குப் பெரிய பெயர்களுடன் ஒரு A4 பக்கம். மேசைச் சீட்டு: தேர்வு மேசைக்குப் பதிவு எண், பெயர், இருக்கை, தொகுப்பு. லேபிள்: மேசையில் ஒட்டப் பெயர்கள். கண்காணிப்பாளர் பட்டியல்: கையொப்ப நெடுவரிசையுடன் இருக்கைவாரிப் பட்டியல்.</p>
         </section>
       </div>
     </div>
@@ -246,34 +246,34 @@
     <div id="viewStudents" hidden>
       <div class="layout">
         <section class="card">
-          <h2 data-i18n="students_title"></h2>
+          <h2 data-i18n="students_title">வகுப்புப் பட்டியல்</h2>
           <div class="stack">
-            <label class="field"><span data-i18n="class_name"></span><input id="className" class="no-i18n" data-i18n-placeholder="class_name_ph"></label>
-            <label class="field"><span data-i18n="names_label"></span>
+            <label class="field"><span data-i18n="class_name">வகுப்பின் பெயர்</span><input id="className" class="no-i18n" data-i18n-placeholder="class_name_ph"></label>
+            <label class="field"><span data-i18n="names_label">மாணவர்கள் (ஒரு வரியில் ஒருவர்)</span>
               <textarea id="names" class="no-i18n" data-i18n-placeholder="names_ph" spellcheck="false"></textarea>
-              <span class="hint" data-i18n="names_hint"></span>
+              <span class="hint" data-i18n="names_hint">ஒரு வரியில் ஒரு மாணவர். விரும்பினால் காற்புள்ளிக்குப் பிறகு: பதிவு எண், பாலினம் (M/F), மதிப்பெண், தேவை (முன், கண்ணாடி, இடக்கை). Excel அல்லது Google Sheets அட்டவணையையும் ஒட்டலாம்.</span>
             </label>
             <div class="row">
-              <button class="btn btn-primary" id="useList" type="button" data-i18n="use_list"></button>
-              <button class="btn" id="importCsv" type="button" data-i18n="import_csv"></button>
-              <button class="btn" id="addStudent" type="button">+ <span data-i18n="add_student"></span></button>
-              <button class="btn" id="loadSample" type="button" data-i18n="load_sample"></button>
+              <button class="btn btn-primary" id="useList" type="button" data-i18n="use_list">இந்தப் பட்டியலைப் பயன்படுத்து</button>
+              <button class="btn" id="importCsv" type="button" data-i18n="import_csv">CSV இறக்கு</button>
+              <button class="btn" id="addStudent" type="button">+ <span data-i18n="add_student">மாணவரைச் சேர்</span></button>
+              <button class="btn" id="loadSample" type="button" data-i18n="load_sample">எடுத்துக்காட்டு வகுப்பைத் திற</button>
             </div>
             <p class="small" id="stuCount" aria-live="polite"></p>
             <div class="scroll-x"><table class="stu-table" id="stuTable">
-              <thead><tr><th>#</th><th data-i18n="col_name"></th><th data-i18n="col_roll"></th><th data-i18n="col_gender"></th><th data-i18n="col_marks"></th><th data-i18n="col_needs"></th></tr></thead>
+              <thead><tr><th>#</th><th data-i18n="col_name">பெயர்</th><th data-i18n="col_roll">எண்</th><th data-i18n="col_gender">பாலினம்</th><th data-i18n="col_marks">மதிப்பெண்</th><th data-i18n="col_needs">தேவை</th></tr></thead>
               <tbody></tbody>
             </table></div>
-            <div><button class="btn btn-danger btn-sm" id="delClass" type="button" data-i18n="delete_class"></button></div>
+            <div><button class="btn btn-danger btn-sm" id="delClass" type="button" data-i18n="delete_class">வகுப்பை நீக்கு</button></div>
           </div>
         </section>
         <section class="card">
-          <h2 data-i18n="apart_title"></h2>
-          <p class="small muted" data-i18n="apart_hint"></p>
+          <h2 data-i18n="apart_title">பிரித்து வை</h2>
+          <p class="small muted" data-i18n="apart_hint">இந்த இருவரும் அருகருகே (பக்கம், முன், பின்) அமர மாட்டார்கள்.</p>
           <div class="apart-row">
-            <label class="field"><span data-i18n="student_a"></span><select id="apartA" class="no-i18n"></select></label>
-            <label class="field"><span data-i18n="student_b"></span><select id="apartB" class="no-i18n"></select></label>
-            <button class="btn" id="addPair" type="button" data-i18n="add_pair"></button>
+            <label class="field"><span data-i18n="student_a">மாணவர் 1</span><select id="apartA" class="no-i18n"></select></label>
+            <label class="field"><span data-i18n="student_b">மாணவர் 2</span><select id="apartB" class="no-i18n"></select></label>
+            <button class="btn" id="addPair" type="button" data-i18n="add_pair">இணையைச் சேர்</button>
           </div>
           <ul class="pairs" id="pairs"></ul>
         </section>
@@ -281,16 +281,16 @@
     </div>
 
     <details class="card help no-print" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">பயன்படுத்தும் முறை / வகுப்பறை யோசனைகள்</summary>
       <ul>
-        <li data-i18n="help_1"></li><li data-i18n="help_2"></li><li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li><li data-i18n="help_5"></li><li data-i18n="help_6"></li>
+        <li data-i18n="help_1">மாணவர்கள் தாவல்: வருகைப் பதிவேடு அல்லது தாளிலிருந்து பெயர்களை ஒட்டுங்கள். காற்புள்ளிக்குப் பின் பதிவு எண், M/F, மதிப்பெண், தேவை (முன், கண்ணாடி, இடக்கை) சேருங்கள், அல்லது வரியைத் தொட்டுத் திருத்துங்கள்.</li><li data-i18n="help_2">அறை அமைப்பைத் தேர்ந்தெடுங்கள் (இணை பெஞ்ச், 4 பேர் குழு, U வடிவம் அல்லது இடைவெளியுடன் தேர்வு அறை), வரிசைகள் மற்றும் இருக்கைகளின் எண்ணிக்கையைக் கொடுங்கள். பல அறைகள், வகுப்புகள் உருவாக்கலாம்; எல்லாம் இந்தச் சாதனத்தில் சேமிக்கப்படும்.</li><li data-i18n="help_3">தேர்வுக்குப் பதிவு எண், புதிய வகுப்புக்கு அகர வரிசை, நியாயமான புதிய தொடக்கத்துக்குக் குலுக்கல். “கலப்புத் திறன்” நன்கு படிப்பவரை உதவி தேவைப்படுபவருடன் அமர வைக்கும்; இருவரும் ஒருவரிடமிருந்து ஒருவர் கற்கிறார்கள்.</li>
+        <li data-i18n="help_4">அதிகம் பேசுபவர்களுக்கு “பிரித்து வை”, கண்ணாடி அல்லது காது கேட்பதில் சிரமம் உள்ளவர்களுக்கு “முன்னால் தேவைப்படுவோர்” பயன்படுத்துங்கள். பிறகு பெயர்களை இழுத்துச் சரிசெய்யுங்கள்.</li><li data-i18n="help_5">தேர்வு அறை: தேர்வு அமைப்பைத் தேர்ந்தெடுத்து, A/B தொகுப்பை இயக்கி, பதிவு எண்ணுடன் மேசைச் சீட்டுகளையும் கையொப்ப நெடுவரிசையுடன் கண்காணிப்பாளர் பட்டியலையும் அச்சிடுங்கள்.</li><li data-i18n="help_6">வகுப்பறை யோசனை: மாதம் ஒருமுறை குலுக்கல் மூலம் இருக்கைகளை மாற்றி, ஒவ்வொருவரும் தன் புதிய பக்கத்து மாணவரை வகுப்புக்கு அறிமுகப்படுத்தட்டும்.</li>
       </ul>
     </details>
-    <p class="small muted no-print">🔒 <span data-i18n="privacy_note"></span></p>
+    <p class="small muted no-print">🔒 <span data-i18n="privacy_note">மாணவர் பெயர்களும் மதிப்பெண்களும் இந்தச் சாதனத்தின் உலாவியிலேயே இருக்கும். எதுவும் பதிவேற்றப்படாது.</span></p>
     <section class="card no-print">
-      <h2 data-i18n="reset_title"></h2>
-      <p class="small muted" data-i18n="reset_help"></p>
+      <h2 data-i18n="reset_title">புதிதாகத் தொடங்கு</h2>
+      <p class="small muted" data-i18n="reset_help">இந்தச் சாதனத்தில் சேமித்த எல்லா வகுப்புகள், அறைகள், வரைபடங்கள் நீக்கப்படும்.</p>
       <button class="btn btn-danger" id="resetAll" type="button" data-i18n="reset"></button>
     </section>
 

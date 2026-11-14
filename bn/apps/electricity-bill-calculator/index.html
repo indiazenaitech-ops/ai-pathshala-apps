@@ -175,15 +175,15 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="eb-privacy no-print"><span aria-hidden="true">🔒</span><span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">জানুন কোন যন্ত্রগুলি সবচেয়ে বেশি বিদ্যুৎ খায়, মাসের বিল স্ল্যাব ধরে ধরে আন্দাজ করুন এবং দেখুন LED, BLDC ফ্যান বা 24 °C-তে AC কতটা বাঁচাবে।</p>
+    <p class="eb-privacy no-print"><span aria-hidden="true">🔒</span><span data-i18n="privacy">সব হিসাব আপনার ডিভাইসেই হয়। কিছুই আপলোড বা অন্য কোথাও সেভ হয় না।</span></p>
 
     <nav class="eb-tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-audit" data-tab="audit" aria-controls="p-audit"><span class="ic" aria-hidden="true">🔌</span><span data-i18n="tab_audit"></span></button>
-      <button type="button" role="tab" id="tab-bill" data-tab="bill" aria-controls="p-bill"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_bill"></span></button>
-      <button type="button" role="tab" id="tab-save" data-tab="save" aria-controls="p-save"><span class="ic" aria-hidden="true">🌱</span><span data-i18n="tab_save"></span></button>
-      <button type="button" role="tab" id="tab-meter" data-tab="meter" aria-controls="p-meter"><span class="ic" aria-hidden="true">☀️</span><span data-i18n="tab_meter"></span></button>
-      <button type="button" role="tab" id="tab-science" data-tab="science" aria-controls="p-science"><span class="ic" aria-hidden="true">⚡</span><span data-i18n="tab_science"></span></button>
+      <button type="button" role="tab" id="tab-audit" data-tab="audit" aria-controls="p-audit"><span class="ic" aria-hidden="true">🔌</span><span data-i18n="tab_audit">যন্ত্রপাতি</span></button>
+      <button type="button" role="tab" id="tab-bill" data-tab="bill" aria-controls="p-bill"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_bill">বিলের আন্দাজ</span></button>
+      <button type="button" role="tab" id="tab-save" data-tab="save" aria-controls="p-save"><span class="ic" aria-hidden="true">🌱</span><span data-i18n="tab_save">সাশ্রয় কোচ</span></button>
+      <button type="button" role="tab" id="tab-meter" data-tab="meter" aria-controls="p-meter"><span class="ic" aria-hidden="true">☀️</span><span data-i18n="tab_meter">মিটার ও সোলার</span></button>
+      <button type="button" role="tab" id="tab-science" data-tab="science" aria-controls="p-science"><span class="ic" aria-hidden="true">⚡</span><span data-i18n="tab_science">বিজ্ঞান কোণ</span></button>
     </nav>
 
     <!-- 1. Appliance audit -->
@@ -192,33 +192,33 @@
         <div class="stack">
           <section class="card stack">
             <div class="row spread">
-              <h2 class="mb0" data-i18n="audit_title"></h2>
+              <h2 class="mb0" data-i18n="audit_title">বাড়ির শক্তি অডিট</h2>
               <div class="field" style="margin:0">
-                <label for="days" class="eb-lbl" data-i18n="days_label"></label>
+                <label for="days" class="eb-lbl" data-i18n="days_label">মাসের দিন</label>
                 <input id="days" class="eb-num" type="number" inputmode="numeric" min="1" max="366" step="1" style="width:110px">
               </div>
             </div>
             <div class="eb-add">
-              <label for="add-sel" class="ap-l" data-i18n="add_label"></label>
+              <label for="add-sel" class="ap-l" data-i18n="add_label">যে যন্ত্র যোগ করবেন</label>
               <select id="add-sel"></select>
-              <button type="button" class="btn btn-primary" id="add-btn">＋ <span data-i18n="add"></span></button>
+              <button type="button" class="btn btn-primary" id="add-btn">＋ <span data-i18n="add">যোগ করুন</span></button>
             </div>
             <div class="ap-head" aria-hidden="true">
-              <span data-i18n="col_appliance"></span><span data-i18n="col_watts"></span><span data-i18n="col_qty"></span><span data-i18n="col_hours"></span><span class="v" data-i18n="col_units"></span><span></span>
+              <span data-i18n="col_appliance">যন্ত্র</span><span data-i18n="col_watts">ওয়াট</span><span data-i18n="col_qty">সংখ্যা</span><span data-i18n="col_hours">ঘণ্টা/দিন</span><span class="v" data-i18n="col_units">ইউনিট</span><span></span>
             </div>
             <div class="ap-rows" id="audit-rows"></div>
-            <p class="muted eb-empty" id="audit-empty" data-i18n="audit_empty"></p>
+            <p class="muted eb-empty" id="audit-empty" data-i18n="audit_empty">এখনও কোনো যন্ত্র নেই। উপরে যোগ করুন বা নমুনা বাড়ি লোড করুন।</p>
             <div class="row">
-              <button type="button" class="btn" id="sample-btn" data-i18n="load_sample"></button>
+              <button type="button" class="btn" id="sample-btn" data-i18n="load_sample">নমুনা বাড়ি লোড করুন</button>
               <button type="button" class="btn btn-danger" id="clear-btn" data-i18n="clear"></button>
             </div>
-            <p class="eb-note" data-i18n="audit_hint"></p>
+            <p class="eb-note" data-i18n="audit_hint">ইউনিট = ওয়াট × সংখ্যা × দিনে ঘণ্টা × দিন ÷ 1000। ওয়াট সাধারণ মান: যন্ত্রের লেবেল দেখে বদলান।</p>
           </section>
         </div>
         <div class="stack">
           <section class="card eb-result" id="audit-result" aria-live="polite"></section>
           <section class="card">
-            <h2 data-i18n="rank_title"></h2>
+            <h2 data-i18n="rank_title">কে সবচেয়ে বেশি খায়?</h2>
             <div id="top3" class="top3"></div>
             <ol class="rk-list" id="rank-list"></ol>
           </section>
@@ -231,46 +231,46 @@
       <div class="eb-two">
         <div class="stack">
           <section class="card stack">
-            <h2 class="mb0" data-i18n="bill_inputs"></h2>
+            <h2 class="mb0" data-i18n="bill_inputs">আপনার সংযোগ</h2>
             <div class="eb-in-row">
               <div class="field">
-                <label for="b-units" data-i18n="b_units"></label>
+                <label for="b-units" data-i18n="b_units">এই মাসের ইউনিট (kWh)</label>
                 <input id="b-units" class="eb-num" type="number" inputmode="decimal" min="0" step="1">
               </div>
               <div class="field">
-                <label for="b-state" data-i18n="b_state"></label>
+                <label for="b-state" data-i18n="b_state">রাজ্যের দর (নমুনা)</label>
                 <select id="b-state"></select>
               </div>
             </div>
-            <label class="check"><input type="checkbox" id="b-use-audit"><span data-i18n="b_use_audit"></span></label>
-            <p class="eb-approx" data-i18n="approx_note"></p>
+            <label class="check"><input type="checkbox" id="b-use-audit"><span data-i18n="b_use_audit">যন্ত্র তালিকার মোট ব্যবহার করুন</span></label>
+            <p class="eb-approx" data-i18n="approx_note">গৃহস্থালি দরের নমুনা, আনুমানিক, অক্টোবর 2026। নিয়ম আলাদা হতে পারে (দুই মাসের বিল, ভর্তুকির শর্ত, সময় অনুযায়ী দর)। নিজের DISCOM বিল দেখুন ও সংখ্যা বদলান।</p>
             <div class="field">
-              <span class="eb-lbl" id="tele-lbl" data-i18n="tele_label"></span>
+              <span class="eb-lbl" id="tele-lbl" data-i18n="tele_label">স্ল্যাব পদ্ধতি</span>
               <div class="seg eb-seg" id="b-tele" role="group" aria-labelledby="tele-lbl">
-                <button type="button" data-v="1" data-i18n="tele_yes"></button>
-                <button type="button" data-v="0" data-i18n="tele_no"></button>
+                <button type="button" data-v="1" data-i18n="tele_yes">টেলিস্কোপিক</button>
+                <button type="button" data-v="0" data-i18n="tele_no">নন-টেলিস্কোপিক</button>
               </div>
               <p class="eb-note" id="tele-hint"></p>
             </div>
             <div>
-              <div class="sl-head" aria-hidden="true"><span data-i18n="col_upto"></span><span data-i18n="col_rate"></span><span></span></div>
+              <div class="sl-head" aria-hidden="true"><span data-i18n="col_upto">পর্যন্ত (ইউনিট)</span><span data-i18n="col_rate">দর (₹/ইউনিট)</span><span></span></div>
               <div class="sl-rows" id="slab-rows"></div>
               <div class="row" style="margin-top:10px">
-                <button type="button" class="btn btn-sm" id="slab-add">＋ <span data-i18n="slab_add"></span></button>
-                <button type="button" class="btn btn-sm" id="slab-restore" data-i18n="slab_restore"></button>
+                <button type="button" class="btn btn-sm" id="slab-add">＋ <span data-i18n="slab_add">স্ল্যাব যোগ করুন</span></button>
+                <button type="button" class="btn btn-sm" id="slab-restore" data-i18n="slab_restore">রাজ্যের টেবিল ফেরান</button>
               </div>
             </div>
             <div class="eb-in-row">
-              <div class="field"><label for="b-load" data-i18n="b_load"></label><input id="b-load" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
-              <div class="field"><label for="b-fixed" data-i18n="b_fixed"></label><input id="b-fixed" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+              <div class="field"><label for="b-load" data-i18n="b_load">অনুমোদিত লোড (kW)</label><input id="b-load" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+              <div class="field"><label for="b-fixed" data-i18n="b_fixed">ফিক্সড চার্জ (₹ প্রতি kW প্রতি মাস)</label><input id="b-fixed" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
             </div>
             <div class="eb-in-row">
-              <div class="field"><label for="b-duty" data-i18n="b_duty"></label><input id="b-duty" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
-              <div class="field"><label for="b-fuel" data-i18n="b_fuel"></label><input id="b-fuel" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+              <div class="field"><label for="b-duty" data-i18n="b_duty">বিদ্যুৎ শুল্ক / কর (%)</label><input id="b-duty" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+              <div class="field"><label for="b-fuel" data-i18n="b_fuel">জ্বালানি সারচার্জ (%)</label><input id="b-fuel" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
             </div>
             <div class="eb-in-row">
-              <label class="check" style="flex:1 1 200px"><input type="checkbox" id="b-sub"><span data-i18n="b_sub"></span></label>
-              <div class="field"><label for="b-free" data-i18n="b_free"></label><input id="b-free" class="eb-num" type="number" inputmode="numeric" min="0" step="1"></div>
+              <label class="check" style="flex:1 1 200px"><input type="checkbox" id="b-sub"><span data-i18n="b_sub">ভর্তুকি / বিনামূল্যে ইউনিট</span></label>
+              <div class="field"><label for="b-free" data-i18n="b_free">মাসে বিনামূল্যে ইউনিট</label><input id="b-free" class="eb-num" type="number" inputmode="numeric" min="0" step="1"></div>
             </div>
           </section>
         </div>
@@ -282,18 +282,18 @@
     <section id="p-save" role="tabpanel" aria-labelledby="tab-save" class="eb-panel" hidden>
       <div class="eb-two">
         <section class="card stack">
-          <h2 class="mb0" data-i18n="save_title"></h2>
-          <p class="eb-note" data-i18n="save_hint"></p>
+          <h2 class="mb0" data-i18n="save_title">যদি এমন করেন…</h2>
+          <p class="eb-note" data-i18n="save_hint">একটি বদল টিক করুন, আপনার যন্ত্র তালিকা অনুযায়ী কত ইউনিট ও টাকা বাঁচবে দেখুন।</p>
           <div class="sw-list">
-            <label class="check"><input type="checkbox" id="sw-led"><span><span data-i18n="sw_led"></span><small data-i18n="sw_led_h"></small></span></label>
-            <label class="check"><input type="checkbox" id="sw-ac24"><span><span data-i18n="sw_ac24"></span><small data-i18n="sw_ac24_h"></small></span></label>
-            <label class="check"><input type="checkbox" id="sw-fridge5"><span><span data-i18n="sw_fridge5"></span><small data-i18n="sw_fridge5_h"></small></span></label>
-            <label class="check"><input type="checkbox" id="sw-bldc"><span><span data-i18n="sw_bldc"></span><small data-i18n="sw_bldc_h"></small></span></label>
-            <label class="check"><input type="checkbox" id="sw-standby"><span><span data-i18n="sw_standby"></span><small data-i18n="sw_standby_h"></small></span></label>
+            <label class="check"><input type="checkbox" id="sw-led"><span><span data-i18n="sw_led">বাল্ব, CFL ও টিউবের বদলে 9 W LED লাগান</span><small data-i18n="sw_led_h">60 W বাল্ব → 9 W LED চালু প্রতি ঘণ্টায় 51 W বাঁচায়।</small></span></label>
+            <label class="check"><input type="checkbox" id="sw-ac24"><span><span data-i18n="sw_ac24">AC 18 °C-এর বদলে 24 °C-তে চালান</span><small data-i18n="sw_ac24_h">প্রতি ডিগ্রিতে প্রায় 6 % কম বিদ্যুৎ: 6 ডিগ্রি ≈ 36 %।</small></span></label>
+            <label class="check"><input type="checkbox" id="sw-fridge5"><span><span data-i18n="sw_fridge5">5-স্টার ফ্রিজ নিন</span><small data-i18n="sw_fridge5_h">পুরনো 2-স্টার ফ্রিজের চেয়ে প্রায় 30 % কম।</small></span></label>
+            <label class="check"><input type="checkbox" id="sw-bldc"><span><span data-i18n="sw_bldc">সিলিং ফ্যানের বদলে BLDC ফ্যান লাগান</span><small data-i18n="sw_bldc_h">প্রতি ফ্যানে 75 W → 30 W।</small></span></label>
+            <label class="check"><input type="checkbox" id="sw-standby"><span><span data-i18n="sw_standby">স্ট্যান্ডবাই বিদ্যুৎ বন্ধ করুন</span><small data-i18n="sw_standby_h">TV, সেট-টপ বক্স, চার্জার ও কম্পিউটার অলস অবস্থাতেও প্রায় 2 W করে নেয়।</small></span></label>
           </div>
           <div class="eb-in-row">
-            <div class="field"><label for="sv-rate" data-i18n="sv_rate"></label><input id="sv-rate" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
-            <button type="button" class="btn" id="sv-rate-auto" data-i18n="sv_rate_auto"></button>
+            <div class="field"><label for="sv-rate" data-i18n="sv_rate">ব্যবহৃত দর (₹ প্রতি ইউনিট)</label><input id="sv-rate" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
+            <button type="button" class="btn" id="sv-rate-auto" data-i18n="sv_rate_auto">আমার বিলের দর নিন</button>
           </div>
         </section>
         <section class="card eb-result" id="save-result" aria-live="polite"></section>
@@ -304,20 +304,20 @@
     <section id="p-meter" role="tabpanel" aria-labelledby="tab-meter" class="eb-panel" hidden>
       <div class="eb-two">
         <section class="card stack">
-          <h2 class="mb0" data-i18n="meter_title"></h2>
-          <p class="eb-note" data-i18n="meter_hint"></p>
+          <h2 class="mb0" data-i18n="meter_title">মিটার রিডিং</h2>
+          <p class="eb-note" data-i18n="meter_hint">গত বিলের রিডিং এবং এখন মিটারের রিডিং লিখুন।</p>
           <div class="eb-in-row">
-            <div class="field"><label for="m-prev" data-i18n="m_prev"></label><input id="m-prev" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
-            <div class="field"><label for="m-cur" data-i18n="m_cur"></label><input id="m-cur" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+            <div class="field"><label for="m-prev" data-i18n="m_prev">আগের রিডিং</label><input id="m-prev" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+            <div class="field"><label for="m-cur" data-i18n="m_cur">বর্তমান রিডিং</label><input id="m-cur" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
           </div>
           <div id="meter-result" aria-live="polite"></div>
         </section>
         <section class="card stack">
-          <h2 class="mb0" data-i18n="solar_title"></h2>
-          <p class="eb-note" data-i18n="solar_hint"></p>
+          <h2 class="mb0" data-i18n="solar_title">ছাদের সোলার: দ্রুত আন্দাজ</h2>
+          <p class="eb-note" data-i18n="solar_hint">ভারতে 1 kW ছাদের সোলার দিনে প্রায় 4 ইউনিট, মাসে প্রায় 120 ইউনিট দেয় (শহর, ঋতু ও ছায়া অনুযায়ী আলাদা)।</p>
           <div class="eb-in-row">
-            <div class="field"><label for="s-kw" data-i18n="s_kw"></label><input id="s-kw" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
-            <div class="field"><label for="s-per" data-i18n="s_per"></label><input id="s-per" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
+            <div class="field"><label for="s-kw" data-i18n="s_kw">সোলার প্ল্যান্টের আকার (kW)</label><input id="s-kw" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+            <div class="field"><label for="s-per" data-i18n="s_per">প্রতি kW দিনে ইউনিট</label><input id="s-per" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
           </div>
           <div id="solar-result" aria-live="polite"></div>
         </section>
@@ -327,51 +327,51 @@
     <!-- 5. Science corner -->
     <section id="p-science" role="tabpanel" aria-labelledby="tab-science" class="eb-panel" hidden>
       <section class="card">
-        <h2 data-i18n="sci_title"></h2>
-        <p class="eb-note" data-i18n="sci_hint"></p>
+        <h2 data-i18n="sci_title">বিজ্ঞান কোণ (দশম শ্রেণি, বিদ্যুৎ)</h2>
+        <p class="eb-note" data-i18n="sci_hint">বিলে যে অঙ্ক লাগে, NCERT যেভাবে লেখে।</p>
         <div class="sc-formulas" style="margin-top:12px">
-          <div class="sc-f"><div class="f eb-ltr">P = V × I</div><p data-i18n="f_power"></p></div>
-          <div class="sc-f"><div class="f eb-ltr">E = P × t</div><p data-i18n="f_energy"></p></div>
-          <div class="sc-f"><div class="f eb-ltr">1 kWh = 3.6 × 10<sup>6</sup> J</div><p data-i18n="f_unit"></p></div>
+          <div class="sc-f"><div class="f eb-ltr">P = V × I</div><p data-i18n="f_power">ক্ষমতা (ওয়াট) = ভোল্টেজ (ভোল্ট) × তড়িৎপ্রবাহ (অ্যাম্পিয়ার)।</p></div>
+          <div class="sc-f"><div class="f eb-ltr">E = P × t</div><p data-i18n="f_energy">শক্তি = ক্ষমতা × সময়। 1 kWh = 1000 W এক ঘণ্টা = 1 ইউনিট।</p></div>
+          <div class="sc-f"><div class="f eb-ltr">1 kWh = 3.6 × 10<sup>6</sup> J</div><p data-i18n="f_unit">বিদ্যুতের এক ইউনিট = 36 লক্ষ জুল।</p></div>
         </div>
       </section>
       <div class="eb-two">
         <section class="card stack">
-          <h2 class="mb0" data-i18n="sci_calc"></h2>
+          <h2 class="mb0" data-i18n="sci_calc">নিজে করুন</h2>
           <div class="eb-in-row">
-            <div class="field"><label for="sc-v" data-i18n="sc_v"></label><input id="sc-v" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
-            <div class="field"><label for="sc-i" data-i18n="sc_i"></label><input id="sc-i" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
+            <div class="field"><label for="sc-v" data-i18n="sc_v">ভোল্টেজ (V)</label><input id="sc-v" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+            <div class="field"><label for="sc-i" data-i18n="sc_i">তড়িৎপ্রবাহ (A)</label><input id="sc-i" class="eb-num" type="number" inputmode="decimal" min="0" step="0.1"></div>
           </div>
           <p class="eb-note" id="sc-p-out" aria-live="polite"></p>
           <div class="eb-in-row">
-            <div class="field"><label for="sc-pw" data-i18n="sc_pw"></label><input id="sc-pw" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
-            <div class="field"><label for="sc-h" data-i18n="sc_h"></label><input id="sc-h" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
-            <div class="field"><label for="sc-d" data-i18n="sc_d"></label><input id="sc-d" class="eb-num" type="number" inputmode="numeric" min="1" step="1"></div>
+            <div class="field"><label for="sc-pw" data-i18n="sc_pw">ক্ষমতা (W)</label><input id="sc-pw" class="eb-num" type="number" inputmode="decimal" min="0" step="1"></div>
+            <div class="field"><label for="sc-h" data-i18n="sc_h">দিনে ঘণ্টা</label><input id="sc-h" class="eb-num" type="number" inputmode="decimal" min="0" step="0.5"></div>
+            <div class="field"><label for="sc-d" data-i18n="sc_d">দিন</label><input id="sc-d" class="eb-num" type="number" inputmode="numeric" min="1" step="1"></div>
           </div>
           <div id="sc-e-out" aria-live="polite"></div>
         </section>
         <section class="card">
-          <h2 data-i18n="sci_practice"></h2>
+          <h2 data-i18n="sci_practice">অনুশীলনী প্রশ্ন</h2>
           <ol class="sc-q" id="sc-q"></ol>
         </section>
       </div>
     </section>
 
     <details class="card no-print">
-      <summary data-i18n="howto_title"></summary>
+      <summary data-i18n="howto_title">কীভাবে ব্যবহার করবেন / আইডিয়া</summary>
       <ul>
-        <li data-i18n="tip1"></li><li data-i18n="tip2"></li><li data-i18n="tip3"></li><li data-i18n="tip4"></li><li data-i18n="tip5"></li>
+        <li data-i18n="tip1">ফোন হাতে বাড়ি ঘুরে প্রতিটি যন্ত্র লিখুন; লেবেল বা স্টিকার থেকে ওয়াট পড়ুন।</li><li data-i18n="tip2">যন্ত্র আসলে যত ঘণ্টা চালু থাকে তাই লিখুন। AC বা ফ্রিজের কম্প্রেসর থেমে থেমে চলে, তাই &quot;কার্যকর ঘণ্টা&quot; কম।</li><li data-i18n="tip3">আন্দাজ আসল বিলের সঙ্গে মেলান। অনেক তফাত হলে ঘণ্টা বা দরের টেবিল ঠিক করুন, বা কোথাও অপচয় আছে, যেমন গিজারের খারাপ থার্মোস্ট্যাট।</li><li data-i18n="tip4">অফিস বা দোকান: আলো, ফ্যান, AC ও কম্পিউটার লিখুন; রাতে শুধু স্ট্যান্ডবাই বন্ধ করলেই প্রায়ই 5–10 % বাঁচে।</li><li data-i18n="tip5">ক্লাসরুম: দশম শ্রেণির পড়ুয়ারা নিজের বাড়ির অডিট করুক, তারপর ক্লাস সবচেয়ে বেশি খরচের 3 যন্ত্র ও বাড়ি-বাড়ি সাশ্রয় তুলনা করুক।</li>
       </ul>
     </details>
     <details class="card no-print">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">জানার শব্দ</summary>
       <ul>
-        <li data-i18n="word_unit"></li><li data-i18n="word_watt"></li><li data-i18n="word_slab"></li><li data-i18n="word_tele"></li><li data-i18n="word_load"></li><li data-i18n="word_duty"></li>
+        <li data-i18n="word_unit">ইউনিট (kWh): 1000 W যন্ত্র এক ঘণ্টায় যে শক্তি নেয়। বিলে ইউনিট গোনা হয়।</li><li data-i18n="word_watt">ওয়াট (W): যন্ত্র কত দ্রুত শক্তি নেয়। 1 kW = 1000 W।</li><li data-i18n="word_slab">স্ল্যাব: ইউনিটের একটি ধাপ যার নিজস্ব প্রতি ইউনিট দর আছে, যেমন 0–100-তে ₹3।</li><li data-i18n="word_tele">টেলিস্কোপিক: প্রতিটি স্ল্যাব আলাদা হিসাব করে যোগ। নন-টেলিস্কোপিক: মোট দিয়ে ঠিক হওয়া একটিই দর সব ইউনিটে।</li><li data-i18n="word_load">অনুমোদিত লোড: আপনার সংযোগের জন্য মঞ্জুর kW; ফিক্সড চার্জ প্রায়ই এর প্রতি kW ধরে।</li><li data-i18n="word_duty">বিদ্যুৎ শুল্ক: রাজ্যের কর যা চার্জের শতাংশ হিসাবে যোগ হয়; জ্বালানি সারচার্জ DISCOM-এর বদলাতে থাকা জ্বালানি খরচের জন্য।</li>
       </ul>
     </details>
-    <p class="muted small no-print" data-i18n="disclaimer"></p>
+    <p class="muted small no-print" data-i18n="disclaimer">শুধু আন্দাজ, বিল নয়। দরগুলি আনুমানিক নমুনা (অক্টোবর 2026) এবং প্রায়ই বদলায়: সবসময় নিজের DISCOM বিল দেখুন।</p>
     <div class="row no-print">
-      <button type="button" class="btn" id="print-btn">🖨 <span data-i18n="print_audit"></span></button>
+      <button type="button" class="btn" id="print-btn">🖨 <span data-i18n="print_audit">অডিট শিট প্রিন্ট করুন</span></button>
       <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset"></button>
     </div>
     <div id="print-area" aria-hidden="true"></div>

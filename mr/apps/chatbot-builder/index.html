@@ -166,20 +166,20 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">स्वतःचा नियमांवर चालणारा चॅटबॉट बनवा: उदाहरण वाक्यांतून त्याला इंटेंट शिकवा, त्याच्याशी गप्पा मारा आणि तो उत्तर कसे निवडतो ते पाहा.</p>
 
     <div id="playBar" class="callout accent row spread" hidden>
-      <span><b data-i18n="play_text"></b></span>
+      <span><b data-i18n="play_text">तुम्ही शेअर केलेल्या बॉटशी गप्पा मारत आहात.</b></span>
       <span class="row">
-        <button class="btn btn-sm" id="playEdit" type="button" data-i18n="play_edit"></button>
-        <button class="btn btn-sm btn-primary" id="playMake" type="button" data-i18n="play_make"></button>
+        <button class="btn btn-sm" id="playEdit" type="button" data-i18n="play_edit">त्याची प्रत बदला</button>
+        <button class="btn btn-sm btn-primary" id="playMake" type="button" data-i18n="play_make">स्वतःचा बॉट बनवा</button>
       </span>
     </div>
 
     <div class="cb-layout">
       <div class="stack" id="editCol">
         <details class="card help no-print" id="howTo">
-          <summary data-i18n="how_title"></summary>
+          <summary data-i18n="how_title">कसे वापरायचे · वर्गासाठी कल्पना</summary>
           <ol>
             <li data-i18n-html="how_1"></li>
             <li data-i18n-html="how_2"></li>
@@ -191,72 +191,72 @@
         </details>
 
         <div class="row cb-toolbar no-print" id="toolbar">
-          <button class="btn" id="sampleBtn" type="button"><span class="ic" aria-hidden="true">📋</span><span data-i18n="tb_sample"></span></button>
-          <button class="btn" id="newBtn" type="button"><span class="ic" aria-hidden="true">✨</span><span data-i18n="tb_new"></span></button>
+          <button class="btn" id="sampleBtn" type="button"><span class="ic" aria-hidden="true">📋</span><span data-i18n="tb_sample">नमुना बॉट उघडा</span></button>
+          <button class="btn" id="newBtn" type="button"><span class="ic" aria-hidden="true">✨</span><span data-i18n="tb_new">नवीन रिकामा बॉट</span></button>
           <button class="btn" id="exportBtn" type="button"><span class="ic" aria-hidden="true">⬇</span><span data-i18n="export"></span></button>
           <button class="btn" id="importBtn" type="button"><span class="ic" aria-hidden="true">⬆</span><span data-i18n="import"></span></button>
           <button class="btn" id="printBtn" type="button"><span class="ic" aria-hidden="true">🖨</span><span data-i18n="print"></span></button>
-          <button class="btn btn-accent" id="shareBtn" type="button"><span class="ic" aria-hidden="true">🔗</span><span data-i18n="tb_share"></span></button>
+          <button class="btn btn-accent" id="shareBtn" type="button"><span class="ic" aria-hidden="true">🔗</span><span data-i18n="tb_share">खेळण्याची लिंक शेअर करा</span></button>
           <span class="badge" data-i18n="saved_local"></span>
         </div>
         <section class="card stack" id="botCard">
-          <h2 class="mb0" data-i18n="ed_title"></h2>
+          <h2 class="mb0" data-i18n="ed_title">तुमचा बॉट</h2>
           <div class="grid-2">
-            <label class="field"><b data-i18n="bot_name"></b>
+            <label class="field"><b data-i18n="bot_name">बॉटचे नाव</b>
               <input type="text" id="botName" maxlength="60" class="no-i18n" autocomplete="off">
             </label>
             <div class="field">
-              <b id="avLbl" data-i18n="avatar"></b>
+              <b id="avLbl" data-i18n="avatar">अवतार</b>
               <div class="av-pick" id="avPick" role="group" aria-labelledby="avLbl"></div>
               <input type="text" id="avCustom" class="av-custom" maxlength="16" autocomplete="off" data-i18n-placeholder="avatar_custom" data-i18n-aria-label="avatar_custom">
             </div>
           </div>
-          <label class="field"><b data-i18n="greeting"></b>
+          <label class="field"><b data-i18n="greeting">स्वागत संदेश (पहिला मेसेज)</b>
             <textarea id="greeting" rows="2" maxlength="600" class="no-i18n" style="min-height:70px"></textarea>
           </label>
-          <label class="field"><b data-i18n="fallback"></b>
-            <span data-i18n="fallback_hint"></span>
+          <label class="field"><b data-i18n="fallback">समजले नाही तर द्यायचे उत्तर</b>
+            <span data-i18n="fallback_hint">बॉटला प्रश्न समजला नाही की हे उत्तर जाते. प्रत्येक ओळीत एक उत्तर; बॉट त्यातील कोणतेही एक निवडतो.</span>
             <textarea id="fallback" rows="3" class="no-i18n" style="min-height:80px"></textarea>
           </label>
         </section>
 
         <section class="card stack" id="intentsCard">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="intents_title"></h2>
+            <h2 class="mb0" data-i18n="intents_title">इंटेंट (हेतू)</h2>
             <span class="badge primary" id="intentCount"></span>
           </div>
-          <p class="muted small mb0" data-i18n="intents_help"></p>
+          <p class="muted small mb0" data-i18n="intents_help">इंटेंट म्हणजे वापरकर्ता विचारू शकेल असा एक प्रकारचा प्रश्न, जसे “ग्रंथालय” किंवा “फी”. प्रत्येक इंटेंटला उदाहरण वाक्ये किंवा कीवर्ड आणि 1–5 उत्तरे द्या.</p>
           <div id="intentList"></div>
           <div class="row">
-            <button class="btn btn-primary" id="addIntent" type="button"><span aria-hidden="true">＋</span><span data-i18n="add_intent"></span></button>
+            <button class="btn btn-primary" id="addIntent" type="button"><span aria-hidden="true">＋</span><span data-i18n="add_intent">इंटेंट जोडा</span></button>
             <span class="muted small" id="maxNote" hidden></span>
           </div>
         </section>
 
         <section class="card stack" id="brainCard">
-          <h2 class="mb0" data-i18n="brain_title"></h2>
+          <h2 class="mb0" data-i18n="brain_title">बॉटचा मेंदू (सेटिंग्ज)</h2>
           <label class="field"><b id="thrLabel"></b>
             <input type="range" id="threshold" min="10" max="100" step="5" value="50">
-            <span data-i18n="threshold_hint"></span>
+            <span data-i18n="threshold_hint">कमी ठेवल्यास: बॉट जास्त वेळा उत्तर देईल पण चुकाही जास्त करेल. जास्त ठेवल्यास: बॉट जास्त वेळा म्हणेल “मला समजले नाही”.</span>
           </label>
           <div>
-            <label class="check"><input type="checkbox" id="useStop"><span data-i18n="use_stop"></span></label>
-            <p class="muted small mt0" style="margin:4px 0 0" data-i18n="stop_hint"></p>
+            <label class="check"><input type="checkbox" id="useStop"><span data-i18n="use_stop">नेहमीचे शब्द सोडून द्या (स्टॉप वर्ड्स)</span></label>
+            <p class="muted small mt0" style="margin:4px 0 0" data-i18n="stop_hint">“काय”, “आहे”, “कधी” असे शब्द जवळजवळ प्रत्येक प्रश्नात असतात, त्यामुळे त्यांच्यावरून बॉटला कळत नाही की तुम्हाला काय हवे आहे.</p>
             <details class="panel" style="margin-top:8px">
-              <summary style="cursor:pointer;font-weight:600" data-i18n="stop_edit"></summary>
+              <summary style="cursor:pointer;font-weight:600" data-i18n="stop_edit">नेहमीच्या शब्दांची यादी पाहा किंवा बदला</summary>
               <textarea id="stopList" class="stop-area no-i18n" style="margin-top:8px" data-i18n-aria-label="stop_edit"></textarea>
-              <button class="btn btn-sm" id="stopRestore" type="button" style="margin-top:6px" data-i18n="stop_restore"></button>
+              <button class="btn btn-sm" id="stopRestore" type="button" style="margin-top:6px" data-i18n="stop_restore">मूळ यादी परत आणा</button>
             </details>
           </div>
-          <label class="check"><input type="checkbox" id="useFuzzy"><span data-i18n="use_fuzzy"></span></label>
-          <label class="field"><b data-i18n="bot_lang"></b>
+          <label class="check"><input type="checkbox" id="useFuzzy"><span data-i18n="use_fuzzy">शब्दाच्या शेवटी थोडा बदल चालेल (ग्रंथालय = ग्रंथालयाची)</span></label>
+          <label class="field"><b data-i18n="bot_lang">बॉटची भाषा (आवाज आणि नेहमीच्या शब्दांसाठी)</b>
             <select id="botLang" class="no-i18n"></select>
           </label>
         </section>
 
         <section class="card" id="healthCard" aria-live="polite">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="health_title"></h2>
+            <h2 class="mb0" data-i18n="health_title">बॉटची तपासणी</h2>
             <span class="health-big" id="healthScore"></span>
           </div>
           <p class="muted small mb0" id="healthCounts"></p>
@@ -270,27 +270,27 @@
             <span class="chat-av" id="chatAvatar" aria-hidden="true"></span>
             <div class="grow">
               <div class="chat-name no-i18n" id="chatName"></div>
-              <div class="chat-status"><span class="dot-on" aria-hidden="true"></span><span data-i18n="online"></span></div>
+              <div class="chat-status"><span class="dot-on" aria-hidden="true"></span><span data-i18n="online">ऑनलाइन</span></div>
             </div>
             <button class="edu-iconbtn" id="restartBtn" type="button" data-i18n-title="restart_chat" data-i18n-aria-label="restart_chat">↺</button>
             <button class="edu-iconbtn" id="fsBtn" type="button" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen">⛶</button>
           </div>
           <div class="chat-opts row">
-            <label class="check"><input type="checkbox" id="thinkToggle"><span data-i18n="show_thinking"></span></label>
-            <label class="check"><input type="checkbox" id="voiceToggle"><span data-i18n="voice_reply"></span></label>
+            <label class="check"><input type="checkbox" id="thinkToggle"><span data-i18n="show_thinking">बॉटचा विचार दाखवा</span></label>
+            <label class="check"><input type="checkbox" id="voiceToggle"><span data-i18n="voice_reply">उत्तरे मोठ्याने ऐकवा</span></label>
           </div>
           <div class="chat-log no-i18n" id="chatLog" role="log" aria-live="polite"></div>
           <div class="typing-row" id="typingRow" hidden style="padding:0 12px 6px;background:var(--surface-2)">
             <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span id="typingTxt"></span>
           </div>
           <div class="suggest row" id="suggest">
-            <span class="tiny muted suggest-lbl" data-i18n="try_asking"></span>
+            <span class="tiny muted suggest-lbl" data-i18n="try_asking">विचारून पाहा:</span>
             <span class="row no-i18n" id="suggestChips" style="flex-wrap:nowrap;gap:6px"></span>
           </div>
           <form class="chat-form row nowrap" id="chatForm" autocomplete="off">
-            <label class="sr-only" for="chatInput" data-i18n="type_msg"></label>
+            <label class="sr-only" for="chatInput" data-i18n="type_msg">मेसेज लिहा…</label>
             <input type="text" id="chatInput" maxlength="300" data-i18n-placeholder="type_msg" enterkeyhint="send">
-            <button class="btn btn-primary" id="sendBtn" type="submit" data-i18n="send"></button>
+            <button class="btn btn-primary" id="sendBtn" type="submit" data-i18n="send">पाठवा</button>
           </form>
           <details class="missed" id="missedBox">
             <summary id="missedTitle"></summary>
@@ -302,8 +302,8 @@
     </div>
 
     <section class="card stack" id="inside" style="margin-top:16px">
-      <h2 class="mb0" data-i18n="inside_title"></h2>
-      <p class="mb0" data-i18n="inside_intro"></p>
+      <h2 class="mb0" data-i18n="inside_title">आत काय घडते?</h2>
+      <p class="mb0" data-i18n="inside_intro">हा बॉट माणसासारखा विचार करत नाही. प्रत्येक मेसेजसाठी तो पाच सोप्या पायऱ्या पाळतो:</p>
       <ol class="steps">
         <li data-i18n-html="step_1"></li>
         <li data-i18n-html="step_2"></li>
@@ -311,33 +311,33 @@
         <li data-i18n-html="step_4"></li>
         <li data-i18n-html="step_5"></li>
       </ol>
-      <h3 data-i18n="trick_title" style="margin-top:8px"></h3>
-      <p class="muted small mt0" data-i18n="trick_hint"></p>
+      <h3 data-i18n="trick_title" style="margin-top:8px">बॉटला फसवून पाहा</h3>
+      <p class="muted small mt0" data-i18n="trick_hint">एखाद्या प्रश्नावर टॅप करा, तो चॅटमध्ये जाईल. मग बॉटचा विचार पाहा.</p>
       <div class="tricks" id="tricks"></div>
-      <h3 data-i18n="vs_title" style="margin-top:8px"></h3>
+      <h3 data-i18n="vs_title" style="margin-top:8px">नियमांचा बॉट विरुद्ध AI चॅटबॉट</h3>
       <div class="scroll-x">
         <table class="table vs">
-          <thead><tr><th></th><th data-i18n="vs_col_rule"></th><th data-i18n="vs_col_ai"></th></tr></thead>
+          <thead><tr><th></th><th data-i18n="vs_col_rule">नियमांचा बॉट (हे ॲप)</th><th data-i18n="vs_col_ai">AI चॅटबॉट (LLM), जसे ChatGPT किंवा Gemini</th></tr></thead>
           <tbody>
-            <tr><th data-i18n="vs_how"></th><td data-i18n="vs_how_rule"></td><td data-i18n="vs_how_ai"></td></tr>
-            <tr><th data-i18n="vs_new"></th><td data-i18n="vs_new_rule"></td><td data-i18n="vs_new_ai"></td></tr>
-            <tr><th data-i18n="vs_wrong"></th><td data-i18n="vs_wrong_rule"></td><td data-i18n="vs_wrong_ai"></td></tr>
-            <tr><th data-i18n="vs_why"></th><td data-i18n="vs_why_rule"></td><td data-i18n="vs_why_ai"></td></tr>
-            <tr><th data-i18n="vs_needs"></th><td data-i18n="vs_needs_rule"></td><td data-i18n="vs_needs_ai"></td></tr>
+            <tr><th data-i18n="vs_how">निर्णय कसा घेतो</th><td data-i18n="vs_how_rule">तुमचे नियम पाळतो: शब्द जुळले → तुम्ही लिहिलेले उत्तर.</td><td data-i18n="vs_how_ai">प्रचंड मजकुरातून शिकलेले मोठे भाषा मॉडेल शब्दामागून शब्द जोडत नवीन वाक्ये लिहिते.</td></tr>
+            <tr><th data-i18n="vs_new">नवीन प्रश्न</th><td data-i18n="vs_new_rule">तुम्ही शिकवलेलेच शब्द समजतो.</td><td data-i18n="vs_new_ai">कधीही न पाहिलेले प्रश्नही समजू शकतो, ते कसेही विचारले तरी.</td></tr>
+            <tr><th data-i18n="vs_wrong">चुका</th><td data-i18n="vs_wrong_rule">चुकीचा इंटेंट निवडू शकतो किंवा “समजले नाही” म्हणतो, पण स्वतःहून माहिती रचत नाही.</td><td data-i18n="vs_wrong_ai">खूप खात्रीने बोलूनही चुकू शकतो (याला “हॅल्युसिनेशन” म्हणतात). माहिती नेहमी तपासा.</td></tr>
+            <tr><th data-i18n="vs_why">“का” ते दिसते का?</th><td data-i18n="vs_why_rule">हो, प्रत्येक पायरी दिसते.</td><td data-i18n="vs_why_ai">बहुतेक वेळा नाही. ते समजावणे खूप कठीण आहे.</td></tr>
+            <tr><th data-i18n="vs_needs">काय लागते</th><td data-i18n="vs_needs_rule">थोडी उदाहरणे आणि उत्तरे. कोणत्याही फोनवर, इंटरनेटशिवायही चालतो.</td><td data-i18n="vs_needs_ai">प्रचंड डेटा, शक्तिशाली कॉम्प्युटर आणि सहसा इंटरनेट.</td></tr>
           </tbody>
         </table>
       </div>
       <div class="grid-2">
         <div class="callout warning">
-          <h3 data-i18n="limits_title"></h3>
+          <h3 data-i18n="limits_title">मर्यादा</h3>
           <ul class="mb0" style="padding-inline-start:1.2em;margin-top:0">
-            <li data-i18n="limit_1"></li><li data-i18n="limit_2"></li><li data-i18n="limit_3"></li><li data-i18n="limit_4"></li>
+            <li data-i18n="limit_1">स्पेलिंगच्या चुका आणि नवीन शब्दांनी तो गोंधळतो.</li><li data-i18n="limit_2">त्याला अर्थ समजत नाही: “फी नको, मला दुसरे काहीतरी विचारायचे आहे” हे वाक्यसुद्धा “फी” शी जुळते.</li><li data-i18n="limit_3">त्याला आठवण नसते: प्रत्येक मेसेज स्वतंत्रपणे तपासला जातो.</li><li data-i18n="limit_4">दोन इंटेंटमध्ये सारखे शब्द असतील तर तो चुकीचा इंटेंट निवडू शकतो.</li>
           </ul>
         </div>
         <div class="callout success">
-          <h3 data-i18n="improve_title"></h3>
+          <h3 data-i18n="improve_title">त्याला अधिक हुशार करण्याच्या कल्पना</h3>
           <ul class="mb0" style="padding-inline-start:1.2em;margin-top:0">
-            <li data-i18n="improve_1"></li><li data-i18n="improve_2"></li><li data-i18n="improve_3"></li><li data-i18n="improve_4"></li><li data-i18n="improve_5"></li>
+            <li data-i18n="improve_1">अजून उदाहरणे जोडा, तुमचे मित्र खरोखर जे शब्द लिहितात ते वापरून.</li><li data-i18n="improve_2">वेगळी स्पेलिंग्ज आणि समान अर्थाचे शब्द जोडा (फी, फीस, शुल्क).</li><li data-i18n="improve_3">“नमस्कार”, “धन्यवाद” आणि “बाय” साठी इंटेंट जोडा.</li><li data-i18n="improve_4">उत्तर न मिळालेले प्रश्न वाचा आणि बॉटला शिकवा.</li><li data-i18n="improve_5">खरे असिस्टंट हजारो उदाहरणांतून पॅटर्न शिकण्यासाठी मशीन लर्निंग, किंवा उत्तरे लिहिण्यासाठी LLM वापरतात.</li>
           </ul>
         </div>
       </div>

@@ -136,29 +136,29 @@
 </head>
 <body>
   <main id="app" data-busy="0">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">એક ફોટો કે પોસ્ટરને Instagram, YouTube, WhatsApp, Facebook, LinkedIn, X અને Google Business ની સાચી સાઇઝમાં બદલો: ખેંચીને જગ્યા પર મૂકો, ઝૂમ કરો, પછી દરેક સાઇઝ ડાઉનલોડ કરો.</p>
 
     <div class="callout success spr-privacy" role="note">
       <span class="ic" aria-hidden="true">🔒</span>
-      <div><strong data-i18n="privacy_head"></strong><p data-i18n="privacy_body"></p></div>
+      <div><strong data-i18n="privacy_head">તમારા ફોટા કદી આ ડિવાઇસની બહાર જતા નથી.</strong><p data-i18n="privacy_body">સાઇઝ બદલવાનું કામ તમારા બ્રાઉઝરની અંદર જ થાય છે. કશું અપલોડ થતું નથી, કશું ઑનલાઇન સેવ થતું નથી.</p></div>
     </div>
 
     <section class="card spr-drop" id="drop" tabindex="0" aria-labelledby="dropTitle">
       <div class="big" aria-hidden="true">🖼️</div>
       <div class="spr-drop-txt">
-        <strong id="dropTitle" data-i18n="drop_title"></strong>
-        <span class="small muted" data-i18n="drop_hint"></span>
+        <strong id="dropTitle" data-i18n="drop_title">ફોટો કે પોસ્ટર પસંદ કરો</strong>
+        <span class="small muted" data-i18n="drop_hint">JPG, PNG, WebP કે GIF · અહીં ખેંચીને છોડો, કે પેસ્ટ કરો (Ctrl+V)</span>
       </div>
       <div class="spr-drop-btns">
-        <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">＋</span> <span data-i18n="pick_btn"></span></button>
-        <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">✨</span> <span data-i18n="sample_btn"></span></button>
+        <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">＋</span> <span data-i18n="pick_btn">ચિત્ર પસંદ કરો</span></button>
+        <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">✨</span> <span data-i18n="sample_btn">નમૂનો જુઓ</span></button>
       </div>
       <input type="file" id="fileIn" accept="image/*,.heic,.heif" hidden>
       <div class="spr-drop-foot">
         <p class="small muted no-i18n" id="loadInfo" aria-live="polite"></p>
         <div class="callout danger" id="loadErr" hidden role="alert">
           <p id="errMsg"></p>
-          <a class="btn btn-sm" id="heicLink" href="../../../apps/social-post-resizer/../image-compressor/" hidden data-i18n="err_heic_link"></a>
+          <a class="btn btn-sm" id="heicLink" href="../../../apps/social-post-resizer/../image-compressor/" hidden data-i18n="err_heic_link">Image Compressor ખોલો</a>
         </div>
       </div>
     </section>
@@ -166,62 +166,62 @@
     <div class="spr-layout">
       <!-- ============ editor ============ -->
       <section class="card" id="editorCard" aria-labelledby="hAdjust">
-        <h2 class="spr-h"><span class="num" aria-hidden="true">2</span> <span id="hAdjust" data-i18n="h_adjust"></span> <span class="badge primary no-i18n" id="activeBadge"><span id="activeName"></span> · <span class="spr-dim" id="activeDim"></span></span></h2>
+        <h2 class="spr-h"><span class="num" aria-hidden="true">2</span> <span id="hAdjust" data-i18n="h_adjust">ગોઠવો</span> <span class="badge primary no-i18n" id="activeBadge"><span id="activeName"></span> · <span class="spr-dim" id="activeDim"></span></span></h2>
         <div class="spr-stage" id="stage">
           <canvas id="preview" width="300" height="300" tabindex="0" role="img" data-i18n-aria-label="stage_aria" aria-label="preview"></canvas>
         </div>
         <div class="spr-hints">
           <p class="tiny muted" id="safeHint"></p>
-          <p class="tiny muted" data-i18n="drag_hint"></p>
+          <p class="tiny muted" data-i18n="drag_hint">ચિત્ર ખસેડવા ખેંચો · ઝૂમ માટે સ્ક્રોલ કરો કે બે આંગળીથી ફેલાવો</p>
           <p class="tiny muted spr-keys" data-i18n-html="keys_hint"></p>
         </div>
 
         <div class="spr-ctl">
           <div class="field">
-            <span data-i18n="mode_label"></span>
+            <span data-i18n="mode_label">ફિટ કે ફિલ</span>
             <div class="seg spr-seg" role="group" data-i18n-aria-label="mode_label" aria-label="mode">
-              <button type="button" id="mode-fit" data-mode="fit" data-i18n="mode_fit"></button>
-              <button type="button" id="mode-fill" data-mode="fill" data-i18n="mode_fill"></button>
+              <button type="button" id="mode-fit" data-mode="fit" data-i18n="mode_fit">ફિટ (પૂરું ચિત્ર)</button>
+              <button type="button" id="mode-fill" data-mode="fill" data-i18n="mode_fill">ફિલ (સાઇઝ મુજબ ક્રૉપ)</button>
             </div>
           </div>
-          <label class="field" for="zoom"><span data-i18n="zoom"></span>
+          <label class="field" for="zoom"><span data-i18n="zoom">ઝૂમ</span>
             <span class="spr-rangerow"><input type="range" id="zoom" min="50" max="400" step="1" value="100"><output id="zoomOut" for="zoom" class="no-i18n">100%</output>
               <button type="button" class="btn btn-sm" id="centerBtn" data-i18n-title="center_btn" data-i18n-aria-label="center_btn" aria-label="reset position" title="reset position">⟲</button></span>
           </label>
           <div class="field full" id="bgField">
-            <span data-i18n="bg_label"></span>
+            <span data-i18n="bg_label">બૅકગ્રાઉન્ડ (ચિત્ર પૂરી ફ્રેમ ન ભરે ત્યારે)</span>
             <div class="spr-chips" id="bgChips" role="group" data-i18n-aria-label="bg_label" aria-label="background">
-              <button type="button" class="chip" data-bg="blur" data-i18n="bg_blur"></button>
-              <button type="button" class="chip" data-bg="auto"><i id="autoSw" aria-hidden="true"></i> <span data-i18n="bg_auto"></span></button>
-              <button type="button" class="chip" data-bg="white"><i style="background:#fff" aria-hidden="true"></i> <span data-i18n="bg_white"></span></button>
-              <button type="button" class="chip" data-bg="black"><i style="background:#000" aria-hidden="true"></i> <span data-i18n="bg_black"></span></button>
-              <label class="chip" for="bgColor" id="bgCustomChip" data-bg="custom"><input type="color" id="bgColor" value="#0b4f5c" data-i18n-aria-label="bg_custom" aria-label="colour" style="width:30px;height:24px;padding:0;border:0;background:transparent"> <span data-i18n="bg_custom"></span></label>
+              <button type="button" class="chip" data-bg="blur" data-i18n="bg_blur">ઝાંખો ફોટો</button>
+              <button type="button" class="chip" data-bg="auto"><i id="autoSw" aria-hidden="true"></i> <span data-i18n="bg_auto">આપમેળે રંગ</span></button>
+              <button type="button" class="chip" data-bg="white"><i style="background:#fff" aria-hidden="true"></i> <span data-i18n="bg_white">સફેદ</span></button>
+              <button type="button" class="chip" data-bg="black"><i style="background:#000" aria-hidden="true"></i> <span data-i18n="bg_black">કાળો</span></button>
+              <label class="chip" for="bgColor" id="bgCustomChip" data-bg="custom"><input type="color" id="bgColor" value="#0b4f5c" data-i18n-aria-label="bg_custom" aria-label="colour" style="width:30px;height:24px;padding:0;border:0;background:transparent"> <span data-i18n="bg_custom">રંગ પસંદ કરો</span></label>
             </div>
           </div>
           <div class="full row spread">
-            <label class="check"><input type="checkbox" id="safeOn" checked> <span data-i18n="safe_show"></span></label>
-            <button type="button" class="btn btn-sm" id="applyAll" data-i18n="apply_all"></button>
+            <label class="check"><input type="checkbox" id="safeOn" checked> <span data-i18n="safe_show">સલામત ભાગ બતાવો</span></label>
+            <button type="button" class="btn btn-sm" id="applyAll" data-i18n="apply_all">બધી સાઇઝમાં આ જ ફિટ / ફિલ</button>
           </div>
 
           <details class="spr-det full" id="capDet">
-            <summary><span data-i18n="h_caption"></span> <span class="badge" id="capBadge" hidden></span></summary>
+            <summary><span data-i18n="h_caption">કૅપ્શન પટ્ટી</span> <span class="badge" id="capBadge" hidden></span></summary>
             <div>
-              <label class="check"><input type="checkbox" id="capOn"> <span data-i18n="caption_on"></span></label>
-              <label class="field"><span data-i18n="caption_text"></span>
+              <label class="check"><input type="checkbox" id="capOn"> <span data-i18n="caption_on">કૅપ્શન પટ્ટી ઉમેરો</span></label>
+              <label class="field"><span data-i18n="caption_text">કૅપ્શનનું લખાણ</span>
                 <input type="text" id="capText" class="no-i18n" maxlength="90" data-i18n-placeholder="caption_ph" autocomplete="off">
               </label>
               <div class="spr-ctl" style="margin-top:0">
-                <div class="field"><span data-i18n="caption_pos"></span>
+                <div class="field"><span data-i18n="caption_pos">જગ્યા</span>
                   <div class="seg spr-seg" role="group" data-i18n-aria-label="caption_pos" aria-label="position">
-                    <button type="button" data-cpos="top" data-i18n="pos_top"></button>
-                    <button type="button" data-cpos="bottom" data-i18n="pos_bottom"></button>
+                    <button type="button" data-cpos="top" data-i18n="pos_top">ઉપર</button>
+                    <button type="button" data-cpos="bottom" data-i18n="pos_bottom">નીચે</button>
                   </div>
                 </div>
-                <div class="field"><span data-i18n="caption_style"></span>
+                <div class="field"><span data-i18n="caption_style">સ્ટાઇલ</span>
                   <div class="seg spr-seg" role="group" data-i18n-aria-label="caption_style" aria-label="style">
-                    <button type="button" data-cstyle="dark" data-i18n="style_dark"></button>
-                    <button type="button" data-cstyle="light" data-i18n="style_light"></button>
-                    <button type="button" data-cstyle="brand" data-i18n="style_brand"></button>
+                    <button type="button" data-cstyle="dark" data-i18n="style_dark">ઘેરો</button>
+                    <button type="button" data-cstyle="light" data-i18n="style_light">આછો</button>
+                    <button type="button" data-cstyle="brand" data-i18n="style_brand">પસંદ કરેલો રંગ</button>
                   </div>
                 </div>
               </div>
@@ -229,17 +229,17 @@
           </details>
 
           <details class="spr-det full" id="logoDet">
-            <summary><span data-i18n="h_logo"></span> <span class="badge" id="logoBadge" hidden></span></summary>
+            <summary><span data-i18n="h_logo">ખૂણામાં લોગો</span> <span class="badge" id="logoBadge" hidden></span></summary>
             <div>
               <div class="row">
                 <img class="spr-logo-prev" id="logoPrev" alt="" hidden>
-                <button type="button" class="btn" id="logoPick" data-i18n="logo_pick"></button>
-                <button type="button" class="btn btn-sm btn-danger" id="logoDel" data-i18n="logo_remove" hidden></button>
+                <button type="button" class="btn" id="logoPick" data-i18n="logo_pick">લોગો ઉમેરો</button>
+                <button type="button" class="btn btn-sm btn-danger" id="logoDel" data-i18n="logo_remove" hidden>લોગો કાઢો</button>
                 <input type="file" id="logoIn" accept="image/*" hidden>
               </div>
-              <p class="tiny muted mb0" data-i18n="logo_hint"></p>
+              <p class="tiny muted mb0" data-i18n="logo_hint">પારદર્શક બૅકગ્રાઉન્ડવાળો PNG સૌથી સારો દેખાય છે.</p>
               <div class="spr-ctl" style="margin-top:0">
-                <div class="field"><span data-i18n="logo_corner"></span>
+                <div class="field"><span data-i18n="logo_corner">ખૂણો</span>
                   <div class="spr-pos" id="cornerGrid" role="group" data-i18n-aria-label="logo_corner" aria-label="corner">
                     <button type="button" data-corner="tl" data-i18n-aria-label="corner_tl" aria-label="top left">◤</button>
                     <button type="button" data-corner="tr" data-i18n-aria-label="corner_tr" aria-label="top right">◥</button>
@@ -247,7 +247,7 @@
                     <button type="button" data-corner="br" data-i18n-aria-label="corner_br" aria-label="bottom right">◢</button>
                   </div>
                 </div>
-                <label class="field" for="logoSize"><span data-i18n="logo_size"></span>
+                <label class="field" for="logoSize"><span data-i18n="logo_size">લોગોની સાઇઝ</span>
                   <span class="spr-rangerow"><input type="range" id="logoSize" min="6" max="35" step="1" value="14"><output id="logoSizeOut" for="logoSize" class="no-i18n">14%</output></span>
                 </label>
               </div>
@@ -259,61 +259,61 @@
       <div class="spr-side">
         <!-- ============ sizes ============ -->
         <section class="card" id="sizesCard" aria-labelledby="hSizes">
-          <h2 class="spr-h"><span class="num" aria-hidden="true">1</span> <span id="hSizes" data-i18n="h_sizes"></span></h2>
-          <p class="small muted" data-i18n="sizes_hint"></p>
+          <h2 class="spr-h"><span class="num" aria-hidden="true">1</span> <span id="hSizes" data-i18n="h_sizes">સાઇઝ</span></h2>
+          <p class="small muted" data-i18n="sizes_hint">ગોઠવવા કોઈ સાઇઝ પર ટૅપ કરો. જે સાઇઝ ડાઉનલોડ કરવી હોય તેના પર ટિક કરો.</p>
           <div class="seg spr-pf no-i18n" id="pfSeg" role="tablist" data-i18n-aria-label="h_sizes" aria-label="platform"></div>
           <div class="spr-presets" id="presetGrid"></div>
           <div class="spr-custom" id="customBox" hidden>
-            <label class="field"><span data-i18n="custom_w"></span><input type="number" id="customW" min="16" max="4096" step="1" inputmode="numeric"></label>
-            <label class="field"><span data-i18n="custom_h"></span><input type="number" id="customH" min="16" max="4096" step="1" inputmode="numeric"></label>
-            <p class="tiny muted mb0" style="grid-column:1/-1" data-i18n="custom_hint"></p>
+            <label class="field"><span data-i18n="custom_w">પહોળાઈ (px)</span><input type="number" id="customW" min="16" max="4096" step="1" inputmode="numeric"></label>
+            <label class="field"><span data-i18n="custom_h">ઊંચાઈ (px)</span><input type="number" id="customH" min="16" max="4096" step="1" inputmode="numeric"></label>
+            <p class="tiny muted mb0" style="grid-column:1/-1" data-i18n="custom_hint">16 થી 4096 px વચ્ચેની કોઈ પણ સાઇઝ.</p>
           </div>
           <div class="spr-selrow">
             <span class="small" id="selCount" aria-live="polite"></span>
             <span class="row" style="gap:6px">
-              <button type="button" class="btn btn-sm" id="selAll" data-i18n="sel_all"></button>
-              <button type="button" class="btn btn-sm" id="selNone" data-i18n="sel_none"></button>
+              <button type="button" class="btn btn-sm" id="selAll" data-i18n="sel_all">બધા પર ટિક</button>
+              <button type="button" class="btn btn-sm" id="selNone" data-i18n="sel_none">બધી ટિક કાઢો</button>
             </span>
           </div>
         </section>
 
         <!-- ============ download ============ -->
         <section class="card stack spr-dl" id="exportCard" aria-labelledby="hExport">
-          <h2 class="spr-h mb0"><span class="num" aria-hidden="true">3</span> <span id="hExport" data-i18n="h_export"></span></h2>
+          <h2 class="spr-h mb0"><span class="num" aria-hidden="true">3</span> <span id="hExport" data-i18n="h_export">ડાઉનલોડ</span></h2>
           <div class="field">
-            <span data-i18n="fmt_label"></span>
+            <span data-i18n="fmt_label">ફૉર્મેટ</span>
             <div class="seg spr-seg no-i18n" role="group" id="fmtSeg" data-i18n-aria-label="fmt_label" aria-label="format">
               <button type="button" id="fmt-jpg" data-fmt="jpg">JPG</button>
               <button type="button" id="fmt-png" data-fmt="png">PNG</button>
             </div>
             <span class="hint" id="fmtHint"></span>
           </div>
-          <label class="field" for="quality" id="qualityField"><span data-i18n="quality"></span>
+          <label class="field" for="quality" id="qualityField"><span data-i18n="quality">JPG ક્વૉલિટી</span>
             <span class="spr-rangerow"><input type="range" id="quality" min="50" max="100" step="1" value="90"><output id="qualityOut" for="quality" class="no-i18n">90</output></span>
           </label>
           <p class="small muted mb0" id="estSize" aria-live="polite"></p>
           <button class="btn btn-primary btn-lg" id="dlThis" type="button"><span aria-hidden="true">⬇</span> <span id="dlThisTxt"></span></button>
           <button class="btn btn-lg" id="dlAll" type="button"><span aria-hidden="true">⬇</span> <span id="dlAllTxt"></span></button>
-          <button class="btn" id="shareBtn" type="button" hidden><span aria-hidden="true">↗</span> <span data-i18n="share_btn"></span></button>
+          <button class="btn" id="shareBtn" type="button" hidden><span aria-hidden="true">↗</span> <span data-i18n="share_btn">આ સાઇઝ શેર કરો</span></button>
           <p class="small muted spr-status no-i18n" id="status" aria-live="polite"></p>
-          <p class="tiny muted mb0" data-i18n="dl_many_hint"></p>
+          <p class="tiny muted mb0" data-i18n="dl_many_hint">ફાઇલો એક પછી એક ડાઉનલોડ થાય છે. બ્રાઉઝર ઘણા ડાઉનલોડની પરવાનગી માગે તો હા કહો.</p>
           <div class="row spread">
             <span class="tiny muted" data-i18n="saved_local"></span>
-            <button type="button" class="btn btn-sm btn-danger" id="resetAll" data-i18n="reset_all"></button>
+            <button type="button" class="btn btn-sm btn-danger" id="resetAll" data-i18n="reset_all">સેટિંગ્સ રીસેટ કરો</button>
           </div>
         </section>
       </div>
     </div>
 
     <details class="card spr-help no-print" id="helpBox" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">કેવી રીતે વાપરવું / વિચારો</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">ચિત્ર પસંદ કરો, કોઈ સાઇઝ પર ટૅપ કરો, પછી ચિત્રને ખેંચીને જગ્યા પર મૂકો. જરૂરી ભાગ પર ઝૂમ કરવા સ્ક્રોલ કરો કે બે આંગળીથી ફેલાવો. દરેક સાઇઝ પોતાની જગ્યા યાદ રાખે છે.</li>
+        <li data-i18n="tip2">ફિટ પૂરું પોસ્ટર રાખે છે અને ખાલી જગ્યા ઝાંખી નકલ કે રંગથી ભરે છે. ફિલ ચિત્રને બરાબર આકારમાં ક્રૉપ કરે છે. &quot;બધી સાઇઝમાં આ જ ફિટ / ફિલ&quot; તમારી પસંદગી બધે લાગુ કરે છે.</li>
+        <li data-i18n="tip3">દુકાનદારો: ઑફરનું પોસ્ટર એક વાર બનાવો, Instagram પોસ્ટ, WhatsApp સ્ટેટસ અને Facebook કવર પર ટિક કરો અને બધું સાથે ડાઉનલોડ કરો. કૅપ્શન પટ્ટીમાં દુકાનનું નામ લખો.</li>
+        <li data-i18n="tip4">ક્રિએટર્સ: Shorts, Reels અને સ્ટેટસમાં લખાણ ઉપર-નીચેના છાંયાવાળા ભાગથી બહાર રાખો, ત્યાં ઍપના બટન હોય છે. YouTube બૅનરમાં બધું ચમકતા વચ્ચેના ભાગમાં રાખો.</li>
+        <li data-i18n="tip5">શાળા અને ઑફિસ: એક નોટિસનો ફોટો એક મિનિટમાં WhatsApp DP, YouTube થંબનેલ અને Facebook કવર બની જાય છે. ખૂણામાં લોગો મૂકો, જેથી દરેક પોસ્ટ તમારી ઓળખ બતાવે.</li>
+        <li data-i18n="tip6">લખાણ અને લોગોવાળા પોસ્ટર માટે PNG પસંદ કરો. ફોટા માટે JPG ક્વૉલિટી 85–92 રાખો: ફાઇલો નાની રહે છે અને ધીમા નેટવર્ક પર પણ ઝડપથી અપલોડ થાય છે.</li>
       </ul>
     </details>
   </main>

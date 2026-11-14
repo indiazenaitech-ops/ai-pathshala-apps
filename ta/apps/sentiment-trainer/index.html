@@ -209,9 +209,9 @@
 </head>
 <body>
   <main id="app">
-    <h1 class="print-title" data-i18n="app_title"></h1>
+    <h1 class="print-title" data-i18n="app_title">மனநிலை அறியும் AI-ஐப் பழக்குங்கள்</h1>
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">சொற்களை எண்ணுவதன் மூலம் மட்டுமே மகிழ்ச்சி, சோகம், கோபம் உள்ள வாக்கியங்களைப் பிரித்தறியக் கணினிக்குக் கற்றுக்கொடுங்கள்; பிறகு அதை எவ்வளவு எளிதாக ஏமாற்றலாம் என்று பாருங்கள்.</p>
       <div class="row no-print">
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm" id="fs-btn" data-i18n="fullscreen"></button>
@@ -221,89 +221,89 @@
 
     <!-- 1. Teach -->
     <section class="card stack" id="data-card">
-      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1"></span></h2>
-      <p class="muted small mb0 no-print" data-i18n="step1_hint"></p>
+      <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="step1">எடுத்துக்காட்டுகள் மூலம் கற்றுக்கொடுங்கள்</span></h2>
+      <p class="muted small mb0 no-print" data-i18n="step1_hint">ஒவ்வொரு பெட்டியும் ஒரு லேபிள் (ஒரு மனநிலை). அந்த மனநிலையைக் காட்டும் சிறு வாக்கியங்களைச் சேர்க்கவும். அதிகமான, பலவிதமான எடுத்துக்காட்டுகள் = புத்திசாலியான மாடல்.</p>
       <p class="callout warning small mb0 no-print" id="lang-note" hidden></p>
       <div class="labs" id="labs"></div>
       <div class="row data-tools no-print">
-        <button type="button" class="btn btn-accent" id="add-label-btn" data-i18n="add_label"></button>
+        <button type="button" class="btn btn-accent" id="add-label-btn" data-i18n="add_label">+ புதிய லேபிள் சேர்</button>
         <div class="row">
-          <button type="button" class="btn btn-sm" id="samples-btn" data-i18n="load_samples"></button>
-          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv"></button>
-          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv"></button>
-          <button type="button" class="btn btn-sm btn-danger" id="clear-all-btn" data-i18n="clear_all"></button>
+          <button type="button" class="btn btn-sm" id="samples-btn" data-i18n="load_samples">மாதிரி வாக்கியங்கள்</button>
+          <button type="button" class="btn btn-sm" id="import-btn" data-i18n="import_csv">CSV இறக்குமதி</button>
+          <button type="button" class="btn btn-sm" id="export-btn" data-i18n="export_csv">CSV ஏற்றுமதி</button>
+          <button type="button" class="btn btn-sm btn-danger" id="clear-all-btn" data-i18n="clear_all">எல்லா வாக்கியங்களையும் அழி</button>
         </div>
       </div>
-      <p class="muted tiny mb0 no-print" data-i18n="csv_hint"></p>
+      <p class="muted tiny mb0 no-print" data-i18n="csv_hint">CSV கோப்பில் இரண்டு நெடுவரிசைகள் இருக்கும்: text மற்றும் label. இது Excel அல்லது Google Sheets-இல் திறக்கும்.</p>
     </section>
 
     <div class="grid-2 main-grid">
       <!-- 2. Train -->
       <section class="card stack" id="train-card">
-        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="step2">மாடலைப் பழக்குங்கள்</span></h2>
         <div class="row train-row no-print">
-          <button type="button" class="btn btn-primary btn-lg" id="train-btn"><span aria-hidden="true">🧠</span><span data-i18n="train_btn"></span></button>
-          <label class="check"><input type="checkbox" id="pairs-chk"><span data-i18n="pairs_label"></span></label>
+          <button type="button" class="btn btn-primary btn-lg" id="train-btn"><span aria-hidden="true">🧠</span><span data-i18n="train_btn">பழக்கு</span></button>
+          <label class="check"><input type="checkbox" id="pairs-chk"><span data-i18n="pairs_label">சொல் ஜோடிகளையும் எண்ணு (“மகிழ்ச்சியாக இல்லை” போன்றவற்றுக்கு உதவும்)</span></label>
         </div>
         <p class="callout small mb0" id="train-status" aria-live="polite"></p>
         <div id="model-view" class="stack" hidden>
           <div class="stats">
-            <div class="stat"><b id="st-sentences">0</b><span data-i18n="st_sentences"></span></div>
-            <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab"></span></div>
-            <div class="stat"><b id="st-train-acc">0</b><span data-i18n="st_train_acc"></span></div>
-            <div class="stat"><b id="st-fair-acc">0</b><span data-i18n="st_fair_acc"></span></div>
+            <div class="stat"><b id="st-sentences">0</b><span data-i18n="st_sentences">வாக்கியங்கள்</span></div>
+            <div class="stat"><b id="st-vocab">0</b><span data-i18n="st_vocab">தெரிந்த வெவ்வேறு சொற்கள்</span></div>
+            <div class="stat"><b id="st-train-acc">0</b><span data-i18n="st_train_acc">தன் எடுத்துக்காட்டுகளில் சரி</span></div>
+            <div class="stat"><b id="st-fair-acc">0</b><span data-i18n="st_fair_acc">நியாயமான சோதனையில் சரி</span></div>
           </div>
-          <p class="muted tiny mb0" data-i18n="fair_hint"></p>
+          <p class="muted tiny mb0" data-i18n="fair_hint">நியாயமான சோதனை: ஒரு வாக்கியத்தை மறைத்து, மற்ற எல்லாவற்றிலிருந்தும் கற்று, மறைத்ததை ஊகிக்கச் சொல்லுங்கள். ஒவ்வொரு வாக்கியத்துக்கும் இப்படிச் செய்யுங்கள்.</p>
           <div class="lab-stats" id="lab-stats"></div>
           <details class="sub" id="mistakes">
             <summary id="mist-sum"></summary>
             <ul class="mist-list no-i18n" id="mist-list"></ul>
           </details>
           <div class="stack" id="peek">
-            <h3 class="mb0" data-i18n="peek_t"></h3>
-            <p class="muted small mb0" data-i18n="peek_note"></p>
+            <h3 class="mb0" data-i18n="peek_t">உள்ளே எட்டிப் பாருங்கள்: மாடலின் சொல் எண்ணிக்கை</h3>
+            <p class="muted small mb0" data-i18n="peek_note">இந்த அட்டவணைதான் முழு மாடல்! பழக்கும்போது ஒவ்வொரு சொல்லும் எந்த லேபிளில் எத்தனை முறை வந்தது என்று மட்டுமே எண்ணப்பட்டது.</p>
             <div class="peek-tools no-print">
               <input type="search" id="peek-filter" class="no-i18n" data-i18n-placeholder="peek_filter" data-i18n-aria-label="peek_filter" autocomplete="off">
               <div class="seg" role="group" data-i18n-aria-label="sort_by">
-                <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common"></button>
-                <button type="button" id="sort-clue" aria-pressed="false" data-i18n="sort_clue"></button>
+                <button type="button" id="sort-count" aria-pressed="true" data-i18n="sort_common">அதிகம் வந்தவை</button>
+                <button type="button" id="sort-clue" aria-pressed="false" data-i18n="sort_clue">வலுவான துப்புகள்</button>
               </div>
             </div>
             <div class="peek-tools">
               <span class="muted small" id="peek-count"></span>
             </div>
             <div class="scroll-x"><table class="table peek" id="peek-table"></table></div>
-            <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more"></button>
+            <button type="button" class="btn btn-sm no-print" id="peek-more" data-i18n="peek_more">மேலும் சொற்களைக் காட்டு</button>
           </div>
         </div>
       </section>
 
       <!-- 3. Test -->
       <section class="card stack" id="test-card">
-        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="step3">சோதித்துப் பாருங்கள்</span></h2>
         <div>
-          <label for="test-input" class="lbl" data-i18n="test_label"></label>
+          <label for="test-input" class="lbl" data-i18n="test_label">ஏதாவது ஒரு வாக்கியம் எழுதுங்கள்</label>
           <div class="test-row">
             <input type="text" id="test-input" class="no-i18n" maxlength="300" autocomplete="off" spellcheck="false" data-i18n-placeholder="test_ph">
             <button type="button" class="btn no-print" id="test-clear" data-i18n-aria-label="clear" data-i18n-title="clear">✕</button>
           </div>
         </div>
         <div class="no-print" id="tries-wrap">
-          <span class="lbl" data-i18n="try_t"></span>
+          <span class="lbl" data-i18n="try_t">அல்லது இவற்றில் ஒன்றை முயற்சிக்கவும்:</span>
           <div class="tries no-i18n" id="tries"></div>
         </div>
         <div id="result" class="stack" aria-live="polite"></div>
         <div id="explain" class="stack" hidden>
-          <h3 class="mb0" data-i18n="words_t"></h3>
-          <p class="muted small mb0" data-i18n="words_hint"></p>
+          <h3 class="mb0" data-i18n="words_t">ஒவ்வொரு சொல்லும் ஊகத்தை எந்தப் பக்கம் தள்ளியது</h3>
+          <p class="muted small mb0" data-i18n="words_hint">நிறம் = சொல் சுட்டும் லேபிள். அடர் நிறம் = அதிக தள்ளல். எண்களைப் பார்க்க சொல்லைத் தட்டுங்கள்.</p>
           <div class="words no-i18n" id="words"></div>
           <div class="legend" id="legend"></div>
           <div class="pairs-used no-i18n" id="pairs-used" hidden></div>
           <div class="panel wd" id="word-detail" aria-live="polite"></div>
           <details class="sub" id="maths">
-            <summary data-i18n="maths_t"></summary>
+            <summary data-i18n="maths_t">கணக்கைக் காட்டு</summary>
             <div class="scroll-x"><table class="table maths no-i18n" id="maths-table"></table></div>
-            <p class="muted small" data-i18n="maths_note" style="margin-top:8px"></p>
+            <p class="muted small" data-i18n="maths_note" style="margin-top:8px">ஒவ்வொரு பின்னமும் = (சொல் வந்த முறை + 1) ÷ (அந்த லேபிளின் மொத்தச் சொற்கள் + வெவ்வேறு சொற்களின் எண்ணிக்கை). இந்த “+1 உத்தி” பார்க்காத சொல் முழுப் பெருக்கற்பலனையும் பூஜ்ஜியமாக்குவதைத் தடுக்கிறது.</p>
           </details>
         </div>
       </section>
@@ -311,14 +311,14 @@
 
     <!-- 4. Experiments -->
     <section class="card stack" id="exp-card">
-      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="step4"></span></h2>
-      <p class="muted small mb0" data-i18n="step4_hint"></p>
+      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="step4">சோதனைகள்: இதை ஏமாற்றிப் பாருங்கள்</span></h2>
+      <p class="muted small mb0" data-i18n="step4_hint">ஒவ்வொரு சோதனையும் எடுத்துக்காட்டுகளை மாற்றி, மீண்டும் பழக்கி, முன்பும் பின்பும் உள்ள ஊகத்தைக் காட்டும். பழையபடி மாற்ற “சோதனையைத் திரும்பப் பெறு” அழுத்தவும்.</p>
       <div class="grid-3 exps">
         <div class="panel exp" id="exp1">
-          <h3><span aria-hidden="true">✂️</span><span data-i18n="exp1_t"></span></h3>
-          <p class="small" data-i18n="exp1_d"></p>
+          <h3><span aria-hidden="true">✂️</span><span data-i18n="exp1_t">ஒரு சொல்லை நீக்கு</span></h3>
+          <p class="small" data-i18n="exp1_d">ஒரு குறிப்பிட்ட சொல் உள்ள எல்லா எடுத்துக்காட்டு வாக்கியங்களையும் நீக்குங்கள். உங்கள் சோதனை வாக்கியத்தின் ஊகம் எவ்வளவு மாறுகிறது?</p>
           <div>
-            <label for="exp1-word" class="lbl" data-i18n="exp1_word"></label>
+            <label for="exp1-word" class="lbl" data-i18n="exp1_word">நீக்க வேண்டிய சொல்</label>
             <div class="exp-word-row">
               <input type="text" id="exp1-word" class="no-i18n" maxlength="60" autocomplete="off" spellcheck="false">
             </div>
@@ -329,53 +329,53 @@
           <div id="exp1-res" aria-live="polite"></div>
         </div>
         <div class="panel exp" id="exp2">
-          <h3><span aria-hidden="true">⚖️</span><span data-i18n="exp2_t"></span></h3>
+          <h3><span aria-hidden="true">⚖️</span><span data-i18n="exp2_t">சார்புள்ள தரவைச் சேர்</span></h3>
           <p class="small" id="exp2-d"></p>
           <ul class="small no-i18n mb0" id="exp2-list" style="margin:0;padding-inline-start:1.2em"></ul>
           <p class="callout warning small exp-need" hidden></p>
           <div class="grow-space"></div>
-          <div class="exp-btns"><button type="button" class="btn btn-accent" id="exp2-btn" data-i18n="exp2_btn"></button></div>
+          <div class="exp-btns"><button type="button" class="btn btn-accent" id="exp2-btn" data-i18n="exp2_btn">சார்புள்ள வாக்கியங்களைச் சேர்</button></div>
           <div id="exp2-res" aria-live="polite"></div>
         </div>
         <div class="panel exp" id="exp3">
-          <h3><span aria-hidden="true">🚫</span><span data-i18n="exp3_t"></span></h3>
+          <h3><span aria-hidden="true">🚫</span><span data-i18n="exp3_t">“இல்லை” சிக்கல்</span></h3>
           <p class="small" id="exp3-d"></p>
           <p class="callout warning small exp-need" hidden></p>
           <div class="grow-space"></div>
           <div class="exp-btns">
-            <button type="button" class="btn" id="exp3-try" data-i18n="exp3_try"></button>
+            <button type="button" class="btn" id="exp3-try" data-i18n="exp3_try">வாக்கியத்தைச் சோதி</button>
             <button type="button" class="btn btn-accent" id="exp3-btn"></button>
           </div>
           <div id="exp3-res" aria-live="polite"></div>
         </div>
       </div>
       <div class="row">
-        <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩</span><span data-i18n="undo_exp"></span></button>
+        <button type="button" class="btn" id="undo-btn" hidden><span class="flip" aria-hidden="true">↩</span><span data-i18n="undo_exp">சோதனையைத் திரும்பப் பெறு</span></button>
       </div>
     </section>
 
     <!-- inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside_t"></h2>
+      <h2 data-i18n="inside_t">உள்ளே என்ன நடக்கிறது?</h2>
       <div class="grid-3 inside-grid">
-        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t"></span></h3><p data-i18n="in1"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t"></span></h3><p data-i18n="in2"></p><p class="formula" data-i18n="formula"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in3_t"></span></h3><p data-i18n="in3"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🙃</span><span data-i18n="in4_t"></span></h3><p data-i18n="in4"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">⚖️</span><span data-i18n="in5_t"></span></h3><p data-i18n="in5"></p></div>
-        <div class="panel"><h3><span aria-hidden="true">🔤</span><span data-i18n="in6_t"></span></h3><p data-i18n="in6"></p></div>
+        <div class="panel"><h3><span aria-hidden="true">🧮</span><span data-i18n="in1_t">இது சொற்களை எண்ணுகிறது</span></h3><p data-i18n="in1">பழக்குவது என்றால் வெறும் எண்ணுதல்தான்: ஒவ்வொரு சொல்லும் ஒவ்வொரு லேபிளின் வாக்கியங்களில் எத்தனை முறை வந்தது. “வென்றோம்” மகிழ்ச்சியில் வருகிறது, “தோற்றோம்” சோகத்தில்.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🎲</span><span data-i18n="in2_t">இது வாய்ப்புகளைப் பெருக்குகிறது</span></h3><p data-i18n="in2">புதிய வாக்கியத்துக்கு, ஒவ்வொரு லேபிளின் தொடக்க வாய்ப்பை ஒவ்வொரு சொல்லின் வாய்ப்பால் பெருக்குகிறது. எதன் விடை பெரியதோ அதுவே வெல்லும். இந்த முறைக்கு Naive Bayes என்று பெயர்.</p><p class="formula" data-i18n="formula">P(மகிழ்ச்சி | வாக்கியம்) ∝ P(மகிழ்ச்சி) × P(சொல்₁ | மகிழ்ச்சி) × P(சொல்₂ | மகிழ்ச்சி) × …</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🙈</span><span data-i18n="in3_t">“Naive” அதாவது அப்பாவி ஏன்?</span></h3><p data-i18n="in3">இது ஒவ்வொரு சொல்லையும் தனியாகப் பார்க்கிறது, சொற்களின் வரிசையைக் கவனிப்பதில்லை. அதனால் “மகிழ்ச்சியாக இல்லை” இதற்கு வெறும் “மகிழ்ச்சியாக” + “இல்லை”; பெரும்பாலும் “மகிழ்ச்சியாக” வென்றுவிடும்.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🙃</span><span data-i18n="in4_t">கிண்டலில் ஏமாறுகிறது</span></h3><p data-i18n="in4">“ஆஹா, அருமை! என் பிறந்தநாள் விருந்து அன்றுதான் மழை பெய்தது!” என்பதில் மகிழ்ச்சிச் சொற்கள் உள்ளன, ஆனால் பொருள் எரிச்சல். சொற்களை எண்ணுவதால் பேச்சின் தொனியைக் கேட்க முடியாது.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">⚖️</span><span data-i18n="in5_t">எல்லாவற்றையும் தரவே தீர்மானிக்கிறது</span></h3><p data-i18n="in5">குறைவான, ஒருபக்கமான அல்லது சார்புள்ள எடுத்துக்காட்டுகள் தவறான பாடம் கற்பிக்கின்றன. வேலை, கடன், செய்திகளுக்குப் பயன்படும் AI-யும் இப்படி அநீதி செய்யலாம், அதனால் மனிதர்கள் தரவைச் சரிபார்க்க வேண்டும்.</p></div>
+        <div class="panel"><h3><span aria-hidden="true">🔤</span><span data-i18n="in6_t">ஒரே சொல், பல வடிவங்கள்</span></h3><p data-i18n="in6">மாடலுக்கு “மகிழ்ச்சி”, “மகிழ்ச்சியாக” இரண்டும் முற்றிலும் வேறு சொற்கள். தமிழில் சொற்களுடன் விகுதிகள் சேர்வதால் இது அடிக்கடி நடக்கும். பெரிய AI மாடல்கள் சொற்களைச் சிறு துண்டுகளாக உடைத்து முழு வாக்கியத்தையும் படிக்கின்றன.</p></div>
       </div>
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">பயன்படுத்துவது எப்படி · வகுப்பறைக்கான யோசனைகள்</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">மாதிரி வாக்கியங்களுடன் தொடங்குங்கள், “பழக்கு” அழுத்துங்கள், பிறகு “சோதித்துப் பாருங்கள்” பகுதியில் உங்கள் சொந்த வாக்கியங்களை எழுதுங்கள்.</li>
+        <li data-i18n="tip2">நிறமுள்ள சொல்லைத் தட்டி அதன் பின்னால் உள்ள எண்ணிக்கையைப் பாருங்கள். வகுப்பைக் கேளுங்கள்: இந்தச் சொல் ஏன் சோகத்தைச் சுட்டுகிறது?</li>
+        <li data-i18n="tip3">வகுப்புச் செயல்பாடு: ஒவ்வொரு குழுவும் ஒரு புதிய லேபிளையும் (எ.கா. பயம் 😨) 8–10 வாக்கியங்களையும் சேர்த்து, மற்றொரு குழுவைத் தங்கள் மாடலை ஏமாற்றச் சவால் விடட்டும்.</li>
+        <li data-i18n="tip4">சொல் எண்ணிக்கை அட்டவணையை அச்சிட்டு, 3 சொற்கள் உள்ள வாக்கியத்தின் வாய்ப்புகளை மாணவர்களைக் கையால் பெருக்கச் சொல்லுங்கள்; பிறகு “கணக்கைக் காட்டு” மூலம் சரிபாருங்கள்.</li>
+        <li data-i18n="tip5">வாக்கியங்களை CSV-ஆக ஏற்றுமதி செய்து சேமியுங்கள் அல்லது வேறு வகுப்புடன் பகிருங்கள். எதுவும் பதிவேற்றப்படுவதில்லை: எல்லாம் இந்தச் சாதனத்திலேயே இருக்கும்.</li>
+        <li data-i18n="tip6">விவாதியுங்கள்: மனநிலை அறிதல் எங்கே பயன்படும் (பொருள் மதிப்புரைகள், கருத்துப் படிவங்கள்)? எங்கே அது தவறாக அல்லது நியாயமற்றதாக இருக்கலாம்?</li>
       </ul>
     </details>
   </main>

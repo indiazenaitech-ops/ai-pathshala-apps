@@ -252,45 +252,45 @@
 </head>
 <body>
   <main id="app">
-    <div id="printHead" class="print-only"><h1 data-i18n="app_title"></h1><p class="small" id="printDate"></p></div>
-    <p class="edu-intro" data-i18n="intro"></p>
+    <div id="printHead" class="print-only"><h1 data-i18n="app_title">EMI, SIP, FD கால்குலேட்டர்</h1><p class="small" id="printDate"></p></div>
+    <p class="edu-intro" data-i18n="intro">கடன் EMI, முழு தவணை அட்டவணை, முன்கூட்டிச் செலுத்தல், கட்டணங்களால் கூடும் உண்மையான செலவு ஆகியவற்றைக் கணக்கிடுங்கள்; SIP, FD, RD, PPF சேமிப்பு எப்படி வளர்கிறது என்றும் பாருங்கள்.</p>
     <div class="fc-top no-print">
-      <span class="badge success"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></span>
-      <span class="badge"><span aria-hidden="true">⌨</span> <span data-i18n="kbd_hint"></span></span>
+      <span class="badge success"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">உங்கள் எண்கள் இந்தச் சாதனத்திலேயே இருக்கும், எங்கும் அனுப்பப்படாது</span></span>
+      <span class="badge"><span aria-hidden="true">⌨</span> <span data-i18n="kbd_hint">25L அல்லது 1.2Cr என எழுதலாம் · ↑ ↓ விசைகளால் எண்ணை மாற்றலாம்</span></span>
     </div>
 
     <div class="fc-tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-emi" data-tab="emi" aria-controls="p-emi"><span class="ic" aria-hidden="true">🏠</span><span data-i18n="tab_emi"></span></button>
-      <button type="button" role="tab" id="tab-sip" data-tab="sip" aria-controls="p-sip"><span class="ic" aria-hidden="true">📈</span><span data-i18n="tab_sip"></span></button>
-      <button type="button" role="tab" id="tab-fd" data-tab="fd" aria-controls="p-fd"><span class="ic" aria-hidden="true">🏦</span><span data-i18n="tab_fd"></span></button>
-      <button type="button" role="tab" id="tab-ppf" data-tab="ppf" aria-controls="p-ppf"><span class="ic" aria-hidden="true">🛡️</span><span data-i18n="tab_ppf"></span></button>
+      <button type="button" role="tab" id="tab-emi" data-tab="emi" aria-controls="p-emi"><span class="ic" aria-hidden="true">🏠</span><span data-i18n="tab_emi">கடன் EMI</span></button>
+      <button type="button" role="tab" id="tab-sip" data-tab="sip" aria-controls="p-sip"><span class="ic" aria-hidden="true">📈</span><span data-i18n="tab_sip">SIP</span></button>
+      <button type="button" role="tab" id="tab-fd" data-tab="fd" aria-controls="p-fd"><span class="ic" aria-hidden="true">🏦</span><span data-i18n="tab_fd">FD / RD</span></button>
+      <button type="button" role="tab" id="tab-ppf" data-tab="ppf" aria-controls="p-ppf"><span class="ic" aria-hidden="true">🛡️</span><span data-i18n="tab_ppf">PPF</span></button>
     </div>
 
     <!-- ============================================================ EMI -->
     <section id="p-emi" class="fc-panel" role="tabpanel" aria-labelledby="tab-emi">
       <div class="fc-split">
         <div class="card fc-form" id="emiForm">
-          <h2 data-i18n="loan_details"></h2>
+          <h2 data-i18n="loan_details">கடன் விவரங்கள்</h2>
           <div class="fc-presets" id="presets" role="group" data-i18n-aria-label="loan_type">
-            <button type="button" class="chip" data-preset="home"><span aria-hidden="true">🏠</span> <span data-i18n="preset_home"></span></button>
-            <button type="button" class="chip" data-preset="car"><span aria-hidden="true">🚗</span> <span data-i18n="preset_car"></span></button>
-            <button type="button" class="chip" data-preset="bike"><span aria-hidden="true">🛵</span> <span data-i18n="preset_bike"></span></button>
-            <button type="button" class="chip" data-preset="personal"><span aria-hidden="true">👤</span> <span data-i18n="preset_personal"></span></button>
-            <button type="button" class="chip" data-preset="edu"><span aria-hidden="true">🎓</span> <span data-i18n="preset_edu"></span></button>
+            <button type="button" class="chip" data-preset="home"><span aria-hidden="true">🏠</span> <span data-i18n="preset_home">வீடு</span></button>
+            <button type="button" class="chip" data-preset="car"><span aria-hidden="true">🚗</span> <span data-i18n="preset_car">கார்</span></button>
+            <button type="button" class="chip" data-preset="bike"><span aria-hidden="true">🛵</span> <span data-i18n="preset_bike">இருசக்கர வாகனம்</span></button>
+            <button type="button" class="chip" data-preset="personal"><span aria-hidden="true">👤</span> <span data-i18n="preset_personal">தனிநபர்</span></button>
+            <button type="button" class="chip" data-preset="edu"><span aria-hidden="true">🎓</span> <span data-i18n="preset_edu">கல்வி</span></button>
           </div>
           <div data-f="emiAmt"></div>
           <div data-f="emiRate"></div>
           <div class="field">
-            <span class="fc-lbl" data-i18n="f_tenure"></span>
+            <span class="fc-lbl" data-i18n="f_tenure">கால அளவு</span>
             <div class="fc-pair"><div data-f="emiYrs"></div><div data-f="emiMos"></div></div>
             <input type="range" class="nf-range" id="emiYrsR" min="0" max="30" step="1" tabindex="-1" aria-hidden="true">
             <span class="nf-hint" id="tenureHint"></span>
           </div>
           <div class="field">
-            <label for="emiStart" data-i18n="f_start"></label>
+            <label for="emiStart" data-i18n="f_start">முதல் EMI மாதம்</label>
             <input type="month" id="emiStart">
           </div>
-          <p class="tiny muted mb0" data-i18n="rate_check"></p>
+          <p class="tiny muted mb0" data-i18n="rate_check">இவை எடுத்துக்காட்டு விகிதங்கள் மட்டுமே. விகிதங்கள் அடிக்கடி மாறும், எனவே உங்கள் வங்கியில் இன்றைய விகிதத்தைக் கேளுங்கள்.</p>
         </div>
 
         <div class="fc-col">
@@ -299,8 +299,8 @@
             <div class="fc-chart-head">
               <h3 id="emiChartTitle"></h3>
               <div class="seg" id="emiChartSeg" role="group" data-i18n-aria-label="chart_view">
-                <button type="button" data-v="balance" data-i18n="ch_balance"></button>
-                <button type="button" data-v="split" data-i18n="ch_split"></button>
+                <button type="button" data-v="balance" data-i18n="ch_balance">மீதிக் கடன்</button>
+                <button type="button" data-v="split" data-i18n="ch_split">ஆண்டுப் பிரிவு</button>
               </div>
             </div>
             <div class="fc-chart" id="emiChart" tabindex="0"></div>
@@ -311,35 +311,35 @@
 
       <div class="card stack" id="chgCard">
         <div>
-          <h2 data-i18n="chg_title"></h2>
-          <p class="muted small mb0" data-i18n="chg_help"></p>
+          <h2 data-i18n="chg_title">முன்கூட்டிச் செலுத்தல், வட்டி மாற்றம்</h2>
+          <p class="muted small mb0" data-i18n="chg_help">இடையில் செய்யும் பகுதிச் செலுத்தல் அல்லது மிதக்கும் வட்டியின் எதிர்கால மாற்றத்தைச் சேர்த்து, அசல் திட்டத்துடன் ஒப்பிடுங்கள்.</p>
         </div>
         <div class="grid-2">
           <div class="panel stack">
-            <h3 data-i18n="pp_title"></h3>
+            <h3 data-i18n="pp_title">முன்கூட்டிச் செலுத்தல் (பகுதி)</h3>
             <div class="fc-rows" id="ppList"></div>
-            <button type="button" class="btn btn-sm no-print" id="ppAdd"><span aria-hidden="true">＋</span> <span data-i18n="pp_add"></span></button>
+            <button type="button" class="btn btn-sm no-print" id="ppAdd"><span aria-hidden="true">＋</span> <span data-i18n="pp_add">முன்கூட்டிச் செலுத்தல் சேர்</span></button>
             <div class="field">
-              <span class="fc-lbl" id="ppModeLbl" data-i18n="pp_mode"></span>
+              <span class="fc-lbl" id="ppModeLbl" data-i18n="pp_mode">முன்கூட்டிச் செலுத்திய பின்</span>
               <div class="seg fc-seg-full" id="ppMode" role="group" aria-labelledby="ppModeLbl">
-                <button type="button" data-v="tenure" data-i18n="mode_tenure"></button>
-                <button type="button" data-v="emi" data-i18n="mode_emi"></button>
+                <button type="button" data-v="tenure" data-i18n="mode_tenure">காலத்தைக் குறை</button>
+                <button type="button" data-v="emi" data-i18n="mode_emi">EMI-ஐக் குறை</button>
               </div>
             </div>
             <div data-f="ppCharge"></div>
           </div>
           <div class="panel stack">
-            <h3 data-i18n="rc_title"></h3>
+            <h3 data-i18n="rc_title">வட்டி மாற்றம் (மிதக்கும் வட்டி)</h3>
             <div class="fc-rows" id="rcList"></div>
-            <button type="button" class="btn btn-sm no-print" id="rcAdd"><span aria-hidden="true">＋</span> <span data-i18n="rc_add"></span></button>
+            <button type="button" class="btn btn-sm no-print" id="rcAdd"><span aria-hidden="true">＋</span> <span data-i18n="rc_add">வட்டி மாற்றம் சேர்</span></button>
             <div class="field">
-              <span class="fc-lbl" id="rcModeLbl" data-i18n="rc_mode"></span>
+              <span class="fc-lbl" id="rcModeLbl" data-i18n="rc_mode">வட்டி மாறும்போது</span>
               <div class="seg fc-seg-full" id="rcMode" role="group" aria-labelledby="rcModeLbl">
-                <button type="button" data-v="tenure" data-i18n="rc_keep_emi"></button>
-                <button type="button" data-v="emi" data-i18n="rc_keep_tenure"></button>
+                <button type="button" data-v="tenure" data-i18n="rc_keep_emi">அதே EMI</button>
+                <button type="button" data-v="emi" data-i18n="rc_keep_tenure">அதே காலம்</button>
               </div>
             </div>
-            <p class="tiny muted mb0" data-i18n="rc_help"></p>
+            <p class="tiny muted mb0" data-i18n="rc_help">அதே EMI: காலம் கூடும் அல்லது குறையும் (வங்கிகள் பொதுவாக இப்படிச் செய்யும்). அதே காலம்: EMI மாறும்.</p>
           </div>
         </div>
         <div id="chgOut" aria-live="polite"></div>
@@ -347,14 +347,14 @@
 
       <div class="card stack" id="schCard">
         <div class="fc-sch-head">
-          <h2 data-i18n="sch_title"></h2>
+          <h2 data-i18n="sch_title">தவணை அட்டவணை</h2>
           <div class="fc-sch-tools no-print">
             <div class="seg" id="schView" role="group" data-i18n-aria-label="sch_title">
-              <button type="button" data-v="monthly" data-i18n="view_monthly"></button>
-              <button type="button" data-v="yearly" data-i18n="view_yearly"></button>
-              <button type="button" data-v="fy" data-i18n="view_fy"></button>
+              <button type="button" data-v="monthly" data-i18n="view_monthly">மாதவாரி</button>
+              <button type="button" data-v="yearly" data-i18n="view_yearly">ஆண்டுவாரி</button>
+              <button type="button" data-v="fy" data-i18n="view_fy">நிதியாண்டு</button>
             </div>
-            <button type="button" class="btn btn-sm" id="emiCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="emiCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn">CSV பதிவிறக்கு</span></button>
             <button type="button" class="btn btn-sm" id="emiPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
           </div>
         </div>
@@ -362,28 +362,28 @@
         <div class="fc-table-wrap"><table class="table fc-table" id="schTable"></table></div>
       </div>
 
-      <h2 class="fc-sec no-print" data-i18n="tools_title"></h2>
-      <p class="muted small no-print" data-i18n="tools_help"></p>
+      <h2 class="fc-sec no-print" data-i18n="tools_title">மேலும் சில கடன் சோதனைகள்</h2>
+      <p class="muted small no-print" data-i18n="tools_help">கடனில் கையெழுத்திடும் முன் அல்லது EMI-யில் வாங்கும் முன் வழக்கமான கேள்விகளுக்கு விரைவான பதில்கள்.</p>
       <div class="grid-2 fc-tools no-print">
         <div class="card fc-tool" id="aprCard">
-          <h3><span aria-hidden="true">🧾</span> <span data-i18n="apr_title"></span></h3>
-          <p class="small muted" data-i18n="apr_help"></p>
+          <h3><span aria-hidden="true">🧾</span> <span data-i18n="apr_title">கட்டணங்களும் உண்மைச் செலவும் (APR)</span></h3>
+          <p class="small muted" data-i18n="apr_help">செயலாக்கக் கட்டணமும் பிற கட்டணங்களும் (சட்ட, மதிப்பீடு, முத்திரைத் தாள்) கைக்கு வரும் தொகையைக் குறைக்கின்றன, எனவே உண்மையான ஆண்டுச் செலவு சொல்லப்பட்ட விகிதத்தைவிட அதிகம். மேலே உள்ள கடன் பயன்படும்.</p>
           <div class="grid-2"><div data-f="aprFee"></div><div data-f="aprOther"></div></div>
-          <label class="check"><input type="checkbox" id="aprGst"> <span data-i18n="apr_gst"></span></label>
+          <label class="check"><input type="checkbox" id="aprGst"> <span data-i18n="apr_gst">கட்டணங்களுக்கு 18% GST சேர்</span></label>
           <div id="aprOut" class="fc-out" aria-live="polite"></div>
         </div>
 
         <div class="card fc-tool" id="flatCard">
-          <h3><span aria-hidden="true">🏷️</span> <span data-i18n="flat_title"></span></h3>
-          <p class="small muted" data-i18n="flat_help"></p>
+          <h3><span aria-hidden="true">🏷️</span> <span data-i18n="flat_title">பிளாட் விகிதம் vs உண்மை விகிதம்</span></h3>
+          <p class="small muted" data-i18n="flat_help">கடைகளும் சில கடன் தருபவர்களும் &quot;பிளாட்&quot; விகிதம் சொல்வார்கள், உதாரணமாக மாதம் 1%. நீங்கள் திருப்பிச் செலுத்தினாலும் முழுத் தொகைக்கும் முழுக் காலமும் வட்டி கணக்கிடப்படும், எனவே உண்மை விகிதம் ஏறக்குறைய இருமடங்கு.</p>
           <div data-f="flAmt"></div>
           <div class="grid-2">
             <div data-f="flRate"></div>
             <div class="field">
-              <span class="fc-lbl" id="flPerLbl" data-i18n="flat_per"></span>
+              <span class="fc-lbl" id="flPerLbl" data-i18n="flat_per">விகிதம் எந்தக் கணக்கில்</span>
               <div class="seg fc-seg-full" id="flPer" role="group" aria-labelledby="flPerLbl">
-                <button type="button" data-v="month" data-i18n="per_month"></button>
-                <button type="button" data-v="year" data-i18n="per_year"></button>
+                <button type="button" data-v="month" data-i18n="per_month">மாதத்துக்கு</button>
+                <button type="button" data-v="year" data-i18n="per_year">ஆண்டுக்கு</button>
               </div>
             </div>
           </div>
@@ -392,8 +392,8 @@
         </div>
 
         <div class="card fc-tool" id="ncCard">
-          <h3><span aria-hidden="true">🛍️</span> <span data-i18n="nc_title"></span></h3>
-          <p class="small muted" data-i18n="nc_help"></p>
+          <h3><span aria-hidden="true">🛍️</span> <span data-i18n="nc_title">&quot;நோ-காஸ்ட் EMI&quot; உண்மையில் இலவசமா?</span></h3>
+          <p class="small muted" data-i18n="nc_help">விற்பவர் வங்கி வட்டிக்குச் சமமான தள்ளுபடி தருவார், அதனால் EMI-களின் கூட்டுத்தொகை விலைக்குச் சமம். ஆனாலும் அந்த வட்டிக்கு 18% GST-யும் செயலாக்கக் கட்டணமும் நீங்களே செலுத்துவீர்கள், ரொக்கத் தள்ளுபடியையும் இழக்கலாம்.</p>
           <div class="grid-2"><div data-f="ncPrice"></div><div data-f="ncN"></div></div>
           <div class="grid-2"><div data-f="ncRate"></div><div data-f="ncFee"></div></div>
           <div data-f="ncCash"></div>
@@ -401,8 +401,8 @@
         </div>
 
         <div class="card fc-tool" id="afCard">
-          <h3><span aria-hidden="true">⚖️</span> <span data-i18n="af_title"></span></h3>
-          <p class="small muted" data-i18n="af_help"></p>
+          <h3><span aria-hidden="true">⚖️</span> <span data-i18n="af_title">இந்த EMI-ஐ என்னால் சமாளிக்க முடியுமா?</span></h3>
+          <p class="small muted" data-i18n="af_help">எல்லா EMI-களும் சேர்ந்து கைக்கு வரும் சம்பளத்தில் சுமார் 40–50%-க்குள் இருக்க வேண்டும் என்று கடன் தருபவர்கள் விரும்புவார்கள். மேலே உள்ள EMI பயன்படும்.</p>
           <div class="grid-2"><div data-f="afInc"></div><div data-f="afOth"></div></div>
           <div data-f="afFoir"></div>
           <div id="afOut" class="fc-out" aria-live="polite"></div>
@@ -414,14 +414,14 @@
     <section id="p-sip" class="fc-panel" role="tabpanel" aria-labelledby="tab-sip" hidden>
       <div class="fc-split">
         <div class="card fc-form" id="sipForm">
-          <h2 data-i18n="sip_title"></h2>
+          <h2 data-i18n="sip_title">SIP (மியூச்சுவல் ஃபண்ட்) கால்குலேட்டர்</h2>
           <div class="seg fc-seg-full" id="sipMode" role="group" data-i18n-aria-label="sip_title">
-            <button type="button" data-v="grow" data-i18n="sip_grow"></button>
-            <button type="button" data-v="goal" data-i18n="sip_goal"></button>
+            <button type="button" data-v="grow" data-i18n="sip_grow">என் SIP எவ்வளவு வளரும்</button>
+            <button type="button" data-v="goal" data-i18n="sip_goal">இலக்குக்குத் திட்டம்</button>
           </div>
           <div id="sipGoalBox" class="fc-form">
             <div data-f="sipGoal"></div>
-            <label class="check"><input type="checkbox" id="sipToday"> <span data-i18n="sip_today"></span></label>
+            <label class="check"><input type="checkbox" id="sipToday"> <span data-i18n="sip_today">இலக்கு இன்றைய பண மதிப்பில் (பணவீக்கம் சேர்)</span></label>
           </div>
           <div data-f="sipAmt" id="sipAmtBox"></div>
           <div data-f="sipStep"></div>
@@ -433,18 +433,18 @@
         <div class="fc-col">
           <div class="card" id="sipRes" aria-live="polite"></div>
           <div class="card">
-            <div class="fc-chart-head"><h3 data-i18n="ch_growth"></h3></div>
+            <div class="fc-chart-head"><h3 data-i18n="ch_growth">ஆண்டுவாரி வளர்ச்சி</h3></div>
             <div class="fc-chart" id="sipChart" tabindex="0"></div>
-            <div class="fc-axis-note" data-i18n="ax_years"></div>
+            <div class="fc-axis-note" data-i18n="ax_years">ஆண்டுகள் →</div>
             <div class="fc-legend" id="sipLegend"></div>
           </div>
         </div>
       </div>
       <div class="card stack">
         <div class="fc-sch-head">
-          <h2 data-i18n="yearwise"></h2>
+          <h2 data-i18n="yearwise">ஆண்டுவாரியாக</h2>
           <div class="fc-sch-tools no-print">
-            <button type="button" class="btn btn-sm" id="sipCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="sipCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn">CSV பதிவிறக்கு</span></button>
             <button type="button" class="btn btn-sm" id="sipPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
           </div>
         </div>
@@ -457,23 +457,23 @@
       <div class="fc-split">
         <div class="card fc-form" id="fdForm">
           <div class="seg fc-seg-full" id="fdKind" role="group" data-i18n-aria-label="tab_fd">
-            <button type="button" data-v="fd" data-i18n="fd_kind_fd"></button>
-            <button type="button" data-v="rd" data-i18n="fd_kind_rd"></button>
+            <button type="button" data-v="fd" data-i18n="fd_kind_fd">நிலை வைப்பு (FD)</button>
+            <button type="button" data-v="rd" data-i18n="fd_kind_rd">தொடர் வைப்பு (RD)</button>
           </div>
           <div id="fdBox" class="fc-form">
             <div data-f="fdAmt"></div>
             <div data-f="fdRate"></div>
             <div class="field">
-              <span class="fc-lbl" data-i18n="f_tenure"></span>
+              <span class="fc-lbl" data-i18n="f_tenure">கால அளவு</span>
               <div class="fc-pair"><div data-f="fdYrs"></div><div data-f="fdMos"></div></div>
               <span class="nf-hint" id="fdTenureHint"></span>
             </div>
             <div class="field">
-              <label for="fdPayout" data-i18n="fd_payout"></label>
+              <label for="fdPayout" data-i18n="fd_payout">வட்டி எப்போது கிடைக்கும்</label>
               <select id="fdPayout">
-                <option value="cum" data-i18n="payout_cum"></option>
-                <option value="month" data-i18n="payout_month"></option>
-                <option value="quarter" data-i18n="payout_quarter"></option>
+                <option value="cum" data-i18n="payout_cum">முதிர்வில் (காலாண்டுக்கு ஒருமுறை கூட்டு வட்டி)</option>
+                <option value="month" data-i18n="payout_month">மாதந்தோறும்</option>
+                <option value="quarter" data-i18n="payout_quarter">காலாண்டுதோறும்</option>
               </select>
             </div>
           </div>
@@ -482,29 +482,29 @@
             <div data-f="rdRate"></div>
             <div data-f="rdN"></div>
           </div>
-          <label class="check"><input type="checkbox" id="fdSenior"> <span data-i18n="fd_senior"></span></label>
-          <p class="tiny muted mb0" data-i18n="rate_check"></p>
+          <label class="check"><input type="checkbox" id="fdSenior"> <span data-i18n="fd_senior">மூத்த குடிமக்கள் (பொதுவாக +0.50%)</span></label>
+          <p class="tiny muted mb0" data-i18n="rate_check">இவை எடுத்துக்காட்டு விகிதங்கள் மட்டுமே. விகிதங்கள் அடிக்கடி மாறும், எனவே உங்கள் வங்கியில் இன்றைய விகிதத்தைக் கேளுங்கள்.</p>
         </div>
         <div class="fc-col">
           <div class="card" id="fdRes" aria-live="polite"></div>
           <div class="card">
-            <div class="fc-chart-head"><h3 data-i18n="ch_growth"></h3></div>
+            <div class="fc-chart-head"><h3 data-i18n="ch_growth">ஆண்டுவாரி வளர்ச்சி</h3></div>
             <div class="fc-chart" id="fdChart" tabindex="0"></div>
-            <div class="fc-axis-note" data-i18n="ax_years"></div>
+            <div class="fc-axis-note" data-i18n="ax_years">ஆண்டுகள் →</div>
             <div class="fc-legend" id="fdLegend"></div>
           </div>
         </div>
       </div>
       <div class="card stack">
         <div class="fc-sch-head">
-          <h2 data-i18n="yearwise"></h2>
+          <h2 data-i18n="yearwise">ஆண்டுவாரியாக</h2>
           <div class="fc-sch-tools no-print">
-            <button type="button" class="btn btn-sm" id="fdCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="fdCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn">CSV பதிவிறக்கு</span></button>
             <button type="button" class="btn btn-sm" id="fdPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
           </div>
         </div>
         <div class="fc-table-wrap"><table class="table fc-table" id="fdTable"></table></div>
-        <p class="tiny muted mb0" data-i18n="fd_note"></p>
+        <p class="tiny muted mb0" data-i18n="fd_note">வங்கிகள் FD, RD வட்டியைக் காலாண்டுக்கு ஒருமுறை சேர்க்கும்; 6 மாதத்துக்குக் குறைவெனில் தனி வட்டி தரும். மாத வட்டி விகிதம் ÷ 12-ஐவிடச் சற்றுக் குறைவு, ஏனெனில் வங்கிகள் அதைத் தள்ளுபடி செய்து கணக்கிடும். ஆண்டு வட்டி வரம்பைத் தாண்டினால் TDS பிடிக்கப்படலாம்; தகுதி இருந்தால் படிவம் 15G/15H கொடுங்கள்.</p>
       </div>
     </section>
 
@@ -512,66 +512,66 @@
     <section id="p-ppf" class="fc-panel" role="tabpanel" aria-labelledby="tab-ppf" hidden>
       <div class="fc-split">
         <div class="card fc-form" id="ppfForm">
-          <h2 data-i18n="ppf_title"></h2>
+          <h2 data-i18n="ppf_title">PPF (பொது வருங்கால வைப்பு நிதி)</h2>
           <div data-f="ppfAmt"></div>
           <div data-f="ppfRate"></div>
           <div class="field">
-            <span class="fc-lbl" id="ppfModeLbl" data-i18n="ppf_how"></span>
+            <span class="fc-lbl" id="ppfModeLbl" data-i18n="ppf_how">எப்படி வைப்பு செய்கிறீர்கள்</span>
             <div class="seg fc-seg-full" id="ppfMode" role="group" aria-labelledby="ppfModeLbl">
-              <button type="button" data-v="yearly" data-i18n="ppf_yearly"></button>
-              <button type="button" data-v="monthly" data-i18n="ppf_monthly"></button>
+              <button type="button" data-v="yearly" data-i18n="ppf_yearly">ஆண்டுக்கு ஒருமுறை (ஏப்ரல் 5-க்குள்)</button>
+              <button type="button" data-v="monthly" data-i18n="ppf_monthly">மாதந்தோறும் (5-ஆம் தேதிக்குள்)</button>
             </div>
           </div>
           <div class="field">
-            <label for="ppfExt" data-i18n="ppf_ext"></label>
+            <label for="ppfExt" data-i18n="ppf_ext">15 ஆண்டுக்குப் பின் நீட்டிப்பு</label>
             <select id="ppfExt"></select>
           </div>
-          <label class="check" id="ppfExtDepBox"><input type="checkbox" id="ppfExtDep"> <span data-i18n="ppf_ext_dep"></span></label>
-          <p class="tiny muted mb0" data-i18n="ppf_rate_hint"></p>
+          <label class="check" id="ppfExtDepBox"><input type="checkbox" id="ppfExtDep"> <span data-i18n="ppf_ext_dep">நீட்டிப்புக் காலத்திலும் வைப்பு தொடரட்டும்</span></label>
+          <p class="tiny muted mb0" data-i18n="ppf_rate_hint">PPF விகிதத்தை அரசு ஒவ்வொரு காலாண்டும் நிர்ணயிக்கிறது. இன்றைய விகிதத்தைச் சரிபாருங்கள்.</p>
         </div>
         <div class="fc-col">
           <div class="card" id="ppfRes" aria-live="polite"></div>
           <div class="card">
-            <div class="fc-chart-head"><h3 data-i18n="ch_growth"></h3></div>
+            <div class="fc-chart-head"><h3 data-i18n="ch_growth">ஆண்டுவாரி வளர்ச்சி</h3></div>
             <div class="fc-chart" id="ppfChart" tabindex="0"></div>
-            <div class="fc-axis-note" data-i18n="ax_years"></div>
+            <div class="fc-axis-note" data-i18n="ax_years">ஆண்டுகள் →</div>
             <div class="fc-legend" id="ppfLegend"></div>
           </div>
         </div>
       </div>
       <div class="card stack">
         <div class="fc-sch-head">
-          <h2 data-i18n="yearwise"></h2>
+          <h2 data-i18n="yearwise">ஆண்டுவாரியாக</h2>
           <div class="fc-sch-tools no-print">
-            <button type="button" class="btn btn-sm" id="ppfCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="ppfCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn">CSV பதிவிறக்கு</span></button>
             <button type="button" class="btn btn-sm" id="ppfPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
           </div>
         </div>
         <div class="fc-table-wrap"><table class="table fc-table" id="ppfTable"></table></div>
-        <p class="tiny muted mb0" data-i18n="ppf_note"></p>
+        <p class="tiny muted mb0" data-i18n="ppf_note">ஒவ்வொரு மாதமும் 5-ஆம் தேதி முதல் மாத இறுதி வரையிலான குறைந்த இருப்பின் மீது வட்டி கணக்கிடப்பட்டு, ஆண்டுக்கு ஒருமுறை மார்ச் 31 அன்று சேர்க்கப்படும். அந்த மாத வட்டியைப் பெற 5-ஆம் தேதிக்குள் வைப்பு செய்யுங்கள்.</p>
       </div>
     </section>
 
-    <p class="callout warning small fc-disc" role="note"><strong data-i18n="disc_title"></strong> <span data-i18n="disclaimer"></span></p>
+    <p class="callout warning small fc-disc" role="note"><strong data-i18n="disc_title">மதிப்பீட்டுக்கு மட்டும்.</strong> <span data-i18n="disclaimer">இது முதலீடு, வரி அல்லது கடன் ஆலோசனை அல்ல. வருமானத்துக்கு உத்தரவாதம் இல்லை; வங்கிகள் சற்று வேறுவிதமாக முழுமையாக்கலாம் அல்லது கணக்கிடலாம். முடிவெடுக்கும் முன் உங்கள் வங்கி, அஞ்சலகம் அல்லது ஃபண்ட் நிறுவனத்தில் இன்றைய விகிதங்களையும் நிபந்தனைகளையும் சரிபாருங்கள்.</span></p>
 
     <details class="card no-print" id="helpBox" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">பயன்படுத்துவது எப்படி / வேலைக்கான யோசனைகள்</summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">கடன் வகையைத் தேர்ந்தெடுங்கள் அல்லது உங்கள் தொகை, விகிதம், காலத்தை எழுதுங்கள்; எழுதும்போதே முடிவுகள் மாறும். குறுக்குவழி: 25L = 25 லட்சம், 1.2Cr = 1.2 கோடி, ↑ ↓ விசைகளால் எண்ணை மாற்றலாம் (பெரிய படிக்கு Shift).</li>
+        <li data-i18n="tip2">முன்கூட்டிச் செலுத்தலைச் சேருங்கள், உதாரணமாக ஆண்டு போனஸிலிருந்து, எவ்வளவு வட்டி மிச்சம் என்று பாருங்கள். &quot;காலத்தைக் குறை&quot; பொதுவாக &quot;EMI-ஐக் குறை&quot;-யைவிட அதிகம் மிச்சப்படுத்தும்.</li>
+        <li data-i18n="tip3">வங்கி, NBFC, கடை ஊழியர்கள்: &quot;பிளாட் விகிதம் vs உண்மை விகிதம்&quot;, &quot;நோ-காஸ்ட் EMI&quot; மூலம் வாடிக்கையாளருக்குச் சில நொடிகளில் உண்மைச் செலவைக் காட்டுங்கள்.</li>
+        <li data-i18n="tip4">வீட்டுக் கடன் வரி ஆவணங்களுக்கு நிதியாண்டுக் காட்சியைப் பயன்படுத்துங்கள்; CSV பதிவிறக்கி அட்டவணையை Excel அல்லது Google Sheets-இல் திறக்கலாம்.</li>
+        <li data-i18n="tip5">&quot;சுருக்கத்தை நகலெடு&quot; WhatsApp அல்லது மின்னஞ்சலுக்கான சிறு செய்தியை உருவாக்கும்; இதே கணக்கைத் திறக்கும் இணைப்பும் அதில் இருக்கும்.</li>
+        <li data-i18n="tip6">HR, நிதிக் குழுக்கள்: பண விழிப்புணர்வு அமர்வில் இதை புரொஜெக்டரில் காட்டி SIP, FD, RD, PPF-ஐ அருகருகே ஒப்பிடுங்கள்.</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="how_title"></h3>
+      <h3 style="margin-top:14px" data-i18n="how_title">கணக்கு எப்படி</h3>
       <div class="fc-how small">
-        <p data-i18n="how_emi"></p>
-        <p data-i18n="how_apr"></p>
-        <p data-i18n="how_flat"></p>
-        <p data-i18n="how_sip"></p>
-        <p data-i18n="how_fd"></p>
-        <p data-i18n="how_ppf"></p>
+        <p data-i18n="how_emi">EMI = P × r × (1+r)^n ÷ ((1+r)^n − 1); இங்கு P கடன், r ஆண்டு விகிதம் ÷ 12 ÷ 100, n மாதங்களின் எண்ணிக்கை (0%-இல் EMI = P ÷ n). ஒவ்வொரு மாதமும் வட்டி = மீதிக் கடன் × r; EMI-யின் மீதி கடனைக் குறைக்கும்.</p>
+        <p data-i18n="how_apr">APR என்பது கைக்கு வந்த உண்மைத் தொகை (கடன் கழித்தல் கட்டணம்) உங்கள் எல்லா EMI-களின் மதிப்புக்குச் சமமாகும் ஆண்டு விகிதம். கடன் தருபவர் முக்கிய உண்மை அறிக்கையில் (KFS) இதே APR-ஐக் காட்ட வேண்டும்.</p>
+        <p data-i18n="how_flat">பிளாட் வட்டி = தொகை × பிளாட் விகிதம் × ஆண்டுகள். உண்மை விகிதம் என்பது அதே EMI தரும் குறையும் இருப்பு விகிதம்.</p>
+        <p data-i18n="how_sip">SIP: ஒவ்வொரு மாதத் தொடக்கத்திலும் முதலீடு செய்கிறீர்கள்; வளர்ச்சி மாதந்தோறும் சேரும் (ஆண்டு வருமானம் ÷ 12), பெரும்பாலான ஃபண்ட் கால்குலேட்டர்கள் போல. ஒருமுறை முதலீடு ஆண்டுக்கு ஒருமுறை வளரும். வரியும் ஃபண்ட் கட்டணங்களும் சேர்க்கப்படவில்லை.</p>
+        <p data-i18n="how_fd">FD: இந்திய வங்கிகள் போலக் காலாண்டுக்கு ஒருமுறை கூட்டு வட்டி. RD: ஒவ்வொரு மாத வைப்பும் இருக்கும் காலம் வரை காலாண்டுதோறும் வளரும். வங்கிகளின் முழுமையாக்கலில் சில ரூபாய் வேறுபாடு இருக்கலாம்.</p>
+        <p data-i18n="how_ppf">PPF: ஆண்டுக்கு ₹1,50,000 வரை வைப்பு, வட்டி ஆண்டுக்கு ஒருமுறை சேரும், 15 ஆண்டுப் பூட்டுக் காலம், அதை 5 ஆண்டுகளாக நீட்டிக்கலாம்.</p>
       </div>
       <div class="row spread" style="margin-top:12px">
         <span class="small muted" data-i18n="saved_local"></span>

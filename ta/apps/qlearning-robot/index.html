@@ -180,38 +180,38 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <div class="print-only print-head"><h2 class="mb0" data-i18n="app_title"></h2><p class="mb0" id="print-sum"></p></div>
+    <p class="edu-intro" data-i18n="intro">ஒரு ரோபோ முயற்சி செய்து, தவறு செய்து புதையலைக் கண்டுபிடிக்க எப்படிக் கற்கிறது என்று பாருங்கள். இதுதான் ரீஇன்ஃபோர்ஸ்மென்ட் லேர்னிங்: யாரும் அதற்கு வழி காட்டுவதில்லை, அதற்கு வெகுமதியும் தண்டனையும் மட்டுமே கிடைக்கும்.</p>
+    <div class="print-only print-head"><h2 class="mb0" data-i18n="app_title">வெகுமதியால் கற்கும் ரோபோ</h2><p class="mb0" id="print-sum"></p></div>
 
     <div class="ql" id="ql">
       <!-- ============ the board ============ -->
       <section class="card ql-stage" aria-labelledby="board-h">
-        <h2 id="board-h" class="mb0" hidden data-i18n="board_title"></h2>
+        <h2 id="board-h" class="mb0" hidden data-i18n="board_title">கட்ட உலகம்</h2>
         <div class="stats">
-          <div class="stat"><span class="lbl" data-i18n="stat_episodes"></span><span class="num" id="st-ep">0</span></div>
-          <div class="stat" data-i18n-title="eps_hint"><span class="lbl" data-i18n="stat_eps"></span><span class="num" id="st-eps">0.30</span></div>
-          <div class="stat"><span class="lbl" data-i18n="stat_last"></span><span class="num" id="st-last">–</span></div>
-          <div class="stat"><span class="lbl" data-i18n="stat_success"></span><span class="num" id="st-succ">–</span></div>
+          <div class="stat"><span class="lbl" data-i18n="stat_episodes">சுற்றுகள்</span><span class="num" id="st-ep">0</span></div>
+          <div class="stat" data-i18n-title="eps_hint"><span class="lbl" data-i18n="stat_eps">இப்போது ஆராய்தல் (ε)</span><span class="num" id="st-eps">0.30</span></div>
+          <div class="stat"><span class="lbl" data-i18n="stat_last">கடைசி வெகுமதி</span><span class="num" id="st-last">–</span></div>
+          <div class="stat"><span class="lbl" data-i18n="stat_success">வெற்றி (கடைசி 100)</span><span class="num" id="st-succ">–</span></div>
         </div>
 
         <div class="board-wrap"><canvas id="board" tabindex="0" role="img"></canvas></div>
 
         <div class="ql-ctrl no-print">
-          <button type="button" class="btn" id="btn-step"><span aria-hidden="true">👣</span> <span data-i18n="btn_step"></span></button>
+          <button type="button" class="btn" id="btn-step"><span aria-hidden="true">👣</span> <span data-i18n="btn_step">1 அடி</span></button>
           <button type="button" class="btn btn-primary" id="btn-episode" aria-pressed="false"><span aria-hidden="true" id="ep-ico">▶</span> <span id="ep-txt"></span></button>
           <button type="button" class="btn" id="btn-fast100"><span aria-hidden="true">⏩</span> <span id="fast100-txt"></span></button>
           <button type="button" class="btn" id="btn-fast1000"><span aria-hidden="true">⏩</span> <span id="fast1000-txt"></span></button>
         </div>
         <div class="ql-ctrl no-print">
           <button type="button" class="btn btn-accent" id="btn-play" aria-pressed="false"><span aria-hidden="true" id="play-ico">🏁</span> <span id="play-txt"></span></button>
-          <button type="button" class="btn btn-danger" id="btn-reset"><span aria-hidden="true">↺</span> <span data-i18n="btn_reset"></span></button>
+          <button type="button" class="btn btn-danger" id="btn-reset"><span aria-hidden="true">↺</span> <span data-i18n="btn_reset">கற்றதை மீட்டமை</span></button>
         </div>
         <div class="ql-ctrl2 no-print">
-          <span class="lbl" id="speed-lbl" data-i18n="speed"></span>
+          <span class="lbl" id="speed-lbl" data-i18n="speed">வேகம்</span>
           <div class="seg" id="speed" role="group" aria-labelledby="speed-lbl">
-            <button type="button" data-speed="slow" data-i18n="speed_slow"></button>
-            <button type="button" data-speed="normal" data-i18n="speed_normal"></button>
-            <button type="button" data-speed="fast" data-i18n="speed_fast"></button>
+            <button type="button" data-speed="slow" data-i18n="speed_slow">மெதுவாக</button>
+            <button type="button" data-speed="normal" data-i18n="speed_normal">சாதாரணம்</button>
+            <button type="button" data-speed="fast" data-i18n="speed_fast">வேகமாக</button>
           </div>
           <div class="push">
             <button type="button" class="btn btn-sm" id="fs-btn"><span aria-hidden="true">⛶</span> <span data-i18n="fullscreen"></span></button>
@@ -224,68 +224,68 @@
       <!-- ============ side panel ============ -->
       <aside class="ql-side">
         <section class="card stack" aria-labelledby="world-h">
-          <h2 id="world-h" data-i18n="world_title"></h2>
+          <h2 id="world-h" data-i18n="world_title">உலகம்</h2>
           <div>
-            <p class="sub-lbl" id="pre-lbl" data-i18n="preset_label"></p>
+            <p class="sub-lbl" id="pre-lbl" data-i18n="preset_label">தயாரான உலகங்கள்</p>
             <div class="pre-grid" role="group" aria-labelledby="pre-lbl">
-              <button type="button" class="pre-btn" id="preset-simple" data-preset="simple"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_simple"></span></button>
-              <button type="button" class="pre-btn" id="preset-maze" data-preset="maze"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_maze"></span></button>
-              <button type="button" class="pre-btn" id="preset-cliff" data-preset="cliff"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_cliff"></span></button>
-              <button type="button" class="pre-btn" id="preset-empty" data-preset="empty"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_empty"></span></button>
+              <button type="button" class="pre-btn" id="preset-simple" data-preset="simple"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_simple">எளிது</span></button>
+              <button type="button" class="pre-btn" id="preset-maze" data-preset="maze"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_maze">புதிர்ப் பாதை</span></button>
+              <button type="button" class="pre-btn" id="preset-cliff" data-preset="cliff"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_cliff">பள்ளத்தின் விளிம்பு</span></button>
+              <button type="button" class="pre-btn" id="preset-empty" data-preset="empty"><canvas width="98" height="98" aria-hidden="true"></canvas><span data-i18n="preset_empty">திறந்த மைதானம்</span></button>
             </div>
             <p class="hint" id="preset-hint"></p>
           </div>
           <div>
-            <p class="sub-lbl" id="tool-lbl" data-i18n="tool_label"></p>
+            <p class="sub-lbl" id="tool-lbl" data-i18n="tool_label">கட்டத்தைத் தட்டினால்</p>
             <div class="seg full" id="tools" role="group" aria-labelledby="tool-lbl">
-              <button type="button" id="tool-cycle" data-tool="cycle"><span aria-hidden="true">🧱</span> <span data-i18n="tool_cycle"></span></button>
-              <button type="button" id="tool-start" data-tool="start"><span aria-hidden="true">🤖</span> <span data-i18n="tool_start"></span></button>
-              <button type="button" id="tool-look" data-tool="look"><span aria-hidden="true">🔍</span> <span data-i18n="tool_look"></span></button>
+              <button type="button" id="tool-cycle" data-tool="cycle"><span aria-hidden="true">🧱</span> <span data-i18n="tool_cycle">மாற்று</span></button>
+              <button type="button" id="tool-start" data-tool="start"><span aria-hidden="true">🤖</span> <span data-i18n="tool_start">தொடக்கத்தை நகர்த்து</span></button>
+              <button type="button" id="tool-look" data-tool="look"><span aria-hidden="true">🔍</span> <span data-i18n="tool_look">உள்ளே பார்</span></button>
             </div>
             <p class="hint" id="tool-hint"></p>
           </div>
           <ul class="legend">
-            <li><canvas width="52" height="52" data-ico="robot" aria-hidden="true"></canvas><span data-i18n="legend_robot"></span></li>
-            <li><canvas width="52" height="52" data-ico="goal" aria-hidden="true"></canvas><span data-i18n="legend_goal"></span></li>
-            <li><canvas width="52" height="52" data-ico="pit" aria-hidden="true"></canvas><span data-i18n="legend_pit"></span></li>
-            <li><canvas width="52" height="52" data-ico="wall" aria-hidden="true"></canvas><span data-i18n="legend_wall"></span></li>
-            <li><canvas width="52" height="52" data-ico="start" aria-hidden="true"></canvas><span data-i18n="legend_start"></span></li>
+            <li><canvas width="52" height="52" data-ico="robot" aria-hidden="true"></canvas><span data-i18n="legend_robot">ரோபோ (முகவர்)</span></li>
+            <li><canvas width="52" height="52" data-ico="goal" aria-hidden="true"></canvas><span data-i18n="legend_goal">புதையல் +10</span></li>
+            <li><canvas width="52" height="52" data-ico="pit" aria-hidden="true"></canvas><span data-i18n="legend_pit">குழி −10</span></li>
+            <li><canvas width="52" height="52" data-ico="wall" aria-hidden="true"></canvas><span data-i18n="legend_wall">சுவர்</span></li>
+            <li><canvas width="52" height="52" data-ico="start" aria-hidden="true"></canvas><span data-i18n="legend_start">தொடக்கம்</span></li>
           </ul>
         </section>
 
         <section class="card stack" aria-labelledby="set-h">
-          <h2 id="set-h" data-i18n="settings_title"></h2>
+          <h2 id="set-h" data-i18n="settings_title">கற்றல் அமைப்புகள்</h2>
           <div class="slider">
-            <div class="top"><label for="sl-alpha" data-i18n="alpha_label"></label><output id="out-alpha" for="sl-alpha"></output></div>
+            <div class="top"><label for="sl-alpha" data-i18n="alpha_label">கற்றல் வீதம் α</label><output id="out-alpha" for="sl-alpha"></output></div>
             <input type="range" id="sl-alpha" min="0.01" max="1" step="0.01">
-            <p class="hint" data-i18n="alpha_hint"></p>
+            <p class="hint" data-i18n="alpha_hint">ஒரு புதிய அனுபவம் பழைய ஊகத்தை எவ்வளவு மாற்றுகிறது. 1 = புதியதை மட்டும் நம்பு, சிறியது = மெதுவாகக் கற்றல்.</p>
           </div>
           <div class="slider">
-            <div class="top"><label for="sl-gamma" data-i18n="gamma_label"></label><output id="out-gamma" for="sl-gamma"></output></div>
+            <div class="top"><label for="sl-gamma" data-i18n="gamma_label">தள்ளுபடி γ</label><output id="out-gamma" for="sl-gamma"></output></div>
             <input type="range" id="sl-gamma" min="0" max="0.99" step="0.01">
-            <p class="hint" data-i18n="gamma_hint"></p>
+            <p class="hint" data-i18n="gamma_hint">எதிர்கால வெகுமதிகள் எவ்வளவு முக்கியம். 1-க்கு அருகில் = தொலைநோக்குத் திட்டம், 0 = அடுத்த வெகுமதி மட்டும்.</p>
           </div>
           <div class="slider">
-            <div class="top"><label for="sl-eps" data-i18n="eps_label"></label><output id="out-eps" for="sl-eps"></output></div>
+            <div class="top"><label for="sl-eps" data-i18n="eps_label">ஆராய்தல் ε</label><output id="out-eps" for="sl-eps"></output></div>
             <input type="range" id="sl-eps" min="0" max="1" step="0.01">
-            <p class="hint" data-i18n="eps_hint"></p>
-            <label class="check"><input type="checkbox" id="chk-decay"> <span data-i18n="decay_label"></span></label>
+            <p class="hint" data-i18n="eps_hint">தற்செயல் நகர்வுக்கான வாய்ப்பு. தற்செயல் நகர்வுகள் புதிய வழிகளைக் கண்டுபிடிக்கும்; சிறந்த நகர்வுகள் தெரிந்ததைப் பயன்படுத்தும்.</p>
+            <label class="check"><input type="checkbox" id="chk-decay"> <span data-i18n="decay_label">நேரம் செல்லச் செல்லக் குறைவாக ஆராய் (ஒவ்வொரு சுற்றுக்குப் பின் ε × 0.99)</span></label>
           </div>
           <div class="slider">
-            <div class="top"><label for="sl-cost" data-i18n="cost_label"></label><output id="out-cost" for="sl-cost"></output></div>
+            <div class="top"><label for="sl-cost" data-i18n="cost_label">ஒவ்வொரு அடிக்கும் தண்டனை</label><output id="out-cost" for="sl-cost"></output></div>
             <input type="range" id="sl-cost" min="0" max="2" step="0.05">
-            <p class="hint" data-i18n="cost_hint"></p>
+            <p class="hint" data-i18n="cost_hint">ஒவ்வொரு சாதாரண அடிக்கும் இந்த வெகுமதி (சிறிய கழித்தல்) கிடைக்கும். இதனால் ரோபோ விரைகிறது.</p>
           </div>
-          <div><button type="button" class="btn btn-sm" id="btn-defaults"><span aria-hidden="true">⚙</span> <span data-i18n="defaults_btn"></span></button></div>
+          <div><button type="button" class="btn btn-sm" id="btn-defaults"><span aria-hidden="true">⚙</span> <span data-i18n="defaults_btn">இயல்பு அமைப்புகள்</span></button></div>
         </section>
 
         <section class="card stack" aria-labelledby="view-h">
-          <h2 id="view-h" data-i18n="view_title"></h2>
+          <h2 id="view-h" data-i18n="view_title">பலகையில் காட்டு</h2>
           <div class="checks">
-            <label class="check"><input type="checkbox" id="v-heat"> <span data-i18n="view_heat"></span></label>
-            <label class="check"><input type="checkbox" id="v-arrows"> <span data-i18n="view_arrows"></span></label>
-            <label class="check"><input type="checkbox" id="v-q"> <span data-i18n="view_q"></span></label>
-            <label class="check"><input type="checkbox" id="v-nums"> <span data-i18n="view_nums"></span></label>
+            <label class="check"><input type="checkbox" id="v-heat"> <span data-i18n="view_heat">மதிப்பு நிறங்கள் (பச்சை = நல்லது, சிவப்பு = கெட்டது)</span></label>
+            <label class="check"><input type="checkbox" id="v-arrows"> <span data-i18n="view_arrows">சிறந்த நகர்வு அம்புகள்</span></label>
+            <label class="check"><input type="checkbox" id="v-q"> <span data-i18n="view_q">நான்கு Q-மதிப்புகளும் (முக்கோணங்கள்)</span></label>
+            <label class="check"><input type="checkbox" id="v-nums"> <span data-i18n="view_nums">எண்கள்</span></label>
           </div>
         </section>
       </aside>
@@ -294,56 +294,56 @@
     <!-- ============ results ============ -->
     <div class="grid-2 ql-results">
       <section class="card stack" aria-labelledby="chart-h">
-        <h2 id="chart-h" data-i18n="chart_title"></h2>
+        <h2 id="chart-h" data-i18n="chart_title">ஒவ்வொரு சுற்றின் மொத்த வெகுமதி</h2>
         <canvas id="chart" role="img" data-i18n-aria-label="chart_title"></canvas>
         <div class="chart-legend" id="chart-legend">
-          <span><i class="thin" id="lg-raw"></i><span data-i18n="chart_raw"></span></span>
-          <span><i id="lg-avg"></i><span data-i18n="chart_avg"></span></span>
-          <span><i class="dash" id="lg-best"></i><span data-i18n="chart_best"></span></span>
+          <span><i class="thin" id="lg-raw"></i><span data-i18n="chart_raw">ஒவ்வொரு சுற்றும்</span></span>
+          <span><i id="lg-avg"></i><span data-i18n="chart_avg">கடைசி 20-இன் சராசரி</span></span>
+          <span><i class="dash" id="lg-best"></i><span data-i18n="chart_best">சிறந்த சாத்தியம்</span></span>
         </div>
-        <p class="small muted mb0" data-i18n="chart_note"></p>
+        <p class="small muted mb0" data-i18n="chart_note">முதலில் கோடு தாழ்வாகவும் ஏற்ற இறக்கமாகவும் இருக்கும்: ரோபோ ஆராய்கிறது, குழிகளில் விழுகிறது. அது கற்கக் கற்கக் கோடு சிறந்த சாத்தியமான வெகுமதியை நோக்கி ஏறுகிறது.</p>
       </section>
 
       <section class="card stack" id="brain-card" aria-labelledby="brain-h">
-        <h2 id="brain-h" data-i18n="brain_title"></h2>
+        <h2 id="brain-h" data-i18n="brain_title">ரோபோவின் மூளைக்குள்</h2>
         <p class="mb0" id="brain-cell"></p>
         <div class="compass" id="compass" aria-live="polite"></div>
         <p class="small mb0" id="brain-note"></p>
-        <h3 data-i18n="upd_title"></h3>
-        <p class="small rule mb0" data-i18n="upd_rule"></p>
+        <h3 data-i18n="upd_title">கடைசி புதுப்பிப்பு: Q-லேர்னிங் விதி</h3>
+        <p class="small rule mb0" data-i18n="upd_rule">புதிய Q = பழைய Q + α × (வெகுமதி + γ × அடுத்த கட்டத்தின் சிறந்த Q − பழைய Q)</p>
         <div id="upd-box" aria-live="polite"></div>
       </section>
     </div>
 
     <!-- ============ learn ============ -->
     <section class="card stack page-sec" aria-labelledby="learn-h">
-      <h2 id="learn-h" data-i18n="learn_title"></h2>
+      <h2 id="learn-h" data-i18n="learn_title">உள்ளே என்ன நடக்கிறது?</h2>
       <div class="learn-grid">
-        <div class="learn-box"><h3><span aria-hidden="true">🤖</span> <span data-i18n="l1_t"></span></h3><p data-i18n="l1"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🗺️</span> <span data-i18n="l2_t"></span></h3><p data-i18n="l2"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">📍</span> <span data-i18n="l3_t"></span></h3><p data-i18n="l3"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🕹️</span> <span data-i18n="l4_t"></span></h3><p data-i18n="l4"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🎁</span> <span data-i18n="l5_t"></span></h3><p data-i18n="l5"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🧮</span> <span data-i18n="l6_t"></span></h3><p data-i18n="l6"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">⚖️</span> <span data-i18n="l7_t"></span></h3><p data-i18n="l7"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🎚️</span> <span data-i18n="l8_t"></span></h3><p data-i18n="l8"></p></div>
-        <div class="learn-box"><h3><span aria-hidden="true">🌍</span> <span data-i18n="l9_t"></span></h3><p data-i18n="l9"></p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🤖</span> <span data-i18n="l1_t">முகவர் (ஏஜென்ட்)</span></h3><p data-i18n="l1">முடிவெடுக்கும் கற்பவர். இங்கே அது ரோபோ. வீடியோ கேமில் அது கணினி விளையாட்டு வீரராக இருக்கும்.</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🗺️</span> <span data-i18n="l2_t">சூழல்</span></h3><p data-i18n="l2">முகவரைச் சுற்றியுள்ள எல்லாம்: சுவர்கள், குழிகள், புதையல் கொண்ட 7 × 7 கட்டம். ஒவ்வொரு நகர்வுக்குப் பின்னும் ரோபோ இப்போது எங்கே இருக்கிறது, எவ்வளவு வெகுமதி பெற்றது என்று இது சொல்கிறது.</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">📍</span> <span data-i18n="l3_t">நிலை (ஸ்டேட்)</span></h3><p data-i18n="l3">இப்போதைய சூழ்நிலை. இங்கே நிலை என்பது ரோபோவின் கட்டம் மட்டுமே, அதனால் 49 நிலைகள்.</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🕹️</span> <span data-i18n="l4_t">செயல் (ஆக்ஷன்)</span></h3><p data-i18n="l4">முகவர் தேர்ந்தெடுக்கக்கூடியது: மேலே, வலது, கீழே அல்லது இடது. சுவர் அல்லது ஓரத்தை நோக்கிச் சென்றால் ரோபோ அதே இடத்தில் இருக்கும்.</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🎁</span> <span data-i18n="l5_t">வெகுமதி</span></h3><p data-i18n="l5">நல்லதா கெட்டதா என்று சொல்லும் ஓர் எண்: புதையலுக்கு +10, குழிக்கு −10, ஒவ்வொரு அடிக்கும் சிறிய கழித்தல். யாரும் ரோபோவுக்கு வழி சொல்வதில்லை. அதற்கு வெகுமதிகள் மட்டுமே கிடைக்கும்.</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🧮</span> <span data-i18n="l6_t">Q-மதிப்பும் Q-அட்டவணையும்</span></h3><p data-i18n="l6">Q(நிலை, செயல்) என்பது அங்கே அந்தச் செயலைச் செய்தால் எதிர்காலத்தில் மொத்தம் எவ்வளவு வெகுமதி கிடைக்கும் என்ற ரோபோவின் ஊகம். 49 × 4 ஊகங்களும் சேர்ந்ததே Q-அட்டவணை. ஒவ்வொரு அடிக்குப் பின்னும் Q-லேர்னிங் விதியால் ஓர் ஊகம் மேம்படுகிறது.</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">⚖️</span> <span data-i18n="l7_t">ஆராய்வதா, பயன்படுத்துவதா?</span></h3><p data-i18n="l7">பயன்படுத்துதல் = தெரிந்த சிறந்த நகர்வையே செய். ஆராய்தல் = தற்செயலாக ஏதாவது முயற்சி செய், ஒருவேளை இன்னும் நல்லது கிடைக்கலாம். கேன்டீனில் எப்போதும் பிடித்த சமோசா வாங்குவது, அல்லது புதிய உணவை ருசிப்பது போல. ரோபோ எத்தனை முறை ஆராய வேண்டும் என்பதை ε தீர்மானிக்கிறது.</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🎚️</span> <span data-i18n="l8_t">α மற்றும் γ</span></h3><p data-i18n="l8">α (கற்றல் வீதம்) ஊகங்கள் எவ்வளவு வேகமாக மாறுகின்றன என்று சொல்கிறது. γ (தள்ளுபடி) எதிர்காலம் எவ்வளவு முக்கியம் என்று சொல்கிறது: இன்றைய ₹100, அடுத்த ஆண்டு தருவதாகச் சொன்ன ₹100-ஐ விட மதிப்புள்ளது; அருகிலுள்ள புதையல் தொலைவில் உள்ளதை விடச் சிறந்தது.</p></div>
+        <div class="learn-box"><h3><span aria-hidden="true">🌍</span> <span data-i18n="l9_t">விளையாட்டுகளும் ரோபோக்களும் எப்படிக் கற்கின்றன</span></h3><p data-i18n="l9">AlphaGo ஓரளவு தன்னுடனேயே லட்சக்கணக்கான ஆட்டங்கள் ஆடி Go விளையாட்டைக் கற்றது, 2016-இல் உலகின் சிறந்த வீரர்களில் ஒருவரான லீ செடோலை வென்றது. ரோபோக்கள் சிமுலேஷனில் நடக்கக் கற்கின்றன, சாட்பாட்கள் மனிதர்களின் கருத்தால் மேம்படுத்தப்படுகின்றன (RLHF). பெரிய பிரச்சனைகளில் நிலைகள் மிக அதிகம், அட்டவணை போதாது, அதனால் ஒரு நியூரல் நெட்வொர்க் ஊகிக்கிறது (Deep Q-Network).</p></div>
       </div>
     </section>
 
     <!-- ============ by hand ============ -->
     <section class="card stack page-sec" id="calc" aria-labelledby="calc-h">
-      <h2 id="calc-h" data-i18n="calc_title"></h2>
-      <p class="small mb0" data-i18n="calc_intro"></p>
+      <h2 id="calc-h" data-i18n="calc_title">ஒரு புதுப்பிப்பைக் கையால் செய்து பாருங்கள்</h2>
+      <p class="small mb0" data-i18n="calc_intro">இந்த எண்களுடன் Q-லேர்னிங் விதியைப் பயன்படுத்துங்கள். முதலில் அடைப்புக்குள் உள்ளதைக் கணக்கிடுங்கள், பிறகு புதிய Q.</p>
       <div class="calc-given" id="calc-given"></div>
       <div class="row">
-        <label for="calc-input" data-i18n="calc_ask"></label>
+        <label for="calc-input" data-i18n="calc_ask">புதிய Q =</label>
         <input type="text" id="calc-input" autocomplete="off" spellcheck="false" class="no-print">
         <span class="print-line" aria-hidden="true"></span>
         <span class="row calc-actions">
-          <button type="button" class="btn btn-primary" id="calc-check" data-i18n="calc_check"></button>
-          <button type="button" class="btn" id="calc-show" data-i18n="calc_show"></button>
-          <button type="button" class="btn" id="calc-new"><span aria-hidden="true">🎲</span> <span data-i18n="calc_new"></span></button>
+          <button type="button" class="btn btn-primary" id="calc-check" data-i18n="calc_check">சரிபார்</button>
+          <button type="button" class="btn" id="calc-show" data-i18n="calc_show">விடையைக் காட்டு</button>
+          <button type="button" class="btn" id="calc-new"><span aria-hidden="true">🎲</span> <span data-i18n="calc_new">புதிய எண்கள்</span></button>
         </span>
       </div>
       <div class="calc-fb" id="calc-fb" aria-live="polite"></div>
@@ -352,7 +352,7 @@
     <!-- ============ quiz ============ -->
     <section class="card stack page-sec" id="quiz" aria-labelledby="quiz-h">
       <div class="row spread">
-        <h2 id="quiz-h" class="mb0" data-i18n="quiz_title"></h2>
+        <h2 id="quiz-h" class="mb0" data-i18n="quiz_title">சிறு வினாடி வினா</h2>
         <div class="row">
           <span class="badge primary" id="quiz-score" aria-live="polite"></span>
           <button type="button" class="btn btn-sm" id="quiz-again" data-i18n="try_again"></button>
@@ -362,14 +362,14 @@
     </section>
 
     <details class="card help page-sec">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">எப்படிப் பயன்படுத்துவது / வகுப்பறைக்கான யோசனைகள்</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">எளிது உலகத்துடன் தொடங்குங்கள். சில முறை 1 சுற்று அழுத்தி, பச்சை நிறம் புதையலிலிருந்து பின்னோக்கி ஒவ்வொரு கட்டமாகப் பரவுவதைப் பாருங்கள்.</li>
+        <li data-i18n="tip2">1000 சுற்றுகள் அழுத்துங்கள், பிறகு “கற்ற கொள்கையை இயக்கு”. ரோபோ மிகக் குறுகிய வழியை எடுக்கிறதா? வரைபடத்தை “சிறந்த சாத்தியம்” என்ற புள்ளிக்கோட்டுடன் ஒப்பிடுங்கள்.</li>
+        <li data-i18n="tip3">“நான்கு Q-மதிப்புகளும்” என்பதை இயக்கி, “உள்ளே பார்” மூலம் எண்களைப் படியுங்கள். அம்பு எப்போதும் நான்கில் பெரிய மதிப்பை நோக்கியே இருக்கும்.</li>
+        <li data-i18n="tip4">சோதனை: ε = 0 வையுங்கள், “கற்றதை மீட்டமை” அழுத்திப் பயிற்றுவியுங்கள். பிறகு ε = 1 முயலுங்கள். கொஞ்சம் ஆராய்தல் ஏன் தேவை, ஆனால் அதிகம் ஏன் கூடாது?</li>
+        <li data-i18n="tip5">வகுப்புச் செயல்பாடு: கரும்பலகையில் 4 × 4 கட்டம் வரையுங்கள். ஒரு மாணவர் ரோபோவாக இருக்க, வகுப்பு வெகுமதி தரட்டும் (+10, −10, −1). ஒவ்வொரு நகர்வுக்குப் பின்னும் சீட்டுகளில் Q-மதிப்புகளை எழுதி, இந்தச் செயலியுடன் ஒப்பிடுங்கள்.</li>
+        <li data-i18n="tip6">பள்ளத்தின் விளிம்பு: பயிற்சியின்போது ரோபோ அடிக்கடி விழுகிறது (தற்செயல் நகர்வுகள்), ஆனால் கற்ற வழி விளிம்பை ஒட்டியே செல்கிறது. விவாதியுங்கள்: மிகக் குறுகிய வழி எப்போதும் மிகப் பாதுகாப்பானதா?</li>
       </ul>
     </details>
   </main>

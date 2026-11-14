@@ -93,57 +93,57 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">Excel அல்லது Google Sheets இலிருந்து வாடிக்கையாளர் பட்டியலை ஒட்டுங்கள், மொபைல் எண்களைச் சரிசெய்து எந்த போனிலும் நேரடியாக இறக்குமதி ஆகும் VCF கோப்பைப் பதிவிறக்குங்கள், அல்லது Google Contacts CSV உருவாக்குங்கள். VCF ஐ மீண்டும் Excel க்கான CSV ஆகவும் மாற்றலாம்.</p>
     <div class="callout success cv-privacy" role="note">
       <span class="cv-lock" aria-hidden="true">🔒</span>
-      <p data-i18n="privacy"></p>
+      <p data-i18n="privacy">உங்கள் வாடிக்கையாளர் பட்டியல் இந்தச் சாதனத்தை விட்டு வெளியே போகாது: எதுவும் பதிவேற்றப்படாது. இந்தியாவின் DPDP Act 2023 படி வாடிக்கையாளர்களின் தனிப்பட்ட தரவைப் பாதுகாப்பது உங்கள் பொறுப்பு, எனவே இந்தக் கோப்புகளைத் தேவையானவர்களுடன் மட்டும் பகிர்ந்து, வேலை முடிந்ததும் நீக்குங்கள்.</p>
     </div>
 
     <div class="cv-grid">
       <div class="stack cv-left">
         <section class="card stack" aria-labelledby="h-input">
-          <h2 id="h-input" data-i18n="h_input"></h2>
-          <label class="field"><span data-i18n="paste_label"></span>
+          <h2 id="h-input" data-i18n="h_input">1. பட்டியலை ஒட்டவும் அல்லது திறக்கவும்</h2>
+          <label class="field"><span data-i18n="paste_label">Excel, Google Sheets அல்லது எந்த CSV இலிருந்தும் இங்கே ஒட்டுங்கள் (ஒரு வரியில் ஒருவர்)</span>
             <textarea id="paste" class="no-i18n" rows="8" spellcheck="false" dir="auto" data-i18n-placeholder="paste_ph"></textarea>
           </label>
           <div class="row">
-            <button type="button" class="btn" id="open-csv"><span aria-hidden="true">📄</span> <span data-i18n="open_csv"></span></button>
-            <button type="button" class="btn" id="open-vcf"><span aria-hidden="true">👤</span> <span data-i18n="open_vcf"></span></button>
-            <button type="button" class="btn" id="load-example" data-i18n="load_example"></button>
+            <button type="button" class="btn" id="open-csv"><span aria-hidden="true">📄</span> <span data-i18n="open_csv">CSV / TXT கோப்பைத் திற</span></button>
+            <button type="button" class="btn" id="open-vcf"><span aria-hidden="true">👤</span> <span data-i18n="open_vcf">VCF கோப்பைத் திற</span></button>
+            <button type="button" class="btn" id="load-example" data-i18n="load_example">உதாரணம் நிரப்பு</button>
             <button type="button" class="btn btn-ghost" id="clear" data-i18n="clear"></button>
           </div>
-          <div class="callout accent small" id="example-note" hidden><span data-i18n="example_note"></span></div>
-          <div class="callout small row" id="vcf-note" hidden><span id="vcf-note-txt"></span> <button type="button" class="btn btn-sm" id="dl-vcf-csv" data-i18n="dl_vcf_csv"></button></div>
-          <p class="muted small mb0" data-i18n="excel_tip"></p>
+          <div class="callout accent small" id="example-note" hidden><span data-i18n="example_note">இது கற்பனை எண்கள் கொண்ட உதாரணம். இதற்குப் பதில் உங்கள் பட்டியலை ஒட்டுங்கள்.</span></div>
+          <div class="callout small row" id="vcf-note" hidden><span id="vcf-note-txt"></span> <button type="button" class="btn btn-sm" id="dl-vcf-csv" data-i18n="dl_vcf_csv">இவற்றை CSV ஆகப் பதிவிறக்கு</button></div>
+          <p class="muted small mb0" data-i18n="excel_tip">குறிப்பு: Excel அல்லது Google Sheets இல் தலைப்பு வரியுடன் நெடுவரிசைகளைத் தேர்ந்தெடுத்து, நகலெடுத்து இங்கே ஒட்டுங்கள். எண் 9.87654E+09 போலத் தெரிந்தால், முதலில் அந்த நெடுவரிசையை Text ஆக வடிவமைத்து மீண்டும் நகலெடுங்கள்.</p>
         </section>
 
         <section class="card stack" aria-labelledby="h-map" id="map-card" hidden>
-          <h2 id="h-map" data-i18n="h_map"></h2>
-          <p class="muted small mb0" data-i18n="map_hint"></p>
-          <label class="check"><input type="checkbox" id="has-header"> <span data-i18n="has_header"></span></label>
+          <h2 id="h-map" data-i18n="h_map">2. எந்த நெடுவரிசை எது?</h2>
+          <p class="muted small mb0" data-i18n="map_hint">உங்கள் தரவைப் பார்த்து ஊகிக்கப்பட்டது. தவறு என்றால் பெட்டியை மாற்றுங்கள்.</p>
+          <label class="check"><input type="checkbox" id="has-header"> <span data-i18n="has_header">முதல் வரி தலைப்பு</span></label>
           <div class="cv-map" id="map"></div>
         </section>
 
         <section class="card stack" aria-labelledby="h-clean">
-          <h2 id="h-clean" data-i18n="h_clean"></h2>
+          <h2 id="h-clean" data-i18n="h_clean">3. சுத்தம் செய்யும் விருப்பங்கள்</h2>
           <div class="cv-opts">
-            <label class="field cv-cc"><span data-i18n="cc_label"></span><input type="text" id="cc" class="no-i18n" inputmode="numeric" maxlength="4" autocomplete="off"><span class="hint tiny" data-i18n="cc_hint"></span></label>
-            <label class="check"><input type="checkbox" id="opt-title"> <span data-i18n="opt_title"></span></label>
-            <label class="check"><input type="checkbox" id="opt-dedupe"> <span data-i18n="opt_dedupe"></span></label>
-            <label class="check"><input type="checkbox" id="opt-landline"> <span data-i18n="opt_landline"></span></label>
-            <label class="check"><input type="checkbox" id="opt-intl"> <span data-i18n="opt_intl"></span></label>
+            <label class="field cv-cc"><span data-i18n="cc_label">நாட்டுக் குறியீடு இல்லாத எண்களுக்கான குறியீடு</span><input type="text" id="cc" class="no-i18n" inputmode="numeric" maxlength="4" autocomplete="off"><span class="hint tiny" data-i18n="cc_hint">இந்தியா 91 · UAE 971 · நேபாளம் 977 · வங்கதேசம் 880 · இலங்கை 94</span></label>
+            <label class="check"><input type="checkbox" id="opt-title"> <span data-i18n="opt_title">பெயர்களின் பெரிய-சிறிய எழுத்துகளைச் சரிசெய் (ramesh KUMAR → Ramesh Kumar)</span></label>
+            <label class="check"><input type="checkbox" id="opt-dedupe"> <span data-i18n="opt_dedupe">ஒரே எண்ணின் நகல் வரிகளை ஒரு தொடர்பாக இணை</span></label>
+            <label class="check"><input type="checkbox" id="opt-landline"> <span data-i18n="opt_landline">லேண்ட்லைன் எண்களை வைத்திரு (⚠ குறியுடன்)</span></label>
+            <label class="check"><input type="checkbox" id="opt-intl"> <span data-i18n="opt_intl">வெளிநாட்டு எண்களை வைத்திரு (🌐 குறியுடன்)</span></label>
           </div>
           <div class="grid-2">
-            <label class="field"><span data-i18n="prefix_label"></span><input type="text" id="prefix" class="no-i18n" maxlength="30" data-i18n-placeholder="prefix_ph"></label>
-            <label class="field"><span data-i18n="suffix_label"></span><input type="text" id="suffix" class="no-i18n" maxlength="30" data-i18n-placeholder="suffix_ph"></label>
+            <label class="field"><span data-i18n="prefix_label">ஒவ்வொரு பெயருக்கும் முன் சேர்</span><input type="text" id="prefix" class="no-i18n" maxlength="30" data-i18n-placeholder="prefix_ph"></label>
+            <label class="field"><span data-i18n="suffix_label">ஒவ்வொரு பெயருக்கும் பின் சேர்</span><input type="text" id="suffix" class="no-i18n" maxlength="30" data-i18n-placeholder="suffix_ph"></label>
           </div>
-          <p class="muted small mb0" data-i18n="prefix_hint"></p>
+          <p class="muted small mb0" data-i18n="prefix_hint">“Cust -” போன்ற முன்னொட்டு இந்தத் தொடர்புகளை போனில் ஒன்றாக வைக்கும், அதனால் WhatsApp ஒளிபரப்புப் பட்டியலுக்குத் தேர்வு செய்வது எளிது.</p>
         </section>
       </div>
 
       <div class="stack">
         <section class="card stack" aria-labelledby="h-result">
-          <h2 id="h-result" data-i18n="h_result"></h2>
+          <h2 id="h-result" data-i18n="h_result">4. முடிவைச் சரிபாருங்கள்</h2>
           <div class="cv-tiles" id="stats" aria-live="polite"></div>
           <div class="cv-prog" id="prog" hidden><div class="progress"><span id="prog-bar" style="width:0%"></span></div><span class="small muted" id="prog-txt"></span></div>
           <div class="row spread">
@@ -156,39 +156,39 @@
         </section>
 
         <section class="card stack cv-export" aria-labelledby="h-export">
-          <h2 id="h-export" data-i18n="h_export"></h2>
-          <label class="field cv-file"><span data-i18n="file_label"></span><input type="text" id="fname" class="no-i18n" maxlength="40"></label>
+          <h2 id="h-export" data-i18n="h_export">5. பதிவிறக்கம்</h2>
+          <label class="field cv-file"><span data-i18n="file_label">கோப்பின் பெயர்</span><input type="text" id="fname" class="no-i18n" maxlength="40"></label>
           <div class="row">
-            <button type="button" class="btn btn-primary btn-lg" id="dl-vcf"><span aria-hidden="true">⬇</span> <span data-i18n="dl_vcf"></span> <span class="badge cv-count" id="vcf-count">0</span></button>
-            <button type="button" class="btn" id="dl-csv"><span aria-hidden="true">📊</span> <span data-i18n="dl_csv"></span></button>
-            <button type="button" class="btn" id="dl-google"><span aria-hidden="true">👥</span> <span data-i18n="dl_google"></span></button>
-            <button type="button" class="btn" id="copy-numbers"><span aria-hidden="true">📋</span> <span data-i18n="copy_numbers"></span></button>
+            <button type="button" class="btn btn-primary btn-lg" id="dl-vcf"><span aria-hidden="true">⬇</span> <span data-i18n="dl_vcf">VCF பதிவிறக்கு (அனைத்துத் தொடர்புகளும்)</span> <span class="badge cv-count" id="vcf-count">0</span></button>
+            <button type="button" class="btn" id="dl-csv"><span aria-hidden="true">📊</span> <span data-i18n="dl_csv">சுத்தமான CSV</span></button>
+            <button type="button" class="btn" id="dl-google"><span aria-hidden="true">👥</span> <span data-i18n="dl_google">Google Contacts CSV</span></button>
+            <button type="button" class="btn" id="copy-numbers"><span aria-hidden="true">📋</span> <span data-i18n="copy_numbers">அனைத்து எண்களையும் நகலெடு</span></button>
           </div>
           <div class="panel stack">
             <div class="cv-split">
-              <label for="split-n" data-i18n="split_label"></label>
+              <label for="split-n" data-i18n="split_label">இத்தனை பேர் கொண்ட கோப்புகளாகப் பிரி</label>
               <input type="number" id="split-n" class="no-i18n" min="1" max="100000" step="1" inputmode="numeric">
-              <button type="button" class="btn" id="dl-zip"><span aria-hidden="true">🗜</span> <span data-i18n="dl_parts_zip"></span></button>
+              <button type="button" class="btn" id="dl-zip"><span aria-hidden="true">🗜</span> <span data-i18n="dl_parts_zip">அனைத்துப் பகுதிகளையும் பதிவிறக்கு (ZIP)</span></button>
             </div>
-            <p class="muted small mb0" data-i18n="split_hint"></p>
+            <p class="muted small mb0" data-i18n="split_hint">WhatsApp ஒளிபரப்புப் பட்டியலில் அதிகபட்சம் 256 பேர் இருக்கலாம் (அக்டோபர் 2026 இல் சரிபார்த்தது), அதனால் 256 கோப்பு = ஒரு கோப்புக்கு ஒரு பட்டியல்.</p>
             <p class="small mb0" id="parts-summary"></p>
             <div class="cv-parts" id="parts"></div>
           </div>
-          <p class="muted small mb0" data-i18n="import_tip"></p>
-          <details class="cv-preview"><summary data-i18n="preview_title"></summary><pre class="no-i18n" id="preview" dir="ltr"></pre></details>
+          <p class="muted small mb0" data-i18n="import_tip">போனில்: .vcf கோப்பை WhatsApp அல்லது மின்னஞ்சலில் உங்களுக்கே அனுப்பி, திறந்து “Import contacts” தேர்ந்தெடுங்கள். கணினியில்: contacts.google.com → Import → CSV தேர்ந்தெடுங்கள்.</p>
+          <details class="cv-preview"><summary data-i18n="preview_title">VCF கோப்பின் முன்னோட்டம் (முதல் 3 தொடர்புகள்)</summary><pre class="no-i18n" id="preview" dir="ltr"></pre></details>
         </section>
       </div>
     </div>
 
     <details class="card cv-help" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">பயன்படுத்துவது எப்படி &amp; யோசனைகள்</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">Excel அல்லது Google Sheets: பெயர், மொபைல் நெடுவரிசைகளைத் தலைப்பு வரியுடன் தேர்ந்தெடுத்து, நகலெடுத்து, பெட்டி 1 இல் ஒட்டுங்கள். நெடுவரிசைகள் தானாகப் பொருந்தும்.</li>
+        <li data-i18n="help_2">098765-43210, +91 98765 43210 அல்லது 9876543210 எல்லாம் +919876543210 ஆகும். ஒரு செல்லில் இரண்டு எண்கள் (98765 43210 / 91234 56789) ஒரே தொடர்பின் இரண்டு எண்களாகும்.</li>
+        <li data-i18n="help_3">WhatsApp ஒளிபரப்பு: “Diwali -” போன்ற முன்னொட்டைச் சேர்த்து, VCF ஐ 256 பகுதிகளாகப் பதிவிறக்கி போனில் இறக்குமதி செய்யுங்கள், பிறகு ஒளிபரப்புப் பட்டியலில் “Diwali -” என்று தொடங்கும் அனைவரையும் தேர்ந்தெடுங்கள்.</li>
+        <li data-i18n="help_4">Google Contacts: Google Contacts CSV ஐப் பதிவிறக்கி contacts.google.com இல் இறக்குமதி செய்யுங்கள். குழுப் பெயர் அங்கே லேபிள் ஆகும்.</li>
+        <li data-i18n="help_5">VCF இலிருந்து Excel: போனிலிருந்து எடுத்த .vcf ஐத் திறந்து, சுத்தமான CSV ஐப் பதிவிறக்கி Excel இல் திறங்கள். எண்கள் +91 உடன் உரையாக இருப்பதால் Excel சுருக்காது.</li>
+        <li data-i18n="help_6">முதலில் அனுமதி பெறுங்கள்: DPDP Act 2023 மற்றும் TRAI விதிகளின்படி சம்மதித்த வாடிக்கையாளர்களுக்கு மட்டும் விளம்பரம் அனுப்புங்கள், நிறுத்தச் சொல்பவர்களைப் பட்டியலிலிருந்து நீக்குங்கள்.</li>
       </ul>
     </details>
   </main>

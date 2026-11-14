@@ -136,30 +136,30 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <div class="ss-privacy callout success small"><span class="ic" aria-hidden="true">🔒</span><p data-i18n="privacy"></p></div>
+    <p class="edu-intro" data-i18n="intro">નોંધો, કોઈ પાઠ, સમાચાર લેખ કે ઑફિસનો પરિપત્ર પેસ્ટ કરો અથવા PDF ખોલો, અને થોડી જ સેકન્ડમાં મુખ્ય મુદ્દા, કીવર્ડ અને સૌથી મહત્ત્વનાં વાક્યો મેળવો.</p>
+    <div class="ss-privacy callout success small"><span class="ic" aria-hidden="true">🔒</span><p data-i18n="privacy">તમારું લખાણ ક્યાંય અપલોડ થતું નથી. સારાંશ આ જ ડિવાઇસ પર બને છે અને ઇન્ટરનેટ વગર પણ ચાલે છે. ફક્ત PDF ખોલવા માટે પહેલી વાર ઇન્ટરનેટ જોઈએ.</p></div>
 
     <h1 class="print-only" id="printTitle"></h1>
     <div class="ss-layout">
       <section class="card stack" id="inCard" aria-labelledby="inH">
         <div class="ss-head">
-          <h2 id="inH" data-i18n="input_h"></h2>
+          <h2 id="inH" data-i18n="input_h">તમારું લખાણ</h2>
           <span class="muted small" id="inStats" aria-live="polite"></span>
         </div>
         <div class="ss-tools">
-          <button class="btn" type="button" id="sampleBtn"><span class="ic" aria-hidden="true">📄</span><span data-i18n="btn_sample"></span></button>
-          <label class="btn" for="fileIn" id="openBtn"><span class="ic" aria-hidden="true">📂</span><span data-i18n="btn_open"></span></label>
+          <button class="btn" type="button" id="sampleBtn"><span class="ic" aria-hidden="true">📄</span><span data-i18n="btn_sample">નમૂનાનું લખાણ</span></button>
+          <label class="btn" for="fileIn" id="openBtn"><span class="ic" aria-hidden="true">📂</span><span data-i18n="btn_open">.txt અથવા PDF ખોલો</span></label>
           <input type="file" id="fileIn" class="sr-only" accept=".txt,.text,.md,.csv,.srt,.vtt,.pdf,text/plain,application/pdf" data-i18n-aria-label="btn_open">
           <button class="btn btn-ghost" type="button" id="clearBtn"><span class="ic" aria-hidden="true">🧹</span><span data-i18n="clear"></span></button>
         </div>
-        <label for="text" class="sr-only" data-i18n="aria_input"></label>
+        <label for="text" class="sr-only" data-i18n="aria_input">સારાંશ માટેનું લખાણ</label>
         <textarea id="text" class="no-i18n" dir="auto" spellcheck="false" data-i18n-placeholder="input_ph"></textarea>
-        <p class="tiny muted ss-hint" data-i18n="drop_hint"></p>
+        <p class="tiny muted ss-hint" data-i18n="drop_hint">ટિપ: .txt કે PDF ફાઇલને આ બૉક્સ પર ખેંચીને પણ મૂકી શકો છો.</p>
         <div id="fileBox" class="callout small ss-file" role="status" hidden>
           <span class="ss-spin" id="fileSpin" aria-hidden="true"></span>
           <span class="msg" id="fileMsg"></span>
           <button class="btn" type="button" id="fileRetry" data-i18n="try_again" hidden></button>
-          <a class="btn" id="fileOcr" href="../../../apps/smart-summarizer/../image-to-text/index.html" data-i18n="link_ocr" hidden></a>
+          <a class="btn" id="fileOcr" href="../../../apps/smart-summarizer/../image-to-text/index.html" data-i18n="link_ocr" hidden>ઇમેજમાંથી ટેક્સ્ટ ઍપ ખોલો</a>
           <div class="progress" id="fileProg" hidden><span id="fileBar"></span></div>
         </div>
       </section>
@@ -167,10 +167,10 @@
       <section class="card stack" id="outCard" aria-labelledby="outH">
         <div class="ss-opts">
           <div class="ss-opt">
-            <span class="lbl" id="lenLbl" data-i18n="len_label"></span>
+            <span class="lbl" id="lenLbl" data-i18n="len_label">લંબાઈ</span>
             <div class="seg" id="modeSeg" role="group" aria-labelledby="lenLbl">
-              <button type="button" data-mode="points" data-i18n="mode_points"></button>
-              <button type="button" data-mode="pct" data-i18n="mode_pct"></button>
+              <button type="button" data-mode="points" data-i18n="mode_points">મુદ્દા</button>
+              <button type="button" data-mode="pct" data-i18n="mode_pct">લખાણના %</button>
             </div>
             <div class="ss-range">
               <input type="range" id="lenRange" min="3" max="10" step="1" value="5" data-i18n-aria-label="len_label">
@@ -178,18 +178,18 @@
             </div>
           </div>
           <div class="ss-opt" id="engRow" hidden>
-            <span class="lbl" id="engLbl" data-i18n="engine_label"></span>
+            <span class="lbl" id="engLbl" data-i18n="engine_label">રીત</span>
             <div class="seg" id="engSeg" role="group" aria-labelledby="engLbl">
-              <button type="button" data-eng="quick" data-i18n="eng_quick"></button>
-              <button type="button" data-eng="chrome" data-i18n="eng_chrome"></button>
+              <button type="button" data-eng="quick" data-i18n="eng_quick">ઝડપી (ઑફલાઇન)</button>
+              <button type="button" data-eng="chrome" data-i18n="eng_chrome">Chrome AI</button>
             </div>
             <div class="ss-ai" id="aiOpts" hidden>
-              <p class="small" data-i18n="eng_chrome_note"></p>
+              <p class="small" data-i18n="eng_chrome_note">Chromeનું ડિવાઇસ પર ચાલતું AI (Gemini Nano): કંઈ જ મોકલાતું નથી. તે નવાં વાક્યો લખે છે અને હમણાં ફક્ત અંગ્રેજી લખાણ માટે ચાલે છે.</p>
               <div class="seg" id="typeSeg" role="group" data-i18n-aria-label="ai_type_label">
-                <button type="button" data-type="key-points" data-i18n="type_points"></button>
-                <button type="button" data-type="tldr" data-i18n="type_tldr"></button>
+                <button type="button" data-type="key-points" data-i18n="type_points">મુખ્ય મુદ્દા</button>
+                <button type="button" data-type="tldr" data-i18n="type_tldr">નાનો ફકરો</button>
               </div>
-              <p class="tiny muted" id="aiFirst" data-i18n="ai_first_dl"></p>
+              <p class="tiny muted" id="aiFirst" data-i18n="ai_first_dl">પહેલી વાર Chrome પોતાનું AI મૉડલ એક વાર ડાઉનલોડ કરે છે. તે મોટું છે, એટલે Wi-Fi સારું.</p>
             </div>
           </div>
           <button class="btn btn-primary btn-lg" type="button" id="goBtn"></button>
@@ -202,14 +202,14 @@
         </div>
 
         <div class="ss-outhead" id="outHead">
-          <h2 id="outH" data-i18n="out_h"></h2>
+          <h2 id="outH" data-i18n="out_h">સારાંશ</h2>
           <span class="badge primary" id="engBadge" hidden></span>
         </div>
         <p class="ss-empty" id="outEmpty"></p>
         <div id="outBody" hidden>
           <div class="tabs" id="outTabs" role="tablist">
-            <button type="button" role="tab" data-tab="points" aria-controls="pane-points" data-i18n="tab_points"></button>
-            <button type="button" role="tab" data-tab="hl" aria-controls="pane-hl" data-i18n="tab_highlight"></button>
+            <button type="button" role="tab" data-tab="points" aria-controls="pane-points" data-i18n="tab_points">મુખ્ય મુદ્દા</button>
+            <button type="button" role="tab" data-tab="hl" aria-controls="pane-hl" data-i18n="tab_highlight">આખા લખાણમાં જુઓ</button>
           </div>
           <div id="pane-points" role="tabpanel">
             <p class="muted small" id="outNote"></p>
@@ -221,13 +221,13 @@
           </div>
           <div class="ss-stats" id="stats" aria-live="polite"></div>
           <div class="ss-kw">
-            <h3 data-i18n="keywords_h"></h3>
+            <h3 data-i18n="keywords_h">કીવર્ડ</h3>
             <div id="kw" class="no-i18n"></div>
           </div>
         </div>
         <div class="ss-actions">
           <button class="btn" type="button" id="copyBtn"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
-          <button class="btn" type="button" id="dlBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="btn_download_txt"></span></button>
+          <button class="btn" type="button" id="dlBtn"><span aria-hidden="true">⬇️</span> <span data-i18n="btn_download_txt">.txt ડાઉનલોડ કરો</span></button>
           <button class="btn" type="button" id="printBtn"><span aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
           <span class="sp"></span>
           <button class="btn btn-danger" type="button" id="resetBtn" data-i18n="reset"></button>
@@ -236,26 +236,26 @@
     </div>
 
     <details class="card">
-      <summary data-i18n="help_h"></summary>
+      <summary data-i18n="help_h">કેવી રીતે વાપરવું / વિચારો</summary>
       <ul>
         <li data-i18n-html="help1"></li>
-        <li data-i18n="help2"></li>
-        <li data-i18n="help3"></li>
-        <li data-i18n="help4"></li>
-        <li data-i18n="help5"></li>
+        <li data-i18n="help2">લંબાઈ પસંદ કરો: મુદ્દાની સંખ્યા (3 થી 10) કે લખાણનો ભાગ (10% થી 60%). મુદ્દા તમારા લખાણના ક્રમમાં જ રહે છે.</li>
+        <li data-i18n="help3">કોઈ મુખ્ય મુદ્દા પર દબાવો, તે આખા લખાણમાં હાઇલાઇટ થઈને દેખાશે, જેથી આગળ-પાછળની વાત પણ વાંચી શકો.</li>
+        <li data-i18n="help4">અભ્યાસ માટે: કોઈ પાઠનો સારાંશ બનાવો, પછી દરેક મુદ્દો પોતાના શબ્દોમાં સમજાવો. વર્ગમાં વિદ્યાર્થીઓ પહેલાં જાતે 5 મુખ્ય વાક્યો પસંદ કરે, પછી ઍપથી ચકાસે.</li>
+        <li data-i18n="help5">કામ માટે: મીટિંગ પહેલાં લાંબા પરિપત્ર, રિપોર્ટ કે નોટિસના મુખ્ય મુદ્દા કાઢો, પછી તેને WhatsAppમાં કૉપી કરો કે .txt ફાઇલ તરીકે ડાઉનલોડ કરો.</li>
       </ul>
     </details>
     <details class="card">
-      <summary data-i18n="inside_h"></summary>
+      <summary data-i18n="inside_h">અંદર શું થાય છે?</summary>
       <ol>
-        <li data-i18n="inside1"></li>
-        <li data-i18n="inside2"></li>
-        <li data-i18n="inside3"></li>
-        <li data-i18n="inside4"></li>
+        <li data-i18n="inside1">પૂર્ણવિરામ, પ્રશ્નચિહ્ન, દંડ (।) અને નવી લાઇન પર લખાણને વાક્યોમાં વહેંચવામાં આવે છે.</li>
+        <li data-i18n="inside2">દરેક વાક્ય તેના મહત્ત્વના શબ્દોની યાદી બને છે. &quot;અને&quot;, &quot;છે&quot;, &quot;નો&quot; જેવા નાના શબ્દો છોડી દેવાય છે. જે શબ્દ થોડાં વાક્યોમાં આવે પણ બધાંમાં નહીં, તેનું વજન વધારે હોય છે (તેને TF-IDF કહે છે).</li>
+        <li data-i18n="inside3">જે વાક્યોમાં સરખા મહત્ત્વના શબ્દો હોય, તે જાળની જેમ જોડાય છે. જે વાક્ય ઘણાં વાક્યો સાથે જોડાયેલું હોય તે &quot;કેન્દ્રીય&quot; છે: આખું લખાણ શેના વિશે છે તે કહે છે. આને TextRank કહે છે, જે PageRank પર આધારિત છે, જે રીતે Google વેબ પાનાંને ક્રમ આપતું.</li>
+        <li data-i18n="inside4">સૌથી કેન્દ્રીય વાક્યો પસંદ થાય છે (લગભગ સરખાં વાક્યો છોડીને) અને મૂળ ક્રમમાં બતાવાય છે. કંઈ ડાઉનલોડ થતું નથી, એટલે તે ઑફલાઇન અને દરેક ભાષામાં ચાલે છે.</li>
       </ol>
       <p class="small" data-i18n-html="inside_gen"></p>
       <p class="small" data-i18n-html="inside_chrome"></p>
-      <p class="small muted" data-i18n="inside_limits"></p>
+      <p class="small muted" data-i18n="inside_limits">મર્યાદા: સારાંશ લખાણ જેટલો જ સારો હોય. યાદીઓ, કોષ્ટકો અને બહુ નાનાં લખાણનો સારાંશ બરાબર બનતો નથી, અને સ્કૅન કરેલી PDFમાં વાંચવા જેવું લખાણ હોતું નથી.</p>
     </details>
   </main>
   <script src="../../../apps/smart-summarizer/../../shared/edu.js"></script>

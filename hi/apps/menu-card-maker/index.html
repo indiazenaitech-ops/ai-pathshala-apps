@@ -199,65 +199,65 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="callout success small privacy no-print"><span class="ic" aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">अपने रेस्टोरेंट, ढाबे, कैफ़े, कैंटीन, टिफ़िन सर्विस या बेकरी के लिए छपा हुआ मेन्यू कार्ड, WhatsApp स्टेटस के लिए मेन्यू इमेज या &quot;मेन्यू के लिए स्कैन करें&quot; पोस्टर बनाएँ, FSSAI वेज/नॉन-वेज चिह्न और UPI स्कैन-पे QR के साथ।</p>
+    <p class="callout success small privacy no-print"><span class="ic" aria-hidden="true">🔒</span> <span data-i18n="privacy">सब कुछ इसी डिवाइस पर रहता है। आपका मेन्यू, लोगो, फ़ोन नंबर और UPI ID कभी अपलोड नहीं होते।</span></p>
 
     <section class="card no-print" style="margin-bottom:16px" aria-labelledby="hMenus">
-      <h2 id="hMenus" data-i18n="h_menus"></h2>
+      <h2 id="hMenus" data-i18n="h_menus">सेव किए मेन्यू</h2>
       <div class="toolbar">
-        <label class="field"><span data-i18n="lbl_menu"></span><select id="menuSel" class="no-i18n"></select></label>
-        <button type="button" class="btn" id="btnNewMenu"><span class="ic" aria-hidden="true">＋</span> <span data-i18n="btn_new_menu"></span></button>
-        <button type="button" class="btn" id="btnRenameMenu" data-i18n="btn_rename_menu"></button>
-        <button type="button" class="btn" id="btnDupMenu" data-i18n="btn_dup_menu"></button>
-        <button type="button" class="btn btn-danger" id="btnDelMenu" data-i18n="btn_del_menu"></button>
+        <label class="field"><span data-i18n="lbl_menu">मेन्यू</span><select id="menuSel" class="no-i18n"></select></label>
+        <button type="button" class="btn" id="btnNewMenu"><span class="ic" aria-hidden="true">＋</span> <span data-i18n="btn_new_menu">नया मेन्यू</span></button>
+        <button type="button" class="btn" id="btnRenameMenu" data-i18n="btn_rename_menu">नाम बदलें</button>
+        <button type="button" class="btn" id="btnDupMenu" data-i18n="btn_dup_menu">कॉपी बनाएँ</button>
+        <button type="button" class="btn btn-danger" id="btnDelMenu" data-i18n="btn_del_menu">मेन्यू हटाएँ</button>
       </div>
       <div class="toolbar" style="margin-top:10px">
-        <button type="button" class="btn" id="btnSample"><span class="ic" aria-hidden="true">🍛</span> <span data-i18n="btn_sample"></span></button>
-        <button type="button" class="btn" id="btnImportCsv"><span class="ic" aria-hidden="true">📥</span> <span data-i18n="btn_import_csv"></span></button>
-        <button type="button" class="btn" id="btnExportCsv"><span class="ic" aria-hidden="true">📤</span> <span data-i18n="btn_export_csv"></span></button>
+        <button type="button" class="btn" id="btnSample"><span class="ic" aria-hidden="true">🍛</span> <span data-i18n="btn_sample">नमूना मेन्यू लोड करें</span></button>
+        <button type="button" class="btn" id="btnImportCsv"><span class="ic" aria-hidden="true">📥</span> <span data-i18n="btn_import_csv">CSV इम्पोर्ट</span></button>
+        <button type="button" class="btn" id="btnExportCsv"><span class="ic" aria-hidden="true">📤</span> <span data-i18n="btn_export_csv">CSV एक्सपोर्ट</span></button>
         <button type="button" class="btn btn-danger" id="btnReset" data-i18n="reset"></button>
       </div>
-      <p class="hint" style="margin:8px 0 0" data-i18n="csv_hint"></p>
+      <p class="hint" style="margin:8px 0 0" data-i18n="csv_hint">CSV कॉलम: name, category, price, veg (veg / non-veg), half price, description। Excel और Google Sheets से CSV सेव किया जा सकता है।</p>
       <p class="msg callout small" id="msg" aria-live="polite" style="margin:8px 0 0"></p>
     </section>
 
     <div class="mc-layout">
       <section class="card no-print" aria-label="Editor">
         <div class="tabs" role="tablist">
-          <button type="button" role="tab" id="tab-details" aria-selected="true" aria-controls="panel-details" data-i18n="tab_details"></button>
-          <button type="button" role="tab" id="tab-items" aria-selected="false" aria-controls="panel-items" data-i18n="tab_items"></button>
-          <button type="button" role="tab" id="tab-design" aria-selected="false" aria-controls="panel-design" data-i18n="tab_design"></button>
+          <button type="button" role="tab" id="tab-details" aria-selected="true" aria-controls="panel-details" data-i18n="tab_details">जानकारी</button>
+          <button type="button" role="tab" id="tab-items" aria-selected="false" aria-controls="panel-items" data-i18n="tab_items">आइटम</button>
+          <button type="button" role="tab" id="tab-design" aria-selected="false" aria-controls="panel-design" data-i18n="tab_design">डिज़ाइन और लेआउट</button>
         </div>
 
         <div class="tabpanel stack" id="panel-details" role="tabpanel" aria-labelledby="tab-details">
-          <label class="field"><span data-i18n="lbl_biz"></span><input id="fBiz" type="text" class="no-i18n" maxlength="60" data-i18n-placeholder="ph_biz"></label>
-          <label class="field"><span data-i18n="lbl_tagline"></span><input id="fTag" type="text" class="no-i18n" maxlength="90" data-i18n-placeholder="ph_tagline"></label>
-          <div class="field"><span data-i18n="lbl_logo"></span>
-            <div class="row"><img id="logoPrev" class="logo-prev" alt="" hidden><button type="button" class="btn" id="btnLogo" data-i18n="btn_logo"></button><button type="button" class="btn btn-ghost" id="btnLogoRm" data-i18n="btn_logo_remove" hidden></button></div>
+          <label class="field"><span data-i18n="lbl_biz">दुकान / रेस्टोरेंट का नाम</span><input id="fBiz" type="text" class="no-i18n" maxlength="60" data-i18n-placeholder="ph_biz"></label>
+          <label class="field"><span data-i18n="lbl_tagline">टैगलाइन</span><input id="fTag" type="text" class="no-i18n" maxlength="90" data-i18n-placeholder="ph_tagline"></label>
+          <div class="field"><span data-i18n="lbl_logo">लोगो</span>
+            <div class="row"><img id="logoPrev" class="logo-prev" alt="" hidden><button type="button" class="btn" id="btnLogo" data-i18n="btn_logo">लोगो इमेज चुनें</button><button type="button" class="btn btn-ghost" id="btnLogoRm" data-i18n="btn_logo_remove" hidden>लोगो हटाएँ</button></div>
           </div>
           <div class="two">
-            <label class="field"><span data-i18n="lbl_phone"></span><input id="fPhone" type="tel" class="no-i18n" dir="ltr" inputmode="tel" maxlength="20" data-i18n-placeholder="ph_phone"></label>
-            <label class="field"><span data-i18n="lbl_fssai"></span><input id="fFssai" type="text" class="no-i18n" dir="ltr" inputmode="numeric" maxlength="14" data-i18n-placeholder="ph_fssai"><span class="hint" data-i18n="fssai_hint"></span><span class="hint" id="fssaiMsg" aria-live="polite"></span></label>
+            <label class="field"><span data-i18n="lbl_phone">फ़ोन / WhatsApp नंबर</span><input id="fPhone" type="tel" class="no-i18n" dir="ltr" inputmode="tel" maxlength="20" data-i18n-placeholder="ph_phone"></label>
+            <label class="field"><span data-i18n="lbl_fssai">FSSAI लाइसेंस नंबर</span><input id="fFssai" type="text" class="no-i18n" dir="ltr" inputmode="numeric" maxlength="14" data-i18n-placeholder="ph_fssai"><span class="hint" data-i18n="fssai_hint">वैकल्पिक। FSSAI खाने के कारोबार से मेन्यू कार्ड पर लाइसेंस नंबर दिखाने को कहता है। इसमें 14 अंक होते हैं।</span><span class="hint" id="fssaiMsg" aria-live="polite"></span></label>
           </div>
-          <label class="field"><span data-i18n="lbl_address"></span><input id="fAddr" type="text" class="no-i18n" maxlength="120" data-i18n-placeholder="ph_address"></label>
-          <label class="field"><span data-i18n="lbl_upi"></span><input id="fUpi" type="text" class="no-i18n" dir="ltr" inputmode="email" autocapitalize="off" spellcheck="false" maxlength="80" data-i18n-placeholder="ph_upi"><span class="hint" data-i18n="upi_hint"></span><span class="hint" id="upiMsg" aria-live="polite"></span></label>
-          <label class="check"><input type="checkbox" id="fWaQr"> <span data-i18n="chk_wa_qr"></span></label>
-          <p class="hint" style="margin:-6px 0 0 26px" data-i18n="wa_qr_hint"></p>
-          <label class="check"><input type="checkbox" id="fGst"> <span data-i18n="chk_gst"></span></label>
-          <label class="field"><span data-i18n="lbl_menu_link"></span><input id="fLink" type="url" class="no-i18n" dir="ltr" inputmode="url" maxlength="300" data-i18n-placeholder="ph_menu_link"><span class="hint" data-i18n="link_hint"></span></label>
-          <label class="field"><span data-i18n="lbl_note"></span><input id="fNote" type="text" class="no-i18n" maxlength="120" data-i18n-placeholder="ph_note"></label>
+          <label class="field"><span data-i18n="lbl_address">पता</span><input id="fAddr" type="text" class="no-i18n" maxlength="120" data-i18n-placeholder="ph_address"></label>
+          <label class="field"><span data-i18n="lbl_upi">स्कैन-पे के लिए UPI ID</span><input id="fUpi" type="text" class="no-i18n" dir="ltr" inputmode="email" autocapitalize="off" spellcheck="false" maxlength="80" data-i18n-placeholder="ph_upi"><span class="hint" data-i18n="upi_hint">मेन्यू पर UPI QR कोड जुड़ जाता है, ग्राहक स्कैन करके पेमेंट कर सकते हैं। QR न चाहिए तो खाली छोड़ें।</span><span class="hint" id="upiMsg" aria-live="polite"></span></label>
+          <label class="check"><input type="checkbox" id="fWaQr"> <span data-i18n="chk_wa_qr">WhatsApp ऑर्डर QR / लिंक जोड़ें</span></label>
+          <p class="hint" style="margin:-6px 0 0 26px" data-i18n="wa_qr_hint">ऊपर दिया फ़ोन नंबर इस्तेमाल होता है। स्कैन करने पर आपके नंबर पर WhatsApp चैट खुलती है।</p>
+          <label class="check"><input type="checkbox" id="fGst"> <span data-i18n="chk_gst">&quot;सभी दाम GST सहित&quot; लाइन दिखाएँ</span></label>
+          <label class="field"><span data-i18n="lbl_menu_link">ऑनलाइन मेन्यू का लिंक (वैकल्पिक)</span><input id="fLink" type="url" class="no-i18n" dir="ltr" inputmode="url" maxlength="300" data-i18n-placeholder="ph_menu_link"><span class="hint" data-i18n="link_hint">&quot;मेन्यू के लिए स्कैन करें&quot; पोस्टर में इस्तेमाल होता है। खाली हो तो पोस्टर के QR में मेन्यू का टेक्स्ट (या आपका WhatsApp लिंक) रहता है।</span></label>
+          <label class="field"><span data-i18n="lbl_note">नीचे की लाइन</span><input id="fNote" type="text" class="no-i18n" maxlength="120" data-i18n-placeholder="ph_note"></label>
         </div>
 
         <div class="tabpanel stack" id="panel-items" role="tabpanel" aria-labelledby="tab-items" hidden>
-          <div class="row" style="justify-content:space-between"><h3 data-i18n="h_cats"></h3><span class="muted small" id="itemsStatus" aria-live="polite"></span></div>
+          <div class="row" style="justify-content:space-between"><h3 data-i18n="h_cats">कैटेगरी और आइटम</h3><span class="muted small" id="itemsStatus" aria-live="polite"></span></div>
           <div id="catList" class="stack"></div>
-          <div class="row"><button type="button" class="btn" id="btnAddCat"><span class="ic" aria-hidden="true">＋</span> <span data-i18n="btn_add_cat"></span></button></div>
+          <div class="row"><button type="button" class="btn" id="btnAddCat"><span class="ic" aria-hidden="true">＋</span> <span data-i18n="btn_add_cat">कैटेगरी जोड़ें</span></button></div>
         </div>
 
         <div class="tabpanel stack" id="panel-design" role="tabpanel" aria-labelledby="tab-design" hidden>
-          <h3 data-i18n="h_design"></h3>
+          <h3 data-i18n="h_design">डिज़ाइन</h3>
           <div class="designs" id="designList" role="group"></div>
-          <h3 data-i18n="h_layout"></h3>
+          <h3 data-i18n="h_layout">लेआउट</h3>
           <div class="seg layouts" id="layoutSeg" role="group"></div>
           <p class="hint" id="layoutHint"></p>
         </div>
@@ -265,29 +265,29 @@
 
       <section class="card pv-card pv-sticky" aria-labelledby="hPreview">
         <div class="pv-bar no-print">
-          <h2 id="hPreview" style="margin:0" data-i18n="h_preview"></h2>
+          <h2 id="hPreview" style="margin:0" data-i18n="h_preview">प्रीव्यू</h2>
           <span class="muted small" id="pageInfo" aria-live="polite"></span>
         </div>
         <div class="pv-wrap" id="pvWrap"><div class="pv-scale" id="pvScale"></div></div>
         <div class="pv-pages" id="pvPages" hidden></div>
-        <p class="hint no-print" style="margin:8px 0 0" data-i18n="preview_hint"></p>
+        <p class="hint no-print" style="margin:8px 0 0" data-i18n="preview_hint">प्रीव्यू छोटा करके दिखाया गया है। पूरे साइज़ के लिए प्रिंट या डाउनलोड करें।</p>
         <div class="export no-print">
           <button type="button" class="btn btn-primary" id="btnPrint"><span class="ic" aria-hidden="true">🖨️</span> <span data-i18n="print"></span></button>
-          <button type="button" class="btn" id="btnPng"><span class="ic" aria-hidden="true">🖼️</span> <span data-i18n="btn_png"></span></button>
-          <button type="button" class="btn" id="btnJpg" data-i18n="btn_jpg"></button>
-          <a class="btn btn-wa" id="btnWa" href="#" target="_blank" rel="noopener"><span class="ic" aria-hidden="true">💬</span> <span data-i18n="btn_wa_text"></span></a>
-          <button type="button" class="btn" id="btnCopy"><span class="ic" aria-hidden="true">⧉</span> <span data-i18n="btn_copy_text"></span></button>
+          <button type="button" class="btn" id="btnPng"><span class="ic" aria-hidden="true">🖼️</span> <span data-i18n="btn_png">PNG डाउनलोड</span></button>
+          <button type="button" class="btn" id="btnJpg" data-i18n="btn_jpg">JPG डाउनलोड</button>
+          <a class="btn btn-wa" id="btnWa" href="#" target="_blank" rel="noopener"><span class="ic" aria-hidden="true">💬</span> <span data-i18n="btn_wa_text">मेन्यू WhatsApp पर भेजें</span></a>
+          <button type="button" class="btn" id="btnCopy"><span class="ic" aria-hidden="true">⧉</span> <span data-i18n="btn_copy_text">मेन्यू टेक्स्ट कॉपी करें</span></button>
         </div>
-        <p class="hint no-print" style="margin:8px 0 0" data-i18n="print_hint"></p>
+        <p class="hint no-print" style="margin:8px 0 0" data-i18n="print_hint">प्रिंट: यहाँ दिखाया पेपर साइज़ चुनें, मार्जिन शून्य रखें, &quot;Background graphics&quot; चालू करें। PDF के लिए &quot;Save as PDF&quot; चुनें।</p>
       </section>
     </div>
 
     <details class="card help no-print">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">कैसे इस्तेमाल करें / आइडिया</summary>
       <ul class="stack" style="margin:10px 0 0; padding-inline-start:20px">
-        <li data-i18n="tip_1"></li><li data-i18n="tip_2"></li><li data-i18n="tip_3"></li><li data-i18n="tip_4"></li><li data-i18n="tip_5"></li><li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">नमूना मेन्यू से शुरू करें, फिर कैटेगरी के नाम बदलें, दाम बदलें और जो आप नहीं बनाते उसे हटा दें। डिश के नाम किसी भी भाषा में लिखे जा सकते हैं।</li><li data-i18n="tip_2">वेज और नॉन-वेज चिह्न FSSAI के तरीक़े से हैं: हरे चौकोर में हरा गोला, भूरे चौकोर में भूरा त्रिकोण। किसी दिन डिश न हो तो हटाने की जगह &quot;स्टॉक में नहीं&quot; लगाएँ।</li><li data-i18n="tip_3">अपनी UPI ID जोड़ें तो हर मेन्यू पर स्कैन-पे QR आ जाता है, और फ़ोन नंबर से &quot;WhatsApp पर ऑर्डर करें&quot; QR। दोनों ऑफ़लाइन काम करते हैं; QR आपके डिवाइस पर ही बनता है।</li><li data-i18n="tip_4">दाम Excel या Google Sheets में रखते हैं? एक बार CSV एक्सपोर्ट करें, वहाँ दाम बदलें, और बदलाव पर वापस इम्पोर्ट कर लें।</li><li data-i18n="tip_5">स्टोरी इमेज: हर सुबह &quot;आज का स्पेशल&quot; के साथ 1080×1920 इमेज WhatsApp स्टेटस या Instagram स्टोरी पर लगाएँ। टेंट कार्ड: प्रिंट करें, मोड़ें और हर टेबल पर रखें।</li><li data-i18n="tip_6">नाश्ते, लंच, पार्टी कैटरिंग या त्योहार स्पेशल के लिए अलग-अलग मेन्यू सेव करें और &quot;सेव किए मेन्यू&quot; सूची से बदलते रहें।</li>
       </ul>
-      <p class="callout warning small" style="margin:12px 0 0" data-i18n="fssai_note"></p>
+      <p class="callout warning small" style="margin:12px 0 0" data-i18n="fssai_note">FSSAI नियम (अक्टूबर 2026, हाथ से जाँचे): लाइसेंस नंबर मेन्यू कार्ड पर दिखाना चाहिए, और वेज / नॉन-वेज चिह्न हरा गोला और भूरा त्रिकोण हैं। अपने कारोबार के लिए FSSAI की नई सूचना ज़रूर देखें।</p>
     </details>
   </main>
   <script src="../../../apps/menu-card-maker/../../shared/edu.js"></script>

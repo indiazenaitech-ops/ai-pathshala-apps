@@ -189,12 +189,12 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">કોઈ પણ રાસાયણિક સમીકરણને પગલે પગલે સંતુલિત કરો, બંને બાજુના પરમાણુ ગણો અને NCERT ધોરણ 10 ની 15 પ્રક્રિયાઓનો મહાવરો કરો.</p>
 
     <div class="eb-tabbar no-print">
       <div class="tabs" role="tablist" id="tabs">
-        <button type="button" role="tab" id="tab-balance" data-tab="balance" aria-controls="p-balance" data-i18n="tab_balance"></button>
-        <button type="button" role="tab" id="tab-practice" data-tab="practice" aria-controls="p-practice" data-i18n="tab_practice"></button>
+        <button type="button" role="tab" id="tab-balance" data-tab="balance" aria-controls="p-balance" data-i18n="tab_balance">સંતુલિત કરો</button>
+        <button type="button" role="tab" id="tab-practice" data-tab="practice" aria-controls="p-practice" data-i18n="tab_practice">મહાવરો: NCERT 10</button>
       </div>
       <button type="button" class="btn btn-sm" id="fs-btn" data-i18n-title="fullscreen" data-i18n-aria-label="fullscreen">&#x26F6;</button>
     </div>
@@ -203,17 +203,17 @@
     <section id="p-balance" class="eb-panel" role="tabpanel" aria-labelledby="tab-balance">
       <div class="card stack" id="in-card">
         <div>
-          <label class="eb-label" for="eq-in" data-i18n="eq_label"></label>
+          <label class="eb-label" for="eq-in" data-i18n="eq_label">રાસાયણિક સમીકરણ લખો</label>
           <div class="eb-inrow">
             <input id="eq-in" class="eb-in no-i18n" type="text" dir="ltr" placeholder="Fe + H2O -> Fe3O4 + H2" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="300">
-            <button type="button" class="btn btn-primary btn-lg" id="balance-btn" data-i18n="balance_btn"></button>
+            <button type="button" class="btn btn-primary btn-lg" id="balance-btn" data-i18n="balance_btn">સંતુલિત કરો</button>
           </div>
         </div>
         <div class="row eb-keys no-i18n" id="keys" role="group" data-i18n-aria-label="keys_aria"></div>
-        <p class="small muted mb0" data-i18n="eq_hint"></p>
+        <p class="small muted mb0" data-i18n="eq_hint">બે બાજુ વચ્ચે → (અથવા -&gt; અથવા =) અને પદાર્થો વચ્ચે + મૂકો. કૌંસ, CuSO4·5H2O જેવા સ્ફટિકજળવાળા ક્ષાર, (aq) જેવી અવસ્થાઓ અને Fe^3+ કે SO4^2- જેવા વીજભાર પણ ચાલે છે.</p>
         <p class="callout danger mb0" id="eq-msg" role="alert" hidden></p>
         <div>
-          <span class="eb-label small" data-i18n="try_these"></span>
+          <span class="eb-label small" data-i18n="try_these">આ ઉદાહરણો અજમાવો</span>
           <div class="eb-examples no-i18n" id="examples"></div>
         </div>
         <div class="row"><button type="button" class="btn btn-sm" id="clear-btn" data-i18n="clear"></button></div>
@@ -222,7 +222,7 @@
       <section id="result" class="eb-panel" aria-live="polite" hidden>
         <div class="card stack eb-result-card">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="result_title"></h2>
+            <h2 class="mb0" data-i18n="result_title">સંતુલિત સમીકરણ</h2>
             <span class="badge success" id="eb-status"></span>
           </div>
           <div class="eb-eq eb-big no-i18n" id="result-eq" dir="ltr"></div>
@@ -235,12 +235,12 @@
         </div>
         <div class="eb-grid">
           <div class="card">
-            <h2 data-i18n="atoms_title"></h2>
+            <h2 data-i18n="atoms_title">બંને બાજુ પરમાણુઓની ગણતરી</h2>
             <div class="scroll-x" id="atoms-wrap"></div>
-            <p class="small muted mb0 eb-law" data-i18n="law"></p>
+            <p class="small muted mb0 eb-law" data-i18n="law">દળ સંરક્ષણનો નિયમ: રાસાયણિક પ્રક્રિયામાં પરમાણુઓ ફક્ત નવી રીતે ગોઠવાય છે. કોઈ પરમાણુ બનતો કે નાશ પામતો નથી, તેથી દરેક તત્ત્વની સંખ્યા બંને બાજુ સરખી હોવી જોઈએ.</p>
           </div>
           <div class="card" id="steps-card">
-            <h2 data-i18n="steps_title"></h2>
+            <h2 data-i18n="steps_title">કેવી રીતે ઉકેલ્યું (બીજગણિત પદ્ધતિ)</h2>
             <div id="steps"></div>
           </div>
         </div>
@@ -251,7 +251,7 @@
     <section id="p-practice" class="eb-panel" role="tabpanel" aria-labelledby="tab-practice" hidden>
       <div class="card stack no-print">
         <div class="eb-prnav">
-          <label class="field"><span data-i18n="pr_pick"></span><select id="pr-select" class="no-i18n" dir="ltr"></select></label>
+          <label class="field"><span data-i18n="pr_pick">પ્રક્રિયા પસંદ કરો</span><select id="pr-select" class="no-i18n" dir="ltr"></select></label>
           <div class="row nowrap">
             <button type="button" class="btn" id="pr-prev" data-i18n="previous"></button>
             <button type="button" class="btn" id="pr-next" data-i18n="next"></button>
@@ -269,19 +269,19 @@
           <span class="badge" id="pr-state" hidden></span>
         </div>
         <p class="eb-desc mb0" id="pr-desc"></p>
-        <p class="small muted mb0 no-print" data-i18n="pr_enter"></p>
+        <p class="small muted mb0 no-print" data-i18n="pr_enter">ખાનાંમાં સૌથી નાની પૂર્ણ સંખ્યાઓ લખો. ખાલી ખાનું એટલે 1.</p>
         <div class="eb-eq eb-pr-eq no-i18n" id="pr-eq" dir="ltr"></div>
-        <p class="tiny muted mb0" data-i18n="states_note"></p>
+        <p class="tiny muted mb0" data-i18n="states_note">(s) ઘન · (l) પ્રવાહી · (g) વાયુ · (aq) પાણીમાં ઓગળેલું</p>
         <div class="row no-print">
-          <button type="button" class="btn btn-primary btn-lg" id="pr-check" data-i18n="check"></button>
-          <button type="button" class="btn btn-lg" id="pr-hint" data-i18n="hint"></button>
-          <button type="button" class="btn btn-lg" id="pr-show" data-i18n="show_answer"></button>
+          <button type="button" class="btn btn-primary btn-lg" id="pr-check" data-i18n="check">ચકાસો</button>
+          <button type="button" class="btn btn-lg" id="pr-hint" data-i18n="hint">સંકેત</button>
+          <button type="button" class="btn btn-lg" id="pr-show" data-i18n="show_answer">જવાબ બતાવો</button>
           <button type="button" class="btn btn-lg" id="pr-next2" data-i18n="next"></button>
         </div>
         <p class="eb-fb" id="pr-fb" aria-live="polite"></p>
         <div class="scroll-x" id="pr-tally" hidden></div>
         <div class="panel stack" id="pr-type-box">
-          <p class="eb-label mb0" data-i18n="type_q"></p>
+          <p class="eb-label mb0" data-i18n="type_q">આ કયા પ્રકારની પ્રક્રિયા છે?</p>
           <div class="eb-types no-print" id="pr-types"></div>
           <p class="eb-fb" id="pr-type-fb" aria-live="polite"></p>
           <div id="pr-type-info" hidden></div>
@@ -289,20 +289,20 @@
       </div>
 
       <div class="row no-print">
-        <button type="button" class="btn" id="ws-print" data-i18n="print_ws"></button>
-        <button type="button" class="btn btn-danger" id="pr-reset" data-i18n="reset_progress"></button>
+        <button type="button" class="btn" id="ws-print" data-i18n="print_ws">વર્કશીટ પ્રિન્ટ કરો</button>
+        <button type="button" class="btn btn-danger" id="pr-reset" data-i18n="reset_progress">પ્રગતિ રીસેટ કરો</button>
       </div>
     </section>
 
     <details class="card no-print" id="help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">કેવી રીતે વાપરવું / વર્ગખંડ માટે વિચારો</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">સાચા મોટા-નાના અક્ષરો સાથે સમીકરણ લખો (Co એ કોબાલ્ટ, CO એ કાર્બન મોનોક્સાઇડ) અને સંતુલિત કરો દબાવો. તીર માટે →, -&gt; કે = લખી શકો.</li>
+        <li data-i18n="help_2">કૌંસ ( ) અને [ ], સ્ફટિકજળવાળા ક્ષાર (CuSO4·5H2O કે CuSO4.5H2O), અવસ્થાઓ (s), (l), (g), (aq) અને આયન (Fe^3+, SO4^2-, e-) પણ સમજાય છે.</li>
+        <li data-i18n="help_3">&quot;કેવી રીતે ઉકેલ્યું&quot; વાંચો: ઍપ દરેક તત્ત્વ માટે એક સમીકરણ લખીને તેને ઉકેલે છે. NCERT પુસ્તકની પ્રયત્ન-ભૂલ (હિટ ઍન્ડ ટ્રાયલ) પદ્ધતિ સાથે સરખાવો.</li>
+        <li data-i18n="help_4">સૂત્રોની આગળ તમારી પોતાની સંખ્યાઓ લખો (જેમ કે 2H2 + O2 -&gt; 2H2O), ઍપ કહેશે કે તમારો જવાબ સાચો છે કે નહીં.</li>
+        <li data-i18n="help_5">મહાવરામાં NCERT ધોરણ 10 ની 15 પ્રક્રિયાઓ છે. ખાનાં ભરો, ચકાસો દબાવો, અટકો તો સંકેત લો અને પ્રક્રિયાનો પ્રકાર જણાવો.</li>
+        <li data-i18n="help_6">વર્ગખંડ પ્રવૃત્તિ: સ્માર્ટબોર્ડ પર ફુલ સ્ક્રીનમાં મહાવરાની એક પ્રક્રિયા બતાવો. ટીમો 2 મિનિટમાં કાગળ પર તેને સંતુલિત કરે, પછી એક ટીમ પોતાનાં પગલાં સમજાવે. ગૃહકાર્ય માટે વર્કશીટ પ્રિન્ટ કરો.</li>
       </ul>
     </details>
 

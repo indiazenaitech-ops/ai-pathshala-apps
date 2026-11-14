@@ -202,19 +202,19 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">ఒక AI మోడల్ ఎంత బాగుందో పరీక్షించండి, అచ్చం CBSE 10వ తరగతి AI లోని “మూల్యాంకనం (Evaluation)” పాఠంలాగే. థ్రెషోల్డ్‌ను జరిపి, కన్ఫ్యూజన్ మ్యాట్రిక్స్, అక్యురసీ, ప్రిసిషన్, రీకాల్, F1 స్కోర్ ఎలా మారుతాయో చూడండి.</p>
 
     <div class="tabs" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-explore" data-tab="explore" aria-controls="panel-explore" data-i18n="tab_explore"></button>
-      <button type="button" role="tab" id="tab-learn" data-tab="learn" aria-controls="panel-learn" data-i18n="tab_learn"></button>
-      <button type="button" role="tab" id="tab-practice" data-tab="practice" aria-controls="panel-practice" data-i18n="tab_practice"></button>
+      <button type="button" role="tab" id="tab-explore" data-tab="explore" aria-controls="panel-explore" data-i18n="tab_explore">థ్రెషోల్డ్ ల్యాబ్</button>
+      <button type="button" role="tab" id="tab-learn" data-tab="learn" aria-controls="panel-learn" data-i18n="tab_learn">ప్రిడిక్షన్ vs రియాలిటీ</button>
+      <button type="button" role="tab" id="tab-practice" data-tab="practice" aria-controls="panel-practice" data-i18n="tab_practice">అభ్యాసం</button>
     </div>
 
     <!-- ============ THRESHOLD LAB ============ -->
     <section id="panel-explore" role="tabpanel" aria-labelledby="tab-explore" class="stack">
       <div class="card stack" id="scen-card">
         <div>
-          <h2 class="h-sm muted" data-i18n="choose_scenario"></h2>
+          <h2 class="h-sm muted" data-i18n="choose_scenario">పరీక్షించడానికి ఒక AI మోడల్‌ను ఎంచుకోండి</h2>
           <div class="row scen-list" id="scen-list" role="group" data-i18n-aria-label="choose_scenario"></div>
         </div>
         <div class="lab-head">
@@ -223,7 +223,7 @@
             <p class="small muted mb0" id="scen-score"></p>
           </div>
           <div class="lab-tools">
-            <button type="button" class="btn btn-sm" id="new-data"><span aria-hidden="true">🔀</span> <span data-i18n="new_data"></span></button>
+            <button type="button" class="btn btn-sm" id="new-data"><span aria-hidden="true">🔀</span> <span data-i18n="new_data">కొత్త టెస్ట్ డేటా</span></button>
             <button type="button" class="btn btn-sm" id="fs-btn"><span aria-hidden="true">⛶</span> <span data-i18n="fullscreen"></span></button>
             <button type="button" class="btn btn-sm btn-danger" id="reset-all" data-i18n="reset"></button>
           </div>
@@ -238,37 +238,37 @@
             <div class="axis-ends small muted" dir="ltr"><span id="axis-low" dir="auto"></span><span id="axis-high" dir="auto"></span></div>
           </div>
           <div class="thr-row">
-            <label for="thr" data-i18n="threshold"></label>
+            <label for="thr" data-i18n="threshold">థ్రెషోల్డ్</label>
             <output id="thr-val" class="thr-val" for="thr"></output>
             <div class="thr-ctrl" dir="ltr">
               <button type="button" class="btn btn-sm thr-btn" id="thr-down" data-i18n-aria-label="thr_lower" data-i18n-title="thr_lower">−</button>
               <input type="range" id="thr" min="0" max="1" step="0.01" value="0.5">
               <button type="button" class="btn btn-sm thr-btn" id="thr-up" data-i18n-aria-label="thr_higher" data-i18n-title="thr_higher">+</button>
             </div>
-            <button type="button" class="btn btn-sm" id="best-f1"><span aria-hidden="true">⭐</span> <span data-i18n="best_f1"></span></button>
+            <button type="button" class="btn btn-sm" id="best-f1"><span aria-hidden="true">⭐</span> <span data-i18n="best_f1">ఉత్తమ F1</span></button>
           </div>
           <p class="mb0" id="thr-rule"></p>
           <p class="small mb0 dot-info" id="dot-info" aria-live="polite"></p>
           <div class="callout" id="insight" aria-live="polite"></div>
         </div>
         <div class="card stack" id="cm-card">
-          <h2 class="mb0" data-i18n="matrix_title"></h2>
-          <p class="small muted mb0" data-i18n="matrix_note"></p>
+          <h2 class="mb0" data-i18n="matrix_title">కన్ఫ్యూజన్ మ్యాట్రిక్స్</h2>
+          <p class="small muted mb0" data-i18n="matrix_note">వరుసలు = AI ఏమి అంచనా వేసింది. నిలువు వరుసలు = నిజంగా ఏముంది. (CBSE పుస్తకంలోని అదే అమరిక.)</p>
           <div class="scroll-x"><table class="cm" id="cm"></table></div>
           <p class="small muted mb0" id="cm-totals"></p>
         </div>
       </div>
 
       <div class="card stack" id="metrics-card">
-        <h2 class="mb0" data-i18n="metrics_title"></h2>
+        <h2 class="mb0" data-i18n="metrics_title">ఈ మోడల్ ఎంత బాగుంది?</h2>
         <div class="metrics" id="metrics"></div>
       </div>
 
       <div class="card stack" id="which-card">
-        <h2 class="mb0" data-i18n="which_title"></h2>
+        <h2 class="mb0" data-i18n="which_title">ఇక్కడ ఏ తప్పు ఎక్కువ చెడ్డది?</h2>
         <div class="which-grid">
-          <div class="which-box k-fp"><b data-i18n="fp_is"></b><p id="which-fp"></p></div>
-          <div class="which-box k-fn"><b data-i18n="fn_is"></b><p id="which-fn"></p></div>
+          <div class="which-box k-fp"><b data-i18n="fp_is">ఫాల్స్ పాజిటివ్ (FP) = తప్పుడు అలారం</b><p id="which-fp"></p></div>
+          <div class="which-box k-fn"><b data-i18n="fn_is">ఫాల్స్ నెగటివ్ (FN) = నిజమైన కేసు తప్పిపోవడం</b><p id="which-fn"></p></div>
         </div>
         <p class="callout accent mb0" id="which-why"></p>
       </div>
@@ -282,39 +282,39 @@
     <!-- ============ LEARN ============ -->
     <section id="panel-learn" role="tabpanel" aria-labelledby="tab-learn" class="stack" hidden>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="learn_h_why"></h2>
-        <p class="mb0" data-i18n="learn_why"></p>
-        <p class="callout warning small mb0" data-i18n="learn_overfit"></p>
+        <h2 class="mb0" data-i18n="learn_h_why">AI మోడల్‌ను ఎందుకు మూల్యాంకనం చేస్తాం?</h2>
+        <p class="mb0" data-i18n="learn_why">మోడల్‌కు శిక్షణ ఇచ్చిన తర్వాత అది ఎంత బాగుందో పరీక్షించాలి. సరైన జవాబులు తెలిసిన టెస్ట్ డేటాను దానికి ఇచ్చి, దాని ప్రిడిక్షన్‌ను (అంచనాను) రియాలిటీతో (వాస్తవంతో) పోలుస్తాం. ప్రతి టెస్ట్ కేసు నాలుగు గడుల్లో ఏదో ఒకదానిలో పడుతుంది.</p>
+        <p class="callout warning small mb0" data-i18n="learn_overfit">శిక్షణ ఇచ్చిన డేటాతోనే మోడల్‌ను ఎప్పుడూ పరీక్షించవద్దు. అది జవాబులను బట్టీ పట్టి ఉండవచ్చు (దీన్ని ఓవర్‌ఫిట్టింగ్ అంటారు), నిజంకంటే బాగున్నట్టు కనిపించవచ్చు.</p>
       </div>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="learn_h_cases"></h2>
-        <p class="mb0" data-i18n="learn_cases_intro"></p>
+        <h2 class="mb0" data-i18n="learn_h_cases">4 స్థితులు: CBSE పుస్తకంలోని అడవి మంటల ఉదాహరణ</h2>
+        <p class="mb0" data-i18n="learn_cases_intro">అడవిలోని కెమెరాల ఫోటోలు చూసి ఒక AI అంచనా వేస్తుంది: అడవిలో మంటలు ఉన్నాయా? (అవును = మంట, కాదు = మంట లేదు)</p>
         <div class="cases" id="learn-cases"></div>
-        <p class="callout accent mb0"><b data-i18n="trick_title"></b> <span data-i18n="trick"></span></p>
+        <p class="callout accent mb0"><b data-i18n="trick_title">గుర్తుంచుకునే చిట్కా:</b> <span data-i18n="trick">పేరును చివరి నుంచి చదవండి. పాజిటివ్ లేదా నెగటివ్ = AI ఏమి చెప్పింది (అవును లేదా కాదు). ట్రూ లేదా ఫాల్స్ = AI సరైనదా?</span></p>
       </div>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="learn_h_matrix"></h2>
-        <p class="mb0" data-i18n="learn_matrix"></p>
+        <h2 class="mb0" data-i18n="learn_h_matrix">కన్ఫ్యూజన్ మ్యాట్రిక్స్</h2>
+        <p class="mb0" data-i18n="learn_matrix">ప్రతి గడిలో ఎన్ని టెస్ట్ కేసులు పడ్డాయో లెక్కించి, ఆ సంఖ్యలను 2 × 2 పట్టికలో రాయండి. CBSE పుస్తకంలో వరుసలు ప్రిడిక్షన్‌ను, నిలువు వరుసలు రియాలిటీని చూపుతాయి. మ్యాట్రిక్స్ స్వయంగా ఒక స్కోర్ కాదు; స్కోర్‌లు లెక్కించడానికి సహాయపడే ఒక రికార్డు.</p>
         <div class="scroll-x"><table class="cm" id="learn-cm"></table></div>
-        <p class="callout warning small mb0" data-i18n="learn_swap"></p>
+        <p class="callout warning small mb0" data-i18n="learn_swap">జాగ్రత్త: కొన్ని పుస్తకాలు, సాఫ్ట్‌వేర్‌లు (ఉదా. Python లోని scikit-learn) వరుసల్లో రియాలిటీని, నిలువు వరుసల్లో ప్రిడిక్షన్‌ను ఉంచుతాయి. ఎప్పుడూ ముందు లేబుల్స్ చదవండి!</p>
       </div>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="learn_h_formulas"></h2>
+        <h2 class="mb0" data-i18n="learn_h_formulas">నాలుగు సూత్రాలు</h2>
         <p class="mb0" id="learn-example"></p>
         <div class="fcards" id="learn-formulas"></div>
-        <p class="small muted mb0" data-i18n="learn_pct"></p>
+        <p class="small muted mb0" data-i18n="learn_pct">శాతం కోసం 100 తో గుణించండి: 0.82 = 82%.</p>
       </div>
       <div class="card stack">
-        <h2 class="mb0" data-i18n="learn_h_which"></h2>
+        <h2 class="mb0" data-i18n="learn_h_which">ఏ స్కోర్‌ను చూడాలి?</h2>
         <ul class="which-list mb0">
-          <li data-i18n="which_fn"></li>
-          <li data-i18n="which_fp"></li>
-          <li data-i18n="which_both"></li>
-          <li data-i18n="which_acc"></li>
+          <li data-i18n="which_fn">నిజమైన కేసు తప్పిపోవడం ప్రమాదకరమైతే (ఫాల్స్ నెగటివ్ ఖరీదైనది) → రీకాల్ చూడండి. ఉదాహరణలు: వ్యాధి పరీక్ష, అడవి మంటల హెచ్చరిక, వైరస్ వ్యాప్తి.</li>
+          <li data-i18n="which_fp">తప్పుడు అలారం ఖరీదైనదైతే (ఫాల్స్ పాజిటివ్ ఖరీదైనది) → ప్రిసిషన్ చూడండి. ఉదాహరణలు: స్పామ్ ఫిల్టర్ ముఖ్యమైన ఈమెయిల్‌ను దాచేయడం, నిధి లేని చోట గని తవ్వడం, నిజాయితీ గల విద్యార్థిని నిందించడం.</li>
+          <li data-i18n="which_both">రెండు తప్పులూ ముఖ్యమైతే → F1 స్కోర్ చూడండి.</li>
+          <li data-i18n="which_acc">అవును, కాదు కేసులు దాదాపు సమానంగా ఉన్నప్పుడే అక్యురసీ న్యాయమైన కొలత. 100 మందిలో 95 మంది ఆరోగ్యంగా ఉంటే, అందరినీ “ఆరోగ్యంగా ఉన్నారు” అనే సోమరి మోడల్ కూడా 95% అక్యురసీ పొందుతుంది, కానీ ఒక్క రోగినీ కనుగొనదు!</li>
         </ul>
       </div>
       <div class="row" id="learn-actions">
-        <button type="button" class="btn btn-primary" id="go-lab"><span data-i18n="learn_try"></span> <span class="flip" aria-hidden="true">→</span></button>
+        <button type="button" class="btn btn-primary" id="go-lab"><span data-i18n="learn_try">థ్రెషోల్డ్ ల్యాబ్‌లో ప్రయత్నించండి</span> <span class="flip" aria-hidden="true">→</span></button>
         <button type="button" class="btn" id="print-learn"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
       </div>
     </section>
@@ -323,11 +323,11 @@
     <section id="panel-practice" role="tabpanel" aria-labelledby="tab-practice" class="stack" hidden>
       <div class="card stack">
         <div class="row spread">
-          <h2 class="mb0" data-i18n="practice_title"></h2>
+          <h2 class="mb0" data-i18n="practice_title">అభ్యాసం</h2>
           <div class="row score-badges" aria-live="polite"><span class="badge primary" id="score-line"></span><span class="badge" id="streak-line"></span></div>
         </div>
         <div>
-          <p class="small muted" style="margin-bottom:6px" data-i18n="ask_label"></p>
+          <p class="small muted" style="margin-bottom:6px" data-i18n="ask_label">ప్రశ్నలు దేనిపై:</p>
           <div class="row mode-list" id="mode-list" role="group" data-i18n-aria-label="ask_label"></div>
         </div>
       </div>
@@ -338,24 +338,24 @@
         <div id="q-answer"></div>
         <div id="q-feedback" aria-live="polite"></div>
         <div class="row" id="q-actions">
-          <button type="button" class="btn btn-primary" id="q-next"><span data-i18n="next_q"></span> <span class="flip" aria-hidden="true">→</span></button>
+          <button type="button" class="btn btn-primary" id="q-next"><span data-i18n="next_q">తదుపరి ప్రశ్న</span> <span class="flip" aria-hidden="true">→</span></button>
         </div>
       </div>
       <div class="row" id="practice-tools">
-        <button type="button" class="btn" id="ws-print"><span aria-hidden="true">🖨</span> <span data-i18n="ws_print"></span></button>
-        <button type="button" class="btn btn-danger" id="score-reset" data-i18n="reset_score"></button>
+        <button type="button" class="btn" id="ws-print"><span aria-hidden="true">🖨</span> <span data-i18n="ws_print">వర్క్‌షీట్ ప్రింట్ చేయండి</span></button>
+        <button type="button" class="btn btn-danger" id="score-reset" data-i18n="reset_score">స్కోరు రీసెట్ చేయండి</button>
       </div>
     </section>
 
     <details class="card help">
-      <summary data-i18n="help_summary"></summary>
+      <summary data-i18n="help_summary">ఎలా ఉపయోగించాలి / తరగతి కోసం ఆలోచనలు</summary>
       <ul>
-        <li data-i18n="help_1"></li>
-        <li data-i18n="help_2"></li>
-        <li data-i18n="help_3"></li>
-        <li data-i18n="help_4"></li>
-        <li data-i18n="help_5"></li>
-        <li data-i18n="help_6"></li>
+        <li data-i18n="help_1">ఒక సందర్భాన్ని ఎంచుకోండి. ప్రతి చుక్క ఒక టెస్ట్ అంశం: పై వరుస నిజంగా “అవును”, కింది వరుస నిజంగా “కాదు”. చుక్క ఎంత కుడివైపు ఉంటే, జవాబు “అవును” అని AI అంత ఖచ్చితంగా ఉంది.</li>
+        <li data-i18n="help_2">థ్రెషోల్డ్ గీతను లాగండి (లేదా స్లైడర్ ఉపయోగించండి). గీతకు కుడివైపు ఉన్న చుక్కల అంచనా “అవును”. ప్రతి సూత్రంలో సంఖ్యలు పెట్టి, కన్ఫ్యూజన్ మ్యాట్రిక్స్, నాలుగు స్కోర్‌లు ఎలా మారుతాయో చూడండి.</li>
+        <li data-i18n="help_3">లోపల ఏమి జరుగుతుంది: నిజమైన AI మోడల్ నేరుగా అవును లేదా కాదు అని చెప్పదు. అది 0 నుంచి 1 మధ్య ఒక స్కోర్ ఇస్తుంది, థ్రెషోల్డ్‌ను మనుషులు నిర్ణయిస్తారు. తక్కువ థ్రెషోల్డ్ ఎక్కువ నిజమైన కేసులను పట్టుకుంటుంది కానీ తప్పుడు అలారాలనూ పెంచుతుంది; ఎక్కువ థ్రెషోల్డ్ దీనికి వ్యతిరేకం.</li>
+        <li data-i18n="help_4">తరగతి కృత్యం: రెండు జట్లు చేయండి, “డాక్టర్లు” (ఏ రోగీ తప్పిపోకూడదు), “కుటుంబాలు” (తప్పుడు అలారాలు అస్సలు ఇష్టం లేదు). ప్రతి జట్టూ వ్యాధి పరీక్షకు ఒక థ్రెషోల్డ్‌ను ఎంచుకుని, ప్రిసిషన్, రీకాల్‌తో దాన్ని సమర్థించాలి. తర్వాత కాపీ పట్టుకునే కెమెరా గురించి చర్చించండి: అలారం మోగితే పాఠశాల ఏమి చేయాలి?</li>
+        <li data-i18n="help_5">త్వరిత అభ్యాసం కోసం “అభ్యాసం” ట్యాబ్ ఉపయోగించండి, హోంవర్క్ లేదా తరగతి పరీక్ష కోసం జవాబుల కీతో వర్క్‌షీట్ ప్రింట్ చేయండి.</li>
+        <li data-i18n="help_6">ఆఫ్‌లైన్‌లో, ఫోన్‌లో, స్మార్ట్‌బోర్డ్‌పై పనిచేస్తుంది (పూర్తి స్క్రీన్ ఉపయోగించండి). ఏదీ అప్‌లోడ్ కాదు; మీ స్కోరు ఈ పరికరంలో మాత్రమే సేవ్ అవుతుంది.</li>
       </ul>
     </details>
 

@@ -185,31 +185,31 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">সমীকরণ লিখো আর NCERT বইয়ের মতো প্রতিটি ধাপ দেখো: এক চলের রৈখিক সমীকরণ, রৈখিক সমীকরণ জোড় ও দ্বিঘাত সমীকরণ, শেষে যাচাই সহ।</p>
 
     <div class="tabs" role="tablist" id="tabs">
-      <button type="button" role="tab" id="tab-linear" data-panel="panel-linear" aria-controls="panel-linear" aria-selected="true">🟰 <span data-i18n="tab_linear"></span></button>
-      <button type="button" role="tab" id="tab-pair" data-panel="panel-pair" aria-controls="panel-pair" aria-selected="false">📈 <span data-i18n="tab_pair"></span></button>
-      <button type="button" role="tab" id="tab-quad" data-panel="panel-quad" aria-controls="panel-quad" aria-selected="false">📐 <span data-i18n="tab_quad"></span></button>
-      <button type="button" role="tab" id="tab-word" data-panel="panel-word" aria-controls="panel-word" aria-selected="false">📖 <span data-i18n="tab_word"></span></button>
-      <button type="button" role="tab" id="tab-practice" data-panel="panel-practice" aria-controls="panel-practice" aria-selected="false">✏️ <span data-i18n="tab_practice"></span></button>
+      <button type="button" role="tab" id="tab-linear" data-panel="panel-linear" aria-controls="panel-linear" aria-selected="true">🟰 <span data-i18n="tab_linear">রৈখিক</span></button>
+      <button type="button" role="tab" id="tab-pair" data-panel="panel-pair" aria-controls="panel-pair" aria-selected="false">📈 <span data-i18n="tab_pair">সমীকরণ জোড়</span></button>
+      <button type="button" role="tab" id="tab-quad" data-panel="panel-quad" aria-controls="panel-quad" aria-selected="false">📐 <span data-i18n="tab_quad">দ্বিঘাত</span></button>
+      <button type="button" role="tab" id="tab-word" data-panel="panel-word" aria-controls="panel-word" aria-selected="false">📖 <span data-i18n="tab_word">শব্দ সমস্যা</span></button>
+      <button type="button" role="tab" id="tab-practice" data-panel="panel-practice" aria-controls="panel-practice" aria-selected="false">✏️ <span data-i18n="tab_practice">অনুশীলন</span></button>
     </div>
 
     <!-- ===================== LINEAR ===================== -->
     <section id="panel-linear" role="tabpanel" aria-labelledby="tab-linear">
       <div class="solve-grid">
         <div class="card stack no-print">
-          <label for="lin-eq" class="lbl" data-i18n="lin_label"></label>
+          <label for="lin-eq" class="lbl" data-i18n="lin_label">এক চল (x) এর সমীকরণ</label>
           <div class="eq-row">
             <input id="lin-eq" class="eq-input no-i18n" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120" data-i18n-placeholder="lin_ph">
             <button type="button" class="btn btn-ghost" id="lin-clear" data-i18n-aria-label="clear_aria" data-i18n-title="clear_aria">✕</button>
           </div>
-          <p class="syntax" data-i18n="syntax_hint"></p>
+          <p class="syntax" data-i18n="syntax_hint">ভগ্নাংশ (x/2), বন্ধনী 2(x − 3) ও দশমিক লেখা যায়। গুণের জন্য * লেখো বা কিছুই না: 3x মানে 3 × x।</p>
           <div class="keys no-i18n" data-target="lin-eq"></div>
-          <p class="muted small mb0" data-i18n="examples"></p>
+          <p class="muted small mb0" data-i18n="examples">একটি উদাহরণ দেখো:</p>
           <div class="examples no-i18n" id="lin-examples"></div>
           <div class="row">
-            <button type="button" class="btn btn-primary btn-lg solve-btn" id="lin-solve">🧮 <span data-i18n="solve"></span></button>
+            <button type="button" class="btn btn-primary btn-lg solve-btn" id="lin-solve">🧮 <span data-i18n="solve">ধাপে ধাপে সমাধান</span></button>
           </div>
         </div>
         <div class="card stack result-card" id="lin-result" aria-live="polite" data-status="none-yet"></div>
@@ -221,21 +221,21 @@
       <div class="solve-grid">
         <div class="card stack no-print">
           <div class="method-block">
-            <span class="lbl" id="lbl-pim" data-i18n="pair_input_label"></span>
+            <span class="lbl" id="lbl-pim" data-i18n="pair_input_label">জোড়টি কীভাবে লিখবে?</span>
             <div class="seg" role="group" aria-labelledby="lbl-pim" id="pair-input-mode">
-              <button type="button" data-v="type" id="pim-type" data-i18n="pim_type"></button>
-              <button type="button" data-v="boxes" id="pim-boxes" data-i18n="pim_boxes"></button>
+              <button type="button" data-v="type" id="pim-type" data-i18n="pim_type">দুটি সমীকরণ লেখো</button>
+              <button type="button" data-v="boxes" id="pim-boxes" data-i18n="pim_boxes">a₁x + b₁y = c₁ ঘর ভরো</button>
             </div>
           </div>
           <div id="pair-typed" class="stack">
-            <label for="pair-eq1" class="lbl" data-i18n="pair_eq1"></label>
+            <label for="pair-eq1" class="lbl" data-i18n="pair_eq1">সমীকরণ (1)</label>
             <input id="pair-eq1" class="eq-input no-i18n w100" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120" data-i18n-placeholder="pair_ph1">
-            <label for="pair-eq2" class="lbl" data-i18n="pair_eq2"></label>
+            <label for="pair-eq2" class="lbl" data-i18n="pair_eq2">সমীকরণ (2)</label>
             <input id="pair-eq2" class="eq-input no-i18n w100" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120" data-i18n-placeholder="pair_ph2">
             <div class="keys no-i18n" data-target="pair-eq1"></div>
           </div>
           <div id="pair-boxes" class="stack" hidden>
-            <span class="lbl" data-i18n="pair_boxes_label"></span>
+            <span class="lbl" data-i18n="pair_boxes_label">দুটি সমীকরণের সহগ</span>
             <div class="boxes no-i18n" dir="ltr">
               <input id="p-a1" type="text" inputmode="text" aria-label="a1" value="2"><span class="m">x +</span>
               <input id="p-b1" type="text" inputmode="text" aria-label="b1" value="3"><span class="m">y =</span>
@@ -244,26 +244,26 @@
               <input id="p-b2" type="text" inputmode="text" aria-label="b2" value="-1"><span class="m">y =</span>
               <input id="p-c2" type="text" inputmode="text" aria-label="c2" value="1">
             </div>
-            <p class="syntax" data-i18n="boxes_hint"></p>
+            <p class="syntax" data-i18n="boxes_hint">পূর্ণসংখ্যা, দশমিক বা 3/2 এর মতো ভগ্নাংশ। ঋণাত্মক সংখ্যায় বিয়োগ চিহ্ন দাও।</p>
           </div>
-          <p class="muted small mb0" data-i18n="examples"></p>
+          <p class="muted small mb0" data-i18n="examples">একটি উদাহরণ দেখো:</p>
           <div class="examples no-i18n" id="pair-examples"></div>
           <div class="method-block">
-            <span class="lbl" id="lbl-pm" data-i18n="method_label"></span>
+            <span class="lbl" id="lbl-pm" data-i18n="method_label">পদ্ধতি</span>
             <div class="seg" role="group" aria-labelledby="lbl-pm" id="pair-method">
-              <button type="button" data-v="substitution" id="pm-substitution" data-i18n="m_substitution"></button>
-              <button type="button" data-v="elimination" id="pm-elimination" data-i18n="m_elimination"></button>
-              <button type="button" data-v="cross" id="pm-cross" data-i18n="m_cross"></button>
+              <button type="button" data-v="substitution" id="pm-substitution" data-i18n="m_substitution">প্রতিস্থাপন</button>
+              <button type="button" data-v="elimination" id="pm-elimination" data-i18n="m_elimination">অপনয়ন</button>
+              <button type="button" data-v="cross" id="pm-cross" data-i18n="m_cross">বজ্রগুণন</button>
             </div>
           </div>
           <div class="row">
-            <button type="button" class="btn btn-primary btn-lg solve-btn" id="pair-solve">🧮 <span data-i18n="solve"></span></button>
+            <button type="button" class="btn btn-primary btn-lg solve-btn" id="pair-solve">🧮 <span data-i18n="solve">ধাপে ধাপে সমাধান</span></button>
           </div>
         </div>
         <div class="stack">
           <div class="card stack result-card" id="pair-result" aria-live="polite" data-status="none-yet"></div>
           <div class="card" id="pair-graph-card" hidden>
-            <h3 data-i18n="graph_title"></h3>
+            <h3 data-i18n="graph_title">দুটি সরলরেখার লেখচিত্র</h3>
             <div class="graph-wrap" id="pair-graph"></div>
             <div class="legend" id="pair-legend"></div>
           </div>
@@ -275,31 +275,31 @@
     <section id="panel-quad" role="tabpanel" aria-labelledby="tab-quad" hidden>
       <div class="solve-grid">
         <div class="card stack no-print">
-          <label for="quad-eq" class="lbl" data-i18n="quad_label"></label>
+          <label for="quad-eq" class="lbl" data-i18n="quad_label">x এর দ্বিঘাত সমীকরণ</label>
           <div class="eq-row">
             <input id="quad-eq" class="eq-input no-i18n" type="text" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120" data-i18n-placeholder="quad_ph">
             <button type="button" class="btn btn-ghost" id="quad-clear" data-i18n-aria-label="clear_aria" data-i18n-title="clear_aria">✕</button>
           </div>
-          <p class="syntax" data-i18n="syntax_hint_quad"></p>
+          <p class="syntax" data-i18n="syntax_hint_quad">x² কে x^2 বা x² লেখো। সমীকরণ যে কোনো ক্রমে হতে পারে, যেমন 6 = x^2 + 5x।</p>
           <div class="keys no-i18n" data-target="quad-eq"></div>
-          <p class="muted small mb0" data-i18n="examples"></p>
+          <p class="muted small mb0" data-i18n="examples">একটি উদাহরণ দেখো:</p>
           <div class="examples no-i18n" id="quad-examples"></div>
           <div class="method-block">
-            <span class="lbl" id="lbl-qm" data-i18n="method_label"></span>
+            <span class="lbl" id="lbl-qm" data-i18n="method_label">পদ্ধতি</span>
             <div class="seg" role="group" aria-labelledby="lbl-qm" id="quad-method">
-              <button type="button" data-v="factor" id="qm-factor" data-i18n="m_factor"></button>
-              <button type="button" data-v="square" id="qm-square" data-i18n="m_square"></button>
-              <button type="button" data-v="formula" id="qm-formula" data-i18n="m_formula"></button>
+              <button type="button" data-v="factor" id="qm-factor" data-i18n="m_factor">উৎপাদকে বিশ্লেষণ</button>
+              <button type="button" data-v="square" id="qm-square" data-i18n="m_square">পূর্ণবর্গ করা</button>
+              <button type="button" data-v="formula" id="qm-formula" data-i18n="m_formula">দ্বিঘাত সূত্র</button>
             </div>
           </div>
           <div class="row">
-            <button type="button" class="btn btn-primary btn-lg solve-btn" id="quad-solve">🧮 <span data-i18n="solve"></span></button>
+            <button type="button" class="btn btn-primary btn-lg solve-btn" id="quad-solve">🧮 <span data-i18n="solve">ধাপে ধাপে সমাধান</span></button>
           </div>
         </div>
         <div class="stack">
           <div class="card stack result-card" id="quad-result" aria-live="polite" data-status="none-yet"></div>
           <div class="card" id="quad-graph-card" hidden>
-            <h3 data-i18n="parabola_title"></h3>
+            <h3 data-i18n="parabola_title">অধিবৃত্তের লেখচিত্র</h3>
             <div class="graph-wrap" id="quad-graph"></div>
             <div class="legend" id="quad-legend"></div>
           </div>
@@ -312,16 +312,16 @@
       <div class="card stack">
         <div class="row spread">
           <div class="method-block">
-            <span class="lbl" id="lbl-wm" data-i18n="word_pick"></span>
+            <span class="lbl" id="lbl-wm" data-i18n="word_pick">সমীকরণের ধরন</span>
             <div class="seg" role="group" aria-labelledby="lbl-wm" id="word-mode">
-              <button type="button" data-v="linear" id="wm-linear" data-i18n="mode_linear"></button>
-              <button type="button" data-v="pair" id="wm-pair" data-i18n="mode_pair"></button>
-              <button type="button" data-v="quad" id="wm-quad" data-i18n="mode_quad"></button>
+              <button type="button" data-v="linear" id="wm-linear" data-i18n="mode_linear">রৈখিক (এক চল)</button>
+              <button type="button" data-v="pair" id="wm-pair" data-i18n="mode_pair">রৈখিক সমীকরণ জোড়</button>
+              <button type="button" data-v="quad" id="wm-quad" data-i18n="mode_quad">দ্বিঘাত</button>
             </div>
           </div>
           <button type="button" class="btn no-print" id="word-print">🖨️ <span data-i18n="print"></span></button>
         </div>
-        <p class="muted small" data-i18n="word_intro"></p>
+        <p class="muted small" data-i18n="word_intro">সমস্যাটি পড়ো, নিজে সমীকরণ গড়ার চেষ্টা করো, তারপর সংকেত খুলে ধাপে ধাপে সমাধান করো।</p>
         <div class="wp-list" id="word-list"></div>
       </div>
     </section>
@@ -333,33 +333,33 @@
           <div class="pr-problem no-i18n" id="pr-problem" dir="ltr"></div>
           <div class="ans-row no-print" id="pr-answers"></div>
           <div class="row no-print">
-            <button type="button" class="btn btn-primary" id="pr-check">✔ <span data-i18n="check_answer"></span></button>
-            <button type="button" class="btn" id="pr-steps">🧮 <span data-i18n="show_steps"></span></button>
-            <button type="button" class="btn btn-accent" id="pr-new">🎲 <span data-i18n="new_problem"></span></button>
+            <button type="button" class="btn btn-primary" id="pr-check">✔ <span data-i18n="check_answer">যাচাই</span></button>
+            <button type="button" class="btn" id="pr-steps">🧮 <span data-i18n="show_steps">ধাপ দেখাও</span></button>
+            <button type="button" class="btn btn-accent" id="pr-new">🎲 <span data-i18n="new_problem">নতুন প্রশ্ন</span></button>
           </div>
           <p class="pr-fb" id="pr-feedback" aria-live="polite" data-ok=""></p>
           <div class="pr-stats" id="pr-stats"></div>
         </div>
         <div class="card stack no-print">
           <div class="method-block">
-            <span class="lbl" id="lbl-prm" data-i18n="word_pick"></span>
+            <span class="lbl" id="lbl-prm" data-i18n="word_pick">সমীকরণের ধরন</span>
             <div class="seg" role="group" aria-labelledby="lbl-prm" id="pr-mode">
-              <button type="button" data-v="linear" id="prm-linear" data-i18n="mode_linear"></button>
-              <button type="button" data-v="pair" id="prm-pair" data-i18n="mode_pair"></button>
-              <button type="button" data-v="quad" id="prm-quad" data-i18n="mode_quad"></button>
+              <button type="button" data-v="linear" id="prm-linear" data-i18n="mode_linear">রৈখিক (এক চল)</button>
+              <button type="button" data-v="pair" id="prm-pair" data-i18n="mode_pair">রৈখিক সমীকরণ জোড়</button>
+              <button type="button" data-v="quad" id="prm-quad" data-i18n="mode_quad">দ্বিঘাত</button>
             </div>
           </div>
           <div class="method-block">
-            <span class="lbl" id="lbl-prl" data-i18n="level_label"></span>
+            <span class="lbl" id="lbl-prl" data-i18n="level_label">স্তর</span>
             <div class="seg" role="group" aria-labelledby="lbl-prl" id="pr-level">
-              <button type="button" data-v="easy" id="lv-easy" data-i18n="lv_easy"></button>
-              <button type="button" data-v="medium" id="lv-medium" data-i18n="lv_medium"></button>
-              <button type="button" data-v="hard" id="lv-hard" data-i18n="lv_hard"></button>
+              <button type="button" data-v="easy" id="lv-easy" data-i18n="lv_easy">সহজ</button>
+              <button type="button" data-v="medium" id="lv-medium" data-i18n="lv_medium">মাঝারি</button>
+              <button type="button" data-v="hard" id="lv-hard" data-i18n="lv_hard">কঠিন</button>
             </div>
           </div>
-          <p class="muted small mb0" data-i18n="worksheet_hint"></p>
-          <button type="button" class="btn" id="pr-worksheet">🖨️ <span data-i18n="print_worksheet"></span></button>
-          <p class="callout small mb0" data-i18n="practice_tip"></p>
+          <p class="muted small mb0" data-i18n="worksheet_hint">এই ধরন ও স্তরের 10টি প্রশ্ন ছাপো, দ্বিতীয় পাতায় উত্তরমালা সহ।</p>
+          <button type="button" class="btn" id="pr-worksheet">🖨️ <span data-i18n="print_worksheet">ওয়ার্কশিট ছাপো</span></button>
+          <p class="callout small mb0" data-i18n="practice_tip">পরামর্শ: ভগ্নাংশ 3/2 এর মতো ও ঋণাত্মক সংখ্যা −4 এর মতো লেখো। দ্বিঘাতে দুটি বীজ যে কোনো ক্রমে লেখো।</p>
         </div>
       </div>
     </section>
@@ -367,28 +367,28 @@
     <section id="worksheet" aria-hidden="true"></section>
 
     <details class="card words" id="words" style="margin-top:18px">
-      <summary><strong data-i18n="words_title"></strong></summary>
+      <summary><strong data-i18n="words_title">জানার শব্দ</strong></summary>
       <dl>
-        <dt data-i18n="w1_t"></dt><dd data-i18n="w1_d"></dd>
-        <dt data-i18n="w2_t"></dt><dd data-i18n="w2_d"></dd>
-        <dt data-i18n="w3_t"></dt><dd data-i18n="w3_d"></dd>
-        <dt data-i18n="w4_t"></dt><dd data-i18n="w4_d"></dd>
-        <dt data-i18n="w5_t"></dt><dd data-i18n="w5_d"></dd>
-        <dt data-i18n="w6_t"></dt><dd data-i18n="w6_d"></dd>
-        <dt data-i18n="w7_t"></dt><dd data-i18n="w7_d"></dd>
-        <dt data-i18n="w8_t"></dt><dd data-i18n="w8_d"></dd>
+        <dt data-i18n="w1_t">চল</dt><dd data-i18n="w1_d">x বা y এর মতো অক্ষর, যা এমন একটি সংখ্যার জায়গায় থাকে যা আমরা এখনো জানি না।</dd>
+        <dt data-i18n="w2_t">রৈখিক সমীকরণ</dt><dd data-i18n="w2_d">যে সমীকরণে চলের ঘাত 1, যেমন 3x + 5 = 20। এর লেখচিত্র একটি সরলরেখা।</dd>
+        <dt data-i18n="w3_t">পক্ষান্তর</dt><dd data-i18n="w3_d">একটি পদকে = এর এক পাশ থেকে অন্য পাশে নেওয়া। চিহ্ন বদলে যায়: + হয় −, × হয় ÷।</dd>
+        <dt data-i18n="w4_t">সঙ্গতিপূর্ণ / অসঙ্গত জোড়</dt><dd data-i18n="w4_d">যে জোড়ের অন্তত একটি সমাধান আছে তা সঙ্গতিপূর্ণ; যার সমাধান নেই তা অসঙ্গত।</dd>
+        <dt data-i18n="w5_t">দ্বিঘাত সমীকরণ</dt><dd data-i18n="w5_d">ax² + bx + c = 0 আকারের সমীকরণ যেখানে a ≠ 0। এর লেখচিত্র অধিবৃত্ত।</dd>
+        <dt data-i18n="w6_t">নিরূপক</dt><dd data-i18n="w6_d">D = b² − 4ac। D &gt; 0 হলে দুটি বাস্তব বীজ, D = 0 হলে দুটি সমান বীজ, D &lt; 0 হলে বাস্তব বীজ নেই।</dd>
+        <dt data-i18n="w7_t">বীজ</dt><dd data-i18n="w7_d">x এর যে মানগুলি সমীকরণকে সত্য করে। দ্বিঘাতের সর্বোচ্চ দুটি বীজ।</dd>
+        <dt data-i18n="w8_t">করণী</dt><dd data-i18n="w8_d">যে বর্গমূল পূর্ণসংখ্যা নয়, যেমন √10। √50 কে সরল করে 5√2 লেখি।</dd>
       </dl>
     </details>
 
     <details class="card" id="howto" style="margin-top:12px">
-      <summary><strong data-i18n="howto_title"></strong></summary>
+      <summary><strong data-i18n="howto_title">কীভাবে ব্যবহার করবে / শ্রেণিকক্ষের জন্য ভাবনা</strong></summary>
       <ul>
-        <li data-i18n="how1"></li>
-        <li data-i18n="how2"></li>
-        <li data-i18n="how3"></li>
-        <li data-i18n="how4"></li>
-        <li data-i18n="how5"></li>
-        <li data-i18n="how6"></li>
+        <li data-i18n="how1">পাঠ্যবইয়ের মতোই সমীকরণ লেখো, যেমন 2(x − 3) = 4x + 1। Enter বা &quot;ধাপে ধাপে সমাধান&quot; চাপো।</li>
+        <li data-i18n="how2">সমীকরণ জোড়ে একই জোড়ে তিনটি পদ্ধতিই দেখো এবং তুলনা করো কোনটি ছোট।</li>
+        <li data-i18n="how3">দ্বিঘাত ট্যাবে প্রথমে নিরূপক দেখো: সমাধানের আগেই জানা যায় কতটি বীজ হবে।</li>
+        <li data-i18n="how4">শব্দ সমস্যা: পড়ো, &quot;সমীকরণ গড়ো&quot; খোলো, তারপর সমাধান করো। সমীকরণ লেখাই আসল দক্ষতা।</li>
+        <li data-i18n="how5">শ্রেণিকক্ষের কাজ: প্রতিটি দলকে একই জোড়ের জন্য আলাদা পদ্ধতি দাও। প্রতিটি দল বোর্ডে ধাপ লিখবে আর সবাই মিলিয়ে দেখবে উত্তর মেলে কি না।</li>
+        <li data-i18n="how6">শিক্ষক: অনুশীলন ট্যাব থেকে ওয়ার্কশিট ছাপো (10টি প্রশ্ন + উত্তরমালা)। সবই অফলাইনে চলে, কিছুই আপলোড হয় না।</li>
       </ul>
     </details>
 

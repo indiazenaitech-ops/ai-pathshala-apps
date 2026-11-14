@@ -136,28 +136,28 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">अपने नोट्स या PDF डालें, अपनी भाषा में सवाल पूछें, और वे पैराग्राफ़ देखें जिनमें जवाब है। आपके नोट्स कहीं अपलोड नहीं होते: सब कुछ आपके डिवाइस पर चलता है।</p>
 
     <div class="callout success an-privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">आपके नोट्स आपके पास ही रहते हैं।</strong> <span data-i18n="privacy_body">खोज इसी ब्राउज़र के अंदर होती है। सिर्फ़ AI मॉडल डाउनलोड होता है (एक बार, अगर आप AI सर्च चालू करें)। आपका टेक्स्ट और सवाल कहीं नहीं भेजे जाते।</span></p>
     </div>
 
     <div class="an-grid">
       <!-- 1. notes -->
       <div class="an-col">
         <section class="card stack" id="notesCard" aria-labelledby="hNotes">
-          <h2 class="an-step" id="hNotes" data-i18n="step_notes"></h2>
+          <h2 class="an-step" id="hNotes" data-i18n="step_notes">1. आपके नोट्स</h2>
           <div class="an-src">
-            <button class="btn btn-primary" id="openBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="open_file"></span></button>
+            <button class="btn btn-primary" id="openBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="open_file">TXT या PDF खोलें</span></button>
             <span class="an-sample">
-              <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">📗</span> <span data-i18n="load_sample"></span></button>
+              <button class="btn" id="sampleBtn" type="button"><span aria-hidden="true">📗</span> <span data-i18n="load_sample">नमूना अध्याय</span></button>
               <select id="sampleLang" class="no-i18n" data-i18n-aria-label="sample_lang"></select>
             </span>
           </div>
           <input type="file" id="fileInput" class="an-hidden-input" accept=".txt,.text,.md,.csv,.pdf,text/plain,application/pdf" tabindex="-1" aria-hidden="true">
           <label class="field" for="notes">
-            <span data-i18n="notes_label"></span>
+            <span data-i18n="notes_label">नोट्स (पेस्ट करें, लिखें या फ़ाइल खोलें)</span>
             <textarea id="notes" class="no-i18n" spellcheck="false" data-i18n-placeholder="notes_ph"></textarea>
           </label>
           <div class="row spread"><div class="an-stats" id="stats" aria-live="polite"></div><button class="btn btn-sm btn-ghost" id="clearBtn" type="button"><span aria-hidden="true">🗑️</span> <span data-i18n="clear"></span></button></div>
@@ -167,41 +167,41 @@
           </div>
           <div class="callout danger stack" id="fileErr" hidden role="alert">
             <p class="mb0" id="fileErrText"></p>
-            <div id="ocrLinkWrap" hidden><a class="btn btn-sm" href="../../../apps/ask-your-notes/../image-to-text/index.html" data-i18n="open_ocr"></a></div>
+            <div id="ocrLinkWrap" hidden><a class="btn btn-sm" href="../../../apps/ask-your-notes/../image-to-text/index.html" data-i18n="open_ocr">इमेज से टेक्स्ट (OCR) खोलें</a></div>
           </div>
-          <p class="small muted mb0" data-i18n="drop_hint"></p>
+          <p class="small muted mb0" data-i18n="drop_hint">आप .txt या .pdf फ़ाइल यहाँ खींचकर भी छोड़ सकते हैं। PDF में असली टेक्स्ट होना चाहिए; फ़ोटो या स्कैन के लिए पहले इमेज से टेक्स्ट (OCR) इस्तेमाल करें।</p>
         </section>
       </div>
 
       <!-- 2. ask -->
       <div class="an-col">
         <section class="card stack" id="askCard" aria-labelledby="hAsk">
-          <h2 class="an-step" id="hAsk" data-i18n="step_ask"></h2>
+          <h2 class="an-step" id="hAsk" data-i18n="step_ask">2. सवाल पूछें</h2>
           <form class="an-ask" id="askForm" autocomplete="off">
-            <label class="an-hidden-input" for="q" data-i18n="q_label"></label>
+            <label class="an-hidden-input" for="q" data-i18n="q_label">आपका सवाल</label>
             <input id="q" type="search" class="no-i18n" enterkeyhint="search" data-i18n-placeholder="q_ph">
-            <button class="btn btn-primary" id="askBtn" type="submit"><span aria-hidden="true">🔎</span> <span data-i18n="find"></span></button>
+            <button class="btn btn-primary" id="askBtn" type="submit"><span aria-hidden="true">🔎</span> <span data-i18n="find">खोजें</span></button>
           </form>
           <div class="an-try" id="tryRow" hidden>
-            <span class="small muted" data-i18n="try_label"></span>
+            <span class="small muted" data-i18n="try_label">आज़माएँ:</span>
             <span id="tryChips" class="an-try no-i18n"></span>
           </div>
           <div class="an-mode" role="group" data-i18n-aria-label="mode_label">
-            <button type="button" id="modeKw" aria-pressed="true"><span class="nm"><span aria-hidden="true">🔤</span> <span data-i18n="mode_kw"></span></span><span class="sub" data-i18n="mode_kw_sub"></span></button>
-            <button type="button" id="modeAi" aria-pressed="false"><span class="nm"><span aria-hidden="true">🧠</span> <span data-i18n="mode_ai"></span></span><span class="sub" data-i18n="mode_ai_sub"></span></button>
+            <button type="button" id="modeKw" aria-pressed="true"><span class="nm"><span aria-hidden="true">🔤</span> <span data-i18n="mode_kw">शब्दों से खोज</span></span><span class="sub" data-i18n="mode_kw_sub">तुरंत · वही शब्द ढूँढता है</span></button>
+            <button type="button" id="modeAi" aria-pressed="false"><span class="nm"><span aria-hidden="true">🧠</span> <span data-i18n="mode_ai">AI सर्च</span></span><span class="sub" data-i18n="mode_ai_sub">मतलब समझता है · कोई भी भाषा</span></button>
           </div>
 
           <!-- AI model: ask before downloading -->
           <div class="callout stack" id="aiBox" hidden>
             <div id="aiAsk" class="stack">
               <p class="mb0" id="aiBody"></p>
-              <p class="mb0 small an-ok" id="aiCachedNote" hidden data-i18n="ai_cached_note"></p>
+              <p class="mb0 small an-ok" id="aiCachedNote" hidden data-i18n="ai_cached_note">AI मॉडल इस डिवाइस पर पहले से सेव है।</p>
               <div class="row"><button class="btn btn-primary" id="aiGet" type="button"></button></div>
             </div>
             <div class="an-status" id="aiStatus" hidden>
               <span id="aiText" class="small" aria-live="polite"></span>
               <div class="progress" id="aiBarWrap" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="aiBar" style="width:0%"></span></div>
-              <span class="tiny muted" id="aiPhone" data-i18n="ai_phone"></span>
+              <span class="tiny muted" id="aiPhone" data-i18n="ai_phone">फ़ोन पर इसमें एक मिनट लग सकता है।</span>
               <div class="row"><button class="btn btn-sm" id="aiCancel" type="button" data-i18n="cancel"></button></div>
             </div>
             <div class="callout danger stack" id="aiErr" hidden role="alert">
@@ -223,7 +223,7 @@
         <section class="card stack" id="resCard" aria-labelledby="hRes" aria-live="polite">
           <div class="an-reshead">
             <h3 id="hRes"></h3>
-            <button class="btn btn-sm" id="copyAll" type="button" hidden><span aria-hidden="true">📋</span> <span data-i18n="copy_all"></span></button>
+            <button class="btn btn-sm" id="copyAll" type="button" hidden><span aria-hidden="true">📋</span> <span data-i18n="copy_all">सब कॉपी करें</span></button>
           </div>
           <div id="resMsg"></div>
           <ol class="an-results" id="results"></ol>
@@ -233,56 +233,56 @@
 
     <!-- what's happening inside -->
     <section class="card stack an-inside" id="inside" aria-labelledby="hInside" style="margin-top:16px">
-      <h2 id="hInside" data-i18n="inside_title"></h2>
+      <h2 id="hInside" data-i18n="inside_title">अंदर क्या हो रहा है</h2>
       <div class="grid-3 an-inside-grid">
         <div class="panel">
-          <h3><span aria-hidden="true">🔤</span> <span data-i18n="in_kw_h"></span></h3>
-          <p class="small" data-i18n="in_kw_p"></p>
+          <h3><span aria-hidden="true">🔤</span> <span data-i18n="in_kw_h">शब्दों से खोज (BM25)</span></h3>
+          <p class="small" data-i18n="in_kw_p">आपके नोट्स लगभग 3 वाक्यों के छोटे हिस्सों में बाँटे जाते हैं। शब्दों से खोज हर हिस्से में आपके सवाल के शब्द गिनती है। कम दिखने वाले शब्द (जैसे “क्लोरोफ़िल”) आम शब्दों (जैसे “पौधा”) से ज़्यादा गिने जाते हैं। यह तुरंत चलती है और कुछ डाउनलोड नहीं करना पड़ता, पर यह सिर्फ़ वही शब्द ढूँढती है।</p>
         </div>
         <div class="panel">
-          <h3><span aria-hidden="true">🧠</span> <span data-i18n="in_ai_h"></span></h3>
-          <p class="small" data-i18n="in_ai_p"></p>
+          <h3><span aria-hidden="true">🧠</span> <span data-i18n="in_ai_h">AI सर्च: मतलब को संख्याओं में बदलना</span></h3>
+          <p class="small" data-i18n="in_ai_p">AI मॉडल हर हिस्से को 384 संख्याओं की एक सूची में बदल देता है, जिसे एम्बेडिंग कहते हैं। मिलते-जुलते मतलब वाले हिस्सों की संख्याएँ भी मिलती-जुलती होती हैं, भले भाषा अलग हो। आपके सवाल की भी एक सूची बनती है, और ऐप कोसाइन समानता से सूचियों की तुलना करता है: 1 के जितना पास, मतलब उतना पास।</p>
         </div>
         <div class="panel">
-          <h3><span aria-hidden="true">✅</span> <span data-i18n="in_find_h"></span></h3>
-          <p class="small" data-i18n="in_find_p"></p>
+          <h3><span aria-hidden="true">✅</span> <span data-i18n="in_find_h">यह ढूँढता है, लिखता नहीं</span></h3>
+          <p class="small" data-i18n="in_find_p">यह ऐप कभी नया जवाब नहीं लिखता। यह सिर्फ़ वही वाक्य दिखाता है जो आपके नोट्स में पहले से हैं, इसलिए यह मनगढ़ंत बातें नहीं बना सकता (चैटबॉट कभी-कभी बना देते हैं; इसे हैलुसिनेशन कहते हैं)। अगर नोट्स में जवाब नहीं है, तब भी सबसे पास वाला हिस्सा दिखेगा, इसलिए हमेशा खुद पढ़कर देखें।</p>
         </div>
       </div>
       <div class="panel">
-        <h3 class="mb0" style="font-size:1rem" data-i18n="viz_title"></h3>
-        <p class="small muted mb0" id="vizEmpty" data-i18n="viz_empty"></p>
+        <h3 class="mb0" style="font-size:1rem" data-i18n="viz_title">अपने सवाल को संख्याओं में देखें</h3>
+        <p class="small muted mb0" id="vizEmpty" data-i18n="viz_empty">AI सर्च करें, फिर अपने सवाल और सबसे अच्छे हिस्से की संख्याएँ देखें।</p>
         <div id="viz" class="an-viz" hidden>
-          <div class="an-vrow"><span class="lbl" data-i18n="viz_q"></span><div class="an-cells" id="vizQ"></div></div>
-          <div class="an-vrow"><span class="lbl" data-i18n="viz_p"></span><div class="an-cells" id="vizP"></div></div>
+          <div class="an-vrow"><span class="lbl" data-i18n="viz_q">आपका सवाल</span><div class="an-cells" id="vizQ"></div></div>
+          <div class="an-vrow"><span class="lbl" data-i18n="viz_p">सबसे अच्छा हिस्सा</span><div class="an-cells" id="vizP"></div></div>
           <div class="an-legend">
-            <span><i id="lgPos"></i><span data-i18n="viz_pos"></span></span>
-            <span><i id="lgNeg"></i><span data-i18n="viz_neg"></span></span>
+            <span><i id="lgPos"></i><span data-i18n="viz_pos">शून्य से ज़्यादा</span></span>
+            <span><i id="lgNeg"></i><span data-i18n="viz_neg">शून्य से कम</span></span>
             <span id="vizNote"></span>
           </div>
           <p class="mb0"><strong id="vizSim"></strong></p>
         </div>
       </div>
       <div class="panel">
-        <h3 style="font-size:1rem;margin:0 0 8px" data-i18n="model_h"></h3>
+        <h3 style="font-size:1rem;margin:0 0 8px" data-i18n="model_h">AI मॉडल के बारे में</h3>
         <dl class="an-facts">
-          <dt data-i18n="model_name"></dt><dd class="no-i18n" id="fModel" dir="auto"></dd>
-          <dt data-i18n="model_lic"></dt><dd id="fLic"></dd>
-          <dt data-i18n="model_size"></dt><dd id="fSize"></dd>
-          <dt data-i18n="model_dims"></dt><dd id="fDims"></dd>
-          <dt data-i18n="model_run"></dt><dd id="fRun"></dd>
+          <dt data-i18n="model_name">मॉडल</dt><dd class="no-i18n" id="fModel" dir="auto"></dd>
+          <dt data-i18n="model_lic">लाइसेंस</dt><dd id="fLic"></dd>
+          <dt data-i18n="model_size">डाउनलोड</dt><dd id="fSize"></dd>
+          <dt data-i18n="model_dims">हर हिस्से की संख्याएँ</dt><dd id="fDims"></dd>
+          <dt data-i18n="model_run">कहाँ चलता है</dt><dd id="fRun"></dd>
         </dl>
       </div>
     </section>
 
     <details class="card" id="help" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">कैसे इस्तेमाल करें / कक्षा के लिए सुझाव</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">अपने नोट्स पेस्ट करें, .txt या PDF फ़ाइल खोलें, या नमूना अध्याय लोड करें। नोट्स लगभग 3 वाक्यों के हिस्सों में बँटते हैं और पेज नंबर साथ रहते हैं।</li>
+        <li data-i18n="tip2">अपने शब्दों में सवाल लिखें और खोजें दबाएँ। शब्दों से खोज तुरंत जवाब देती है; AI सर्च तब भी जवाब ढूँढ लेता है जब आपके शब्द नोट्स से अलग हों।</li>
+        <li data-i18n="tip3">AI सर्च कई भाषाएँ समझता है: अंग्रेज़ी का नमूना अध्याय लोड करें और सवाल हिंदी, तमिल या उर्दू में पूछें।</li>
+        <li data-i18n="tip4">हर जवाब के साथ पेज नंबर दिखता है और सबसे सही वाक्य हाइलाइट होता है। पूरा हिस्सा पढ़ें, फिर उसे अपनी कॉपी में उतार लें।</li>
+        <li data-i18n="tip5">कक्षा गतिविधि: एक अध्याय लोड करें। हर विद्यार्थी 3 सवाल लिखे और अंदाज़ा लगाए कि जवाब किस पेज पर है। ऐप से जाँचें, फिर शब्दों से खोज और AI सर्च की तुलना करें: कौन-से सवाल सिर्फ़ AI ने ढूँढे, और क्यों?</li>
+        <li data-i18n="tip6">किताब के पन्ने का स्कैन या फ़ोटो है? पहले इमेज से टेक्स्ट (OCR) से उसे टेक्स्ट में बदलें। दफ़्तर में लंबे सर्कुलर, नीतियाँ या मीटिंग नोट्स भी ऐसे ही खोजें।</li>
       </ul>
       <div class="row" style="margin-top:12px"><button class="btn btn-danger btn-sm" id="resetBtn" type="button" data-i18n="reset"></button></div>
     </details>

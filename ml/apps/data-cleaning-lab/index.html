@@ -127,35 +127,35 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">കുഴഞ്ഞ ലിസ്റ്റ് പടിപടിയായി വൃത്തിയാക്കൂ: അധിക സ്പേസ്, രണ്ടുതവണ വന്ന വരികൾ, പല തരം തീയതികൾ, മൊബൈൽ നമ്പറുകൾ, ₹ തുകകൾ. പടികൾ ഒരു റെസിപ്പിയായി സേവ് ചെയ്ത് അടുത്ത മാസത്തെ ഫയലിൽ വീണ്ടും പ്രവർത്തിപ്പിക്കൂ.</p>
 
     <section class="card" aria-labelledby="h-load">
-      <h2 class="dc-h" id="h-load" data-i18n="h_load"></h2>
+      <h2 class="dc-h" id="h-load" data-i18n="h_load">1. നിങ്ങളുടെ ഡാറ്റ തുറക്കൂ</h2>
       <div class="row">
-        <button class="btn" id="load-sample" type="button" data-i18n="load_sample"></button>
-        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file"></button>
+        <button class="btn" id="load-sample" type="button" data-i18n="load_sample">കുഴഞ്ഞ മാതൃക</button>
+        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file">CSV ഫയൽ തുറക്കൂ</button>
         <button class="btn btn-danger" id="reset" type="button" data-i18n="reset"></button>
       </div>
       <details id="paste-box">
-        <summary data-i18n="paste_data"></summary>
+        <summary data-i18n="paste_data">ഡാറ്റ പേസ്റ്റ് ചെയ്യൂ</summary>
         <textarea id="paste" class="no-i18n" data-i18n-placeholder="paste_ph" aria-label="CSV" data-i18n-aria-label="paste_data"></textarea>
-        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste"></button>
+        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste">പേസ്റ്റ് ചെയ്ത ഡാറ്റ ഉപയോഗിക്കൂ</button>
       </details>
-      <p class="dc-drop small muted" data-i18n="drop_hint"></p>
+      <p class="dc-drop small muted" data-i18n="drop_hint">CSV ഫയൽ ഈ പേജിലേക്ക് വലിച്ചിടാനും കഴിയും. Excel-ൽ: File → Save as → CSV. നിങ്ങളുടെ ഫയൽ ഈ ഉപകരണത്തിൽ തന്നെ നിൽക്കും.</p>
       <p id="data-info" class="no-i18n" aria-live="polite"></p>
       <p id="busy" class="muted" hidden data-i18n="loading"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-quality">
-      <h2 class="dc-h" id="h-quality" data-i18n="h_quality"></h2>
+      <h2 class="dc-h" id="h-quality" data-i18n="h_quality">2. ഡാറ്റയുടെ ഗുണനിലവാരം</h2>
       <div class="dc-scores" aria-live="polite">
         <div class="dc-score">
-          <span class="lbl" data-i18n="score_before"></span>
+          <span class="lbl" data-i18n="score_before">വൃത്തിയാക്കും മുമ്പുള്ള സ്കോർ</span>
           <span class="big"><span id="score-before"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-before"></span></div>
         </div>
         <div class="dc-score after">
-          <span class="lbl" data-i18n="score_after"></span>
+          <span class="lbl" data-i18n="score_after">വൃത്തിയാക്കിയ ശേഷമുള്ള സ്കോർ</span>
           <span class="big"><span id="score-after"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-after"></span></div>
         </div>
@@ -164,56 +164,56 @@
       <div class="scroll-x">
         <table class="table dc-qt">
           <thead><tr>
-            <th scope="col" data-i18n="th_column"></th><th scope="col" data-i18n="th_type"></th>
-            <th scope="col" data-i18n="q_missing"></th><th scope="col" data-i18n="q_invalid"></th><th scope="col" data-i18n="q_spaces"></th>
+            <th scope="col" data-i18n="th_column">കോളം</th><th scope="col" data-i18n="th_type">എങ്ങനെ തോന്നുന്നു</th>
+            <th scope="col" data-i18n="q_missing">ശൂന്യം</th><th scope="col" data-i18n="q_invalid">ശരിയായ രൂപത്തിലല്ല</th><th scope="col" data-i18n="q_spaces">അധിക സ്പേസ്</th>
           </tr></thead>
           <tbody id="q-body"></tbody>
         </table>
       </div>
-      <p class="tiny muted" data-i18n="quality_note"></p>
+      <p class="tiny muted" data-i18n="quality_note">സ്കോർ = ഒരു പ്രശ്നവുമില്ലാത്ത സെല്ലുകളുടെ പങ്ക്. പ്രശ്നം എന്നാൽ ശൂന്യ മൂല്യം, അധിക സ്പേസ്, ശരിയായ രൂപത്തിലല്ലാത്ത മൂല്യം, അല്ലെങ്കിൽ മുഴുവനായി രണ്ടുതവണ വന്ന വരി.</p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-steps">
-      <h2 class="dc-h" id="h-steps" data-i18n="h_steps"></h2>
+      <h2 class="dc-h" id="h-steps" data-i18n="h_steps">3. വൃത്തിയാക്കൽ പടികൾ (നിങ്ങളുടെ റെസിപ്പി)</h2>
       <div class="panel stack">
         <div class="dc-add">
-          <label class="field"><span data-i18n="step_type"></span><select id="step-type"></select></label>
+          <label class="field"><span data-i18n="step_type">പടി ചേർക്കൂ</span><select id="step-type"></select></label>
         </div>
         <div id="step-form"></div>
         <div class="dc-actions">
-          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step"></button>
-          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest"></button>
+          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step">പടി ചേർക്കൂ</button>
+          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest">പടികൾ നിർദേശിക്കൂ</button>
         </div>
       </div>
       <ol id="recipe" aria-live="polite"></ol>
-      <p id="recipe-empty" class="muted" data-i18n="recipe_empty"></p>
+      <p id="recipe-empty" class="muted" data-i18n="recipe_empty">ഇതുവരെ പടികളില്ല. മുകളിൽ ഒരു പടി തിരഞ്ഞെടുത്ത് &quot;പടി ചേർക്കൂ&quot; അമർത്തൂ, അല്ലെങ്കിൽ &quot;പടികൾ നിർദേശിക്കൂ&quot; അമർത്തൂ.</p>
       <div class="dc-actions" style="margin-top:12px">
-        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo"></button>
-        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe"></button>
-        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe"></button>
-        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps"></button>
+        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo">പഴയപടി</button>
+        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe">റെസിപ്പി എക്സ്പോർട്ട്</button>
+        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe">റെസിപ്പി ഇംപോർട്ട്</button>
+        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps">എല്ലാ പടികളും മാറ്റൂ</button>
       </div>
       <p class="callout small" style="margin-top:12px" data-i18n-html="pipeline_note"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-preview">
-      <h2 class="dc-h" id="h-preview" data-i18n="h_preview"></h2>
+      <h2 class="dc-h" id="h-preview" data-i18n="h_preview">4. വൃത്തിയുള്ള ഡാറ്റ</h2>
       <div class="dc-bar">
         <div class="seg" id="view-seg" role="group">
-          <button type="button" data-v="clean" data-i18n="view_clean"></button>
-          <button type="button" data-v="orig" data-i18n="view_orig"></button>
+          <button type="button" data-v="clean" data-i18n="view_clean">വൃത്തിയുള്ളത്</button>
+          <button type="button" data-v="orig" data-i18n="view_orig">യഥാർഥം</button>
         </div>
-        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show"></span>
+        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show">കാണിക്കൂ</span>
           <select id="filter">
-            <option value="all" data-i18n="show_all"></option>
-            <option value="changed" data-i18n="show_changed"></option>
-            <option value="problems" data-i18n="show_problems"></option>
+            <option value="all" data-i18n="show_all">എല്ലാ വരികളും</option>
+            <option value="changed" data-i18n="show_changed">മാറിയ വരികൾ</option>
+            <option value="problems" data-i18n="show_problems">പ്രശ്നമുള്ള വരികൾ</option>
           </select>
         </label>
       </div>
-      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed"></span><span class="lg-bad" data-i18n="legend_bad"></span></div>
+      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed">ഒരു പടി മാറ്റിയത്</span><span class="lg-bad" data-i18n="legend_bad">ശൂന്യം അല്ലെങ്കിൽ ശരിയായ രൂപത്തിലല്ല</span></div>
       <div class="dc-gridwrap no-i18n"><table class="table" id="grid"></table></div>
-      <p id="no-rows" class="muted" hidden data-i18n="no_rows"></p>
+      <p id="no-rows" class="muted" hidden data-i18n="no_rows">കാണിക്കാൻ വരികളില്ല.</p>
       <div class="dc-pager" id="pager">
         <button class="btn btn-sm" id="pg-prev" type="button" data-i18n="previous"></button>
         <span id="page-info" class="small"></span>
@@ -221,23 +221,23 @@
       </div>
       <div class="dc-foot">
         <span id="out-count" class="small muted"></span>
-        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv"></button>
+        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv">വൃത്തിയുള്ള CSV ഡൗൺലോഡ്</button>
       </div>
     </section>
 
     <details class="card dc-sec">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">കുഴഞ്ഞ മാതൃകയിൽ നിന്ന് തുടങ്ങൂ: &quot;പടികൾ നിർദേശിക്കൂ&quot; അമർത്തി, പട്ടികയിലെ പച്ച (മാറിയവ), ചുവപ്പ് (പ്രശ്നമുള്ളവ) സെല്ലുകൾ നോക്കൂ.</li>
+        <li data-i18n="tip2">ഓഫീസ് ജോലിക്ക്: എല്ലാ മാസവും വരുന്ന ഉപഭോക്തൃ അല്ലെങ്കിൽ സ്റ്റാഫ് ലിസ്റ്റിനായി ഒരിക്കൽ റെസിപ്പി ഉണ്ടാക്കി എക്സ്പോർട്ട് ചെയ്യൂ. അടുത്ത മാസം പുതിയ ഫയൽ തുറന്ന്, റെസിപ്പി ഇംപോർട്ട് ചെയ്ത്, ഒരു മിനിറ്റിൽ വൃത്തിയുള്ള CSV ഡൗൺലോഡ് ചെയ്യൂ.</li>
+        <li data-i18n="tip3">ക്രമം പ്രധാനമാണ്: രണ്ടുതവണ വന്ന വരികൾ നീക്കും മുമ്പ് സ്പേസും വലിയ-ചെറിയ അക്ഷരവും ശരിയാക്കൂ; അപ്പോഴേ &quot;പ്രിയ  ശർമ്മ&quot;, &quot;പ്രിയ ശർമ്മ&quot; ഒരാളാണെന്ന് മനസ്സിലാകൂ.</li>
+        <li data-i18n="tip4">ക്ലാസ് പ്രവർത്തനം: ഓരോ ഗ്രൂപ്പിനും ഒരേ കുഴഞ്ഞ ലിസ്റ്റ് നൽകൂ. ഗ്രൂപ്പുകൾ ആദ്യം കടലാസിൽ വൃത്തിയാക്കൽ പടികൾ എഴുതി, പിന്നെ ഇവിടെ പരീക്ഷിക്കട്ടെ. ഏറ്റവും കുറച്ച് പടികളിൽ ഏറ്റവും കൂടുതൽ സ്കോർ ആർക്ക്?</li>
+        <li data-i18n="tip5">ഒരു പടി ഓഫാക്കി അത് എന്താണ് ചെയ്തിരുന്നത് എന്ന് നോക്കൂ. ↑ ↓ കൊണ്ട് ക്രമം മാറ്റൂ; തെറ്റിയാൽ &quot;പഴയപടി&quot; അമർത്തൂ.</li>
+        <li data-i18n="tip6">വൃത്തിയാക്കിയ ശേഷം ബാക്കിയുള്ള ചുവന്ന സെല്ലുകൾ നോക്കൂ: ചില മൂല്യങ്ങൾ (5 അക്ക മൊബൈൽ നമ്പർ പോലെ) കമ്പ്യൂട്ടറിന് ശരിയാക്കാനാവില്ല. ഒരാൾ അവ പരിശോധിക്കണം.</li>
       </ul>
     </details>
     <details class="card dc-sec">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">അറിയേണ്ട വാക്കുകൾ: ഉള്ളിൽ എന്താണ് നടക്കുന്നത്</summary>
       <ul>
         <li data-i18n-html="w_dataset"></li>
         <li data-i18n-html="w_missing"></li>

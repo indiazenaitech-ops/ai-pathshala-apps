@@ -126,30 +126,30 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">WhatsApp وائس نوٹ، ریکارڈنگ یا ویڈیو کو تحریر اور سب ٹائٹل میں بدلیں: انگریزی، ہندی، اردو اور دوسری ہندوستانی زبانوں میں۔ AI آپ کے اپنے فون یا کمپیوٹر پر چلتا ہے، آپ کی آواز کہیں اپ لوڈ نہیں ہوتی۔</p>
 
     <div class="callout success vt-privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong> <span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">آپ کی آواز آپ کے آلے پر ہی رہتی ہے۔</strong> <span data-i18n="privacy_body">صرف AI ماڈل ایک بار ڈاؤن لوڈ ہوتا ہے۔ وائس نوٹ کبھی اپ لوڈ نہیں ہوتے، اس لیے نجی پیغامات اور میٹنگ کے لیے بھی استعمال کریں۔</span></p>
     </div>
 
     <div class="vt-grid">
       <!-- 1. audio -->
       <section class="card stack" id="inCard" aria-labelledby="hIn">
-        <h2 class="vt-step" id="hIn" data-i18n="step_add"></h2>
+        <h2 class="vt-step" id="hIn" data-i18n="step_add">1۔ وائس نوٹ شامل کریں</h2>
         <div class="vt-drop" id="drop" tabindex="0" role="button" aria-describedby="dropHint">
           <span class="vt-drop-ic" aria-hidden="true">🎧</span>
-          <strong data-i18n="drop_title"></strong>
-          <span class="small muted" id="dropHint" data-i18n="drop_hint"></span>
+          <strong data-i18n="drop_title">آڈیو یا ویڈیو فائل یہاں چھوڑیں</strong>
+          <span class="small muted" id="dropHint" data-i18n="drop_hint">یا ٹیپ کر کے چنیں: WhatsApp وائس نوٹ (⁦.opus⁩)، mp3، m4a، wav، mp4، webm · 30 منٹ تک</span>
         </div>
         <div class="vt-add">
-          <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_file"></span></button>
-          <button class="btn" id="recBtn" type="button"><span aria-hidden="true">🎙️</span> <span data-i18n="record"></span></button>
+          <button class="btn btn-primary" id="pickBtn" type="button"><span aria-hidden="true">📂</span> <span data-i18n="choose_file">فائل چنیں</span></button>
+          <button class="btn" id="recBtn" type="button"><span aria-hidden="true">🎙️</span> <span data-i18n="record">مائک سے ریکارڈ کریں</span></button>
         </div>
         <div class="vt-samples">
-          <span class="lbl" data-i18n="try_sample"></span>
-          <button class="btn btn-sm" id="sampleHi" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_hi"></span></button>
-          <button class="btn btn-sm" id="sampleEn" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_en"></span></button>
+          <span class="lbl" data-i18n="try_sample">نمونہ آزمائیں:</span>
+          <button class="btn btn-sm" id="sampleHi" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_hi">ہندی</span></button>
+          <button class="btn btn-sm" id="sampleEn" type="button"><span aria-hidden="true">▶</span> <span data-i18n="sample_en">انگریزی</span></button>
         </div>
         <input type="file" id="fileInput" class="vt-hidden-input" accept="audio/*,video/*,.opus,.ogg,.oga,.m4a,.mp3,.wav,.aac,.flac,.webm,.mp4,.mov,.3gp" tabindex="-1" aria-hidden="true">
 
@@ -157,7 +157,7 @@
           <span class="dot" aria-hidden="true"></span>
           <span class="time no-i18n" id="recTime" aria-live="off">0:00</span>
           <span class="lvl" aria-hidden="true"><span id="recLvl"></span></span>
-          <button class="btn btn-danger btn-sm" id="recStop" type="button"><span aria-hidden="true">⏹</span> <span data-i18n="rec_stop"></span></button>
+          <button class="btn btn-danger btn-sm" id="recStop" type="button"><span aria-hidden="true">⏹</span> <span data-i18n="rec_stop">روکیں اور استعمال کریں</span></button>
           <button class="btn btn-ghost btn-sm" id="recCancel" type="button" data-i18n="cancel"></button>
         </div>
 
@@ -168,33 +168,33 @@
           </div>
           <audio id="player" controls preload="metadata"></audio>
           <p class="small muted mb0" id="fileNote" hidden></p>
-          <div><button class="btn btn-sm btn-ghost" id="clearFile" type="button" data-i18n="remove_audio"></button></div>
+          <div><button class="btn btn-sm btn-ghost" id="clearFile" type="button" data-i18n="remove_audio">یہ آڈیو ہٹائیں</button></div>
         </div>
         <div class="callout danger" id="fileErr" role="alert" hidden></div>
       </section>
 
       <!-- 2. settings + run -->
       <section class="card stack" id="setCard" aria-labelledby="hSet">
-        <h2 class="vt-step" id="hSet" data-i18n="step_settings"></h2>
+        <h2 class="vt-step" id="hSet" data-i18n="step_settings">2۔ چنیں اور شروع کریں</h2>
         <label class="field">
-          <span data-i18n="spoken_lang"></span>
+          <span data-i18n="spoken_lang">آڈیو میں بولی گئی زبان</span>
           <select id="langSel"></select>
         </label>
         <p class="small muted mb0" id="langNote"></p>
         <div class="field">
-          <span id="modeLbl" data-i18n="mode_label"></span>
+          <span id="modeLbl" data-i18n="mode_label">آپ کو کیا چاہیے؟</span>
           <div class="seg" role="group" aria-labelledby="modeLbl" id="modeSeg">
-            <button type="button" data-mode="transcribe" data-i18n="mode_transcribe"></button>
-            <button type="button" data-mode="translate" data-i18n="mode_translate"></button>
+            <button type="button" data-mode="transcribe" data-i18n="mode_transcribe">جو بولا گیا، وہی لکھیں</button>
+            <button type="button" data-mode="translate" data-i18n="mode_translate">انگریزی میں ترجمہ</button>
           </div>
         </div>
         <div class="field">
-          <span id="modelLbl" data-i18n="model_label"></span>
+          <span id="modelLbl" data-i18n="model_label">AI ماڈل (بڑا ماڈل بہتر ہے، مگر سست)</span>
           <div class="vt-models" id="models" role="group" aria-labelledby="modelLbl"></div>
         </div>
         <p class="callout warning small mb0" id="scriptNote" hidden></p>
         <div class="vt-run">
-          <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled><span aria-hidden="true">📝</span> <span data-i18n="run_btn"></span></button>
+          <button class="btn btn-primary btn-lg" id="runBtn" type="button" disabled><span aria-hidden="true">📝</span> <span data-i18n="run_btn">تحریر میں بدلیں</span></button>
           <button class="btn btn-danger" id="stopBtn" type="button" data-i18n="stop" hidden></button>
         </div>
         <div class="vt-status" id="statusBox" hidden>
@@ -207,59 +207,59 @@
           <div><button class="btn btn-sm" id="retryBtn" type="button" data-i18n="try_again"></button></div>
         </div>
         <p class="small muted mb0" id="firstNote"></p>
-        <p class="small muted mb0" data-i18n="phone_note"></p>
+        <p class="small muted mb0" data-i18n="phone_note">فون پر ایک منٹ کی آڈیو میں کچھ منٹ لگ سکتے ہیں۔ کام پورا ہونے تک یہ صفحہ کھلا رکھیں۔</p>
       </section>
     </div>
 
     <!-- 3. result -->
     <section class="card stack" id="resCard" aria-labelledby="hRes" style="margin-top:16px" hidden>
       <div class="vt-resbar">
-        <h2 class="vt-step" id="hRes" data-i18n="step_result"></h2>
+        <h2 class="vt-step" id="hRes" data-i18n="step_result">3۔ آپ کی تحریر</h2>
         <div class="vt-stats" id="stats"></div>
       </div>
-      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden></p>
+      <p class="callout small mb0" id="restoredNote" data-i18n="restored" hidden>یہ پچھلی بار کی تحریر ہے۔ سننے کے لیے آڈیو دوبارہ شامل کریں۔</p>
       <div class="row spread">
         <div class="seg" role="group" data-i18n-aria-label="view_label" id="viewSeg">
-          <button type="button" data-view="times" data-i18n="view_times"></button>
-          <button type="button" data-view="plain" data-i18n="view_plain"></button>
+          <button type="button" data-view="times" data-i18n="view_times">وقت کے ساتھ</button>
+          <button type="button" data-view="plain" data-i18n="view_plain">صرف تحریر</button>
         </div>
-        <span class="small muted" id="editHint" data-i18n="edit_hint"></span>
+        <span class="small muted" id="editHint" data-i18n="edit_hint">سننے کے لیے وقت پر ٹیپ کریں۔ کوئی لفظ ٹھیک کرنے کے لیے تحریر پر ٹیپ کریں۔</span>
       </div>
       <div class="vt-segs no-i18n" id="segs" aria-live="polite"></div>
       <div class="vt-plain no-i18n" id="plain" tabindex="0" hidden></div>
       <div class="vt-actions">
         <button class="btn btn-primary" id="copyBtn" type="button"><span aria-hidden="true">📋</span> <span data-i18n="copy"></span></button>
-        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt"></span></button>
-        <button class="btn" id="dlSrt" type="button"><span aria-hidden="true">🎬</span> <span data-i18n="dl_srt"></span></button>
-        <button class="btn" id="dlVtt" type="button"><span aria-hidden="true">🌐</span> <span data-i18n="dl_vtt"></span></button>
-        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text"></button>
+        <button class="btn" id="dlTxt" type="button"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_txt">تحریر (⁦.txt⁩)</span></button>
+        <button class="btn" id="dlSrt" type="button"><span aria-hidden="true">🎬</span> <span data-i18n="dl_srt">سب ٹائٹل (⁦.srt⁩)</span></button>
+        <button class="btn" id="dlVtt" type="button"><span aria-hidden="true">🌐</span> <span data-i18n="dl_vtt">ویب سب ٹائٹل (⁦.vtt⁩)</span></button>
+        <button class="btn btn-danger" id="clearText" type="button" data-i18n="clear_text">تحریر مٹائیں</button>
       </div>
     </section>
 
     <details class="card vt-help no-print" style="margin-top:16px">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">کیسے استعمال کریں / مشورے</strong></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
+        <li data-i18n="tip1">WhatsApp وائس نوٹ: اسے دبا کر رکھیں، Share پر ٹیپ کریں اور فون میں محفوظ کریں (جیسے Files میں)۔ پھر یہاں &quot;فائل چنیں&quot; سے اسے چنیں۔</li>
+        <li data-i18n="tip2">جو زبان بولی گئی ہے، وہی چنیں۔ &quot;خود پہچانیں&quot; بھی کام کرتا ہے، مگر زبان خود چننا زیادہ قابلِ بھروسا ہے۔</li>
+        <li data-i18n="tip3">انگریزی ہر ماڈل کے ساتھ اچھی چلتی ہے۔ اردو بیس اور اسمال میں اردو حروف میں آتی ہے۔ ہندی، مراٹھی اور تمل کو ان کی اپنی لکھائی میں پانے کے لیے اسمال چنیں۔</li>
+        <li data-i18n="tip4">YouTube یا Instagram ویڈیو کے لیے سب ٹائٹل (⁦.srt⁩) ڈاؤن لوڈ کریں اور ویڈیو کے ساتھ اپ لوڈ کریں۔ پہلے الفاظ اور وقت جانچ لیں۔</li>
+        <li data-i18n="tip5">صاف آواز، ایک وقت میں ایک شخص اور کم شور سے سب سے اچھی تحریر ملتی ہے۔ استعمال سے پہلے تحریر ضرور پڑھیں۔</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="ideas_title"></h3>
-      <p class="mb0" data-i18n="ideas_body"></p>
-      <h3 style="margin-top:14px" data-i18n="inside_title"></h3>
+      <h3 style="margin-top:14px" data-i18n="ideas_title">کام اور کلاس کے لیے مشورے</h3>
+      <p class="mb0" data-i18n="ideas_body">میٹنگ یا لیکچر کی ریکارڈنگ سے نوٹس بنائیں، اپنی ویڈیو کے سب ٹائٹل بنائیں، انٹرویو لکھیں، یا طلبہ سے چھوٹی تقریر ریکارڈ کروا کر دیکھیں کہ انہوں نے کیا کہا اور AI نے کیا سنا۔</p>
+      <h3 style="margin-top:14px" data-i18n="inside_title">اندر کیا ہو رہا ہے</h3>
       <div class="vt-steps" aria-hidden="true">
-        <span class="chip" data-i18n="in_sound"></span><span class="arr">→</span>
-        <span class="chip" data-i18n="in_picture"></span><span class="arr">→</span>
-        <span class="chip" data-i18n="in_tokens"></span><span class="arr">→</span>
-        <span class="chip" data-i18n="in_text"></span>
+        <span class="chip" data-i18n="in_sound">آواز</span><span class="arr">→</span>
+        <span class="chip" data-i18n="in_picture">آواز کی تصویر</span><span class="arr">→</span>
+        <span class="chip" data-i18n="in_tokens">لفظوں کے ٹکڑے</span><span class="arr">→</span>
+        <span class="chip" data-i18n="in_text">تحریر</span>
       </div>
-      <p data-i18n="inside_body"></p>
-      <p data-i18n="inside_mistakes"></p>
-      <p class="small muted mb0" data-i18n="inside_models"></p>
+      <p data-i18n="inside_body">آڈیو کو خاموش لمحوں پر کاٹ کر 30 سیکنڈ تک کے ٹکڑے بنائے جاتے ہیں۔ ہر ٹکڑا ایک &quot;آواز کی تصویر&quot; (اسپیکٹروگرام) بنتا ہے، جو دکھاتی ہے کہ ہر لمحے کون سے سُر اونچے ہیں۔ Whisper نام کا AI یہ تصویر دیکھ کر ایک ایک چھوٹا لفظی ٹکڑا (ٹوکن) اندازے سے لکھتا ہے، ساتھ میں وقت بھی۔</p>
+      <p data-i18n="inside_mistakes">چھوٹے ماڈلز نے کم ڈیٹا سے سیکھا ہے، خاص طور پر ہندوستانی زبانوں میں۔ اس لیے وہ نام غلط سن سکتے ہیں، ملتی جلتی آوازوں میں الجھ سکتے ہیں یا کوئی سطر دہرا سکتے ہیں۔ بڑے ماڈل کم غلطیاں کرتے ہیں مگر سست ہیں۔ شور، موسیقی اور ایک ساتھ کئی لوگوں کے بولنے سے بھی غلطیاں ہوتی ہیں۔</p>
+      <p class="small muted mb0" data-i18n="inside_models">ماڈل: OpenAI کے Whisper ٹائنی (41 MB)، بیس (77 MB) اور اسمال (249 MB)، MIT لائسنس، جو براؤزر میں Transformers.js (Apache-2.0) سے چلتے ہیں۔ AI انجن (27 MB) بھی ایک بار ڈاؤن لوڈ ہوتا ہے۔ Whisper میں ابھی اوڑیا نہیں ہے۔</p>
       <div class="vt-storage">
         <span class="small muted" id="storageText"></span>
-        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden></button>
+        <button class="btn btn-sm btn-danger" id="storageClear" type="button" data-i18n="storage_clear" hidden>ڈاؤن لوڈ کی گئی AI فائلیں ہٹائیں</button>
       </div>
       <div class="row spread" style="margin-top:12px">
         <span class="small muted" data-i18n="saved_local"></span>

@@ -149,48 +149,48 @@
 <body>
   <main id="app">
     <div id="ui">
-      <p class="edu-intro" data-i18n="intro"></p>
-      <p class="privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+      <p class="edu-intro" data-i18n="intro">దుకాణం, గోదాము లేదా స్టోర్ రూమ్ కోసం సులభమైన స్టాక్ రిజిస్టర్: వస్తువుల జాబితా, సరుకు రాక-పోక, తక్కువ స్టాక్ మరియు ఎక్స్‌పైరీ హెచ్చరికలు, రోజువారీ మరియు నెలవారీ రిపోర్టులు, CSV మరియు బ్యాకప్. అన్నీ మీ డివైస్‌లోనే ఉంటాయి.</p>
+      <p class="privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">మీ స్టాక్ డేటా ఈ బ్రౌజర్‌లో, ఈ డివైస్‌లో మాత్రమే సేవ్ అవుతుంది. ఏదీ అప్‌లోడ్ అవదు. ప్రతి వారం బ్యాకప్ డౌన్‌లోడ్ చేయండి.</span></p>
 
       <div id="remind" class="callout warning row spread banner no-print" hidden>
         <span id="remind-txt" class="grow"></span>
         <span class="row">
-          <button type="button" class="btn btn-sm btn-primary" id="remind-backup" data-i18n="backup_now"></button>
-          <button type="button" class="btn btn-sm" id="remind-later" data-i18n="later"></button>
+          <button type="button" class="btn btn-sm btn-primary" id="remind-backup" data-i18n="backup_now">ఇప్పుడే బ్యాకప్</button>
+          <button type="button" class="btn btn-sm" id="remind-later" data-i18n="later">తర్వాత</button>
         </span>
       </div>
       <div id="quota" class="callout danger row spread banner no-print" hidden>
         <span id="quota-txt" class="grow"></span>
-        <button type="button" class="btn btn-sm btn-primary" id="quota-backup" data-i18n="backup_dl"></button>
+        <button type="button" class="btn btn-sm btn-primary" id="quota-backup" data-i18n="backup_dl">బ్యాకప్ డౌన్‌లోడ్</button>
       </div>
       <div id="sample-banner" class="callout accent row spread banner no-print" hidden>
-        <span class="grow" data-i18n="sample_note"></span>
-        <button type="button" class="btn btn-sm" id="remove-samples" data-i18n="remove_samples"></button>
+        <span class="grow" data-i18n="sample_note">ఇవి యాప్‌ను ప్రయత్నించడానికి ఉదాహరణ వస్తువులు. మీ వస్తువులు జోడించేటప్పుడు వీటిని తీసేయండి.</span>
+        <button type="button" class="btn btn-sm" id="remove-samples" data-i18n="remove_samples">ఉదాహరణలు తీసేయి</button>
       </div>
       <div id="undo-bar" class="callout success row spread banner no-print" role="status" aria-live="polite" hidden>
         <span id="undo-txt" class="grow"></span>
-        <button type="button" class="btn btn-sm btn-primary" id="undo-btn" data-i18n="undo"></button>
+        <button type="button" class="btn btn-sm btn-primary" id="undo-btn" data-i18n="undo">వెనక్కి తీసుకురా</button>
       </div>
 
       <nav class="tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-        <button type="button" role="tab" id="tab-stock" aria-selected="true" aria-controls="pane-stock" data-tab="stock"><span aria-hidden="true">📦</span> <span data-i18n="tab_stock"></span></button>
-        <button type="button" role="tab" id="tab-moves" aria-selected="false" aria-controls="pane-moves" data-tab="moves"><span aria-hidden="true">🔁</span> <span data-i18n="tab_moves"></span></button>
-        <button type="button" role="tab" id="tab-expiry" aria-selected="false" aria-controls="pane-expiry" data-tab="expiry"><span aria-hidden="true">⏳</span> <span data-i18n="tab_expiry"></span></button>
-        <button type="button" role="tab" id="tab-data" aria-selected="false" aria-controls="pane-data" data-tab="data"><span aria-hidden="true">💾</span> <span data-i18n="tab_data"></span></button>
+        <button type="button" role="tab" id="tab-stock" aria-selected="true" aria-controls="pane-stock" data-tab="stock"><span aria-hidden="true">📦</span> <span data-i18n="tab_stock">స్టాక్</span></button>
+        <button type="button" role="tab" id="tab-moves" aria-selected="false" aria-controls="pane-moves" data-tab="moves"><span aria-hidden="true">🔁</span> <span data-i18n="tab_moves">రాక-పోక &amp; రిపోర్టులు</span></button>
+        <button type="button" role="tab" id="tab-expiry" aria-selected="false" aria-controls="pane-expiry" data-tab="expiry"><span aria-hidden="true">⏳</span> <span data-i18n="tab_expiry">ఎక్స్‌పైరీ</span></button>
+        <button type="button" role="tab" id="tab-data" aria-selected="false" aria-controls="pane-data" data-tab="data"><span aria-hidden="true">💾</span> <span data-i18n="tab_data">డేటా &amp; బ్యాకప్</span></button>
       </nav>
 
       <!-- ===================== STOCK ===================== -->
       <section id="pane-stock" role="tabpanel" aria-labelledby="tab-stock">
         <div class="card scan-card stack no-print">
           <div class="scanrow">
-            <label class="field grow"><span data-i18n="scan_label"></span>
+            <label class="field grow"><span data-i18n="scan_label">బార్‌కోడ్ స్కానర్ / త్వరిత శోధన</span>
               <input id="scan" type="search" dir="auto" autocomplete="off" spellcheck="false" enterkeyhint="go" data-i18n-placeholder="scan_ph">
             </label>
-            <div class="field"><span data-i18n="scan_mode"></span>
+            <div class="field"><span data-i18n="scan_mode">స్కాన్ చేస్తే</span>
               <div class="seg" id="scan-mode" role="group">
-                <button type="button" data-mode="find" aria-pressed="true" data-i18n="mode_find"></button>
-                <button type="button" data-mode="in" aria-pressed="false" data-i18n="mode_in"></button>
-                <button type="button" data-mode="out" aria-pressed="false" data-i18n="mode_out"></button>
+                <button type="button" data-mode="find" aria-pressed="true" data-i18n="mode_find">కనుగొను</button>
+                <button type="button" data-mode="in" aria-pressed="false" data-i18n="mode_in">సరుకు వచ్చింది +1</button>
+                <button type="button" data-mode="out" aria-pressed="false" data-i18n="mode_out">సరుకు వెళ్ళింది −1</button>
               </div>
             </div>
           </div>
@@ -202,49 +202,49 @@
         <div class="card stack">
           <div class="filters no-print">
             <label class="field wide"><span data-i18n="search"></span><input id="search" type="search" dir="auto" autocomplete="off" data-i18n-placeholder="search"></label>
-            <label class="field"><span data-i18n="category"></span><select id="f-cat"></select></label>
-            <label class="field"><span data-i18n="status"></span>
+            <label class="field"><span data-i18n="category">వర్గం</span><select id="f-cat"></select></label>
+            <label class="field"><span data-i18n="status">స్థితి</span>
               <select id="f-status">
-                <option value="" data-i18n="all_status"></option>
-                <option value="low" data-i18n="f_low"></option>
-                <option value="out" data-i18n="f_out"></option>
-                <option value="neg" data-i18n="f_neg"></option>
-                <option value="exp" data-i18n="f_exp"></option>
-                <option value="expired" data-i18n="f_expired"></option>
+                <option value="" data-i18n="all_status">అన్ని వస్తువులు</option>
+                <option value="low" data-i18n="f_low">తక్కువ స్టాక్</option>
+                <option value="out" data-i18n="f_out">అయిపోయింది / మైనస్</option>
+                <option value="neg" data-i18n="f_neg">మైనస్ స్టాక్</option>
+                <option value="exp" data-i18n="f_exp">త్వరలో ఎక్స్‌పైరీ</option>
+                <option value="expired" data-i18n="f_expired">ఎక్స్‌పైర్ అయినవి</option>
               </select>
             </label>
-            <label class="field"><span data-i18n="sort"></span>
+            <label class="field"><span data-i18n="sort">క్రమం</span>
               <select id="sort">
-                <option value="name" data-i18n="sort_name"></option>
-                <option value="stock" data-i18n="sort_stock"></option>
-                <option value="value" data-i18n="sort_value"></option>
-                <option value="expiry" data-i18n="sort_expiry"></option>
-                <option value="new" data-i18n="sort_new"></option>
+                <option value="name" data-i18n="sort_name">పేరు (A నుండి Z)</option>
+                <option value="stock" data-i18n="sort_stock">స్టాక్ (తక్కువ నుండి ఎక్కువ)</option>
+                <option value="value" data-i18n="sort_value">విలువ (ఎక్కువ నుండి తక్కువ)</option>
+                <option value="expiry" data-i18n="sort_expiry">ఎక్స్‌పైరీ (ముందుగా వచ్చేది)</option>
+                <option value="new" data-i18n="sort_new">ఇటీవల జోడించినవి</option>
               </select>
             </label>
           </div>
           <div class="row no-print">
-            <button type="button" class="btn btn-primary" id="add-item"><span aria-hidden="true">＋</span> <span data-i18n="add_item"></span></button>
-            <button type="button" class="btn" id="print-sheet"><span aria-hidden="true">🖨</span> <span data-i18n="print_sheet"></span></button>
-            <button type="button" class="btn" id="export-items"><span aria-hidden="true">⬇</span> <span data-i18n="export_items"></span></button>
+            <button type="button" class="btn btn-primary" id="add-item"><span aria-hidden="true">＋</span> <span data-i18n="add_item">వస్తువు జోడించు</span></button>
+            <button type="button" class="btn" id="print-sheet"><span aria-hidden="true">🖨</span> <span data-i18n="print_sheet">స్టాక్ లెక్కింపు షీట్ ప్రింట్ చేయి</span></button>
+            <button type="button" class="btn" id="export-items"><span aria-hidden="true">⬇</span> <span data-i18n="export_items">వస్తువులు CSV</span></button>
             <span class="muted small grow" id="count-txt" aria-live="polite"></span>
           </div>
           <div class="scroll-x">
             <table class="table stock" id="stock-table">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="col_name"></th>
-                  <th scope="col" data-i18n="col_sku"></th>
-                  <th scope="col" data-i18n="col_cat"></th>
-                  <th scope="col" class="num" data-i18n="col_stock"></th>
-                  <th scope="col" class="num" data-i18n="col_min"></th>
-                  <th scope="col" data-i18n="col_status"></th>
-                  <th scope="col" class="num" data-i18n="col_buy"></th>
-                  <th scope="col" class="num" data-i18n="col_sell"></th>
-                  <th scope="col" class="num" data-i18n="col_gst"></th>
-                  <th scope="col" class="num" data-i18n="col_value"></th>
-                  <th scope="col" data-i18n="col_expiry"></th>
-                  <th scope="col" class="no-print" data-i18n="col_actions"></th>
+                  <th scope="col" data-i18n="col_name">వస్తువు</th>
+                  <th scope="col" data-i18n="col_sku">కోడ్ / బార్‌కోడ్</th>
+                  <th scope="col" data-i18n="col_cat">వర్గం</th>
+                  <th scope="col" class="num" data-i18n="col_stock">స్టాక్</th>
+                  <th scope="col" class="num" data-i18n="col_min">కనిష్ఠం</th>
+                  <th scope="col" data-i18n="col_status">స్థితి</th>
+                  <th scope="col" class="num" data-i18n="col_buy">కొన్న ₹</th>
+                  <th scope="col" class="num" data-i18n="col_sell">అమ్మకం ₹</th>
+                  <th scope="col" class="num" data-i18n="col_gst">GST %</th>
+                  <th scope="col" class="num" data-i18n="col_value">విలువ (కొన్న ధర) ₹</th>
+                  <th scope="col" data-i18n="col_expiry">ఎక్స్‌పైరీ</th>
+                  <th scope="col" class="no-print" data-i18n="col_actions">చర్యలు</th>
                 </tr>
               </thead>
               <tbody id="stock-body"></tbody>
@@ -252,14 +252,14 @@
           </div>
           <div class="empty center" id="empty" hidden>
             <div class="big" aria-hidden="true">📦</div>
-            <h2 class="mt0" data-i18n="empty_title"></h2>
-            <p class="muted" data-i18n="empty_help"></p>
+            <h2 class="mt0" data-i18n="empty_title">ఇంకా వస్తువులు లేవు</h2>
+            <p class="muted" data-i18n="empty_help">మొదటి వస్తువు జోడించండి, CSV ఇంపోర్ట్ చేయండి, లేదా ఎలా పనిచేస్తుందో చూడడానికి ఉదాహరణ వస్తువులు లోడ్ చేయండి.</p>
             <div class="row" style="justify-content:center">
-              <button type="button" class="btn btn-primary" id="empty-add" data-i18n="add_item"></button>
-              <button type="button" class="btn" id="load-samples" data-i18n="load_samples"></button>
+              <button type="button" class="btn btn-primary" id="empty-add" data-i18n="add_item">వస్తువు జోడించు</button>
+              <button type="button" class="btn" id="load-samples" data-i18n="load_samples">ఉదాహరణ వస్తువులు లోడ్ చేయి</button>
             </div>
           </div>
-          <div class="center no-print"><button type="button" class="btn" id="more" data-i18n="show_more" hidden></button></div>
+          <div class="center no-print"><button type="button" class="btn" id="more" data-i18n="show_more" hidden>మరిన్ని చూపు</button></div>
         </div>
       </section>
 
@@ -268,32 +268,32 @@
         <div class="card stack">
           <div class="row no-print">
             <div class="seg" id="view-seg" role="group">
-              <button type="button" data-view="ledger" aria-pressed="true" data-i18n="view_ledger"></button>
-              <button type="button" data-view="daily" aria-pressed="false" data-i18n="view_daily"></button>
-              <button type="button" data-view="monthly" aria-pressed="false" data-i18n="view_monthly"></button>
+              <button type="button" data-view="ledger" aria-pressed="true" data-i18n="view_ledger">ఖాతా</button>
+              <button type="button" data-view="daily" aria-pressed="false" data-i18n="view_daily">రోజువారీ రిపోర్ట్</button>
+              <button type="button" data-view="monthly" aria-pressed="false" data-i18n="view_monthly">నెలవారీ రిపోర్ట్</button>
             </div>
-            <button type="button" class="btn" id="export-moves"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves"></span></button>
+            <button type="button" class="btn" id="export-moves"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves">రాక-పోక CSV</span></button>
           </div>
           <div class="filters no-print">
-            <label class="field"><span data-i18n="period"></span>
+            <label class="field"><span data-i18n="period">కాలం</span>
               <select id="period">
-                <option value="today" data-i18n="p_today"></option>
-                <option value="7" data-i18n="p_7"></option>
-                <option value="month" selected data-i18n="p_month"></option>
-                <option value="last" data-i18n="p_last"></option>
-                <option value="year" data-i18n="p_year"></option>
-                <option value="all" data-i18n="p_all"></option>
-                <option value="custom" data-i18n="p_custom"></option>
+                <option value="today" data-i18n="p_today">ఈరోజు</option>
+                <option value="7" data-i18n="p_7">గత 7 రోజులు</option>
+                <option value="month" selected data-i18n="p_month">ఈ నెల</option>
+                <option value="last" data-i18n="p_last">గత నెల</option>
+                <option value="year" data-i18n="p_year">ఈ సంవత్సరం</option>
+                <option value="all" data-i18n="p_all">మొత్తం కాలం</option>
+                <option value="custom" data-i18n="p_custom">సొంత తేదీలు</option>
               </select>
             </label>
-            <label class="field" id="from-field" hidden><span data-i18n="from"></span><input type="date" id="from"></label>
-            <label class="field" id="to-field" hidden><span data-i18n="to"></span><input type="date" id="to"></label>
-            <label class="field"><span data-i18n="type"></span>
+            <label class="field" id="from-field" hidden><span data-i18n="from">నుండి</span><input type="date" id="from"></label>
+            <label class="field" id="to-field" hidden><span data-i18n="to">వరకు</span><input type="date" id="to"></label>
+            <label class="field"><span data-i18n="type">రకం</span>
               <select id="m-type">
-                <option value="" data-i18n="all_types"></option>
-                <option value="in" data-i18n="type_in"></option>
-                <option value="out" data-i18n="type_out"></option>
-                <option value="adj" data-i18n="type_adj"></option>
+                <option value="" data-i18n="all_types">అన్ని రకాలు</option>
+                <option value="in" data-i18n="type_in">వచ్చింది</option>
+                <option value="out" data-i18n="type_out">వెళ్ళింది</option>
+                <option value="adj" data-i18n="type_adj">సరిచేత</option>
               </select>
             </label>
             <label class="field"><span data-i18n="search"></span><input id="m-search" type="search" dir="auto" autocomplete="off" data-i18n-placeholder="search"></label>
@@ -303,12 +303,12 @@
             <table class="table ledger">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="col_date"></th>
-                  <th scope="col" data-i18n="col_item"></th>
-                  <th scope="col" data-i18n="col_type"></th>
-                  <th scope="col" class="num" data-i18n="col_qty"></th>
-                  <th scope="col" data-i18n="col_note"></th>
-                  <th scope="col" class="no-print" data-i18n="col_actions"></th>
+                  <th scope="col" data-i18n="col_date">తేదీ</th>
+                  <th scope="col" data-i18n="col_item">వస్తువు</th>
+                  <th scope="col" data-i18n="col_type">రకం</th>
+                  <th scope="col" class="num" data-i18n="col_qty">పరిమాణం</th>
+                  <th scope="col" data-i18n="col_note">నోట్</th>
+                  <th scope="col" class="no-print" data-i18n="col_actions">చర్యలు</th>
                 </tr>
               </thead>
               <tbody id="ledger-body"></tbody>
@@ -319,19 +319,19 @@
               <thead>
                 <tr>
                   <th scope="col" id="rep-h1"></th>
-                  <th scope="col" class="num" data-i18n="col_moves"></th>
-                  <th scope="col" class="num" data-i18n="col_in"></th>
-                  <th scope="col" class="num" data-i18n="col_out"></th>
-                  <th scope="col" class="num" data-i18n="col_purchase"></th>
-                  <th scope="col" class="num" data-i18n="col_sales"></th>
+                  <th scope="col" class="num" data-i18n="col_moves">ఎంట్రీలు</th>
+                  <th scope="col" class="num" data-i18n="col_in">వచ్చింది (పరిమాణం)</th>
+                  <th scope="col" class="num" data-i18n="col_out">వెళ్ళింది (పరిమాణం)</th>
+                  <th scope="col" class="num" data-i18n="col_purchase">కొనుగోళ్లు ₹ (కొన్న ధర)</th>
+                  <th scope="col" class="num" data-i18n="col_sales">అమ్మకాలు ₹ (అమ్మకం ధర)</th>
                 </tr>
               </thead>
               <tbody id="report-body"></tbody>
               <tfoot id="report-foot"></tfoot>
             </table>
           </div>
-          <p class="muted center" id="m-empty" hidden data-i18n="no_moves"></p>
-          <div class="center no-print"><button type="button" class="btn" id="m-more" data-i18n="show_more" hidden></button></div>
+          <p class="muted center" id="m-empty" hidden data-i18n="no_moves">ఈ కాలంలో రాక-పోకలు లేవు.</p>
+          <div class="center no-print"><button type="button" class="btn" id="m-more" data-i18n="show_more" hidden>మరిన్ని చూపు</button></div>
         </div>
       </section>
 
@@ -339,33 +339,33 @@
       <section id="pane-expiry" role="tabpanel" aria-labelledby="tab-expiry" hidden>
         <div class="card stack">
           <div class="row no-print">
-            <label class="field"><span data-i18n="exp_window"></span>
+            <label class="field"><span data-i18n="exp_window">ఇన్ని రోజుల్లో ఎక్స్‌పైర్ అయ్యే వస్తువులు చూపు</span>
               <select id="exp-days">
-                <option value="7" data-i18n="days_7"></option>
-                <option value="30" selected data-i18n="days_30"></option>
-                <option value="60" data-i18n="days_60"></option>
-                <option value="90" data-i18n="days_90"></option>
+                <option value="7" data-i18n="days_7">7 రోజులు</option>
+                <option value="30" selected data-i18n="days_30">30 రోజులు</option>
+                <option value="60" data-i18n="days_60">60 రోజులు</option>
+                <option value="90" data-i18n="days_90">90 రోజులు</option>
               </select>
             </label>
             <span class="badge primary" id="exp-count" aria-live="polite"></span>
           </div>
-          <p class="muted small mb0" data-i18n="exp_help"></p>
+          <p class="muted small mb0" data-i18n="exp_help">ఎక్స్‌పైరీ తేదీ ఉన్న, స్టాక్ 0 కంటే ఎక్కువ ఉన్న వస్తువులే చూపబడతాయి. వీటిని ముందుగా అమ్మండి లేదా తిరిగి ఇవ్వండి.</p>
           <div class="scroll-x">
             <table class="table exp">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="col_name"></th>
-                  <th scope="col" data-i18n="col_sku"></th>
-                  <th scope="col" class="num" data-i18n="col_stock"></th>
-                  <th scope="col" data-i18n="col_expiry"></th>
-                  <th scope="col" data-i18n="col_days"></th>
-                  <th scope="col" class="no-print" data-i18n="col_actions"></th>
+                  <th scope="col" data-i18n="col_name">వస్తువు</th>
+                  <th scope="col" data-i18n="col_sku">కోడ్ / బార్‌కోడ్</th>
+                  <th scope="col" class="num" data-i18n="col_stock">స్టాక్</th>
+                  <th scope="col" data-i18n="col_expiry">ఎక్స్‌పైరీ</th>
+                  <th scope="col" data-i18n="col_days">మిగిలిన రోజులు</th>
+                  <th scope="col" class="no-print" data-i18n="col_actions">చర్యలు</th>
                 </tr>
               </thead>
               <tbody id="exp-body"></tbody>
             </table>
           </div>
-          <p class="muted center" id="exp-empty" hidden data-i18n="no_expiry"></p>
+          <p class="muted center" id="exp-empty" hidden data-i18n="no_expiry">ఈ కాలంలో ఏదీ ఎక్స్‌పైర్ అవడం లేదు. ఇక్కడ చూడడానికి వస్తువులకు ఎక్స్‌పైరీ తేదీ జోడించండి.</p>
         </div>
       </section>
 
@@ -374,41 +374,41 @@
         <div class="grid-2">
           <div class="card stack">
             <h2 data-i18n="settings"></h2>
-            <label class="field"><span data-i18n="shop_name"></span><input type="text" id="shop" maxlength="80" dir="auto" autocomplete="off" data-i18n-placeholder="shop_ph"></label>
-            <label class="field"><span data-i18n="default_gst"></span><input type="text" id="default-gst" inputmode="decimal" dir="ltr" list="gst-list" autocomplete="off" class="tnum"></label>
+            <label class="field"><span data-i18n="shop_name">దుకాణం / గోదాము పేరు (షీట్‌పై ప్రింట్ అవుతుంది)</span><input type="text" id="shop" maxlength="80" dir="auto" autocomplete="off" data-i18n-placeholder="shop_ph"></label>
+            <label class="field"><span data-i18n="default_gst">కొత్త వస్తువులకు డిఫాల్ట్ GST %</span><input type="text" id="default-gst" inputmode="decimal" dir="ltr" list="gst-list" autocomplete="off" class="tnum"></label>
           </div>
           <div class="card stack">
-            <h2 data-i18n="csv_title"></h2>
-            <p class="muted small mb0" data-i18n="csv_help"></p>
-            <code class="cols" data-i18n="csv_cols"></code>
-            <label class="check"><input type="checkbox" id="csv-update" checked> <span data-i18n="csv_update"></span></label>
+            <h2 data-i18n="csv_title">CSV ఇంపోర్ట్ మరియు ఎక్స్‌పోర్ట్</h2>
+            <p class="muted small mb0" data-i18n="csv_help">CSV ఫైల్ Excel లేదా Google Sheets లో తెరుచుకుంటుంది. ఇంపోర్ట్ కోసం మొదటి వరుసలో ఈ కాలమ్ పేర్లు ఉండాలి (ఏ క్రమంలోనైనా; &quot;name&quot; మాత్రమే అవసరం):</p>
+            <code class="cols" data-i18n="csv_cols">name, sku, category, unit, purchase_price, selling_price, gst_percent, min_stock, supplier, expiry, stock</code>
+            <label class="check"><input type="checkbox" id="csv-update" checked> <span data-i18n="csv_update">అదే కోడ్ ఉన్న పాత వస్తువులను అప్‌డేట్ చేయి</span></label>
             <div class="row">
-              <button type="button" class="btn btn-primary" id="import-csv"><span aria-hidden="true">⬆</span> <span data-i18n="import_items"></span></button>
-              <button type="button" class="btn" id="export-items-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_items"></span></button>
-              <button type="button" class="btn" id="export-moves-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves"></span></button>
+              <button type="button" class="btn btn-primary" id="import-csv"><span aria-hidden="true">⬆</span> <span data-i18n="import_items">వస్తువులు CSV ఇంపోర్ట్</span></button>
+              <button type="button" class="btn" id="export-items-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_items">వస్తువులు CSV</span></button>
+              <button type="button" class="btn" id="export-moves-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves">రాక-పోక CSV</span></button>
             </div>
           </div>
           <div class="card stack">
-            <h2 data-i18n="backup_title"></h2>
-            <p class="muted small mb0" data-i18n="backup_help"></p>
+            <h2 data-i18n="backup_title">బ్యాకప్ మరియు పునరుద్ధరణ</h2>
+            <p class="muted small mb0" data-i18n="backup_help">బ్యాకప్ అంటే అన్ని వస్తువులు, రాక-పోకలు, సెట్టింగ్‌లు ఉన్న ఒక JSON ఫైల్. దీన్ని Google Drive, WhatsApp లేదా పెన్ డ్రైవ్‌లో ఉంచండి. పునరుద్ధరిస్తే ప్రస్తుత డేటా మారుతుంది.</p>
             <div class="row">
-              <button type="button" class="btn btn-primary" id="backup-btn"><span aria-hidden="true">💾</span> <span data-i18n="backup_dl"></span></button>
-              <button type="button" class="btn" id="restore-btn"><span aria-hidden="true">📂</span> <span data-i18n="restore"></span></button>
+              <button type="button" class="btn btn-primary" id="backup-btn"><span aria-hidden="true">💾</span> <span data-i18n="backup_dl">బ్యాకప్ డౌన్‌లోడ్</span></button>
+              <button type="button" class="btn" id="restore-btn"><span aria-hidden="true">📂</span> <span data-i18n="restore">బ్యాకప్ నుండి పునరుద్ధరించు</span></button>
             </div>
             <p class="small mb0" id="last-backup" aria-live="polite"></p>
           </div>
           <div class="card stack">
-            <h2 data-i18n="storage_title"></h2>
+            <h2 data-i18n="storage_title">ఈ డివైస్‌లో స్టోరేజ్</h2>
             <p class="small mb0 tnum" id="storage-txt"></p>
             <div class="progress" aria-hidden="true"><span id="storage-bar" style="width:0%"></span></div>
             <p class="muted small mb0" id="persist-txt"></p>
           </div>
           <div class="card stack dz">
-            <h2 data-i18n="danger_title"></h2>
-            <label class="field"><span data-i18n="clear_old"></span><input type="date" id="old-date"></label>
+            <h2 data-i18n="danger_title">జాగ్రత్త విభాగం</h2>
+            <label class="field"><span data-i18n="clear_old">ఈ తేదీకి ముందు ఎంట్రీలు తీసేయి (స్టాక్ అలాగే ఉంటుంది)</span><input type="date" id="old-date"></label>
             <div class="row">
-              <button type="button" class="btn btn-danger" id="clear-old" data-i18n="clear_old_btn"></button>
-              <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset_all"></button>
+              <button type="button" class="btn btn-danger" id="clear-old" data-i18n="clear_old_btn">పాత ఎంట్రీలు తీసేయి</button>
+              <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset_all">అన్నీ తీసేయి</button>
             </div>
           </div>
         </div>
@@ -417,18 +417,18 @@
       <details class="card help" style="margin-top:16px">
         <summary data-i18n="help"></summary>
         <ul>
-          <li data-i18n="tip1"></li>
-          <li data-i18n="tip2"></li>
-          <li data-i18n="tip3"></li>
-          <li data-i18n="tip4"></li>
-          <li data-i18n="tip5"></li>
-          <li data-i18n="tip6"></li>
+          <li data-i18n="tip1">ప్రతి వస్తువును ఒకసారి జోడించండి: బార్‌కోడ్, యూనిట్, ధరలు, కనిష్ఠ స్టాక్. లెక్క రిజిస్టర్ చూసుకుంటుంది.</li>
+          <li data-i18n="tip2">స్కానర్ బాక్స్‌లో క్లిక్ చేసి, &quot;సరుకు వెళ్ళింది −1&quot; ఎంచుకొని, అమ్మేటప్పుడు వస్తువులు స్కాన్ చేయండి; ప్రతి స్కాన్ స్టాక్‌ను ఒకటి తగ్గిస్తుంది. పెద్ద పరిమాణాలకు వచ్చింది / వెళ్ళింది బటన్లు వాడండి.</li>
+          <li data-i18n="tip3">&quot;తక్కువ స్టాక్&quot; టైల్ సప్లయర్ నుండి ఏమి తెప్పించాలో చూపుతుంది. వస్తువులు CSV ఎక్స్‌పోర్ట్ చేసి WhatsApp లో పంపండి.</li>
+          <li data-i18n="tip4">మెడికల్, డెయిరీ, కాస్మెటిక్ దుకాణాలు: ఎక్స్‌పైరీ తేదీలు జోడించి, ప్రతి వారం ఎక్స్‌పైరీ విభాగం చూడండి.</li>
+          <li data-i18n="tip5">స్టాక్ లెక్కింపు షీట్ ప్రింట్ చేసి, గోదాము లెక్కించి, తేడాలను సరిచేతగా నమోదు చేయండి.</li>
+          <li data-i18n="tip6">ప్రతి వారం బ్యాకప్ డౌన్‌లోడ్ చేసి Google Drive లేదా పెన్ డ్రైవ్‌లో ఉంచండి. బ్రౌజర్లు డేటాను తీసేయవచ్చు.</li>
         </ul>
-        <h3 data-i18n="ideas_title"></h3>
+        <h3 data-i18n="ideas_title">పని కోసం ఆలోచనలు</h3>
         <ul>
-          <li data-i18n="idea1"></li>
-          <li data-i18n="idea2"></li>
-          <li data-i18n="idea3"></li>
+          <li data-i18n="idea1">కిరాణా లేదా మెడికల్ స్టోర్: రోజువారీ అమ్మకాలు వెళ్ళింది, వారపు కొనుగోళ్లు వచ్చింది, తక్కువ స్టాక్ ఆర్డర్ జాబితా.</li>
+          <li data-i18n="idea2">స్కూల్ లేదా ఆఫీస్ స్టోర్ రూమ్: తరగతులకు ఇచ్చిన స్టేషనరీ, ల్యాబ్ సామగ్రి, క్రీడా సామగ్రి.</li>
+          <li data-i18n="idea3">చిన్న గోదాము లేదా వర్క్‌షాప్: ముడి సరుకు వచ్చింది, తయారైన సరుకు వెళ్ళింది, అకౌంటెంట్ కోసం నెలవారీ రిపోర్ట్.</li>
         </ul>
       </details>
 

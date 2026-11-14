@@ -126,6 +126,10 @@ function ogImage(id, L) {
 const ld = o => '<script type="application/ld+json">' + JSON.stringify(o).replace(/</g, '\\u003c') + '</script>';
 const ORG = { '@type': 'Organization', '@id': S.SITE + '#org', name: 'AI Pathshala (AI की पाठशाला)', url: S.SITE, logo: { '@type': 'ImageObject', url: S.SITE + 'shared/img/icon-192.png' }, sameAs: ['https://www.youtube.com/@Apni_Pathshala_AI'] };
 
+/* a guide may carry its own date (structure.js: date); the index shows the newest one */
+const dateOf = id => { const gd = id && S.GUIDES.find(x => x.id === id); return gd && gd.date ? { pub: gd.date, mod: gd.date } : { pub: S.PUBLISHED, mod: S.UPDATED }; };
+const NEWEST = S.GUIDES.reduce((m, x) => (x.date && x.date > m ? x.date : m), S.UPDATED);
+
 function head(id, L, P, title, desc, og, jsonld) {
   const alts = LANGS.map(x => `  <link rel="alternate" hreflang="${x}" href="${S.pageUrl(id, x)}">`).join('\n') +
     `\n  <link rel="alternate" hreflang="x-default" href="${S.pageUrl(id, 'en')}">`;
@@ -150,7 +154,7 @@ ${alts}
   <meta property="og:image:width" content="${og.w}">
   <meta property="og:image:height" content="${og.h}">
   <meta property="og:image:alt" content="${esc(title)}">
-  <meta property="og:locale" content="${OG_LOCALE[L]}">${id ? `\n  <meta property="article:published_time" content="${S.PUBLISHED}">\n  <meta property="article:modified_time" content="${S.UPDATED}">` : ''}
+  <meta property="og:locale" content="${OG_LOCALE[L]}">${id ? `\n  <meta property="article:published_time" content="${dateOf(id).pub}">\n  <meta property="article:modified_time" content="${dateOf(id).mod}">` : ''}
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${esc(title)}">
   <meta name="twitter:description" content="${esc(desc)}">
@@ -238,7 +242,7 @@ function guidePage(gd, L) {
   const jsonld = {
     '@context': 'https://schema.org', '@graph': [
       { '@type': 'Article', '@id': P.url + '#article', headline: txt(L, id + '_h1').slice(0, 110), description: desc, inLanguage: L, url: P.url, mainEntityOfPage: P.url,
-        datePublished: S.PUBLISHED, dateModified: S.UPDATED, image: [og.url], author: { '@id': S.SITE + '#org' }, publisher: ORG, isAccessibleForFree: true },
+        datePublished: dateOf(id).pub, dateModified: dateOf(id).mod, image: [og.url], author: { '@id': S.SITE + '#org' }, publisher: ORG, isAccessibleForFree: true },
       { '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: txt(L, 'g_crumb_home'), item: S.SITE },
         { '@type': 'ListItem', position: 2, name: txt(L, 'g_crumb_guides'), item: S.pageUrl(null, L) },
@@ -255,7 +259,7 @@ function guidePage(gd, L) {
       ${g('span', L, 'g_kicker', 'class="g-kicker"')}
       ${g('h1', L, id + '_h1')}
       ${g('p', L, id + '_lead', 'class="g-lead"')}
-      ${g('p', L, 'g_meta', 'class="g-meta small muted"', { date: S.UPDATED, min: gd.mins })}
+      ${g('p', L, 'g_meta', 'class="g-meta small muted"', { date: dateOf(id).mod, min: gd.mins })}
       <div class="g-cta">
         ${ctaApp
       ? `<a class="btn btn-primary btn-lg" data-app="${ctaApp}" href="${esc(appHref(P, ctaApp, L))}"><span aria-hidden="true">${icon(ctaApp)}</span> ${g('span', L, 'g_open', '', { app: '@' + appKey(ctaApp) })}</a>`
@@ -326,7 +330,7 @@ function indexPage(L) {
   const all = S.GROUPS.flatMap(gr => gr.ids);
   const jsonld = {
     '@context': 'https://schema.org', '@graph': [
-      { '@type': 'CollectionPage', '@id': P.url + '#page', url: P.url, name: txt(L, 'g_ix_h1'), description: desc, inLanguage: L, dateModified: S.UPDATED,
+      { '@type': 'CollectionPage', '@id': P.url + '#page', url: P.url, name: txt(L, 'g_ix_h1'), description: desc, inLanguage: L, dateModified: NEWEST,
         isPartOf: { '@type': 'WebSite', '@id': S.SITE + '#website', url: S.SITE, name: 'AI Pathshala' }, publisher: ORG,
         mainEntity: { '@type': 'ItemList', numberOfItems: all.length, itemListElement: all.map((id, i) => ({ '@type': 'ListItem', position: i + 1, url: S.pageUrl(id, L), name: txt(L, id + '_h1') })) } },
       { '@type': 'BreadcrumbList', itemListElement: [

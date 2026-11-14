@@ -146,9 +146,9 @@
 </head>
 <body>
   <main id="app">
-    <h1 class="print-only" data-i18n="app_title"></h1>
+    <h1 class="print-only" data-i18n="app_title">టోకెన్ ఎక్స్‌ప్లోరర్</h1>
     <div class="row spread intro-row">
-      <p class="edu-intro" data-i18n="intro"></p>
+      <p class="edu-intro" data-i18n="intro">ChatGPT లాంటి AI మోడల్స్ అక్షరాలను గానీ పదాలను గానీ చదవవు, అవి టోకెన్లను చదువుతాయి. ఏదైనా రాయండి, మీ టోకనైజర్‌కు మీరే నేర్పించండి, కొన్ని భాషలకు ఎక్కువ టోకెన్లు ఎందుకు అవసరమో చూడండి.</p>
       <div class="row no-print">
         <button type="button" class="btn btn-sm" id="print-btn" data-i18n="print"></button>
         <button type="button" class="btn btn-sm" id="fs-btn" data-i18n="fullscreen"></button>
@@ -160,64 +160,64 @@
       <div class="lab-left">
         <!-- 1. Text -->
         <section class="card stack" id="input-card">
-          <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="input_t"></span></h2>
-          <label for="input" class="lbl" data-i18n="input_label"></label>
+          <h2><span class="step-no" aria-hidden="true">1</span><span data-i18n="input_t">ఏదైనా రాయండి</span></h2>
+          <label for="input" class="lbl" data-i18n="input_label">టోకెన్లుగా విడగొట్టాల్సిన టెక్స్ట్</label>
           <textarea id="input" class="no-i18n" rows="4" spellcheck="false" data-i18n-placeholder="input_ph"></textarea>
           <div class="row no-print">
-            <button type="button" class="btn btn-sm" id="ex-lang" data-i18n="ex_lang"></button>
-            <button type="button" class="btn btn-sm" id="ex-en" data-i18n="ex_en"></button>
-            <button type="button" class="btn btn-sm" id="ex-mix" data-i18n="ex_mix"></button>
+            <button type="button" class="btn btn-sm" id="ex-lang" data-i18n="ex_lang">నా భాషలో ఉదాహరణ</button>
+            <button type="button" class="btn btn-sm" id="ex-en" data-i18n="ex_en">ఇంగ్లీష్ ఉదాహరణ</button>
+            <button type="button" class="btn btn-sm" id="ex-mix" data-i18n="ex_mix">కలగలుపు భాష ఉదాహరణ</button>
             <button type="button" class="btn btn-sm btn-ghost" id="clear-input" data-i18n="clear"></button>
           </div>
         </section>
 
         <!-- 2. Tokenizer -->
         <section class="card stack" id="mode-card">
-          <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="mode_t"></span></h2>
+          <h2><span class="step-no" aria-hidden="true">2</span><span data-i18n="mode_t">టోకనైజర్‌ను ఎంచుకోండి</span></h2>
           <div class="seg big no-print" role="group" data-i18n-aria-label="mode_t">
-            <button type="button" id="mode-char" data-i18n="mode_char"></button>
-            <button type="button" id="mode-word" data-i18n="mode_word"></button>
-            <button type="button" id="mode-bpe" data-i18n="mode_bpe"></button>
+            <button type="button" id="mode-char" data-i18n="mode_char">అక్షరాలు</button>
+            <button type="button" id="mode-word" data-i18n="mode_word">పదాలు</button>
+            <button type="button" id="mode-bpe" data-i18n="mode_bpe">BPE (AI లాగా)</button>
           </div>
           <p class="callout small mb0" id="mode-note"></p>
 
           <div id="train-block" class="stack">
-            <h3 class="mb0" data-i18n="train_t"></h3>
+            <h3 class="mb0" data-i18n="train_t">టోకనైజర్‌కు నేర్పించండి</h3>
             <div class="no-print">
-              <span class="lbl" id="src-lbl" data-i18n="train_src"></span>
+              <span class="lbl" id="src-lbl" data-i18n="train_src">శిక్షణ టెక్స్ట్</span>
               <div class="seg src" role="group" aria-labelledby="src-lbl">
-                <button type="button" id="src-en" data-i18n="src_en"></button>
+                <button type="button" id="src-en" data-i18n="src_en">ఇంగ్లీష్</button>
                 <button type="button" id="src-lang"></button>
-                <button type="button" id="src-both" data-i18n="src_both"></button>
-                <button type="button" id="src-all" data-i18n="src_all"></button>
-                <button type="button" id="src-own" data-i18n="src_own"></button>
+                <button type="button" id="src-both" data-i18n="src_both">రెండూ</button>
+                <button type="button" id="src-all" data-i18n="src_all">మొత్తం 12 భాషలు</button>
+                <button type="button" id="src-own" data-i18n="src_own">నా సొంత టెక్స్ట్</button>
               </div>
             </div>
             <div id="own-wrap" class="stack" hidden>
-              <label for="own-text" class="lbl" data-i18n="own_label"></label>
+              <label for="own-text" class="lbl" data-i18n="own_label">మీ శిక్షణ టెక్స్ట్</label>
               <textarea id="own-text" class="no-i18n" rows="4" spellcheck="false" data-i18n-placeholder="own_ph"></textarea>
             </div>
-            <p class="callout warning small mb0" id="own-empty" data-i18n="own_empty" hidden></p>
+            <p class="callout warning small mb0" id="own-empty" data-i18n="own_empty" hidden>మీ శిక్షణ టెక్స్ట్ ఖాళీగా ఉంది. కొంత టెక్స్ట్ పేస్ట్ చేయండి, లేదా వేరే శిక్షణ టెక్స్ట్ ఎంచుకోండి.</p>
             <p class="muted small mb0" id="corpus-info" aria-live="polite"></p>
 
             <div id="bpe-block" class="stack">
               <div>
                 <div class="range-head">
-                  <label for="merges" data-i18n="merges_label"></label>
+                  <label for="merges" data-i18n="merges_label">కలయికల సంఖ్య</label>
                   <b id="merges-val" class="no-i18n"></b>
                 </div>
                 <input type="range" id="merges" min="0" max="600" step="1" class="no-print">
-                <div class="range-ends tiny muted no-print"><span data-i18n="merges_few"></span><span data-i18n="merges_many"></span></div>
+                <div class="range-ends tiny muted no-print"><span data-i18n="merges_few">తక్కువ కలయికలు, చిన్న టోకెన్లు</span><span data-i18n="merges_many">ఎక్కువ కలయికలు, పెద్ద టోకెన్లు</span></div>
               </div>
               <p class="small mb0" id="vocab-size"></p>
               <p class="callout small mb0" id="merges-early" aria-live="polite" hidden></p>
               <div class="row no-print">
-                <button type="button" class="btn btn-accent" id="play" data-i18n="play"></button>
-                <span class="small muted" data-i18n="play_hint"></span>
+                <button type="button" class="btn btn-accent" id="play" data-i18n="play">▶ నేర్చుకోవడం చూడండి</button>
+                <span class="small muted" data-i18n="play_hint">0 నుంచి మొదలుపెట్టి ఒక్కొక్కటిగా కలయికలను జోడిస్తుంది.</span>
               </div>
-              <h4 class="mb0" data-i18n="merge_list_t"></h4>
+              <h4 class="mb0" data-i18n="merge_list_t">కలయికల జాబితా (కొత్తది పైన)</h4>
               <div class="merge-box">
-                <p class="muted small merge-empty" id="merge-empty" data-i18n="merge_empty"></p>
+                <p class="muted small merge-empty" id="merge-empty" data-i18n="merge_empty">ఇంకా కలయికలు లేవు, కాబట్టి ప్రతి టోకెన్ ఒక బైట్. స్లైడర్‌ను ముందుకు జరపండి.</p>
                 <ol class="merge-list no-i18n" id="merge-list"></ol>
               </div>
             </div>
@@ -227,16 +227,16 @@
 
       <!-- 3. Tokens -->
       <section class="card stack" id="result-card">
-        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="result_t"></span></h2>
+        <h2><span class="step-no" aria-hidden="true">3</span><span data-i18n="result_t">టోకెన్లను చూడండి</span></h2>
         <div class="stats" id="stats" aria-live="polite">
-          <div class="stat main"><b id="stat-tokens">0</b><span data-i18n="stat_tokens"></span></div>
-          <div class="stat"><b id="stat-chars">0</b><span data-i18n="stat_chars"></span></div>
-          <div class="stat"><b id="stat-bytes">0</b><span data-i18n="stat_bytes"></span></div>
-          <div class="stat"><b id="stat-cpt">0</b><span data-i18n="stat_cpt"></span></div>
-          <div class="stat unk" id="stat-unk-wrap" hidden><b id="stat-unk">0</b><span data-i18n="stat_unk"></span></div>
+          <div class="stat main"><b id="stat-tokens">0</b><span data-i18n="stat_tokens">టోకెన్లు</span></div>
+          <div class="stat"><b id="stat-chars">0</b><span data-i18n="stat_chars">అక్షరాలు</span></div>
+          <div class="stat"><b id="stat-bytes">0</b><span data-i18n="stat_bytes">UTF-8 బైట్లు</span></div>
+          <div class="stat"><b id="stat-cpt">0</b><span data-i18n="stat_cpt">ఒక్కో టోకెన్‌కు అక్షరాలు</span></div>
+          <div class="stat unk" id="stat-unk-wrap" hidden><b id="stat-unk">0</b><span data-i18n="stat_unk">తెలియనివి [UNK]</span></div>
         </div>
         <div class="row spread no-print">
-          <label class="check"><input type="checkbox" id="show-ids"> <span data-i18n="show_ids"></span></label>
+          <label class="check"><input type="checkbox" id="show-ids"> <span data-i18n="show_ids">టోకెన్ ID-లు చూపించు</span></label>
           <span class="small muted" id="mode-badge"></span>
         </div>
         <div class="chips no-i18n" id="chips" dir="auto"></div>
@@ -245,8 +245,8 @@
         <p class="muted small mb0" id="chips-hint"></p>
         <div id="ids-wrap" class="stack">
           <div class="row spread">
-            <h3 class="mb0" data-i18n="ids_t"></h3>
-            <button type="button" class="btn btn-sm no-print" id="copy-ids" data-i18n="copy_ids"></button>
+            <h3 class="mb0" data-i18n="ids_t">AI మోడల్ నిజంగా చూసేది ఇదే</h3>
+            <button type="button" class="btn btn-sm no-print" id="copy-ids" data-i18n="copy_ids">ID-లు కాపీ చేయండి</button>
           </div>
           <pre class="ids-box no-i18n" id="ids-box" dir="ltr"></pre>
         </div>
@@ -255,57 +255,57 @@
 
     <!-- 4. Comparison -->
     <section class="card stack" id="cmp-card">
-      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="cmp_t"></span></h2>
+      <h2><span class="step-no" aria-hidden="true">4</span><span data-i18n="cmp_t">ఒకే అర్థం, 12 భాషలు</span></h2>
       <p class="mb0" id="cmp-intro"></p>
       <div class="legend">
-        <span><span class="sw en" aria-hidden="true"></span><span data-i18n="cmp_en"></span> <span class="muted small" id="cmp-en-m"></span></span>
-        <span><span class="sw mu" aria-hidden="true"></span><span data-i18n="cmp_multi"></span> <span class="muted small" id="cmp-mu-m"></span></span>
+        <span><span class="sw en" aria-hidden="true"></span><span data-i18n="cmp_en">ఇంగ్లీష్‌పై మాత్రమే శిక్షణ</span> <span class="muted small" id="cmp-en-m"></span></span>
+        <span><span class="sw mu" aria-hidden="true"></span><span data-i18n="cmp_multi">మొత్తం 12 భాషలపై శిక్షణ</span> <span class="muted small" id="cmp-mu-m"></span></span>
       </div>
       <div class="cmp-rows no-i18n" id="cmp-rows"></div>
       <p class="callout accent mb0" id="cmp-summary" aria-live="polite"></p>
       <p class="callout mb0 small" id="cmp-budget" hidden></p>
       <div class="callout warning">
-        <h3 data-i18n="cmp_why_t"></h3>
+        <h3 data-i18n="cmp_why_t">ఇది సమానత్వ సమస్య ఎందుకు?</h3>
         <ul class="mb0" style="margin:0;padding-inline-start:20px">
-          <li data-i18n="cmp_why_1"></li>
-          <li data-i18n="cmp_why_2"></li>
-          <li data-i18n="cmp_why_3"></li>
-          <li data-i18n="cmp_why_4"></li>
+          <li data-i18n="cmp_why_1">డబ్బు తీసుకునే AI సేవలు ప్రతి టోకెన్‌కు ధర వసూలు చేస్తాయి. మీ భాషకు 3 రెట్లు టోకెన్లు అవసరమైతే, అదే ప్రశ్న-జవాబుకు 3 రెట్లు ఖర్చవుతుంది.</li>
+          <li data-i18n="cmp_why_2">ఒక మోడల్ ఒకేసారి నిర్ణీత సంఖ్యలో టోకెన్లను మాత్రమే చదవగలదు (దాని కాంటెక్స్ట్ విండో). ప్రతి వాక్యంలో ఎక్కువ టోకెన్లు అంటే మీ పాఠంలో లేదా చాట్‌లో తక్కువ భాగాన్నే అది పట్టుకోగలదు.</li>
+          <li data-i18n="cmp_why_3">ఎక్కువ టోకెన్లు అంటే జవాబులు కూడా నెమ్మదిగా వస్తాయి. శిక్షణ డేటాలో ఏ భాష టెక్స్ట్ తక్కువగా ఉంటుందో, ఆ భాషలో జవాబులు తరచుగా బలహీనంగా ఉంటాయి.</li>
+          <li data-i18n="cmp_why_4">పరిష్కారం: భారతీయ భాషలపై కూడా టోకనైజర్లకు శిక్షణ ఇవ్వడం. కొత్త మోడల్స్, భారతీయ AI బృందాలు ఇలా చేస్తున్నాయి, అందువల్ల వాటి టోకెన్లు మన భాషలకు చాలా బాగా సరిపోతాయి.</li>
         </ul>
       </div>
-      <p class="muted small mb0" data-i18n="cmp_bytes_note"></p>
-      <p class="muted small mb0" id="cmp-real" data-i18n="cmp_real"></p>
+      <p class="muted small mb0" data-i18n="cmp_bytes_note">0 కలయికల వద్ద ఇన్ని టోకెన్లు ఎందుకు? అప్పుడు ప్రతి టోకెన్ ఒక బైట్. UTF-8లో ఇంగ్లీష్ అక్షరానికి 1 బైట్, ఉర్దూ అక్షరానికి 2 బైట్లు, తెలుగు, హిందీ లేదా ఏ భారతీయ లిపి అక్షరానికైనా 3 బైట్లు పడతాయి.</p>
+      <p class="muted small mb0" id="cmp-real" data-i18n="cmp_real">ఇవి నేర్పడం కోసం చేసిన చాలా చిన్న టోకనైజర్లు, కాబట్టి నిజమైన AI మోడల్స్‌లో సంఖ్యలు వేరుగా ఉంటాయి. కానీ నిజమైన టోకనైజర్లపై జరిగిన అధ్యయనాల్లోనూ ఇదే తీరు కనిపించింది: చాలా భారతీయ భాషలకు ఇంగ్లీష్ కంటే ఎక్కువ టోకెన్లు కావాలి, టోకనైజర్ భారతీయ భాషల టెక్స్ట్ నుంచి ఎక్కువగా నేర్చుకుంటే ఈ తేడా తగ్గుతుంది.</p>
     </section>
 
     <!-- Inside -->
     <section class="card stack" id="inside-card">
-      <h2 data-i18n="inside_t"></h2>
+      <h2 data-i18n="inside_t">లోపల ఏం జరుగుతోంది?</h2>
       <div class="grid-2 inside-grid">
         <div class="panel stack">
-          <h3><span aria-hidden="true">🧩</span><span data-i18n="in_tok_t"></span></h3>
-          <p class="mb0" data-i18n="in_tok"></p>
+          <h3><span aria-hidden="true">🧩</span><span data-i18n="in_tok_t">టోకెన్లు అంటే పదాలు కాదు</span></h3>
+          <p class="mb0" data-i18n="in_tok">కంప్యూటర్‌కు అక్షరాలు అర్థం కావు. టోకనైజర్ ముందుగా టెక్స్ట్‌ను టోకెన్లు అనే చిన్న ముక్కలుగా విడగొట్టి, ప్రతి ముక్కకు ఒక సంఖ్య (ID) ఇస్తుంది. AI మోడల్ ఈ సంఖ్యలను మాత్రమే చూస్తుంది. ఒక టోకెన్ పూర్తి పదం (&quot;బడి&quot;), పదంలో భాగం (&quot;ing&quot;), ఒక అక్షరం, లేదా ఒక అక్షరపు ముక్క కూడా కావచ్చు.</p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">🔢</span><span data-i18n="in_bpe_t"></span></h3>
-          <p class="mb0" data-i18n="in_bpe"></p>
+          <h3><span aria-hidden="true">🔢</span><span data-i18n="in_bpe_t">BPE ఎలా నేర్చుకుంటుంది</span></h3>
+          <p class="mb0" data-i18n="in_bpe">బైట్లతో మొదలుపెట్టండి. శిక్షణ టెక్స్ట్‌లో పక్కపక్కనే ఉన్న టోకెన్ల ప్రతి జంటను లెక్కించండి. ఎక్కువగా కనిపించే జంటను కలిపి కొత్త టోకెన్ తయారుచేసి పదకోశంలో చేర్చండి. మళ్ళీ చేయండి. పెద్ద AI మోడల్స్ టోకనైజర్లు దాదాపు 50,000 నుంచి 2,50,000 టోకెన్లు అయ్యే వరకు ఇలా చేస్తూనే ఉంటాయి.</p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">💾</span><span data-i18n="in_uni_t"></span></h3>
-          <p data-i18n="in_uni"></p>
-          <label for="byte-in" class="lbl" data-i18n="byte_demo"></label>
+          <h3><span aria-hidden="true">💾</span><span data-i18n="in_uni_t">Unicode మరియు బైట్లు</span></h3>
+          <p data-i18n="in_uni">ప్రతి భాషలోని ప్రతి అక్షరానికి ఒక Unicode సంఖ్య ఉంటుంది: &quot;A&quot; అంటే U+0041, &quot;క&quot; అంటే U+0C15. కంప్యూటర్ టెక్స్ట్‌ను UTF-8 బైట్లుగా సేవ్ చేస్తుంది. ఇంగ్లీష్ అక్షరానికి 1 బైట్, భారతీయ లిపి అక్షరానికి 3 బైట్లు, చాలా ఎమోజీలకు 4 బైట్లు కావాలి.</p>
+          <label for="byte-in" class="lbl" data-i18n="byte_demo">ప్రయత్నించండి: కొన్ని అక్షరాలు రాయండి</label>
           <input type="text" id="byte-in" class="byte-in no-i18n" maxlength="24" autocomplete="off" spellcheck="false">
           <div class="scroll-x">
             <table class="table byte-table">
-              <thead><tr><th data-i18n="col_char"></th><th data-i18n="col_code"></th><th data-i18n="col_bytes"></th></tr></thead>
+              <thead><tr><th data-i18n="col_char">అక్షరం</th><th data-i18n="col_code">Unicode సంఖ్య</th><th data-i18n="col_bytes">UTF-8 బైట్లు</th></tr></thead>
               <tbody id="byte-body" class="no-i18n"></tbody>
             </table>
           </div>
           <p class="small mb0" id="byte-total" aria-live="polite"></p>
         </div>
         <div class="panel stack">
-          <h3><span aria-hidden="true">🪟</span><span data-i18n="in_ctx_t"></span></h3>
-          <p data-i18n="in_ctx"></p>
-          <label for="ctx-size" class="lbl" data-i18n="ctx_label"></label>
+          <h3><span aria-hidden="true">🪟</span><span data-i18n="in_ctx_t">కాంటెక్స్ట్ విండో</span></h3>
+          <p data-i18n="in_ctx">మోడల్ కాంటెక్స్ట్ విండో అంటే అది ఒకేసారి నిర్వహించగల గరిష్ఠ టోకెన్ల సంఖ్య: మీ ప్రశ్న, ఇప్పటివరకు జరిగిన చాట్, దాని జవాబు. విండో నిండిపోతే, పాత భాగం కత్తిరించబడుతుంది లేదా మర్చిపోబడుతుంది.</p>
+          <label for="ctx-size" class="lbl" data-i18n="ctx_label">కాంటెక్స్ట్ విండో పరిమాణం</label>
           <select id="ctx-size"></select>
           <p class="ctx-out mb0" id="ctx-out" aria-live="polite"></p>
         </div>
@@ -313,14 +313,14 @@
     </section>
 
     <details class="card" id="help">
-      <summary data-i18n="help_t"></summary>
+      <summary data-i18n="help_t">ఎలా ఉపయోగించాలి / తరగతి కోసం ఆలోచనలు</summary>
       <ul>
-        <li data-i18n="tip_1"></li>
-        <li data-i18n="tip_2"></li>
-        <li data-i18n="tip_3"></li>
-        <li data-i18n="tip_4"></li>
-        <li data-i18n="tip_5"></li>
-        <li data-i18n="tip_6"></li>
+        <li data-i18n="tip_1">BPE ఎంచుకుని, &quot;కలయికల సంఖ్య&quot; స్లైడర్‌ను 0 నుంచి 600 వరకు జరపండి. సాధారణ పదాలు ఒక్కో టోకెన్‌గా ఎలా మారుతాయో చూడండి.</li>
+        <li data-i18n="tip_2">స్మార్ట్‌బోర్డ్‌పై &quot;నేర్చుకోవడం చూడండి&quot; నొక్కి, మధ్యలో ఆపండి. తరగతిని అడగండి: తర్వాత ఏ జంట కలుస్తుంది, ఎందుకు?</li>
+        <li data-i18n="tip_3">తరగతి కార్యకలాపం: ప్రతి బృందానికి పోలిక చార్ట్ నుంచి ఒక భాష ఇవ్వండి. ప్రతి బృందం ముందుగా తన టోకెన్ల సంఖ్యను ఊహించి, తర్వాత సరిచూసుకోవాలి. తర్వాత చర్చించండి: కొన్ని భాషలకు ఎక్కువ ఖర్చు కావడం న్యాయమేనా?</li>
+        <li data-i18n="tip_4">&quot;పదాలు&quot; ఎంచుకుని ఒక కొత్త పదం లేదా తప్పు స్పెల్లింగ్ రాయండి: అది [UNK] అవుతుంది. ఇప్పుడు BPE ఎంచుకోండి: పదాన్ని చిన్న ముక్కలుగా విడగొట్టి, అది అప్పుడు కూడా పని చేస్తుంది.</li>
+        <li data-i18n="tip_5">&quot;నా సొంత టెక్స్ట్&quot; ఎంచుకుని మీ పాఠ్యపుస్తకంలోని ఒక పాఠాన్ని పేస్ట్ చేయండి. మీ సబ్జెక్టు నుంచి మొదట ఏ కలయికలు ఏర్పడతాయి?</li>
+        <li data-i18n="tip_6">ఈ పేజీని ప్రింట్ చేయండి: పోలిక చార్ట్ కంప్యూటర్ ల్యాబ్ కోసం టోకెన్లు, సమానత్వం గురించి మంచి పోస్టర్ అవుతుంది.</li>
       </ul>
       <p class="muted small mb0" data-i18n="saved_local"></p>
     </details>

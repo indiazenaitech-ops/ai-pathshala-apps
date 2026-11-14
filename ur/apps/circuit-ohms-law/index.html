@@ -269,12 +269,12 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">سلسلہ وار اور متوازی سرکٹ بنائیں، برقی رو کو بہتے دیکھیں اور لائیو میٹروں، V–I گراف اور مشقی سوالوں سے اوہم کا قانون (V = IR) سیکھیں۔</p>
 
     <div class="tabs cl-tabs" role="tablist">
-      <button type="button" role="tab" id="tab-lab" data-tab="lab" aria-controls="pane-lab" data-i18n="tab_lab"></button>
-      <button type="button" role="tab" id="tab-exp" data-tab="exp" aria-controls="pane-exp" data-i18n="tab_exp"></button>
-      <button type="button" role="tab" id="tab-prac" data-tab="prac" aria-controls="pane-prac" data-i18n="tab_prac"></button>
+      <button type="button" role="tab" id="tab-lab" data-tab="lab" aria-controls="pane-lab" data-i18n="tab_lab">سرکٹ لیب</button>
+      <button type="button" role="tab" id="tab-exp" data-tab="exp" aria-controls="pane-exp" data-i18n="tab_exp">V–I تجربہ</button>
+      <button type="button" role="tab" id="tab-prac" data-tab="prac" aria-controls="pane-prac" data-i18n="tab_prac">مشق</button>
     </div>
 
     <!-- ===================== circuit lab ===================== -->
@@ -282,29 +282,29 @@
       <div class="cl-lab">
         <div class="card cl-diag" id="diag-card">
           <div class="row spread cl-head">
-            <h2 class="mb0" data-i18n="diagram"></h2>
+            <h2 class="mb0" data-i18n="diagram">سرکٹ کا خاکہ</h2>
             <button type="button" class="btn btn-sm" id="btn-fs" data-i18n="fullscreen"></button>
           </div>
           <div class="cl-stats" aria-live="polite">
-            <div class="cl-stat" id="st-req"><span class="k" data-i18n="req"></span><span class="v" id="out-req"></span></div>
-            <div class="cl-stat" id="st-i"><span class="k" data-i18n="itotal"></span><span class="v" id="out-i"></span></div>
-            <div class="cl-stat" id="st-p"><span class="k" data-i18n="ptotal"></span><span class="v" id="out-p"></span></div>
+            <div class="cl-stat" id="st-req"><span class="k" data-i18n="req">مساوی مزاحمت</span><span class="v" id="out-req"></span></div>
+            <div class="cl-stat" id="st-i"><span class="k" data-i18n="itotal">کل برقی رو</span><span class="v" id="out-i"></span></div>
+            <div class="cl-stat" id="st-p"><span class="k" data-i18n="ptotal">کل طاقت</span><span class="v" id="out-p"></span></div>
           </div>
           <div class="cl-svgwrap"><svg id="cv-lab" class="cv" viewBox="0 0 640 400" role="group"></svg></div>
-          <div class="callout warning" id="warn-open" hidden data-i18n="warn_open"></div>
-          <div class="callout danger" id="warn-short" role="alert" hidden data-i18n="warn_short"></div>
+          <div class="callout warning" id="warn-open" hidden data-i18n="warn_open">سوئچ کھلا ہے، اس لیے سرکٹ ٹوٹا ہوا ہے۔ کوئی رو نہیں بہتی: ایمیٹر 0 دکھاتا ہے اور بلب نہیں جلتے۔</div>
+          <div class="callout danger" id="warn-short" role="alert" hidden data-i18n="warn_short">شارٹ سرکٹ! ایک سادہ تار نے لوڈ کے دونوں سروں کو جوڑ دیا ہے، اس لیے مزاحمت تقریباً ⁦0 Ω⁩ ہو گئی ہے۔ I = V / R کے مطابق رو بہت زیادہ ہو جاتی ہے: تار گرم ہوتے ہیں اور سیل جلدی ختم ہوتا ہے۔ گھر میں آگ سے بچانے کے لیے فیوز یا MCB بجلی کاٹ دیتا ہے۔</div>
           <div class="callout warning" id="warn-low" hidden></div>
           <p class="callout accent small cl-note" id="bright-note" hidden></p>
           <p class="tiny muted cl-note cl-dots-line"><span class="cl-dotkey" id="dot-key"></span><span id="dots-note"></span></p>
         </div>
 
         <div class="card cl-ctrl" id="ctrl-card">
-          <h2 data-i18n="ctrl_title"></h2>
-          <span class="lbl-t" id="type-lbl" data-i18n="circuit_type"></span>
+          <h2 data-i18n="ctrl_title">سرکٹ بنائیں</h2>
+          <span class="lbl-t" id="type-lbl" data-i18n="circuit_type">سرکٹ کی قسم</span>
           <div class="cl-presets" role="group" aria-labelledby="type-lbl" id="presets"></div>
 
           <div class="cl-sl">
-            <label class="lbl-t" for="v-range" data-i18n="battery_v"></label>
+            <label class="lbl-t" for="v-range" data-i18n="battery_v">بیٹری وولٹیج (V)</label>
             <div class="cl-sl-row">
               <input type="range" id="v-range" min="1.5" max="12" step="0.5">
               <input type="number" class="cl-num" id="v-num" min="1.5" max="12" step="0.5" inputmode="decimal" data-i18n-aria-label="battery_v">
@@ -313,11 +313,11 @@
           </div>
 
           <div class="cl-sl">
-            <span class="lbl-t" data-i18n="switch_lbl"></span>
+            <span class="lbl-t" data-i18n="switch_lbl">سوئچ (کنجی)</span>
             <button type="button" class="btn" id="btn-switch" aria-pressed="true"><span class="sw-ico" aria-hidden="true"></span><span id="sw-text"></span></button>
           </div>
 
-          <h3 class="cl-sub" data-i18n="resistances"></h3>
+          <h3 class="cl-sub" data-i18n="resistances">مزاحمتیں (Ω)</h3>
           <div id="r-rows">
             <div class="cl-rrow" id="r-row-1">
               <label class="cl-rname" for="r1-range">R₁</label>
@@ -341,29 +341,29 @@
 
           <div class="cl-opts">
             <div>
-              <span class="lbl-t" id="as-lbl" data-i18n="show_as"></span>
+              <span class="lbl-t" id="as-lbl" data-i18n="show_as">کس شکل میں دکھائیں</span>
               <div class="seg" role="group" aria-labelledby="as-lbl">
-                <button type="button" id="as-res" data-i18n="as_resistors"></button><button type="button" id="as-bulb" data-i18n="as_bulbs"></button>
+                <button type="button" id="as-res" data-i18n="as_resistors">مزاحم</button><button type="button" id="as-bulb" data-i18n="as_bulbs">بلب</button>
               </div>
             </div>
             <div>
-              <span class="lbl-t" id="flow-lbl" data-i18n="dots_show"></span>
+              <span class="lbl-t" id="flow-lbl" data-i18n="dots_show">چلتے نقطے دکھاتے ہیں</span>
               <div class="seg" role="group" aria-labelledby="flow-lbl">
-                <button type="button" id="flow-conv" data-i18n="flow_conv"></button><button type="button" id="flow-elec" data-i18n="flow_elec"></button>
+                <button type="button" id="flow-conv" data-i18n="flow_conv">رو ⁦(+ → −)⁩</button><button type="button" id="flow-elec" data-i18n="flow_elec">الیکٹران ⁦(− → +)⁩</button>
               </div>
             </div>
-            <label class="field" for="vm-sel"><span class="lbl-t mb0" data-i18n="vm_across"></span>
+            <label class="field" for="vm-sel"><span class="lbl-t mb0" data-i18n="vm_across">وولٹ میٹر کس کے سروں پر لگائیں</span>
               <select id="vm-sel"></select></label>
           </div>
 
           <div class="cl-btns">
             <button type="button" class="btn btn-danger" id="btn-short" aria-pressed="false"></button>
-            <button type="button" class="btn" id="btn-reset" data-i18n="reset_circuit"></button>
+            <button type="button" class="btn" id="btn-reset" data-i18n="reset_circuit">سرکٹ ری سیٹ کریں</button>
           </div>
         </div>
 
         <div class="card cl-calc" id="calc-card">
-          <h2 data-i18n="calc_title"></h2>
+          <h2 data-i18n="calc_title">مرحلہ وار حساب</h2>
           <div class="cl-steps" id="calc-steps"></div>
           <div class="scroll-x" style="margin-top:14px"><table class="table cl-table" id="calc-table"></table></div>
           <div class="callout success cl-check" id="calc-check" hidden></div>
@@ -372,29 +372,29 @@
 
       <div class="grid-2 cl-ref">
         <div class="card" id="legend-card">
-          <h2 data-i18n="legend_title"></h2>
+          <h2 data-i18n="legend_title">سرکٹ کی علامتیں</h2>
           <div class="cl-syms">
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H27M37 16H62"/><path d="M27 4V28"/><path class="thick" d="M37 10V22"/></svg><span data-i18n="sym_cell"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H15M22 16H36M43 16H62"/><path d="M15 4V28M36 4V28"/><path class="thick" d="M22 10V22M43 10V22"/></svg><span data-i18n="sym_battery"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 20H18M46 20H62"/><path d="M20 20L42 6"/><circle class="bg" cx="20" cy="20" r="3.5"/><circle class="bg" cx="44" cy="20" r="3.5"/></svg><span data-i18n="sym_switch_open"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 20H62"/><circle class="bg" cx="20" cy="20" r="3.5"/><circle class="bg" cx="44" cy="20" r="3.5"/></svg><span data-i18n="sym_switch_closed"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H14L17 8L23 24L29 8L35 24L41 8L47 24L50 16H62"/></svg><span data-i18n="sym_resistor"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H19M45 16H62"/><circle cx="32" cy="16" r="13"/><path d="M23 7L41 25M23 25L41 7"/></svg><span data-i18n="sym_bulb"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H18M46 16H62"/><circle cx="32" cy="16" r="14"/><text x="32" y="22" text-anchor="middle">A</text></svg><span data-i18n="sym_ammeter"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H18M46 16H62"/><circle cx="32" cy="16" r="14"/><text x="32" y="22" text-anchor="middle">V</text></svg><span data-i18n="sym_voltmeter"></span></div>
-            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H62M32 2V30"/><circle class="f" cx="32" cy="16" r="5"/></svg><span data-i18n="sym_joint"></span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H27M37 16H62"/><path d="M27 4V28"/><path class="thick" d="M37 10V22"/></svg><span data-i18n="sym_cell">سیل (لمبی لکیر = +)</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H15M22 16H36M43 16H62"/><path d="M15 4V28M36 4V28"/><path class="thick" d="M22 10V22M43 10V22"/></svg><span data-i18n="sym_battery">بیٹری (جڑے ہوئے سیل)</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 20H18M46 20H62"/><path d="M20 20L42 6"/><circle class="bg" cx="20" cy="20" r="3.5"/><circle class="bg" cx="44" cy="20" r="3.5"/></svg><span data-i18n="sym_switch_open">سوئچ / کنجی کھلی</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 20H62"/><circle class="bg" cx="20" cy="20" r="3.5"/><circle class="bg" cx="44" cy="20" r="3.5"/></svg><span data-i18n="sym_switch_closed">سوئچ / کنجی بند</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H14L17 8L23 24L29 8L35 24L41 8L47 24L50 16H62"/></svg><span data-i18n="sym_resistor">مزاحم</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H19M45 16H62"/><circle cx="32" cy="16" r="13"/><path d="M23 7L41 25M23 25L41 7"/></svg><span data-i18n="sym_bulb">برقی بلب</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H18M46 16H62"/><circle cx="32" cy="16" r="14"/><text x="32" y="22" text-anchor="middle">A</text></svg><span data-i18n="sym_ammeter">ایمیٹر (سلسلہ وار جڑتا ہے)</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H18M46 16H62"/><circle cx="32" cy="16" r="14"/><text x="32" y="22" text-anchor="middle">V</text></svg><span data-i18n="sym_voltmeter">وولٹ میٹر (متوازی جڑتا ہے)</span></div>
+            <div class="cl-sym"><svg viewBox="0 0 64 32" aria-hidden="true"><path d="M2 16H62M32 2V30"/><circle class="f" cx="32" cy="16" r="5"/></svg><span data-i18n="sym_joint">تاروں کا جوڑ</span></div>
           </div>
         </div>
         <div class="card" id="formula-card">
-          <h2 data-i18n="formula_title"></h2>
+          <h2 data-i18n="formula_title">فارمولوں کی فہرست</h2>
           <dl class="cl-forms">
-            <div><dt data-i18n="f_ohm"></dt><dd class="math no-i18n">V = I × R &nbsp;·&nbsp; I = V / R &nbsp;·&nbsp; R = V / I</dd></div>
-            <div><dt data-i18n="f_series"></dt><dd class="math no-i18n">R = R₁ + R₂ + R₃</dd></div>
-            <div><dt data-i18n="f_parallel"></dt><dd class="math no-i18n">1/R = 1/R₁ + 1/R₂ + 1/R₃</dd></div>
-            <div><dt data-i18n="f_power"></dt><dd class="math no-i18n">P = V × I = I² × R = V² / R</dd></div>
-            <div><dt data-i18n="f_heat"></dt><dd class="math no-i18n">H = I² × R × t</dd></div>
-            <div><dt data-i18n="f_energy"></dt><dd class="math no-i18n">E = P × t &nbsp;·&nbsp; 1 kWh = 3.6 × 10⁶ J</dd></div>
-            <div><dt data-i18n="f_units"></dt><dd data-i18n="units_line"></dd></div>
+            <div><dt data-i18n="f_ohm">اوہم کا قانون</dt><dd class="math no-i18n">V = I × R &nbsp;·&nbsp; I = V / R &nbsp;·&nbsp; R = V / I</dd></div>
+            <div><dt data-i18n="f_series">سلسلہ وار مزاحم</dt><dd class="math no-i18n">R = R₁ + R₂ + R₃</dd></div>
+            <div><dt data-i18n="f_parallel">متوازی مزاحم</dt><dd class="math no-i18n">1/R = 1/R₁ + 1/R₂ + 1/R₃</dd></div>
+            <div><dt data-i18n="f_power">برقی طاقت</dt><dd class="math no-i18n">P = V × I = I² × R = V² / R</dd></div>
+            <div><dt data-i18n="f_heat">پیدا ہونے والی حرارت (جول کا قانون)</dt><dd class="math no-i18n">H = I² × R × t</dd></div>
+            <div><dt data-i18n="f_energy">برقی توانائی</dt><dd class="math no-i18n">E = P × t &nbsp;·&nbsp; 1 kWh = 3.6 × 10⁶ J</dd></div>
+            <div><dt data-i18n="f_units">SI اکائیاں</dt><dd data-i18n="units_line">V وولٹ (V) میں · I ایمپیئر (A) میں · R اوہم (Ω) میں · P واٹ (W) میں</dd></div>
           </dl>
         </div>
       </div>
@@ -404,17 +404,17 @@
     <section id="pane-exp" class="cl-pane" role="tabpanel" aria-labelledby="tab-exp" hidden>
       <div class="cl-exp">
         <div class="card" id="exp-card">
-          <h2 data-i18n="exp_title"></h2>
-          <p class="muted small" data-i18n="exp_how"></p>
+          <h2 data-i18n="exp_title">سرگرمی: وولٹیج بدلنے پر رو کیسے بدلتی ہے؟</h2>
+          <p class="muted small" data-i18n="exp_how">1 سیل لگا کر وولٹ میٹر (V) اور ایمیٹر (I) کی ریڈنگ لکھیں۔ 2، 3 اور 4 سیلوں کے ساتھ دہرائیں۔ پھر V اور I کا گراف بنائیں اور اس کی ڈھلان معلوم کریں۔</p>
           <div class="cl-svgwrap"><svg id="cv-exp" class="cv" viewBox="0 0 640 400" role="group"></svg></div>
           <div class="cl-meters" aria-live="polite">
-            <div class="cl-mbox"><span class="k" data-i18n="voltmeter"></span><span class="v ltr" id="exp-v"></span></div>
-            <div class="cl-mbox am"><span class="k" data-i18n="ammeter"></span><span class="v ltr" id="exp-i"></span></div>
+            <div class="cl-mbox"><span class="k" data-i18n="voltmeter">وولٹ میٹر</span><span class="v ltr" id="exp-v"></span></div>
+            <div class="cl-mbox am"><span class="k" data-i18n="ammeter">ایمیٹر</span><span class="v ltr" id="exp-i"></span></div>
           </div>
           <div class="cl-exp-ctrl">
-            <span class="lbl-t" id="exp-r-lbl" data-i18n="exp_resistor"></span>
+            <span class="lbl-t" id="exp-r-lbl" data-i18n="exp_resistor">جانچا جانے والا تار یا مزاحم</span>
             <div class="seg" role="group" aria-labelledby="exp-r-lbl">
-              <button type="button" id="exp-known" data-i18n="exp_known"></button><button type="button" id="exp-mystery" data-i18n="exp_mystery"></button>
+              <button type="button" id="exp-known" data-i18n="exp_known">معلوم مزاحم</button><button type="button" id="exp-mystery" data-i18n="exp_mystery">پراسرار تار</button>
             </div>
             <div class="cl-rrow" id="exp-r-row" style="margin-top:10px">
               <label class="cl-rname" for="exp-r-range">R</label>
@@ -423,34 +423,34 @@
               <span class="cl-unit">Ω</span>
             </div>
             <div class="row" id="exp-myst-row" style="margin-top:10px">
-              <button type="button" class="btn btn-sm" id="exp-new" data-i18n="exp_new_mystery"></button>
-              <button type="button" class="btn btn-sm" id="exp-reveal" data-i18n="exp_reveal"></button>
+              <button type="button" class="btn btn-sm" id="exp-new" data-i18n="exp_new_mystery">نیا پراسرار تار</button>
+              <button type="button" class="btn btn-sm" id="exp-reveal" data-i18n="exp_reveal">R دکھائیں</button>
             </div>
             <p class="small muted" id="exp-lock" style="margin:8px 0 0"></p>
             <div class="cl-sl">
-              <label class="lbl-t" for="exp-cells" data-i18n="exp_cells"></label>
+              <label class="lbl-t" for="exp-cells" data-i18n="exp_cells">سیلوں کی تعداد (ہر ایک ⁦1.5 V⁩)</label>
               <div class="cl-sl-row" style="grid-template-columns:minmax(0,1fr) auto">
                 <input type="range" id="exp-cells" min="1" max="8" step="1">
                 <span class="cl-cellsv ltr numf" id="exp-cells-v"></span>
               </div>
             </div>
-            <label class="check" style="margin-top:12px"><input type="checkbox" id="exp-noise"> <span data-i18n="exp_noise"></span></label>
+            <label class="check" style="margin-top:12px"><input type="checkbox" id="exp-noise"> <span data-i18n="exp_noise">اصلی لیب کی طرح میٹر میں چھوٹی غلطیاں شامل کریں</span></label>
             <div class="cl-btns">
-              <button type="button" class="btn btn-primary" id="exp-record" data-i18n="exp_record"></button>
-              <button type="button" class="btn" id="exp-quick" data-i18n="exp_quick"></button>
+              <button type="button" class="btn btn-primary" id="exp-record" data-i18n="exp_record">یہ ریڈنگ لکھیں</button>
+              <button type="button" class="btn" id="exp-quick" data-i18n="exp_quick">4 ریڈنگ لیں (1 سے 4 سیل)</button>
             </div>
           </div>
         </div>
 
         <div class="card" id="exp-res-card">
-          <h2 data-i18n="exp_table"></h2>
+          <h2 data-i18n="exp_table">مشاہدے کا جدول</h2>
           <div class="scroll-x"><table class="table cl-table" id="exp-table"></table></div>
           <div class="cl-tbl-tools">
             <button type="button" class="btn btn-sm" id="exp-csv" data-i18n="download"></button>
             <button type="button" class="btn btn-sm" id="exp-print" data-i18n="print"></button>
-            <button type="button" class="btn btn-sm btn-danger" id="exp-clear" data-i18n="clear_table"></button>
+            <button type="button" class="btn btn-sm btn-danger" id="exp-clear" data-i18n="clear_table">جدول خالی کریں</button>
           </div>
-          <h3 class="cl-sub" data-i18n="graph_title"></h3>
+          <h3 class="cl-sub" data-i18n="graph_title">V–I گراف</h3>
           <svg id="exp-graph" class="graph" viewBox="0 0 560 380" role="img"></svg>
           <div class="cl-result" id="exp-result" aria-live="polite"></div>
         </div>
@@ -462,41 +462,41 @@
       <div class="cl-prac">
         <div class="card" id="prac-card">
           <div class="row spread">
-            <h2 class="mb0" data-i18n="prac_title"></h2>
+            <h2 class="mb0" data-i18n="prac_title">مشقی سوالات</h2>
             <div class="cl-score" aria-live="polite">
               <span class="badge success" id="score"></span>
               <span class="badge accent" id="streak"></span>
             </div>
           </div>
           <div class="cl-topics" role="group" data-i18n-aria-label="topic">
-            <button type="button" class="chip" id="topic-all" data-topic="all" data-i18n="topic_all"></button>
-            <button type="button" class="chip" id="topic-ohm" data-topic="ohm" data-i18n="topic_ohm"></button>
-            <button type="button" class="chip" id="topic-combo" data-topic="combo" data-i18n="topic_combo"></button>
-            <button type="button" class="chip" id="topic-power" data-topic="power" data-i18n="topic_power"></button>
+            <button type="button" class="chip" id="topic-all" data-topic="all" data-i18n="topic_all">سب</button>
+            <button type="button" class="chip" id="topic-ohm" data-topic="ohm" data-i18n="topic_ohm">اوہم کا قانون</button>
+            <button type="button" class="chip" id="topic-combo" data-topic="combo" data-i18n="topic_combo">سلسلہ وار اور متوازی</button>
+            <button type="button" class="chip" id="topic-power" data-topic="power" data-i18n="topic_power">طاقت اور توانائی</button>
           </div>
           <p class="cl-q" id="q-text"></p>
           <p class="small muted mb0" id="q-unit-hint"></p>
           <div class="cl-ans">
-            <label class="field" for="q-ans"><span data-i18n="your_answer"></span>
+            <label class="field" for="q-ans"><span data-i18n="your_answer">آپ کا جواب</span>
               <span class="inwrap"><input type="text" id="q-ans" inputmode="decimal" autocomplete="off"><span class="u" id="q-unit"></span></span></label>
-            <button type="button" class="btn btn-primary" id="q-check" data-i18n="check_btn"></button>
-            <button type="button" class="btn btn-accent" id="q-new" data-i18n="new_problem"></button>
+            <button type="button" class="btn btn-primary" id="q-check" data-i18n="check_btn">جانچیں</button>
+            <button type="button" class="btn btn-accent" id="q-new" data-i18n="new_problem">نیا سوال</button>
           </div>
           <div class="callout" id="q-feedback" aria-live="polite"></div>
           <div class="cl-step" id="q-solution" hidden></div>
           <div class="row" style="margin-top:12px">
-            <button type="button" class="btn btn-sm" id="q-lab" data-i18n="try_lab" hidden></button>
-            <button type="button" class="btn btn-sm btn-danger" id="score-reset" data-i18n="reset_score"></button>
+            <button type="button" class="btn btn-sm" id="q-lab" data-i18n="try_lab" hidden>یہ سرکٹ لیب میں بنائیں</button>
+            <button type="button" class="btn btn-sm btn-danger" id="score-reset" data-i18n="reset_score">اسکور ری سیٹ کریں</button>
           </div>
         </div>
 
         <div class="card" id="ws-card">
-          <h2 data-i18n="ws_title"></h2>
-          <p class="muted small" data-i18n="ws_note"></p>
+          <h2 data-i18n="ws_title">چھاپنے کے قابل ورک شیٹ</h2>
+          <p class="muted small" data-i18n="ws_note">منتخب موضوع سے 10 نئے سوال، جوابات کی کلید کے ساتھ۔</p>
           <div class="row ws-tools">
-            <button type="button" class="btn btn-primary" id="ws-make" data-i18n="ws_make"></button>
-            <button type="button" class="btn" id="ws-print" data-i18n="ws_print" disabled></button>
-            <label class="check"><input type="checkbox" id="ws-ans"> <span data-i18n="ws_answers"></span></label>
+            <button type="button" class="btn btn-primary" id="ws-make" data-i18n="ws_make">ورک شیٹ بنائیں</button>
+            <button type="button" class="btn" id="ws-print" data-i18n="ws_print" disabled>ورک شیٹ چھاپیں</button>
+            <label class="check"><input type="checkbox" id="ws-ans"> <span data-i18n="ws_answers">جوابات کی کلید بھی چھاپیں</span></label>
           </div>
           <div id="ws-out"></div>
         </div>
@@ -504,14 +504,14 @@
     </section>
 
     <details class="card cl-help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">استعمال کا طریقہ / کلاس روم کے لیے خیالات</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">سرکٹ کی قسم چنیں اور سلائیڈر کھسکائیں۔ میٹر، مرحلہ وار حساب اور چلتے نقطوں کی رفتار فوراً بدلتی ہے۔</li>
+        <li data-i18n="tip2">“کس شکل میں دکھائیں” میں بلب چن کر موازنہ کریں: سلسلہ وار بلب متوازی والے انہی بلبوں سے مدھم جلتے ہیں۔ اسی لیے ہمارے گھروں کی وائرنگ متوازی ہوتی ہے۔</li>
+        <li data-i18n="tip3">خاکے میں سوئچ پر ٹیپ کر کے اسے کھولیں یا بند کریں۔ وولٹ میٹر کو مختلف حصوں پر لگائیں: وولٹ میٹر ہمیشہ متوازی اور ایمیٹر ہمیشہ سلسلہ وار جوڑا جاتا ہے۔</li>
+        <li data-i18n="tip4">کلاس روم سرگرمی (NCERT جماعت 10): V–I تجربے میں 1، 2، 3 اور 4 سیلوں سے ریڈنگ لیں، گراف بنائیں اور ڈھلان سے R معلوم کریں۔ ہر گروپ کو ایک پراسرار تار دیں اور دیکھیں کس کا جواب سب سے قریب ہے۔</li>
+        <li data-i18n="tip5">“لوڈ کو شارٹ سرکٹ کریں” دبا کر بات کریں کہ شارٹ سرکٹ خطرناک کیوں ہے اور فیوز اور MCB ہمارے گھروں کو کیسے محفوظ رکھتے ہیں۔</li>
+        <li data-i18n="tip6">نقطے صرف سمت دکھاتے ہیں اور رو کا موازنہ کرتے ہیں۔ اصلی الیکٹران بہت آہستہ سرکتے ہیں (ایک سیکنڈ میں ایک ملی میٹر سے بھی کم)۔ اسمارٹ بورڈ پر فل اسکرین بٹن استعمال کریں۔</li>
       </ul>
     </details>
   </main>

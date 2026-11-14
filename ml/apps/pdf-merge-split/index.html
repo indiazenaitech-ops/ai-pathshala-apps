@@ -220,28 +220,28 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">പല PDF-കളും ഫോട്ടോകളും ഒരൊറ്റ ഫയലാക്കി ചേർക്കുക, ഭാഗങ്ങളായി വിഭജിക്കുക, പേജുകളുടെ ക്രമം മാറ്റുക, തിരിക്കുക അല്ലെങ്കിൽ മുദ്ര പതിക്കുക. എല്ലാം നിങ്ങളുടെ ബ്രൗസറിനുള്ളിൽ തന്നെ നടക്കുന്നു.</p>
 
     <div class="callout success pm-privacy" id="privacy">
       <span class="ic" aria-hidden="true">🔒</span>
-      <p><strong data-i18n="privacy_title"></strong><span data-i18n="privacy_body"></span></p>
+      <p><strong data-i18n="privacy_title">നിങ്ങളുടെ ഫയലുകൾ ഒരിക്കലും ഈ ഉപകരണത്തിന് പുറത്ത് പോകില്ല.</strong><span data-i18n="privacy_body">ആധാർ, PAN, ബാങ്ക് സ്റ്റേറ്റ്മെന്റുകൾ, ശമ്പള സ്ലിപ്പുകൾ, കരാറുകൾ എല്ലാം ഇവിടെ നിങ്ങളുടെ ബ്രൗസറിൽ തന്നെ പ്രോസസ് ചെയ്യുന്നു. ഒന്നും അപ്‌ലോഡ് ചെയ്യുന്നില്ല, ഈ പേജ് അടച്ച ശേഷം ഒന്നും സൂക്ഷിക്കുന്നില്ല.</span></p>
     </div>
 
     <div id="engine" class="pm-engine small" role="status" aria-live="polite">
       <span class="pm-spin" id="engSpin" aria-hidden="true"></span>
       <span id="engMsg"></span>
-      <button class="btn btn-sm" id="engRetry" type="button" data-i18n="retry" hidden></button>
+      <button class="btn btn-sm" id="engRetry" type="button" data-i18n="retry" hidden>വീണ്ടും ശ്രമിക്കുക</button>
     </div>
 
     <div class="pm-layout">
       <section class="pm-work" aria-labelledby="dropTitle">
         <div class="card pm-drop" id="drop">
           <div class="big" aria-hidden="true">📄</div>
-          <h2 id="dropTitle" data-i18n="drop_title"></h2>
-          <p class="muted small mb0 pm-drop-hint" data-i18n="drop_hint"></p>
+          <h2 id="dropTitle" data-i18n="drop_title">PDF, JPG അല്ലെങ്കിൽ PNG ഫയലുകൾ ഇവിടെ ഇടുക</h2>
+          <p class="muted small mb0 pm-drop-hint" data-i18n="drop_hint">എത്ര ഫയലുകൾ വേണമെങ്കിലും ചേർക്കാം: ബില്ലുകൾ, സ്കാനുകൾ, രേഖകളുടെ ഫോട്ടോകൾ. സേവ് ചെയ്യുന്നതിന് മുമ്പ് ഓരോ പേജും ഇഷ്ടം പോലെ ക്രമീകരിക്കാം.</p>
           <div class="row">
-            <button class="btn btn-primary btn-lg" id="addBtn" type="button" data-act="add"><span aria-hidden="true">＋</span> <span data-i18n="add_files"></span></button>
-            <button class="btn" id="sampleBtn" type="button" data-i18n="try_sample"></button>
+            <button class="btn btn-primary btn-lg" id="addBtn" type="button" data-act="add"><span aria-hidden="true">＋</span> <span data-i18n="add_files">ഫയലുകൾ ചേർക്കുക</span></button>
+            <button class="btn" id="sampleBtn" type="button" data-i18n="try_sample">മാതൃകാ ഫയലുകൾ കൊണ്ട് പരീക്ഷിക്കുക</button>
           </div>
           <input type="file" id="fileInput" multiple accept=".pdf,application/pdf,.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden>
         </div>
@@ -252,8 +252,8 @@
 
         <div class="card pm-toolbar" id="toolbar" hidden>
           <div class="grp">
-            <button class="tb" type="button" data-act="selAll" data-i18n-title="sel_all" data-i18n-aria-label="sel_all"><span class="i" aria-hidden="true">☑</span><span class="lbl opt" data-i18n="sel_all"></span></button>
-            <button class="tb" type="button" data-act="selNone" data-i18n-title="sel_none" data-i18n-aria-label="sel_none"><span class="i" aria-hidden="true">☐</span><span class="lbl opt" data-i18n="sel_none"></span></button>
+            <button class="tb" type="button" data-act="selAll" data-i18n-title="sel_all" data-i18n-aria-label="sel_all"><span class="i" aria-hidden="true">☑</span><span class="lbl opt" data-i18n="sel_all">എല്ലാം തിരഞ്ഞെടുക്കുക</span></button>
+            <button class="tb" type="button" data-act="selNone" data-i18n-title="sel_none" data-i18n-aria-label="sel_none"><span class="i" aria-hidden="true">☐</span><span class="lbl opt" data-i18n="sel_none">തിരഞ്ഞെടുപ്പ് മാറ്റുക</span></button>
             <span class="pm-count" id="countTxt" aria-live="polite"></span>
           </div>
           <span class="sep" aria-hidden="true"></span>
@@ -262,17 +262,17 @@
             <button class="tb" type="button" data-act="rotR" data-i18n-title="rot_right" data-i18n-aria-label="rot_right"><span class="i" aria-hidden="true">⟳</span></button>
             <button class="tb selonly" type="button" data-act="back" data-need="sel" data-i18n-title="move_back" data-i18n-aria-label="move_back"><span class="i flipx" aria-hidden="true">◀</span></button>
             <button class="tb selonly" type="button" data-act="fwd" data-need="sel" data-i18n-title="move_fwd" data-i18n-aria-label="move_fwd"><span class="i flipx" aria-hidden="true">▶</span></button>
-            <button class="tb selonly" type="button" data-act="dup" data-need="sel" data-i18n-title="duplicate" data-i18n-aria-label="duplicate"><span class="i" aria-hidden="true">⧉</span><span class="lbl opt" data-i18n="duplicate"></span></button>
+            <button class="tb selonly" type="button" data-act="dup" data-need="sel" data-i18n-title="duplicate" data-i18n-aria-label="duplicate"><span class="i" aria-hidden="true">⧉</span><span class="lbl opt" data-i18n="duplicate">പകർപ്പെടുക്കുക</span></button>
             <button class="tb selonly danger" type="button" data-act="del" data-need="sel" data-i18n-title="delete" data-i18n-aria-label="delete"><span class="i" aria-hidden="true">🗑</span><span class="lbl" data-i18n="delete"></span></button>
           </div>
           <span class="sep" aria-hidden="true"></span>
           <div class="grp">
-            <button class="tb" type="button" data-act="blank" data-i18n-title="blank" data-i18n-aria-label="blank"><span class="i" aria-hidden="true">▭</span><span class="lbl opt" data-i18n="blank"></span></button>
-            <button class="tb" type="button" data-act="reverse" data-i18n-title="reverse" data-i18n-aria-label="reverse"><span class="i" aria-hidden="true">⇅</span><span class="lbl opt" data-i18n="reverse"></span></button>
+            <button class="tb" type="button" data-act="blank" data-i18n-title="blank" data-i18n-aria-label="blank"><span class="i" aria-hidden="true">▭</span><span class="lbl opt" data-i18n="blank">ശൂന്യ പേജ് ചേർക്കുക</span></button>
+            <button class="tb" type="button" data-act="reverse" data-i18n-title="reverse" data-i18n-aria-label="reverse"><span class="i" aria-hidden="true">⇅</span><span class="lbl opt" data-i18n="reverse">ക്രമം തിരിക്കുക</span></button>
             <button class="tb" type="button" data-act="undo" id="undoBtn" data-i18n-title="undo" data-i18n-aria-label="undo"><span class="i flipx" aria-hidden="true">↶</span></button>
             <button class="tb" type="button" data-act="redo" id="redoBtn" data-i18n-title="redo" data-i18n-aria-label="redo"><span class="i flipx" aria-hidden="true">↷</span></button>
           </div>
-          <label class="pm-zoom small"><span aria-hidden="true">🔍</span><span class="sr-only" data-i18n="zoom"></span><input type="range" id="zoom" min="110" max="240" step="10" data-i18n-aria-label="zoom" data-i18n-title="zoom"></label>
+          <label class="pm-zoom small"><span aria-hidden="true">🔍</span><span class="sr-only" data-i18n="zoom">തംബ്‌നെയിൽ വലുപ്പം</span><input type="range" id="zoom" min="110" max="240" step="10" data-i18n-aria-label="zoom" data-i18n-title="zoom"></label>
         </div>
 
         <div id="grid" class="pm-grid" role="list" data-i18n-aria-label="pages_label"></div>
@@ -282,33 +282,33 @@
       <aside class="pm-side" id="side">
         <div class="card stack" id="exportCard">
           <div class="pm-tabs" role="tablist">
-            <button type="button" role="tab" id="tabMerge" data-tab="merge" aria-controls="pMerge"><span aria-hidden="true">📑</span> <span data-i18n="tab_merge"></span></button>
-            <button type="button" role="tab" id="tabSplit" data-tab="split" aria-controls="pSplit"><span aria-hidden="true">✂️</span> <span data-i18n="tab_split"></span></button>
+            <button type="button" role="tab" id="tabMerge" data-tab="merge" aria-controls="pMerge"><span aria-hidden="true">📑</span> <span data-i18n="tab_merge">ഒറ്റ PDF</span></button>
+            <button type="button" role="tab" id="tabSplit" data-tab="split" aria-controls="pSplit"><span aria-hidden="true">✂️</span> <span data-i18n="tab_split">വിഭജിക്കുക</span></button>
           </div>
 
           <div id="pMerge" role="tabpanel" aria-labelledby="tabMerge">
-            <p class="muted small mb0" data-i18n="merge_help"></p>
+            <p class="muted small mb0" data-i18n="merge_help">എല്ലാ പേജുകളും, കാണിച്ച ക്രമത്തിൽ, ഒരൊറ്റ PDF ഫയലായി സേവ് ചെയ്യുന്നു.</p>
           </div>
 
           <div id="pSplit" role="tabpanel" aria-labelledby="tabSplit" class="stack" hidden>
             <div class="field">
-              <span data-i18n="split_mode"></span>
+              <span data-i18n="split_mode">എങ്ങനെ വിഭജിക്കണം</span>
               <div class="seg stack2" role="group" id="splitSeg">
-                <button type="button" data-val="each" data-i18n="sm_each"></button>
-                <button type="button" data-val="ranges" data-i18n="sm_ranges"></button>
-                <button type="button" data-val="every" data-i18n="sm_every"></button>
-                <button type="button" data-val="selected" data-i18n="sm_selected"></button>
+                <button type="button" data-val="each" data-i18n="sm_each">ഓരോ പേജും വെവ്വേറെ</button>
+                <button type="button" data-val="ranges" data-i18n="sm_ranges">പേജ് ശ്രേണികൾ</button>
+                <button type="button" data-val="every" data-i18n="sm_every">ഓരോ N പേജുകൾ</button>
+                <button type="button" data-val="selected" data-i18n="sm_selected">തിരഞ്ഞെടുത്ത പേജുകൾ</button>
               </div>
             </div>
             <div id="rangesBox" class="stack" hidden>
               <label class="field">
-                <span data-i18n="ranges_label"></span>
+                <span data-i18n="ranges_label">പേജ് ശ്രേണികൾ</span>
                 <input type="text" id="ranges" inputmode="numeric" autocomplete="off" spellcheck="false" data-i18n-placeholder="ranges_ph">
               </label>
-              <p class="tiny muted mb0" data-i18n="ranges_hint"></p>
+              <p class="tiny muted mb0" data-i18n="ranges_hint">കാർഡുകളിൽ കാണുന്ന പേജ് നമ്പറുകൾ ഉപയോഗിക്കുക. ഓരോ ശ്രേണിയും വെവ്വേറെ ഫയലാകും.</p>
             </div>
             <label class="field" id="everyBox" hidden>
-              <span data-i18n="every_label"></span>
+              <span data-i18n="every_label">ഓരോ ഫയലിലും പേജുകൾ</span>
               <input type="number" id="everyN" min="1" max="999" step="1" inputmode="numeric">
             </label>
             <label class="check" id="oneFileBox" hidden><input type="checkbox" id="oneFile"> <span id="oneFileTxt"></span></label>
@@ -317,79 +317,79 @@
           <div class="pm-plan" id="plan" aria-live="polite"></div>
 
           <div>
-            <p class="small muted mb0" style="margin-bottom:6px" data-i18n="extras"></p>
+            <p class="small muted mb0" style="margin-bottom:6px" data-i18n="extras">സേവ് ചെയ്യുന്ന ഓരോ ഫയലിനും അധിക സൗകര്യങ്ങൾ</p>
             <details class="pm-opt" id="optNum">
-              <summary><span aria-hidden="true">#</span> <span data-i18n="opt_numbers"></span> <span class="badge" id="bNum"></span></summary>
+              <summary><span aria-hidden="true">#</span> <span data-i18n="opt_numbers">പേജ് നമ്പറുകൾ</span> <span class="badge" id="bNum"></span></summary>
               <div class="pm-opt-body">
-                <label class="check"><input type="checkbox" id="numOn"> <span data-i18n="num_add"></span></label>
+                <label class="check"><input type="checkbox" id="numOn"> <span data-i18n="num_add">പേജ് നമ്പറുകൾ ചേർക്കുക</span></label>
                 <div class="pm-two">
-                  <label class="field"><span data-i18n="position"></span>
+                  <label class="field"><span data-i18n="position">സ്ഥാനം</span>
                     <select id="numPos">
-                      <option value="bc" data-i18n="pos_bc"></option>
-                      <option value="br" data-i18n="pos_br"></option>
-                      <option value="bl" data-i18n="pos_bl"></option>
-                      <option value="tc" data-i18n="pos_tc"></option>
-                      <option value="tr" data-i18n="pos_tr"></option>
-                      <option value="tl" data-i18n="pos_tl"></option>
+                      <option value="bc" data-i18n="pos_bc">താഴെ നടുവിൽ</option>
+                      <option value="br" data-i18n="pos_br">താഴെ വലത്</option>
+                      <option value="bl" data-i18n="pos_bl">താഴെ ഇടത്</option>
+                      <option value="tc" data-i18n="pos_tc">മുകളിൽ നടുവിൽ</option>
+                      <option value="tr" data-i18n="pos_tr">മുകളിൽ വലത്</option>
+                      <option value="tl" data-i18n="pos_tl">മുകളിൽ ഇടത്</option>
                     </select>
                   </label>
-                  <label class="field"><span data-i18n="num_style"></span><select id="numFmt"></select></label>
-                  <label class="field"><span data-i18n="num_start"></span><input type="number" id="numStart" min="0" max="99999" step="1" inputmode="numeric"></label>
-                  <label class="field"><span data-i18n="text_size"></span><input type="number" id="numSize" min="6" max="36" step="1" inputmode="numeric"></label>
+                  <label class="field"><span data-i18n="num_style">ശൈലി</span><select id="numFmt"></select></label>
+                  <label class="field"><span data-i18n="num_start">ആദ്യ നമ്പർ</span><input type="number" id="numStart" min="0" max="99999" step="1" inputmode="numeric"></label>
+                  <label class="field"><span data-i18n="text_size">അക്ഷര വലുപ്പം</span><input type="number" id="numSize" min="6" max="36" step="1" inputmode="numeric"></label>
                 </div>
-                <label class="check"><input type="checkbox" id="numSkip"> <span data-i18n="num_skip"></span></label>
+                <label class="check"><input type="checkbox" id="numSkip"> <span data-i18n="num_skip">ആദ്യ പേജിൽ (കവർ) നമ്പർ വേണ്ട</span></label>
               </div>
             </details>
 
             <details class="pm-opt" id="optWm">
-              <summary><span aria-hidden="true">💧</span> <span data-i18n="opt_watermark"></span> <span class="badge" id="bWm"></span></summary>
+              <summary><span aria-hidden="true">💧</span> <span data-i18n="opt_watermark">വാട്ടർമാർക്ക്</span> <span class="badge" id="bWm"></span></summary>
               <div class="pm-opt-body">
                 <div class="seg w100" role="group" id="wmSeg">
-                  <button type="button" data-val="none" data-i18n="wm_none"></button>
-                  <button type="button" data-val="text" data-i18n="wm_text"></button>
-                  <button type="button" data-val="image" data-i18n="wm_image"></button>
+                  <button type="button" data-val="none" data-i18n="wm_none">ഒന്നുമില്ല</button>
+                  <button type="button" data-val="text" data-i18n="wm_text">ടെക്സ്റ്റ്</button>
+                  <button type="button" data-val="image" data-i18n="wm_image">ലോഗോ അല്ലെങ്കിൽ ചിത്രം</button>
                 </div>
                 <div id="wmTextBox" class="stack">
-                  <label class="field"><span data-i18n="wm_text_label"></span><input type="text" id="wmText" dir="auto" maxlength="120" data-i18n-placeholder="wm_text_ph"></label>
+                  <label class="field"><span data-i18n="wm_text_label">വാട്ടർമാർക്ക് ടെക്സ്റ്റ്</span><input type="text" id="wmText" dir="auto" maxlength="120" data-i18n-placeholder="wm_text_ph"></label>
                   <div class="pm-kyc">
-                    <h4><span aria-hidden="true">🪪</span> <span data-i18n="kyc_title"></span></h4>
-                    <p class="small mb0" data-i18n="kyc_help"></p>
-                    <label class="field"><span data-i18n="kyc_org"></span><input type="text" id="kycOrg" dir="auto" maxlength="60" data-i18n-placeholder="kyc_org_ph"></label>
-                    <button class="btn btn-sm" type="button" id="kycBtn" data-i18n="kyc_make"></button>
+                    <h4><span aria-hidden="true">🪪</span> <span data-i18n="kyc_title">ആധാർ അല്ലെങ്കിൽ PAN-ന്റെ KYC പകർപ്പ്</span></h4>
+                    <p class="small mb0" data-i18n="kyc_help">ആധാറിന്റെയോ PAN-ന്റെയോ പകർപ്പ് നൽകുന്നതിന് മുമ്പ്, അത് ആർക്കുവേണ്ടിയാണെന്നും തീയതിയും അതിൽ എഴുതുക. അപ്പോൾ ആ പകർപ്പ് മറ്റൊരിടത്ത് ആർക്കും ദുരുപയോഗം ചെയ്യാനാവില്ല.</p>
+                    <label class="field"><span data-i18n="kyc_org">ആർക്കാണ് നൽകുന്നത് (ബാങ്ക് അല്ലെങ്കിൽ കമ്പനി)</span><input type="text" id="kycOrg" dir="auto" maxlength="60" data-i18n-placeholder="kyc_org_ph"></label>
+                    <button class="btn btn-sm" type="button" id="kycBtn" data-i18n="kyc_make">KYC വാട്ടർമാർക്ക് ചേർക്കുക</button>
                   </div>
                 </div>
                 <div id="wmImgBox" class="stack" hidden>
                   <div class="pm-wmimg">
-                    <button class="btn btn-sm" type="button" id="wmPick"><span aria-hidden="true">🖼</span> <span data-i18n="wm_pick"></span></button>
+                    <button class="btn btn-sm" type="button" id="wmPick"><span aria-hidden="true">🖼</span> <span data-i18n="wm_pick">ചിത്രം തിരഞ്ഞെടുക്കുക</span></button>
                     <img id="wmImgPrev" alt="" hidden>
                   </div>
-                  <p class="tiny muted mb0" data-i18n="wm_img_note"></p>
+                  <p class="tiny muted mb0" data-i18n="wm_img_note">ഈ ചിത്രം ഈ ഉപകരണത്തിൽ മാത്രമേ ഉപയോഗിക്കൂ, സേവ് ചെയ്യില്ല.</p>
                 </div>
                 <div id="wmStyleBox" class="stack">
-                  <div class="field"><span data-i18n="layout"></span>
+                  <div class="field"><span data-i18n="layout">വിന്യാസം</span>
                     <div class="seg w100" role="group" id="wmLayoutSeg">
-                      <button type="button" data-val="center" data-i18n="wm_center"></button>
-                      <button type="button" data-val="tile" data-i18n="wm_tile"></button>
+                      <button type="button" data-val="center" data-i18n="wm_center">ഒരിക്കൽ, നടുവിൽ</button>
+                      <button type="button" data-val="tile" data-i18n="wm_tile">പേജ് മുഴുവൻ ആവർത്തിച്ച്</button>
                     </div>
                   </div>
-                  <div class="field"><span data-i18n="angle"></span>
+                  <div class="field"><span data-i18n="angle">കോൺ</span>
                     <div class="seg w100" role="group" id="wmAngleSeg">
-                      <button type="button" data-val="diag" data-i18n="wm_diag"></button>
-                      <button type="button" data-val="flat" data-i18n="wm_flat"></button>
+                      <button type="button" data-val="diag" data-i18n="wm_diag">ചരിഞ്ഞ്</button>
+                      <button type="button" data-val="flat" data-i18n="wm_flat">നേരെ</button>
                     </div>
                   </div>
-                  <div class="field" id="wmColorBox"><span data-i18n="colour"></span>
+                  <div class="field" id="wmColorBox"><span data-i18n="colour">നിറം</span>
                     <div class="pm-colors" role="group" id="wmColors">
-                      <button type="button" data-val="grey"><i style="background:#808080"></i><span data-i18n="col_grey"></span></button>
-                      <button type="button" data-val="red"><i style="background:#cc1a1a"></i><span data-i18n="col_red"></span></button>
-                      <button type="button" data-val="blue"><i style="background:#1a4dcc"></i><span data-i18n="col_blue"></span></button>
-                      <button type="button" data-val="black"><i style="background:#000"></i><span data-i18n="col_black"></span></button>
+                      <button type="button" data-val="grey"><i style="background:#808080"></i><span data-i18n="col_grey">ചാരനിറം</span></button>
+                      <button type="button" data-val="red"><i style="background:#cc1a1a"></i><span data-i18n="col_red">ചുവപ്പ്</span></button>
+                      <button type="button" data-val="blue"><i style="background:#1a4dcc"></i><span data-i18n="col_blue">നീല</span></button>
+                      <button type="button" data-val="black"><i style="background:#000"></i><span data-i18n="col_black">കറുപ്പ്</span></button>
                     </div>
                   </div>
-                  <label class="field"><span data-i18n="strength"></span>
+                  <label class="field"><span data-i18n="strength">കടുപ്പം</span>
                     <span class="range-row"><input type="range" id="wmOpacity" min="5" max="100" step="5"><output id="wmOpacityOut"></output></span>
                   </label>
-                  <label class="field"><span data-i18n="size"></span>
+                  <label class="field"><span data-i18n="size">വലുപ്പം</span>
                     <span class="range-row"><input type="range" id="wmSize" min="10" max="100" step="5"><output id="wmSizeOut"></output></span>
                   </label>
                 </div>
@@ -397,31 +397,31 @@
             </details>
 
             <details class="pm-opt" id="optMeta">
-              <summary><span aria-hidden="true">🏷</span> <span data-i18n="opt_meta"></span> <span class="badge" id="bMeta"></span></summary>
+              <summary><span aria-hidden="true">🏷</span> <span data-i18n="opt_meta">രേഖയുടെ വിവരങ്ങൾ</span> <span class="badge" id="bMeta"></span></summary>
               <div class="pm-opt-body">
                 <div class="seg w100" role="group" id="metaSeg">
-                  <button type="button" data-val="remove" data-i18n="meta_remove"></button>
-                  <button type="button" data-val="keep" data-i18n="meta_keep"></button>
-                  <button type="button" data-val="set" data-i18n="meta_set"></button>
+                  <button type="button" data-val="remove" data-i18n="meta_remove">നീക്കുക</button>
+                  <button type="button" data-val="keep" data-i18n="meta_keep">നിലനിർത്തുക</button>
+                  <button type="button" data-val="set" data-i18n="meta_set">സ്വയം എഴുതുക</button>
                 </div>
                 <p class="tiny muted mb0" id="metaHelp"></p>
                 <div id="metaFields" class="stack" hidden>
-                  <label class="field"><span data-i18n="meta_title"></span><input type="text" id="mTitle" dir="auto" maxlength="200"></label>
-                  <label class="field"><span data-i18n="meta_author"></span><input type="text" id="mAuthor" dir="auto" maxlength="120"></label>
-                  <label class="field"><span data-i18n="meta_subject"></span><input type="text" id="mSubject" dir="auto" maxlength="200"></label>
-                  <label class="field"><span data-i18n="meta_keywords"></span><input type="text" id="mKeywords" dir="auto" maxlength="200"></label>
+                  <label class="field"><span data-i18n="meta_title">തലക്കെട്ട്</span><input type="text" id="mTitle" dir="auto" maxlength="200"></label>
+                  <label class="field"><span data-i18n="meta_author">രചയിതാവ്</span><input type="text" id="mAuthor" dir="auto" maxlength="120"></label>
+                  <label class="field"><span data-i18n="meta_subject">വിഷയം</span><input type="text" id="mSubject" dir="auto" maxlength="200"></label>
+                  <label class="field"><span data-i18n="meta_keywords">കീവേഡുകൾ (കോമ ഇട്ട് വേർതിരിച്ച്)</span><input type="text" id="mKeywords" dir="auto" maxlength="200"></label>
                 </div>
               </div>
             </details>
 
             <details class="pm-opt" id="optImg">
-              <summary><span aria-hidden="true">🖼</span> <span data-i18n="opt_images"></span></summary>
+              <summary><span aria-hidden="true">🖼</span> <span data-i18n="opt_images">ഫോട്ടോ പേജുകൾ</span></summary>
               <div class="pm-opt-body">
-                <label class="field"><span data-i18n="img_mode"></span>
+                <label class="field"><span data-i18n="img_mode">ഓരോ ഫോട്ടോയും ചിത്രവും ആകുന്നത്</span>
                   <select id="imgMode">
-                    <option value="a4" data-i18n="img_a4"></option>
-                    <option value="a4p" data-i18n="img_a4p"></option>
-                    <option value="fit" data-i18n="img_fit"></option>
+                    <option value="a4" data-i18n="img_a4">ഒരു A4 പേജ് (വീതിയുള്ള ഫോട്ടോകൾക്ക് കിടക്കുന്ന രീതിയിൽ)</option>
+                    <option value="a4p" data-i18n="img_a4p">ഒരു നിവർന്ന A4 പേജ്</option>
+                    <option value="fit" data-i18n="img_fit">ഫോട്ടോയുടെ അതേ ആകൃതിയിലുള്ള പേജ്</option>
                   </select>
                 </label>
               </div>
@@ -430,12 +430,12 @@
 
           <div class="pm-prev" id="prevBox" hidden>
             <canvas id="stampPrev" width="240" height="340" role="img" data-i18n-aria-label="stamp_preview"></canvas>
-            <p class="small muted mb0" data-i18n="stamp_preview"></p>
+            <p class="small muted mb0" data-i18n="stamp_preview">ആദ്യ പേജിന്റെ പ്രിവ്യൂ</p>
           </div>
 
           <div class="pm-gobar stack">
           <label class="field">
-            <span data-i18n="out_name"></span>
+            <span data-i18n="out_name">ഫയലിന്റെ പേര്</span>
             <input type="text" id="outName" maxlength="80" autocomplete="off" spellcheck="false">
           </label>
           <p class="small bad mb0" id="planErr" role="alert" hidden></p>
@@ -447,8 +447,8 @@
           <div class="callout success pm-result" id="result" role="status" hidden>
             <p class="mb0" id="resultMsg"></p>
             <div class="row">
-              <button class="btn btn-sm" type="button" id="againBtn"><span aria-hidden="true">⬇</span> <span data-i18n="download_again"></span></button>
-              <button class="btn btn-sm" type="button" id="shareBtn" hidden><span aria-hidden="true">↗</span> <span data-i18n="share_file"></span></button>
+              <button class="btn btn-sm" type="button" id="againBtn"><span aria-hidden="true">⬇</span> <span data-i18n="download_again">വീണ്ടും ഡൗൺലോഡ് ചെയ്യുക</span></button>
+              <button class="btn btn-sm" type="button" id="shareBtn" hidden><span aria-hidden="true">↗</span> <span data-i18n="share_file">പങ്കിടുക</span></button>
             </div>
           </div>
           </div>
@@ -457,25 +457,25 @@
     </div>
 
     <details class="card" id="helpBox">
-      <summary><strong data-i18n="help_title"></strong></summary>
+      <summary><strong data-i18n="help_title">എങ്ങനെ ഉപയോഗിക്കാം · ജോലിക്കുള്ള ആശയങ്ങൾ</strong></summary>
       <ul class="stack">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">PDF-കളും ഫോട്ടോകളും ചേർക്കുക, അല്ലെങ്കിൽ ഈ പേജിൽ എവിടെയെങ്കിലും ഇടുക. ക്രമം മാറ്റാൻ പേജിനെ ⠿ പിടിച്ച് വലിക്കുക (മൗസ് ഉണ്ടെങ്കിൽ ചിത്രം പിടിച്ചും).</li>
+        <li data-i18n="tip2">പേജുകൾ തിരഞ്ഞെടുക്കാൻ അവയിൽ ക്ലിക്ക് ചെയ്യുക; Shift+ക്ലിക്ക് തുടർച്ചയായ പല പേജുകളും തിരഞ്ഞെടുക്കും. പിന്നെ അവ ഒരുമിച്ച് തിരിക്കുക, നീക്കുക, പകർപ്പെടുക്കുക അല്ലെങ്കിൽ കളയുക. തെറ്റ് പറ്റിയാൽ “പഴയപടിയാക്കുക” അമർത്തുക.</li>
+        <li data-i18n="tip3">വിഭജനം: 1-3, 5, 8-10 പോലെ ശ്രേണികൾ എഴുതിയാൽ ഓരോ ശ്രേണിക്കും വെവ്വേറെ ഫയൽ കിട്ടും, അല്ലെങ്കിൽ മുൻ-പിൻ സ്കാനുകൾക്കായി ഓരോ 2 പേജിലും വിഭജിക്കുക. പല ഫയലുകൾ ഒരു ZIP ആയി ഡൗൺലോഡ് ആകും.</li>
+        <li data-i18n="tip4">KYC പകർപ്പ്: നിങ്ങളുടെ ആധാറിന്റെ മുൻവശത്തെയും പിൻവശത്തെയും ഫോട്ടോകൾ ചേർക്കുക, ബാങ്കിന്റെ പേരും ഇന്നത്തെ തീയതിയും ചേർത്ത് KYC വാട്ടർമാർക്ക് ഓണാക്കുക, ഒരു PDF സേവ് ചെയ്യുക.</li>
+        <li data-i18n="tip5">ഓഫീസ് ജോലി: ഇമെയിൽ ചെയ്യുന്നതിന് മുമ്പ് ബിൽ, അതിന്റെ GST ഇൻവോയ്സ്, UPI പേയ്‌മെന്റ് സ്ക്രീൻഷോട്ട് എന്നിവ ഒറ്റ PDF ആക്കുക, അല്ലെങ്കിൽ കരാറിന് പേജ് നമ്പറുകൾ ചേർക്കുക.</li>
+        <li data-i18n="tip6">PDF പൂട്ടിയതാണോ? ആദ്യം “PDF Compress” ആപ്പിൽ പാസ്‌വേഡ് ഉപയോഗിച്ച് തുറക്കുക, എന്നിട്ട് ഇവിടെ ചേർക്കുക. വളരെ വലിയ ഫയലുകൾ കമ്പ്യൂട്ടറിൽ ഏറ്റവും നന്നായി പ്രവർത്തിക്കും.</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="keys_title"></h3>
+      <h3 style="margin-top:14px" data-i18n="keys_title">കീബോർഡ് കുറുക്കുവഴികൾ</h3>
       <ul class="pm-keys small">
-        <li data-i18n="key1"></li>
-        <li data-i18n="key2"></li>
-        <li data-i18n="key3"></li>
-        <li data-i18n="key4"></li>
-        <li data-i18n="key5"></li>
+        <li data-i18n="key1">അമ്പ് കീകൾ: പേജിൽ നിന്ന് പേജിലേക്ക് · Home / End: ആദ്യ അല്ലെങ്കിൽ അവസാന പേജ്</li>
+        <li data-i18n="key2">Space: തിരഞ്ഞെടുക്കുക അല്ലെങ്കിൽ ഒഴിവാക്കുക · Enter: വലുതാക്കി കാണുക</li>
+        <li data-i18n="key3">Ctrl + അമ്പ്: പേജ് നീക്കുക · Ctrl + Home / End: തുടക്കത്തിലേക്കോ അവസാനത്തിലേക്കോ നീക്കുക</li>
+        <li data-i18n="key4">R: വലത്തേക്ക് തിരിക്കുക (Shift + R: ഇടത്തേക്ക്) · D: പകർപ്പ് · Delete: നീക്കുക</li>
+        <li data-i18n="key5">Ctrl + Z: പഴയപടിയാക്കുക · Ctrl + Y: വീണ്ടും ചെയ്യുക · Ctrl + A: എല്ലാം തിരഞ്ഞെടുക്കുക</li>
       </ul>
       <div class="row spread" style="margin-top:12px">
-        <span class="small muted" data-i18n="reset_help"></span>
+        <span class="small muted" data-i18n="reset_help">“റീസെറ്റ്” എല്ലാ പേജുകളും നീക്കി, ഓരോ ക്രമീകരണവും പഴയപടിയാക്കുന്നു.</span>
         <button class="btn btn-sm btn-danger" id="resetAll" type="button" data-i18n="reset"></button>
       </div>
     </details>
@@ -492,7 +492,7 @@
           <button class="tb danger" type="button" data-act="del" data-i18n-aria-label="delete" data-i18n-title="delete"><span class="i" aria-hidden="true">🗑</span></button>
           <button class="tb" type="button" data-act="selNone" data-i18n-aria-label="sel_none" data-i18n-title="sel_none"><span class="i" aria-hidden="true">✕</span></button>
         </div>
-        <button class="tb primary" type="button" data-act="toExport" id="mExport"><span class="i" aria-hidden="true">⬇</span> <span data-i18n="to_export"></span></button>
+        <button class="tb primary" type="button" data-act="toExport" id="mExport"><span class="i" aria-hidden="true">⬇</span> <span data-i18n="to_export">സേവ് അല്ലെങ്കിൽ വിഭജിക്കുക</span></button>
       </div>
     </div>
   </main>

@@ -149,48 +149,48 @@
 <body>
   <main id="app">
     <div id="ui">
-      <p class="edu-intro" data-i18n="intro"></p>
-      <p class="privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></p>
+      <p class="edu-intro" data-i18n="intro">दुकान, गोदाम या स्टोर रूम के लिए आसान स्टॉक रजिस्टर: सामान की सूची, माल आना-जाना, कम स्टॉक और एक्सपायरी की चेतावनी, दिन और महीने की रिपोर्ट, CSV और बैकअप। सब कुछ आपके डिवाइस पर ही रहता है।</p>
+      <p class="privacy"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">आपका स्टॉक डेटा सिर्फ़ इसी ब्राउज़र में, इसी डिवाइस पर सेव होता है। कुछ भी अपलोड नहीं होता। हर हफ़्ते बैकअप डाउनलोड करें।</span></p>
 
       <div id="remind" class="callout warning row spread banner no-print" hidden>
         <span id="remind-txt" class="grow"></span>
         <span class="row">
-          <button type="button" class="btn btn-sm btn-primary" id="remind-backup" data-i18n="backup_now"></button>
-          <button type="button" class="btn btn-sm" id="remind-later" data-i18n="later"></button>
+          <button type="button" class="btn btn-sm btn-primary" id="remind-backup" data-i18n="backup_now">अभी बैकअप लें</button>
+          <button type="button" class="btn btn-sm" id="remind-later" data-i18n="later">बाद में</button>
         </span>
       </div>
       <div id="quota" class="callout danger row spread banner no-print" hidden>
         <span id="quota-txt" class="grow"></span>
-        <button type="button" class="btn btn-sm btn-primary" id="quota-backup" data-i18n="backup_dl"></button>
+        <button type="button" class="btn btn-sm btn-primary" id="quota-backup" data-i18n="backup_dl">बैकअप डाउनलोड करें</button>
       </div>
       <div id="sample-banner" class="callout accent row spread banner no-print" hidden>
-        <span class="grow" data-i18n="sample_note"></span>
-        <button type="button" class="btn btn-sm" id="remove-samples" data-i18n="remove_samples"></button>
+        <span class="grow" data-i18n="sample_note">ये उदाहरण के सामान हैं ताकि आप ऐप आज़मा सकें। अपना सामान जोड़ते समय इन्हें हटा दें।</span>
+        <button type="button" class="btn btn-sm" id="remove-samples" data-i18n="remove_samples">उदाहरण हटाएँ</button>
       </div>
       <div id="undo-bar" class="callout success row spread banner no-print" role="status" aria-live="polite" hidden>
         <span id="undo-txt" class="grow"></span>
-        <button type="button" class="btn btn-sm btn-primary" id="undo-btn" data-i18n="undo"></button>
+        <button type="button" class="btn btn-sm btn-primary" id="undo-btn" data-i18n="undo">वापस लाएँ</button>
       </div>
 
       <nav class="tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-        <button type="button" role="tab" id="tab-stock" aria-selected="true" aria-controls="pane-stock" data-tab="stock"><span aria-hidden="true">📦</span> <span data-i18n="tab_stock"></span></button>
-        <button type="button" role="tab" id="tab-moves" aria-selected="false" aria-controls="pane-moves" data-tab="moves"><span aria-hidden="true">🔁</span> <span data-i18n="tab_moves"></span></button>
-        <button type="button" role="tab" id="tab-expiry" aria-selected="false" aria-controls="pane-expiry" data-tab="expiry"><span aria-hidden="true">⏳</span> <span data-i18n="tab_expiry"></span></button>
-        <button type="button" role="tab" id="tab-data" aria-selected="false" aria-controls="pane-data" data-tab="data"><span aria-hidden="true">💾</span> <span data-i18n="tab_data"></span></button>
+        <button type="button" role="tab" id="tab-stock" aria-selected="true" aria-controls="pane-stock" data-tab="stock"><span aria-hidden="true">📦</span> <span data-i18n="tab_stock">स्टॉक</span></button>
+        <button type="button" role="tab" id="tab-moves" aria-selected="false" aria-controls="pane-moves" data-tab="moves"><span aria-hidden="true">🔁</span> <span data-i18n="tab_moves">आना-जाना और रिपोर्ट</span></button>
+        <button type="button" role="tab" id="tab-expiry" aria-selected="false" aria-controls="pane-expiry" data-tab="expiry"><span aria-hidden="true">⏳</span> <span data-i18n="tab_expiry">एक्सपायरी</span></button>
+        <button type="button" role="tab" id="tab-data" aria-selected="false" aria-controls="pane-data" data-tab="data"><span aria-hidden="true">💾</span> <span data-i18n="tab_data">डेटा और बैकअप</span></button>
       </nav>
 
       <!-- ===================== STOCK ===================== -->
       <section id="pane-stock" role="tabpanel" aria-labelledby="tab-stock">
         <div class="card scan-card stack no-print">
           <div class="scanrow">
-            <label class="field grow"><span data-i18n="scan_label"></span>
+            <label class="field grow"><span data-i18n="scan_label">बारकोड स्कैनर / तुरंत खोज</span>
               <input id="scan" type="search" dir="auto" autocomplete="off" spellcheck="false" enterkeyhint="go" data-i18n-placeholder="scan_ph">
             </label>
-            <div class="field"><span data-i18n="scan_mode"></span>
+            <div class="field"><span data-i18n="scan_mode">स्कैन पर</span>
               <div class="seg" id="scan-mode" role="group">
-                <button type="button" data-mode="find" aria-pressed="true" data-i18n="mode_find"></button>
-                <button type="button" data-mode="in" aria-pressed="false" data-i18n="mode_in"></button>
-                <button type="button" data-mode="out" aria-pressed="false" data-i18n="mode_out"></button>
+                <button type="button" data-mode="find" aria-pressed="true" data-i18n="mode_find">ढूँढें</button>
+                <button type="button" data-mode="in" aria-pressed="false" data-i18n="mode_in">माल आया +1</button>
+                <button type="button" data-mode="out" aria-pressed="false" data-i18n="mode_out">माल गया −1</button>
               </div>
             </div>
           </div>
@@ -202,49 +202,49 @@
         <div class="card stack">
           <div class="filters no-print">
             <label class="field wide"><span data-i18n="search"></span><input id="search" type="search" dir="auto" autocomplete="off" data-i18n-placeholder="search"></label>
-            <label class="field"><span data-i18n="category"></span><select id="f-cat"></select></label>
-            <label class="field"><span data-i18n="status"></span>
+            <label class="field"><span data-i18n="category">श्रेणी</span><select id="f-cat"></select></label>
+            <label class="field"><span data-i18n="status">स्थिति</span>
               <select id="f-status">
-                <option value="" data-i18n="all_status"></option>
-                <option value="low" data-i18n="f_low"></option>
-                <option value="out" data-i18n="f_out"></option>
-                <option value="neg" data-i18n="f_neg"></option>
-                <option value="exp" data-i18n="f_exp"></option>
-                <option value="expired" data-i18n="f_expired"></option>
+                <option value="" data-i18n="all_status">सभी सामान</option>
+                <option value="low" data-i18n="f_low">कम स्टॉक</option>
+                <option value="out" data-i18n="f_out">खत्म / माइनस</option>
+                <option value="neg" data-i18n="f_neg">माइनस स्टॉक</option>
+                <option value="exp" data-i18n="f_exp">जल्दी एक्सपायर</option>
+                <option value="expired" data-i18n="f_expired">एक्सपायर हो चुके</option>
               </select>
             </label>
-            <label class="field"><span data-i18n="sort"></span>
+            <label class="field"><span data-i18n="sort">क्रम</span>
               <select id="sort">
-                <option value="name" data-i18n="sort_name"></option>
-                <option value="stock" data-i18n="sort_stock"></option>
-                <option value="value" data-i18n="sort_value"></option>
-                <option value="expiry" data-i18n="sort_expiry"></option>
-                <option value="new" data-i18n="sort_new"></option>
+                <option value="name" data-i18n="sort_name">नाम (A से Z)</option>
+                <option value="stock" data-i18n="sort_stock">स्टॉक (कम से ज़्यादा)</option>
+                <option value="value" data-i18n="sort_value">कीमत (ज़्यादा से कम)</option>
+                <option value="expiry" data-i18n="sort_expiry">एक्सपायरी (सबसे पहले)</option>
+                <option value="new" data-i18n="sort_new">हाल में जोड़े गए</option>
               </select>
             </label>
           </div>
           <div class="row no-print">
-            <button type="button" class="btn btn-primary" id="add-item"><span aria-hidden="true">＋</span> <span data-i18n="add_item"></span></button>
-            <button type="button" class="btn" id="print-sheet"><span aria-hidden="true">🖨</span> <span data-i18n="print_sheet"></span></button>
-            <button type="button" class="btn" id="export-items"><span aria-hidden="true">⬇</span> <span data-i18n="export_items"></span></button>
+            <button type="button" class="btn btn-primary" id="add-item"><span aria-hidden="true">＋</span> <span data-i18n="add_item">सामान जोड़ें</span></button>
+            <button type="button" class="btn" id="print-sheet"><span aria-hidden="true">🖨</span> <span data-i18n="print_sheet">स्टॉक गिनती शीट प्रिंट करें</span></button>
+            <button type="button" class="btn" id="export-items"><span aria-hidden="true">⬇</span> <span data-i18n="export_items">सामान CSV</span></button>
             <span class="muted small grow" id="count-txt" aria-live="polite"></span>
           </div>
           <div class="scroll-x">
             <table class="table stock" id="stock-table">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="col_name"></th>
-                  <th scope="col" data-i18n="col_sku"></th>
-                  <th scope="col" data-i18n="col_cat"></th>
-                  <th scope="col" class="num" data-i18n="col_stock"></th>
-                  <th scope="col" class="num" data-i18n="col_min"></th>
-                  <th scope="col" data-i18n="col_status"></th>
-                  <th scope="col" class="num" data-i18n="col_buy"></th>
-                  <th scope="col" class="num" data-i18n="col_sell"></th>
-                  <th scope="col" class="num" data-i18n="col_gst"></th>
-                  <th scope="col" class="num" data-i18n="col_value"></th>
-                  <th scope="col" data-i18n="col_expiry"></th>
-                  <th scope="col" class="no-print" data-i18n="col_actions"></th>
+                  <th scope="col" data-i18n="col_name">सामान</th>
+                  <th scope="col" data-i18n="col_sku">कोड / बारकोड</th>
+                  <th scope="col" data-i18n="col_cat">श्रेणी</th>
+                  <th scope="col" class="num" data-i18n="col_stock">स्टॉक</th>
+                  <th scope="col" class="num" data-i18n="col_min">न्यूनतम</th>
+                  <th scope="col" data-i18n="col_status">स्थिति</th>
+                  <th scope="col" class="num" data-i18n="col_buy">खरीद ₹</th>
+                  <th scope="col" class="num" data-i18n="col_sell">बिक्री ₹</th>
+                  <th scope="col" class="num" data-i18n="col_gst">GST %</th>
+                  <th scope="col" class="num" data-i18n="col_value">कीमत (खरीद भाव) ₹</th>
+                  <th scope="col" data-i18n="col_expiry">एक्सपायरी</th>
+                  <th scope="col" class="no-print" data-i18n="col_actions">कार्य</th>
                 </tr>
               </thead>
               <tbody id="stock-body"></tbody>
@@ -252,14 +252,14 @@
           </div>
           <div class="empty center" id="empty" hidden>
             <div class="big" aria-hidden="true">📦</div>
-            <h2 class="mt0" data-i18n="empty_title"></h2>
-            <p class="muted" data-i18n="empty_help"></p>
+            <h2 class="mt0" data-i18n="empty_title">अभी कोई सामान नहीं</h2>
+            <p class="muted" data-i18n="empty_help">पहला सामान जोड़ें, CSV इम्पोर्ट करें, या देखने के लिए उदाहरण के सामान लोड करें।</p>
             <div class="row" style="justify-content:center">
-              <button type="button" class="btn btn-primary" id="empty-add" data-i18n="add_item"></button>
-              <button type="button" class="btn" id="load-samples" data-i18n="load_samples"></button>
+              <button type="button" class="btn btn-primary" id="empty-add" data-i18n="add_item">सामान जोड़ें</button>
+              <button type="button" class="btn" id="load-samples" data-i18n="load_samples">उदाहरण के सामान लोड करें</button>
             </div>
           </div>
-          <div class="center no-print"><button type="button" class="btn" id="more" data-i18n="show_more" hidden></button></div>
+          <div class="center no-print"><button type="button" class="btn" id="more" data-i18n="show_more" hidden>और दिखाएँ</button></div>
         </div>
       </section>
 
@@ -268,32 +268,32 @@
         <div class="card stack">
           <div class="row no-print">
             <div class="seg" id="view-seg" role="group">
-              <button type="button" data-view="ledger" aria-pressed="true" data-i18n="view_ledger"></button>
-              <button type="button" data-view="daily" aria-pressed="false" data-i18n="view_daily"></button>
-              <button type="button" data-view="monthly" aria-pressed="false" data-i18n="view_monthly"></button>
+              <button type="button" data-view="ledger" aria-pressed="true" data-i18n="view_ledger">खाता</button>
+              <button type="button" data-view="daily" aria-pressed="false" data-i18n="view_daily">दिन की रिपोर्ट</button>
+              <button type="button" data-view="monthly" aria-pressed="false" data-i18n="view_monthly">महीने की रिपोर्ट</button>
             </div>
-            <button type="button" class="btn" id="export-moves"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves"></span></button>
+            <button type="button" class="btn" id="export-moves"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves">आना-जाना CSV</span></button>
           </div>
           <div class="filters no-print">
-            <label class="field"><span data-i18n="period"></span>
+            <label class="field"><span data-i18n="period">अवधि</span>
               <select id="period">
-                <option value="today" data-i18n="p_today"></option>
-                <option value="7" data-i18n="p_7"></option>
-                <option value="month" selected data-i18n="p_month"></option>
-                <option value="last" data-i18n="p_last"></option>
-                <option value="year" data-i18n="p_year"></option>
-                <option value="all" data-i18n="p_all"></option>
-                <option value="custom" data-i18n="p_custom"></option>
+                <option value="today" data-i18n="p_today">आज</option>
+                <option value="7" data-i18n="p_7">पिछले 7 दिन</option>
+                <option value="month" selected data-i18n="p_month">यह महीना</option>
+                <option value="last" data-i18n="p_last">पिछला महीना</option>
+                <option value="year" data-i18n="p_year">यह साल</option>
+                <option value="all" data-i18n="p_all">पूरा समय</option>
+                <option value="custom" data-i18n="p_custom">अपनी तारीखें</option>
               </select>
             </label>
-            <label class="field" id="from-field" hidden><span data-i18n="from"></span><input type="date" id="from"></label>
-            <label class="field" id="to-field" hidden><span data-i18n="to"></span><input type="date" id="to"></label>
-            <label class="field"><span data-i18n="type"></span>
+            <label class="field" id="from-field" hidden><span data-i18n="from">से</span><input type="date" id="from"></label>
+            <label class="field" id="to-field" hidden><span data-i18n="to">तक</span><input type="date" id="to"></label>
+            <label class="field"><span data-i18n="type">प्रकार</span>
               <select id="m-type">
-                <option value="" data-i18n="all_types"></option>
-                <option value="in" data-i18n="type_in"></option>
-                <option value="out" data-i18n="type_out"></option>
-                <option value="adj" data-i18n="type_adj"></option>
+                <option value="" data-i18n="all_types">सभी प्रकार</option>
+                <option value="in" data-i18n="type_in">आया</option>
+                <option value="out" data-i18n="type_out">गया</option>
+                <option value="adj" data-i18n="type_adj">सुधार</option>
               </select>
             </label>
             <label class="field"><span data-i18n="search"></span><input id="m-search" type="search" dir="auto" autocomplete="off" data-i18n-placeholder="search"></label>
@@ -303,12 +303,12 @@
             <table class="table ledger">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="col_date"></th>
-                  <th scope="col" data-i18n="col_item"></th>
-                  <th scope="col" data-i18n="col_type"></th>
-                  <th scope="col" class="num" data-i18n="col_qty"></th>
-                  <th scope="col" data-i18n="col_note"></th>
-                  <th scope="col" class="no-print" data-i18n="col_actions"></th>
+                  <th scope="col" data-i18n="col_date">तारीख</th>
+                  <th scope="col" data-i18n="col_item">सामान</th>
+                  <th scope="col" data-i18n="col_type">प्रकार</th>
+                  <th scope="col" class="num" data-i18n="col_qty">मात्रा</th>
+                  <th scope="col" data-i18n="col_note">नोट</th>
+                  <th scope="col" class="no-print" data-i18n="col_actions">कार्य</th>
                 </tr>
               </thead>
               <tbody id="ledger-body"></tbody>
@@ -319,19 +319,19 @@
               <thead>
                 <tr>
                   <th scope="col" id="rep-h1"></th>
-                  <th scope="col" class="num" data-i18n="col_moves"></th>
-                  <th scope="col" class="num" data-i18n="col_in"></th>
-                  <th scope="col" class="num" data-i18n="col_out"></th>
-                  <th scope="col" class="num" data-i18n="col_purchase"></th>
-                  <th scope="col" class="num" data-i18n="col_sales"></th>
+                  <th scope="col" class="num" data-i18n="col_moves">एंट्री</th>
+                  <th scope="col" class="num" data-i18n="col_in">आया (मात्रा)</th>
+                  <th scope="col" class="num" data-i18n="col_out">गया (मात्रा)</th>
+                  <th scope="col" class="num" data-i18n="col_purchase">खरीद ₹ (खरीद भाव)</th>
+                  <th scope="col" class="num" data-i18n="col_sales">बिक्री ₹ (बिक्री भाव)</th>
                 </tr>
               </thead>
               <tbody id="report-body"></tbody>
               <tfoot id="report-foot"></tfoot>
             </table>
           </div>
-          <p class="muted center" id="m-empty" hidden data-i18n="no_moves"></p>
-          <div class="center no-print"><button type="button" class="btn" id="m-more" data-i18n="show_more" hidden></button></div>
+          <p class="muted center" id="m-empty" hidden data-i18n="no_moves">इस अवधि में कोई आना-जाना नहीं।</p>
+          <div class="center no-print"><button type="button" class="btn" id="m-more" data-i18n="show_more" hidden>और दिखाएँ</button></div>
         </div>
       </section>
 
@@ -339,33 +339,33 @@
       <section id="pane-expiry" role="tabpanel" aria-labelledby="tab-expiry" hidden>
         <div class="card stack">
           <div class="row no-print">
-            <label class="field"><span data-i18n="exp_window"></span>
+            <label class="field"><span data-i18n="exp_window">इतने दिन में एक्सपायर होने वाले दिखाएँ</span>
               <select id="exp-days">
-                <option value="7" data-i18n="days_7"></option>
-                <option value="30" selected data-i18n="days_30"></option>
-                <option value="60" data-i18n="days_60"></option>
-                <option value="90" data-i18n="days_90"></option>
+                <option value="7" data-i18n="days_7">7 दिन</option>
+                <option value="30" selected data-i18n="days_30">30 दिन</option>
+                <option value="60" data-i18n="days_60">60 दिन</option>
+                <option value="90" data-i18n="days_90">90 दिन</option>
               </select>
             </label>
             <span class="badge primary" id="exp-count" aria-live="polite"></span>
           </div>
-          <p class="muted small mb0" data-i18n="exp_help"></p>
+          <p class="muted small mb0" data-i18n="exp_help">सिर्फ़ वही सामान दिखते हैं जिनकी एक्सपायरी तारीख है और स्टॉक 0 से ज़्यादा है। इन्हें पहले बेचें या वापस करें।</p>
           <div class="scroll-x">
             <table class="table exp">
               <thead>
                 <tr>
-                  <th scope="col" data-i18n="col_name"></th>
-                  <th scope="col" data-i18n="col_sku"></th>
-                  <th scope="col" class="num" data-i18n="col_stock"></th>
-                  <th scope="col" data-i18n="col_expiry"></th>
-                  <th scope="col" data-i18n="col_days"></th>
-                  <th scope="col" class="no-print" data-i18n="col_actions"></th>
+                  <th scope="col" data-i18n="col_name">सामान</th>
+                  <th scope="col" data-i18n="col_sku">कोड / बारकोड</th>
+                  <th scope="col" class="num" data-i18n="col_stock">स्टॉक</th>
+                  <th scope="col" data-i18n="col_expiry">एक्सपायरी</th>
+                  <th scope="col" data-i18n="col_days">बाकी दिन</th>
+                  <th scope="col" class="no-print" data-i18n="col_actions">कार्य</th>
                 </tr>
               </thead>
               <tbody id="exp-body"></tbody>
             </table>
           </div>
-          <p class="muted center" id="exp-empty" hidden data-i18n="no_expiry"></p>
+          <p class="muted center" id="exp-empty" hidden data-i18n="no_expiry">इस अवधि में कुछ भी एक्सपायर नहीं हो रहा। यहाँ देखने के लिए सामान में एक्सपायरी तारीख जोड़ें।</p>
         </div>
       </section>
 
@@ -374,41 +374,41 @@
         <div class="grid-2">
           <div class="card stack">
             <h2 data-i18n="settings"></h2>
-            <label class="field"><span data-i18n="shop_name"></span><input type="text" id="shop" maxlength="80" dir="auto" autocomplete="off" data-i18n-placeholder="shop_ph"></label>
-            <label class="field"><span data-i18n="default_gst"></span><input type="text" id="default-gst" inputmode="decimal" dir="ltr" list="gst-list" autocomplete="off" class="tnum"></label>
+            <label class="field"><span data-i18n="shop_name">दुकान / गोदाम का नाम (शीट पर छपेगा)</span><input type="text" id="shop" maxlength="80" dir="auto" autocomplete="off" data-i18n-placeholder="shop_ph"></label>
+            <label class="field"><span data-i18n="default_gst">नए सामान के लिए डिफ़ॉल्ट GST %</span><input type="text" id="default-gst" inputmode="decimal" dir="ltr" list="gst-list" autocomplete="off" class="tnum"></label>
           </div>
           <div class="card stack">
-            <h2 data-i18n="csv_title"></h2>
-            <p class="muted small mb0" data-i18n="csv_help"></p>
-            <code class="cols" data-i18n="csv_cols"></code>
-            <label class="check"><input type="checkbox" id="csv-update" checked> <span data-i18n="csv_update"></span></label>
+            <h2 data-i18n="csv_title">CSV इम्पोर्ट और एक्सपोर्ट</h2>
+            <p class="muted small mb0" data-i18n="csv_help">CSV फ़ाइल Excel या Google Sheets में खुलती है। इम्पोर्ट के लिए पहली पंक्ति में ये कॉलम नाम होने चाहिए (किसी भी क्रम में; सिर्फ़ &quot;name&quot; ज़रूरी है):</p>
+            <code class="cols" data-i18n="csv_cols">name, sku, category, unit, purchase_price, selling_price, gst_percent, min_stock, supplier, expiry, stock</code>
+            <label class="check"><input type="checkbox" id="csv-update" checked> <span data-i18n="csv_update">एक जैसे कोड वाले पुराने सामान अपडेट करें</span></label>
             <div class="row">
-              <button type="button" class="btn btn-primary" id="import-csv"><span aria-hidden="true">⬆</span> <span data-i18n="import_items"></span></button>
-              <button type="button" class="btn" id="export-items-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_items"></span></button>
-              <button type="button" class="btn" id="export-moves-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves"></span></button>
+              <button type="button" class="btn btn-primary" id="import-csv"><span aria-hidden="true">⬆</span> <span data-i18n="import_items">सामान CSV इम्पोर्ट करें</span></button>
+              <button type="button" class="btn" id="export-items-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_items">सामान CSV</span></button>
+              <button type="button" class="btn" id="export-moves-2"><span aria-hidden="true">⬇</span> <span data-i18n="export_moves">आना-जाना CSV</span></button>
             </div>
           </div>
           <div class="card stack">
-            <h2 data-i18n="backup_title"></h2>
-            <p class="muted small mb0" data-i18n="backup_help"></p>
+            <h2 data-i18n="backup_title">बैकअप और वापस लाना</h2>
+            <p class="muted small mb0" data-i18n="backup_help">बैकअप एक JSON फ़ाइल है जिसमें सारा सामान, आना-जाना और सेटिंग होती हैं। इसे Google Drive, WhatsApp या पेन ड्राइव में रखें। वापस लाने पर अभी का डेटा बदल जाता है।</p>
             <div class="row">
-              <button type="button" class="btn btn-primary" id="backup-btn"><span aria-hidden="true">💾</span> <span data-i18n="backup_dl"></span></button>
-              <button type="button" class="btn" id="restore-btn"><span aria-hidden="true">📂</span> <span data-i18n="restore"></span></button>
+              <button type="button" class="btn btn-primary" id="backup-btn"><span aria-hidden="true">💾</span> <span data-i18n="backup_dl">बैकअप डाउनलोड करें</span></button>
+              <button type="button" class="btn" id="restore-btn"><span aria-hidden="true">📂</span> <span data-i18n="restore">बैकअप से वापस लाएँ</span></button>
             </div>
             <p class="small mb0" id="last-backup" aria-live="polite"></p>
           </div>
           <div class="card stack">
-            <h2 data-i18n="storage_title"></h2>
+            <h2 data-i18n="storage_title">इस डिवाइस पर स्टोरेज</h2>
             <p class="small mb0 tnum" id="storage-txt"></p>
             <div class="progress" aria-hidden="true"><span id="storage-bar" style="width:0%"></span></div>
             <p class="muted small mb0" id="persist-txt"></p>
           </div>
           <div class="card stack dz">
-            <h2 data-i18n="danger_title"></h2>
-            <label class="field"><span data-i18n="clear_old"></span><input type="date" id="old-date"></label>
+            <h2 data-i18n="danger_title">सावधानी वाला हिस्सा</h2>
+            <label class="field"><span data-i18n="clear_old">इस तारीख से पहले की एंट्री हटाएँ (स्टॉक वैसा ही रहेगा)</span><input type="date" id="old-date"></label>
             <div class="row">
-              <button type="button" class="btn btn-danger" id="clear-old" data-i18n="clear_old_btn"></button>
-              <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset_all"></button>
+              <button type="button" class="btn btn-danger" id="clear-old" data-i18n="clear_old_btn">पुरानी एंट्री हटाएँ</button>
+              <button type="button" class="btn btn-danger" id="reset-btn" data-i18n="reset_all">सब कुछ हटाएँ</button>
             </div>
           </div>
         </div>
@@ -417,18 +417,18 @@
       <details class="card help" style="margin-top:16px">
         <summary data-i18n="help"></summary>
         <ul>
-          <li data-i18n="tip1"></li>
-          <li data-i18n="tip2"></li>
-          <li data-i18n="tip3"></li>
-          <li data-i18n="tip4"></li>
-          <li data-i18n="tip5"></li>
-          <li data-i18n="tip6"></li>
+          <li data-i18n="tip1">हर सामान एक बार जोड़ें: बारकोड, इकाई, भाव और न्यूनतम स्टॉक। गिनती रजिस्टर रखेगा।</li>
+          <li data-i18n="tip2">स्कैनर बॉक्स में क्लिक करें, &quot;माल गया −1&quot; चुनें और बिकते समय सामान स्कैन करें; हर स्कैन से स्टॉक एक कम होता है। बड़ी मात्रा के लिए आया / गया बटन इस्तेमाल करें।</li>
+          <li data-i18n="tip3">&quot;कम स्टॉक&quot; टाइल बताती है कि सप्लायर से क्या मँगवाना है। सामान CSV एक्सपोर्ट करके WhatsApp पर भेजें।</li>
+          <li data-i18n="tip4">मेडिकल, डेयरी और कॉस्मेटिक दुकानें: एक्सपायरी तारीख जोड़ें और हर हफ़्ते एक्सपायरी भाग देखें।</li>
+          <li data-i18n="tip5">स्टॉक गिनती शीट प्रिंट करें, गोदाम गिनें, फिर अंतर को सुधार के रूप में दर्ज करें।</li>
+          <li data-i18n="tip6">हर हफ़्ते बैकअप डाउनलोड करके Google Drive या पेन ड्राइव में रखें। ब्राउज़र डेटा हटा सकते हैं।</li>
         </ul>
-        <h3 data-i18n="ideas_title"></h3>
+        <h3 data-i18n="ideas_title">काम के लिए आइडिया</h3>
         <ul>
-          <li data-i18n="idea1"></li>
-          <li data-i18n="idea2"></li>
-          <li data-i18n="idea3"></li>
+          <li data-i18n="idea1">किराना या मेडिकल स्टोर: रोज़ की बिक्री गया, हफ़्ते की खरीद आया, कम स्टॉक की ऑर्डर सूची।</li>
+          <li data-i18n="idea2">स्कूल या ऑफ़िस का स्टोर रूम: स्टेशनरी, लैब सामग्री और खेल का सामान जो क्लासों को दिया गया।</li>
+          <li data-i18n="idea3">छोटा गोदाम या वर्कशॉप: कच्चा माल आया, तैयार माल गया, अकाउंटेंट के लिए महीने की रिपोर्ट।</li>
         </ul>
       </details>
 

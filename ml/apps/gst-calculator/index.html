@@ -213,14 +213,14 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
-    <p class="gc-privacy no-print"><span aria-hidden="true">🔒</span><span data-i18n="privacy"></span></p>
+    <p class="edu-intro" data-i18n="intro">GST ചേർക്കുകയോ കുറയ്ക്കുകയോ ചെയ്യാം, CGST, SGST, IGST വിഭജനം കാണാം, വേഗത്തിൽ ബിൽ ഉണ്ടാക്കാം, വിൽപ്പന വില തീരുമാനിക്കാം, GSTIN പരിശോധിക്കാം.</p>
+    <p class="gc-privacy no-print"><span aria-hidden="true">🔒</span><span data-i18n="privacy">ഇന്റർനെറ്റ് ഇല്ലാതെയും പ്രവർത്തിക്കും. നിങ്ങളുടെ തുകകളും ബില്ലുകളും GSTIN-കളും ഒരിക്കലും ഈ ഉപകരണം വിട്ടുപോകില്ല.</span></p>
 
     <nav class="gc-tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-calc" data-tab="calc" aria-controls="p-calc"><span class="ic" aria-hidden="true">🧮</span><span data-i18n="tab_calc"></span></button>
-      <button type="button" role="tab" id="tab-bill" data-tab="bill" aria-controls="p-bill"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_bill"></span></button>
-      <button type="button" role="tab" id="tab-price" data-tab="price" aria-controls="p-price"><span class="ic" aria-hidden="true">🎯</span><span data-i18n="tab_price"></span></button>
-      <button type="button" role="tab" id="tab-gstin" data-tab="gstin" aria-controls="p-gstin"><span class="ic" aria-hidden="true">🔍</span><span data-i18n="tab_gstin"></span></button>
+      <button type="button" role="tab" id="tab-calc" data-tab="calc" aria-controls="p-calc"><span class="ic" aria-hidden="true">🧮</span><span data-i18n="tab_calc">GST കാൽക്കുലേറ്റർ</span></button>
+      <button type="button" role="tab" id="tab-bill" data-tab="bill" aria-controls="p-bill"><span class="ic" aria-hidden="true">🧾</span><span data-i18n="tab_bill">വേഗ ബിൽ</span></button>
+      <button type="button" role="tab" id="tab-price" data-tab="price" aria-controls="p-price"><span class="ic" aria-hidden="true">🎯</span><span data-i18n="tab_price">വില ആസൂത്രണം</span></button>
+      <button type="button" role="tab" id="tab-gstin" data-tab="gstin" aria-controls="p-gstin"><span class="ic" aria-hidden="true">🔍</span><span data-i18n="tab_gstin">GSTIN പരിശോധന</span></button>
     </nav>
 
     <!-- 1. GST calculator -->
@@ -228,36 +228,36 @@
       <div class="gc-two">
         <div class="card stack">
           <div class="field">
-            <label for="amt" data-i18n="amt_label"></label>
+            <label for="amt" data-i18n="amt_label">തുക (₹)</label>
             <div class="gc-amt-wrap"><span class="gc-rupee" aria-hidden="true">₹</span><input id="amt" class="gc-num" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" data-i18n-placeholder="amt_ph" aria-describedby="amt-err"></div>
             <p class="gc-err" id="amt-err" role="alert"></p>
           </div>
           <div class="field">
             <div class="seg gc-seg" id="mode" role="group" data-i18n-aria-label="mode_label">
-              <button type="button" data-mode="add" data-i18n="mode_add"></button>
-              <button type="button" data-mode="remove" data-i18n="mode_remove"></button>
+              <button type="button" data-mode="add" data-i18n="mode_add">GST ചേർക്കുക</button>
+              <button type="button" data-mode="remove" data-i18n="mode_remove">GST കുറയ്ക്കുക</button>
             </div>
             <span class="hint" id="mode-hint"></span>
           </div>
           <div class="field">
-            <span class="gc-lbl" id="calc-rate-lbl" data-i18n="rate_label"></span>
+            <span class="gc-lbl" id="calc-rate-lbl" data-i18n="rate_label">GST നിരക്ക്</span>
             <div class="gc-rates" id="calc-rates" role="group" aria-labelledby="calc-rate-lbl"></div>
           </div>
           <div class="field">
-            <span class="gc-lbl" id="supply-lbl" data-i18n="supply_label"></span>
+            <span class="gc-lbl" id="supply-lbl" data-i18n="supply_label">വാങ്ങുന്നയാൾ എവിടെയാണ്?</span>
             <div class="seg gc-seg" id="supply" role="group" aria-labelledby="supply-lbl">
-              <button type="button" data-supply="intra" data-i18n="supply_intra"></button>
-              <button type="button" data-supply="inter" data-i18n="supply_inter"></button>
+              <button type="button" data-supply="intra" data-i18n="supply_intra">അതേ സംസ്ഥാനം: CGST + SGST</button>
+              <button type="button" data-supply="inter" data-i18n="supply_inter">മറ്റൊരു സംസ്ഥാനം: IGST</button>
             </div>
           </div>
           <div class="gc-opts">
-            <label class="check"><input type="checkbox" id="cess-on"><span data-i18n="cess_label"></span></label>
+            <label class="check"><input type="checkbox" id="cess-on"><span data-i18n="cess_label">സെസ് ചേർക്കുക</span></label>
             <div class="gc-cess" id="cess-box" hidden>
-              <label for="cess-rate" data-i18n="cess_rate_label"></label>
+              <label for="cess-rate" data-i18n="cess_rate_label">സെസ് നിരക്ക് (%)</label>
               <input id="cess-rate" class="gc-num" type="text" inputmode="decimal" autocomplete="off" placeholder="0">
-              <p class="muted tiny" data-i18n="cess_hint"></p>
+              <p class="muted tiny" data-i18n="cess_hint">GST നഷ്ടപരിഹാര സെസ് 2026 ഫെബ്രുവരി 1 മുതൽ നിർത്തി. പഴയ ബില്ലുകൾക്കോ മറ്റൊരു സെസിനോ മാത്രം ഉപയോഗിക്കുക.</p>
             </div>
-            <label class="check" id="round-wrap"><input type="checkbox" id="round-on"><span data-i18n="round_label"></span></label>
+            <label class="check" id="round-wrap"><input type="checkbox" id="round-on"><span data-i18n="round_label">ആകെ തുക അടുത്ത ₹1-ലേക്ക് റൗണ്ട് ചെയ്യുക</span></label>
           </div>
         </div>
         <div class="card gc-result" id="calc-result" aria-live="polite"></div>
@@ -265,72 +265,72 @@
 
       <section class="card">
         <div class="row spread">
-          <h2 class="mb0" data-i18n="hist_title"></h2>
+          <h2 class="mb0" data-i18n="hist_title">അവസാന 20 കണക്കുകൾ</h2>
           <div class="row">
-            <button type="button" class="btn btn-sm" id="hist-csv">⬇ <span data-i18n="bill_csv"></span></button>
+            <button type="button" class="btn btn-sm" id="hist-csv">⬇ <span data-i18n="bill_csv">CSV ഡൗൺലോഡ്</span></button>
             <button type="button" class="btn btn-sm btn-danger" id="hist-clear" data-i18n="clear"></button>
           </div>
         </div>
-        <p class="muted small" data-i18n="enter_hint" style="margin-top:8px"></p>
+        <p class="muted small" data-i18n="enter_hint" style="margin-top:8px">ഓരോ കണക്കും അൽപ്പം നിർത്തിയാൽ ഇവിടെ സേവ് ആകും. ഉടനെ സേവ് ചെയ്യാൻ Enter അമർത്തുക.</p>
         <ol class="gc-hist-list" id="hist-list"></ol>
-        <p class="muted mb0" id="hist-empty" data-i18n="hist_empty"></p>
+        <p class="muted mb0" id="hist-empty" data-i18n="hist_empty">നിങ്ങളുടെ കണക്കുകൾ ഇവിടെ കാണാം. വീണ്ടും തുറക്കാൻ ഏതിലെങ്കിലും ടാപ്പ് ചെയ്യുക.</p>
       </section>
     </section>
 
     <!-- 2. Quick bill -->
     <section id="p-bill" role="tabpanel" aria-labelledby="tab-bill" class="gc-panel" hidden>
       <section class="card stack">
-        <h2 class="mb0" data-i18n="bill_details"></h2>
+        <h2 class="mb0" data-i18n="bill_details">ബിൽ വിവരങ്ങൾ</h2>
         <div class="gc-bill-head">
-          <div class="field"><label for="b-seller" data-i18n="bill_seller"></label><input id="b-seller" type="text" autocomplete="organization" data-i18n-placeholder="bill_seller_ph" data-bf="seller"></div>
-          <div class="field"><label for="b-sgstin" data-i18n="bill_seller_gstin"></label><input id="b-sgstin" class="gc-num" type="text" autocomplete="off" spellcheck="false" maxlength="20" data-i18n-placeholder="gstin_ph" data-bf="sgstin"><p class="gc-note bad" id="b-sgstin-note"></p></div>
-          <div class="field"><label for="b-buyer" data-i18n="bill_buyer"></label><input id="b-buyer" type="text" autocomplete="off" data-i18n-placeholder="bill_buyer_ph" data-bf="buyer"></div>
-          <div class="field"><label for="b-bgstin" data-i18n="bill_buyer_gstin"></label><input id="b-bgstin" class="gc-num" type="text" autocomplete="off" spellcheck="false" maxlength="20" data-i18n-placeholder="gstin_ph" data-bf="bgstin"><p class="gc-note bad" id="b-bgstin-note"></p></div>
-          <div class="field"><label for="b-no" data-i18n="bill_no"></label><input id="b-no" type="text" autocomplete="off" data-bf="no"></div>
-          <div class="field"><label for="b-date" data-i18n="bill_date"></label><input id="b-date" type="date" data-bf="date"></div>
+          <div class="field"><label for="b-seller" data-i18n="bill_seller">നിങ്ങളുടെ ബിസിനസ് പേര്</label><input id="b-seller" type="text" autocomplete="organization" data-i18n-placeholder="bill_seller_ph" data-bf="seller"></div>
+          <div class="field"><label for="b-sgstin" data-i18n="bill_seller_gstin">നിങ്ങളുടെ GSTIN</label><input id="b-sgstin" class="gc-num" type="text" autocomplete="off" spellcheck="false" maxlength="20" data-i18n-placeholder="gstin_ph" data-bf="sgstin"><p class="gc-note bad" id="b-sgstin-note"></p></div>
+          <div class="field"><label for="b-buyer" data-i18n="bill_buyer">ഉപഭോക്താവിന്റെ പേര്</label><input id="b-buyer" type="text" autocomplete="off" data-i18n-placeholder="bill_buyer_ph" data-bf="buyer"></div>
+          <div class="field"><label for="b-bgstin" data-i18n="bill_buyer_gstin">ഉപഭോക്താവിന്റെ GSTIN (ഐച്ഛികം)</label><input id="b-bgstin" class="gc-num" type="text" autocomplete="off" spellcheck="false" maxlength="20" data-i18n-placeholder="gstin_ph" data-bf="bgstin"><p class="gc-note bad" id="b-bgstin-note"></p></div>
+          <div class="field"><label for="b-no" data-i18n="bill_no">ബിൽ നമ്പർ</label><input id="b-no" type="text" autocomplete="off" data-bf="no"></div>
+          <div class="field"><label for="b-date" data-i18n="bill_date">തീയതി</label><input id="b-date" type="date" data-bf="date"></div>
         </div>
         <div class="field">
-          <span class="gc-lbl" id="b-supply-lbl" data-i18n="supply_label"></span>
+          <span class="gc-lbl" id="b-supply-lbl" data-i18n="supply_label">വാങ്ങുന്നയാൾ എവിടെയാണ്?</span>
           <div class="seg gc-seg" id="b-supply" role="group" aria-labelledby="b-supply-lbl">
-            <button type="button" data-supply="intra" data-i18n="supply_intra"></button>
-            <button type="button" data-supply="inter" data-i18n="supply_inter"></button>
+            <button type="button" data-supply="intra" data-i18n="supply_intra">അതേ സംസ്ഥാനം: CGST + SGST</button>
+            <button type="button" data-supply="inter" data-i18n="supply_inter">മറ്റൊരു സംസ്ഥാനം: IGST</button>
           </div>
           <p class="gc-note muted" id="b-auto"></p>
         </div>
         <div class="row">
-          <label class="check"><input type="checkbox" id="b-incl"><span data-i18n="bill_incl"></span></label>
-          <label class="check"><input type="checkbox" id="b-round"><span data-i18n="round_label"></span></label>
+          <label class="check"><input type="checkbox" id="b-incl"><span data-i18n="bill_incl">നിരക്കുകളിൽ GST ഉൾപ്പെടുന്നു</span></label>
+          <label class="check"><input type="checkbox" id="b-round"><span data-i18n="round_label">ആകെ തുക അടുത്ത ₹1-ലേക്ക് റൗണ്ട് ചെയ്യുക</span></label>
         </div>
       </section>
 
       <section class="card">
-        <h2 data-i18n="bill_items"></h2>
+        <h2 data-i18n="bill_items">സാധനങ്ങൾ</h2>
         <div class="bl-head" aria-hidden="true">
-          <span>#</span><span data-i18n="col_item"></span><span data-i18n="col_hsn"></span><span data-i18n="col_qty"></span>
-          <span data-i18n="col_rate"></span><span data-i18n="col_gst"></span><span class="v" data-i18n="col_amount"></span><span></span>
+          <span>#</span><span data-i18n="col_item">സാധനം</span><span data-i18n="col_hsn">HSN/SAC കോഡ്</span><span data-i18n="col_qty">അളവ്</span>
+          <span data-i18n="col_rate">നിരക്ക് (₹)</span><span data-i18n="col_gst">GST %</span><span class="v" data-i18n="col_amount">തുക (₹)</span><span></span>
         </div>
         <div class="bl-rows" id="bill-rows"></div>
         <div class="row" style="margin-top:12px">
-          <button type="button" class="btn btn-primary" id="bill-add">＋ <span data-i18n="bill_add_line"></span></button>
-          <button type="button" class="btn" id="bill-sample" data-i18n="bill_sample"></button>
-          <button type="button" class="btn btn-danger" id="bill-new" data-i18n="bill_new"></button>
+          <button type="button" class="btn btn-primary" id="bill-add">＋ <span data-i18n="bill_add_line">സാധനം ചേർക്കുക</span></button>
+          <button type="button" class="btn" id="bill-sample" data-i18n="bill_sample">ഉദാഹരണം നിറയ്ക്കുക</button>
+          <button type="button" class="btn btn-danger" id="bill-new" data-i18n="bill_new">പുതിയ ബിൽ</button>
         </div>
       </section>
 
       <section class="card" aria-live="polite">
         <div class="gc-totals">
           <div>
-            <h2 data-i18n="bill_summary"></h2>
+            <h2 data-i18n="bill_summary">നിരക്ക് തിരിച്ചുള്ള GST</h2>
             <div class="scroll-x" id="bill-summary"></div>
           </div>
           <div id="bill-totals"></div>
         </div>
         <div class="row gc-actions">
-          <button type="button" class="btn btn-primary" id="bill-print">🖨 <span data-i18n="bill_print"></span></button>
-          <button type="button" class="btn" id="bill-csv">⬇ <span data-i18n="bill_csv"></span></button>
+          <button type="button" class="btn btn-primary" id="bill-print">🖨 <span data-i18n="bill_print">പ്രിന്റ് / PDF സേവ്</span></button>
+          <button type="button" class="btn" id="bill-csv">⬇ <span data-i18n="bill_csv">CSV ഡൗൺലോഡ്</span></button>
           <button type="button" class="btn" id="bill-copy">📋 <span data-i18n="copy"></span></button>
         </div>
-        <p class="muted small" style="margin:12px 0 0" data-i18n="bill_note"></p>
+        <p class="muted small" style="margin:12px 0 0" data-i18n="bill_note">ഇത് വേഗ ബിൽ അല്ലെങ്കിൽ എസ്റ്റിമേറ്റ് ആണ്. പൂർണ GST ടാക്സ് ഇൻവോയ്സിൽ GST ചട്ടങ്ങൾ (ചട്ടം 46) ആവശ്യപ്പെടുന്ന എല്ലാ വിവരങ്ങളും വേണം, ഉദാ. വിതരണ സ്ഥലം, ഒപ്പ്.</p>
       </section>
     </section>
 
@@ -338,30 +338,30 @@
     <section id="p-price" role="tabpanel" aria-labelledby="tab-price" class="gc-panel" hidden>
       <div class="gc-two">
         <section class="card stack">
-          <h2 class="mb0" data-i18n="pq_title"></h2>
-          <p class="muted small mb0" data-i18n="pq_intro"></p>
+          <h2 class="mb0" data-i18n="pq_title">ഏത് വില പറയണം?</h2>
+          <p class="muted small mb0" data-i18n="pq_intro">നിങ്ങളുടെ കൈയിൽ എത്ര ബാക്കി വേണമെന്ന് എഴുതുക. അതിൽ GST ചേർത്ത് ഉപഭോക്താവിനോട് പറയേണ്ട വില കാണിക്കും.</p>
           <div class="gc-in-row">
-            <div class="field"><label for="pq-amt" data-i18n="pq_want"></label><input id="pq-amt" class="gc-num" type="text" inputmode="decimal" autocomplete="off" data-i18n-placeholder="amt_ph"></div>
-            <div class="field"><label for="pq-round" data-i18n="pq_round"></label><select id="pq-round"></select></div>
+            <div class="field"><label for="pq-amt" data-i18n="pq_want">നിങ്ങൾക്ക് ബാക്കി വേണ്ട തുക, GST-ക്ക് മുമ്പ് (₹)</label><input id="pq-amt" class="gc-num" type="text" inputmode="decimal" autocomplete="off" data-i18n-placeholder="amt_ph"></div>
+            <div class="field"><label for="pq-round" data-i18n="pq_round">വില മുകളിലേക്ക് റൗണ്ട് ചെയ്യുക</label><select id="pq-round"></select></div>
           </div>
-          <div class="field"><span class="gc-lbl" id="pq-rate-lbl" data-i18n="rate_label"></span><div class="gc-rates" id="pq-rates" role="group" aria-labelledby="pq-rate-lbl"></div></div>
+          <div class="field"><span class="gc-lbl" id="pq-rate-lbl" data-i18n="rate_label">GST നിരക്ക്</span><div class="gc-rates" id="pq-rates" role="group" aria-labelledby="pq-rate-lbl"></div></div>
           <div aria-live="polite" id="pq-out"></div>
         </section>
 
         <section class="card stack">
-          <h2 class="mb0" data-i18n="sp_title"></h2>
-          <p class="muted small mb0" data-i18n="sp_intro"></p>
+          <h2 class="mb0" data-i18n="sp_title">ചെലവിൽ നിന്ന് വിൽപ്പന വില</h2>
+          <p class="muted small mb0" data-i18n="sp_intro">നിങ്ങളുടെ ചെലവിൽ തുടങ്ങി, ലാഭവും GST-യും ചേർത്ത്, MRP-യുമായി താരതമ്യം ചെയ്യുക.</p>
           <div class="gc-in-row">
-            <div class="field"><label for="sp-cost" data-i18n="sp_cost"></label><input id="sp-cost" class="gc-num" type="text" inputmode="decimal" autocomplete="off" aria-describedby="sp-cost-hint"></div>
-            <div class="field"><label for="sp-profit" data-i18n="sp_profit"></label><input id="sp-profit" class="gc-num" type="text" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label for="sp-cost" data-i18n="sp_cost">ഒരു യൂണിറ്റിന്റെ ചെലവ്, GST-ക്ക് മുമ്പ് (₹)</label><input id="sp-cost" class="gc-num" type="text" inputmode="decimal" autocomplete="off" aria-describedby="sp-cost-hint"></div>
+            <div class="field"><label for="sp-profit" data-i18n="sp_profit">ലാഭം (%)</label><input id="sp-profit" class="gc-num" type="text" inputmode="decimal" autocomplete="off"></div>
           </div>
-          <p class="muted tiny mb0" id="sp-cost-hint" data-i18n="sp_cost_hint"></p>
+          <p class="muted tiny mb0" id="sp-cost-hint" data-i18n="sp_cost_hint">GST ഇല്ലാത്ത ചെലവ് എഴുതുക. നിങ്ങൾ അടച്ച GST-ക്ക് സാധാരണയായി ഇൻപുട്ട് ടാക്സ് ക്രെഡിറ്റ് കിട്ടും.</p>
           <div class="seg gc-seg" id="sp-kind" role="group" data-i18n-aria-label="sp_profit">
-            <button type="button" data-kind="markup" data-i18n="sp_markup"></button>
-            <button type="button" data-kind="margin" data-i18n="sp_margin"></button>
+            <button type="button" data-kind="markup" data-i18n="sp_markup">ചെലവിൽ മാർക്കപ്പ്</button>
+            <button type="button" data-kind="margin" data-i18n="sp_margin">വിൽപ്പന വിലയിൽ മാർജിൻ</button>
           </div>
-          <div class="field"><span class="gc-lbl" id="sp-rate-lbl" data-i18n="rate_label"></span><div class="gc-rates" id="sp-rates" role="group" aria-labelledby="sp-rate-lbl"></div></div>
-          <div class="field"><label for="sp-mrp" data-i18n="sp_mrp"></label><input id="sp-mrp" class="gc-num gc-small-in" style="width:100%" type="text" inputmode="decimal" autocomplete="off"></div>
+          <div class="field"><span class="gc-lbl" id="sp-rate-lbl" data-i18n="rate_label">GST നിരക്ക്</span><div class="gc-rates" id="sp-rates" role="group" aria-labelledby="sp-rate-lbl"></div></div>
+          <div class="field"><label for="sp-mrp" data-i18n="sp_mrp">MRP (ഐച്ഛികം, ₹)</label><input id="sp-mrp" class="gc-num gc-small-in" style="width:100%" type="text" inputmode="decimal" autocomplete="off"></div>
           <div aria-live="polite" id="sp-out"></div>
         </section>
       </div>
@@ -371,7 +371,7 @@
     <section id="p-gstin" role="tabpanel" aria-labelledby="tab-gstin" class="gc-panel" hidden>
       <section class="card">
         <div class="field">
-          <label for="gstin" data-i18n="g_label"></label>
+          <label for="gstin" data-i18n="g_label">പരിശോധിക്കേണ്ട GSTIN</label>
           <input id="gstin" class="gc-num" type="text" autocomplete="off" spellcheck="false" autocapitalize="characters" maxlength="24" data-i18n-placeholder="g_ph">
         </div>
         <div class="gx-boxes" id="gx-boxes" aria-hidden="true"></div>
@@ -383,22 +383,22 @@
           <dl class="gc-kv" id="gx-info"></dl>
         </div>
         <div class="row gc-actions">
-          <button type="button" class="btn" id="g-sample" data-i18n="g_sample"></button>
+          <button type="button" class="btn" id="g-sample" data-i18n="g_sample">ഉദാഹരണം നോക്കുക</button>
           <button type="button" class="btn" id="g-copy">📋 <span data-i18n="copy"></span></button>
           <button type="button" class="btn btn-ghost" id="g-clear" data-i18n="clear"></button>
         </div>
         <div class="callout warning" style="margin-top:14px">
-          <p class="mb0"><span data-i18n="g_disclaimer"></span> <a class="no-i18n gc-ltr" href="https://services.gst.gov.in/services/searchtp" target="_blank" rel="noopener noreferrer">services.gst.gov.in</a></p>
+          <p class="mb0"><span data-i18n="g_disclaimer">ഇത് ഫോർമാറ്റ് മാത്രമേ പരിശോധിക്കൂ. ഒരു GSTIN ശരിയായി തോന്നിയാലും റദ്ദാക്കിയതോ വ്യാജമോ മറ്റൊരാളുടേതോ ആകാം. പണം നൽകുന്നതിനോ ഇൻപുട്ട് ടാക്സ് ക്രെഡിറ്റ് എടുക്കുന്നതിനോ മുമ്പ് ഔദ്യോഗിക GST പോർട്ടലിൽ “Search Taxpayer” വഴി ഉറപ്പാക്കുക:</span> <a class="no-i18n gc-ltr" href="https://services.gst.gov.in/services/searchtp" target="_blank" rel="noopener noreferrer">services.gst.gov.in</a></p>
         </div>
       </section>
 
       <section class="card stack">
-        <h2 class="mb0" data-i18n="g_batch_title"></h2>
-        <label for="batch-in" class="muted small" data-i18n="g_batch_hint"></label>
+        <h2 class="mb0" data-i18n="g_batch_title">ഒരേസമയം പല GSTIN-കൾ പരിശോധിക്കുക</h2>
+        <label for="batch-in" class="muted small" data-i18n="g_batch_hint">ഓരോ വരിയിലും ഒരു GSTIN പേസ്റ്റ് ചെയ്യുക, ഉദാ. നിങ്ങളുടെ വിതരണക്കാരുടെ പട്ടിക.</label>
         <textarea id="batch-in" class="no-i18n" spellcheck="false" autocapitalize="characters"></textarea>
         <div class="row">
-          <button type="button" class="btn btn-primary" id="batch-run" data-i18n="g_batch_run"></button>
-          <button type="button" class="btn" id="batch-csv" disabled>⬇ <span data-i18n="bill_csv"></span></button>
+          <button type="button" class="btn btn-primary" id="batch-run" data-i18n="g_batch_run">എല്ലാം പരിശോധിക്കുക</button>
+          <button type="button" class="btn" id="batch-csv" disabled>⬇ <span data-i18n="bill_csv">CSV ഡൗൺലോഡ്</span></button>
           <strong id="batch-sum" aria-live="polite"></strong>
         </div>
         <div class="scroll-x" id="batch-out"></div>
@@ -406,28 +406,28 @@
     </section>
 
     <section class="card no-print" style="margin-top:16px">
-      <h2 data-i18n="rates_title"></h2>
+      <h2 data-i18n="rates_title">GST 2.0-ന് ശേഷമുള്ള നിരക്കുകൾ (2025 സെപ്റ്റംബർ 22 മുതൽ)</h2>
       <ul class="gc-rate-list">
-        <li><b>0%</b><span data-i18n="rate_0"></span></li>
-        <li><b>5%</b><span data-i18n="rate_5"></span></li>
-        <li><b>18%</b><span data-i18n="rate_18"></span></li>
-        <li><b>40%</b><span data-i18n="rate_40"></span></li>
-        <li><b>3%</b><span data-i18n="rate_3"></span></li>
-        <li><b>0.25%</b><span data-i18n="rate_025"></span></li>
+        <li><b>0%</b><span data-i18n="rate_0">പൂജ്യം അല്ലെങ്കിൽ ഒഴിവ്: ഉദാ. പുതിയ പഴങ്ങളും പച്ചക്കറികളും, പാൽ, വ്യക്തിഗത ആരോഗ്യ, ലൈഫ് ഇൻഷുറൻസ്.</span></li>
+        <li><b>5%</b><span data-i18n="rate_5">കുറഞ്ഞ നിരക്ക്: ഉദാ. പല പായ്ക്ക് ചെയ്ത ഭക്ഷണങ്ങൾ, സോപ്പ്, ഷാംപൂ, ടൂത്ത്പേസ്റ്റ്, മിക്ക മരുന്നുകളും.</span></li>
+        <li><b>18%</b><span data-i18n="rate_18">സാധാരണ നിരക്ക്: മിക്ക സാധനങ്ങളും സേവനങ്ങളും, ഉദാ. ഇലക്ട്രോണിക്സ്, ചെറിയ കാറുകൾ, സിമന്റ്.</span></li>
+        <li><b>40%</b><span data-i18n="rate_40">ആഡംബര, ദോഷകരമായ സാധനങ്ങൾ: ഉദാ. പഞ്ചസാര ചേർത്ത ശീതളപാനീയങ്ങൾ, വലിയ കാറുകൾ, സിഗരറ്റ്.</span></li>
+        <li><b>3%</b><span data-i18n="rate_3">സ്വർണം, വെള്ളി, ആഭരണങ്ങൾ.</span></li>
+        <li><b>0.25%</b><span data-i18n="rate_025">മിനുക്കാത്ത വജ്രങ്ങളും വിലയേറിയ കല്ലുകളും.</span></li>
       </ul>
-      <p class="small" style="margin:12px 0 4px" data-i18n="rate_old"></p>
+      <p class="small" style="margin:12px 0 4px" data-i18n="rate_old">12%, 28% നിരക്കുകൾ 2025 സെപ്റ്റംബർ 22-ന് അവസാനിച്ചു; GST നഷ്ടപരിഹാര സെസ് 2026 ഫെബ്രുവരി 1-ന് അവസാനിച്ചു. പഴയ ബില്ലുകൾക്ക് “സ്വന്തം നിരക്ക്” തിരഞ്ഞെടുക്കുക.</p>
       <p class="muted small mb0" id="rates-checked"></p>
     </section>
 
     <details class="card no-print" style="margin-top:16px">
-      <summary data-i18n="how_title"></summary>
+      <summary data-i18n="how_title">ഉപയോഗിക്കുന്ന വിധം · ജോലിക്കുള്ള ആശയങ്ങൾ</summary>
       <ul>
-        <li data-i18n="how_1"></li>
-        <li data-i18n="how_2"></li>
-        <li data-i18n="how_3"></li>
-        <li data-i18n="how_4"></li>
-        <li data-i18n="how_5"></li>
-        <li data-i18n="how_6"></li>
+        <li data-i18n="how_1">തുക ടൈപ്പ് ചെയ്ത്, “GST ചേർക്കുക” അല്ലെങ്കിൽ “GST കുറയ്ക്കുക” തിരഞ്ഞെടുത്ത്, നിരക്ക് തിരഞ്ഞെടുക്കുക. ടൈപ്പ് ചെയ്യുമ്പോൾ തന്നെ കണക്ക് മുഴുവൻ മാറും.</li>
+        <li data-i18n="how_2">വാങ്ങുന്നയാൾ മറ്റൊരു സംസ്ഥാനത്താണോ? IGST തിരഞ്ഞെടുക്കുക. നിങ്ങളുടെ സംസ്ഥാനത്തിനുള്ളിൽ GST പകുതി പകുതിയായി CGST, SGST എന്നിങ്ങനെ വിഭജിക്കും (ചില കേന്ദ്രഭരണ പ്രദേശങ്ങളിൽ UTGST).</li>
+        <li data-i18n="how_3">വേഗ ബിൽ: ഓരോ സാധനവും അതിന്റെ GST നിരക്കോടെ ചേർത്ത്, പ്രിന്റ് ചെയ്യുക, PDF ആയി സേവ് ചെയ്യുക അല്ലെങ്കിൽ അക്കൗണ്ടന്റിനായി CSV ഡൗൺലോഡ് ചെയ്യുക.</li>
+        <li data-i18n="how_4">വില ആസൂത്രണം: നിങ്ങൾക്ക് വേണ്ട തുക ബാക്കിയാകാൻ ഏത് വില പറയണമെന്ന് കണ്ടെത്തുക, അല്ലെങ്കിൽ ചെലവും മാർജിനും വച്ച് വിൽപ്പന വില ഉണ്ടാക്കി MRP-യുമായി താരതമ്യം ചെയ്യുക.</li>
+        <li data-i18n="how_5">പുതിയ വിതരണക്കാരനാണോ? അവരുടെ GSTIN ഇവിടെ പരിശോധിച്ച്, പണം നൽകുന്നതിനോ ഇൻപുട്ട് ടാക്സ് ക്രെഡിറ്റ് എടുക്കുന്നതിനോ മുമ്പ് GST പോർട്ടലിൽ ഉറപ്പാക്കുക.</li>
+        <li data-i18n="how_6">ഏത് ഫലവും നേരിട്ട് WhatsApp-ലേക്കോ ഇമെയിലിലേക്കോ കോപ്പി ചെയ്യുക. ഒന്നും അപ്‌ലോഡ് ആകുന്നില്ല; അവസാന 20 കണക്കുകൾ ഈ ഉപകരണത്തിൽ മാത്രം നിൽക്കും.</li>
       </ul>
     </details>
 

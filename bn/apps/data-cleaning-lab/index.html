@@ -127,35 +127,35 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">অগোছালো তালিকা ধাপে ধাপে পরিষ্কার করুন: বাড়তি স্পেস, একই সারি দুবার, নানা রকম তারিখ, মোবাইল নম্বর আর ₹ টাকা। ধাপগুলো একটা রেসিপি হিসেবে সেভ করুন আর পরের মাসের ফাইলে আবার চালান।</p>
 
     <section class="card" aria-labelledby="h-load">
-      <h2 class="dc-h" id="h-load" data-i18n="h_load"></h2>
+      <h2 class="dc-h" id="h-load" data-i18n="h_load">1. আপনার ডেটা খুলুন</h2>
       <div class="row">
-        <button class="btn" id="load-sample" type="button" data-i18n="load_sample"></button>
-        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file"></button>
+        <button class="btn" id="load-sample" type="button" data-i18n="load_sample">অগোছালো নমুনা</button>
+        <button class="btn btn-primary" id="open-file" type="button" data-i18n="open_file">CSV ফাইল খুলুন</button>
         <button class="btn btn-danger" id="reset" type="button" data-i18n="reset"></button>
       </div>
       <details id="paste-box">
-        <summary data-i18n="paste_data"></summary>
+        <summary data-i18n="paste_data">ডেটা পেস্ট করুন</summary>
         <textarea id="paste" class="no-i18n" data-i18n-placeholder="paste_ph" aria-label="CSV" data-i18n-aria-label="paste_data"></textarea>
-        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste"></button>
+        <button class="btn btn-sm" id="use-paste" type="button" data-i18n="use_paste">পেস্ট করা ডেটা ব্যবহার করুন</button>
       </details>
-      <p class="dc-drop small muted" data-i18n="drop_hint"></p>
+      <p class="dc-drop small muted" data-i18n="drop_hint">CSV ফাইল এই পাতায় টেনে এনেও ছাড়তে পারেন। Excel-এ: File → Save as → CSV। আপনার ফাইল এই ডিভাইসেই থাকে।</p>
       <p id="data-info" class="no-i18n" aria-live="polite"></p>
       <p id="busy" class="muted" hidden data-i18n="loading"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-quality">
-      <h2 class="dc-h" id="h-quality" data-i18n="h_quality"></h2>
+      <h2 class="dc-h" id="h-quality" data-i18n="h_quality">2. ডেটার মান</h2>
       <div class="dc-scores" aria-live="polite">
         <div class="dc-score">
-          <span class="lbl" data-i18n="score_before"></span>
+          <span class="lbl" data-i18n="score_before">পরিষ্কারের আগে স্কোর</span>
           <span class="big"><span id="score-before"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-before"></span></div>
         </div>
         <div class="dc-score after">
-          <span class="lbl" data-i18n="score_after"></span>
+          <span class="lbl" data-i18n="score_after">পরিষ্কারের পরে স্কোর</span>
           <span class="big"><span id="score-after"></span> <small>/ 100</small></span>
           <div class="progress"><span id="bar-after"></span></div>
         </div>
@@ -164,56 +164,56 @@
       <div class="scroll-x">
         <table class="table dc-qt">
           <thead><tr>
-            <th scope="col" data-i18n="th_column"></th><th scope="col" data-i18n="th_type"></th>
-            <th scope="col" data-i18n="q_missing"></th><th scope="col" data-i18n="q_invalid"></th><th scope="col" data-i18n="q_spaces"></th>
+            <th scope="col" data-i18n="th_column">কলাম</th><th scope="col" data-i18n="th_type">দেখে মনে হয়</th>
+            <th scope="col" data-i18n="q_missing">ফাঁকা</th><th scope="col" data-i18n="q_invalid">ঠিক রূপে নেই</th><th scope="col" data-i18n="q_spaces">বাড়তি স্পেস</th>
           </tr></thead>
           <tbody id="q-body"></tbody>
         </table>
       </div>
-      <p class="tiny muted" data-i18n="quality_note"></p>
+      <p class="tiny muted" data-i18n="quality_note">স্কোর = যে ঘরগুলোতে কোনো সমস্যা নেই তাদের ভাগ। সমস্যা মানে ফাঁকা মান, বাড়তি স্পেস, ঠিক রূপে না লেখা মান, বা পুরো একটা সারি দুবার।</p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-steps">
-      <h2 class="dc-h" id="h-steps" data-i18n="h_steps"></h2>
+      <h2 class="dc-h" id="h-steps" data-i18n="h_steps">3. পরিষ্কারের ধাপ (আপনার রেসিপি)</h2>
       <div class="panel stack">
         <div class="dc-add">
-          <label class="field"><span data-i18n="step_type"></span><select id="step-type"></select></label>
+          <label class="field"><span data-i18n="step_type">ধাপ যোগ করুন</span><select id="step-type"></select></label>
         </div>
         <div id="step-form"></div>
         <div class="dc-actions">
-          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step"></button>
-          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest"></button>
+          <button class="btn btn-primary" id="step-add" type="button" data-i18n="add_step">ধাপ যোগ করুন</button>
+          <button class="btn btn-accent" id="suggest" type="button" data-i18n="suggest">ধাপ সাজেস্ট করুন</button>
         </div>
       </div>
       <ol id="recipe" aria-live="polite"></ol>
-      <p id="recipe-empty" class="muted" data-i18n="recipe_empty"></p>
+      <p id="recipe-empty" class="muted" data-i18n="recipe_empty">এখনও কোনো ধাপ নেই। ওপরে একটি ধাপ বেছে &quot;ধাপ যোগ করুন&quot; টিপুন, বা &quot;ধাপ সাজেস্ট করুন&quot; টিপুন।</p>
       <div class="dc-actions" style="margin-top:12px">
-        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo"></button>
-        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe"></button>
-        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe"></button>
-        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps"></button>
+        <button class="btn btn-sm" id="undo" type="button" data-i18n="undo">ফিরিয়ে নিন</button>
+        <button class="btn btn-sm" id="export-recipe" type="button" data-i18n="export_recipe">রেসিপি এক্সপোর্ট</button>
+        <button class="btn btn-sm" id="import-recipe" type="button" data-i18n="import_recipe">রেসিপি ইমপোর্ট</button>
+        <button class="btn btn-sm btn-danger" id="clear-steps" type="button" data-i18n="clear_steps">সব ধাপ মুছুন</button>
       </div>
       <p class="callout small" style="margin-top:12px" data-i18n-html="pipeline_note"></p>
     </section>
 
     <section class="card dc-sec" aria-labelledby="h-preview">
-      <h2 class="dc-h" id="h-preview" data-i18n="h_preview"></h2>
+      <h2 class="dc-h" id="h-preview" data-i18n="h_preview">4. পরিষ্কার ডেটা</h2>
       <div class="dc-bar">
         <div class="seg" id="view-seg" role="group">
-          <button type="button" data-v="clean" data-i18n="view_clean"></button>
-          <button type="button" data-v="orig" data-i18n="view_orig"></button>
+          <button type="button" data-v="clean" data-i18n="view_clean">পরিষ্কার</button>
+          <button type="button" data-v="orig" data-i18n="view_orig">মূল</button>
         </div>
-        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show"></span>
+        <label class="row" style="gap:6px"><span class="small muted" data-i18n="show">দেখান</span>
           <select id="filter">
-            <option value="all" data-i18n="show_all"></option>
-            <option value="changed" data-i18n="show_changed"></option>
-            <option value="problems" data-i18n="show_problems"></option>
+            <option value="all" data-i18n="show_all">সব সারি</option>
+            <option value="changed" data-i18n="show_changed">বদলানো সারি</option>
+            <option value="problems" data-i18n="show_problems">সমস্যার সারি</option>
           </select>
         </label>
       </div>
-      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed"></span><span class="lg-bad" data-i18n="legend_bad"></span></div>
+      <div class="dc-legend"><span class="lg-chg" data-i18n="legend_changed">কোনো ধাপে বদলেছে</span><span class="lg-bad" data-i18n="legend_bad">ফাঁকা বা ঠিক রূপে নেই</span></div>
       <div class="dc-gridwrap no-i18n"><table class="table" id="grid"></table></div>
-      <p id="no-rows" class="muted" hidden data-i18n="no_rows"></p>
+      <p id="no-rows" class="muted" hidden data-i18n="no_rows">দেখানোর মতো কোনো সারি নেই।</p>
       <div class="dc-pager" id="pager">
         <button class="btn btn-sm" id="pg-prev" type="button" data-i18n="previous"></button>
         <span id="page-info" class="small"></span>
@@ -221,23 +221,23 @@
       </div>
       <div class="dc-foot">
         <span id="out-count" class="small muted"></span>
-        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv"></button>
+        <button class="btn btn-primary" id="download" type="button" data-i18n="download_csv">পরিষ্কার CSV ডাউনলোড</button>
       </div>
     </section>
 
     <details class="card dc-sec">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">অগোছালো নমুনা দিয়ে শুরু করুন: &quot;ধাপ সাজেস্ট করুন&quot; টিপুন, তারপর টেবিলে সবুজ (বদলানো) আর লাল (সমস্যার) ঘরগুলো দেখুন।</li>
+        <li data-i18n="tip2">অফিসের কাজে: প্রতি মাসের গ্রাহক বা কর্মী তালিকার জন্য একবার রেসিপি বানিয়ে এক্সপোর্ট করুন। পরের মাসে নতুন ফাইল খুলুন, রেসিপি ইমপোর্ট করুন আর এক মিনিটে পরিষ্কার CSV নামান।</li>
+        <li data-i18n="tip3">ক্রম গুরুত্বপূর্ণ: একই সারি মোছার আগে স্পেস আর বড়-ছোট অক্ষর ঠিক করুন, যাতে &quot;প্রিয়া  শর্মা&quot; আর &quot;প্রিয়া শর্মা&quot; একই মানুষ বলে ধরা পড়ে।</li>
+        <li data-i18n="tip4">ক্লাসের কাজ: প্রতিটি দলকে একই অগোছালো তালিকা দিন। দলগুলো আগে কাগজে পরিষ্কারের ধাপ লিখবে, তারপর এখানে চেষ্টা করবে। সবচেয়ে কম ধাপে কে সবচেয়ে বেশি স্কোর পেল?</li>
+        <li data-i18n="tip5">কোনো ধাপ বন্ধ করে দেখুন সেটা কী করছিল। ↑ ↓ দিয়ে ক্রম বদলান, ভুল হলে &quot;ফিরিয়ে নিন&quot; টিপুন।</li>
+        <li data-i18n="tip6">পরিষ্কারের পরে বাকি লাল ঘরগুলো দেখুন: কিছু মান (যেমন 5 অঙ্কের মোবাইল নম্বর) কম্পিউটার ঠিক করতে পারে না। একজন মানুষকে সেগুলো যাচাই করতে হবে।</li>
       </ul>
     </details>
     <details class="card dc-sec">
-      <summary data-i18n="words_title"></summary>
+      <summary data-i18n="words_title">জরুরি শব্দ: ভেতরে কী হচ্ছে</summary>
       <ul>
         <li data-i18n-html="w_dataset"></li>
         <li data-i18n-html="w_missing"></li>

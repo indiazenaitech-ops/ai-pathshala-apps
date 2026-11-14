@@ -172,12 +172,12 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">একই ডিভাইসে বন্ধুর সঙ্গে বা কম্পিউটারের (6টি লেভেল) সঙ্গে দাবা খেলুন, কিস্তিমাতের ধাঁধা সমাধান করুন আর প্রতিটি ঘুঁটির চাল শিখুন। বিনামূল্যে, অফলাইনে, বিজ্ঞাপন ছাড়া।</p>
 
     <div class="tabs ch-tabs no-print" role="tablist" id="tabs">
-      <button type="button" role="tab" id="tabbtn-play" aria-controls="tab-play" data-tab="play"><span aria-hidden="true">♟</span> <span data-i18n="tab_play"></span></button>
-      <button type="button" role="tab" id="tabbtn-puzzles" aria-controls="tab-puzzles" data-tab="puzzles"><span aria-hidden="true">🧩</span> <span data-i18n="tab_puzzles"></span></button>
-      <button type="button" role="tab" id="tabbtn-learn" aria-controls="tab-learn" data-tab="learn"><span aria-hidden="true">📘</span> <span data-i18n="tab_learn"></span></button>
+      <button type="button" role="tab" id="tabbtn-play" aria-controls="tab-play" data-tab="play"><span aria-hidden="true">♟</span> <span data-i18n="tab_play">খেলুন</span></button>
+      <button type="button" role="tab" id="tabbtn-puzzles" aria-controls="tab-puzzles" data-tab="puzzles"><span aria-hidden="true">🧩</span> <span data-i18n="tab_puzzles">ধাঁধা</span></button>
+      <button type="button" role="tab" id="tabbtn-learn" aria-controls="tab-learn" data-tab="learn"><span aria-hidden="true">📘</span> <span data-i18n="tab_learn">শিখুন</span></button>
     </div>
 
     <!-- ===================================================== PLAY -->
@@ -189,67 +189,67 @@
           <div class="pbar" id="bar-bot"></div>
           <p class="callout status" id="status" aria-live="polite"></p>
           <div class="ctrl no-print">
-            <button type="button" class="btn" id="undo"><span aria-hidden="true">↶</span> <span data-i18n="undo"></span></button>
-            <button type="button" class="btn" id="hint"><span aria-hidden="true">💡</span> <span data-i18n="hint"></span></button>
-            <button type="button" class="btn" id="flip"><span aria-hidden="true">⇅</span> <span data-i18n="flip"></span></button>
-            <button type="button" class="btn" id="draw"><span aria-hidden="true">½</span> <span data-i18n="offer_draw"></span></button>
-            <button type="button" class="btn" id="claim" hidden><span aria-hidden="true">½</span> <span data-i18n="claim_draw"></span></button>
-            <button type="button" class="btn btn-danger" id="resign"><span aria-hidden="true">🏳</span> <span data-i18n="resign"></span></button>
+            <button type="button" class="btn" id="undo"><span aria-hidden="true">↶</span> <span data-i18n="undo">চাল ফেরত</span></button>
+            <button type="button" class="btn" id="hint"><span aria-hidden="true">💡</span> <span data-i18n="hint">ইঙ্গিত</span></button>
+            <button type="button" class="btn" id="flip"><span aria-hidden="true">⇅</span> <span data-i18n="flip">বোর্ড ঘোরান</span></button>
+            <button type="button" class="btn" id="draw"><span aria-hidden="true">½</span> <span data-i18n="offer_draw">ড্রয়ের প্রস্তাব</span></button>
+            <button type="button" class="btn" id="claim" hidden><span aria-hidden="true">½</span> <span data-i18n="claim_draw">ড্র দাবি করুন</span></button>
+            <button type="button" class="btn btn-danger" id="resign"><span aria-hidden="true">🏳</span> <span data-i18n="resign">হার মানুন</span></button>
             <button type="button" class="btn" id="fs-btn"><span aria-hidden="true">⛶</span> <span data-i18n="fullscreen"></span></button>
           </div>
         </div>
 
         <aside class="side">
           <section class="card stack settings no-print" aria-labelledby="ng-h">
-            <h2 id="ng-h" class="mb0" data-i18n="new_game_h"></h2>
+            <h2 id="ng-h" class="mb0" data-i18n="new_game_h">নতুন খেলা</h2>
             <div>
-              <span class="lbl" id="mode-lbl" data-i18n="mode_label"></span>
+              <span class="lbl" id="mode-lbl" data-i18n="mode_label">কার সঙ্গে খেলবেন</span>
               <div class="seg full" role="group" aria-labelledby="mode-lbl">
-                <button type="button" id="mode-cpu" data-mode="cpu"><span aria-hidden="true">🤖</span> <span data-i18n="mode_cpu"></span></button>
-                <button type="button" id="mode-human" data-mode="human"><span aria-hidden="true">👥</span> <span data-i18n="mode_human"></span></button>
+                <button type="button" id="mode-cpu" data-mode="cpu"><span aria-hidden="true">🤖</span> <span data-i18n="mode_cpu">কম্পিউটার</span></button>
+                <button type="button" id="mode-human" data-mode="human"><span aria-hidden="true">👥</span> <span data-i18n="mode_human">2 জন খেলোয়াড়</span></button>
               </div>
             </div>
             <div id="cpu-opts">
-              <span class="lbl" id="lv-lbl" data-i18n="level_label"></span>
+              <span class="lbl" id="lv-lbl" data-i18n="level_label">কম্পিউটারের লেভেল</span>
               <div class="lv-grid" role="group" aria-labelledby="lv-lbl" id="levels">
-                <button type="button" class="chip" data-lv="1" id="lv-1" data-i18n="lv1"></button>
-                <button type="button" class="chip" data-lv="2" id="lv-2" data-i18n="lv2"></button>
-                <button type="button" class="chip" data-lv="3" id="lv-3" data-i18n="lv3"></button>
-                <button type="button" class="chip" data-lv="4" id="lv-4" data-i18n="lv4"></button>
-                <button type="button" class="chip" data-lv="5" id="lv-5" data-i18n="lv5"></button>
-                <button type="button" class="chip" data-lv="6" id="lv-6" data-i18n="lv6"></button>
+                <button type="button" class="chip" data-lv="1" id="lv-1" data-i18n="lv1">নতুন শিক্ষার্থী</button>
+                <button type="button" class="chip" data-lv="2" id="lv-2" data-i18n="lv2">সহজ</button>
+                <button type="button" class="chip" data-lv="3" id="lv-3" data-i18n="lv3">সাধারণ</button>
+                <button type="button" class="chip" data-lv="4" id="lv-4" data-i18n="lv4">মাঝারি</button>
+                <button type="button" class="chip" data-lv="5" id="lv-5" data-i18n="lv5">কঠিন</button>
+                <button type="button" class="chip" data-lv="6" id="lv-6" data-i18n="lv6">শক্তিশালী</button>
               </div>
-              <p class="hint-txt" data-i18n="level_hint"></p>
-              <span class="lbl" id="col-lbl" data-i18n="color_label" style="margin-top:10px"></span>
+              <p class="hint-txt" data-i18n="level_hint">নতুন শিক্ষার্থী লেভেল ইচ্ছে করে ভুল করে। শক্তিশালী লেভেল প্রতি চালে 3 সেকেন্ড পর্যন্ত ভাবে।</p>
+              <span class="lbl" id="col-lbl" data-i18n="color_label" style="margin-top:10px">আপনার ঘুঁটি</span>
               <div class="seg full" role="group" aria-labelledby="col-lbl">
-                <button type="button" id="col-w" data-col="w" data-i18n="white"></button>
-                <button type="button" id="col-b" data-col="b" data-i18n="black"></button>
-                <button type="button" id="col-r" data-col="r" data-i18n="col_random"></button>
+                <button type="button" id="col-w" data-col="w" data-i18n="white">সাদা</button>
+                <button type="button" id="col-b" data-col="b" data-i18n="black">কালো</button>
+                <button type="button" id="col-r" data-col="r" data-i18n="col_random">যেকোনো</button>
               </div>
             </div>
             <div>
-              <span class="lbl" id="clk-lbl" data-i18n="clock_label"></span>
+              <span class="lbl" id="clk-lbl" data-i18n="clock_label">ঘড়ি</span>
               <div class="seg full" role="group" aria-labelledby="clk-lbl">
-                <button type="button" id="clk-none" data-clk="none" data-i18n="clk_none"></button>
+                <button type="button" id="clk-none" data-clk="none" data-i18n="clk_none">ঘড়ি নেই</button>
                 <button type="button" id="clk-3" data-clk="3+2" dir="ltr">3 + 2</button>
                 <button type="button" id="clk-5" data-clk="5+0" dir="ltr">5 + 0</button>
                 <button type="button" id="clk-10" data-clk="10+5" dir="ltr">10 + 5</button>
               </div>
-              <p class="hint-txt" data-i18n="clock_hint"></p>
+              <p class="hint-txt" data-i18n="clock_hint">প্রতি খেলোয়াড়ের মিনিট + প্রতি চালের পরে যোগ হওয়া সেকেন্ড।</p>
             </div>
-            <button type="button" class="btn btn-primary btn-lg w100" id="new-game"><span aria-hidden="true">▶</span> <span data-i18n="new_game"></span></button>
+            <button type="button" class="btn btn-primary btn-lg w100" id="new-game"><span aria-hidden="true">▶</span> <span data-i18n="new_game">নতুন খেলা শুরু করুন</span></button>
             <div class="opts">
-              <label class="check" id="autoflip-row"><input type="checkbox" id="autoflip"> <span data-i18n="autoflip"></span></label>
-              <label class="check"><input type="checkbox" id="showdots"> <span data-i18n="showdots"></span></label>
-              <label class="check"><input type="checkbox" id="autodraw"> <span data-i18n="autodraw"></span></label>
-              <label class="check"><input type="checkbox" id="sound"> <span data-i18n="sound"></span></label>
+              <label class="check" id="autoflip-row"><input type="checkbox" id="autoflip"> <span data-i18n="autoflip">প্রত্যেক খেলোয়াড়ের জন্য বোর্ড ঘোরান</span></label>
+              <label class="check"><input type="checkbox" id="showdots"> <span data-i18n="showdots">ঘুঁটি কোথায় যেতে পারে দেখান</span></label>
+              <label class="check"><input type="checkbox" id="autodraw"> <span data-i18n="autodraw">ড্র হওয়া খেলা নিজে থেকে শেষ করুন (তিনবার একই অবস্থান, 50 চালের নিয়ম)</span></label>
+              <label class="check"><input type="checkbox" id="sound"> <span data-i18n="sound">চালের শব্দ</span></label>
             </div>
-            <p class="muted tiny mb0"><span aria-hidden="true">💾</span> <span data-i18n="saved_note"></span></p>
+            <p class="muted tiny mb0"><span aria-hidden="true">💾</span> <span data-i18n="saved_note">খেলা এই ডিভাইসেই সেভ থাকে। পেজ বন্ধ করে পরে আবার খেলুন।</span></p>
           </section>
 
           <section class="card stack" aria-labelledby="mv-h">
-            <h2 id="mv-h" class="mb0" data-i18n="moves_h"></h2>
-            <p class="muted small mb0" id="no-moves" data-i18n="no_moves"></p>
+            <h2 id="mv-h" class="mb0" data-i18n="moves_h">চালগুলি</h2>
+            <p class="muted small mb0" id="no-moves" data-i18n="no_moves">এখনও কোনো চাল নেই। প্রথম চাল দেয় সাদা।</p>
             <ol class="mlist no-i18n" id="mlist"></ol>
             <div class="nav-row no-print">
               <button type="button" class="btn btn-sm" id="nav-first" data-i18n-aria-label="nav_first" data-i18n-title="nav_first">⏮</button>
@@ -258,32 +258,32 @@
               <button type="button" class="btn btn-sm" id="nav-last" data-i18n-aria-label="nav_last" data-i18n-title="nav_last">⏭</button>
             </div>
             <div class="typed no-print">
-              <label class="vh" for="type-move" data-i18n="type_move_label"></label>
+              <label class="vh" for="type-move" data-i18n="type_move_label">চাল লিখুন</label>
               <input type="text" id="type-move" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-placeholder="type_move_ph">
-              <button type="button" class="btn" id="type-btn" data-i18n="type_move_btn"></button>
+              <button type="button" class="btn" id="type-btn" data-i18n="type_move_btn">চালুন</button>
             </div>
           </section>
 
           <section class="card stack pgn-box no-print" aria-labelledby="pgn-h">
-            <h2 id="pgn-h" class="mb0" data-i18n="pgn_h"></h2>
+            <h2 id="pgn-h" class="mb0" data-i18n="pgn_h">সেভ, কপি আর লোড</h2>
             <div class="row">
-              <button type="button" class="btn btn-sm" id="copy-pgn"><span aria-hidden="true">📋</span> <span data-i18n="copy_pgn"></span></button>
-              <button type="button" class="btn btn-sm" id="dl-pgn"><span aria-hidden="true">⬇</span> <span data-i18n="download_pgn"></span></button>
-              <button type="button" class="btn btn-sm" id="copy-fen"><span aria-hidden="true">📋</span> <span data-i18n="copy_fen"></span></button>
+              <button type="button" class="btn btn-sm" id="copy-pgn"><span aria-hidden="true">📋</span> <span data-i18n="copy_pgn">PGN কপি করুন</span></button>
+              <button type="button" class="btn btn-sm" id="dl-pgn"><span aria-hidden="true">⬇</span> <span data-i18n="download_pgn">PGN ডাউনলোড</span></button>
+              <button type="button" class="btn btn-sm" id="copy-fen"><span aria-hidden="true">📋</span> <span data-i18n="copy_fen">FEN কপি করুন</span></button>
               <button type="button" class="btn btn-sm" id="print-btn"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
             </div>
-            <label class="field" for="load-text"><span data-i18n="load_label"></span>
+            <label class="field" for="load-text"><span data-i18n="load_label">একটি খেলা (PGN) বা অবস্থান (FEN) পেস্ট করুন</span>
               <textarea id="load-text" class="no-i18n" spellcheck="false"></textarea>
             </label>
             <div class="row">
-              <button type="button" class="btn" id="load-btn"><span aria-hidden="true">📥</span> <span data-i18n="load_btn"></span></button>
-              <button type="button" class="btn btn-sm" id="load-file"><span aria-hidden="true">📂</span> <span data-i18n="load_file"></span></button>
+              <button type="button" class="btn" id="load-btn"><span aria-hidden="true">📥</span> <span data-i18n="load_btn">লোড করুন</span></button>
+              <button type="button" class="btn btn-sm" id="load-file"><span aria-hidden="true">📂</span> <span data-i18n="load_file">PGN ফাইল খুলুন</span></button>
             </div>
             <p class="muted small mb0" id="load-msg" aria-live="polite"></p>
           </section>
         </aside>
       </div>
-      <p class="muted small rules-note page-sec" data-i18n="rules_note"></p>
+      <p class="muted small rules-note page-sec" data-i18n="rules_note">নিয়ম: FIDE-র দাবার নিয়ম। একই অবস্থান তিনবার হলে আর 50 চালের নিয়মে খেলা সঙ্গে সঙ্গে ড্র হয় (বিকল্পটি তুলে দিলে আপনি নিজে দাবি করবেন; তখন পাঁচবার একই অবস্থান বা 75 চালে খেলা শেষ হয়)। আপনার সময় শেষ হলে আপনি হারবেন, যদি না প্রতিপক্ষের কিস্তিমাত দেওয়ার মতো ঘুঁটি থাকে না: তখন ড্র। চাল লেখা হয় প্রচলিত ইংরেজি সংকেতে (K, Q, R, B, N)।</p>
     </section>
 
     <!-- ===================================================== PUZZLES -->
@@ -297,22 +297,22 @@
           <div class="board-wrap" id="pz-board"></div>
           <p class="callout status" id="pz-msg" aria-live="polite"></p>
           <div class="ctrl no-print">
-            <button type="button" class="btn" id="pz-hint"><span aria-hidden="true">💡</span> <span data-i18n="hint"></span></button>
-            <button type="button" class="btn" id="pz-retry"><span aria-hidden="true">↺</span> <span data-i18n="pz_retry"></span></button>
-            <button type="button" class="btn" id="pz-show"><span aria-hidden="true">👁</span> <span data-i18n="pz_show"></span></button>
-            <button type="button" class="btn btn-primary" id="pz-next"><span data-i18n="pz_next"></span> <span aria-hidden="true">→</span></button>
+            <button type="button" class="btn" id="pz-hint"><span aria-hidden="true">💡</span> <span data-i18n="hint">ইঙ্গিত</span></button>
+            <button type="button" class="btn" id="pz-retry"><span aria-hidden="true">↺</span> <span data-i18n="pz_retry">আবার চেষ্টা</span></button>
+            <button type="button" class="btn" id="pz-show"><span aria-hidden="true">👁</span> <span data-i18n="pz_show">উত্তর দেখান</span></button>
+            <button type="button" class="btn btn-primary" id="pz-next"><span data-i18n="pz_next">পরের ধাঁধা</span> <span aria-hidden="true">→</span></button>
           </div>
         </div>
         <aside class="side">
           <section class="card stack" aria-labelledby="pz-h">
-            <h2 id="pz-h" class="mb0" data-i18n="pz_h"></h2>
-            <p class="mb0 small" data-i18n="pz_intro"></p>
+            <h2 id="pz-h" class="mb0" data-i18n="pz_h">কিস্তিমাতের ধাঁধা</h2>
+            <p class="mb0 small" data-i18n="pz_intro">কিস্তিমাত খুঁজুন। 1 চালে মাত: একটাই চাল। 2 চালে মাত: আপনি চালবেন, কম্পিউটার যথাসাধ্য বাঁচাবে, তারপর আপনি মাত দেবেন।</p>
             <p class="mb0" id="pz-count"></p>
             <div class="progress" aria-hidden="true"><span id="pz-bar" style="width:0%"></span></div>
-            <span class="lbl" data-i18n="pz_list"></span>
+            <span class="lbl" data-i18n="pz_list">সব ধাঁধা</span>
             <div class="pz-list" id="pz-list"></div>
-            <p class="hint-txt mb0" data-i18n="pz_legend"></p>
-            <button type="button" class="btn btn-sm btn-danger" id="pz-reset"><span aria-hidden="true">↺</span> <span data-i18n="pz_reset"></span></button>
+            <p class="hint-txt mb0" data-i18n="pz_legend">টানা দাগ: 1 চালে মাত · ভাঙা দাগ: 2 চালে মাত · ✓ সমাধান হয়েছে</p>
+            <button type="button" class="btn btn-sm btn-danger" id="pz-reset"><span aria-hidden="true">↺</span> <span data-i18n="pz_reset">সমাধানের চিহ্ন মুছুন</span></button>
           </section>
         </aside>
       </div>
@@ -322,55 +322,55 @@
     <section id="tab-learn" role="tabpanel" aria-labelledby="tabbtn-learn" hidden>
       <div class="learn-grid">
         <div class="card stack mini">
-          <h2 class="mb0" data-i18n="learn_h"></h2>
-          <p class="mb0 small" data-i18n="learn_intro"></p>
+          <h2 class="mb0" data-i18n="learn_h">ঘুঁটি কীভাবে চলে</h2>
+          <p class="mb0 small" data-i18n="learn_intro">একটি ঘুঁটি বেছে নিন। বিন্দুগুলো দেখায় সেটি কোথায় যেতে পারে। যত কম চালে পারেন সব কালো বোড়ে ধরুন।</p>
           <div class="pc-pick" id="pc-pick" role="group" data-i18n-aria-label="learn_h"></div>
           <div class="board-wrap" id="learn-board"></div>
           <p class="callout status" id="learn-msg" aria-live="polite"></p>
-          <div class="row no-print"><button type="button" class="btn" id="learn-reset"><span aria-hidden="true">↺</span> <span data-i18n="lesson_reset"></span></button></div>
+          <div class="row no-print"><button type="button" class="btn" id="learn-reset"><span aria-hidden="true">↺</span> <span data-i18n="lesson_reset">আবার শুরু</span></button></div>
         </div>
         <div class="card stack">
           <h2 class="mb0" id="pc-name"></h2>
           <p class="mb0" id="pc-move"></p>
           <p class="mb0 muted" id="pc-val"></p>
           <hr class="divider">
-          <h3 class="mb0" data-i18n="end_h"></h3>
+          <h3 class="mb0" data-i18n="end_h">খেলা কীভাবে শেষ হয়</h3>
           <ul class="end-list">
-            <li data-i18n="end_check"></li>
-            <li data-i18n="end_mate"></li>
-            <li data-i18n="end_stale"></li>
-            <li data-i18n="end_draws"></li>
+            <li data-i18n="end_check">কিস্তি (চেক): রাজার উপর আক্রমণ হয়েছে। এখনই বাঁচাতে হবে: রাজা সরান, মাঝে ঘুঁটি দিন বা আক্রমণকারীকে মারুন।</li>
+            <li data-i18n="end_mate">কিস্তিমাত: রাজার উপর কিস্তি আর বাঁচার কোনো পথ নেই। সেই খেলোয়াড় হেরে যান।</li>
+            <li data-i18n="end_stale">স্টেলমেট: যার চাল তার উপর কিস্তি নেই, কিন্তু কোনো বৈধ চালও নেই। খেলা ড্র।</li>
+            <li data-i18n="end_draws">অন্য ড্র: একই অবস্থান তিনবার, দুই পক্ষের 50 চাল কোনো ঘুঁটি না মেরে আর বোড়ে না চেলে, মাত দেওয়ার মতো ঘুঁটি না থাকা, বা দুজনেই রাজি হওয়া।</li>
           </ul>
           <div class="callout accent">
-            <h3 class="mb0" data-i18n="history_h"></h3>
-            <p class="small" data-i18n="history_p"></p>
-            <p class="small mb0" data-i18n="history_p2"></p>
+            <h3 class="mb0" data-i18n="history_h">চতুরঙ্গ থেকে দাবা</h3>
+            <p class="small" data-i18n="history_p">দাবার জন্ম চতুরঙ্গ থেকে, যা প্রায় 1,500 বছর আগে ভারতে খেলা হত। নামের মানে “চার অঙ্গ”: পুরনো ভারতীয় সেনার পদাতিক, ঘোড়া, হাতি আর রথ। খেলাটি পারস্যে গিয়ে শতরঞ্জ নামে পরিচিত হয়, পরে ইউরোপে যায়, যেখানে প্রায় 1500 সালের কাছাকাছি মন্ত্রী আর হাতি লম্বা চাল পায়।</p>
+            <p class="small mb0" data-i18n="history_p2">আজ ভারত দাবার এক বড় দেশ: বিশ্বনাথন আনন্দ 1988 সালে ভারতের প্রথম গ্র্যান্ডমাস্টার হন আর পরে বিশ্ব চ্যাম্পিয়ন, আর ডি. গুকেশ 2024 সালে বিশ্ব চ্যাম্পিয়নশিপ জেতেন।</p>
           </div>
         </div>
       </div>
 
-      <h2 class="page-sec" data-i18n="special_h"></h2>
+      <h2 class="page-sec" data-i18n="special_h">বিশেষ চাল (বোর্ডে চেলে দেখুন)</h2>
       <div class="sp-grid">
         <div class="card stack sp-card" id="sp-castle">
-          <h3 data-i18n="sp_castle_t"></h3>
-          <p class="small mb0" data-i18n="sp_castle"></p>
+          <h3 data-i18n="sp_castle_t">ক্যাসলিং</h3>
+          <p class="small mb0" data-i18n="sp_castle">খেলায় একবার রাজা কোনো নৌকার দিকে দুই ঘর চলে, আর সেই নৌকা লাফিয়ে রাজার অন্য পাশের ঘরে আসে। এটা তখনই হয় যখন রাজা আর সেই নৌকা আগে চলেনি, মাঝের ঘরগুলো ফাঁকা, আর রাজার উপর কিস্তি নেই এবং সে আক্রান্ত ঘর পেরোয় না বা সেখানে থামে না।</p>
           <div class="board-wrap" id="sp-castle-board"></div>
           <p class="callout status" id="sp-castle-msg" aria-live="polite"></p>
-          <button type="button" class="btn btn-sm no-print" id="sp-castle-again"><span aria-hidden="true">↺</span> <span data-i18n="sp_again"></span></button>
+          <button type="button" class="btn btn-sm no-print" id="sp-castle-again"><span aria-hidden="true">↺</span> <span data-i18n="sp_again">আবার</span></button>
         </div>
         <div class="card stack sp-card" id="sp-ep">
-          <h3 data-i18n="sp_ep_t"></h3>
-          <p class="small mb0" data-i18n="sp_ep"></p>
+          <h3 data-i18n="sp_ep_t">আঁ পাসাঁ</h3>
+          <p class="small mb0" data-i18n="sp_ep">কোনো বোড়ে দুই ঘর এগিয়ে শত্রুর বোড়ের ঠিক পাশে এলে, শত্রুর বোড়ে এমনভাবে মারতে পারে যেন সেটা মাত্র এক ঘর এগিয়েছে। এটা শুধু ঠিক পরের চালেই করা যায়।</p>
           <div class="board-wrap" id="sp-ep-board"></div>
           <p class="callout status" id="sp-ep-msg" aria-live="polite"></p>
-          <button type="button" class="btn btn-sm no-print" id="sp-ep-again"><span aria-hidden="true">↺</span> <span data-i18n="sp_again"></span></button>
+          <button type="button" class="btn btn-sm no-print" id="sp-ep-again"><span aria-hidden="true">↺</span> <span data-i18n="sp_again">আবার</span></button>
         </div>
         <div class="card stack sp-card" id="sp-promo">
-          <h3 data-i18n="sp_promo_t"></h3>
-          <p class="small mb0" data-i18n="sp_promo"></p>
+          <h3 data-i18n="sp_promo_t">প্রোমোশন (বোড়ে বদল)</h3>
+          <p class="small mb0" data-i18n="sp_promo">যে বোড়ে বোর্ডের শেষ প্রান্তে পৌঁছায়, সে মন্ত্রী, নৌকা, হাতি বা ঘোড়া হয়ে যায়: আপনি বাছবেন। বেশিরভাগ খেলোয়াড় মন্ত্রী বাছেন।</p>
           <div class="board-wrap" id="sp-promo-board"></div>
           <p class="callout status" id="sp-promo-msg" aria-live="polite"></p>
-          <button type="button" class="btn btn-sm no-print" id="sp-promo-again"><span aria-hidden="true">↺</span> <span data-i18n="sp_again"></span></button>
+          <button type="button" class="btn btn-sm no-print" id="sp-promo-again"><span aria-hidden="true">↺</span> <span data-i18n="sp_again">আবার</span></button>
         </div>
       </div>
     </section>
@@ -378,12 +378,12 @@
     <details class="card help page-sec no-print">
       <summary data-i18n="help"></summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">শুরুতে “কম্পিউটার” আর “নতুন শিক্ষার্থী” বাছুন: কম্পিউটার ইচ্ছে করে ভুল করে, তাই আপনি জিতবেন আর শিখবেন। সহজে জিতলে লেভেল বাড়ান।</li>
+        <li data-i18n="tip2">একটি ঘুঁটিতে ট্যাপ করুন, তারপর বিন্দুওয়ালা ঘরে। ঘুঁটি টেনেও চালতে পারেন, বা e4, Nf3-এর মতো চাল লিখতে পারেন।</li>
+        <li data-i18n="tip3">“চাল ফেরত” আপনার শেষ চাল মুছে দেয় আর “ইঙ্গিত” তীর দিয়ে একটি ভালো চাল দেখায়। ◀ ▶ দিয়ে খেলার যেকোনো চাল আবার দেখুন।</li>
+        <li data-i18n="tip4">এক ফোন বা স্মার্টবোর্ডে দুজন: “2 জন খেলোয়াড়” বাছুন আর “প্রত্যেক খেলোয়াড়ের জন্য বোর্ড ঘোরান” টিক দিন। প্রোজেক্টরে “পূর্ণ পর্দা” ব্যবহার করুন।</li>
+        <li data-i18n="tip5">দাবা ক্লাবের কাজ: সবাইকে একই ধাঁধা দিন, আর যে প্রথম সমাধান করবে সে বুঝিয়ে বলবে কেন প্রতিটি বাঁচানোর চেষ্টা ব্যর্থ হয়।</li>
+        <li data-i18n="tip6">খেলা রেখে দিতে বা WhatsApp-এ পাঠাতে PGN কপি করুন। যেকোনো খেলা বা অবস্থান সাজাতে PGN বা FEN পেস্ট করুন।</li>
       </ul>
     </details>
   </main>

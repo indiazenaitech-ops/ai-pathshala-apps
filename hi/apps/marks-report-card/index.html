@@ -288,20 +288,20 @@
 </head>
 <body>
   <main id="app">
-    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="edu-intro" data-i18n="intro">एक बार अंक भरें और पाएँ कुल अंक, प्रतिशत, CBSE ग्रेड, रैंक, कक्षा का विश्लेषण और प्रिंट होने वाले रिपोर्ट कार्ड। सारा डेटा इसी डिवाइस पर रहता है।</p>
 
     <details class="card help no-print" id="help">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">कैसे इस्तेमाल करें / कक्षा के लिए सुझाव</summary>
       <ul>
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
-        <li data-i18n="tip7"></li>
+        <li data-i18n="tip1">सेटअप: कक्षा, परीक्षा का नाम, विषय और उनके पूर्णांक लिखें। अगर आपके स्कूल का नियम अलग है तो पास होने के अंक बदल दें।</li>
+        <li data-i18n="tip2">विद्यार्थी जोड़ें: नाम चिपकाएँ (हर लाइन में एक), या Excel / Google Sheets से रोल नंबर, नाम और अंकों के कॉलम कॉपी करके &quot;विद्यार्थी जोड़ें&quot; दबाएँ। CSV फ़ाइल भी इम्पोर्ट कर सकते हैं।</li>
+        <li data-i18n="tip3">अंक: Enter दबाने पर अगला विद्यार्थी आता है, तीर वाली कुंजियों से इधर-उधर जाएँ। अनुपस्थित के लिए AB लिखें। लाल = पूर्णांक से ज़्यादा; नारंगी = पास अंकों से कम।</li>
+        <li data-i18n="tip4">विश्लेषण में कक्षा का औसत, टॉपर, विषयवार परिणाम, ग्रेड चार्ट और किसे मदद चाहिए, सब दिखता है। PTM और स्टाफ़ मीटिंग में काम आता है।</li>
+        <li data-i18n="tip5">रिपोर्ट कार्ड: उपस्थिति और टिप्पणी जोड़ें, फिर हर पेज पर एक कार्ड प्रिंट करें। प्रिंट विंडो में &quot;PDF के रूप में सेव करें&quot; चुनकर अभिभावकों को WhatsApp पर भेजें।</li>
+        <li data-i18n="tip6">कक्षा गतिविधि (कक्षा 6–8, आँकड़ों का प्रबंधन): बच्चों को 5 काल्पनिक सहपाठियों के अंक दें। वे हाथ से कुल, प्रतिशत, ग्रेड और कक्षा का औसत निकालें, फिर इस ऐप से जाँचें।</li>
+        <li data-i18n="tip7">आपका डेटा सिर्फ़ इसी ब्राउज़र में सेव होता है। कॉपी रखने या दूसरे कंप्यूटर पर ले जाने के लिए सेटअप में &quot;बैकअप डाउनलोड करें&quot; दबाएँ।</li>
       </ul>
-      <p class="small mb0"><strong data-i18n="scale_title"></strong></p>
+      <p class="small mb0"><strong data-i18n="scale_title">CBSE ग्रेड स्केल (प्रतिशत)</strong></p>
       <div class="scale" id="help-scale"></div>
     </details>
     <div style="height:12px"></div>
@@ -309,90 +309,90 @@
     <section class="card bar no-print" aria-labelledby="class-select-label">
       <div class="row">
         <div class="bar-cls">
-          <label for="class-select" id="class-select-label" data-i18n="class_label"></label>
+          <label for="class-select" id="class-select-label" data-i18n="class_label">कक्षा</label>
           <select id="class-select" class="no-i18n"></select>
         </div>
-        <button class="btn" id="new-class" type="button"><span aria-hidden="true">＋</span><span data-i18n="new_class"></span></button>
-        <button class="btn btn-danger" id="delete-class" type="button" data-i18n="delete_class"></button>
-        <button class="btn" id="export-csv" type="button"><span aria-hidden="true">⬇</span><span data-i18n="export_csv"></span></button>
-        <button class="btn" id="print-sheet" type="button"><span aria-hidden="true">🖨</span><span data-i18n="print_sheet"></span></button>
+        <button class="btn" id="new-class" type="button"><span aria-hidden="true">＋</span><span data-i18n="new_class">नई कक्षा</span></button>
+        <button class="btn btn-danger" id="delete-class" type="button" data-i18n="delete_class">कक्षा हटाएँ</button>
+        <button class="btn" id="export-csv" type="button"><span aria-hidden="true">⬇</span><span data-i18n="export_csv">CSV एक्सपोर्ट</span></button>
+        <button class="btn" id="print-sheet" type="button"><span aria-hidden="true">🖨</span><span data-i18n="print_sheet">रिज़ल्ट शीट प्रिंट करें</span></button>
         <button class="btn btn-ghost" id="fs-btn" type="button" data-i18n-aria-label="fullscreen" data-i18n-title="fullscreen"><span aria-hidden="true">⛶</span></button>
         <p class="tiny muted saved-note" id="saved-note"></p>
       </div>
     </section>
 
     <div class="tabs no-print" role="tablist" data-i18n-aria-label="tabs_label">
-      <button role="tab" type="button" id="tab-setup" aria-controls="panel-setup"><span class="ti" aria-hidden="true">⚙️</span><span data-i18n="tab_setup"></span></button>
-      <button role="tab" type="button" id="tab-marks" aria-controls="panel-marks"><span class="ti" aria-hidden="true">✍️</span><span data-i18n="tab_marks"></span></button>
-      <button role="tab" type="button" id="tab-analysis" aria-controls="panel-analysis"><span class="ti" aria-hidden="true">📊</span><span data-i18n="tab_analysis"></span></button>
-      <button role="tab" type="button" id="tab-cards" aria-controls="panel-cards"><span class="ti" aria-hidden="true">📄</span><span data-i18n="tab_cards"></span></button>
+      <button role="tab" type="button" id="tab-setup" aria-controls="panel-setup"><span class="ti" aria-hidden="true">⚙️</span><span data-i18n="tab_setup">सेटअप</span></button>
+      <button role="tab" type="button" id="tab-marks" aria-controls="panel-marks"><span class="ti" aria-hidden="true">✍️</span><span data-i18n="tab_marks">अंक</span></button>
+      <button role="tab" type="button" id="tab-analysis" aria-controls="panel-analysis"><span class="ti" aria-hidden="true">📊</span><span data-i18n="tab_analysis">विश्लेषण</span></button>
+      <button role="tab" type="button" id="tab-cards" aria-controls="panel-cards"><span class="ti" aria-hidden="true">📄</span><span data-i18n="tab_cards">रिपोर्ट कार्ड</span></button>
     </div>
 
     <!-- SETUP -->
     <section id="panel-setup" role="tabpanel" aria-labelledby="tab-setup" hidden>
       <div class="setup-grid">
         <div class="card stack">
-          <h2 data-i18n="class_details"></h2>
-          <div class="field"><label for="cl-name" data-i18n="class_name"></label><input type="text" id="cl-name" class="no-i18n" maxlength="60" autocomplete="off" data-i18n-placeholder="class_name_ph"></div>
-          <div class="field"><label for="cl-term" data-i18n="term"></label><input type="text" id="cl-term" class="no-i18n" maxlength="80" autocomplete="off" data-i18n-placeholder="term_ph"></div>
+          <h2 data-i18n="class_details">कक्षा की जानकारी</h2>
+          <div class="field"><label for="cl-name" data-i18n="class_name">कक्षा और सेक्शन</label><input type="text" id="cl-name" class="no-i18n" maxlength="60" autocomplete="off" data-i18n-placeholder="class_name_ph"></div>
+          <div class="field"><label for="cl-term" data-i18n="term">परीक्षा / सत्र</label><input type="text" id="cl-term" class="no-i18n" maxlength="80" autocomplete="off" data-i18n-placeholder="term_ph"></div>
           <div class="two">
-            <div class="field"><label for="cl-pass" data-i18n="pass_pct"></label><input type="number" id="cl-pass" min="0" max="100" step="any" inputmode="decimal"></div>
-            <div class="field"><label for="cl-days" data-i18n="working_days"></label><input type="number" id="cl-days" min="0" max="400" step="1" inputmode="numeric"></div>
+            <div class="field"><label for="cl-pass" data-i18n="pass_pct">पास होने के अंक (%)</label><input type="number" id="cl-pass" min="0" max="100" step="any" inputmode="decimal"></div>
+            <div class="field"><label for="cl-days" data-i18n="working_days">कार्य दिवस</label><input type="number" id="cl-days" min="0" max="400" step="1" inputmode="numeric"></div>
           </div>
-          <p class="tiny muted mb0" data-i18n="working_days_hint"></p>
-          <label class="check"><input type="checkbox" id="cl-each"><span data-i18n="rule_each"></span></label>
-          <p class="tiny muted mb0" data-i18n="rule_hint"></p>
-          <label class="check"><input type="checkbox" id="cl-rank"><span data-i18n="show_rank"></span></label>
+          <p class="tiny muted mb0" data-i18n="working_days_hint">इस सत्र के कार्य दिवस। रिपोर्ट कार्ड पर उपस्थिति न दिखानी हो तो खाली छोड़ें।</p>
+          <label class="check"><input type="checkbox" id="cl-each"><span data-i18n="rule_each">हर विषय में पास होना ज़रूरी</span></label>
+          <p class="tiny muted mb0" data-i18n="rule_hint">बंद करने पर सिर्फ़ कुल प्रतिशत से पास या फ़ेल तय होगा।</p>
+          <label class="check"><input type="checkbox" id="cl-rank"><span data-i18n="show_rank">रिपोर्ट कार्ड पर रैंक दिखाएँ</span></label>
         </div>
 
         <div class="card stack">
-          <h2 data-i18n="subjects"></h2>
-          <div class="subj-head" aria-hidden="true"><span>#</span><span data-i18n="subject_name"></span><span data-i18n="max_marks"></span><span></span></div>
+          <h2 data-i18n="subjects">विषय</h2>
+          <div class="subj-head" aria-hidden="true"><span>#</span><span data-i18n="subject_name">विषय</span><span data-i18n="max_marks">पूर्णांक</span><span></span></div>
           <div id="subj-list"></div>
-          <button class="btn" id="add-subject" type="button"><span aria-hidden="true">＋</span><span data-i18n="add_subject"></span></button>
+          <button class="btn" id="add-subject" type="button"><span aria-hidden="true">＋</span><span data-i18n="add_subject">विषय जोड़ें</span></button>
         </div>
 
         <div class="card stack">
-          <div class="row spread"><h2 class="mb0" data-i18n="students"></h2><span class="badge primary" id="st-count"></span></div>
+          <div class="row spread"><h2 class="mb0" data-i18n="students">विद्यार्थी</h2><span class="badge primary" id="st-count"></span></div>
           <div class="field">
-            <label for="paste" data-i18n="paste_label"></label>
+            <label for="paste" data-i18n="paste_label">नाम या तालिका चिपकाएँ</label>
             <textarea id="paste" data-i18n-placeholder="paste_ph" spellcheck="false"></textarea>
-            <span class="hint" data-i18n="paste_help"></span>
+            <span class="hint" data-i18n="paste_help">अगर पहली पंक्ति में &quot;गणित (80)&quot; जैसे विषयों के नाम हों, तो अंक उन्हीं विषयों में जाएँगे। एक ही नाम वाला विद्यार्थी दोबारा नहीं जुड़ेगा, अपडेट हो जाएगा।</span>
           </div>
           <div class="row">
-            <button class="btn btn-primary" id="add-students" type="button"><span aria-hidden="true">＋</span><span data-i18n="add_students"></span></button>
-            <button class="btn" id="import-csv" type="button"><span aria-hidden="true">📂</span><span data-i18n="import_csv"></span></button>
-            <button class="btn" id="template-csv" type="button"><span aria-hidden="true">⬇</span><span data-i18n="template_csv"></span></button>
+            <button class="btn btn-primary" id="add-students" type="button"><span aria-hidden="true">＋</span><span data-i18n="add_students">विद्यार्थी जोड़ें</span></button>
+            <button class="btn" id="import-csv" type="button"><span aria-hidden="true">📂</span><span data-i18n="import_csv">CSV फ़ाइल इम्पोर्ट करें</span></button>
+            <button class="btn" id="template-csv" type="button"><span aria-hidden="true">⬇</span><span data-i18n="template_csv">CSV टेम्पलेट डाउनलोड करें</span></button>
           </div>
           <div class="row">
-            <button class="btn btn-sm" id="sort-roll" type="button" data-i18n="sort_roll"></button>
-            <button class="btn btn-sm" id="sort-az" type="button" data-i18n="sort_az"></button>
-            <button class="btn btn-sm" id="renumber" type="button" data-i18n="renumber"></button>
+            <button class="btn btn-sm" id="sort-roll" type="button" data-i18n="sort_roll">रोल नंबर से क्रम</button>
+            <button class="btn btn-sm" id="sort-az" type="button" data-i18n="sort_az">नाम से क्रम</button>
+            <button class="btn btn-sm" id="renumber" type="button" data-i18n="renumber">रोल नंबर 1, 2, 3… दोबारा दें</button>
           </div>
         </div>
 
         <div class="card stack" id="school-card">
-          <h2 data-i18n="school"></h2>
-          <div class="field"><label for="sc-name" data-i18n="school_name"></label><input type="text" id="sc-name" class="no-i18n" maxlength="90" autocomplete="off" data-i18n-placeholder="school_name_ph"></div>
-          <div class="field"><label for="sc-addr" data-i18n="school_addr"></label><input type="text" id="sc-addr" class="no-i18n" maxlength="120" autocomplete="off" data-i18n-placeholder="school_addr_ph"></div>
+          <h2 data-i18n="school">स्कूल की जानकारी (रिपोर्ट कार्ड के लिए)</h2>
+          <div class="field"><label for="sc-name" data-i18n="school_name">स्कूल का नाम</label><input type="text" id="sc-name" class="no-i18n" maxlength="90" autocomplete="off" data-i18n-placeholder="school_name_ph"></div>
+          <div class="field"><label for="sc-addr" data-i18n="school_addr">पता / बोर्ड की जानकारी</label><input type="text" id="sc-addr" class="no-i18n" maxlength="120" autocomplete="off" data-i18n-placeholder="school_addr_ph"></div>
           <div class="field">
-            <span class="hint" data-i18n="logo"></span>
+            <span class="hint" data-i18n="logo">स्कूल का लोगो</span>
             <div class="logo-box">
               <img id="sc-logo-img" alt="" hidden>
-              <button class="btn" id="sc-logo-up" type="button"><span aria-hidden="true">🖼</span><span data-i18n="upload_logo"></span></button>
-              <button class="btn btn-danger btn-sm" id="sc-logo-rm" type="button" data-i18n="remove_logo" hidden></button>
+              <button class="btn" id="sc-logo-up" type="button"><span aria-hidden="true">🖼</span><span data-i18n="upload_logo">लोगो अपलोड करें</span></button>
+              <button class="btn btn-danger btn-sm" id="sc-logo-rm" type="button" data-i18n="remove_logo" hidden>लोगो हटाएँ</button>
             </div>
           </div>
         </div>
 
         <div class="card stack">
-          <h2 data-i18n="backup_title"></h2>
-          <p class="small muted mb0" data-i18n="backup_help"></p>
+          <h2 data-i18n="backup_title">बैकअप और रीस्टोर</h2>
+          <p class="small muted mb0" data-i18n="backup_help">सारी कक्षाएँ सिर्फ़ इसी ब्राउज़र में सेव हैं। कॉपी रखने या दूसरे कंप्यूटर पर ले जाने के लिए बैकअप फ़ाइल डाउनलोड करें।</p>
           <div class="row">
-            <button class="btn" id="backup" type="button"><span aria-hidden="true">💾</span><span data-i18n="backup_btn"></span></button>
-            <button class="btn" id="restore" type="button"><span aria-hidden="true">📂</span><span data-i18n="restore_btn"></span></button>
+            <button class="btn" id="backup" type="button"><span aria-hidden="true">💾</span><span data-i18n="backup_btn">बैकअप डाउनलोड करें</span></button>
+            <button class="btn" id="restore" type="button"><span aria-hidden="true">📂</span><span data-i18n="restore_btn">बैकअप से वापस लाएँ</span></button>
           </div>
-          <div><button class="btn btn-danger btn-sm" id="reset-all" type="button" data-i18n="reset_app"></button></div>
+          <div><button class="btn btn-danger btn-sm" id="reset-all" type="button" data-i18n="reset_app">सारा डेटा मिटाएँ और नमूना कक्षा लाएँ</button></div>
         </div>
       </div>
     </section>
@@ -402,12 +402,12 @@
       <div class="card stack mk-card">
         <div class="mk-top">
           <h2 id="mk-title" class="no-i18n"></h2>
-          <button class="btn" id="add-row" type="button"><span aria-hidden="true">＋</span><span data-i18n="add_row"></span></button>
+          <button class="btn" id="add-row" type="button"><span aria-hidden="true">＋</span><span data-i18n="add_row">विद्यार्थी जोड़ें</span></button>
         </div>
-        <p class="small muted mb0" data-i18n="marks_help"></p>
+        <p class="small muted mb0" data-i18n="marks_help">Enter दबाने पर अगला विद्यार्थी; तीर वाली कुंजियों से इधर-उधर जाएँ। अनुपस्थित के लिए AB लिखें (फ़ोन के नंबर पैड पर - लिखें)। Excel से कॉपी किए अंक एक साथ चिपका सकते हैं।</p>
         <div class="callout warning row spread" id="mk-empty" hidden>
           <span id="mk-empty-txt"></span>
-          <button class="btn btn-sm" id="mk-goto-setup" type="button" data-i18n="goto_setup"></button>
+          <button class="btn btn-sm" id="mk-goto-setup" type="button" data-i18n="goto_setup">सेटअप पर जाएँ</button>
         </div>
         <div class="grid-wrap" id="mk-wrap">
           <table class="marks" id="marks">
@@ -416,9 +416,9 @@
           </table>
         </div>
         <div class="legend small muted" id="mk-legend">
-          <span class="lg"><i class="lg-bad" aria-hidden="true"></i><span data-i18n="legend_bad"></span></span>
-          <span class="lg"><i class="lg-low" aria-hidden="true"></i><span data-i18n="legend_low"></span></span>
-          <span class="lg"><i class="lg-ab" aria-hidden="true"></i><span data-i18n="legend_ab"></span></span>
+          <span class="lg"><i class="lg-bad" aria-hidden="true"></i><span data-i18n="legend_bad">यह अंक जाँचें</span></span>
+          <span class="lg"><i class="lg-low" aria-hidden="true"></i><span data-i18n="legend_low">पास अंकों से कम</span></span>
+          <span class="lg"><i class="lg-ab" aria-hidden="true"></i><span data-i18n="legend_ab">AB = अनुपस्थित</span></span>
         </div>
         <p class="mb0 strong" id="mk-summary" aria-live="polite"></p>
       </div>
@@ -436,7 +436,7 @@
           <p class="callout warning mb0" id="rc-none" hidden></p>
           <div class="stack" id="rc-editor-body">
             <div class="field">
-              <label for="rc-student" data-i18n="pick_student"></label>
+              <label for="rc-student" data-i18n="pick_student">विद्यार्थी</label>
               <div class="rc-nav">
                 <button class="btn" id="rc-prev" type="button" data-i18n-aria-label="previous" data-i18n-title="previous"><span aria-hidden="true">‹</span></button>
                 <select id="rc-student" class="no-i18n"></select>
@@ -445,26 +445,26 @@
               <span class="hint" id="rc-pos"></span>
             </div>
             <div class="field">
-              <label for="rc-present" data-i18n="days_present"></label>
+              <label for="rc-present" data-i18n="days_present">उपस्थित दिन</label>
               <input type="number" id="rc-present" min="0" max="400" step="1" inputmode="numeric">
               <span class="hint" id="rc-days"></span>
             </div>
             <div class="field">
-              <label for="rc-remark" data-i18n="remarks"></label>
+              <label for="rc-remark" data-i18n="remarks">टिप्पणी</label>
               <textarea id="rc-remark" maxlength="600" data-i18n-placeholder="remarks_ph"></textarea>
             </div>
             <div>
-              <p class="small muted mb0" data-i18n="suggestions"></p>
+              <p class="small muted mb0" data-i18n="suggestions">सुझाव (जोड़ने के लिए दबाएँ)</p>
               <div class="chips" id="rc-sugg"></div>
             </div>
-            <button class="btn btn-sm" id="rc-auto" type="button"><span aria-hidden="true">✨</span><span data-i18n="auto_remarks"></span></button>
+            <button class="btn btn-sm" id="rc-auto" type="button"><span aria-hidden="true">✨</span><span data-i18n="auto_remarks">खाली टिप्पणियाँ ग्रेड के हिसाब से भरें</span></button>
             <hr class="divider">
             <div class="row">
-              <button class="btn btn-primary" id="rc-print" type="button"><span aria-hidden="true">🖨</span><span data-i18n="print_card"></span></button>
-              <button class="btn btn-accent" id="rc-print-all" type="button"><span aria-hidden="true">🖨</span><span data-i18n="print_all"></span></button>
+              <button class="btn btn-primary" id="rc-print" type="button"><span aria-hidden="true">🖨</span><span data-i18n="print_card">यह कार्ड प्रिंट करें</span></button>
+              <button class="btn btn-accent" id="rc-print-all" type="button"><span aria-hidden="true">🖨</span><span data-i18n="print_all">सारे कार्ड प्रिंट करें</span></button>
             </div>
-            <p class="tiny muted mb0" data-i18n="print_tip"></p>
-            <button class="btn btn-sm btn-ghost" id="goto-school" type="button"><span aria-hidden="true">🏫</span><span data-i18n="edit_school"></span></button>
+            <p class="tiny muted mb0" data-i18n="print_tip">सुझाव: प्रिंट विंडो में &quot;PDF के रूप में सेव करें&quot; चुनें और कार्ड WhatsApp पर भेजें।</p>
+            <button class="btn btn-sm btn-ghost" id="goto-school" type="button"><span aria-hidden="true">🏫</span><span data-i18n="edit_school">स्कूल का नाम और लोगो बदलें</span></button>
           </div>
         </div>
         <div id="rc-preview" aria-live="polite"></div>

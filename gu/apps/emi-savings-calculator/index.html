@@ -252,45 +252,45 @@
 </head>
 <body>
   <main id="app">
-    <div id="printHead" class="print-only"><h1 data-i18n="app_title"></h1><p class="small" id="printDate"></p></div>
-    <p class="edu-intro" data-i18n="intro"></p>
+    <div id="printHead" class="print-only"><h1 data-i18n="app_title">EMI, SIP અને FD કૅલ્ક્યુલેટર</h1><p class="small" id="printDate"></p></div>
+    <p class="edu-intro" data-i18n="intro">લોનનો EMI, હપ્તાનું આખું શેડ્યૂલ, પ્રીપેમેન્ટ અને ફીથી વધેલો સાચો ખર્ચ કાઢો, અને જુઓ કે SIP, FD, RD અને PPFમાં બચત કેવી રીતે વધે છે.</p>
     <div class="fc-top no-print">
-      <span class="badge success"><span aria-hidden="true">🔒</span> <span data-i18n="privacy"></span></span>
-      <span class="badge"><span aria-hidden="true">⌨</span> <span data-i18n="kbd_hint"></span></span>
+      <span class="badge success"><span aria-hidden="true">🔒</span> <span data-i18n="privacy">તમારા આંકડા આ જ ડિવાઇસ પર રહે છે, ક્યાંય મોકલાતા નથી</span></span>
+      <span class="badge"><span aria-hidden="true">⌨</span> <span data-i18n="kbd_hint">25L કે 1.2Cr લખો · ↑ ↓ થી સંખ્યા બદલો</span></span>
     </div>
 
     <div class="fc-tabs no-print" role="tablist" id="tabs" data-i18n-aria-label="tabs_label">
-      <button type="button" role="tab" id="tab-emi" data-tab="emi" aria-controls="p-emi"><span class="ic" aria-hidden="true">🏠</span><span data-i18n="tab_emi"></span></button>
-      <button type="button" role="tab" id="tab-sip" data-tab="sip" aria-controls="p-sip"><span class="ic" aria-hidden="true">📈</span><span data-i18n="tab_sip"></span></button>
-      <button type="button" role="tab" id="tab-fd" data-tab="fd" aria-controls="p-fd"><span class="ic" aria-hidden="true">🏦</span><span data-i18n="tab_fd"></span></button>
-      <button type="button" role="tab" id="tab-ppf" data-tab="ppf" aria-controls="p-ppf"><span class="ic" aria-hidden="true">🛡️</span><span data-i18n="tab_ppf"></span></button>
+      <button type="button" role="tab" id="tab-emi" data-tab="emi" aria-controls="p-emi"><span class="ic" aria-hidden="true">🏠</span><span data-i18n="tab_emi">લોન EMI</span></button>
+      <button type="button" role="tab" id="tab-sip" data-tab="sip" aria-controls="p-sip"><span class="ic" aria-hidden="true">📈</span><span data-i18n="tab_sip">SIP</span></button>
+      <button type="button" role="tab" id="tab-fd" data-tab="fd" aria-controls="p-fd"><span class="ic" aria-hidden="true">🏦</span><span data-i18n="tab_fd">FD / RD</span></button>
+      <button type="button" role="tab" id="tab-ppf" data-tab="ppf" aria-controls="p-ppf"><span class="ic" aria-hidden="true">🛡️</span><span data-i18n="tab_ppf">PPF</span></button>
     </div>
 
     <!-- ============================================================ EMI -->
     <section id="p-emi" class="fc-panel" role="tabpanel" aria-labelledby="tab-emi">
       <div class="fc-split">
         <div class="card fc-form" id="emiForm">
-          <h2 data-i18n="loan_details"></h2>
+          <h2 data-i18n="loan_details">લોનની વિગત</h2>
           <div class="fc-presets" id="presets" role="group" data-i18n-aria-label="loan_type">
-            <button type="button" class="chip" data-preset="home"><span aria-hidden="true">🏠</span> <span data-i18n="preset_home"></span></button>
-            <button type="button" class="chip" data-preset="car"><span aria-hidden="true">🚗</span> <span data-i18n="preset_car"></span></button>
-            <button type="button" class="chip" data-preset="bike"><span aria-hidden="true">🛵</span> <span data-i18n="preset_bike"></span></button>
-            <button type="button" class="chip" data-preset="personal"><span aria-hidden="true">👤</span> <span data-i18n="preset_personal"></span></button>
-            <button type="button" class="chip" data-preset="edu"><span aria-hidden="true">🎓</span> <span data-i18n="preset_edu"></span></button>
+            <button type="button" class="chip" data-preset="home"><span aria-hidden="true">🏠</span> <span data-i18n="preset_home">હોમ</span></button>
+            <button type="button" class="chip" data-preset="car"><span aria-hidden="true">🚗</span> <span data-i18n="preset_car">કાર</span></button>
+            <button type="button" class="chip" data-preset="bike"><span aria-hidden="true">🛵</span> <span data-i18n="preset_bike">ટુ-વ્હીલર</span></button>
+            <button type="button" class="chip" data-preset="personal"><span aria-hidden="true">👤</span> <span data-i18n="preset_personal">પર્સનલ</span></button>
+            <button type="button" class="chip" data-preset="edu"><span aria-hidden="true">🎓</span> <span data-i18n="preset_edu">શિક્ષણ</span></button>
           </div>
           <div data-f="emiAmt"></div>
           <div data-f="emiRate"></div>
           <div class="field">
-            <span class="fc-lbl" data-i18n="f_tenure"></span>
+            <span class="fc-lbl" data-i18n="f_tenure">મુદત</span>
             <div class="fc-pair"><div data-f="emiYrs"></div><div data-f="emiMos"></div></div>
             <input type="range" class="nf-range" id="emiYrsR" min="0" max="30" step="1" tabindex="-1" aria-hidden="true">
             <span class="nf-hint" id="tenureHint"></span>
           </div>
           <div class="field">
-            <label for="emiStart" data-i18n="f_start"></label>
+            <label for="emiStart" data-i18n="f_start">પહેલા EMIનો મહિનો</label>
             <input type="month" id="emiStart">
           </div>
-          <p class="tiny muted mb0" data-i18n="rate_check"></p>
+          <p class="tiny muted mb0" data-i18n="rate_check">આ ફક્ત ઉદાહરણના દર છે. દર વારંવાર બદલાય છે, એટલે તમારી બૅંકમાં આજનો દર પૂછી લો.</p>
         </div>
 
         <div class="fc-col">
@@ -299,8 +299,8 @@
             <div class="fc-chart-head">
               <h3 id="emiChartTitle"></h3>
               <div class="seg" id="emiChartSeg" role="group" data-i18n-aria-label="chart_view">
-                <button type="button" data-v="balance" data-i18n="ch_balance"></button>
-                <button type="button" data-v="split" data-i18n="ch_split"></button>
+                <button type="button" data-v="balance" data-i18n="ch_balance">બાકી લોન</button>
+                <button type="button" data-v="split" data-i18n="ch_split">વાર્ષિક ભાગ</button>
               </div>
             </div>
             <div class="fc-chart" id="emiChart" tabindex="0"></div>
@@ -311,35 +311,35 @@
 
       <div class="card stack" id="chgCard">
         <div>
-          <h2 data-i18n="chg_title"></h2>
-          <p class="muted small mb0" data-i18n="chg_help"></p>
+          <h2 data-i18n="chg_title">પ્રીપેમેન્ટ અને વ્યાજદરમાં ફેરફાર</h2>
+          <p class="muted small mb0" data-i18n="chg_help">વચ્ચે કરેલી આંશિક ચૂકવણી કે ફ્લોટિંગ દરનો ભવિષ્યનો ફેરફાર ઉમેરો, અને મૂળ પ્લાન સાથે સરખાવો.</p>
         </div>
         <div class="grid-2">
           <div class="panel stack">
-            <h3 data-i18n="pp_title"></h3>
+            <h3 data-i18n="pp_title">પ્રીપેમેન્ટ (આંશિક ચૂકવણી)</h3>
             <div class="fc-rows" id="ppList"></div>
-            <button type="button" class="btn btn-sm no-print" id="ppAdd"><span aria-hidden="true">＋</span> <span data-i18n="pp_add"></span></button>
+            <button type="button" class="btn btn-sm no-print" id="ppAdd"><span aria-hidden="true">＋</span> <span data-i18n="pp_add">પ્રીપેમેન્ટ ઉમેરો</span></button>
             <div class="field">
-              <span class="fc-lbl" id="ppModeLbl" data-i18n="pp_mode"></span>
+              <span class="fc-lbl" id="ppModeLbl" data-i18n="pp_mode">પ્રીપેમેન્ટ પછી</span>
               <div class="seg fc-seg-full" id="ppMode" role="group" aria-labelledby="ppModeLbl">
-                <button type="button" data-v="tenure" data-i18n="mode_tenure"></button>
-                <button type="button" data-v="emi" data-i18n="mode_emi"></button>
+                <button type="button" data-v="tenure" data-i18n="mode_tenure">મુદત ઘટાડો</button>
+                <button type="button" data-v="emi" data-i18n="mode_emi">EMI ઘટાડો</button>
               </div>
             </div>
             <div data-f="ppCharge"></div>
           </div>
           <div class="panel stack">
-            <h3 data-i18n="rc_title"></h3>
+            <h3 data-i18n="rc_title">વ્યાજદરમાં ફેરફાર (ફ્લોટિંગ રેટ)</h3>
             <div class="fc-rows" id="rcList"></div>
-            <button type="button" class="btn btn-sm no-print" id="rcAdd"><span aria-hidden="true">＋</span> <span data-i18n="rc_add"></span></button>
+            <button type="button" class="btn btn-sm no-print" id="rcAdd"><span aria-hidden="true">＋</span> <span data-i18n="rc_add">દર ફેરફાર ઉમેરો</span></button>
             <div class="field">
-              <span class="fc-lbl" id="rcModeLbl" data-i18n="rc_mode"></span>
+              <span class="fc-lbl" id="rcModeLbl" data-i18n="rc_mode">દર બદલાય ત્યારે</span>
               <div class="seg fc-seg-full" id="rcMode" role="group" aria-labelledby="rcModeLbl">
-                <button type="button" data-v="tenure" data-i18n="rc_keep_emi"></button>
-                <button type="button" data-v="emi" data-i18n="rc_keep_tenure"></button>
+                <button type="button" data-v="tenure" data-i18n="rc_keep_emi">EMI એ જ રાખો</button>
+                <button type="button" data-v="emi" data-i18n="rc_keep_tenure">મુદત એ જ રાખો</button>
               </div>
             </div>
-            <p class="tiny muted mb0" data-i18n="rc_help"></p>
+            <p class="tiny muted mb0" data-i18n="rc_help">EMI એ જ રાખો: મુદત લાંબી કે ટૂંકી થાય (બૅંકો મોટે ભાગે આમ કરે છે). મુદત એ જ રાખો: EMI બદલાય.</p>
           </div>
         </div>
         <div id="chgOut" aria-live="polite"></div>
@@ -347,14 +347,14 @@
 
       <div class="card stack" id="schCard">
         <div class="fc-sch-head">
-          <h2 data-i18n="sch_title"></h2>
+          <h2 data-i18n="sch_title">હપ્તાનું શેડ્યૂલ</h2>
           <div class="fc-sch-tools no-print">
             <div class="seg" id="schView" role="group" data-i18n-aria-label="sch_title">
-              <button type="button" data-v="monthly" data-i18n="view_monthly"></button>
-              <button type="button" data-v="yearly" data-i18n="view_yearly"></button>
-              <button type="button" data-v="fy" data-i18n="view_fy"></button>
+              <button type="button" data-v="monthly" data-i18n="view_monthly">માસિક</button>
+              <button type="button" data-v="yearly" data-i18n="view_yearly">વાર્ષિક</button>
+              <button type="button" data-v="fy" data-i18n="view_fy">નાણાકીય વર્ષ</button>
             </div>
-            <button type="button" class="btn btn-sm" id="emiCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="emiCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn">CSV ડાઉનલોડ કરો</span></button>
             <button type="button" class="btn btn-sm" id="emiPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
           </div>
         </div>
@@ -362,28 +362,28 @@
         <div class="fc-table-wrap"><table class="table fc-table" id="schTable"></table></div>
       </div>
 
-      <h2 class="fc-sec no-print" data-i18n="tools_title"></h2>
-      <p class="muted small no-print" data-i18n="tools_help"></p>
+      <h2 class="fc-sec no-print" data-i18n="tools_title">લોનની વધુ ચકાસણી</h2>
+      <p class="muted small no-print" data-i18n="tools_help">લોન પર સહી કરતાં કે EMI પર ખરીદતાં પહેલાં સામાન્ય સવાલોના ઝડપી જવાબ.</p>
       <div class="grid-2 fc-tools no-print">
         <div class="card fc-tool" id="aprCard">
-          <h3><span aria-hidden="true">🧾</span> <span data-i18n="apr_title"></span></h3>
-          <p class="small muted" data-i18n="apr_help"></p>
+          <h3><span aria-hidden="true">🧾</span> <span data-i18n="apr_title">ફી અને સાચો ખર્ચ (APR)</span></h3>
+          <p class="small muted" data-i18n="apr_help">પ્રોસેસિંગ ફી અને બીજા ચાર્જ (કાનૂની, મૂલ્યાંકન, સ્ટૅમ્પ ડ્યૂટી)થી હાથમાં આવતી રકમ ઘટે છે, એટલે સાચો વાર્ષિક ખર્ચ જણાવેલા દર કરતાં વધુ હોય છે. ઉપરની લોન વપરાય છે.</p>
           <div class="grid-2"><div data-f="aprFee"></div><div data-f="aprOther"></div></div>
-          <label class="check"><input type="checkbox" id="aprGst"> <span data-i18n="apr_gst"></span></label>
+          <label class="check"><input type="checkbox" id="aprGst"> <span data-i18n="apr_gst">ફી પર 18% GST ઉમેરો</span></label>
           <div id="aprOut" class="fc-out" aria-live="polite"></div>
         </div>
 
         <div class="card fc-tool" id="flatCard">
-          <h3><span aria-hidden="true">🏷️</span> <span data-i18n="flat_title"></span></h3>
-          <p class="small muted" data-i18n="flat_help"></p>
+          <h3><span aria-hidden="true">🏷️</span> <span data-i18n="flat_title">ફ્લૅટ રેટ સામે સાચો રેટ</span></h3>
+          <p class="small muted" data-i18n="flat_help">દુકાનો અને કેટલાક ધિરાણકર્તા &quot;ફ્લૅટ&quot; રેટ કહે છે, જેમ કે મહિને 1%. તમે લોન ભરતા જાઓ તોય આખી રકમ પર આખો સમય વ્યાજ લાગે છે, એટલે સાચો દર લગભગ બમણો હોય છે.</p>
           <div data-f="flAmt"></div>
           <div class="grid-2">
             <div data-f="flRate"></div>
             <div class="field">
-              <span class="fc-lbl" id="flPerLbl" data-i18n="flat_per"></span>
+              <span class="fc-lbl" id="flPerLbl" data-i18n="flat_per">દર કયા હિસાબે</span>
               <div class="seg fc-seg-full" id="flPer" role="group" aria-labelledby="flPerLbl">
-                <button type="button" data-v="month" data-i18n="per_month"></button>
-                <button type="button" data-v="year" data-i18n="per_year"></button>
+                <button type="button" data-v="month" data-i18n="per_month">દર મહિને</button>
+                <button type="button" data-v="year" data-i18n="per_year">દર વર્ષે</button>
               </div>
             </div>
           </div>
@@ -392,8 +392,8 @@
         </div>
 
         <div class="card fc-tool" id="ncCard">
-          <h3><span aria-hidden="true">🛍️</span> <span data-i18n="nc_title"></span></h3>
-          <p class="small muted" data-i18n="nc_help"></p>
+          <h3><span aria-hidden="true">🛍️</span> <span data-i18n="nc_title">શું &quot;નો-કૉસ્ટ EMI&quot; ખરેખર મફત છે?</span></h3>
+          <p class="small muted" data-i18n="nc_help">વેચનાર બૅંકના વ્યાજ જેટલું ડિસ્કાઉન્ટ આપે છે, એટલે EMIનો સરવાળો કિંમત જેટલો થાય છે. છતાં એ વ્યાજ પર 18% GST અને પ્રોસેસિંગ ફી તમે જ ભરો છો, અને રોકડ ડિસ્કાઉન્ટ પણ જતું રહી શકે.</p>
           <div class="grid-2"><div data-f="ncPrice"></div><div data-f="ncN"></div></div>
           <div class="grid-2"><div data-f="ncRate"></div><div data-f="ncFee"></div></div>
           <div data-f="ncCash"></div>
@@ -401,8 +401,8 @@
         </div>
 
         <div class="card fc-tool" id="afCard">
-          <h3><span aria-hidden="true">⚖️</span> <span data-i18n="af_title"></span></h3>
-          <p class="small muted" data-i18n="af_help"></p>
+          <h3><span aria-hidden="true">⚖️</span> <span data-i18n="af_title">શું મને આ EMI પોસાશે?</span></h3>
+          <p class="small muted" data-i18n="af_help">ધિરાણકર્તા ઇચ્છે છે કે બધા EMI મળીને હાથમાં આવતા પગારના લગભગ 40–50%થી ઓછા રહે. ઉપરનો EMI વપરાય છે.</p>
           <div class="grid-2"><div data-f="afInc"></div><div data-f="afOth"></div></div>
           <div data-f="afFoir"></div>
           <div id="afOut" class="fc-out" aria-live="polite"></div>
@@ -414,14 +414,14 @@
     <section id="p-sip" class="fc-panel" role="tabpanel" aria-labelledby="tab-sip" hidden>
       <div class="fc-split">
         <div class="card fc-form" id="sipForm">
-          <h2 data-i18n="sip_title"></h2>
+          <h2 data-i18n="sip_title">SIP (મ્યુચ્યુઅલ ફંડ) કૅલ્ક્યુલેટર</h2>
           <div class="seg fc-seg-full" id="sipMode" role="group" data-i18n-aria-label="sip_title">
-            <button type="button" data-v="grow" data-i18n="sip_grow"></button>
-            <button type="button" data-v="goal" data-i18n="sip_goal"></button>
+            <button type="button" data-v="grow" data-i18n="sip_grow">મારી SIP કેટલી વધશે</button>
+            <button type="button" data-v="goal" data-i18n="sip_goal">લક્ષ્ય માટે પ્લાન</button>
           </div>
           <div id="sipGoalBox" class="fc-form">
             <div data-f="sipGoal"></div>
-            <label class="check"><input type="checkbox" id="sipToday"> <span data-i18n="sip_today"></span></label>
+            <label class="check"><input type="checkbox" id="sipToday"> <span data-i18n="sip_today">લક્ષ્ય આજના પૈસામાં છે (મોંઘવારી ઉમેરો)</span></label>
           </div>
           <div data-f="sipAmt" id="sipAmtBox"></div>
           <div data-f="sipStep"></div>
@@ -433,18 +433,18 @@
         <div class="fc-col">
           <div class="card" id="sipRes" aria-live="polite"></div>
           <div class="card">
-            <div class="fc-chart-head"><h3 data-i18n="ch_growth"></h3></div>
+            <div class="fc-chart-head"><h3 data-i18n="ch_growth">વર્ષ દર વર્ષ વધારો</h3></div>
             <div class="fc-chart" id="sipChart" tabindex="0"></div>
-            <div class="fc-axis-note" data-i18n="ax_years"></div>
+            <div class="fc-axis-note" data-i18n="ax_years">વર્ષ →</div>
             <div class="fc-legend" id="sipLegend"></div>
           </div>
         </div>
       </div>
       <div class="card stack">
         <div class="fc-sch-head">
-          <h2 data-i18n="yearwise"></h2>
+          <h2 data-i18n="yearwise">વર્ષ પ્રમાણે</h2>
           <div class="fc-sch-tools no-print">
-            <button type="button" class="btn btn-sm" id="sipCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="sipCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn">CSV ડાઉનલોડ કરો</span></button>
             <button type="button" class="btn btn-sm" id="sipPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
           </div>
         </div>
@@ -457,23 +457,23 @@
       <div class="fc-split">
         <div class="card fc-form" id="fdForm">
           <div class="seg fc-seg-full" id="fdKind" role="group" data-i18n-aria-label="tab_fd">
-            <button type="button" data-v="fd" data-i18n="fd_kind_fd"></button>
-            <button type="button" data-v="rd" data-i18n="fd_kind_rd"></button>
+            <button type="button" data-v="fd" data-i18n="fd_kind_fd">ફિક્સ્ડ ડિપોઝિટ (FD)</button>
+            <button type="button" data-v="rd" data-i18n="fd_kind_rd">રિકરિંગ ડિપોઝિટ (RD)</button>
           </div>
           <div id="fdBox" class="fc-form">
             <div data-f="fdAmt"></div>
             <div data-f="fdRate"></div>
             <div class="field">
-              <span class="fc-lbl" data-i18n="f_tenure"></span>
+              <span class="fc-lbl" data-i18n="f_tenure">મુદત</span>
               <div class="fc-pair"><div data-f="fdYrs"></div><div data-f="fdMos"></div></div>
               <span class="nf-hint" id="fdTenureHint"></span>
             </div>
             <div class="field">
-              <label for="fdPayout" data-i18n="fd_payout"></label>
+              <label for="fdPayout" data-i18n="fd_payout">વ્યાજ ક્યારે મળે</label>
               <select id="fdPayout">
-                <option value="cum" data-i18n="payout_cum"></option>
-                <option value="month" data-i18n="payout_month"></option>
-                <option value="quarter" data-i18n="payout_quarter"></option>
+                <option value="cum" data-i18n="payout_cum">પાકતી મુદતે (દર ત્રિમાસિક ચક્રવૃદ્ધિ)</option>
+                <option value="month" data-i18n="payout_month">દર મહિને</option>
+                <option value="quarter" data-i18n="payout_quarter">દર ત્રિમાસિક</option>
               </select>
             </div>
           </div>
@@ -482,29 +482,29 @@
             <div data-f="rdRate"></div>
             <div data-f="rdN"></div>
           </div>
-          <label class="check"><input type="checkbox" id="fdSenior"> <span data-i18n="fd_senior"></span></label>
-          <p class="tiny muted mb0" data-i18n="rate_check"></p>
+          <label class="check"><input type="checkbox" id="fdSenior"> <span data-i18n="fd_senior">વરિષ્ઠ નાગરિક (સામાન્ય રીતે +0.50%)</span></label>
+          <p class="tiny muted mb0" data-i18n="rate_check">આ ફક્ત ઉદાહરણના દર છે. દર વારંવાર બદલાય છે, એટલે તમારી બૅંકમાં આજનો દર પૂછી લો.</p>
         </div>
         <div class="fc-col">
           <div class="card" id="fdRes" aria-live="polite"></div>
           <div class="card">
-            <div class="fc-chart-head"><h3 data-i18n="ch_growth"></h3></div>
+            <div class="fc-chart-head"><h3 data-i18n="ch_growth">વર્ષ દર વર્ષ વધારો</h3></div>
             <div class="fc-chart" id="fdChart" tabindex="0"></div>
-            <div class="fc-axis-note" data-i18n="ax_years"></div>
+            <div class="fc-axis-note" data-i18n="ax_years">વર્ષ →</div>
             <div class="fc-legend" id="fdLegend"></div>
           </div>
         </div>
       </div>
       <div class="card stack">
         <div class="fc-sch-head">
-          <h2 data-i18n="yearwise"></h2>
+          <h2 data-i18n="yearwise">વર્ષ પ્રમાણે</h2>
           <div class="fc-sch-tools no-print">
-            <button type="button" class="btn btn-sm" id="fdCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="fdCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn">CSV ડાઉનલોડ કરો</span></button>
             <button type="button" class="btn btn-sm" id="fdPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
           </div>
         </div>
         <div class="fc-table-wrap"><table class="table fc-table" id="fdTable"></table></div>
-        <p class="tiny muted mb0" data-i18n="fd_note"></p>
+        <p class="tiny muted mb0" data-i18n="fd_note">બૅંકો FD અને RD પર દર ત્રિમાસિકે વ્યાજ ઉમેરે છે; 6 મહિનાથી ઓછા સમય માટે સાદું વ્યાજ આપે છે. માસિક વ્યાજ દર ÷ 12 કરતાં થોડું ઓછું હોય છે, કારણ કે બૅંકો તેને ડિસ્કાઉન્ટ કરે છે. વાર્ષિક વ્યાજ મર્યાદા વટાવે તો TDS કપાઈ શકે; પાત્ર હો તો ફૉર્મ 15G/15H આપો.</p>
       </div>
     </section>
 
@@ -512,66 +512,66 @@
     <section id="p-ppf" class="fc-panel" role="tabpanel" aria-labelledby="tab-ppf" hidden>
       <div class="fc-split">
         <div class="card fc-form" id="ppfForm">
-          <h2 data-i18n="ppf_title"></h2>
+          <h2 data-i18n="ppf_title">PPF (પબ્લિક પ્રોવિડન્ટ ફંડ)</h2>
           <div data-f="ppfAmt"></div>
           <div data-f="ppfRate"></div>
           <div class="field">
-            <span class="fc-lbl" id="ppfModeLbl" data-i18n="ppf_how"></span>
+            <span class="fc-lbl" id="ppfModeLbl" data-i18n="ppf_how">કેવી રીતે જમા કરો છો</span>
             <div class="seg fc-seg-full" id="ppfMode" role="group" aria-labelledby="ppfModeLbl">
-              <button type="button" data-v="yearly" data-i18n="ppf_yearly"></button>
-              <button type="button" data-v="monthly" data-i18n="ppf_monthly"></button>
+              <button type="button" data-v="yearly" data-i18n="ppf_yearly">વર્ષમાં એક વાર (5 એપ્રિલ સુધી)</button>
+              <button type="button" data-v="monthly" data-i18n="ppf_monthly">દર મહિને (5 તારીખ સુધી)</button>
             </div>
           </div>
           <div class="field">
-            <label for="ppfExt" data-i18n="ppf_ext"></label>
+            <label for="ppfExt" data-i18n="ppf_ext">15 વર્ષ પછી મુદત વધારો</label>
             <select id="ppfExt"></select>
           </div>
-          <label class="check" id="ppfExtDepBox"><input type="checkbox" id="ppfExtDep"> <span data-i18n="ppf_ext_dep"></span></label>
-          <p class="tiny muted mb0" data-i18n="ppf_rate_hint"></p>
+          <label class="check" id="ppfExtDepBox"><input type="checkbox" id="ppfExtDep"> <span data-i18n="ppf_ext_dep">વધારેલી મુદતમાં પણ જમા કરતા રહો</span></label>
+          <p class="tiny muted mb0" data-i18n="ppf_rate_hint">PPFનો દર સરકાર દર ત્રિમાસિકે નક્કી કરે છે. આજનો દર તપાસો.</p>
         </div>
         <div class="fc-col">
           <div class="card" id="ppfRes" aria-live="polite"></div>
           <div class="card">
-            <div class="fc-chart-head"><h3 data-i18n="ch_growth"></h3></div>
+            <div class="fc-chart-head"><h3 data-i18n="ch_growth">વર્ષ દર વર્ષ વધારો</h3></div>
             <div class="fc-chart" id="ppfChart" tabindex="0"></div>
-            <div class="fc-axis-note" data-i18n="ax_years"></div>
+            <div class="fc-axis-note" data-i18n="ax_years">વર્ષ →</div>
             <div class="fc-legend" id="ppfLegend"></div>
           </div>
         </div>
       </div>
       <div class="card stack">
         <div class="fc-sch-head">
-          <h2 data-i18n="yearwise"></h2>
+          <h2 data-i18n="yearwise">વર્ષ પ્રમાણે</h2>
           <div class="fc-sch-tools no-print">
-            <button type="button" class="btn btn-sm" id="ppfCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn"></span></button>
+            <button type="button" class="btn btn-sm" id="ppfCsv"><span aria-hidden="true">⬇</span> <span data-i18n="csv_btn">CSV ડાઉનલોડ કરો</span></button>
             <button type="button" class="btn btn-sm" id="ppfPrint"><span aria-hidden="true">🖨</span> <span data-i18n="print"></span></button>
           </div>
         </div>
         <div class="fc-table-wrap"><table class="table fc-table" id="ppfTable"></table></div>
-        <p class="tiny muted mb0" data-i18n="ppf_note"></p>
+        <p class="tiny muted mb0" data-i18n="ppf_note">દર મહિને 5 તારીખથી મહિનાના અંત સુધીના સૌથી ઓછા બૅલેન્સ પર વ્યાજ ગણાય છે અને વર્ષમાં એક વાર 31 માર્ચે ઉમેરાય છે. એ મહિનાનું વ્યાજ મેળવવા 5 તારીખ સુધીમાં જમા કરો.</p>
       </div>
     </section>
 
-    <p class="callout warning small fc-disc" role="note"><strong data-i18n="disc_title"></strong> <span data-i18n="disclaimer"></span></p>
+    <p class="callout warning small fc-disc" role="note"><strong data-i18n="disc_title">ફક્ત અંદાજ માટે.</strong> <span data-i18n="disclaimer">આ રોકાણ, ટૅક્સ કે લોનની સલાહ નથી. વળતરની ગૅરંટી નથી, અને બૅંકો થોડી અલગ રીતે રાઉન્ડ કે ગણતરી કરી શકે. નિર્ણય લેતાં પહેલાં તમારી બૅંક, પોસ્ટ ઑફિસ કે ફંડ હાઉસમાં આજના દર અને શરતો તપાસો.</span></p>
 
     <details class="card no-print" id="helpBox" style="margin-top:16px">
-      <summary data-i18n="help_title"></summary>
+      <summary data-i18n="help_title">કેવી રીતે વાપરવું / કામ માટે આઇડિયા</summary>
       <ul class="stack" style="margin-top:10px">
-        <li data-i18n="tip1"></li>
-        <li data-i18n="tip2"></li>
-        <li data-i18n="tip3"></li>
-        <li data-i18n="tip4"></li>
-        <li data-i18n="tip5"></li>
-        <li data-i18n="tip6"></li>
+        <li data-i18n="tip1">લોનનો પ્રકાર પસંદ કરો કે તમારી રકમ, દર અને મુદત લખો; લખતાં જ પરિણામ બદલાય છે. શૉર્ટકટ: 25L = 25 લાખ, 1.2Cr = 1.2 કરોડ, અને ↑ ↓ કીથી સંખ્યા બદલો (મોટા પગલા માટે Shift દબાવો).</li>
+        <li data-i18n="tip2">પ્રીપેમેન્ટ ઉમેરો, દા.ત. વાર્ષિક બોનસમાંથી, અને જુઓ કેટલું વ્યાજ બચે છે. &quot;મુદત ઘટાડો&quot; સામાન્ય રીતે &quot;EMI ઘટાડો&quot; કરતાં વધુ બચાવે છે.</li>
+        <li data-i18n="tip3">બૅંક, NBFC અને દુકાનના સ્ટાફ: &quot;ફ્લૅટ રેટ સામે સાચો રેટ&quot; અને &quot;નો-કૉસ્ટ EMI&quot; વડે ગ્રાહકને થોડી સેકન્ડમાં સાચો ખર્ચ બતાવો.</li>
+        <li data-i18n="tip4">હોમ લોનના ટૅક્સ કાગળો માટે નાણાકીય વર્ષનો વ્યૂ વાપરો, અને CSV ડાઉનલોડ કરીને શેડ્યૂલ Excel કે Google Sheetsમાં ખોલો.</li>
+        <li data-i18n="tip5">&quot;સારાંશ કૉપિ કરો&quot; WhatsApp કે ઈમેલ માટે ટૂંકો સંદેશ બનાવે છે, જેમાં આ જ ગણતરી ખોલતી લિંક હોય છે.</li>
+        <li data-i18n="tip6">HR અને ફાઇનાન્સ ટીમ: પૈસાની સમજના સેશનમાં તેને પ્રોજેક્ટર પર ચલાવો અને SIP, FD, RD અને PPFની સાથે-સાથે સરખામણી કરો.</li>
       </ul>
-      <h3 style="margin-top:14px" data-i18n="how_title"></h3>
+      <h3 style="margin-top:14px" data-i18n="how_title">ગણતરી કેવી રીતે થાય છે</h3>
       <div class="fc-how small">
-        <p data-i18n="how_emi"></p>
-        <p data-i18n="how_apr"></p>
-        <p data-i18n="how_flat"></p>
-        <p data-i18n="how_sip"></p>
-        <p data-i18n="how_fd"></p>
-        <p data-i18n="how_ppf"></p>
+        <p data-i18n="how_emi">EMI = P × r × (1+r)^n ÷ ((1+r)^n − 1), જ્યાં P લોન, r વાર્ષિક દર ÷ 12 ÷ 100 અને n મહિનાની સંખ્યા છે (0% પર EMI = P ÷ n). દર મહિને વ્યાજ = બાકી લોન × r, અને EMIનો બાકીનો ભાગ લોન ઘટાડે છે.</p>
+        <p data-i18n="how_apr">APR એ એવો વાર્ષિક દર છે જેના પર હાથમાં આવેલી સાચી રકમ (લોન બાદ ફી) તમારા બધા EMIના મૂલ્ય જેટલી થાય. ધિરાણકર્તાએ કી ફૅક્ટ સ્ટેટમેન્ટ (KFS)માં આ જ APR જણાવવો પડે છે.</p>
+        <p data-i18n="how_flat">ફ્લૅટ વ્યાજ = રકમ × ફ્લૅટ રેટ × વર્ષ. સાચો દર એ ઘટતા બૅલેન્સનો દર છે જેનાથી એટલો જ EMI આવે.</p>
+        <p data-i18n="how_sip">SIP: તમે દર મહિનાની શરૂઆતમાં રોકાણ કરો છો અને વધારો દર મહિને ઉમેરાય છે (વાર્ષિક વળતર ÷ 12), મોટા ભાગના ફંડ કૅલ્ક્યુલેટરની જેમ. એકસામટું રોકાણ વર્ષે એક વાર વધે છે. ટૅક્સ અને ફંડના ચાર્જ ગણ્યા નથી.</p>
+        <p data-i18n="how_fd">FD: ભારતીય બૅંકોની જેમ દર ત્રિમાસિકે ચક્રવૃદ્ધિ વ્યાજ. RD: દરેક માસિક જમા જેટલો સમય રહે તેટલો સમય દર ત્રિમાસિકે વધે છે. બૅંકના રાઉન્ડિંગમાં થોડા રૂપિયાનો ફરક આવી શકે.</p>
+        <p data-i18n="how_ppf">PPF: વર્ષે ₹1,50,000 સુધી જમા, વ્યાજ વર્ષે એક વાર ઉમેરાય, 15 વર્ષનો લૉક-ઇન, જે 5-5 વર્ષ માટે વધારી શકાય.</p>
       </div>
       <div class="row spread" style="margin-top:12px">
         <span class="small muted" data-i18n="saved_local"></span>
