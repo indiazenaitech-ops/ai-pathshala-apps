@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shopping Calculator · AI Pathshala</title>
+  <meta name="description" content="Free shopping calculator: price after discount, which pack is cheaper per kg or litre, what buy-2-get-1 offers are really worth, and fuel cost of a trip. 12 Indian languages, works offline.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .sc-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 16px; }
+    .sc-tabs button {
+      min-width: 0; font: inherit; font-weight: 700; font-size: .95rem; color: var(--text); background: var(--surface);
+      border: 1px solid var(--border); border-radius: 12px; padding: 8px 6px; min-height: 56px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px; text-align: center; line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+    .sc-tabs button[aria-selected="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+    .sc-tabs .ic { font-size: 1.25rem; flex: none; line-height: 1; }
+    @media (max-width: 640px) {
+      .sc-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sc-tabs button { font-size: .88rem; }
+    }
+    .sc-split { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+    @media (max-width: 860px) { .sc-split { grid-template-columns: minmax(0, 1fr); } }
+    .sc-form > * + * { margin-top: 14px; }
+    .sc-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); align-items: end; }
+    .sc-form .field > span { font-size: .9rem; color: var(--text); font-weight: 600; }
+    .sc-form input[type="text"], .sc-form select { width: 100%; min-width: 0; min-height: 46px; font-size: 1.1rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sc-form input.bad { border-color: var(--danger); background: var(--danger-soft); }
+    .sc-seg { display: flex; width: 100%; }
+    .sc-seg button { flex: 1 1 0; min-height: 46px; min-width: 0; white-space: normal; line-height: 1.25; overflow-wrap: anywhere; }
+    @media (max-width: 480px) {
+      .sc-seg.three { flex-direction: column; }
+      .sc-seg.three button { flex: none; }
+      .sc-seg.three button + button { border-inline-start: 0; border-top: 1px solid var(--border); }
+    }
+    .sc-res { position: sticky; top: 12px; }
+    .sc-res > * + * { margin-top: 10px; }
+    .sc-res .lbl { font-weight: 700; color: var(--muted); font-size: .92rem; margin: 0; }
+    .sc-big { font-size: clamp(2rem, 8vw, 3.2rem); font-weight: 800; line-height: 1.15; font-variant-numeric: tabular-nums; color: var(--primary); overflow-wrap: anywhere; margin: 0; }
+    .sc-sub { font-size: 1.08rem; font-weight: 700; margin: 0; overflow-wrap: anywhere; }
+    .sc-work { margin: 0; line-height: 1.7; overflow-wrap: anywhere; }
+    .sc-work p { margin: 0 0 4px; }
+    .sc-pack { border: 1px solid var(--border); border-radius: 12px; padding: 10px; background: var(--surface-2); }
+    .sc-pack.best { border-color: var(--success); box-shadow: inset 0 0 0 1px var(--success); background: var(--success-soft); }
+    .sc-pack-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; font-weight: 700; }
+    .sc-pack-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 8px; align-items: end; }
+    .sc-up { margin-top: 8px; font-weight: 700; font-variant-numeric: tabular-nums; min-height: 1.4em; overflow-wrap: anywhere; }
+    .sc-del { min-width: 40px; min-height: 40px; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+
+    <div class="sc-tabs" role="tablist">
+      <button type="button" role="tab" id="tab-disc" data-tab="disc"><span class="ic" aria-hidden="true">🏷️</span><span data-i18n="tab_disc"></span></button>
+      <button type="button" role="tab" id="tab-pack" data-tab="pack"><span class="ic" aria-hidden="true">⚖️</span><span data-i18n="tab_pack"></span></button>
+      <button type="button" role="tab" id="tab-offer" data-tab="offer"><span class="ic" aria-hidden="true">🎁</span><span data-i18n="tab_offer"></span></button>
+      <button type="button" role="tab" id="tab-fuel" data-tab="fuel"><span class="ic" aria-hidden="true">⛽</span><span data-i18n="tab_fuel"></span></button>
+    </div>
+
+    <!-- 1. Discount -->
+    <section class="sc-split" id="pane-disc" role="tabpanel" aria-labelledby="tab-disc">
+      <div class="card sc-form">
+        <div class="seg sc-seg three" id="d-modes">
+          <button type="button" id="d-mode-pct" data-set="d.mode" data-val="pct" data-i18n="d_pct_mode"></button>
+          <button type="button" id="d-mode-flat" data-set="d.mode" data-val="flat" data-i18n="d_flat_mode"></button>
+          <button type="button" id="d-mode-rev" data-set="d.mode" data-val="rev" data-i18n="d_rev_mode"></button>
+        </div>
+        <div class="sc-grid">
+          <label class="field"><span data-i18n="l_mrp"></span><input type="text" inputmode="decimal" autocomplete="off" id="d-mrp" data-k="d.mrp"></label>
+          <label class="field" data-show="d.mode=pct"><span data-i18n="l_dpct"></span><input type="text" inputmode="decimal" autocomplete="off" id="d-pct" data-k="d.pct"></label>
+          <label class="field" data-show="d.mode=pct"><span data-i18n="l_extra"></span><input type="text" inputmode="decimal" autocomplete="off" id="d-extra" data-k="d.extra"></label>
+          <label class="field" data-show="d.mode=flat"><span data-i18n="l_flat"></span><input type="text" inputmode="decimal" autocomplete="off" id="d-flat" data-k="d.flat"></label>
+          <label class="field" data-show="d.mode=rev"><span data-i18n="l_paid"></span><input type="text" inputmode="decimal" autocomplete="off" id="d-paid" data-k="d.paid"></label>
+        </div>
+      </div>
+      <div class="card sc-res" aria-live="polite">
+        <p class="callout warning" id="d-err" hidden></p>
+        <div id="d-ok" class="stack">
+          <p class="lbl" id="d-lbl"></p>
+          <p class="sc-big" id="d-out"></p>
+          <p class="sc-sub" id="d-save"></p>
+          <div class="panel sc-work" id="d-work"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Which pack is cheaper -->
+    <section class="sc-split" id="pane-pack" role="tabpanel" aria-labelledby="tab-pack" hidden>
+      <div class="card sc-form">
+        <p class="muted" data-i18n="pack_hint" style="margin:0"></p>
+        <div id="pk-rows" class="stack"></div>
+        <button type="button" class="btn" id="pk-add">＋ <span data-i18n="add_pack"></span></button>
+      </div>
+      <div class="card sc-res" aria-live="polite">
+        <p class="callout warning" id="pk-err" hidden></p>
+        <div id="pk-ok" class="stack">
+          <p class="lbl" data-i18n="cheapest"></p>
+          <p class="sc-big" id="pk-out"></p>
+          <p class="sc-sub" id="pk-best"></p>
+          <div id="pk-cmp" class="sc-work"></div>
+          <div class="panel sc-work" id="pk-work"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Offers -->
+    <section class="sc-split" id="pane-offer" role="tabpanel" aria-labelledby="tab-offer" hidden>
+      <div class="card sc-form">
+        <div class="seg sc-seg">
+          <button type="button" id="o-mode-bogo" data-set="o.mode" data-val="bogo" data-i18n="o_bogo_mode"></button>
+          <button type="button" id="o-mode-second" data-set="o.mode" data-val="second" data-i18n="o_second_mode"></button>
+        </div>
+        <div class="sc-grid">
+          <label class="field"><span data-i18n="l_item"></span><input type="text" inputmode="decimal" autocomplete="off" id="o-price" data-k="o.price"></label>
+          <label class="field" data-show="o.mode=bogo"><span data-i18n="l_buy"></span><input type="text" inputmode="numeric" autocomplete="off" id="o-x" data-k="o.x"></label>
+          <label class="field" data-show="o.mode=bogo"><span data-i18n="l_free"></span><input type="text" inputmode="numeric" autocomplete="off" id="o-y" data-k="o.y"></label>
+          <label class="field" data-show="o.mode=second"><span data-i18n="l_z"></span><input type="text" inputmode="decimal" autocomplete="off" id="o-z" data-k="o.z"></label>
+        </div>
+      </div>
+      <div class="card sc-res" aria-live="polite">
+        <p class="callout warning" id="o-err" hidden></p>
+        <div id="o-ok" class="stack">
+          <p class="lbl" data-i18n="r_eff"></p>
+          <p class="sc-big" id="o-out"></p>
+          <p class="sc-sub" id="o-per"></p>
+          <div class="panel sc-work" id="o-work"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Fuel and trip -->
+    <section class="sc-split" id="pane-fuel" role="tabpanel" aria-labelledby="tab-fuel" hidden>
+      <div class="card sc-form">
+        <div class="seg sc-seg">
+          <button type="button" id="f-mode-trip" data-set="f.mode" data-val="trip" data-i18n="f_trip_mode"></button>
+          <button type="button" id="f-mode-mil" data-set="f.mode" data-val="mil" data-i18n="f_mil_mode"></button>
+        </div>
+        <div class="seg sc-seg">
+          <button type="button" id="f-unit-l" data-set="f.unit" data-val="l" data-i18n="f_l"></button>
+          <button type="button" id="f-unit-kg" data-set="f.unit" data-val="kg" data-i18n="f_kg"></button>
+        </div>
+        <div class="sc-grid" data-show="f.mode=trip">
+          <label class="field"><span data-i18n="l_dist"></span><input type="text" inputmode="decimal" autocomplete="off" id="f-dist" data-k="f.dist"></label>
+          <label class="field"><span id="f-mil-lbl"></span><input type="text" inputmode="decimal" autocomplete="off" id="f-mil" data-k="f.mil"></label>
+          <label class="field"><span id="f-price-lbl"></span><input type="text" inputmode="decimal" autocomplete="off" id="f-price" data-k="f.price"></label>
+          <label class="field"><span data-i18n="l_people"></span><input type="text" inputmode="numeric" autocomplete="off" id="f-n" data-k="f.n"></label>
+        </div>
+        <div data-show="f.mode=mil" class="stack">
+          <p class="muted small" data-i18n="mil_tip" style="margin:0"></p>
+          <div class="sc-grid">
+            <label class="field"><span data-i18n="l_odo1"></span><input type="text" inputmode="decimal" autocomplete="off" id="m-odo1" data-k="f.odo1"></label>
+            <label class="field"><span data-i18n="l_odo2"></span><input type="text" inputmode="decimal" autocomplete="off" id="m-odo2" data-k="f.odo2"></label>
+            <label class="field"><span id="m-fuel-lbl"></span><input type="text" inputmode="decimal" autocomplete="off" id="m-fuel" data-k="f.fuel"></label>
+          </div>
+        </div>
+      </div>
+      <div class="card sc-res" aria-live="polite">
+        <p class="callout warning" id="f-err" hidden></p>
+        <div id="f-ok" class="stack">
+          <p class="lbl" id="f-lbl"></p>
+          <p class="sc-big" id="f-out"></p>
+          <p class="sc-sub" id="f-fuel"></p>
+          <p class="sc-sub" id="f-perkm"></p>
+          <p class="sc-sub" id="f-each"></p>
+          <div class="panel sc-work" id="f-work"></div>
+          <button type="button" class="btn btn-primary" id="m-use" data-i18n="use_mil" hidden></button>
+        </div>
+      </div>
+    </section>
+
+    <details class="card" id="helpBox" style="margin-top:16px">
+      <summary data-i18n="help"></summary>
+      <ul>
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+      </ul>
+      <p class="muted small">🔒 <span data-i18n="saved_local"></span></p>
+      <button type="button" class="btn btn-danger btn-sm" id="resetAll" data-i18n="reset"></button>
+    </details>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

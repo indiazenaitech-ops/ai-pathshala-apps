@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Colour Palette Tool · AI Pathshala</title>
+  <meta name="description" content="Free colour palette maker: matching colours from one base colour, HEX RGB HSL codes, WCAG contrast checker, pick colours from a photo on your device, save and export palettes. 12 Indian languages, works offline.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .cp-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 16px; }
+    .cp-tabs button {
+      min-width: 0; font: inherit; font-weight: 700; font-size: .95rem; color: var(--text); background: var(--surface);
+      border: 1px solid var(--border); border-radius: 12px; padding: 8px 6px; min-height: 56px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px; text-align: center; line-height: 1.25; overflow-wrap: anywhere;
+    }
+    .cp-tabs button[aria-selected="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+    .cp-tabs .ic { font-size: 1.25rem; flex: none; line-height: 1; }
+    @media (max-width: 640px) { .cp-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cp-tabs button { font-size: .88rem; } }
+    .cp-pane > * + * { margin-top: 14px; }
+    .cp-pane h2 { font-size: 1.15rem; margin: 0 0 10px; }
+    .cp-pane h3 { font-size: 1rem; margin: 0; overflow-wrap: anywhere; }
+    .cp-base { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; align-items: start; }
+    .cp-pick { display: flex; flex-direction: column; gap: 6px; align-items: stretch; font-size: .84rem; color: var(--muted); text-align: center; }
+    .cp-pick input[type="color"] { width: 96px; height: 96px; border-radius: 14px; padding: 4px; cursor: pointer; }
+    .cp-fields { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    .cp-fields .field > span, .cp-two .field > span { font-size: .9rem; color: var(--text); font-weight: 600; }
+    .cp-code-in { width: 100%; min-width: 0; min-height: 44px; font-family: ui-monospace, Consolas, monospace; font-size: 1rem; direction: ltr; text-align: start; }
+    [dir="rtl"] .cp-code-in { text-align: end; }
+    .cp-code-in.bad { border-color: var(--danger); background: var(--danger-soft); }
+    .cp-groups { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .cp-group > * + * { margin-top: 10px; }
+    .cp-sws { display: flex; gap: 6px; }
+    .cp-sw { flex: 1 1 0; min-width: 0; border: 1px solid var(--border); border-radius: 10px; padding: 0; overflow: hidden; cursor: pointer; background: var(--surface); color: var(--text); font: inherit; display: flex; flex-direction: column; }
+    .cp-sw:hover, .cp-sw:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+    .cp-chip { display: block; height: 64px; background: var(--c); }
+    .cp-code { display: block; padding: 5px 2px; font-family: ui-monospace, Consolas, monospace; font-size: .72rem; line-height: 1.25; text-align: center; overflow-wrap: anywhere; direction: ltr; min-height: 2.6em; }
+    .cp-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+    .cp-acts .btn { min-height: 40px; }
+    .cp-two { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cp-colrow { display: flex; gap: 8px; align-items: center; }
+    .cp-colrow input[type="color"] { flex: none; width: 48px; height: 44px; cursor: pointer; }
+    .cp-ratio { font-size: clamp(2.2rem, 9vw, 3.4rem); font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; margin: 0; direction: ltr; text-align: start; }
+    [dir="rtl"] .cp-ratio { text-align: end; }
+    .cp-sample { border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-wrap: anywhere; }
+    .cp-sample .big { font-size: 1.5rem; font-weight: 700; margin: 0 0 6px; line-height: 1.35; }
+    .cp-sample .small { font-size: 1rem; margin: 0; line-height: 1.6; }
+    .cp-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 6px 8px; align-items: center; }
+    .cp-grid .hd { font-weight: 700; font-size: .86rem; color: var(--muted); }
+    .cp-grid .badge { justify-self: start; font-size: .86rem; padding: 4px 10px; white-space: normal; }
+    .cp-canvas-wrap { border: 1px dashed var(--border); border-radius: 12px; padding: 8px; background: var(--surface-2); text-align: center; }
+    #ph-canvas { max-width: 100%; height: auto; max-height: 60vh; border-radius: 8px; cursor: crosshair; touch-action: manipulation; display: block; margin: 0 auto; }
+    .cp-picked { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .cp-picked .dot { width: 56px; height: 56px; border-radius: 12px; border: 1px solid var(--border); flex: none; }
+    .cp-picked .code { font-family: ui-monospace, Consolas, monospace; font-weight: 700; direction: ltr; }
+    @media (max-width: 480px) {
+      .cp-base { grid-template-columns: minmax(0, 1fr); }
+      .cp-pick { flex-direction: row; align-items: center; text-align: start; }
+      .cp-pick input[type="color"] { width: 72px; height: 56px; }
+      .cp-two { grid-template-columns: minmax(0, 1fr); }
+      .cp-chip { height: 52px; }
+    }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+
+    <div class="cp-tabs" role="tablist">
+      <button type="button" role="tab" id="tab-pal" data-tab="pal"><span class="ic" aria-hidden="true">🎨</span><span data-i18n="tab_pal"></span></button>
+      <button type="button" role="tab" id="tab-con" data-tab="con"><span class="ic" aria-hidden="true">👓</span><span data-i18n="tab_con"></span></button>
+      <button type="button" role="tab" id="tab-photo" data-tab="photo"><span class="ic" aria-hidden="true">📷</span><span data-i18n="tab_photo"></span></button>
+      <button type="button" role="tab" id="tab-saved" data-tab="saved"><span class="ic" aria-hidden="true">💾</span><span data-i18n="tab_saved"></span></button>
+    </div>
+
+    <!-- 1. Palettes -->
+    <section class="cp-pane" id="pane-pal" role="tabpanel" aria-labelledby="tab-pal">
+      <div class="card">
+        <h2 data-i18n="base_h"></h2>
+        <div class="cp-base">
+          <label class="cp-pick"><input type="color" id="base-pick" value="#ff9933"><span data-i18n="l_pick"></span></label>
+          <div class="stack">
+            <div class="cp-fields">
+              <label class="field"><span data-i18n="l_hex"></span><input type="text" class="cp-code-in" id="base-hex" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="9"></label>
+              <label class="field"><span data-i18n="l_rgb"></span><input type="text" class="cp-code-in" id="base-rgb" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="24"></label>
+              <label class="field"><span data-i18n="l_hsl"></span><input type="text" class="cp-code-in" id="base-hsl" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="28"></label>
+            </div>
+            <p class="callout warning" id="base-err" data-i18n="err_code" hidden></p>
+            <div class="row">
+              <span class="small muted" data-i18n="show_as"></span>
+              <div class="seg no-i18n" id="fmt-seg">
+                <button type="button" id="fmt-hex" data-fmt="hex">HEX</button>
+                <button type="button" id="fmt-rgb" data-fmt="rgb">RGB</button>
+                <button type="button" id="fmt-hsl" data-fmt="hsl">HSL</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="muted small" style="margin-bottom:0">👆 <span data-i18n="tap_copy"></span></p>
+      <div class="cp-groups" id="palettes"></div>
+    </section>
+
+    <!-- 2. Contrast -->
+    <section class="cp-pane" id="pane-con" role="tabpanel" aria-labelledby="tab-con" hidden>
+      <div class="card stack">
+        <h2 data-i18n="con_h"></h2>
+        <div class="cp-two">
+          <label class="field"><span data-i18n="l_fg"></span>
+            <span class="cp-colrow"><input type="color" id="c-fg" data-i18n-aria-label="l_fg"><input type="text" class="cp-code-in" id="c-fg-hex" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="28"></span></label>
+          <label class="field"><span data-i18n="l_bg"></span>
+            <span class="cp-colrow"><input type="color" id="c-bg" data-i18n-aria-label="l_bg"><input type="text" class="cp-code-in" id="c-bg-hex" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="28"></span></label>
+        </div>
+        <p class="callout warning" id="c-err" data-i18n="err_code" hidden></p>
+        <div class="row">
+          <button type="button" class="btn" id="c-swap">⇄ <span data-i18n="b_swap"></span></button>
+          <button type="button" class="btn" id="c-usebase" data-i18n="b_base_bg"></button>
+        </div>
+      </div>
+      <div class="card stack" aria-live="polite">
+        <p class="muted" style="margin:0;font-weight:700" data-i18n="ratio_l"></p>
+        <p class="cp-ratio no-i18n" id="c-ratio"></p>
+        <p class="callout" id="c-verdict"></p>
+        <div class="cp-grid">
+          <span></span><span class="hd" data-i18n="lvl_aa"></span><span class="hd" data-i18n="lvl_aaa"></span>
+          <span data-i18n="normal_t"></span><span class="badge" id="c-n-aa"></span><span class="badge" id="c-n-aaa"></span>
+          <span data-i18n="large_t"></span><span class="badge" id="c-l-aa"></span><span class="badge" id="c-l-aaa"></span>
+        </div>
+        <div class="cp-sample" id="c-sample">
+          <p class="big" data-i18n="sample_big"></p>
+          <p class="small" data-i18n="sample_small"></p>
+        </div>
+        <p class="muted small" data-i18n="con_tip" style="margin-bottom:0"></p>
+      </div>
+    </section>
+
+    <!-- 3. From a photo -->
+    <section class="cp-pane" id="pane-photo" role="tabpanel" aria-labelledby="tab-photo" hidden>
+      <div class="card stack">
+        <h2 data-i18n="ph_h"></h2>
+        <p class="callout success" style="margin-top:0">🔒 <span data-i18n="ph_note"></span></p>
+        <div class="row">
+          <button type="button" class="btn btn-primary" id="ph-pick" data-i18n="b_choose"></button>
+          <button type="button" class="btn" id="ph-sample" data-i18n="b_sample"></button>
+          <input type="file" id="ph-file" accept="image/*" hidden>
+        </div>
+        <p class="callout danger" id="ph-err" data-i18n="err_img" hidden></p>
+        <p class="muted" id="ph-empty" data-i18n="ph_empty"></p>
+        <div id="ph-work" class="stack" hidden>
+          <p class="muted small" style="margin-bottom:0">👆 <span data-i18n="ph_tap"></span></p>
+          <div class="cp-canvas-wrap"><canvas id="ph-canvas" width="2" height="2" role="img" data-i18n-aria-label="ph_alt"></canvas></div>
+          <div class="cp-picked" id="ph-picked" hidden aria-live="polite">
+            <span class="dot" id="ph-dot"></span>
+            <span><span class="small muted" data-i18n="ph_picked"></span><br><span class="code no-i18n" id="ph-picked-code"></span></span>
+            <button type="button" class="btn btn-sm" id="ph-copy" data-i18n="copy"></button>
+            <button type="button" class="btn btn-sm btn-primary" id="ph-use" data-i18n="b_usebase"></button>
+          </div>
+          <div id="ph-main"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Saved -->
+    <section class="cp-pane" id="pane-saved" role="tabpanel" aria-labelledby="tab-saved" hidden>
+      <div class="card">
+        <h2 data-i18n="sv_h"></h2>
+        <p class="muted small" style="margin:0">🔒 <span data-i18n="saved_local"></span></p>
+      </div>
+      <p class="muted" id="sv-empty" data-i18n="sv_empty"></p>
+      <div class="cp-groups" id="saved-list"></div>
+    </section>
+
+    <details class="card" id="helpBox" style="margin-top:16px">
+      <summary data-i18n="help"></summary>
+      <ul>
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+      </ul>
+      <button type="button" class="btn btn-danger btn-sm" id="resetAll" data-i18n="reset"></button>
+    </details>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

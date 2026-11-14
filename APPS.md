@@ -1,4 +1,4 @@
-# App list (166)
+# App list (170)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -41,6 +41,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🔳 | [QR Code Maker](https://apnipathshala.ai/apps/qr-code-maker/) | teacher-tools | all | Make QR codes for links, text in any language, Wi-Fi, phone and contacts, and print poster sheets. Works offline. |
 | 📃 | [Question Paper Maker](https://apnipathshala.ai/apps/question-paper-maker/) | teacher-tools | 1-12 | Build an exam paper with sections, six question types, auto numbering and a marks check. Print on A4 or save as PDF, with an answer key. |
 | ❓ | [Quiz Maker & Player](https://apnipathshala.ai/apps/quiz-maker/) | teacher-tools | all | Make MCQ and true/false quizzes, play them on the projector with team scores, share a practice link on WhatsApp, print worksheets. |
+| 📝 | [Report Card Remarks](https://apnipathshala.ai/apps/report-card-remarks/) | teacher-tools | 1-12 | Kind, ready remarks for report cards in 12 languages. Add the student's name, join 2 or 3 remarks, save favourites. Works offline. |
 | 🪑 | [Seating Chart Maker](https://apnipathshala.ai/apps/seating-chart-maker/) | teacher-tools | all | Plan class and exam seating: drag to swap, keep students apart, boy–girl, mixed ability, A/B paper sets, desk slips, A4 print. |
 | 🗓️ | [Timetable Maker](https://apnipathshala.ai/apps/timetable-maker/) | teacher-tools | all | Build weekly class timetables: tap to fill periods, catch teacher clashes, see today’s period, print in colour or export CSV. |
 | 🔠 | [Word Puzzle Maker](https://apnipathshala.ai/apps/word-puzzle-maker/) | teacher-tools | 1-12 | Make printable word search, crossword and word scramble sheets from your own words in any Indian language, with an answer key. |
@@ -114,6 +115,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 💳 | [UPI QR & Payment Standee](https://apnipathshala.ai/apps/upi-qr-standee/) | business | all | Make a printable Scan & Pay UPI QR standee, table tent or stickers for your shop, plus a counter mode with the bill amount. |
 | 📇 | [Visiting Card Maker](https://apnipathshala.ai/apps/visiting-card-maker/) | business | all | Design a visiting card with QR, logo and 10 designs, print 10 per A4 sheet with crop marks, or share a PNG on WhatsApp. |
 | ✂️ | [AI Background Remover](https://apnipathshala.ai/apps/background-remover/) | marketing | all | Remove the background from a photo of a person or product: transparent PNG, white, colour or blur. Runs on your device, no upload. |
+| 🎨 | [Colour Palette Tool](https://apnipathshala.ai/apps/colour-palette-tool/) | marketing | all | Matching palettes from one colour, HEX/RGB/HSL codes, a text contrast check and colours from your photo. Nothing leaves your device. |
 | 📇 | [Excel to Contacts (VCF)](https://apnipathshala.ai/apps/contact-list-vcf/) | marketing | all | Clean a customer list from Excel, fix mobile numbers, merge duplicates and download a VCF or Google Contacts CSV. Nothing is uploaded. |
 | 🪔 | [Festival Greeting & Offer Poster](https://apnipathshala.ai/apps/festival-poster-maker/) | marketing | all | Festival wishes and shop offer posters with your logo, photo and UPI QR, for WhatsApp, Instagram and print. Photos stay on your device. |
 | 🖼️ | [Image Compressor & Resizer](https://apnipathshala.ai/apps/image-compressor/) | marketing | all | Resize, compress and watermark 100 photos at once for Instagram, WhatsApp, YouTube, Amazon and websites. Photos never leave your device. |
@@ -138,12 +140,14 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🍳 | [Kitchen Recipe Finder](https://apnipathshala.ai/apps/recipe-finder/) | everyday | all | Tap what you have at home and get Indian home recipes ranked by match, with missing items, substitutes and a shopping list. |
 | 💍 | [Marriage Biodata Maker](https://apnipathshala.ai/apps/biodata-maker/) | everyday | all | Make a neat marriage biodata in any of 12 Indian languages: 8 designs, photo, horoscope. Print, PDF or WhatsApp image. Stays private. |
 | 💰 | [Monthly Budget Planner](https://apnipathshala.ai/apps/monthly-budget-planner/) | everyday | all | Plan a month's home budget: income, planned and spent by category, daily expenses, what is left, chart, CSV, print. Stays on your device. |
+| 🪪 | [Passport Photo Sheet Maker](https://apnipathshala.ai/apps/passport-photo-sheet/) | everyday | all | One photo to a print-ready sheet of passport-size photos on 4 × 6, 5 × 7 or A4 at true size. Nothing is uploaded. |
 | 🗜️ | [PDF Compress & JPG to PDF](https://apnipathshala.ai/apps/pdf-compress-convert/) | everyday | all | Compress a PDF under 100 KB or 200 KB, turn photos into a PDF, save pages as JPG, unlock your own PDF. Files stay on your device. |
 | ％ | [Percentage & Marks Calculator](https://apnipathshala.ai/apps/percentage-calculator/) | everyday | all | Percentages with step-by-step working: marks %, CGPA to %, SGPA, discounts, profit & loss and 75% attendance. Works offline. |
 | 🖼️ | [Photo Collage Maker](https://apnipathshala.ai/apps/photo-collage-maker/) | everyday | all | Join 2 to 9 photos into one picture: grids, strips, square, story or A4, with a caption. PNG or JPG. Photos never leave your device. |
 | 🗓️ | [Printable Calendar Maker](https://apnipathshala.ai/apps/printable-calendar-maker/) | everyday | all | Print a month, a whole year on one page or 12 monthly pages on A4, with your own events, holidays and birthdays, in 12 languages. |
 | 📷 | [QR & Barcode Scanner](https://apnipathshala.ai/apps/qr-barcode-scanner/) | everyday | all | Scan QR codes and barcodes with the camera or from a picture, on your device. See the full link before you open it. Nothing is uploaded. |
 | 📄 | [Resume & CV Builder](https://apnipathshala.ai/apps/resume-builder/) | everyday | all | Make a job-ready resume with a live A4 preview, ATS-safe and Govt/PSU templates, and a free PDF. Your details stay on your device. |
+| 🛒 | [Shopping Calculator](https://apnipathshala.ai/apps/shopping-calculator/) | everyday | all | Price after discount, which pack is cheaper per kg or litre, what an offer is really worth, and the fuel cost of a trip. Works offline. |
 | ✍️ | [Signature Maker](https://apnipathshala.ai/apps/signature-maker/) | everyday | all | Make a clean signature image: draw it, take it from a photo of paper, or type your name. Transparent PNG or JPG, exact size and KB limit. |
 | 🧾 | [Split Bill & Trip Expenses](https://apnipathshala.ai/apps/split-bill/) | everyday | all | Split trip, dinner and room expenses between friends: who paid, who owes, the fewest UPI payments to settle up, and a WhatsApp summary. |
 | 🎵 | [Sur & Taal Trainer](https://apnipathshala.ai/apps/sur-taal-trainer/) | everyday | all | Tanpura drone, live swar meter for your voice, sargam alankars with a score, tabla-style taal metronome and tuner. Nothing is recorded. |

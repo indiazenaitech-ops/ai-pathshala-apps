@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Passport Photo Sheet Maker · AI Pathshala</title>
+  <meta name="description" content="Turn one photo into a printable sheet of passport-size photos. Free, private, nothing is uploaded.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .pps-cropwrap { display: flex; justify-content: center; }
+    #crop { max-width: 100%; width: 280px; height: auto; border: 2px solid var(--border); border-radius: 6px; touch-action: none; cursor: grab; background: #fff; display: block; }
+    #crop:active { cursor: grabbing; }
+    #crop:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+    .pps-zoom { display: flex; align-items: center; gap: 8px; }
+    .pps-zoom input[type=range] { flex: 1 1 auto; min-width: 0; }
+    .pps-zoom .btn { min-width: 44px; }
+    .pps-zoom #recenter { white-space: nowrap; flex: none; }
+    .pps-sheetwrap { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; display: flex; justify-content: center; }
+    #sheet { max-width: 100%; max-height: 70vh; width: auto; height: auto; background: #fff; box-shadow: 0 1px 6px rgba(0,0,0,.25); display: block; }
+    .pps-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pps-opts .chip { min-height: 40px; }
+    .pps-custom { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .pps-custom input { width: 100%; }
+    .pps-h { margin: 0 0 4px; font-size: 1.05rem; }
+    .pps-opts + .pps-h, .pps-custom + .pps-h { margin-top: 10px; }
+    .pps-btns .btn { flex: 1 1 150px; }
+    #printBox { display: none; }
+    @media print {
+      main#app > *:not(#printBox) { display: none !important; }
+      #printBox { display: block !important; margin: 0; padding: 0; }
+      #printBox img { display: block; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+
+    <div class="callout warning" id="rulesNote" data-i18n="rules_note"></div>
+
+    <div class="grid-2">
+      <section class="card stack">
+        <h2 class="pps-h" data-i18n="crop_title"></h2>
+        <div class="row">
+          <button class="btn btn-primary" id="choose" data-i18n="choose_photo"></button>
+          <input type="file" id="fileIn" accept="image/*" hidden>
+        </div>
+        <p class="muted small" id="photoNote" aria-live="polite"></p>
+        <div class="pps-cropwrap">
+          <canvas id="crop" width="413" height="531" tabindex="0" data-i18n-aria-label="crop_aria"></canvas>
+        </div>
+        <div class="pps-zoom" dir="ltr">
+          <button class="btn btn-sm" id="zoomOut" data-i18n-aria-label="zoom_out">−</button>
+          <input type="range" id="zoom" min="100" max="400" step="1" value="100" data-i18n-aria-label="zoom">
+          <button class="btn btn-sm" id="zoomIn" data-i18n-aria-label="zoom_in">+</button>
+          <button class="btn btn-sm btn-ghost" id="recenter" data-i18n="recenter"></button>
+        </div>
+        <p class="muted small" data-i18n="crop_hint"></p>
+        <p class="muted small" data-i18n="bg_hint"></p>
+      </section>
+
+      <section class="card stack">
+        <h2 class="pps-h" data-i18n="size_title"></h2>
+        <div class="pps-opts" id="sizeOpts" role="group" data-i18n-aria-label="size_title">
+          <button class="chip" data-size="35x45" data-i18n="size_35x45"></button>
+          <button class="chip" data-size="51x51" data-i18n="size_51"></button>
+          <button class="chip" data-size="25x35" data-i18n="size_25x35"></button>
+          <button class="chip" data-size="custom" data-i18n="size_custom"></button>
+        </div>
+        <div class="pps-custom" id="customBox" hidden>
+          <label class="field"><span data-i18n="width_mm"></span><input type="number" id="cw" min="10" max="150" step="1" inputmode="numeric"></label>
+          <label class="field"><span data-i18n="height_mm"></span><input type="number" id="ch" min="10" max="150" step="1" inputmode="numeric"></label>
+        </div>
+
+        <h2 class="pps-h" data-i18n="paper_title"></h2>
+        <div class="pps-opts" id="paperOpts" role="group" data-i18n-aria-label="paper_title">
+          <button class="chip" data-paper="4x6" data-i18n="paper_4x6"></button>
+          <button class="chip" data-paper="a4" data-i18n="paper_a4"></button>
+          <button class="chip" data-paper="5x7" data-i18n="paper_5x7"></button>
+        </div>
+
+        <label class="check"><input type="checkbox" id="optBorder"> <span data-i18n="opt_border"></span></label>
+        <label class="check"><input type="checkbox" id="optCut"> <span data-i18n="opt_cut"></span></label>
+        <p class="muted small" data-i18n="privacy_note"></p>
+      </section>
+    </div>
+
+    <section class="card stack">
+      <h2 class="pps-h" data-i18n="sheet_title"></h2>
+      <p id="countLine" aria-live="polite"><strong id="countText"></strong></p>
+      <p class="muted small" id="pxLine"></p>
+      <div class="pps-sheetwrap"><canvas id="sheet" width="1800" height="1200" data-i18n-aria-label="sheet_title" role="img"></canvas></div>
+      <div class="row pps-btns">
+        <button class="btn btn-primary" id="dlJpg" data-i18n="dl_sheet_jpg"></button>
+        <button class="btn" id="dlPng" data-i18n="dl_sheet_png"></button>
+        <button class="btn" id="dlOne" data-i18n="dl_single"></button>
+        <button class="btn btn-accent" id="printBtn" data-i18n="print_sheet"></button>
+        <button class="btn btn-ghost" id="resetBtn" data-i18n="reset"></button>
+      </div>
+      <div class="callout" data-i18n="print_tip"></div>
+    </section>
+
+    <details class="card">
+      <summary data-i18n="how_title"></summary>
+      <ul class="stack">
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+        <li data-i18n="tip5"></li>
+      </ul>
+    </details>
+
+    <div id="printBox"><img id="printImg" alt=""></div>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
