@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sticker & Meme Maker · AI Pathshala</title>
+  <meta name="description" content="Free sticker and meme maker: turn your photo into a 512 × 512 WhatsApp-size sticker (PNG / WebP) or make a meme with bold text in any language. Photos never leave your device.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .sm-top { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+    .sm-top .seg button { min-height: 44px; padding-inline: 18px; font-size: 1rem; }
+    .sm-layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); align-items: start; margin-bottom: 16px; }
+    @media (min-width: 900px) { .sm-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .sm-stagecard { position: sticky; top: 12px; } }
+    .sm-stage { display: flex; justify-content: center; border-radius: var(--radius-sm, 10px); padding: 10px;
+      background-color: #e5e7eb;
+      background-image: linear-gradient(45deg, #cbd5e1 25%, transparent 25%), linear-gradient(-45deg, #cbd5e1 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #cbd5e1 75%), linear-gradient(-45deg, transparent 75%, #cbd5e1 75%);
+      background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0; }
+    .sm-stage canvas { display: block; width: 100%; max-width: 440px; height: auto; max-height: 70vh; object-fit: contain; touch-action: none; cursor: grab; }
+    .sm-side > * + * { margin-top: 16px; }
+    .sm-side h2 { font-size: 1.1rem; margin: 0; }
+    .sm-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+    .sm-btns .btn { min-height: 44px; flex: 1 1 150px; min-width: 0; white-space: normal; }
+    .sm-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+    .sm-row input[type=range] { flex: 1 1 140px; min-width: 0; min-height: 40px; }
+    .sm-side input[type=color] { width: 52px; height: 42px; padding: 2px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); cursor: pointer; }
+    .sm-side input[type=text] { width: 100%; min-height: 42px; }
+    .sm-add { display: flex; gap: 8px; }
+    .sm-add input { flex: 1 1 auto; min-width: 0; }
+    .sm-add .btn { flex: none; min-height: 42px; }
+    .sm-emoji { display: flex; flex-wrap: wrap; gap: 6px; }
+    .sm-emoji button { width: 44px; height: 44px; font-size: 1.4rem; line-height: 1; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); cursor: pointer; padding: 0;
+      font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif; }
+    .sm-emoji button:hover { background: var(--surface-2); }
+    .sm-ed { border: 1px dashed var(--border); border-radius: var(--radius-sm, 10px); padding: 10px; }
+    .sm-ed > * + * { margin-top: 10px; }
+    .sm-seg { display: flex; width: 100%; }
+    .sm-seg button { flex: 1 1 0; min-height: 42px; min-width: 0; }
+    .sm-note { margin: 0; }
+    .sm-help summary { cursor: pointer; font-size: 1.05rem; }
+    .sm-help ul { margin: 12px 0 0; padding-inline-start: 22px; }
+    .sm-help li { margin-bottom: 8px; }
+    :root[lang="ur"] .sm-side h2 { line-height: 2; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main id="app" data-mode="sticker">
+    <p class="edu-intro" data-i18n="intro"></p>
+
+    <div class="sm-top">
+      <div class="seg" id="modeSeg" role="group" data-i18n-aria-label="mode_label">
+        <button type="button" id="modeSticker" data-mode="sticker" aria-pressed="true"><span aria-hidden="true">🏷️</span> <span data-i18n="mode_sticker"></span></button>
+        <button type="button" id="modeMeme" data-mode="meme" aria-pressed="false"><span aria-hidden="true">😄</span> <span data-i18n="mode_meme"></span></button>
+      </div>
+      <button type="button" class="btn btn-ghost" id="resetBtn"><span aria-hidden="true">↺</span> <span data-i18n="reset"></span></button>
+    </div>
+
+    <div class="sm-layout">
+      <section class="card stack sm-stagecard">
+        <div class="sm-stage"><canvas id="cv" width="512" height="512" role="img" data-i18n-aria-label="preview_label" data-rev="0"></canvas></div>
+        <p class="muted small sm-note" data-i18n="stage_hint"></p>
+        <p class="callout warning small sm-note" data-i18n="fair_note"></p>
+      </section>
+
+      <div class="sm-side">
+        <section class="card stack">
+          <h2 data-i18n="photo_title"></h2>
+          <div class="sm-btns">
+            <button type="button" class="btn btn-primary" id="pickBtn"><span aria-hidden="true">🖼️</span> <span data-i18n="btn_pick"></span></button>
+            <button type="button" class="btn" id="sampleBtn" data-i18n="btn_sample"></button>
+            <button type="button" class="btn" id="plainBtn" data-i18n="btn_plain"></button>
+          </div>
+          <input type="file" id="file" accept="image/*" hidden>
+          <div class="sm-row" id="colorRow"><label for="bgColor" data-i18n="bg_color"></label><input type="color" id="bgColor" value="#1d4ed8"></div>
+          <div class="sm-row" id="zoomRow"><label for="zoom" data-i18n="zoom"></label><input type="range" id="zoom" min="1" max="4" step="0.05" value="1"></div>
+          <div class="callout danger" id="msg" role="alert" hidden></div>
+        </section>
+
+        <section class="card stack" id="shapeCard">
+          <h2 data-i18n="shape_title"></h2>
+          <div class="seg sm-seg" id="shapeSeg" role="group" data-i18n-aria-label="shape_title">
+            <button type="button" data-shape="square" aria-pressed="false" data-i18n="shape_square"></button>
+            <button type="button" data-shape="round" aria-pressed="false" data-i18n="shape_round"></button>
+            <button type="button" data-shape="circle" aria-pressed="true" data-i18n="shape_circle"></button>
+          </div>
+          <label class="check"><input type="checkbox" id="outline" checked> <span data-i18n="outline"></span></label>
+        </section>
+
+        <section class="card stack" id="memeCard" hidden>
+          <h2 data-i18n="meme_title"></h2>
+          <div class="field"><label for="topText" data-i18n="top_text"></label><input type="text" id="topText" class="no-i18n" maxlength="120" autocomplete="off"></div>
+          <div class="field"><label for="botText" data-i18n="bottom_text"></label><input type="text" id="botText" class="no-i18n" maxlength="120" autocomplete="off"></div>
+        </section>
+
+        <section class="card stack">
+          <h2 data-i18n="text_title"></h2>
+          <div class="sm-add">
+            <input type="text" id="newText" maxlength="80" autocomplete="off" data-i18n-placeholder="new_text_ph" data-i18n-aria-label="new_text_ph">
+            <button type="button" class="btn btn-primary" id="addText" data-i18n="btn_add_text"></button>
+          </div>
+          <div>
+            <div class="small muted" data-i18n="emoji_label" style="margin-bottom:6px"></div>
+            <div class="sm-emoji no-i18n" id="emojiRow"></div>
+          </div>
+          <p class="muted small sm-note" id="selNone" data-i18n="sel_none"></p>
+          <div class="sm-ed" id="itemEd" hidden>
+            <b data-i18n="sel_title"></b>
+            <div class="field" id="itTextField"><label for="itText" data-i18n="it_text"></label><input type="text" id="itText" class="no-i18n" maxlength="80" autocomplete="off"></div>
+            <div class="sm-row"><label for="itSize" data-i18n="it_size"></label><input type="range" id="itSize" min="4" max="40" step="1" value="12"></div>
+            <div class="sm-row" id="itColors">
+              <label for="itColor" data-i18n="it_color"></label><input type="color" id="itColor" value="#ffffff">
+              <label for="itStroke" data-i18n="it_stroke"></label><input type="color" id="itStroke" value="#111827">
+            </div>
+            <button type="button" class="btn btn-danger btn-sm" id="itDel" style="min-height:40px"><span aria-hidden="true">🗑️</span> <span data-i18n="btn_remove"></span></button>
+          </div>
+        </section>
+
+        <section class="card stack">
+          <h2 data-i18n="dl_title"></h2>
+          <div class="sm-btns">
+            <button type="button" class="btn btn-accent" id="dlWebp"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_webp"></span></button>
+            <button type="button" class="btn btn-accent" id="dlPng"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_png"></span></button>
+            <button type="button" class="btn" id="dlJpg"><span aria-hidden="true">⬇️</span> <span data-i18n="dl_jpg"></span></button>
+          </div>
+          <div class="callout success" id="dlMsg" role="status" hidden></div>
+          <p class="muted small sm-note" id="noWebp" data-i18n="no_webp" hidden></p>
+          <p class="callout small sm-note" id="waNote" data-i18n="wa_note"></p>
+        </section>
+      </div>
+    </div>
+
+    <details class="card sm-help">
+      <summary><b data-i18n="how_title"></b></summary>
+      <ul>
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+      </ul>
+    </details>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

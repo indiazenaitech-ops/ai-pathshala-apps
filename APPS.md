@@ -1,4 +1,4 @@
-# App list (164)
+# App list (166)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -119,6 +119,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🖼️ | [Image Compressor & Resizer](https://apnipathshala.ai/apps/image-compressor/) | marketing | all | Resize, compress and watermark 100 photos at once for Instagram, WhatsApp, YouTube, Amazon and websites. Photos never leave your device. |
 | 💧 | [Photo Watermark](https://apnipathshala.ai/apps/photo-watermark/) | marketing | all | Add your name or logo to one or many photos at once: corner, centre or repeated. Saves JPGs at original size and removes GPS details. |
 | 📐 | [Social Post Resizer](https://apnipathshala.ai/apps/social-post-resizer/) | marketing | all | One photo or poster into every size: Instagram post, story, YouTube thumbnail, WhatsApp DP, Facebook cover and more. Drag, zoom, download. |
+| 🏷️ | [Sticker & Meme Maker](https://apnipathshala.ai/apps/sticker-meme-maker/) | marketing | all | Make a 512 × 512 WhatsApp-size sticker (PNG / WebP) or a bold-text meme from your own photo, in any language. Nothing is uploaded. |
 | 🔗 | [UTM Campaign Link Builder](https://apnipathshala.ai/apps/utm-link-builder/) | marketing | all | Tag links for GA4: see which WhatsApp status, Instagram post, ad or poster brought each visitor. Bulk links, CSV, QR, history. |
 | 💬 | [WhatsApp Business Link Kit](https://apnipathshala.ai/apps/whatsapp-business-kit/) | marketing | all | Click-to-chat links, ready messages in 12 languages, payment reminders for a customer list and a website chat button. |
 | 🎬 | [YouTube Thumbnail Maker](https://apnipathshala.ai/apps/thumbnail-maker/) | marketing | all | Click-worthy YouTube thumbnails and Shorts covers with a big Hindi or regional headline, stickers and your photo, all on your device. |
@@ -126,6 +127,7 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | ✨ | [AI Photo Enhancer](https://apnipathshala.ai/apps/photo-enhancer/) | everyday | all | Make small, blurry or old photos 2× or 4× bigger and clearer with AI, plus one-tap auto fix. Your photo is not uploaded. |
 | 📝 | [AI Text Summarizer](https://apnipathshala.ai/apps/smart-summarizer/) | everyday | all | Get the key points, keywords and highlights of notes, chapters, articles or PDFs. Works offline in 12 languages; text is not uploaded. |
 | ✉️ | [Application & Letter Writer](https://apnipathshala.ai/apps/application-letter-writer/) | everyday | all | Ready formats for leave, bank, TC, fee, complaint, job and resignation letters in 12 languages. Fill, copy, print. Stays on your device. |
+| ✂️ | [Audio Recorder & Trimmer](https://apnipathshala.ai/apps/audio-recorder-trimmer/) | everyday | all | Record your voice or open an audio file, cut the part you want, add fades and download WAV or a smaller file. Nothing is uploaded. |
 | 🏏 | [Cricket Scorer](https://apnipathshala.ai/apps/cricket-scorer/) | everyday | all | Score gully, school and office cricket ball by ball: live score, run rate, target, full scorecard and a WhatsApp summary. Offline. |
 | 💡 | [Electricity Bill Calculator](https://apnipathshala.ai/apps/electricity-bill-calculator/) | everyday | all | Appliance energy audit in units, slab-wise bill estimate for 12 states, savings coach, meter and solar check, and a Class 10 science corner. |
 | 🧮 | [EMI, SIP & FD Calculator](https://apnipathshala.ai/apps/emi-savings-calculator/) | everyday | all | Loan EMI with schedule, prepayment, rate change, APR and flat-rate checks, plus SIP, FD, RD and PPF calculators. Private, works offline. |
