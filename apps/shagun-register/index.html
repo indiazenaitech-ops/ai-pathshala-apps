@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shagun Register: Gift Book · AI Pathshala</title>
+  <meta name="description" content="Free private gift register for weddings, birthdays, griha pravesh and naming ceremonies: write down shagun envelopes, gold, silver and gifts, see totals by side, look up what a family gave before. Stays on your device.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .num { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+    .field input, .field select { width: 100%; }
+    /* edu.css styles text inputs but not type="tel" */
+    input[type="tel"] { font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 11px; min-height: 40px; max-width: 100%; }
+    :root[lang="ur"] input[type="tel"] { line-height: 2; }
+    .t td small { display: block; color: var(--muted); font-size: .8rem; }
+    .sr-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+    .sr-head h3 { margin: 0; }
+    .privacy { display: flex; gap: 10px; align-items: flex-start; }
+    .privacy b { display: block; }
+    .sample-box { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; }
+    .sample-box p { margin: 0; flex: 1 1 240px; }
+    .err { color: var(--danger); font-size: .88rem; margin: 0; }
+    .err:empty { display: none; }
+    .two { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @media (max-width: 560px) { .two, .three { grid-template-columns: minmax(0, 1fr); } }
+
+    /* events */
+    .ev-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; }
+    .ev-row .field { flex: 1 1 260px; }
+    .ev-meta { margin: 0; }
+    .ev-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+    table.t { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    .t th, .t td { padding: 7px 8px; border-bottom: 1px solid var(--border); text-align: start; vertical-align: top; }
+    .t thead th { background: var(--surface-2); font-size: .84rem; }
+    .t td.a, .t th.a { text-align: end; white-space: nowrap; }
+    .t tfoot td { font-weight: 800; border-top: 2px solid var(--border); }
+    .t tr.cur td { background: var(--primary-soft); }
+    .t button.link { background: none; border: 0; padding: 0; color: var(--primary); font: inherit; font-weight: 600; cursor: pointer; text-align: start; min-height: 32px; }
+
+    /* totals */
+    .tiles { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
+    .tile { background: var(--surface-2); border-radius: var(--radius-sm); padding: 9px 12px; min-width: 0; }
+    .tile span { display: block; color: var(--muted); font-size: .84rem; font-weight: 600; }
+    .tile b { font-size: 1.35rem; overflow-wrap: anywhere; }
+    .tile small { display: block; color: var(--muted); }
+    .tile.big { grid-column: 1 / -1; }
+    .tile.big b { font-size: 1.7rem; color: var(--primary); }
+
+    /* entry form */
+    .seg.gift button { min-height: 42px; }
+    .hint-box { border-inline-start: 4px solid var(--info); background: var(--info-soft); padding: 8px 12px; border-radius: var(--radius-sm); font-size: .9rem; }
+    .hint-box.dup { border-color: var(--warning); background: var(--warning-soft); }
+    .hint-box ul { margin: 4px 0 0; padding-inline-start: 18px; }
+
+    /* quick entry */
+    .quick { border: 2px solid var(--accent); }
+    .quick .q-name { font-size: 1.3rem; min-height: 56px; width: 100%; }
+    .q-sides { display: flex; flex-wrap: wrap; gap: 6px; }
+    .q-sides .chip { min-height: 44px; font-size: .95rem; }
+    .q-amts { display: grid; gap: 8px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .q-amts .btn { min-height: 64px; font-size: 1.35rem; font-weight: 800; }
+    .q-other { display: flex; gap: 8px; align-items: stretch; }
+    .q-other input { flex: 1 1 auto; min-width: 0; font-size: 1.2rem; min-height: 56px; }
+    .q-other .btn { min-height: 56px; font-size: 1.1rem; }
+    .q-stat { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: baseline; font-size: 1.1rem; }
+    .q-stat b { font-size: 1.6rem; }
+    .q-recent { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+    .q-recent li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 10px; background: var(--surface-2); border-radius: 8px; }
+    .q-flash { color: var(--success); font-weight: 700; min-height: 1.5em; margin: 0; }
+    .edu-fullscreen-on .quick { font-size: 1.15rem; }
+
+    /* register list */
+    .filters { display: grid; gap: 8px; grid-template-columns: 2fr 1fr 1fr 1fr; }
+    @media (max-width: 760px) { .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } .filters .search { grid-column: 1 / -1; } }
+    .rlist { display: flex; flex-direction: column; gap: 6px; }
+    .rrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: start; width: 100%; padding: 9px 12px; border: 1px solid var(--border);
+      border-radius: 12px; background: var(--surface); color: var(--text); font: inherit; text-align: start; cursor: pointer; }
+    .rrow:hover, .rrow.editing { border-color: var(--primary); background: var(--surface-2); }
+    .rrow .nm { font-weight: 700; overflow-wrap: anywhere; }
+    .rrow .sub { display: block; color: var(--muted); font-size: .84rem; overflow-wrap: anywhere; }
+    .rrow .gift { text-align: end; font-weight: 800; }
+    .rrow .gift small { display: block; font-weight: 600; color: var(--muted); font-size: .8rem; max-width: 12rem; overflow-wrap: anywhere; white-space: normal; }
+    @media (max-width: 560px) { .rrow .gift small { max-width: 8.5rem; } }
+    .rrow .hist { grid-column: 1 / -1; font-size: .82rem; color: var(--info); }
+    .rrow .badge { margin-inline-start: 6px; vertical-align: middle; }
+
+    /* look-up */
+    .lres { display: grid; gap: 8px; }
+    .lgroup { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; }
+    .lgroup h4 { margin: 0 0 4px; overflow-wrap: anywhere; }
+    .lgroup .cols { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 560px) { .lgroup .cols { grid-template-columns: minmax(0, 1fr); } }
+    .lgroup ul { margin: 2px 0 0; padding-inline-start: 18px; font-size: .9rem; }
+    .lgroup .lbl { font-weight: 700; font-size: .86rem; }
+    .lbl.in { color: var(--success); } .lbl.out { color: var(--accent); }
+    .act-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    @media (max-width: 520px) { .act-row .btn { flex: 1 1 100%; } }
+    :root[lang="ur"] .rrow, :root[lang="ur"] .chip { line-height: 1.8; }
+
+    /* print register */
+    #printReg h1 { font-size: 16pt; margin: 0 0 1mm; }
+    #printReg .p-sub { margin: 0 0 3mm; }
+    #printReg table { width: 100%; border-collapse: collapse; margin-bottom: 4mm; }
+    #printReg th, #printReg td { border: 1px solid #999; padding: 2px 5px; text-align: start; vertical-align: top; font-size: 9.5pt; }
+    #printReg td.a, #printReg th.a { text-align: end; white-space: nowrap; }
+    #printReg thead { display: table-header-group; }
+    #printReg tr { break-inside: avoid; }
+    @media print { @page { size: A4 portrait; margin: 10mm; } }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro no-print" data-i18n="intro"></p>
+    <div class="callout success privacy no-print"><span aria-hidden="true">🔒</span><p class="mb0"><b data-i18n="privacy_h"></b><span data-i18n="privacy"></span></p></div>
+    <div class="callout accent no-print sample-box" id="sampleNote" hidden>
+      <p data-i18n="sample_note"></p>
+      <button class="btn btn-sm" id="btnClearSample" type="button" data-i18n="clear_sample"></button>
+    </div>
+
+    <section class="card stack no-print">
+      <div class="sr-head"><h3 data-i18n="h_events"></h3><button class="btn btn-primary" id="evNew" type="button" data-i18n="new_event"></button></div>
+      <p class="muted mb0" id="noEvents" data-i18n="no_events" hidden></p>
+      <div id="evBox" class="stack">
+        <div class="ev-row">
+          <label class="field"><span data-i18n="pick_event"></span><select id="evSel" class="no-i18n"></select></label>
+          <div class="ev-btns">
+            <button class="btn" id="evEdit" type="button" data-i18n="edit_event"></button>
+            <button class="btn btn-danger" id="evDel" type="button" data-i18n="delete_event"></button>
+          </div>
+        </div>
+        <p class="ev-meta small muted" id="evMeta"></p>
+        <details>
+          <summary data-i18n="all_events"></summary>
+          <div class="scroll-x"><table class="t" id="evAll"></table></div>
+        </details>
+      </div>
+    </section>
+
+    <section class="card stack no-print" id="totCard">
+      <h3 id="totHead"></h3>
+      <div class="tiles" aria-live="polite">
+        <div class="tile big"><span data-i18n="t_cash"></span><b class="num" id="tCash"></b><small id="tCashN"></small></div>
+        <div class="tile"><span data-i18n="t_entries"></span><b class="num" id="tCount"></b></div>
+        <div class="tile"><span data-i18n="g_gold"></span><b class="num" id="tGold"></b><small id="tGoldW"></small></div>
+        <div class="tile"><span data-i18n="g_silver"></span><b class="num" id="tSilver"></b><small id="tSilverW"></small></div>
+        <div class="tile"><span data-i18n="g_other"></span><b class="num" id="tOther"></b><small id="tOtherV"></small></div>
+      </div>
+      <div class="scroll-x"><table class="t" id="tSides"></table></div>
+    </section>
+
+    <section class="card stack no-print" id="formCard">
+      <div class="sr-head">
+        <h3 id="formHead"></h3>
+        <button class="btn btn-accent" id="btnQuick" type="button" data-i18n="quick_open"></button>
+      </div>
+      <form id="eForm" class="stack" novalidate>
+        <div class="two">
+          <label class="field"><span id="fNameLbl"></span><input type="text" id="fName" class="no-i18n" maxlength="60" autocomplete="off" list="knownNames"></label>
+          <label class="field"><span data-i18n="f_city"></span><input type="text" id="fCity" class="no-i18n" maxlength="40" autocomplete="off"></label>
+        </div>
+        <div id="fHint" class="hint-box" aria-live="polite" hidden></div>
+        <div class="two">
+          <label class="field"><span data-i18n="f_side"></span><select id="fSide"></select></label>
+          <label class="field" id="fSideNewBox" hidden><span data-i18n="f_side_new"></span><input type="text" id="fSideNew" class="no-i18n" maxlength="30" autocomplete="off"></label>
+          <label class="field"><span data-i18n="f_phone"></span><input type="tel" id="fPhone" class="no-i18n" maxlength="20" autocomplete="off" inputmode="tel"></label>
+        </div>
+        <div class="field"><span data-i18n="f_gift"></span>
+          <div class="seg gift" id="fGift" role="group" data-i18n-aria-label="f_gift">
+            <button type="button" data-g="cash" data-i18n="g_cash"></button>
+            <button type="button" data-g="gold" data-i18n="g_gold"></button>
+            <button type="button" data-g="silver" data-i18n="g_silver"></button>
+            <button type="button" data-g="other" data-i18n="g_other"></button>
+          </div>
+        </div>
+        <div class="three">
+          <label class="field"><span id="fAmtLbl"></span><input type="text" id="fAmt" inputmode="decimal" maxlength="16" autocomplete="off"></label>
+          <label class="field" id="fWtBox"><span data-i18n="f_weight"></span><input type="text" id="fWt" inputmode="decimal" maxlength="9" autocomplete="off"></label>
+          <label class="field" id="fDescBox"><span id="fDescLbl"></span><input type="text" id="fDesc" class="no-i18n" maxlength="60" autocomplete="off"></label>
+        </div>
+        <p class="err" id="fErr" role="alert"></p>
+        <div class="row">
+          <button class="btn btn-primary" id="fSave" type="submit"></button>
+          <button class="btn" id="fCancel" type="button" data-i18n="cancel" hidden></button>
+          <button class="btn btn-danger" id="fDel" type="button" data-i18n="delete" hidden></button>
+        </div>
+      </form>
+      <datalist id="knownNames"></datalist>
+    </section>
+
+    <section class="card stack no-print quick" id="quickCard" hidden>
+      <div class="sr-head">
+        <h3 data-i18n="quick_h"></h3>
+        <div class="row">
+          <button class="btn btn-sm" id="qFull" type="button" data-i18n="fullscreen"></button>
+          <button class="btn btn-sm" id="qClose" type="button" data-i18n="quick_close"></button>
+        </div>
+      </div>
+      <p class="small muted mb0" data-i18n="quick_help"></p>
+      <label class="field"><span data-i18n="q_name"></span><input type="text" id="qName" class="q-name no-i18n" maxlength="60" autocomplete="off" list="knownNames"></label>
+      <div class="q-sides" id="qSides" role="group" data-i18n-aria-label="f_side"></div>
+      <div class="q-amts" id="qAmts"></div>
+      <div class="q-other">
+        <input type="text" id="qOther" inputmode="decimal" maxlength="12" autocomplete="off" data-i18n-placeholder="q_other" data-i18n-aria-label="q_other">
+        <button class="btn btn-primary" id="qAdd" type="button" data-i18n="add"></button>
+      </div>
+      <p class="err" id="qErr" role="alert"></p>
+      <p class="q-flash" id="qFlash" aria-live="polite"></p>
+      <div class="q-stat"><span data-i18n="q_count"></span><b class="num" id="qCount"></b><span data-i18n="t_cash"></span><b class="num" id="qTotal"></b></div>
+      <ul class="q-recent" id="qRecent"></ul>
+      <div class="row"><button class="btn" id="qUndo" type="button" data-i18n="q_undo"></button></div>
+    </section>
+
+    <section class="card stack no-print" id="listCard">
+      <div class="sr-head"><h3 data-i18n="h_register"></h3><span class="muted small" id="rCount"></span></div>
+      <div class="filters">
+        <label class="field search"><span data-i18n="search"></span><input type="search" id="rSearch" class="no-i18n" autocomplete="off" data-i18n-placeholder="search_ph"></label>
+        <label class="field"><span data-i18n="f_side"></span><select id="rSide"></select></label>
+        <label class="field"><span data-i18n="f_gift"></span><select id="rGift"></select></label>
+        <label class="field"><span data-i18n="sort"></span><select id="rSort">
+          <option value="order" data-i18n="sort_order"></option>
+          <option value="name" data-i18n="sort_name"></option>
+          <option value="amt" data-i18n="sort_amt"></option>
+          <option value="side" data-i18n="sort_side"></option>
+        </select></label>
+      </div>
+      <div class="rlist" id="rList"></div>
+      <p class="muted mb0" id="rEmpty" hidden></p>
+    </section>
+
+    <section class="card stack no-print">
+      <h3 data-i18n="h_lookup"></h3>
+      <p class="small muted mb0" data-i18n="lookup_help"></p>
+      <label class="field"><span data-i18n="lookup_q"></span><input type="search" id="lQ" class="no-i18n" autocomplete="off" list="knownNames"></label>
+      <div class="lres" id="lRes" aria-live="polite"></div>
+    </section>
+
+    <section class="card stack no-print">
+      <h3 data-i18n="h_data"></h3>
+      <div class="act-row">
+        <button class="btn btn-primary" id="btnPrint" type="button" data-i18n="print_reg"></button>
+        <button class="btn" id="btnCsv" type="button" data-i18n="csv_event"></button>
+        <button class="btn" id="btnCsvAll" type="button" data-i18n="csv_all"></button>
+      </div>
+      <div class="act-row">
+        <button class="btn" id="btnBackup" type="button" data-i18n="backup"></button>
+        <button class="btn" id="btnRestore" type="button" data-i18n="restore"></button>
+        <button class="btn btn-danger" id="btnReset" type="button" data-i18n="reset"></button>
+      </div>
+      <p class="tiny muted mb0" data-i18n="backup_note"></p>
+    </section>
+
+    <details class="card no-print">
+      <summary data-i18n="help"></summary>
+      <ul>
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+        <li data-i18n="tip5"></li>
+        <li data-i18n="tip6"></li>
+      </ul>
+    </details>
+
+    <section id="printReg" class="print-only"></section>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
