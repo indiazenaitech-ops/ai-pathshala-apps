@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Monthly Budget Planner · AI Pathshala</title>
+  <meta name="description" content="Plan a household budget for the month: income, planned and actual expenses by category, daily expenses, what is left, chart, CSV and print. Works offline; data stays on your device.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    .mb-month { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .mb-month h2 { margin: 0; flex: 1 1 140px; text-align: center; font-size: 1.25rem; }
+    .mb-cols { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); align-items: start; }
+    @media (max-width: 860px) { .mb-cols { grid-template-columns: minmax(0, 1fr); } }
+    .mb-inc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 120px) auto; gap: 8px; align-items: center; padding: 6px 0; }
+    .mb-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 6px 10px; align-items: end; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .mb-row .mb-name { grid-column: 1 / 3; font-weight: 700; }
+    .mb-row .mb-diff { grid-column: 1 / 4; }
+    .mb-row input, .mb-inc input, .mb-quick input, .mb-quick select { width: 100%; min-width: 0; }
+    .mb-spent { font-weight: 700; font-size: 1.05rem; padding: 8px 0; font-variant-numeric: tabular-nums; }
+    .mb-x { min-width: 40px; min-height: 40px; padding: 0; }
+    .mb-quick { display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)) auto; align-items: end; }
+    @media (max-width: 760px) { .mb-quick { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mb-quick .btn { grid-column: 1 / 3; } }
+    .mb-sum { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .mb-sum > div { background: var(--surface-2); border-radius: var(--radius-sm, 10px); padding: 10px 12px; min-width: 0; }
+    .mb-sum span { display: block; }
+    .mb-sum b { display: inline-block; max-width: 100%; direction: ltr; unicode-bidi: isolate; font-size: 1.2rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    .mb-neg { color: var(--danger); }
+    .mb-pos { color: var(--success); }
+    .mb-tx { display: flex; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .mb-tx .grow { min-width: 0; overflow-wrap: anywhere; }
+    .mb-list { max-height: 340px; overflow-y: auto; }
+    #chart { display: block; width: 100%; }
+    [aria-invalid="true"] { border-color: var(--danger) !important; }
+    #printSum h2 { margin: 0 0 4px; }
+    #printSum table { margin-bottom: 12px; }
+    #printSum td.num, #printSum th.num { text-align: end; white-space: nowrap; }
+    @media print {
+      @page { size: A4; margin: 12mm; }
+      #printSum { font-size: 11pt; }
+      #printSum .table th, #printSum .table td { padding: 4px 8px; }
+      #printSum .table th { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro no-print" data-i18n="intro"></p>
+    <p class="callout small no-print" data-i18n="privacy"></p>
+    <p class="callout accent no-print" id="sampleNote" data-i18n="sample_note" hidden></p>
+
+    <section class="card no-print">
+      <div class="mb-month">
+        <button class="btn mb-x" id="btnPrev" data-act="prev" data-i18n-aria-label="prev_month" data-i18n-title="prev_month">‹</button>
+        <h2 id="monthLabel" aria-live="polite"></h2>
+        <button class="btn mb-x" id="btnNext" data-act="next" data-i18n-aria-label="next_month" data-i18n-title="next_month">›</button>
+        <button class="btn btn-sm" id="btnCopyLast" data-act="copy-last" data-i18n="copy_last"></button>
+      </div>
+    </section>
+
+    <section class="card stack no-print">
+      <h3 data-i18n="h_quick"></h3>
+      <div class="mb-quick">
+        <label class="field"><span data-i18n="amount"></span><input type="text" inputmode="decimal" id="qAmt" autocomplete="off" maxlength="14"></label>
+        <label class="field"><span data-i18n="category"></span><select id="qCat"></select></label>
+        <label class="field"><span data-i18n="note"></span><input type="text" id="qNote" class="no-i18n" maxlength="80" autocomplete="off"></label>
+        <label class="field"><span data-i18n="date"></span><input type="date" id="qDate"></label>
+        <button class="btn btn-primary" id="btnAddExp" data-act="add-exp" data-i18n="add_expense"></button>
+      </div>
+      <p class="small mb-neg" id="qMsg" role="alert"></p>
+    </section>
+
+    <section class="card stack no-print">
+      <h3 data-i18n="h_summary"></h3>
+      <div class="mb-sum" aria-live="polite">
+        <div><span class="small muted" data-i18n="s_income"></span><b id="sIncome"></b></div>
+        <div><span class="small muted" data-i18n="s_planned"></span><b id="sPlanned"></b></div>
+        <div><span class="small muted" data-i18n="s_spent"></span><b id="sSpent"></b></div>
+        <div><span class="small muted" data-i18n="s_left_plan"></span><b id="sLeftPlan"></b></div>
+        <div><span class="small muted" data-i18n="s_left_now"></span><b id="sLeftNow"></b></div>
+      </div>
+      <div class="stack">
+        <label class="field" style="max-width:260px"><span data-i18n="goal_label"></span><input type="text" inputmode="decimal" id="goal" data-f="goal" autocomplete="off" maxlength="14"></label>
+        <div class="progress" id="goalBar" hidden><span style="width:0"></span></div>
+        <p class="small" id="goalText"></p>
+        <p class="tiny muted" data-i18n="goal_hint"></p>
+      </div>
+    </section>
+
+    <div class="mb-cols no-print">
+      <section class="card stack">
+        <h3 data-i18n="h_income"></h3>
+        <div id="incList"></div>
+        <button class="btn btn-sm" id="btnAddInc" data-act="add-inc" data-i18n="add_income"></button>
+      </section>
+      <section class="card stack">
+        <h3 data-i18n="h_expenses"></h3>
+        <div id="catList"></div>
+        <button class="btn btn-sm" id="btnAddCat" data-act="add-cat" data-i18n="add_cat"></button>
+      </section>
+    </div>
+
+    <section class="card stack no-print">
+      <div class="row spread">
+        <h3 data-i18n="h_chart" style="margin:0"></h3>
+        <div class="seg" role="group">
+          <button id="btnBars" data-act="chart-bars" data-i18n="chart_bars" aria-pressed="true"></button>
+          <button id="btnDonut" data-act="chart-donut" data-i18n="chart_donut" aria-pressed="false"></button>
+        </div>
+      </div>
+      <div id="chartWrap"><canvas id="chart" role="img" data-i18n-aria-label="h_chart"></canvas></div>
+    </section>
+
+    <section class="card stack no-print">
+      <h3 data-i18n="h_entries"></h3>
+      <div id="txList" class="mb-list"></div>
+    </section>
+
+    <section class="card stack no-print">
+      <h3 data-i18n="h_data"></h3>
+      <div class="row">
+        <button class="btn btn-primary" id="btnPrint" data-act="print" data-i18n="print_summary"></button>
+        <button class="btn" id="btnCsv" data-act="csv" data-i18n="export_csv"></button>
+        <button class="btn" id="btnBackup" data-act="backup" data-i18n="backup"></button>
+        <button class="btn" id="btnRestore" data-act="restore" data-i18n="restore"></button>
+        <button class="btn btn-danger" id="btnReset" data-act="reset" data-i18n="reset"></button>
+      </div>
+      <p class="tiny muted" data-i18n="saved_local"></p>
+    </section>
+
+    <details class="card no-print">
+      <summary data-i18n="help"></summary>
+      <ul>
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+      </ul>
+    </details>
+
+    <section id="printSum" class="print-only"></section>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

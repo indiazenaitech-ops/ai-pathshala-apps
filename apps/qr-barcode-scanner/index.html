@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QR & Barcode Scanner · AI Pathshala</title>
+  <meta name="description" content="Scan QR codes and barcodes with the camera or from a picture, on your device. See the full link before opening. Nothing is uploaded.">
+  <link rel="icon" href="../../shared/img/icon-32.png">
+  <link rel="stylesheet" href="../../shared/edu.css">
+  <style>
+    #camWrap { position: relative; background: #000; border-radius: var(--radius-sm, 10px); overflow: hidden; max-width: 560px; }
+    #video { display: block; width: 100%; max-height: 62vh; object-fit: cover; }
+    #camWrap::after { content: ""; position: absolute; inset: 14%; border: 3px solid rgba(255, 255, 255, .85); border-radius: 14px; pointer-events: none; }
+    .qs-raw { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm, 10px); padding: 10px 12px; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-all; max-height: 260px; overflow-y: auto; font-size: .95rem; unicode-bidi: plaintext; text-align: start; }
+    .qs-url { font-size: 1.05rem; font-weight: 600; direction: ltr; }
+    .qs-rows { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; margin: 0; }
+    .qs-rows dt { color: var(--muted); font-size: .9rem; }
+    .qs-rows dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+    .qs-hist { display: flex; gap: 10px; align-items: center; width: 100%; text-align: start; padding: 8px 4px; border: 0; border-bottom: 1px solid var(--border); background: transparent; color: var(--text); font: inherit; cursor: pointer; min-height: 44px; }
+    .qs-hist .grow { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #fileIn { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <p class="edu-intro" data-i18n="intro"></p>
+    <p class="callout small" data-i18n="privacy"></p>
+
+    <section class="card stack">
+      <h3 data-i18n="h_scan"></h3>
+      <p class="small muted" data-i18n="cam_explain"></p>
+      <div class="row">
+        <button class="btn btn-primary" id="btnCam" data-i18n="cam_start"></button>
+        <button class="btn btn-danger" id="btnStop" data-i18n="cam_stop" hidden></button>
+        <button class="btn" id="btnPick" data-i18n="pick_image"></button>
+        <input type="file" id="fileIn" accept="image/*" tabindex="-1" aria-hidden="true">
+      </div>
+      <div id="camWrap" hidden><video id="video" playsinline muted></video></div>
+      <p id="msg" role="status" aria-live="polite"></p>
+      <p class="tiny muted" id="engineNote" hidden></p>
+    </section>
+
+    <section class="card stack" id="result" hidden aria-live="polite"></section>
+
+    <section class="card stack">
+      <h3 data-i18n="h_history"></h3>
+      <label class="check"><input type="checkbox" id="keep"><span data-i18n="keep_history"></span></label>
+      <div id="histList"></div>
+      <div><button class="btn btn-sm btn-danger" id="btnClear" data-i18n="clear_all" hidden></button></div>
+    </section>
+
+    <details class="card">
+      <summary data-i18n="help"></summary>
+      <ul>
+        <li data-i18n="tip1"></li>
+        <li data-i18n="tip2"></li>
+        <li data-i18n="tip3"></li>
+        <li data-i18n="tip4"></li>
+      </ul>
+    </details>
+  </main>
+  <script src="../../shared/edu.js"></script>
+  <script src="strings.js"></script>
+  <script src="vendor/jsQR.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

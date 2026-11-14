@@ -145,7 +145,24 @@ const SHOTS = [
   { name: 'resume-format-for-freshers-1', app: 'resume-builder', w: 390,
     run: async (p) => { await p.click('label[for="tpl-fresher"]'); await p.waitForTimeout(600); }, clip: '#designCard', maxH: 760 },
   { name: 'resume-format-for-freshers-2', app: 'resume-builder', w: 390,
-    run: async (p) => { await p.click('label[for="tpl-fresher"]'); await p.waitForTimeout(300); await p.click('#viewPreview'); await p.waitForTimeout(1500); }, clip: '#stage', maxH: 820 }
+    run: async (p) => { await p.click('label[for="tpl-fresher"]'); await p.waitForTimeout(300); await p.click('#viewPreview'); await p.waitForTimeout(1500); }, clip: '#stage', maxH: 820 },
+  /* ---- added 14 Nov 2026 (second batch: letters, school office and handwriting) ---- */
+  { name: 'leave-application-format-1', app: 'application-letter-writer', w: 390, run: async (p) => { await p.waitForTimeout(500); }, clip: '#formCard', maxH: 760 },
+  { name: 'leave-application-format-2', app: 'application-letter-writer', w: 390, run: async (p) => { await p.waitForTimeout(500); }, clip: '#letter', maxH: 820 },
+  { name: 'question-paper-format-for-teachers-1', app: 'question-paper-maker', w: 390, run: async (p) => { await p.waitForTimeout(500); },
+    clip: async (p) => p.evaluate(() => { const a = document.querySelector('#sections').firstElementChild.getBoundingClientRect(); return { x: a.left - 8, y: a.top + scrollY - 8, width: a.width + 16, height: a.height + 16 }; }), maxH: 760 },
+  { name: 'question-paper-format-for-teachers-2', app: 'question-paper-maker', w: 390, run: async (p) => { await p.waitForTimeout(500); }, clip: '#paperView', maxH: 820 },
+  { name: 'student-id-card-maker-1', app: 'id-card-maker', w: 390, run: async (p) => { await p.waitForTimeout(800); }, clip: 'section[aria-labelledby="hWho"]', maxH: 760 },
+  { name: 'student-id-card-maker-2', app: 'id-card-maker', w: 390, run: async (p) => { await p.waitForTimeout(1200); }, clip: 'section[aria-labelledby="hPrev"]', maxH: 760 },
+  { name: 'handwriting-practice-worksheets-1', app: 'handwriting-practice-sheets', w: 390, run: async (p) => { await p.waitForTimeout(600); }, clip: '#form', maxH: 700 },
+  { name: 'handwriting-practice-worksheets-2', app: 'handwriting-practice-sheets', w: 390, run: async (p) => { await p.waitForTimeout(1000); },
+    clip: async (p) => p.evaluate(() => { const a = document.querySelector('#pages').firstElementChild.getBoundingClientRect(); return { x: a.left - 8, y: a.top + scrollY - 8, width: a.width + 16, height: a.height + 16 }; }), maxH: 860 },
+  { name: 'convert-text-to-handwriting-1', app: 'text-to-handwriting', w: 390, run: async (p) => { await p.waitForTimeout(600); },
+    clip: async (p) => p.evaluate(() => { const a = document.querySelector('#paper').closest('.card').getBoundingClientRect(); return { x: a.left - 8, y: a.top + scrollY - 8, width: a.width + 16, height: a.height + 16 }; }), maxH: 800 },
+  { name: 'convert-text-to-handwriting-2', app: 'text-to-handwriting', w: 390, run: async (p) => { await p.waitForTimeout(2500); }, clip: '#page', maxH: 860 },
+  { name: 'fee-receipt-format-1', app: 'fee-receipt-maker', w: 390, run: async (p) => { await p.waitForTimeout(600); },
+    clip: async (p) => p.evaluate(() => { const a = document.querySelector('#heads').closest('.grp').getBoundingClientRect(), b = document.querySelector('#paid').closest('.grp').getBoundingClientRect(), c = document.querySelector('#heads').closest('.card').getBoundingClientRect(); return { x: c.left - 8, y: a.top + scrollY - 8, width: c.width + 16, height: b.bottom - a.top + 16 }; }), maxH: 820 },
+  { name: 'fee-receipt-format-2', app: 'fee-receipt-maker', w: 390, run: async (p) => { await p.waitForTimeout(800); }, clip: '#preview', maxH: 860 }
 ];
 
 async function rectOf(page, clip) {
