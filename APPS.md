@@ -1,4 +1,4 @@
-# App list (172)
+# App list (174)
 
 Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools.html · Offline ZIP: https://github.com/indiazenaitech-ops/ai-pathshala-apps/archive/refs/heads/main.zip
 
@@ -118,7 +118,9 @@ Live: https://apnipathshala.ai/ · For schools: https://apnipathshala.ai/schools
 | 🎨 | [Colour Palette Tool](https://apnipathshala.ai/apps/colour-palette-tool/) | marketing | all | Matching palettes from one colour, HEX/RGB/HSL codes, a text contrast check and colours from your photo. Nothing leaves your device. |
 | 📇 | [Excel to Contacts (VCF)](https://apnipathshala.ai/apps/contact-list-vcf/) | marketing | all | Clean a customer list from Excel, fix mobile numbers, merge duplicates and download a VCF or Google Contacts CSV. Nothing is uploaded. |
 | 🪔 | [Festival Greeting & Offer Poster](https://apnipathshala.ai/apps/festival-poster-maker/) | marketing | all | Festival wishes and shop offer posters with your logo, photo and UPI QR, for WhatsApp, Instagram and print. Photos stay on your device. |
+| 🎞️ | [GIF Maker](https://apnipathshala.ai/apps/gif-maker/) | marketing | all | Turn 2 to 50 photos or a short video clip into a moving GIF, with caption, speed and loop. Made on your device; nothing is uploaded. |
 | 🖼️ | [Image Compressor & Resizer](https://apnipathshala.ai/apps/image-compressor/) | marketing | all | Resize, compress and watermark 100 photos at once for Instagram, WhatsApp, YouTube, Amazon and websites. Photos never leave your device. |
+| 🔰 | [Logo Maker](https://apnipathshala.ai/apps/logo-maker/) | marketing | all | Simple logos for shops, clubs, events and YouTube channels: name, icon, layout, colours. Transparent PNG or SVG, made on your device. |
 | 💧 | [Photo Watermark](https://apnipathshala.ai/apps/photo-watermark/) | marketing | all | Add your name or logo to one or many photos at once: corner, centre or repeated. Saves JPGs at original size and removes GPS details. |
 | 📐 | [Social Post Resizer](https://apnipathshala.ai/apps/social-post-resizer/) | marketing | all | One photo or poster into every size: Instagram post, story, YouTube thumbnail, WhatsApp DP, Facebook cover and more. Drag, zoom, download. |
 | 🏷️ | [Sticker & Meme Maker](https://apnipathshala.ai/apps/sticker-meme-maker/) | marketing | all | Make a 512 × 512 WhatsApp-size sticker (PNG / WebP) or a bold-text meme from your own photo, in any language. Nothing is uploaded. |
